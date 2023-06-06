@@ -1,5 +1,5 @@
-import { useState, useEffect, Fragment } from 'react'
-import { withRouter } from 'react-router'
+import { useState, useEffect } from 'react'
+
 import { Modal, Row, Col, Avatar, Button } from 'antd'
 import { SpeakersApi } from '@helpers/request'
 import { UserOutlined } from '@ant-design/icons'
@@ -23,7 +23,7 @@ const ModalSpeakers = (props) => {
   }
 
   return (
-    <Fragment>
+    <>
       <Modal
         title="Conferencista"
         centered
@@ -75,8 +75,8 @@ const ModalSpeakers = (props) => {
           </Col>
         </Row>
       </Modal>
-    </Fragment>
+    </>
   )
 }
 
-export default withRouter(ModalSpeakers)
+export default ModalSpeakers

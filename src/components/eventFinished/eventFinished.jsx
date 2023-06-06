@@ -1,5 +1,4 @@
 /* globals require */
-import { withRouter } from 'react-router-dom'
 import { Result } from 'antd'
 import { imageUtils } from '../../Utilities/ImageUtils'
 
@@ -12,4 +11,4 @@ function EventFinished() {
   )
 }
 
-export default withRouter(EventFinished)
+export default EventFinished

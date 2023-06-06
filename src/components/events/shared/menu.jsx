@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { NavLink, withRouter } from 'react-router-dom'
+import { NavLink, useParams, useRouteMatch } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Button, Col, Divider, Menu, Row } from 'antd'
 import { EventsApi } from '@helpers/request'
@@ -25,7 +25,10 @@ const MenuConfig = (props) => {
     organizationId: '',
   })
 
-  const eventId = props.match.params.event
+  const params = useParams()
+  const match = useRouteMatch()
+
+  const eventId = params.event
 
   const eventOrganization = async (eventId) => {
     const currentEvent = await EventsApi.getOne(eventId)
@@ -34,7 +37,7 @@ const MenuConfig = (props) => {
   }
 
   useEffect(() => {
-    const { pathname } = props.location
+    const { pathname } = location
     const splitted = pathname.split('/')
     eventOrganization(splitted[2])
     props.collapseMenu()
@@ -97,7 +100,7 @@ const MenuConfig = (props) => {
         </Col>
         <Divider style={{ background: 'gray' }} />
       </Row>
-      {renderMenuItems(controller, props)}
+      {renderMenuItems(controller, { ...props, matchUrl: match.url })}
 
       <SubMenu
         key="sub9"
@@ -140,7 +143,7 @@ const renderMenuItems = (controller, props) => {
           >
             {item.items.map((subItem) => (
               <Menu.Item key={subItem.key}>
-                <NavLink to={props.match.url + subItem.path}>{subItem.name}</NavLink>
+                <NavLink to={props.matchUrl + subItem.path}>{subItem.name}</NavLink>
               </Menu.Item>
             ))}
           </SubMenu>
@@ -150,4 +153,4 @@ const renderMenuItems = (controller, props) => {
   )
 }
 
-export default connect(mapStateToProps)(withRouter(MenuConfig))
+export default connect(mapStateToProps)(MenuConfig)

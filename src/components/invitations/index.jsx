@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { Route, Switch, useLocation } from 'react-router-dom'
 import InvitedUsers from './eventUsersList'
 import CreateMessage from './send'
 import ImportUsers from '../import-users/importUser'
 import { EventsApi } from '@helpers/request'
 
-function ListaInvitados({ ...props }) {
-  const { eventId, event, parentUrl, location } = props
+function ListaInvitados(props) {
+  const { eventId, event, parentUrl } = props
+
+  const location = useLocation()
 
   useEffect(() => {
     if (parentUrl === `/eventadmin/${eventId}`) {
@@ -67,4 +69,4 @@ function ListaInvitados({ ...props }) {
   )
 }
 
-export default withRouter(ListaInvitados)
+export default ListaInvitados

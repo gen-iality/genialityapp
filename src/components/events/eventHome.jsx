@@ -1,7 +1,6 @@
 import { Row, Col } from 'antd'
 import EventLanding from './EventLanding'
 import { useEventContext } from '@context/eventContext'
-import { withRouter } from 'react-router-dom'
 import { useContext, useEffect } from 'react'
 import { CurrentEventUserContext } from '@context/eventUserContext'
 
@@ -36,4 +35,4 @@ const EventHome = () => {
   )
 }
 
-export default withRouter(EventHome)
+export default EventHome

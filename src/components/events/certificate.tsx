@@ -1,7 +1,6 @@
 import { useEffect, useState, createElement, useMemo, useRef } from 'react'
 import dayjs from 'dayjs'
 import { Row, Col, Card, Spin, Alert, Button, Modal, Typography } from 'antd'
-import { withRouter } from 'react-router-dom'
 import withContext from '@context/withContext'
 import {
   AgendaApi,
@@ -415,5 +414,4 @@ function Certificate(props: CertificateProps) {
   )
 }
 
-const Component = withContext((props: any) => <Certificate {...props} />)
-export default withRouter((props: any) => <Component {...props} />)
+export default withContext((props: any) => <Certificate {...props} />)

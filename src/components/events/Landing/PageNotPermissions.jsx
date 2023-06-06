@@ -7,7 +7,6 @@ import { useEventContext } from '@context/eventContext'
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions'
 import { Redirect } from 'react-router-dom'
 import { EventsApi } from '@helpers/request'
-import { withRouter } from 'react-router-dom'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import UserLoginContainer from '../UserLoginContainer'
 
@@ -120,7 +119,4 @@ const mapDispatchToProps = {
   setSectionPermissions,
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(withRouter(PageNotPermissions))
+export default connect(mapStateToProps, mapDispatchToProps)(PageNotPermissions)

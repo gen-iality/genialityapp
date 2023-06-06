@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import Agenda from './agenda'
 import AgendaTypeCat from './typecat'
 import AgendaTypeCatCE from './AgendaTypeCatCE'
@@ -7,7 +7,7 @@ import ActivityTypeProvider from '@context/activityType/activityTypeProvider'
 import AgendaEditPage from './AgendaEditPage'
 import AgendaCreatorPage from './AgendaCreatorPage'
 
-function AgendaRoutes({ ...props }) {
+function AgendaRoutes(props) {
   const { event, matchUrl } = props
 
   return (
@@ -66,4 +66,4 @@ function AgendaRoutes({ ...props }) {
   )
 }
 
-export default withRouter(AgendaRoutes)
+export default AgendaRoutes

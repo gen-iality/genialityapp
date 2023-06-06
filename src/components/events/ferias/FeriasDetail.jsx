@@ -4,14 +4,13 @@ import FeriasBanner from './feriaBanner.jsx'
 import Information from './information.jsx'
 import Product from './product'
 import Contact from './contact'
-import { withRouter } from 'react-router'
+import { useParams } from 'react-router'
 import { connect } from 'react-redux'
 import { setTopBanner } from '../../../redux/topBanner/actions'
 import { getEventCompany } from '../../empresas/services.js'
 import { useState } from 'react'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
 import Feedback from './feedback.jsx'
-import { useEventContext } from '@context/eventContext'
 import ReactPlayer from 'react-player'
 
 const { useBreakpoint } = Grid
@@ -23,10 +22,7 @@ const FeriasDetail = (props) => {
 
   const { Title } = Typography
 
-  const cEvent = useEventContext()
-
-  const colorTexto = cEvent.value.styles.textMenu
-  const colorFondo = cEvent.value.styles.toolbarDefaultBg
+  const params = useParams()
 
   useEffect(() => {
     props.setTopBanner(false)
@@ -39,9 +35,8 @@ const FeriasDetail = (props) => {
 
   useEffect(() => {
     window.scrollTo(0, 0)
-    const { match } = props
-    const eventId = match.params.event_id
-    const idCompany = match.params.id
+    const eventId = params.event_id
+    const idCompany = params.id
 
     obtenerEmpresa(eventId, idCompany).then((resp) => {
       setCompanyDetail(resp)
@@ -224,4 +219,4 @@ const mapDispatchToProps = {
   setVirtualConference,
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(FeriasDetail))
+export default connect(mapStateToProps, mapDispatchToProps)(FeriasDetail)

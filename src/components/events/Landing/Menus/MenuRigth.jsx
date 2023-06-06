@@ -4,7 +4,6 @@ import { CommentOutlined, TeamOutlined, ArrowLeftOutlined } from '@ant-design/ic
 import { stylesMenuItems } from '../helpers/csshelpers'
 import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
 import withContext from '@context/withContext'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { useEventContext } from '@context/eventContext'
@@ -12,7 +11,7 @@ import { recordTypeForThisEvent } from '../helpers/thisRouteCanBeDisplayed'
 
 const MenuRigth = (props) => {
   const cEvent = useEventContext()
-  const [typeEvent, settypeEvent] = useState()
+  const [typeEvent, setTypeEvent] = useState()
 
   const {
     HandleOpenCloseMenuRigth,
@@ -23,7 +22,7 @@ const MenuRigth = (props) => {
   } = useHelper()
 
   useEffect(() => {
-    settypeEvent(recordTypeForThisEvent(cEvent))
+    setTypeEvent(recordTypeForThisEvent(cEvent))
   }, [cEvent])
 
   return (
@@ -147,4 +146,4 @@ const MenuRigth = (props) => {
 }
 
 const MenuRigthWithContext = withContext(MenuRigth)
-export default connect(null, null)(withRouter(MenuRigthWithContext))
+export default connect(null, null)(MenuRigthWithContext)

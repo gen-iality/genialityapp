@@ -1,16 +1,16 @@
 import { Card, Result } from 'antd'
-import { withRouter } from 'react-router'
+import { useParams } from 'react-router'
 import PayForm from './payRegister'
 import { useIntl } from 'react-intl'
 
-const MessageRegister = (props) => {
+const MessageRegister = () => {
   const intl = useIntl()
+  const params = useParams()
+
   return (
     <>
-      {props.match.params.type == 'pay' && (
-        <PayForm eventId={props.match.params.event_id} />
-      )}
-      {props.match.params.type == 'free' && (
+      {params.type == 'pay' && <PayForm eventId={params.event_id} />}
+      {params.type == 'free' && (
         <Card>
           <Result
             status="success"
@@ -27,4 +27,4 @@ const MessageRegister = (props) => {
   )
 }
 
-export default withRouter(MessageRegister)
+export default MessageRegister

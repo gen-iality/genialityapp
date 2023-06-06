@@ -8,7 +8,6 @@ import {
 import { InitialsNameUser } from './index'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
 import { setViewPerfil } from '../../../redux/viewPerfil/actions'
 import {
   addNotification,
@@ -210,4 +209,4 @@ const mapDispatchToProps = {
   setUserAgenda,
 }
 
-export default connect(null, mapDispatchToProps)(withRouter(PopoverInfoUser))
+export default connect(null, mapDispatchToProps)(PopoverInfoUser)

@@ -1,4 +1,4 @@
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 
 import CrearEditarEmpresa from './crearEditarEmpresa'
 import Empresas from './empresas'
@@ -31,4 +31,4 @@ function EmpresasRoutes({ event, matchUrl }) {
   )
 }
 
-export default withRouter(EmpresasRoutes)
+export default EmpresasRoutes

@@ -1,5 +1,4 @@
-import { Route, Switch, useRouteMatch } from 'react-router-dom'
-import { withRouter } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 
 /** --------------------
  *  secciones del curso
@@ -9,17 +8,17 @@ import News from './news'
 import NewCE from './newCE'
 
 const NewsSectionRoutes = (props) => {
-  const { path } = useRouteMatch()
+  const { matchUrl } = props
 
   return (
     <Switch>
-      <Route exact path={`${path}/`}>
+      <Route exact path={`${matchUrl}/`}>
         <News {...props} />
       </Route>
-      <Route path={`${path}/new`}>
+      <Route path={`${matchUrl}/new`}>
         <NewCE {...props} />
       </Route>
     </Switch>
   )
 }
-export default withRouter(NewsSectionRoutes)
+export default NewsSectionRoutes

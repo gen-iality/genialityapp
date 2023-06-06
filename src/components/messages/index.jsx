@@ -1,10 +1,10 @@
 import { Fragment } from 'react'
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { Route, Switch, useRouteMatch } from 'react-router-dom'
 import InvitationDetail from './invitationDetail'
 import InvitationsList from './list'
 
 function Messages(props) {
-  const { match } = props
+  const match = useRouteMatch()
 
   return (
     <Fragment>
@@ -29,4 +29,4 @@ function Messages(props) {
   )
 }
 
-export default withRouter(Messages)
+export default Messages

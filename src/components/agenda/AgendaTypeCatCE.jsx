@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { withRouter, useHistory, useLocation } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { ChromePicker } from 'react-color'
 import { CategoriesAgendaApi, TypesAgendaApi } from '@helpers/request'
 import { handleRequestError } from '@helpers/utils'
@@ -173,4 +173,4 @@ const AgendaTypeCatCE = (props) => {
   )
 }
 
-export default withRouter(AgendaTypeCatCE)
+export default AgendaTypeCatCE

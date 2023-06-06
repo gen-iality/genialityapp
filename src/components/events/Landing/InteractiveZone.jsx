@@ -3,7 +3,8 @@ import { MenuUnfoldOutlined, MessageOutlined } from '@ant-design/icons'
 import SocialZone from '../../socialZone/socialZone'
 import MenuRigth from './Menus/MenuRigth'
 const { Sider } = Layout
-const InteractiveZone = () => {
+
+const InteractiveZone = (props) => {
   return (
     <>
       {/* aqui esta el boton del chat mobile */}
@@ -55,7 +56,7 @@ const InteractiveZone = () => {
         this.state.generalTabs?.privateChat) && (
         <Sider
           className="collapse-chatEvent"
-          style={{ backgroundColor: this.props.cEvent.styles?.toolbarMenuSocial }}
+          style={{ backgroundColor: props.cEvent.styles?.toolbarMenuSocial }}
           trigger={null}
           theme="light"
           collapsible
