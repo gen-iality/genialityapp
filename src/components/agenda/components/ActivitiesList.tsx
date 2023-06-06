@@ -17,6 +17,7 @@ import TakenActivityBadge from './TakenActivityBadge'
 import { useLocation } from 'react-router'
 import { DeleteActivitiesTakenButton } from './DeleteActivitiesTakenButton'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
+import ModuledActivityDisplayer from './ModuledActivityDisplayer'
 
 interface ActivitiesListProps {
   eventId: string
@@ -153,46 +154,6 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
   if (isLoading) return <Spin />
 
-  const ModuledActivityHOC: FunctionComponent<{
-    list: TruncatedAgenda[]
-    render: (nameToFilter: string) => any
-  }> = (props) => {
-    const moduleNames = useMemo(() => {
-      const uniqueNames = Array.from(
-        new Set(props.list.map((item) => item.module_name)),
-      ).filter((item) => item !== undefined) as string[]
-
-      const sorttedNames = uniqueNames
-        .map((name) => {
-          const data = props.list.find((item) => item.module_name == name)
-          if (!data) return { name, order: 0 }
-          return {
-            name,
-            order: data.module_order,
-          }
-        })
-        .sort((a, b) => (a.order || 0) - (b.order || 0))
-        .map((item) => item.name)
-      return sorttedNames
-    }, [props.list])
-
-    return (
-      <Collapse>
-        {moduleNames.map((name: string, index: number) => (
-          <Collapse.Panel
-            header={`Módulo: ${name}`}
-            key={index}
-            extra={`${
-              props.list.filter((item) => item.module_name === name).length
-            } elemento(s)`}
-          >
-            {props.render(name)}
-          </Collapse.Panel>
-        ))}
-      </Collapse>
-    )
-  }
-
   return (
     <>
       {currentEventUser.value?.rol.type === 'admin' ? (
@@ -204,8 +165,8 @@ const ActivitiesList = (props: ActivitiesListProps) => {
           />
         </>
       ) : undefined}
-      <ModuledActivityHOC
-        list={truncatedAgendaList || []}
+      <ModuledActivityDisplayer
+        list={truncatedAgendaList}
         render={(nameToFilter) => (
           <ListTheseActivities
             dataSource={truncatedAgendaList.filter(
