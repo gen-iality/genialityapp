@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { RolAttApi } from '@helpers/request'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { handleRequestError } from '@helpers/utils'
 import { Row, Col, Form, Input, Modal } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
@@ -16,7 +16,10 @@ const { confirm } = Modal
 
 const TipoAsistente = (props) => {
   const eventID = props.event._id
-  const locationState = props.location.state //si viene new o edit en el state, si es edit es un id
+
+  const location = useLocation()
+
+  const locationState = location.state //si viene new o edit en el state, si es edit es un id
   const history = useHistory()
   const [tipoAsistente, setTipoAsistente] = useState({ event_id: props.event._id })
 

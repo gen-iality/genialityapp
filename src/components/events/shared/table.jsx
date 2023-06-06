@@ -1,6 +1,6 @@
 import 'react-tabs/style/react-tabs.css'
 
-export default function EvenTable({ ...props }) {
+export default function EvenTable(props) {
   return (
     //<Table columns={columns} dataSource={data} size="middle" />
     <div className="ant-table-content">

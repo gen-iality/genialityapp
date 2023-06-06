@@ -1,4 +1,4 @@
-import { Route, Switch, useRouteMatch, withRouter } from 'react-router-dom'
+import { Route, Switch, useRouteMatch } from 'react-router-dom'
 /** --------------------
  *  secciones del curso
  * ---------------------*/
@@ -22,4 +22,4 @@ const FeriasSectionRoutes = () => {
     </Switch>
   )
 }
-export default withRouter(FeriasSectionRoutes)
+export default FeriasSectionRoutes

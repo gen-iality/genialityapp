@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { ToolsApi } from '@helpers/request'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { handleRequestError } from '@helpers/utils'
 import { Row, Col, Form, Input, Modal } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
@@ -16,7 +16,8 @@ const formLayout = {
 
 const Herramienta = (props) => {
   const eventID = props.event._id
-  const locationState = props.location.state //si viene new o edit en el state, si es edit es un id
+  const location = useLocation()
+  const locationState = location.state //si viene new o edit en el state, si es edit es un id
   const history = useHistory()
   const [herramienta, setHerramienta] = useState({})
 

@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import Faqs from './faqs'
 import Faq from './faq'
 
@@ -23,4 +23,4 @@ function FaqsRoutes(props) {
   )
 }
 
-export default withRouter(FaqsRoutes)
+export default FaqsRoutes

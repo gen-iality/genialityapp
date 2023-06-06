@@ -4,7 +4,6 @@ import { SmileOutlined } from '@ant-design/icons'
 import HeaderColumnswithContext from '../HeaderColumns'
 import WithEviusContext from '@context/withContext'
 import ImageComponentwithContext from '../ImageComponent'
-import { withRouter } from 'react-router-dom'
 import GcoreStreamingPlayer from '../GcoreStreamingPlayer'
 import AgendaContext from '@context/AgendaContext'
 import ReactPlayer from 'react-player'
@@ -111,4 +110,4 @@ const StreamingActivityDisplayer: FunctionComponent<IBasicActivityProps> = (prop
   )
 }
 
-export default withRouter(WithEviusContext(StreamingActivityDisplayer))
+export default WithEviusContext(StreamingActivityDisplayer)

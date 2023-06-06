@@ -1,5 +1,5 @@
-import { Fragment, useState, useEffect } from 'react'
-import { withRouter } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { MessageApi } from '@helpers/request'
 import MessageUser from './messageUser'
 import EmailPrev from './emailPreview'
@@ -10,7 +10,8 @@ const { TabPane } = Tabs
 
 const InvitationDetail = (props) => {
   const eventID = props.event._id
-  const locationState = props.location.state //si viene item
+  const location = useLocation()
+  const locationState = location.state //si viene item
   const [users, setUsers] = useState({})
 
   useEffect(() => {
@@ -26,7 +27,7 @@ const InvitationDetail = (props) => {
   }
 
   return (
-    <Fragment>
+    <>
       <Header title="Detalle de la comunicación" back />
 
       <Tabs defaultActiveKey="1">
@@ -53,8 +54,8 @@ const InvitationDetail = (props) => {
           </Row>
         </TabPane>
       </Tabs>
-    </Fragment>
+    </>
   )
 }
 
-export default withRouter(InvitationDetail)
+export default InvitationDetail

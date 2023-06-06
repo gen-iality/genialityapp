@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { withRouter } from 'react-router-dom'
 import dayjs from 'dayjs'
 import { AgendaApi } from '@helpers/request'
 import { RightOutlined } from '@ant-design/icons'
@@ -68,4 +67,4 @@ const ReportList = (props) => {
   )
 }
 
-export default withRouter(ReportList)
+export default ReportList

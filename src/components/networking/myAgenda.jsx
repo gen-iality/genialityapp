@@ -3,7 +3,6 @@ import {
   Button,
   Card,
   Col,
-  Modal,
   notification,
   Row,
   Spin,
@@ -13,7 +12,6 @@ import {
   Popconfirm,
   Divider,
 } from 'antd'
-import { withRouter } from 'react-router-dom'
 import dayjs from 'dayjs'
 import { find, map, mergeRight, path, propEq } from 'ramda'
 import { isNonEmptyArray } from 'ramda-adjunct'
@@ -359,4 +357,4 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
   )
 }
 
-export default withRouter(MyAgenda)
+export default MyAgenda
