@@ -3,12 +3,13 @@ import SurveyDetailPage from '../../surveys/SurveyDetailPage'
 import HeaderColumnswithContext from '../HeaderColumns'
 
 import WithEviusContext from '@context/withContext'
-import { withRouter } from 'react-router-dom'
+
 import { Spin } from 'antd'
 
 import { IBasicActivityProps } from './basicTypes'
 import { getActivityFirestoreData } from './getActivityFirestoreData'
 
+// TODO: fix props definition, for example: cEvent
 const SurveyActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
   const { activity } = props
 
@@ -46,4 +47,4 @@ const SurveyActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) 
   )
 }
 
-export default withRouter(WithEviusContext(SurveyActivityDisplayer))
+export default WithEviusContext(SurveyActivityDisplayer)

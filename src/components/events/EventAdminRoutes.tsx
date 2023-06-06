@@ -494,7 +494,13 @@ class EventAdminRoutes extends Component {
               <Protected
                 path={`${match.url}/news`}
                 event={event}
-                render={() => <NewsSectionRoutes eventId={event._id} event={event} />}
+                render={(routeProps) => (
+                  <NewsSectionRoutes
+                    eventId={event._id}
+                    event={event}
+                    matchUrl={routeProps.match.url}
+                  />
+                )}
               />
               <Protected
                 path={`${match.url}/product`}
@@ -528,7 +534,12 @@ class EventAdminRoutes extends Component {
               <Protected
                 path={`${match.url}/isolated`}
                 event={this.state.event}
-                render={() => <IsolatedRoutes event={this.state.event} />}
+                render={(routeProps) => (
+                  <IsolatedRoutes
+                    event={this.state.event}
+                    matchUrl={routeProps.match.url}
+                  />
+                )}
               />
               <Protected
                 path={`${match.url}/timetracking`}

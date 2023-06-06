@@ -1,7 +1,7 @@
 /** React's libraries */
 import { useEffect, useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { Link, withRouter } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 
 /** Redux imports */
 import { connect } from 'react-redux'
@@ -65,7 +65,10 @@ const UserStatusAndMenu = (props) => {
   const photo = props.photo
   const name = props.name
   const logout = props.logout
-  const organizationId = props.match.params.id
+
+  const params = useParams()
+  const location = useLocation()
+  const organizationId = params.id
 
   const [visible, setVisible] = useState(true)
   const [isSomeAdminUser, setIsSomeAdminUser] = useState(false)
@@ -100,7 +103,7 @@ const UserStatusAndMenu = (props) => {
 
   useEffect(() => {
     // Why do I have to do that bro
-    const path = props.match?.path || ''
+    const path = location.pathname
     if (path.startsWith('/organization') && path.endsWith('/events')) {
       setIsAtOrganizationLanding(true)
     } else {
@@ -118,11 +121,11 @@ const UserStatusAndMenu = (props) => {
     } else {
       setIsAtHome(true)
     }
-  }, [props.match])
+  }, [location.pathname])
 
   const menu = !props.anonimususer ? (
     <Menu>
-      {props.location.pathname.includes('landing') &&
+      {location.pathname.includes('landing') &&
         cEventUser.value &&
         cEventUser.status === 'LOADED' && (
           <Menu.ItemGroup
@@ -131,7 +134,7 @@ const UserStatusAndMenu = (props) => {
               defaultMessage: 'Curso',
             })}
           >
-            {props.location.pathname.includes('landing') &&
+            {location.pathname.includes('landing') &&
               cEventUser.value &&
               cEventUser.status === 'LOADED' && (
                 <Badge
@@ -416,4 +419,4 @@ const UserStatusAndMenuWithContext = withContext(UserStatusAndMenu)
 export default connect(
   null,
   mapDispatchToProps,
-)(WithLoading(withRouter(UserStatusAndMenuWithContext)))
+)(WithLoading(UserStatusAndMenuWithContext))

@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect, useState, useRef } from 'react'
 import { CertsApi, RolAttApi } from '@helpers/request'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { handleRequestError } from '@helpers/utils'
 import {
   Row,
@@ -26,7 +26,7 @@ import Header from '@antdComponents/Header'
 import BackTop from '@antdComponents/BackTop'
 import dayjs from 'dayjs'
 import { firestore } from '@helpers/firebase'
-import { withRouter } from 'react-router-dom'
+
 import { StateMessage } from '@context/MessageService'
 import { CertRow, Html2PdfCerts, Html2PdfCertsRef } from 'html2pdf-certs'
 import 'html2pdf-certs/dist/styles.css'
@@ -45,7 +45,8 @@ const formLayout = {
 const initContent: string = JSON.stringify(defaultCertRows)
 
 const CertificateEditor: FunctionComponent<any> = (props) => {
-  const locationState = props.location?.state || {} //si viene new o edit en el state, si es edit es un id
+  const location = useLocation()
+  const locationState = location?.state || {} //si viene new o edit en el state, si es edit es un id
   const history = useHistory()
   const [certificateData, setCertificateData] = useState<CertificateData>({
     content: initContent,
@@ -499,4 +500,4 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
   )
 }
 
-export default withRouter(CertificateEditor)
+export default CertificateEditor

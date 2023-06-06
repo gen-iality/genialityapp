@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Col, Row, Spin, Switch } from 'antd'
-import { withRouter } from 'react-router'
+import { useHistory } from 'react-router'
 import ReactQuill from 'react-quill'
 import { toolbarEditor } from '@helpers/constants'
 import { firestore } from '@helpers/firebase'
@@ -12,6 +12,8 @@ const Configuration = (props) => {
   const [messageF, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [loadingData, setLoadingData] = useState(true)
+
+  const history = useHistory()
 
   useEffect(() => {
     if (props.eventId) {
@@ -28,7 +30,7 @@ const Configuration = (props) => {
     }
   }, [])
 
-  const goBack = () => props.history.goBack()
+  const goBack = () => history.goBack()
   function onChange(checked) {
     setCheckSubasta(checked)
   }
@@ -84,4 +86,4 @@ const Configuration = (props) => {
   )
 }
 
-export default withRouter(Configuration)
+export default Configuration

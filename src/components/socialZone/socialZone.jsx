@@ -1,4 +1,3 @@
-import { withRouter } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { Tabs, Row, Badge, Button, Space } from 'antd'
 import { SearchOutlined, CloseOutlined } from '@ant-design/icons'
@@ -304,4 +303,4 @@ const mapDispatchToProps = {
   setCurrentSurvey,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SocialZone))
+export default connect(mapStateToProps, mapDispatchToProps)(SocialZone)

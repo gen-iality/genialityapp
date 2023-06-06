@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
 import withContext from '@context/withContext'
-import { withRouter } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useState } from 'react'
 import { NewsFeed } from '@helpers/request'
 import { Card, Row, Spin, Col, Space, Badge, Typography, Button, Image } from 'antd'
@@ -15,7 +15,7 @@ const imgNotFound =
 const { Paragraph } = Typography
 
 const NoticiasList = (props) => {
-  const { setVirtualConference, match, size, newId } = props
+  const { setVirtualConference, size, newId } = props
   const [eventId] = useState(props.cEvent.value._id)
   const [loading, setLoading] = useState(true)
   const [noticias, setNoticias] = useState()
@@ -217,8 +217,5 @@ const NoticiasList = (props) => {
 const mapDispatchToProps = {
   setVirtualConference,
 }
-const NoticiasConnect = connect(
-  null,
-  mapDispatchToProps,
-)(withContext(withRouter(NoticiasList)))
+const NoticiasConnect = connect(null, mapDispatchToProps)(withContext(NoticiasList))
 export default NoticiasConnect

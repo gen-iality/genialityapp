@@ -12,7 +12,7 @@ import { SurveysApi } from '@helpers/request'
 /** Contexts */
 import { useCurrentUser } from '@context/userContext'
 import { useSurveyContext } from './surveyContext'
-import WithEviusContext from '@context/withContextV2'
+import WithEviusContext from '@context/withContext'
 
 /** Components */
 import SurveyComponent from './SurveyComponent'

@@ -1,4 +1,3 @@
-import { withRouter } from 'react-router-dom'
 import { MessageApi } from '@helpers/request'
 import { Button, Row, Col, Space, Typography } from 'antd'
 import {
@@ -108,4 +107,4 @@ function InvitationsList(props) {
   )
 }
 
-export default withRouter(InvitationsList)
+export default InvitationsList

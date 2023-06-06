@@ -1,4 +1,3 @@
-import { withRouter } from 'react-router-dom'
 import dayjs from 'dayjs'
 import momentLocalizer from 'react-widgets-moment'
 import { useRequest } from '../../services/useRequest'
@@ -147,4 +146,4 @@ const Home = () => {
   )
 }
 
-export default withRouter(Home)
+export default Home

@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Redirect, Route, Switch, useRouteMatch, withRouter } from 'react-router-dom'
+import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
 import { setSpaceNetworking } from '../../../redux/networking/actions'
@@ -63,6 +63,8 @@ const EventSectionRoutes = (props) => {
   const cEventUser = useUserEvent()
   const cUser = useCurrentUser()
 
+  const location = useLocation()
+
   const obtenerFirstSection = () => {
     if (props.cEvent.value == null) return
     const firstroute = Object.keys(props.cEvent.value.itemsMenu).filter(
@@ -102,7 +104,7 @@ const EventSectionRoutes = (props) => {
 
     if (props.cEvent.value && props.currentActivity) {
       if (
-        props.location.pathname !==
+        location.pathname !==
         `/landing/${props.cEvent.value._id}/activity/${props.currentActivity._id}`
       ) {
         initBroadcastViewers(
@@ -114,13 +116,13 @@ const EventSectionRoutes = (props) => {
         )
       }
     }
-  }, [props.location.pathname])
+  }, [location.pathname])
 
   useEffect(() => {
     //presencia de usuario en la
     if (props.cEvent.value && props.currentActivity) {
       if (
-        props.location.pathname ===
+        location.pathname ===
         `/landing/${props.cEvent.value._id}/activity/${props.currentActivity._id}`
       ) {
         if (props.currentActivity.type) {
@@ -151,7 +153,7 @@ const EventSectionRoutes = (props) => {
     //presencia de usuario en la
     if (props.cEvent.value && props.currentActivity) {
       if (
-        props.location.pathname ===
+        location.pathname ===
         `/landing/${props.cEvent.value._id}/activity/${props.currentActivity._id}`
       ) {
         if (props.currentActivity.type) {
@@ -371,5 +373,5 @@ const mapDispatchToProps = {
   setSectionPermissions,
 }
 
-const eventSectionsContext = withRouter(withContext(EventSectionRoutes))
+const eventSectionsContext = withContext(EventSectionRoutes)
 export default connect(mapStateToProps, mapDispatchToProps)(eventSectionsContext)
