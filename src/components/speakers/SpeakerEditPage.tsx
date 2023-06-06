@@ -70,7 +70,7 @@ const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
     categories: true,
   })
   const [event, setEvent] = useState<any>()
-  const [areacodeselected, setareacodeselected] = useState(57)
+  const [areacodeselected, setAreacodeselected] = useState(57)
   const [editDataIsLoading, setEditDataIsLoading] = useState(true)
 
   const { state } = useLocation<any>()
@@ -226,7 +226,7 @@ const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
       style={{ fontSize: '12px', width: 150 }}
       value={areacodeselected}
       onChange={(val) => {
-        setareacodeselected(val)
+        setAreacodeselected(val)
         console.log(val)
       }}
       placeholder="Codigo de area del pais"

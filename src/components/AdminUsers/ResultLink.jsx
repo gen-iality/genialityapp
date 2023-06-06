@@ -8,7 +8,7 @@ const { useBreakpoint } = Grid
 
 const ResultLink = ({ status, data, event, verifyLink }) => {
   const screens = useBreakpoint()
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const intl = useIntl()
   // statust -> loading || error
   status = status ? status : 'loading'
@@ -98,7 +98,7 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
                     }}
                     size="large"
                     type="text"
-                    disabled={loading}
+                    disabled={isLoading}
                     key="goToEvius"
                   >
                     {intl.formatMessage({
@@ -108,18 +108,18 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
                   </Button>,
                   <Button
                     onClick={async () => {
-                      setLoading(true)
+                      setIsLoading(true)
                       const conectionRef = firestore.collection(`connections`)
                       const docRef = await conectionRef.where('email', '==', data).get()
                       if (docRef.docs.length > 0) {
                         await conectionRef.doc(docRef.docs[0].id).delete()
-                        setLoading(false)
+                        setIsLoading(false)
                         window.location.href = window.location.href
                       }
-                      setLoading(false)
+                      setIsLoading(false)
                     }}
                     size="large"
-                    loading={loading}
+                    loading={isLoading}
                     type="primary"
                     key="goToEvius"
                   >

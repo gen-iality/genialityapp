@@ -17,11 +17,11 @@ const RegistrationResult = ({
   dataEventUser,
   requireAutomaticLoguin,
 }) => {
-  const [fraseLoading, setfraseLoading] = useState('')
+  const [fraseLoading, setFraseLoading] = useState('')
 
   useEffect(() => {
     const random = Math.floor(Math.random() * FrasesInspiradoras.length)
-    setfraseLoading(FrasesInspiradoras[random])
+    setFraseLoading(FrasesInspiradoras[random])
   }, [])
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const RegistrationResult = ({
       try {
         if (validationGeneral.isLoading) {
           const ramdon = Math.floor(Math.random() * FrasesInspiradoras.length)
-          setfraseLoading(FrasesInspiradoras[ramdon])
+          setFraseLoading(FrasesInspiradoras[ramdon])
           console.log('FrasesInspiradoras[ramdon]', FrasesInspiradoras[ramdon])
         }
       } catch (err) {

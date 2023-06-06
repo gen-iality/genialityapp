@@ -33,10 +33,10 @@ function formatAMPM(hours, minutes) {
 
 const ChatExport = ({ eventId, event }) => {
   // eslint-disable-next-line prefer-const
-  let [datamsjevent, setdatamsjevent] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [datamsjevent, setDatamsjevent] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
   const [columnsData, setColumnsData] = useState({})
-  const [listUsersBlocked, setlistUsersBlocked] = useState([])
+  const [listUsersBlocked, setListUsersBlocked] = useState([])
   const cEvent = useEventContext()
   const { eventIsActive } = useHelper()
 
@@ -111,10 +111,10 @@ const ChatExport = ({ eventId, event }) => {
   const exportFile = async (e) => {
     e.preventDefault()
     e.stopPropagation()
-    datamsjevent = datamsjevent.filter(
+    const filteredDatamsjevent = datamsjevent.filter(
       (item) => item.text.toLowerCase().indexOf('spam') === -1,
     )
-    const ws = utils.json_to_sheet(datamsjevent)
+    const ws = utils.json_to_sheet(filteredDatamsjevent)
     const wb = utils.book_new()
     utils.book_append_sheet(wb, ws, 'Chat')
     writeFileXLSX(wb, `chatCURSO ${event.name}.xls`)
@@ -145,8 +145,8 @@ const ChatExport = ({ eventId, event }) => {
           }
           datamessagesthisevent.push(msjnew)
         })
-        setdatamsjevent(datamessagesthisevent)
-        setLoading(false)
+        setDatamsjevent(datamessagesthisevent)
+        setIsLoading(false)
       })
       .catch()
   }
@@ -155,7 +155,7 @@ const ChatExport = ({ eventId, event }) => {
     const list = []
     const path = cEvent.value._id + '_event_attendees/'
 
-    setLoading(true)
+    setIsLoading(true)
     firestore
       .collection(path)
       .where('blocked', '==', true)
@@ -170,8 +170,8 @@ const ChatExport = ({ eventId, event }) => {
           }
           list.push(newUser)
         })
-        setlistUsersBlocked(list)
-        setLoading(false)
+        setListUsersBlocked(list)
+        setIsLoading(false)
       }).catch
   }
 
@@ -191,12 +191,12 @@ const ChatExport = ({ eventId, event }) => {
       onOk() {
         const onHandlerRemove = async () => {
           try {
-            setLoading(true)
+            setIsLoading(true)
             datamsjevent.forEach(async (item) => {
               await deleteSingleChat(eventId, item.chatId)
             })
-            setdatamsjevent([])
-            setLoading(false)
+            setDatamsjevent([])
+            setIsLoading(false)
             StateMessage.destroy('loading')
             StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
           } catch (e) {
@@ -240,10 +240,10 @@ const ChatExport = ({ eventId, event }) => {
       onOk() {
         const onHandlerRemove = async () => {
           try {
-            setLoading(true)
+            setIsLoading(true)
             await deleteSingleChat(eventId, id)
             getChat()
-            setLoading(false)
+            setIsLoading(false)
             StateMessage.destroy('loading')
             StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
           } catch (e) {
@@ -293,7 +293,7 @@ const ChatExport = ({ eventId, event }) => {
         onOk() {
           const onHandlerBlock = async () => {
             try {
-              setLoading(true)
+              setIsLoading(true)
               //Código de bloqueo
               await firestore
                 .doc(path)
@@ -310,7 +310,7 @@ const ChatExport = ({ eventId, event }) => {
                 })
               getChat()
               getBlocketdUsers()
-              setLoading(false)
+              setIsLoading(false)
             } catch (e) {
               StateMessage.destroy('loading')
               StateMessage.show(null, 'error', handleRequestError(e).message)
@@ -328,7 +328,7 @@ const ChatExport = ({ eventId, event }) => {
         <Table
           header={columns}
           list={datamsjevent}
-          loading={loading}
+          loading={isLoading}
           actions
           remove={remove}
           extraFn={blockUser}
@@ -380,7 +380,7 @@ const ChatExport = ({ eventId, event }) => {
         <Table
           header={columnsUserBlocked}
           list={listUsersBlocked}
-          loading={loading}
+          loading={isLoading}
           actions
           extraFn={blockUser}
           extraFnTitle="Desbloquear usuario"

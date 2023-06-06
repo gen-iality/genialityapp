@@ -63,8 +63,8 @@ const Headers = (props) => {
   const { helperDispatch } = cHelper
 
   const [headerIsLoading, setHeaderIsLoading] = useState(true)
-  const [dataGeneral, setdataGeneral] = useState(initialDataGeneral)
-  const [showButtons, setshowButtons] = useState({
+  const [dataGeneral, setDataGeneral] = useState(initialDataGeneral)
+  const [showButtons, setShowButtons] = useState({
     buttonregister: true,
     buttonlogin: true,
   })
@@ -73,7 +73,7 @@ const Headers = (props) => {
   const history = useHistory()
   const intl = useIntl()
   const openMenu = () => {
-    setdataGeneral({
+    setDataGeneral({
       ...dataGeneral,
       menuOpen: !dataGeneral.menuOpen,
       filterOpen: false,
@@ -81,7 +81,7 @@ const Headers = (props) => {
   }
 
   const handleMenuEvent = () => {
-    setdataGeneral({
+    setDataGeneral({
       ...dataGeneral,
       showEventMenu: !dataGeneral.showEventMenu,
     })
@@ -89,21 +89,21 @@ const Headers = (props) => {
   }
 
   const showDrawer = () => {
-    setdataGeneral({ ...dataGeneral, showEventMenu: true })
+    setDataGeneral({ ...dataGeneral, showEventMenu: true })
   }
 
   const onClose = () => {
-    setdataGeneral({ ...dataGeneral, showEventMenu: false })
+    setDataGeneral({ ...dataGeneral, showEventMenu: false })
   }
 
   async function LoadCurrentUser() {
     const { value, status } = cUser
 
     if (!value && status === 'LOADED')
-      return setHeaderIsLoading(false), setdataGeneral(initialDataGeneral)
+      return setHeaderIsLoading(false), setDataGeneral(initialDataGeneral)
     if (!value) return
 
-    setdataGeneral({
+    setDataGeneral({
       name: value?.names || value?.name,
       userEvent: { ...value, properties: { names: value.names || value.name } },
       photo: value?.picture
@@ -177,28 +177,28 @@ const Headers = (props) => {
       const typeEvent = recordTypeForThisEvent(cEvent)
       switch (typeEvent) {
         case 'PRIVATE_EVENT':
-          setshowButtons({
+          setShowButtons({
             buttonregister: false,
             buttonlogin: true,
           })
           break
 
         case 'PUBLIC_EVENT_WITH_REGISTRATION':
-          setshowButtons({
+          setShowButtons({
             buttonregister: true,
             buttonlogin: true,
           })
           break
 
         case 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS':
-          setshowButtons({
+          setShowButtons({
             buttonregister: true,
             buttonlogin: true,
           })
           break
 
         default:
-          setshowButtons({
+          setShowButtons({
             buttonregister: true,
             buttonlogin: true,
           })

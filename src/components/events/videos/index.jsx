@@ -3,19 +3,19 @@ import { useEventContext } from '@context/eventContext'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { useState, useEffect } from 'react'
 import VideoCard from '../../shared/videoCard'
-import Feedback from '../ferias/feedback'
+import Feedback from '../ferias/Feedback'
 
 const Videos = () => {
   const cEvent = useEventContext()
   const { activitiesEvent } = useHelper()
-  const [existActivity, setexistActivity] = useState(0)
+  const [existActivity, setExistActivity] = useState(0)
 
   function ExistvideoInActivity() {
     activitiesEvent &&
       activitiesEvent.map((activity) => {
         if (activity.video != undefined || activity.video != null) {
           {
-            setexistActivity(1)
+            setExistActivity(1)
           }
         }
       })

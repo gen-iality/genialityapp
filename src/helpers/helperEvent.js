@@ -151,14 +151,14 @@ export const zoomExternoHandleOpen = (activity, eventUser, isMobile) => {
 
 //obtener las generaltabs del curso
 
-export const GetGeneralTabsByEvent = (event_id, setgeneraltabs) => {
+export const GetGeneralTabsByEvent = (event_id, setGeneralTabs) => {
   firestore
     .collection('events')
     .doc(event_id)
     .onSnapshot(function (eventSnapshot) {
       if (eventSnapshot.exists) {
         if (eventSnapshot.data().tabs !== undefined) {
-          setgeneraltabs(eventSnapshot.data().tabs)
+          setGeneralTabs(eventSnapshot.data().tabs)
         }
       }
     })

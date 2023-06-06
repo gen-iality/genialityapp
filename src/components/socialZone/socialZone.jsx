@@ -45,12 +45,12 @@ const SocialZone = (props) => {
   } = useHelper()
   const [setCurrentUser] = useState(null)
   const [busqueda, setBusqueda] = useState(null)
-  const [strAttende, setstrAttende] = useState()
+  const [stringAttende, setStringAttende] = useState()
   const [isFiltered, setIsFiltered] = useState(false)
   const busquedaRef = useRef()
   const history = useHistory()
-  const [typeEvent, settypeEvent] = useState()
-  const [countAttendeesOnline, SetCountAttendeesOnline] = useState(0)
+  const [typeEvent, setTypeEvent] = useState()
+  const [countAttendeesOnline, setCountAttendeesOnline] = useState(0)
 
   const handleChange = async (e) => {
     const { value } = e.target
@@ -59,11 +59,11 @@ const SocialZone = (props) => {
 
   const searhAttende = () => {
     if (!isFiltered && (busqueda != undefined || busqueda != '')) {
-      setstrAttende(busqueda)
+      setStringAttende(busqueda)
       setIsFiltered(true)
     } else {
       setIsFiltered(false)
-      setstrAttende('')
+      setStringAttende('')
       setBusqueda(null)
       busquedaRef.current.value = ''
     }
@@ -82,7 +82,7 @@ const SocialZone = (props) => {
 
   useEffect(() => {
     const eventype = recordTypeForThisEvent(cEvent)
-    settypeEvent(eventype)
+    setTypeEvent(eventype)
   }, [cEvent])
 
   return (
@@ -168,8 +168,8 @@ const SocialZone = (props) => {
                         perfil={props.perfil}
                         section={props.section}
                         containNetWorking={props.containNetWorking}
-                        busqueda={strAttende}
-                        SetCountAttendeesOnline={SetCountAttendeesOnline}
+                        busqueda={stringAttende}
+                        SetCountAttendeesOnline={setCountAttendeesOnline}
                       />
                     )}
                   </div>

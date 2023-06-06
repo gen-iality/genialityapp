@@ -5,13 +5,13 @@ import { drawerButton } from '../helpers/csshelpers'
 import { useEventContext } from '@context/eventContext'
 import MenuEvent from './MenuEvent'
 const MenuTablets = () => {
-  const [isOpen, setisOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const cEvent = useEventContext()
 
   return (
     <>
       <div className="hiddenMenuMobile_Landing">
-        <Button onClick={() => setisOpen(!isOpen)} block style={drawerButton}>
+        <Button onClick={() => setIsOpen(!isOpen)} block style={drawerButton}>
           <MenuOutlined style={{ fontSize: '15px' }} />
           <div>Menu</div>
         </Button>
@@ -23,7 +23,7 @@ const MenuTablets = () => {
         title={cEvent.value.name}
         placement="left"
         closable={false}
-        onClose={() => setisOpen(!isOpen)}
+        onClose={() => setIsOpen(!isOpen)}
         visible={isOpen}
         maskClosable
         bodyStyle={{

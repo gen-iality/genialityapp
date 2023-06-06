@@ -38,7 +38,7 @@ const Stands = (props) => {
   const [nameStand, setNameStand] = useState(null)
   const [documentEmpresa, setDocumentEmpresa] = useState(null)
   const [visualization, setVisualization] = useState('list')
-  const [config, setconfig] = useState(null)
+  const [config, setConfig] = useState(null)
   const [colorStand, setColorStand] = useState('#2C2A29')
   const [viewModalColor, setViewModalColor] = useState(false)
   const [noValid, setNoValid] = useState(false)
@@ -133,7 +133,7 @@ const Stands = (props) => {
       .collection('event_companies')
       .doc(props.event._id)
       .get()
-    setconfig(config.data())
+    setConfig(config.data())
     if (config.data().config) {
       setVisualization(config.data().config.visualization)
     }

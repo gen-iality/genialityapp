@@ -182,19 +182,19 @@ const FormRegister = ({
   const [form] = Form.useForm()
 
   // Estado de carga para obtener los datos de pais, región y ciudad del formulario
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   // Estados del evento - ¿Será necesario este estado? - ¿const cEvent = useEventContext()?
   const [event, setEvent] = useState(null)
 
   // Estado de los datos iniciales del usuario. ¿Se usará solo para el Modal?
-  const [initialValues, setinitialValues] = useState({})
+  const [initialValues, setInitialValues] = useState({})
 
   // Estados de campos dinámicos
   const [extraFields, setExtraFields] = useState(
     cEvent.value?.user_properties || [] || fields,
   )
-  const [extraFieldsOriginal, setextraFieldsOriginal] = useState(
+  const [extraFieldsOriginal, setExtraFieldsOriginal] = useState(
     organization ? fields : cEvent.value?.user_properties || {},
   )
 
@@ -223,14 +223,14 @@ const FormRegister = ({
 
   const buttonSubmit = useRef(null)
   const getCountries = async () => {
-    setLoading(true)
+    setIsLoading(true)
     try {
       const response = await countryApi.getCountries()
       setCountries(response)
     } catch (error) {
       setCountries([])
     }
-    setLoading(false)
+    setIsLoading(false)
   }
 
   const getIso2ByName = (name) => {
@@ -257,7 +257,7 @@ const FormRegister = ({
   }
 
   const getState = async (country) => {
-    setLoading(true)
+    setIsLoading(true)
     try {
       const response = await countryApi.getStatesByCountry(country)
       setRegiones(response)
@@ -269,11 +269,11 @@ const FormRegister = ({
     } catch (error) {
       setRegiones([])
     }
-    setLoading(false)
+    setIsLoading(false)
   }
 
   const getCities = async (country, state) => {
-    setLoading(true)
+    setIsLoading(true)
     try {
       const response = await countryApi.getCities(country, state)
       setCities(response)
@@ -285,11 +285,11 @@ const FormRegister = ({
     } catch (error) {
       setCities([])
     }
-    setLoading(false)
+    setIsLoading(false)
   }
 
   const getCitiesByCountry = async (country) => {
-    setLoading(true)
+    setIsLoading(true)
     try {
       const response = await countryApi.getCitiesByCountry(country)
 
@@ -297,7 +297,7 @@ const FormRegister = ({
     } catch (error) {
       setCities([])
     }
-    setLoading(false)
+    setIsLoading(false)
   }
 
   useEffect(() => {
@@ -320,7 +320,7 @@ const FormRegister = ({
       }
     }
     console.log('initialValues2', initialValuesGeneral, cUser, cEventUser)
-    setinitialValues(
+    setInitialValues(
       organization
         ? {
             ...initialOtherValue?.properties,
@@ -760,8 +760,8 @@ const FormRegister = ({
                     inputName: name,
                   })
                 }}
-                disabled={loading || countries.length === 0}
-                loading={loading}
+                disabled={isLoading || countries.length === 0}
+                loading={isLoading}
                 placeholder="Seleccione un país"
               >
                 {countries.map((country) => (
@@ -791,8 +791,8 @@ const FormRegister = ({
                     inputName: name,
                   })
                 }}
-                disabled={loading || regiones.length === 0}
-                loading={loading}
+                disabled={isLoading || regiones.length === 0}
+                loading={isLoading}
                 placeholder="Seleccione un región"
               >
                 {regiones.map((regiones) => (
@@ -812,8 +812,8 @@ const FormRegister = ({
                 showSearch
                 optionFilterProp="children"
                 style={{ width: '100%' }}
-                disabled={loading || cities.length === 0}
-                loading={loading}
+                disabled={isLoading || cities.length === 0}
+                loading={isLoading}
                 onChange={(nameCity, aditionalData) => {
                   setCity({
                     name: nameCity,

@@ -72,7 +72,7 @@ const ModalWithLessonsInfo_ = ({
 }) => {
   const [loaded, setLoaded] = useState(false)
   const [activities, setActivities] = useState([])
-  const [shouldUpdate, setshouldUpdate] = useState(0)
+  const [shouldUpdate, setShouldUpdate] = useState(0)
 
   useEffect(async () => {
     if (!currentUser) return
@@ -111,7 +111,7 @@ const ModalWithLessonsInfo_ = ({
                 <Checkbox
                   onChange={async () => {
                     await checkinAttendeeInActivity(currentUser, item._id)
-                    setshouldUpdate((value) => value + 1)
+                    setShouldUpdate((value) => value + 1)
                   }}
                 />
               )}{' '}
@@ -175,7 +175,7 @@ const ColumnProgreso = ({
   ...props
 }) => {
   const [attendee, setAttendee] = useState([])
-  const [shouldUpdate, setshouldUpdate] = useState(0)
+  const [shouldUpdate, setShouldUpdate] = useState(0)
   useEffect(async () => {
     // Get all existent activities, after will filter it
     const existentActivities = await allActivities.map(async (activity) => {
@@ -203,7 +203,7 @@ const ColumnProgreso = ({
         onClick={() => {
           updateAttendee(attendee)
           updateCurrentUser(item)
-          setshouldUpdate((previus) => previus + 1)
+          setShouldUpdate((previus) => previus + 1)
           onOpen()
         }}
       >

@@ -30,7 +30,7 @@ const ModalAuthAnonymous = (props: any) => {
     useHelper()
   const cEvent = useEventContext()
   const cUser = useCurrentUser()
-  const [modalVisible, setmodalVisible] = useState(false)
+  const [modalVisible, setModalVisible] = useState(false)
 
   const isVisibleRegister = () => {
     const typeEvent = recordTypeForThisEvent(cEvent)
@@ -52,26 +52,26 @@ const ModalAuthAnonymous = (props: any) => {
       const typeEvent = recordTypeForThisEvent(cEvent)
       switch (typeEvent) {
         case 'PRIVATE_EVENT':
-          setmodalVisible(false)
+          setModalVisible(false)
           helperDispatch({ type: 'showLogin', visible: true })
           break
 
         case 'PUBLIC_EVENT_WITH_REGISTRATION':
-          setmodalVisible(false)
+          setModalVisible(false)
           helperDispatch({ type: 'showRegister', visible: true })
           break
         case 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS':
-          setmodalVisible(true)
+          setModalVisible(true)
           helperDispatch({ type: 'showRegister', visible: true })
           break
 
         case 'UN_REGISTERED_PUBLIC_EVENT':
-          setmodalVisible(false)
+          setModalVisible(false)
           helperDispatch({ type: 'showLogin', visible: false })
           break
 
         default:
-          setmodalVisible(false)
+          setModalVisible(false)
           break
       }
     }
@@ -79,7 +79,7 @@ const ModalAuthAnonymous = (props: any) => {
     async function isUserAuth() {
       unsubscribe = app.auth().onAuthStateChanged((user) => {
         if (user) {
-          setmodalVisible(false)
+          setModalVisible(false)
 
           helperDispatch({ type: 'showLogin', visible: false })
         } else {

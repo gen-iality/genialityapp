@@ -112,7 +112,7 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
   const [correctAnswerIndex, setCorrectAnswerIndex] = useState<number[]>([])
   const [questionType, setQuestionType] = useState<string | undefined>()
   const [defaultImgValue, setDefaultImgValue] = useState<any[] | undefined>()
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   /** se almacenan las dimenciones de la imagen para mostarlas en el error */
   const [dimensions, setDimensions] = useState({
     width: 0,
@@ -219,7 +219,7 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
   }
 
   useEffect(() => {
-    setLoading(true)
+    setIsLoading(true)
     const state = gradableSurvey === 'true' ? true : false
     console.log('valuesQuestion', valuesQuestion)
 
@@ -271,7 +271,7 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
     }
 
     setTimeout(() => {
-      setLoading(false)
+      setIsLoading(false)
     }, 500)
   }, [form, valuesQuestion])
 
@@ -462,7 +462,7 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
   if (Object.entries(defaultValues).length !== 0) {
     return (
       <>
-        {loading ? (
+        {isLoading ? (
           <Spin />
         ) : (
           <Form

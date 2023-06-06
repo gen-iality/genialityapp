@@ -6,12 +6,12 @@ import { Result } from 'antd'
 const ImageComponent = (props) => {
   const { willStartSoon } = props
   const { currentActivity } = useHelper()
-  const [activityState, setactivityState] = useState('')
+  const [activityState, setActivityState] = useState('')
 
   useEffect(() => {
-    setactivityState(currentActivity?.habilitar_ingreso)
+    setActivityState(currentActivity?.habilitar_ingreso)
     return () => {
-      setactivityState('')
+      setActivityState('')
     }
   }, [currentActivity])
 

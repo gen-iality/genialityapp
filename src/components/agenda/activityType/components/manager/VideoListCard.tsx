@@ -37,7 +37,7 @@ const VideoListCard = (props: any) => {
   const { activityEdit } = useContext(AgendaContext)
   const cEvent = useContext(CurrentEventContext)
   const [selectVideo, setSelectVideo] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [keyVideo, setKeyVideo] = useState<string | null>(null)
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const VideoListCard = (props: any) => {
 
   const asignarVideo = async (url: string) => {
     setKeyVideo(url)
-    setLoading(true)
+    setIsLoading(true)
     try {
       if (activityEdit && cEvent?.value?._id && url) {
         const urlVideo = url === selectVideo ? null : url
@@ -78,7 +78,7 @@ const VideoListCard = (props: any) => {
     } catch (e) {
       message.error('Error al asignar el video')
     }
-    setLoading(false)
+    setIsLoading(false)
     setKeyVideo(null)
   }
   return (
@@ -104,7 +104,7 @@ const VideoListCard = (props: any) => {
                         <Button
                           size="large"
                           icon={
-                            !loading && item.hls_url == selectVideo ? (
+                            !isLoading && item.hls_url == selectVideo ? (
                               <CheckSquareOutlined style={{ color: '#52C41A' }} />
                             ) : keyVideo !== item.hls_url ? (
                               <BorderOutlined />
