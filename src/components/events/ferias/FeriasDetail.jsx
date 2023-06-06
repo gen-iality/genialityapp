@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Tabs, Row, Col, Image, Typography, Space, Grid } from 'antd'
-import FeriasBanner from './feriaBanner.jsx'
-import Information from './information.jsx'
+import FeriaBanner from './FeriaBanner'
+import Information from './information'
 import Product from './product'
 import Contact from './contact'
 import { useParams } from 'react-router'
@@ -10,7 +10,7 @@ import { setTopBanner } from '../../../redux/topBanner/actions'
 import { getEventCompany } from '../../empresas/services.js'
 import { useState } from 'react'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
-import Feedback from './feedback.jsx'
+import Feedback from './Feedback'
 import ReactPlayer from 'react-player'
 
 const { useBreakpoint } = Grid
@@ -53,7 +53,7 @@ const FeriasDetail = (props) => {
   return (
     <div className="feriasdetail">
       <div style={{ position: 'relative' }}>
-        <FeriasBanner imagen={companyDetail?.stand_image} />
+        <FeriaBanner image={companyDetail?.stand_image} />
         <div className="container-information">
           <Information
             companyDetail={companyDetail}

@@ -3,7 +3,7 @@ import { useEventContext } from '@context/eventContext'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { useState, useEffect } from 'react'
 import VideoCard from '../../shared/videoCard'
-import Feedback from '../ferias/feedback'
+import Feedback from '../ferias/Feedback'
 
 const Videos = () => {
   const cEvent = useEventContext()

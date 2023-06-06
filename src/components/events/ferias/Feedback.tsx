@@ -1,6 +1,13 @@
 import { MehOutlined } from '@ant-design/icons'
 import { Result } from 'antd'
-const feedback = (props) => {
+import { FunctionComponent } from 'react'
+
+interface IFeedbackProps {
+  image: any
+  message?: string
+}
+
+const Feedback: FunctionComponent<IFeedbackProps> = (props) => {
   const image = props.image || <MehOutlined />
   const message = props.message || 'No hay datos'
 
@@ -11,4 +18,4 @@ const feedback = (props) => {
   )
 }
 
-export default feedback
+export default Feedback
