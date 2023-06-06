@@ -146,6 +146,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   }, [multiDates]);
 
   useEffect(() => {
+    if (!multiDates) return;
     const existDate = multiDates.find((dateRange) => {
       const exist = moment(dateRange.start).format('YYYY-M-DD') === moment(formdata.date).format('YYYY-M-DD');
       return exist;
@@ -155,7 +156,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     } else {
       sethaveDateNotIncluded(false);
     }
-  }, [formdata.date]);
+  }, [formdata.date, multiDates]);
 
   /**
    * Custom hooks
