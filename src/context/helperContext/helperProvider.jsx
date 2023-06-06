@@ -39,7 +39,7 @@ export const HelperContextProvider = ({ children }) => {
   const [totalsolicitudes, setTotalsolicitudes] = useState(0)
   const [propertiesProfile, setpropertiesProfile] = useState()
   const [propertiesOtherprofile, setpropertiesOtherprofile] = useState(null)
-  const [activitiesEvent, setactivitiesEvent] = useState(null)
+  const [activitiesEvent, setactivitiesEvent] = useState([]) // Who fool initializes null an array
   const [chatActual, setchatActual] = useState({
     chatid: null,
     idactualuser: null,
