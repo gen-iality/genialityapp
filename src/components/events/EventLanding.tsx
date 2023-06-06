@@ -25,6 +25,8 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
   const [activityDetail, setActivityDetail] = useState<any | null>(null)
   const [thereAreQuizingOrSurveys, setThereAreQuizingOrSurveys] = useState<boolean>(false)
 
+  const [eventProgressPercent, setEventProgressPercent] = useState(0)
+
   const isDescriptionVisible = useMemo(() => {
     if (
       (event.description !== '<p><br></p>' &&
@@ -80,6 +82,7 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
                 </Link>
               )
             }
+            onProgressChange={(percent) => setEventProgressPercent(percent)}
           />
           {event.is_examen_required ? (
             <StudentSelfCourseProgress
@@ -122,7 +125,11 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
             </Col>
             <Col sm={24} md={18} style={{ padding: '0 5px' }}>
               <div className="activities-main-list">
-                <ActivitiesList eventId={event?._id} eventUserId={eventUser?._id} />
+                <ActivitiesList
+                  eventId={event?._id}
+                  eventUserId={eventUser?._id}
+                  eventProgressPercent={eventProgressPercent}
+                />
               </div>
             </Col>
           </Row>

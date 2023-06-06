@@ -23,12 +23,14 @@ interface ActivitiesListProps {
   eventId: string
   eventUserId?: string
   agendaList?: ExtendedAgendaType[] // If parent has this, why have we to re-do?
+  eventProgressPercent?: number
 }
 
 const ActivitiesList = (props: ActivitiesListProps) => {
   const {
     eventId, // The event ID
     eventUserId, // The event user ID
+    eventProgressPercent,
   } = props
 
   const service = new Service(firestore)
@@ -93,9 +95,11 @@ const ActivitiesList = (props: ActivitiesListProps) => {
         }
 
         const result: TruncatedAgenda = {
+          _id: agenda._id,
           title: agenda.name,
           datetime_start: agenda.datetime_start,
           isInfoOnly: agenda.is_info_only,
+          require_completion: agenda.require_completion,
           module_name: agenda.module?.module_name,
           module_order: agenda.module?.order || 0,
           type: agenda.type?.name as ActivityType.ContentValue,
@@ -174,6 +178,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
         list={truncatedAgendaList}
         render={(nameToFilter) => (
           <ListTheseActivities
+            eventProgressPercent={eventProgressPercent}
             dataSource={truncatedAgendaList.filter(
               (item) => item.module_name === nameToFilter,
             )}
@@ -183,6 +188,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
       {/* Without modules: */}
       <ListTheseActivities
+        eventProgressPercent={eventProgressPercent}
         dataSource={truncatedAgendaList.filter((item) => item.module_name === undefined)}
       />
     </>
