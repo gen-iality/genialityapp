@@ -215,7 +215,6 @@ class ListEventUser extends Component {
       pageOfItems: [],
       listTickets: [],
       usersRef: firestore.collection(`${props.event._id}_event_attendees`),
-      pilaRef: firestore.collection('pila'),
       total: 0,
       totalCheckedIn: 0,
       totalCheckedInWithWeight: 0,

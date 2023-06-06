@@ -1,7 +1,8 @@
-import { app, firestore } from '@helpers/firebase'
+import { app } from '@helpers/firebase'
 import { EventsApi } from '@helpers/request'
 import { useEffect, useState } from 'react'
 import ResultLink from './ResultLink'
+import { FB } from '@helpers/firestore-request'
 
 const WithCode = () => {
   const [email, setEmail] = useState()
@@ -9,7 +10,7 @@ const WithCode = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(false)
   const [verifyLink, setVerifyLink] = useState(false)
-  const conectionRef = firestore.collection(`connections`)
+
   useEffect(() => {
     // Referencia firestore para verificar si el usuario esta conectado
 
@@ -21,30 +22,27 @@ const WithCode = () => {
       setEmail(email)
       setEvent(event)
       email = email.replace('%40', '@')
-      conectionRef
-        .where('email', '==', email)
-        .get()
-        .then(async (resp) => {
-          if (
-            (resp.docs.length == 0 && app.auth()?.currentUser?.email != email) ||
-            (app.auth().currentUser?.email == email && resp.docs.length > 0) ||
-            (resp.docs.length == 0 && !app.auth()?.currentUser)
-          ) {
-            if (app.auth().currentUser) {
-              await app.auth().signOut()
-              const docRef = await conectionRef.where('email', '==', email).get()
-              if (docRef.docs.length > 0) {
-                await conectionRef.doc(docRef.docs[0].id).delete()
-              }
-              await loginWithCode()
-            } else {
-              await loginWithCode()
+      FB.Connections.getAllByEmail(email, true).then(async (resp) => {
+        if (
+          (resp.docs.length == 0 && app.auth()?.currentUser?.email != email) ||
+          (app.auth().currentUser?.email == email && resp.docs.length > 0) ||
+          (resp.docs.length == 0 && !app.auth()?.currentUser)
+        ) {
+          if (app.auth().currentUser) {
+            await app.auth().signOut()
+            const docRef = await FB.Connections.getAllByEmail(email, true)
+            if (docRef.docs.length > 0) {
+              await FB.Connections.delete(docRef.docs[0].id)
             }
+            await loginWithCode()
           } else {
-            setError(true)
-            setIsLoading(false)
+            await loginWithCode()
           }
-        })
+        } else {
+          setError(true)
+          setIsLoading(false)
+        }
+      })
     }
     async function loginWithCode() {
       app

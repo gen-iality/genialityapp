@@ -1,23 +1,18 @@
-import { firestore } from '../../helpers/firebase'
+import { FB } from '@helpers/firestore-request'
 
-export const setHostState = (hostId, state) => {
-  return new Promise((resolve, reject) => {
-    firestore
-      .collection('host')
-      .doc(hostId)
-      .update({ busy: state })
-      .then(() => {
-        resolve({ message: 'El host ha sido actualizado' })
-      })
-      .catch((err) => {
-        reject({ message: err })
-      })
-  })
+export const setHostState = async (hostId, state) => {
+  try {
+    FB.Hosts.update(hostId, { busy: state })
+    return { message: 'El host ha sido actualizado' }
+  } catch (err) {
+    console.error(err)
+    return { message: err }
+  }
 }
 
 export const getAllHost = () => {
   return new Promise((resolve, reject) => {
-    firestore.collection('host').onSnapshot((docs) => {
+    FB.Hosts.collection().onSnapshot((docs) => {
       const hostList = []
       if (docs.empty) {
         resolve(false)
@@ -31,8 +26,7 @@ export const getAllHost = () => {
 }
 
 export default (loadHost) => {
-  firestore
-    .collection('host')
+  FB.Hosts.collection()
     .where('busy', '==', false)
     .onSnapshot((docs) => {
       const hostList = []

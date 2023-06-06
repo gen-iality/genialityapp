@@ -2,11 +2,9 @@ import { firestore, fireRealtime } from '@helpers/firebase'
 import { FB } from '@helpers/firestore-request'
 import dayjs from 'dayjs'
 
-const refSurvey = firestore.collection('surveys')
-
 export const validateSurveyCreated = (surveyId) => {
   return new Promise((resolve) => {
-    refSurvey.doc(surveyId).onSnapshot((survey) => {
+    FB.Surveys.ref(surveyId).onSnapshot((survey) => {
       if (!survey.exists) {
         resolve(false)
       }
@@ -23,15 +21,13 @@ export const createOrUpdateSurvey = (surveyId, status, surveyInfo) => {
 
     validateSurveyCreated(surveyId).then((existSurvey) => {
       if (existSurvey) {
-        refSurvey
-          .doc(surveyId)
-          .update({ ...status })
-          .then(() => resolve({ message: 'Evaluación actualizada', state: 'updated' }))
+        FB.Surveys.update(surveyId, { ...status }).then(() =>
+          resolve({ message: 'Evaluación actualizada', state: 'updated' }),
+        )
       } else {
-        refSurvey
-          .doc(surveyId)
-          .set({ ...surveyInfo, ...status })
-          .then(() => resolve({ message: 'Evaluación creada', state: 'created' }))
+        FB.Surveys.edit(surveyId, { ...surveyInfo, ...status }).then(() =>
+          resolve({ message: 'Evaluación creada', state: 'created' }),
+        )
       }
     })
   })
@@ -39,10 +35,9 @@ export const createOrUpdateSurvey = (surveyId, status, surveyInfo) => {
 
 export const deleteSurvey = (surveyId) => {
   return new Promise((resolve) => {
-    refSurvey
-      .doc(surveyId)
-      .delete()
-      .then(() => resolve({ message: 'Evaluación eliminada', state: 'deleted' }))
+    FB.Surveys.delete(surveyId).then(() =>
+      resolve({ message: 'Evaluación eliminada', state: 'deleted' }),
+    )
   })
 }
 

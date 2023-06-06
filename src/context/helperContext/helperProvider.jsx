@@ -17,6 +17,7 @@ import { maleIcons, femaleicons, imageforDefaultProfile } from '@helpers/constan
 import { useHistory } from 'react-router-dom'
 import { useIntl } from 'react-intl'
 import { helperReducer, helperInitialState } from './helperReducer'
+import { FB } from '@helpers/firestore-request'
 
 const initialStateNotification = {
   notify: false,
@@ -526,39 +527,35 @@ export const HelperContextProvider = ({ children }) => {
     /*NOTIFICACIONES POR LECCIÓN*/
 
     async function fetchActivityChange() {
-      firestore
-        .collection('events')
-        .doc(cEvent.value._id)
-        .collection('activities')
-        .onSnapshot((querySnapshot) => {
-          if (querySnapshot.empty) return
-          const change = querySnapshot.docChanges()[0]
-          if (
-            change.doc.data().habilitar_ingreso == 'open_meeting_room' &&
-            obtenerNombreActivity(change.doc.id)?.name != null &&
-            change.type === 'modified'
-          ) {
-            const message =
-              obtenerNombreActivity(change.doc.id)?.name + ' ' + ' está en vivo..'
-            ChangeActiveNotification(true, message, 'open', change.doc.id)
-          } else if (
-            change.doc.data().habilitar_ingreso == 'ended_meeting_room' &&
-            obtenerNombreActivity(change.doc.id)?.name != null &&
-            change.type === 'modified'
-          ) {
-            const message =
-              obtenerNombreActivity(change.doc.id)?.name + ' ' + 'ha terminado..'
-            ChangeActiveNotification(true, message, 'ended', change.doc.id)
-          } else if (
-            change.doc.data().habilitar_ingreso == 'closed_meeting_room' &&
-            change.type === 'modified' &&
-            obtenerNombreActivity(change.doc.id)?.name != null
-          ) {
-            const message =
-              obtenerNombreActivity(change.doc.id)?.name + ' ' + 'está por iniciar'
-            ChangeActiveNotification(true, message, 'close', change.doc.id)
-          }
-        })
+      FB.Activities.collection(cEvent.value._id).onSnapshot((querySnapshot) => {
+        if (querySnapshot.empty) return
+        const change = querySnapshot.docChanges()[0]
+        if (
+          change.doc.data().habilitar_ingreso == 'open_meeting_room' &&
+          obtenerNombreActivity(change.doc.id)?.name != null &&
+          change.type === 'modified'
+        ) {
+          const message =
+            obtenerNombreActivity(change.doc.id)?.name + ' ' + ' está en vivo..'
+          ChangeActiveNotification(true, message, 'open', change.doc.id)
+        } else if (
+          change.doc.data().habilitar_ingreso == 'ended_meeting_room' &&
+          obtenerNombreActivity(change.doc.id)?.name != null &&
+          change.type === 'modified'
+        ) {
+          const message =
+            obtenerNombreActivity(change.doc.id)?.name + ' ' + 'ha terminado..'
+          ChangeActiveNotification(true, message, 'ended', change.doc.id)
+        } else if (
+          change.doc.data().habilitar_ingreso == 'closed_meeting_room' &&
+          change.type === 'modified' &&
+          obtenerNombreActivity(change.doc.id)?.name != null
+        ) {
+          const message =
+            obtenerNombreActivity(change.doc.id)?.name + ' ' + 'está por iniciar'
+          ChangeActiveNotification(true, message, 'close', change.doc.id)
+        }
+      })
     }
 
     if (cEvent.value != null) {
