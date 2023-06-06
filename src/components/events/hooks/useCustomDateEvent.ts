@@ -81,7 +81,7 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
                 });
 
                 let newDateRanges = dateToCustomDate(dateStart, dateEnd)
-                
+
                 const days = newDateRanges.map((date) => new Date(date.start));
                 setDays(days);
                 setDates(newDateRanges)
@@ -182,6 +182,13 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
                     end: parseDate(dateEnd),
                 };
             });
+
+            if (payload.length === 0 || !payload) {
+                return notification.open({
+                    message: 'Datos no guardados',
+                    description: 'Debe seleccionar por lo menos una fecha especifica',
+                });
+            }
             await EventsApi.editOne({ dates: payload }, props.eventId);
             notification.open({
                 message: 'Datos guardados',
