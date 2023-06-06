@@ -11,8 +11,10 @@ import Line from './Line'
 
 import './CourseProgressBar.css'
 import { firestore } from '@helpers/firebase'
+import { ExtendedAgendaType } from '@Utilities/types/AgendaType'
+import { filterIndexed } from 'ramda-adjunct'
 
-type Activity = {
+interface Activity extends ExtendedAgendaType {
   _id: string
   type?: { name: string }
   name: string
@@ -22,13 +24,14 @@ type Activity = {
 export interface CourseProgressBarProps {
   eventId: string
   eventUser: any
-  activities: Activity[]
+  activities: ExtendedAgendaType[]
+  eventProgressPercent?: number
 }
 
 function CourseProgressBar(props: CourseProgressBarProps) {
-  const { activities, eventUser, eventId } = props
+  const { activities, eventUser, eventId, eventProgressPercent } = props
 
-  const [attendees, setAttendees] = useState<any[]>([])
+  const [attendees, setAttendees] = useState<Activity[]>([])
   const [watchedActivityId, setWatchedActivityId] = useState<undefined | string>()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -37,19 +40,29 @@ function CourseProgressBar(props: CourseProgressBarProps) {
   const requestAttendees = async () => {
     console.debug('will request the attendee for', activities.length, 'activities')
     const existentActivities = activities.map(async (activity) => {
+      // TODO: this can be imported from Landing
       const activity_attendee = await firestore
         .collection(`${activity._id}_event_attendees`)
         .doc(eventUser._id)
         .get() //checkedin_at
       if (activity_attendee.exists) {
         const newAttendee = activity_attendee.data()
-        return { ...newAttendee, activity_id: activity._id }
+        const oneActivity = {
+          ...newAttendee,
+          activity_id: activity._id!,
+          require_completion: activity.require_completion,
+        } as Activity
+        return oneActivity
       }
-      return null
+      return
     })
 
     // Filter existent activities and set the state
-    setAttendees((await Promise.all(existentActivities)).filter((item) => !!item))
+    const calcedActivities = await Promise.all(existentActivities)
+    const filteredActivities: Activity[] = calcedActivities.filter(
+      (item) => !!item,
+    ) as Activity[]
+    setAttendees(filteredActivities)
   }
 
   useEffect(() => {
@@ -102,7 +115,7 @@ function CourseProgressBar(props: CourseProgressBarProps) {
                         ...previous,
                         {
                           activity_id: activity._id,
-                        },
+                        } as Activity,
                       ])
                     }
                   }}
