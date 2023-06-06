@@ -5,6 +5,11 @@ import useMenuLanding from './hooks/useMenuLanding';
 import { MenuLandingProps } from './interfaces/menuLandingProps';
 
 
+/* `const formLayout` is defining an object that contains the layout configuration for the `Form`
+component from the `antd` library. It specifies that the label column should span the entire width
+of the form, the wrapper column should also span the entire width, and the size of the form should
+be small. This object is then passed as props to the `Form` component to apply the specified layout
+configuration. */
 const formLayout = { labelCol: { span: 24 }, wrapperCol: { span: 24 }, size: 'small' };
 
 export default function MenuLanding(props: MenuLandingProps) {
@@ -19,6 +24,7 @@ export default function MenuLanding(props: MenuLandingProps) {
   } = useMenuLanding(props);
 
   return (
+    //@ts-ignore
     <Form {...formLayout} onFinish={submit}>
       <Header title={titleheader} save form />
       <Spin tip='Cargando...' size='large' spinning={isLoading}>
@@ -31,19 +37,21 @@ export default function MenuLanding(props: MenuLandingProps) {
                 </Form.Item>
                 <Form.Item label={'Cambiar nombre de la sección'}>
                   <Input
+                    size='small'
                     name={`name${index}`}
                     disabled={menu[key].checked === true ? false : true}
-                    onChange={(e) => updateValue(key, parseInt(e?.toString() || '0'), 'name')}
+                    onChange={(e) => updateValue(key, e.target.value, 'name')}
                     placeholder={menu[key].name}
                   />
                 </Form.Item>
                 <Form.Item label={'Posición en el menú'}>
                   <InputNumber
+                    size= 'small'
                     name={`position${index}`}
                     disabled={menu[key].checked === true ? false : true}
-                    placeholder={(index + 1).toString()}
+                    placeholder={menu[key].position !== 30 ? menu[key].position.toString() : (index + 1).toString()}
                     min={1}
-                    onChange={(e) => orderPosition(key, parseInt(e?.toString() || '0'))}
+                    onChange={(e) => {e && orderPosition(key, e )}}
                   />
                 </Form.Item>
               </Card>

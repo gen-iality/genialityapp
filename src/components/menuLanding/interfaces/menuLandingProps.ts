@@ -15,7 +15,6 @@ export interface MenuLandingProps {
     visibility: string;
   };
 }
-
 export interface MenuItem {
   name: string;
   position: number;
@@ -23,13 +22,11 @@ export interface MenuItem {
   icon: string;
   checked: boolean;
   permissions: string;
-  [key: string]: string | number | boolean | any[];
+  [key: string]: string | number | boolean;
 }
-
 export interface MenuBase {
   [key: string]: MenuItem;
 }
-
 export interface MenuLanding {
   _id: string;
 }
