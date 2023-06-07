@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { FunctionComponent, useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
 import { useEventContext } from '@context/eventContext'
 import { useCurrentUser } from '@context/userContext'
@@ -27,7 +27,7 @@ import { EnableFacebookPixelByEVENT } from './helpers/facebookPixelHelper'
 
 import loadable from '@loadable/component'
 import { StateMessage } from '@context/MessageService'
-import WithEviusContext from '@context/withContext'
+import WithEviusContext, { WithEviusContextProps } from '@context/withContext'
 import { checkinAttendeeInEvent } from '@helpers/HelperAuth'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { AgendaApi } from '@helpers/request'
@@ -58,7 +58,20 @@ const iniitalstatetabs = {
   publicChat: false,
 }
 
-const IconRender = (type) => {
+type MapStateToProps = {
+  currentActivity: any
+  tabs: any
+  view: any
+  userAgenda: any
+}
+
+const mapDispatchToProps = {
+  setUserAgenda,
+}
+
+type ILandingRoutesProps = MapStateToProps & typeof mapDispatchToProps
+
+const IconRender = (type: string) => {
   let iconRender
   switch (type) {
     case 'open':
@@ -80,7 +93,9 @@ const IconRender = (type) => {
   return iconRender
 }
 
-const LandingRoutes = (props) => {
+const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps>> = (
+  props,
+) => {
   const cEventContext = useEventContext()
   const cUser = useCurrentUser()
   const cEventUser = useUserEvent()
@@ -124,14 +139,14 @@ const LandingRoutes = (props) => {
     }
   }, [])
 
-  const ButtonRender = (status, activity) => {
+  const ButtonRender = (status: string, activityId: string) => {
     return status == 'open' ? (
       <Button
         type="primary"
         size="small"
         onClick={() =>
           window.location.replace(
-            `${window.location.origin}/landing/${cEventContext.value._id}/activity/${activity}`,
+            `${window.location.origin}/landing/${cEventContext.value._id}/activity/${activityId}`,
           )
         }
       >
@@ -147,7 +162,15 @@ const LandingRoutes = (props) => {
     }
   }, [])
   // Para obtener parametro al loguearme
-  const NotificationHelper = ({ message, type, activity }) => {
+  const NotificationHelper = ({
+    message,
+    type,
+    activityId,
+  }: {
+    message: string
+    type: string
+    activityId: any
+  }) => {
     notification.open({
       message: 'Nueva notificación',
       description: message,
@@ -155,7 +178,7 @@ const LandingRoutes = (props) => {
       onClose: () => {
         ChangeActiveNotification(false, 'none', 'none')
       },
-      btn: ButtonRender(type, activity),
+      btn: ButtonRender(type, activityId),
       duration: type == 'ended' || type == 'open' ? 7 : 3,
     })
   }
@@ -168,58 +191,7 @@ const LandingRoutes = (props) => {
 
   const [generaltabs, setGeneraltabs] = useState(iniitalstatetabs)
   // eslint-disable-next-line prefer-const
-  let [totalNewMessages, setTotalnewmessages] = useState(0)
-
-  useEffect(() => {
-    if (cEventContext.status === 'LOADED') {
-      import('../../../helpers/firebase').then((fb) => {
-        fb.firestore
-          .collection('events')
-          .doc(cEventContext.value?._id)
-          .onSnapshot(function (eventSnapshot) {
-            if (eventSnapshot.exists) {
-              if (eventSnapshot.data().tabs !== undefined) {
-                setGeneraltabs(eventSnapshot.data().tabs)
-              }
-            }
-          })
-
-        fb.firestore
-          .collection(
-            'eventchats/' +
-              cEventContext.value._id +
-              '/userchats/' +
-              cUser.uid +
-              '/' +
-              'chats/',
-          )
-          .onSnapshot(function (querySnapshot) {
-            let data
-            querySnapshot.forEach((doc) => {
-              data = doc.data()
-
-              if (data.newMessages) {
-                setTotalnewmessages(
-                  (totalNewMessages += !isNaN(parseInt(data.newMessages.length))
-                    ? parseInt(data.newMessages.length)
-                    : 0),
-                )
-              }
-            })
-          })
-
-        if (
-          cEventUser.status == 'LOADED' &&
-          cEventUser.value != null &&
-          cEventContext.status == 'LOADED'
-        ) {
-          if (cEventContext.value.type_event !== 'onlineEvent') {
-            checkinAttendeeInEvent(cEventUser.value, cEventContext.value._id)
-          }
-        }
-      })
-    }
-  }, [cEventContext.status, cEventUser.status, cEventUser.value, location])
+  const [totalNewMessages, setTotalNewMessages] = useState(0)
 
   // This can be a context or well
 
@@ -252,6 +224,59 @@ const LandingRoutes = (props) => {
 
     loadActivityAttendeeData().then()
   }, [activities, location.pathname])
+
+  useEffect(() => {
+    if (cEventContext.status === 'LOADED') {
+      import('../../../helpers/firebase').then((fb) => {
+        fb.firestore
+          .collection('events')
+          .doc(cEventContext.value?._id)
+          .onSnapshot(function (eventSnapshot) {
+            if (eventSnapshot.exists) {
+              const eventData = eventSnapshot.data()
+              if (eventData?.tabs !== undefined) {
+                setGeneraltabs(eventData.tabs)
+              }
+            }
+          })
+
+        fb.firestore
+          .collection(
+            'eventchats/' +
+              cEventContext.value._id +
+              '/userchats/' +
+              cUser.uid +
+              '/' +
+              'chats/',
+          )
+          .onSnapshot(function (querySnapshot) {
+            let data
+            querySnapshot.forEach((doc) => {
+              data = doc.data()
+
+              // NOTA: I don't know what the last developer did want to do here
+              if (data.newMessages) {
+                setTotalNewMessages(
+                  (totalNewMessages += !isNaN(parseInt(data.newMessages.length))
+                    ? parseInt(data.newMessages.length)
+                    : 0),
+                )
+              }
+            })
+          })
+
+        if (
+          cEventUser.status == 'LOADED' &&
+          cEventUser.value != null &&
+          cEventContext.status == 'LOADED'
+        ) {
+          if (cEventContext.value.type_event !== 'onlineEvent') {
+            checkinAttendeeInEvent(cEventUser.value, cEventContext.value._id)
+          }
+        }
+      })
+    }
+  }, [cEventContext.status, cEventUser.status, cEventUser.value, location])
 
   const eventProgressPercent: number = useMemo(
     () =>
@@ -343,11 +368,7 @@ const mapStateToProps = (state) => ({
   userAgenda: state.spaceNetworkingReducer.userAgenda,
 })
 
-const mapDispatchToProps = {
-  setUserAgenda,
-}
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(WithEviusContext(LandingRoutes))
+)(WithEviusContext<ILandingRoutesProps>(LandingRoutes))
