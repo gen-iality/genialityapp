@@ -27,7 +27,7 @@ export default function CustomDateEvent(props: Props) {
   return (
     <Row gutter={[16, 24]}>
       <Col xs={24} lg={12}>
-        <MyMultiPicker multiple onChange={handleInterceptor} value={dates.map(dateRange=>dateRange.start)} />
+        <MyMultiPicker multiple onChange={handleInterceptor} value={dates.map(dateRange=>dateRange.start)} className="rmdp-mobile" />
         {mustUpdateDate && (
           <Alert
             message='Formato de fecha incorrecto'

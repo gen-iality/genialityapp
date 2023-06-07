@@ -140,17 +140,17 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     if (!formdata.name) nameInputRef.current?.focus();
   }, [nameInputRef.current]);
 
-
   useEffect(() => {
     if (multiDates && agenda === null) handleChangeFormData('date', moment(multiDates[0]?.start).format('YYYY-MM-DD'));
   }, [multiDates]);
 
   useEffect(() => {
-    if (!multiDates) return;
+    if (multiDates.length === 0) return;
     const existDate = multiDates.find((dateRange) => {
       const exist = moment(dateRange.start).format('YYYY-MM-DD') === moment(formdata.date).format('YYYY-MM-DD');
       return exist;
     });
+
     if (!existDate) {
       sethaveDateNotIncluded(true);
     } else {
