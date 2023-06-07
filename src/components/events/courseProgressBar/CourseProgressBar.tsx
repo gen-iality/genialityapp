@@ -54,9 +54,8 @@ function CourseProgressBar(props: CourseProgressBarProps) {
     console.debug('will request the attendee for', activities.length, 'activities')
     const existentActivities = activities.map(async (activity) => {
       // TODO: this can be imported from Landing
-      const newAttendee = await FB.Attendees.get(activity._id, eventUser._id)
+      const newAttendee = await FB.Attendees.get(activity._id!, eventUser._id)
       if (newAttendee) {
-        const newAttendee = activity_attendee.data()
         const oneActivity = {
           ...newAttendee,
           activity_id: activity._id!,
