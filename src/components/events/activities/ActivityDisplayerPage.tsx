@@ -112,7 +112,7 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
     if (props.eventProgressPercent === undefined) return false
     if (activity.require_completion === undefined) return false
 
-    if (activity.require_completion > props.eventProgressPercent) return true
+    if (activity.require_completion >= props.eventProgressPercent) return true
     return false
   }, [activity, props.eventProgressPercent])
 

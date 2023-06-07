@@ -20,7 +20,7 @@ const ListTheseActivities: FunctionComponent<IListTheseActivitiesProps> = (props
         .map((activity) => {
           if (eventProgressPercent === undefined) return
           if (activity.require_completion === undefined) return
-          if (activity.require_completion > eventProgressPercent) return activity._id
+          if (activity.require_completion >= eventProgressPercent) return activity._id
           return
         })
         .filter((activity) => activity !== undefined) as string[],
@@ -106,7 +106,7 @@ const ListTheseActivities: FunctionComponent<IListTheseActivitiesProps> = (props
                           item._id!,
                         )
                           ? 'line-through'
-                          : null,
+                          : 'inherit',
                       }}
                     >
                       {item.title}
@@ -133,6 +133,12 @@ const ListTheseActivities: FunctionComponent<IListTheseActivitiesProps> = (props
                   {(item.endComponents || []).map((render) => render())}
                   {item.isInfoOnly && (
                     <Badge style={{ backgroundColor: '#999' }} count="Info" />
+                  )}
+                  {thereActivitiesRequireCompletion.includes(item._id!) && (
+                    <Badge
+                      style={{ backgroundColor: '#FE2C00', marginRight: '3px' }}
+                      count="Requiere completar el curso"
+                    />
                   )}
                 </span>
                 {/* <Link to={item.link}>
