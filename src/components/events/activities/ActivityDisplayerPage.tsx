@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Moment from 'moment-timezone'
 import { FormattedMessage } from 'react-intl'
-import { Card, Col, Button, Row } from 'antd'
+import { Card, Col, Button, Row, Result } from 'antd'
 import { setTopBanner } from '../../../redux/topBanner/actions'
 import { AgendaApi } from '@helpers/request'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
@@ -28,7 +28,9 @@ const { LOG, ERROR } = Logger('studentlanding-activity')
 
 Moment.locale(window.navigator.language)
 
-interface IActivityDisplayerPageProps {}
+interface IActivityDisplayerPageProps {
+  eventProgressPercent?: number
+}
 
 const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
   const { HandleOpenCloseMenuRigth, currentActivity, helperDispatch } = useHelper()
@@ -105,6 +107,15 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
     history.push(`/landing/${cEvent?.value._id}/activity/${activityId}`)
   }
 
+  const thisActivityRequiresCompletion = useMemo(() => {
+    if (!activity) return false
+    if (props.eventProgressPercent === undefined) return false
+    if (activity.require_completion === undefined) return false
+
+    if (activity.require_completion > props.eventProgressPercent) return true
+    return false
+  }, [activity, props.eventProgressPercent])
+
   return (
     <div>
       {cUser.value?._id && cEvent.value?._id && activity?._id && (
@@ -120,6 +131,12 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
         <Card style={{ padding: '1 !important' }} className="agenda_information">
           {activity?.type === undefined ? (
             <PreloaderApp />
+          ) : thisActivityRequiresCompletion ? (
+            <Result
+              status="403"
+              title="Esta sección está bloqueado"
+              subTitle="Se requiere avanzar más en el curso para habilitar esta sección"
+            />
           ) : (
             <ActivityDisplayer activity={activity} />
           )}
