@@ -4,24 +4,21 @@ import { Actions, OrganizationApi } from '@/helpers/request';
 import { GetTokenUserFirebase } from '@/helpers/HelperAuth';
 import { DispatchMessageService } from '@/context/MessageService';
 import { MenuBase, MenuItem, MenuLandingProps } from '../interfaces/menuLandingProps';
+import { deepCopy } from '../utils/functions';
 
 export default function useMenuLanding(props: MenuLandingProps) {
-
+  const menuBase = deepCopy(menu)
   const { organizationObj, organization, event } = props;
-  const [itemsMenu, setItemsMenu] = useState<Record<string, MenuItem>>(menu || {});
+  const [itemsMenu, setItemsMenu] = useState<Record<string, MenuItem>>({...menu});
   const [keySelect, setKeySelect] = useState<number>(Date.now());
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const ORGANIZATION_VALUE = 1;
 
   const mapActiveItemsToAvailable = (key: string, value: boolean) => {
-    const menuBase: MenuBase = { ...menu };
-    // console.log("****",menuBase);
     const itemsMenuDB = { ...itemsMenu };
-    // console.log("****-----",itemsMenuDB);
-    
     itemsMenuDB[key].checked = value;
-    if (!itemsMenuDB[key].checked) {
+    if (!value) {
       itemsMenuDB[key] = menuBase[key];
       itemsMenuDB[key].name = menuBase[key].name;
     }
