@@ -80,7 +80,7 @@ const IconRender = (type) => {
   return iconRender
 }
 
-const Landing = (props) => {
+const LandingRoutes = (props) => {
   const cEventContext = useEventContext()
   const cUser = useCurrentUser()
   const cEventUser = useUserEvent()
@@ -346,4 +346,7 @@ const mapDispatchToProps = {
   setUserAgenda,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(WithEviusContext(Landing))
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(WithEviusContext(LandingRoutes))

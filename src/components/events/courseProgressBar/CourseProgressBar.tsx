@@ -12,7 +12,6 @@ import Line from './Line'
 import './CourseProgressBar.css'
 import { firestore } from '@helpers/firebase'
 import { ExtendedAgendaType } from '@Utilities/types/AgendaType'
-import { filterIndexed } from 'ramda-adjunct'
 
 interface Activity extends ExtendedAgendaType {
   _id: string

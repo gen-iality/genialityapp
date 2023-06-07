@@ -30,7 +30,7 @@ import CertificateGeneraterPage from '@/pages/CertificateGeneraterPage'
 //Code splitting
 const Header = loadable(() => import('./header'))
 const Home = loadable(() => import('../pages/home'))
-const Landing = loadable(() => import('../components/events/Landing/landing'))
+const LandingRoutes = loadable(() => import('../components/events/Landing/LandingRoutes'))
 const Transition = loadable(() => import('../components/shared/Animate_Img/index'))
 const NewEventPage = loadable(() =>
   import('../components/events/createEvent/NewEventPage'),
@@ -72,7 +72,7 @@ const ContentContainer = () => {
           />
           <RouteContext
             path={['/landing/:event_id', '/event/:event_name']}
-            component={Landing}
+            component={LandingRoutes}
           />
           {/*Ruta para ver resumen */}
           <PrivateRoute exact path="/myprofile/:tab" component={MainProfile} />
