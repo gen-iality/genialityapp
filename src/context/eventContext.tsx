@@ -3,9 +3,12 @@ import { useParams } from 'react-router-dom'
 import { EventsApi } from '@helpers/request'
 import NotFoundPage from '@components/notFoundPage/NotFoundPage'
 
-export const CurrentEventContext = createContext()
+const EventContext = createContext()
 
-export function CurrentEventProvider({ children }) {
+export default EventContext
+export const CurrentEventContext = EventContext
+
+function EventProvider({ children }) {
   const { event_id, event_name, event } = useParams()
   let eventNameFormated = null
   let initialContextState = { status: 'LOADING', value: null, nameEvent: '' }
@@ -79,6 +82,8 @@ export function CurrentEventProvider({ children }) {
     </CurrentEventContext.Provider>
   )
 }
+
+export const CurrentEventProvider = EventProvider
 
 export function useEventContext() {
   const contextevent = useContext(CurrentEventContext)
