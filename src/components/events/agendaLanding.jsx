@@ -17,6 +17,7 @@ import AgendaActivityItem from './AgendaActivityItem/index';
 import { ArrowRightOutlined, CalendarOutlined, DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
 import * as notificationsActions from '../../redux/notifications/actions';
 import { setTabs } from '../../redux/stage/actions';
+import moment from 'moment-timezone';
 const { TabPane } = Tabs;
 let attendee_states = {
   STATE_DRAFT: '5b0efc411d18160bce9bc706', //"DRAFT";
@@ -580,20 +581,25 @@ class Agenda extends Component {
   //FUNCION QUE PERMITE VERIFICAR SI EXISTEN ACTIVIDADES PUBLICADAS POR DIA
   //SIRVE PARA MOSTRAR U OCULTAR FECHAS
   getActivitiesByDayVisibility = (date) => {
+    if (!date) return;
+
     const { toggleConference } = this.props;
     const { hideBtnDetailAgenda, show_inscription, data, survey, documents } = this.state;
 
-    //Se trae el filtro de dia para poder filtar por fecha y mostrar los datos
+
+    console.log('que verga es est=>', data)
     const list =
       date != null
         ? data
             .filter(
               (a) =>
-                date &&
-                date.format &&
+              {
+                console.log('--------------------------------------------',date + '0000000000000000000000000', ( a.datetime_start))
+                return date.format &&
                 a.datetime_start &&
                 a.datetime_start.includes(date.format('YYYY-MM-DD')) &&
                 (a.isPublished || a.isPublished == undefined)
+              }
             )
             .sort(
               (a, b) =>
@@ -603,6 +609,32 @@ class Agenda extends Component {
         : data;
     return list;
   };
+
+
+  /* getActivitiesByDayVisibility = (date) => {
+    if (!date) return;
+    const { data } = this.state;
+    
+    const list =
+    date != null
+    ? data
+    .filter((a) => {
+              console.log('--------------------------------------------',date + '0000000000000000000000000', a)
+              return (
+                moment(a.datetime_start).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD') &&
+                (a.isPublished || a.isPublished === undefined)
+              );
+            })
+            .sort(
+              (a, b) =>
+                Moment(a.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY') -
+                Moment(b.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY')
+            )
+        : data;
+    return list;
+  }; */
+
+
 
   //End modal methods
 
@@ -760,8 +792,11 @@ class Agenda extends Component {
                         borderRadius: '10px',
                         paddingLeft: '25px',
                       }}>
-                      {days.map(
-                        (day, index) =>
+                      {days.map((day, index) => {
+                         console.log('days',days)
+                        //  console.log('this.getActivitiesByDayVisibility(day)',this.getActivitiesByDayVisibility(day))
+                        //  console.log('this.getActivitiesByDayVisibility(day).length > 0',this.getActivitiesByDayVisibility(day).length > 0)
+                        return (
                           this.getActivitiesByDayVisibility(day) &&
                           this.getActivitiesByDayVisibility(day).length > 0 && (
                             <TabPane
@@ -782,7 +817,8 @@ class Agenda extends Component {
                               {this.getActivitiesByDay(day)}
                             </TabPane>
                           )
-                      )}
+                        );
+                      })}
                     </Tabs>
                   )}
               </div>

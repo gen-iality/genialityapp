@@ -141,6 +141,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     if (!formdata.name) nameInputRef.current?.focus();
   }, [nameInputRef.current]);
 
+console.log('000000000000000',allDays)
+
   useEffect(() => {
     if (multiDates && agenda === null) handleChangeFormData('date', moment(multiDates[0]?.start).format('YYYY-M-DD'));
   }, [multiDates]);
