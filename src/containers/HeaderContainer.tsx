@@ -1,5 +1,5 @@
 /** React's libraries */
-import { useEffect, useState, createElement } from 'react'
+import { useEffect, useState, createElement, FunctionComponent } from 'react'
 import { useHistory } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
 import { useIntl } from 'react-intl'
@@ -20,7 +20,7 @@ import {
 import AccountCircleIcon from '@2fd/ant-design-icons/lib/AccountCircle'
 
 /** Context */
-import withContext from '@context/withContext'
+import withContext, { WithEviusContextProps } from '@context/withContext'
 
 /** Components */
 import ModalLoginHelpers from '@components/authentication/ModalLoginHelpers'
@@ -58,12 +58,33 @@ const initialDataGeneral = {
   anonimususer: false,
 }
 
-const Headers = (props) => {
+type MapStateToProps = {
+  categories: any
+  types: any
+  loginInfo: any
+  eventMenu: any
+  permissions: any
+  error: any
+  event: any
+  modalVisible: any
+}
+
+const mapDispatchToProps = {
+  setEventData,
+  addLoginInformation,
+  showMenu,
+}
+
+type IHeaderContainerProps = WithEviusContextProps<
+  MapStateToProps & typeof mapDispatchToProps
+>
+
+const HeaderContainer: FunctionComponent<IHeaderContainerProps> = (props) => {
   const { showMenu, loginInfo, cHelper, cEvent, cEventUser, cUser } = props
   const { helperDispatch } = cHelper
 
   const [headerIsLoading, setHeaderIsLoading] = useState(true)
-  const [dataGeneral, setDataGeneral] = useState(initialDataGeneral)
+  const [dataGeneral, setDataGeneral] = useState<any>(initialDataGeneral)
   const [showButtons, setShowButtons] = useState({
     buttonregister: true,
     buttonlogin: true,
@@ -72,6 +93,7 @@ const Headers = (props) => {
   const screens = useBreakpoint()
   const history = useHistory()
   const intl = useIntl()
+
   const openMenu = () => {
     setDataGeneral({
       ...dataGeneral,
@@ -96,7 +118,7 @@ const Headers = (props) => {
     setDataGeneral({ ...dataGeneral, showEventMenu: false })
   }
 
-  async function LoadCurrentUser() {
+  const LoadCurrentUser = async () => {
     const { value, status } = cUser
 
     if (!value && status === 'LOADED')
@@ -106,16 +128,15 @@ const Headers = (props) => {
     setDataGeneral({
       name: value?.names || value?.name,
       userEvent: { ...value, properties: { names: value.names || value.name } },
-      photo: value?.picture
-        ? value?.picture
-        : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
-      uid: value?.user?.uid,
-      id: value?.user?._id,
+      photo:
+        value.picture ??
+        'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
+      uid: value.user?.uid,
+      id: value.user?._id,
       user: true,
       anonimususer: value?.isAnonymous || false,
     })
     setHeaderIsLoading(false)
-    // }
   }
 
   const WhereHerePath = () => {
@@ -123,7 +144,7 @@ const Headers = (props) => {
     return containtorganization ? 'organization' : 'landing'
   }
 
-  const userLogOut = (callBack) => {
+  const userLogOut = (callBack: any) => {
     const params = {
       user: cUser.value,
       setCurrentUser: cUser.setCurrentUser,
@@ -173,47 +194,47 @@ const Headers = (props) => {
     LoadCurrentUser()
   }, [cUser?.value])
 
-  useEffect(() => {
-    async function RenderButtonsForTypeEvent() {
-      const typeEvent = recordTypeForThisEvent(cEvent)
-      switch (typeEvent) {
-        case 'PRIVATE_EVENT':
-          setShowButtons({
-            buttonregister: false,
-            buttonlogin: true,
-          })
-          break
+  const RenderButtonsForTypeEvent = async () => {
+    const typeEvent = recordTypeForThisEvent(cEvent)
+    switch (typeEvent) {
+      case 'PRIVATE_EVENT':
+        setShowButtons({
+          buttonregister: false,
+          buttonlogin: true,
+        })
+        break
 
-        case 'PUBLIC_EVENT_WITH_REGISTRATION':
-          setShowButtons({
-            buttonregister: true,
-            buttonlogin: true,
-          })
-          break
+      case 'PUBLIC_EVENT_WITH_REGISTRATION':
+        setShowButtons({
+          buttonregister: true,
+          buttonlogin: true,
+        })
+        break
 
-        case 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS':
-          setShowButtons({
-            buttonregister: true,
-            buttonlogin: true,
-          })
-          break
+      case 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS':
+        setShowButtons({
+          buttonregister: true,
+          buttonlogin: true,
+        })
+        break
 
-        default:
-          setShowButtons({
-            buttonregister: true,
-            buttonlogin: true,
-          })
-          break
-      }
+      default:
+        setShowButtons({
+          buttonregister: true,
+          buttonlogin: true,
+        })
+        break
     }
+  }
 
+  useEffect(() => {
     if (cEvent?.value) {
       RenderButtonsForTypeEvent()
     }
   }, [cEvent])
 
   useEffect(() => {
-    const onScroll = (e) => {
+    const onScroll = (e: any) => {
       const showHeaderFixed = window.scrollY > 64
       fixed != showHeaderFixed && setFixed(showHeaderFixed)
     }
@@ -342,14 +363,13 @@ const Headers = (props) => {
                 user={dataGeneral.user}
                 menuOpen={dataGeneral.menuOpen}
                 photo={
-                  dataGeneral.photo
-                    ? dataGeneral.photo
-                    : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
+                  dataGeneral.photo ??
+                  'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
                 }
                 name={dataGeneral.name ? dataGeneral.name : ''}
                 userEvent={dataGeneral.userEvent}
                 eventId={dataGeneral.eventId}
-                logout={(callBack) => userLogOut(callBack)}
+                logout={(callBack: any) => userLogOut(callBack)}
                 openMenu={() => openMenu()}
                 loginInfo={loginInfo}
               />
@@ -363,7 +383,7 @@ const Headers = (props) => {
                   name={cUser.value?.names}
                   userEvent={dataGeneral.userEvent}
                   eventId={dataGeneral.eventId}
-                  logout={(callBack) => userLogOut(callBack)}
+                  logout={(callBack: any) => userLogOut(callBack)}
                   openMenu={() => console.log('openMenu')}
                   loginInfo={loginInfo}
                   anonimususer
@@ -402,7 +422,7 @@ const Headers = (props) => {
   )
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: any) => ({
   categories: state.categories.items,
   types: state.types.items,
   loginInfo: state.user.data,
@@ -413,11 +433,5 @@ const mapStateToProps = (state) => ({
   modalVisible: state.stage.modal,
 })
 
-const mapDispatchToProps = {
-  setEventData,
-  addLoginInformation,
-  showMenu,
-}
-
-const HeaderWithContext = withContext(Headers)
+const HeaderWithContext = withContext(HeaderContainer)
 export default connect(mapStateToProps, mapDispatchToProps)(HeaderWithContext)
