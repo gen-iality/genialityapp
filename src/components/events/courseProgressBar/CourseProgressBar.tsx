@@ -45,6 +45,11 @@ function CourseProgressBar(props: CourseProgressBarProps) {
     return false
   }
 
+  const isSurveyLike = (activity: ExtendedAgendaType) =>
+    [activityContentValues.quizing, activityContentValues.survey].includes(
+      activity.type?.name as any,
+    )
+
   const requestAttendees = async () => {
     console.debug('will request the attendee for', activities.length, 'activities')
     const existentActivities = activities.map(async (activity) => {
@@ -115,11 +120,6 @@ function CourseProgressBar(props: CourseProgressBarProps) {
                     : `/landing/${eventId}/activity/${activity._id}`
                 }
                 key={`key_${index}`}
-                title={
-                  isThisActivityBlockedByRequirement(activity)
-                    ? 'Curso bloqueado por requerimiento'
-                    : 'Ir al curso'
-                }
               >
                 <Step
                   onClick={() => {
@@ -147,17 +147,16 @@ function CourseProgressBar(props: CourseProgressBarProps) {
                 >
                   <Tooltip
                     placement="right"
-                    title={`Ir ${
-                      [
-                        activityContentValues.quizing,
-                        activityContentValues.survey,
-                      ].includes(activity.type?.name as any)
-                        ? 'al cuestionario'
-                        : 'a la actividad'
-                    } "${activity.name}", tipo ${(activity.type?.name
-                      ? lessonTypeToString(activity.type?.name)
-                      : 'sin contenido'
-                    ).toLowerCase()}`}
+                    title={
+                      isThisActivityBlockedByRequirement(activity)
+                        ? `Sección "${activity.name}" bloqueada por requerimientos`
+                        : `Ir ${
+                            isSurveyLike(activity) ? 'al cuestionario' : 'a la actividad'
+                          } "${activity.name}", tipo ${(activity.type?.name
+                            ? lessonTypeToString(activity.type?.name)
+                            : 'sin contenido'
+                          ).toLowerCase()}`
+                    }
                   >
                     <Spin spinning={isLoading && activity._id === watchedActivityId}>
                       {index + 1}
