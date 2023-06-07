@@ -85,7 +85,6 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   const [haveDateNotIncluded, sethaveDateNotIncluded] = useState(false);
   const history = useHistory();
   const nameInputRef = useRef<InputRef>(null);
-
   const processDateFromAgendaDocument = useProcessDateFromAgendaDocument();
   const hourWithAdditionalMinutes = useHourWithAdditionalMinutes();
 
@@ -141,16 +140,15 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     if (!formdata.name) nameInputRef.current?.focus();
   }, [nameInputRef.current]);
 
-console.log('000000000000000',allDays)
 
   useEffect(() => {
-    if (multiDates && agenda === null) handleChangeFormData('date', moment(multiDates[0]?.start).format('YYYY-M-DD'));
+    if (multiDates && agenda === null) handleChangeFormData('date', moment(multiDates[0]?.start).format('YYYY-MM-DD'));
   }, [multiDates]);
 
   useEffect(() => {
     if (!multiDates) return;
     const existDate = multiDates.find((dateRange) => {
-      const exist = moment(dateRange.start).format('YYYY-M-DD') === moment(formdata.date).format('YYYY-M-DD');
+      const exist = moment(dateRange.start).format('YYYY-MM-DD') === moment(formdata.date).format('YYYY-MM-DD');
       return exist;
     });
     if (!existDate) {
@@ -327,8 +325,8 @@ console.log('000000000000000',allDays)
               )}
               <SelectAntd
                 options={multiDates.map((date) => ({
-                  value: moment(date.start).format('YYYY-M-DD'),
-                  label: moment(date.start).format('YYYY-M-DD'),
+                  value: moment(date.start).format('YYYY-MM-DD'),
+                  label: moment(date.start).format('YYYY-MM-DD'),
                 }))}
                 value={formdata.date}
                 defaultValue={formdata.date}

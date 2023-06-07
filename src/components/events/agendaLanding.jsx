@@ -587,14 +587,12 @@ class Agenda extends Component {
     const { hideBtnDetailAgenda, show_inscription, data, survey, documents } = this.state;
 
 
-    console.log('que verga es est=>', data)
     const list =
       date != null
         ? data
             .filter(
               (a) =>
               {
-                console.log('--------------------------------------------',date + '0000000000000000000000000', ( a.datetime_start))
                 return date.format &&
                 a.datetime_start &&
                 a.datetime_start.includes(date.format('YYYY-MM-DD')) &&
@@ -609,31 +607,6 @@ class Agenda extends Component {
         : data;
     return list;
   };
-
-
-  /* getActivitiesByDayVisibility = (date) => {
-    if (!date) return;
-    const { data } = this.state;
-    
-    const list =
-    date != null
-    ? data
-    .filter((a) => {
-              console.log('--------------------------------------------',date + '0000000000000000000000000', a)
-              return (
-                moment(a.datetime_start).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD') &&
-                (a.isPublished || a.isPublished === undefined)
-              );
-            })
-            .sort(
-              (a, b) =>
-                Moment(a.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY') -
-                Moment(b.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY')
-            )
-        : data;
-    return list;
-  }; */
-
 
 
   //End modal methods
