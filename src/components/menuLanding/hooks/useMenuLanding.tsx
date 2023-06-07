@@ -7,19 +7,20 @@ import { MenuBase, MenuItem, MenuLandingProps } from '../interfaces/menuLandingP
 import { deepCopy } from '../utils/functions';
 
 export default function useMenuLanding(props: MenuLandingProps) {
-  const menuBase = deepCopy(menu)
+
   const { organizationObj, organization, event } = props;
-  const [itemsMenu, setItemsMenu] = useState<Record<string, MenuItem>>({...menu});
+  const [itemsMenu, setItemsMenu] = useState<Record<string, MenuItem>>(deepCopy(menu));
   const [keySelect, setKeySelect] = useState<number>(Date.now());
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const ORGANIZATION_VALUE = 1;
 
   const mapActiveItemsToAvailable = (key: string, value: boolean) => {
+    const menuBase: MenuBase = { ...menu };
     const itemsMenuDB = { ...itemsMenu };
+    
     itemsMenuDB[key].checked = value;
     if (!value) {
-      itemsMenuDB[key] = menuBase[key];
       itemsMenuDB[key].name = menuBase[key].name;
     }
     setItemsMenu(itemsMenuDB);
