@@ -52,7 +52,7 @@ const EventSectionMenuRigth = loadable(() => import('./EventSectionMenuRigth'))
 const MenuTablets = loadable(() => import('./Menus/MenuTablets'))
 const MenuTabletsSocialZone = loadable(() => import('./Menus/MenuTabletsSocialZone'))
 
-const iniitalstatetabs = {
+const iniitalStateTabs = {
   attendees: false,
   privateChat: false,
   publicChat: false,
@@ -93,6 +93,22 @@ const IconRender = (type: string) => {
   return iconRender
 }
 
+const ButtonRender = (status: string, eventId: string, activityId: string) => {
+  return status == 'open' ? (
+    <Button
+      type="primary"
+      size="small"
+      onClick={() =>
+        window.location.replace(
+          `${window.location.origin}/landing/${eventId}/activity/${activityId}`,
+        )
+      }
+    >
+      Ir a la lección
+    </Button>
+  ) : null
+}
+
 const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps>> = (
   props,
 ) => {
@@ -107,7 +123,7 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
     setRegister,
   } = useHelper()
 
-  const [activitiesAttendee, setActivitiesAttendee] = useState<any[]>([])
+  const [activityAttendees, setActivityAttendees] = useState<any[]>([])
   const [countableActivities, setCountableActivities] = useState<any[]>([])
 
   const [activities, setActivities] = useState<ExtendedAgendaType[]>([])
@@ -134,43 +150,36 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
       'loading',
       '¡Estamos configurando la mejor experiencia para tí!',
     )
+
+    const urlParams = new URLSearchParams(window.location.search)
+    if (urlParams.get('register') !== null) {
+      setRegister(urlParams.get('register'))
+    }
+
     return () => {
       setActivities([])
     }
   }, [])
 
-  const ButtonRender = (status: string, activityId: string) => {
-    return status == 'open' ? (
-      <Button
-        type="primary"
-        size="small"
-        onClick={() =>
-          window.location.replace(
-            `${window.location.origin}/landing/${cEventContext.value._id}/activity/${activityId}`,
-          )
-        }
-      >
-        Ir a la lección
-      </Button>
-    ) : null
-  }
-
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search)
-    if (urlParams.get('register') !== null) {
-      setRegister(urlParams.get('register'))
+    if (isNotification.notify) {
+      notificationHelper(cEventContext.value._id, isNotification)
     }
-  }, [])
+  }, [isNotification])
+
   // Para obtener parametro al loguearme
-  const NotificationHelper = ({
-    message,
-    type,
-    activityId,
-  }: {
-    message: string
-    type: string
-    activityId: any
-  }) => {
+  const notificationHelper = (
+    eventId: string,
+    {
+      message,
+      type,
+      activityId,
+    }: {
+      message: string
+      type: string
+      activityId: any
+    },
+  ) => {
     notification.open({
       message: 'Nueva notificación',
       description: message,
@@ -178,18 +187,12 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
       onClose: () => {
         ChangeActiveNotification(false, 'none', 'none')
       },
-      btn: ButtonRender(type, activityId),
+      btn: ButtonRender(type, eventId, activityId),
       duration: type == 'ended' || type == 'open' ? 7 : 3,
     })
   }
 
-  useEffect(() => {
-    if (isNotification.notify) {
-      NotificationHelper(isNotification)
-    }
-  }, [isNotification])
-
-  const [generaltabs, setGeneraltabs] = useState(iniitalstatetabs)
+  const [generalTabs, setGeneralTabs] = useState(iniitalStateTabs)
   // eslint-disable-next-line prefer-const
   const [totalNewMessages, setTotalNewMessages] = useState(0)
 
@@ -204,7 +207,7 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
       .filter((activity) => !activity.is_info_only)
     setCountableActivities(filteredData)
 
-    const existentActivities = filteredData.map(async (activity) => {
+    const existentActivityPromises = filteredData.map(async (activity) => {
       const activityAttendee = await firestore
         .collection(`${activity._id}_event_attendees`)
         .doc(cEventUser.value._id)
@@ -213,17 +216,17 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
       return null
     })
     // Filter existent activities and set the state
-    setActivitiesAttendee(
-      // Promises don't bite :)
-      (await Promise.all(existentActivities)).filter((item) => !!item),
-    )
+    const existentActivities = await Promise.all(existentActivityPromises)
+    setActivityAttendees(existentActivities.filter((item) => !!item))
   }
 
   useEffect(() => {
-    setActivitiesAttendee([])
+    if (!cEventUser.value._id) return
 
-    loadActivityAttendeeData().then()
-  }, [activities, location.pathname])
+    loadActivityAttendeeData()
+      .then(() => console.log('attendees updated successful'))
+      .catch((err) => console.error('Cannot load activity attendees at routes', err))
+  }, [activities, location.pathname, cEventUser.value])
 
   useEffect(() => {
     if (cEventContext.status === 'LOADED') {
@@ -235,7 +238,7 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
             if (eventSnapshot.exists) {
               const eventData = eventSnapshot.data()
               if (eventData?.tabs !== undefined) {
-                setGeneraltabs(eventData.tabs)
+                setGeneralTabs(eventData.tabs)
               }
             }
           })
@@ -281,9 +284,9 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
   const eventProgressPercent: number = useMemo(
     () =>
       Math.round(
-        ((activitiesAttendee.length || 0) / (countableActivities.length || 0)) * 100,
+        ((activityAttendees.length || 0) / (countableActivities.length || 0)) * 100,
       ),
-    [activitiesAttendee, countableActivities],
+    [activityAttendees, countableActivities],
   )
 
   if (cEventContext.status === 'LOADING') return <Spin />
@@ -335,7 +338,7 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
           >
             {props.view && <TopBanner currentActivity={currentActivity} />}
             <EventSectionRoutes
-              generaltabs={generaltabs}
+              generaltabs={generalTabs}
               currentActivity={currentActivity}
               eventProgressPercent={eventProgressPercent}
             />
@@ -343,7 +346,7 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
           </Content>
         </Layout>
         <EventSectionMenuRigth
-          generalTabs={generaltabs}
+          generalTabs={generalTabs}
           currentActivity={currentActivity}
           totalNewMessages={totalNewMessages}
           tabs={props.tabs}
@@ -351,7 +354,7 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
         <MenuTabletsSocialZone
           totalNewMessages={totalNewMessages}
           currentActivity={currentActivity}
-          generalTabs={generaltabs}
+          generalTabs={generalTabs}
         />
         <EnableGTMByEVENT />
         <EnableAnalyticsByEVENT />

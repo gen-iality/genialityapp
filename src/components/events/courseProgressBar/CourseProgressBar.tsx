@@ -118,6 +118,7 @@ function CourseProgressBar(props: CourseProgressBarProps) {
                     ? '#'
                     : `/landing/${eventId}/activity/${activity._id}`
                 }
+                replace
                 key={`key_${index}`}
               >
                 <Step
