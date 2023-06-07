@@ -9,7 +9,7 @@ import { haveRequest, isMyContacts } from '@helpers/netWorkingFunctions'
 import { useEventContext } from '@context/eventContext'
 import { useUserEvent } from '@context/eventUserContext'
 import { setUserAgenda } from '../../../redux/networking/actions'
-import withContext from '@context/withContext'
+import withContext, { WithEviusContextProps } from '@context/withContext'
 import { FunctionComponent, useEffect } from 'react'
 import { useState } from 'react'
 import { useIntl, FormattedMessage } from 'react-intl'
@@ -28,7 +28,9 @@ const mapDispatchToProps = {
   setUserAgenda,
 }
 
-type IDrawerProfileProps = MapStateToPropsType & typeof mapDispatchToProps
+type IDrawerProfileProps = WithEviusContextProps<
+  MapStateToPropsType & typeof mapDispatchToProps
+>
 
 const DrawerProfile: FunctionComponent<IDrawerProfileProps> = (props) => {
   const cUser = useCurrentUser()
