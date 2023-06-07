@@ -16,6 +16,7 @@ export const logout = async ({ showNotification, params }: logoutInterface) => {
     user,
     handleChangeTypeModal,
     setuserEvent,
+    resetEventUser,
     setCurrentUser,
     history,
   } = params
@@ -42,7 +43,12 @@ export const logout = async ({ showNotification, params }: logoutInterface) => {
       const weAreOnTheOrganizationLanding =
         routeUrl.includes('organization') && !routeUrl.includes('admin/organization')
       handleChangeTypeModal(null)
-      setuserEvent(initialStateEvenUserContext)
+      try {
+        resetEventUser()
+      } catch (err) {
+        console.error(err)
+        setuserEvent(initialStateEvenUserContext)
+      }
       setCurrentUser(initialStateUserContext)
       if (showNotification)
         remoteLogoutNotification({ type: 'info', names: user.names, formatMessage })

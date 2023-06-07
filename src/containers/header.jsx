@@ -128,6 +128,7 @@ const Headers = (props) => {
       user: cUser.value,
       setCurrentUser: cUser.setCurrentUser,
       setuserEvent: cEventUser.setuserEvent,
+      resetEventUser: cEventUser.resetEventUser,
       formatMessage: intl.formatMessage,
       handleChangeTypeModal: cHelper.handleChangeTypeModal,
       history,
