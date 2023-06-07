@@ -106,7 +106,7 @@ const ListTheseActivities: FunctionComponent<IListTheseActivitiesProps> = (props
                           item._id!,
                         )
                           ? 'line-through'
-                          : null,
+                          : 'inherit',
                       }}
                     >
                       {item.title}
