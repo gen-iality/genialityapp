@@ -226,31 +226,32 @@ const LandingRoutes = (props) => {
   const activityFilter = (a: any) =>
     [activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
 
+  const loadActivityAttendeeData = async () => {
+    const filteredData = activities
+      .filter(activityFilter)
+      .filter((activity) => !activity.is_info_only)
+    setCountableActivities(filteredData)
+
+    const existentActivities = filteredData.map(async (activity) => {
+      const activityAttendee = await firestore
+        .collection(`${activity._id}_event_attendees`)
+        .doc(cEventUser.value._id)
+        .get() //checkedin_at
+      if (activityAttendee.exists) return activityAttendee.data() as any
+      return null
+    })
+    // Filter existent activities and set the state
+    setActivitiesAttendee(
+      // Promises don't bite :)
+      (await Promise.all(existentActivities)).filter((item) => !!item),
+    )
+  }
+
   useEffect(() => {
     setActivitiesAttendee([])
 
-    const loadData = async () => {
-      const filteredData = activities
-        .filter(activityFilter)
-        .filter((activity) => !activity.is_info_only)
-      setCountableActivities(filteredData)
-
-      const existentActivities = filteredData.map(async (activity) => {
-        const activityAttendee = await firestore
-          .collection(`${activity._id}_event_attendees`)
-          .doc(cEventUser.value._id)
-          .get() //checkedin_at
-        if (activityAttendee.exists) return activityAttendee.data() as any
-        return null
-      })
-      // Filter existent activities and set the state
-      setActivitiesAttendee(
-        // Promises don't bite :)
-        (await Promise.all(existentActivities)).filter((item) => !!item),
-      )
-    }
-    loadData().then()
-  }, [activities])
+    loadActivityAttendeeData().then()
+  }, [activities, location.pathname])
 
   const eventProgressPercent: number = useMemo(
     () =>
