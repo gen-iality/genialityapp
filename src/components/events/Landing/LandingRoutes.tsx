@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { FunctionComponent, useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
 import { useEventContext } from '@context/eventContext'
 import { useCurrentUser } from '@context/userContext'
@@ -27,7 +27,7 @@ import { EnableFacebookPixelByEVENT } from './helpers/facebookPixelHelper'
 
 import loadable from '@loadable/component'
 import { StateMessage } from '@context/MessageService'
-import WithEviusContext from '@context/withContext'
+import WithEviusContext, { WithEviusContextProps } from '@context/withContext'
 import { checkinAttendeeInEvent } from '@helpers/HelperAuth'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { AgendaApi } from '@helpers/request'
@@ -52,13 +52,26 @@ const EventSectionMenuRigth = loadable(() => import('./EventSectionMenuRigth'))
 const MenuTablets = loadable(() => import('./Menus/MenuTablets'))
 const MenuTabletsSocialZone = loadable(() => import('./Menus/MenuTabletsSocialZone'))
 
-const iniitalstatetabs = {
+const iniitalStateTabs = {
   attendees: false,
   privateChat: false,
   publicChat: false,
 }
 
-const IconRender = (type) => {
+type MapStateToProps = {
+  currentActivity: any
+  tabs: any
+  view: any
+  userAgenda: any
+}
+
+const mapDispatchToProps = {
+  setUserAgenda,
+}
+
+type ILandingRoutesProps = MapStateToProps & typeof mapDispatchToProps
+
+const IconRender = (type: string) => {
   let iconRender
   switch (type) {
     case 'open':
@@ -80,7 +93,25 @@ const IconRender = (type) => {
   return iconRender
 }
 
-const LandingRoutes = (props) => {
+const ButtonRender = (status: string, eventId: string, activityId: string) => {
+  return status == 'open' ? (
+    <Button
+      type="primary"
+      size="small"
+      onClick={() =>
+        window.location.replace(
+          `${window.location.origin}/landing/${eventId}/activity/${activityId}`,
+        )
+      }
+    >
+      Ir a la lección
+    </Button>
+  ) : null
+}
+
+const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps>> = (
+  props,
+) => {
   const cEventContext = useEventContext()
   const cUser = useCurrentUser()
   const cEventUser = useUserEvent()
@@ -92,7 +123,7 @@ const LandingRoutes = (props) => {
     setRegister,
   } = useHelper()
 
-  const [activitiesAttendee, setActivitiesAttendee] = useState<any[]>([])
+  const [activityAttendees, setActivityAttendees] = useState<any[]>([])
   const [countableActivities, setCountableActivities] = useState<any[]>([])
 
   const [activities, setActivities] = useState<ExtendedAgendaType[]>([])
@@ -119,35 +150,36 @@ const LandingRoutes = (props) => {
       'loading',
       '¡Estamos configurando la mejor experiencia para tí!',
     )
+
+    const urlParams = new URLSearchParams(window.location.search)
+    if (urlParams.get('register') !== null) {
+      setRegister(urlParams.get('register'))
+    }
+
     return () => {
       setActivities([])
     }
   }, [])
 
-  const ButtonRender = (status, activity) => {
-    return status == 'open' ? (
-      <Button
-        type="primary"
-        size="small"
-        onClick={() =>
-          window.location.replace(
-            `${window.location.origin}/landing/${cEventContext.value._id}/activity/${activity}`,
-          )
-        }
-      >
-        Ir a la lección
-      </Button>
-    ) : null
-  }
-
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search)
-    if (urlParams.get('register') !== null) {
-      setRegister(urlParams.get('register'))
+    if (isNotification.notify) {
+      notificationHelper(cEventContext.value._id, isNotification)
     }
-  }, [])
+  }, [isNotification])
+
   // Para obtener parametro al loguearme
-  const NotificationHelper = ({ message, type, activity }) => {
+  const notificationHelper = (
+    eventId: string,
+    {
+      message,
+      type,
+      activityId,
+    }: {
+      message: string
+      type: string
+      activityId: any
+    },
+  ) => {
     notification.open({
       message: 'Nueva notificación',
       description: message,
@@ -155,20 +187,46 @@ const LandingRoutes = (props) => {
       onClose: () => {
         ChangeActiveNotification(false, 'none', 'none')
       },
-      btn: ButtonRender(type, activity),
+      btn: ButtonRender(type, eventId, activityId),
       duration: type == 'ended' || type == 'open' ? 7 : 3,
     })
   }
 
-  useEffect(() => {
-    if (isNotification.notify) {
-      NotificationHelper(isNotification)
-    }
-  }, [isNotification])
-
-  const [generaltabs, setGeneraltabs] = useState(iniitalstatetabs)
+  const [generalTabs, setGeneralTabs] = useState(iniitalStateTabs)
   // eslint-disable-next-line prefer-const
-  let [totalNewMessages, setTotalnewmessages] = useState(0)
+  const [totalNewMessages, setTotalNewMessages] = useState(0)
+
+  // This can be a context or well
+
+  const activityFilter = (a: any) =>
+    ![activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
+
+  const loadActivityAttendeeData = async () => {
+    const filteredData = activities
+      .filter(activityFilter)
+      .filter((activity) => !activity.is_info_only)
+    setCountableActivities(filteredData)
+
+    const existentActivityPromises = filteredData.map(async (activity) => {
+      const activityAttendee = await firestore
+        .collection(`${activity._id}_event_attendees`)
+        .doc(cEventUser.value._id)
+        .get() //checkedin_at
+      if (activityAttendee.exists) return activityAttendee.data() as any
+      return null
+    })
+    // Filter existent activities and set the state
+    const existentActivities = await Promise.all(existentActivityPromises)
+    setActivityAttendees(existentActivities.filter((item) => !!item))
+  }
+
+  useEffect(() => {
+    if (!cEventUser.value._id) return
+
+    loadActivityAttendeeData()
+      .then(() => console.log('attendees updated successful'))
+      .catch((err) => console.error('Cannot load activity attendees at routes', err))
+  }, [activities, location.pathname, cEventUser.value])
 
   useEffect(() => {
     if (cEventContext.status === 'LOADED') {
@@ -178,8 +236,9 @@ const LandingRoutes = (props) => {
           .doc(cEventContext.value?._id)
           .onSnapshot(function (eventSnapshot) {
             if (eventSnapshot.exists) {
-              if (eventSnapshot.data().tabs !== undefined) {
-                setGeneraltabs(eventSnapshot.data().tabs)
+              const eventData = eventSnapshot.data()
+              if (eventData?.tabs !== undefined) {
+                setGeneralTabs(eventData.tabs)
               }
             }
           })
@@ -198,8 +257,9 @@ const LandingRoutes = (props) => {
             querySnapshot.forEach((doc) => {
               data = doc.data()
 
+              // NOTA: I don't know what the last developer did want to do here
               if (data.newMessages) {
-                setTotalnewmessages(
+                setTotalNewMessages(
                   (totalNewMessages += !isNaN(parseInt(data.newMessages.length))
                     ? parseInt(data.newMessages.length)
                     : 0),
@@ -221,43 +281,12 @@ const LandingRoutes = (props) => {
     }
   }, [cEventContext.status, cEventUser.status, cEventUser.value, location])
 
-  // This can be a context or well
-
-  const activityFilter = (a: any) =>
-    [activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
-
-  useEffect(() => {
-    setActivitiesAttendee([])
-
-    const loadData = async () => {
-      const filteredData = activities
-        .filter(activityFilter)
-        .filter((activity) => !activity.is_info_only)
-      setCountableActivities(filteredData)
-
-      const existentActivities = filteredData.map(async (activity) => {
-        const activityAttendee = await firestore
-          .collection(`${activity._id}_event_attendees`)
-          .doc(cEventUser.value._id)
-          .get() //checkedin_at
-        if (activityAttendee.exists) return activityAttendee.data() as any
-        return null
-      })
-      // Filter existent activities and set the state
-      setActivitiesAttendee(
-        // Promises don't bite :)
-        (await Promise.all(existentActivities)).filter((item) => !!item),
-      )
-    }
-    loadData().then()
-  }, [activities])
-
   const eventProgressPercent: number = useMemo(
     () =>
       Math.round(
-        ((activitiesAttendee.length || 0) / (countableActivities.length || 0)) * 100,
+        ((activityAttendees.length || 0) / (countableActivities.length || 0)) * 100,
       ),
-    [activitiesAttendee, countableActivities],
+    [activityAttendees, countableActivities],
   )
 
   if (cEventContext.status === 'LOADING') return <Spin />
@@ -309,7 +338,7 @@ const LandingRoutes = (props) => {
           >
             {props.view && <TopBanner currentActivity={currentActivity} />}
             <EventSectionRoutes
-              generaltabs={generaltabs}
+              generaltabs={generalTabs}
               currentActivity={currentActivity}
               eventProgressPercent={eventProgressPercent}
             />
@@ -317,7 +346,7 @@ const LandingRoutes = (props) => {
           </Content>
         </Layout>
         <EventSectionMenuRigth
-          generalTabs={generaltabs}
+          generalTabs={generalTabs}
           currentActivity={currentActivity}
           totalNewMessages={totalNewMessages}
           tabs={props.tabs}
@@ -325,7 +354,7 @@ const LandingRoutes = (props) => {
         <MenuTabletsSocialZone
           totalNewMessages={totalNewMessages}
           currentActivity={currentActivity}
-          generalTabs={generaltabs}
+          generalTabs={generalTabs}
         />
         <EnableGTMByEVENT />
         <EnableAnalyticsByEVENT />
@@ -342,11 +371,7 @@ const mapStateToProps = (state) => ({
   userAgenda: state.spaceNetworkingReducer.userAgenda,
 })
 
-const mapDispatchToProps = {
-  setUserAgenda,
-}
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(WithEviusContext(LandingRoutes))
+)(WithEviusContext<ILandingRoutesProps>(LandingRoutes))
