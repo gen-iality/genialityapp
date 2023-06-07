@@ -134,6 +134,12 @@ const ListTheseActivities: FunctionComponent<IListTheseActivitiesProps> = (props
                   {item.isInfoOnly && (
                     <Badge style={{ backgroundColor: '#999' }} count="Info" />
                   )}
+                  {thereActivitiesRequireCompletion.includes(item._id!) && (
+                    <Badge
+                      style={{ backgroundColor: '#FE2C00', marginRight: '3px' }}
+                      count="Requiere completar el curso"
+                    />
+                  )}
                 </span>
                 {/* <Link to={item.link}>
                   {/* <span style={{ fontWeight: '100', fontSize: '1.2rem' }}>{item.timeString}</span> * /}
