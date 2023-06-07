@@ -105,8 +105,7 @@ const EventProvider: FunctionComponent = (props) => {
 
   return (
     <CurrentEventContext.Provider value={eventContext}>
-      {eventContext && eventContext.error && <NotFoundPage />}
-      {eventContext && !eventContext.error && <>{children}</>}
+      {eventContext.error ? <NotFoundPage /> : <>{children}</>}
     </CurrentEventContext.Provider>
   )
 }
