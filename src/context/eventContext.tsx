@@ -1,71 +1,99 @@
-import { useState, createContext, useEffect, useContext } from 'react'
+// TODO: rename to EventContext everywhere
+import { useState, createContext, useEffect, useContext, FunctionComponent } from 'react'
 import { useParams } from 'react-router-dom'
 import { EventsApi } from '@helpers/request'
 import NotFoundPage from '@components/notFoundPage/NotFoundPage'
 
-const EventContext = createContext()
+type WantedParams = {
+  event_id: string
+  event_name: string
+  event: string
+}
+
+interface EventContextState {
+  status: 'LOADING' | 'LOADED'
+  value: any
+  nameEvent: string
+  error?: any
+  isByname?: boolean
+  idEvent?: any
+}
+
+const initialContextState: EventContextState = {
+  status: 'LOADING',
+  value: null,
+  nameEvent: '',
+  isByname: false,
+}
+
+const EventContext = createContext<EventContextState>(initialContextState)
 
 export default EventContext
 export const CurrentEventContext = EventContext
 
-function EventProvider({ children }) {
-  const { event_id, event_name, event } = useParams()
-  let eventNameFormated = null
-  let initialContextState = { status: 'LOADING', value: null, nameEvent: '' }
+const EventProvider: FunctionComponent = (props) => {
+  const { children } = props
+  const [eventContext, setEventContext] = useState<EventContextState>(initialContextState)
+  const [formatedEventName, setFormatedEventName] = useState<string | null>(null)
+  const { event_id, event_name, event } = useParams<WantedParams>()
 
   if (event_name) {
-    eventNameFormated = event_name.replaceAll('---', 'more')
-    eventNameFormated = eventNameFormated.replaceAll('-', '%20')
-    eventNameFormated = eventNameFormated.replaceAll('more', '"-"')
-    initialContextState = {
+    const newFormatedEventName = event_name
+      .replaceAll('---', 'more')
+      .replaceAll('-', '%20')
+      .replaceAll('more', '"-"')
+    setFormatedEventName(newFormatedEventName)
+    setEventContext({
       error: null,
       status: 'LOADING',
       value: null,
       nameEvent: event_name,
-    }
+    })
   }
 
-  const [eventContext, setEventContext] = useState(initialContextState)
+  async function fetchEvent(type: string) {
+    let eventData: any
+    let newEventContextState: EventContextState | undefined
+
+    switch (type) {
+      case 'id':
+        eventData = await EventsApi.getOne(event_id || event)
+        newEventContextState = {
+          status: 'LOADED',
+          value: eventData,
+          nameEvent: event_id || event,
+          isByname: false,
+        }
+        break
+
+      case 'name':
+        eventData = await EventsApi.getOneByNameEvent(formatedEventName)
+        newEventContextState = {
+          status: 'LOADED',
+          value: eventData.data[0],
+          nameEvent: event_name,
+          isByname: true,
+        }
+        break
+
+      case 'eventadmin':
+        eventData = await EventsApi.getOne(event)
+        newEventContextState = {
+          status: 'LOADED',
+          value: eventData,
+          nameEvent: event_id || event,
+          idEvent: event,
+          isByname: false,
+        }
+        break
+      default:
+        console.error(`The type ${type} is unknown for the EventContext`)
+        return
+    }
+    setEventContext(newEventContextState)
+  }
 
   useEffect(() => {
-    async function fetchEvent(type) {
-      let eventGlobal
-      let dataevent
-      switch (type) {
-        case 'id':
-          eventGlobal = await EventsApi.getOne(event_id || event)
-          dataevent = {
-            status: 'LOADED',
-            value: eventGlobal,
-            nameEvent: event_id || event,
-            isByname: false,
-          }
-          break
-
-        case 'name':
-          eventGlobal = await EventsApi.getOneByNameEvent(eventNameFormated)
-          dataevent = {
-            status: 'LOADED',
-            value: eventGlobal.data[0],
-            nameEvent: event_name,
-            isByname: true,
-          }
-          break
-
-        case 'eventadmin':
-          eventGlobal = await EventsApi.getOne(event)
-          dataevent = {
-            status: 'LOADED',
-            value: eventGlobal,
-            nameEvent: event_id || event,
-            idEvent: event,
-            isByname: false,
-          }
-          break
-      }
-      setEventContext(dataevent)
-    }
-
     if (event_id) {
       fetchEvent('id')
     } else if (event_name) {
