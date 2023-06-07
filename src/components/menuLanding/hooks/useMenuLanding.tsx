@@ -15,34 +15,34 @@ export default function useMenuLanding(props: MenuLandingProps) {
 
   const ORGANIZATION_VALUE = 1;
 
-  const mapActiveItemsToAvailable = (key: string, value: boolean) => {
+  const checkedItem = (key: string, value: boolean) => {
     const menuBase: MenuBase = { ...menu };
     const itemsMenuDB = { ...itemsMenu };
-    
     itemsMenuDB[key].checked = value;
     if (!value) {
       itemsMenuDB[key].name = menuBase[key].name;
+      itemsMenuDB[key].position = menuBase[key].position;
     }
     setItemsMenu(itemsMenuDB);
   };
 
   async function componentDidMount() {
-    let menuLanding: { itemsMenu: MenuBase } | null = null   
+    let menuLanding: { itemsMenu: MenuBase } | null = null;
     if (organization !== ORGANIZATION_VALUE) {
       let token = await GetTokenUserFirebase();
       menuLanding = await Actions.getAll(`/api/events/${event?._id}?token=${token}`);
+      console.log(menuLanding?.itemsMenu);
+      
     } else {
       setItemsMenu(organizationObj.itemsMenu || []);
     }
+
     if (menuLanding) {
-      for (const prop in menuLanding.itemsMenu) {
-        const { name, position, markup, permissions, checked } = menuLanding.itemsMenu[prop];
-        mapActiveItemsToAvailable(prop, checked);
-        updateValue(prop, markup, 'markup');
-        updateValue(prop, name, 'name');
-        updateValue(prop, position, 'position');
-        updateValue(prop, permissions, 'permissions');
+      const menuCopy = { ...itemsMenu };
+      for (const key in menuLanding.itemsMenu) {
+        if (menuCopy[key]) menuCopy[key] = { ...menuLanding.itemsMenu[key] };
       }
+      setItemsMenu(menuCopy);
     }
     setIsLoading(false);
   }
@@ -52,18 +52,17 @@ export default function useMenuLanding(props: MenuLandingProps) {
   }, []);
 
 
-  function updateValue(key: string, value: string | number | boolean, index: string) {
-    let itemsMenuDB: Record<string, MenuItem> = Object.assign({}, itemsMenu);
-    !!value && itemsMenuDB[key] && (itemsMenuDB[key][index] = value);
+  function updateValue(key: string, value: string | number | boolean, property: string) {
+    let itemsMenuDB =  { ...itemsMenu }
+    if (value && itemsMenuDB[key]) itemsMenuDB[key][property] = value;
     setItemsMenu(itemsMenuDB);
-    index === 'permissions' && setKeySelect(Date.now());
+    if (property === 'permissions') setKeySelect(Date.now());
   }
 
 
   function orderPosition(key: string, order: string | number): void {
     let itemsMenuToOrder = Object.assign({}, itemsMenu);
     itemsMenuToOrder[key].position = order !== '' ? parseInt(String(order)) : 0;
-    itemsMenu[key].position = itemsMenuToOrder[key].position;
     setItemsMenu(itemsMenuToOrder);
   }
 
@@ -150,6 +149,6 @@ export default function useMenuLanding(props: MenuLandingProps) {
     orderPosition,
     submit,
     // validation,
-    mapActiveItemsToAvailable,
+    checkedItem,
   };
 }
