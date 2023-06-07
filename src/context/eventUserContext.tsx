@@ -4,7 +4,7 @@ import { useEventContext } from './eventContext'
 import { app } from '@helpers/firebase'
 import { useCurrentUser } from './userContext'
 
-interface EventUserContextState {
+export interface EventUserContextState {
   status: 'LOADING' | 'LOADED'
   value: any
   error?: any

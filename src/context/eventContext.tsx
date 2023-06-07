@@ -10,7 +10,7 @@ type WantedParams = {
   event: string
 }
 
-interface EventContextState {
+export interface EventContextState {
   status: 'LOADING' | 'LOADED'
   value: any
   nameEvent: string
