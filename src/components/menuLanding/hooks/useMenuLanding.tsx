@@ -31,10 +31,8 @@ export default function useMenuLanding(props: MenuLandingProps) {
     if (organization !== ORGANIZATION_VALUE) {
       let token = await GetTokenUserFirebase();
       menuLanding = await Actions.getAll(`/api/events/${event?._id}?token=${token}`);
-      console.log(menuLanding?.itemsMenu);
-      
     } else {
-      setItemsMenu(organizationObj.itemsMenu || []);
+      menuLanding = { itemsMenu : organizationObj.itemsMenu || []}    
     }
 
     if (menuLanding) {
