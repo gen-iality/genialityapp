@@ -37,7 +37,6 @@ import { ExtendedAgendaType } from '@Utilities/types/AgendaType'
 
 import { activityContentValues } from '@context/activityType/constants/ui'
 import { FB } from '@helpers/firestore-request'
-import { firestore } from '@helpers/firebase'
 
 const EviusFooter = loadable(() => import('./EviusFooter'))
 const AppointmentModal = loadable(() => import('../../networking/appointmentModal'))
@@ -210,11 +209,8 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
     setCountableActivities(filteredData)
 
     const existentActivityPromises = filteredData.map(async (activity) => {
-      const activityAttendee = await firestore
-        .collection(`${activity._id}_event_attendees`)
-        .doc(cEventUser.value._id)
-        .get() //checkedin_at
-      if (activityAttendee.exists) return activityAttendee.data() as any
+      const activityAttendee = await FB.Attendees.get(activity._id!, cEventUser.value._id)
+      if (activityAttendee) return activityAttendee
       return null
     })
     // Filter existent activities and set the state
