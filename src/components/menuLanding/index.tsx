@@ -33,7 +33,7 @@ export default function MenuLanding(props: MenuLandingProps) {
             <Col key={key} xs={24} sm={8} md={6} lg={6} xl={6} xxl={6}>
               <Card title={menu[key].name} bordered={true} style={{ maxHeight: '350px' }}>
                 <Form.Item name={menu[key].name}>
-                  <Switch checked={menu[key].checked} onChange={() => mapActiveItemsToAvailable(key)} />
+                  <Switch checked={menu[key].checked} onChange={(value) => mapActiveItemsToAvailable(key, value)} />
                 </Form.Item>
                 <Form.Item label={'Cambiar nombre de la sección'}>
                   <Input
