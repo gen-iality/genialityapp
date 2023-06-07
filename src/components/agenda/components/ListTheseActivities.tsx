@@ -20,7 +20,7 @@ const ListTheseActivities: FunctionComponent<IListTheseActivitiesProps> = (props
         .map((activity) => {
           if (eventProgressPercent === undefined) return
           if (activity.require_completion === undefined) return
-          if (activity.require_completion > eventProgressPercent) return activity._id
+          if (activity.require_completion >= eventProgressPercent) return activity._id
           return
         })
         .filter((activity) => activity !== undefined) as string[],
@@ -81,6 +81,12 @@ const ListTheseActivities: FunctionComponent<IListTheseActivitiesProps> = (props
                         />
                       )
                     })}
+                  {thereActivitiesRequireCompletion.includes(item._id!) && (
+                    <Badge
+                      style={{ backgroundColor: '#FE2C00', marginRight: '3px' }}
+                      count="Requiere completar el curso"
+                    />
+                  )}
                 </div>
                 <Link
                   to={
@@ -94,7 +100,7 @@ const ListTheseActivities: FunctionComponent<IListTheseActivitiesProps> = (props
                       : 'Ir al curso'
                   }
                 >
-                  <div style={{ fontSize: '1.6rem' }}>
+                  <div style={{ fontSize: '1.3rem' }}>
                     <ActivityCustomIcon
                       type={item.type!}
                       className="list-icon"
@@ -106,14 +112,14 @@ const ListTheseActivities: FunctionComponent<IListTheseActivitiesProps> = (props
                           item._id!,
                         )
                           ? 'line-through'
-                          : null,
+                          : 'inherit',
                       }}
                     >
                       {item.title}
                     </span>
                   </div>
                 </Link>
-                <span style={{ fontSize: '1.6rem' }}>{item.name_host}</span>
+                <span style={{ fontSize: '1.2rem' }}>{item.name_host}</span>
                 {item.short_description !== '<p><br></p>' && (
                   <ReactQuill
                     style={{ color: '#777' }}
@@ -126,7 +132,7 @@ const ListTheseActivities: FunctionComponent<IListTheseActivitiesProps> = (props
                 {item.type &&
                   [activityContentValues.meet, activityContentValues.meeting].includes(
                     item.type,
-                  ) && <small>Inicia en: {item.datetime_start}</small>}
+                  ) && <small>Inicia el: {item.datetime_start}</small>}
               </div>
               <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <span style={{ marginRight: '.5em' }}>

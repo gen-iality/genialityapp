@@ -28,9 +28,9 @@ import ModalUpdate from '@components/events/Landing/ModalUpdate'
 import DirectLoginPage from '@/pages/DirectLoginPage'
 import CertificateGeneraterPage from '@/pages/CertificateGeneraterPage'
 //Code splitting
-const Header = loadable(() => import('./header'))
+const HeaderContainer = loadable(() => import('./HeaderContainer'))
 const Home = loadable(() => import('../pages/home'))
-const Landing = loadable(() => import('../components/events/Landing/landing'))
+const LandingRoutes = loadable(() => import('../components/events/Landing/LandingRoutes'))
 const Transition = loadable(() => import('../components/shared/Animate_Img/index'))
 const NewEventPage = loadable(() =>
   import('../components/events/createEvent/NewEventPage'),
@@ -70,7 +70,7 @@ const ContentContainer = () => {
           />
           <RouteContext
             path={['/landing/:event_id', '/event/:event_name']}
-            component={Landing}
+            component={LandingRoutes}
           />
           {/*Ruta para ver resumen */}
           <PrivateRoute exact path="/myprofile/:tab" component={MainProfile} />
@@ -157,7 +157,7 @@ const RouteContext = ({ component: Component, ...rest }) => (
                       minHeight: '100vh',
                     }}
                   >
-                    <Header />
+                    <HeaderContainer />
                     <Component {...props} />
                     <ModalAuth />
                     <ModalAuthAnonymous />
@@ -187,7 +187,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
                 <AgendaContextProvider>
                   <SurveysProvider>
                     <Layout style={{ minHeight: '100vh' }}>
-                      <Header />
+                      <HeaderContainer />
                       {cUser.value ? (
                         <Component {...props} />
                       ) : cUser.value == null && cUser.status == 'LOADED' ? (

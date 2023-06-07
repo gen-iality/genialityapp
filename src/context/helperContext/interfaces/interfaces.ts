@@ -24,7 +24,9 @@ export interface logoutParams {
   formatMessage: ({}) => any
   user: logoutUser
   handleChangeTypeModal: any
+  /** @deprecated use resetEventUser instead */
   setuserEvent: ({}) => any
+  resetEventUser: () => void
   setCurrentUser: ({}) => any
   history: any
 }
