@@ -8,11 +8,12 @@ export interface StepProps {
   isSurvey?: boolean
   key?: string
   isFocus?: boolean
+  isBlocked?: boolean
   onClick?: () => void
 }
 
 function Step(props: StepProps) {
-  const { children, isActive, isSurvey, isFocus, ...rest } = props
+  const { children, isActive, isSurvey, isFocus, isBlocked, ...rest } = props
 
   const className = useMemo(() => {
     if (isActive) {
@@ -31,7 +32,11 @@ function Step(props: StepProps) {
       }}
       {...rest}
       onClick={() => {
-        props.onClick && props.onClick()
+        if (typeof props.onClick === 'function') {
+          if (!isBlocked) {
+            props.onClick()
+          }
+        }
       }}
     >
       {children}

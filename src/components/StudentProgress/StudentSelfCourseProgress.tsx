@@ -53,6 +53,8 @@ function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
     if (!cEventUser || !cEventUser.value) return
 
     setActivitiesAttendee([])
+
+    /** @deprecated TODO: import event progress from the Landing component because this feature is moving to get be global */
     const loadData = async () => {
       const { data }: { data: ExtendedAgendaType[] } = await AgendaApi.byEvent(
         cEventContext.value._id,
