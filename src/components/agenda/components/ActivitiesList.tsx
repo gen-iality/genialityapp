@@ -132,7 +132,8 @@ const ActivitiesList = (props: ActivitiesListProps) => {
               ),
             () =>
               ![activityContentValues.quizing, activityContentValues.survey].includes(
-                agenda.type?.name as any,
+                (agenda.type?.name as any) ||
+                  !(import.meta.env.MODE || '').includes('staging'),
               ) ? (
                 <></>
               ) : (
