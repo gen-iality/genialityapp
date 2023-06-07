@@ -289,6 +289,7 @@ const Landing = (props) => {
           eventId={cEventContext.value._id}
           activities={activities}
           eventUser={cEventUser.value}
+          eventProgressPercent={eventProgressPercent}
         />
         <EventSectionsInnerMenu />
         <MenuTablets />
