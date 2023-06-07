@@ -196,7 +196,7 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
   // This can be a context or well
 
   const activityFilter = (a: any) =>
-    [activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
+    ![activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
 
   const loadActivityAttendeeData = async () => {
     const filteredData = activities
