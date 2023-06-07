@@ -40,7 +40,7 @@ function CourseProgressBar(props: CourseProgressBarProps) {
     if (eventProgressPercent === undefined) return false
     if (activity.require_completion === undefined) return false
 
-    if (activity.require_completion > eventProgressPercent) return true
+    if (activity.require_completion >= eventProgressPercent) return true
     return false
   }
 
