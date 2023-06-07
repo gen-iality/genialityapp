@@ -6,6 +6,7 @@ import {
   Col,
   Form,
   FormInstance,
+  InputNumber,
   InputRef,
   Modal,
   Row,
@@ -44,6 +45,7 @@ import { Link, useHistory } from 'react-router-dom'
 export interface FormValues {
   name: string
   module_id: string
+  require_completion?: number
   is_info_only?: boolean
   datetime_start: string // real
   datetime_end: string // real
@@ -197,6 +199,18 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
         >
           <EviusReactQuill />
           {/* <TextArea autoFocus allowClear autoSize placeholder="Descripción corta" /> */}
+        </Form.Item>
+        <Form.Item
+          label="Porcentaje del curso requierido (optional)"
+          name="require_completion"
+        >
+          <InputNumber
+            formatter={(value) => `${value}%`}
+            parser={(value) => {
+              if (value === undefined) return 0
+              return parseInt(value.replace('%', ''))
+            }}
+          />
         </Form.Item>
         <Form.Item label="Módulo (opcional)" name="module_id">
           <Select

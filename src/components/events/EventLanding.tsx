@@ -16,10 +16,11 @@ import QuizApprovedStatus from '../quiz/QuizApprovedStatus'
 interface EventLandingProps {
   event: any
   eventUser: any
+  eventProgressPercent?: number
 }
 
 const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
-  const { event, eventUser } = props
+  const { event, eventUser, eventProgressPercent } = props
 
   const [activityId, setActivityId] = useState<string | null>(null)
   const [activityDetail, setActivityDetail] = useState<any | null>(null)
@@ -122,7 +123,11 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
             </Col>
             <Col sm={24} md={18} style={{ padding: '0 5px' }}>
               <div className="activities-main-list">
-                <ActivitiesList eventId={event?._id} eventUserId={eventUser?._id} />
+                <ActivitiesList
+                  eventId={event?._id}
+                  eventUserId={eventUser?._id}
+                  eventProgressPercent={eventProgressPercent}
+                />
               </div>
             </Col>
           </Row>

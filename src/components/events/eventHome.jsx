@@ -4,7 +4,7 @@ import { useEventContext } from '@context/eventContext'
 import { useContext, useEffect } from 'react'
 import { CurrentEventUserContext } from '@context/eventUserContext'
 
-const EventHome = () => {
+const EventHome = (props) => {
   /*Contextos*/
   const cEvent = useEventContext()
   const cEventUser = useContext(CurrentEventUserContext)
@@ -27,7 +27,11 @@ const EventHome = () => {
             span={24}
             /* sm={24} md={16} lg={18} xl={18} */ style={{ padding: '1rem' }}
           >
-            <EventLanding event={cEvent.value} eventUser={cEventUser.value} />
+            <EventLanding
+              event={cEvent.value}
+              eventUser={cEventUser.value}
+              eventProgressPercent={props.eventProgressPercent}
+            />
           </Col>
         </Row>
       ) : undefined}
