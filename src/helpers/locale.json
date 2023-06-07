@@ -368,7 +368,7 @@
     "modal.title.login": "Iniciar sesión",
     "modal.title.register": "Registrarme",
     "modal.label.email": "Correo electrónico",
-    "modal.label.password": "Documento de identidad",
+    "modal.label.password": "Contraseña",
     "modal.label.cedula": "Cédula",
     "modal.label.name": "Nombre completo",
     "modal.label.photo": "Subir foto",
