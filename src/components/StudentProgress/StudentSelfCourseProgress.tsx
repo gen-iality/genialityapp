@@ -25,6 +25,7 @@ export interface StudentSelfCourseProgressProps {
   activityFilter?: (a: ExtendedAgendaType) => boolean
   customTitle?: string
   nodeIfCompleted?: ReactNode
+  onProgressChange?: (percent: number) => void
 }
 
 function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
@@ -34,6 +35,7 @@ function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
     activityFilter = (a: ExtendedAgendaType) => true,
     customTitle,
     nodeIfCompleted,
+    onProgressChange,
   } = props
 
   const cEventContext = useEventContext()
@@ -51,6 +53,8 @@ function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
     if (!cEventUser || !cEventUser.value) return
 
     setActivitiesAttendee([])
+
+    /** @deprecated TODO: import event progress from the Landing component because this feature is moving to get be global */
     const loadData = async () => {
       const { data }: { data: ExtendedAgendaType[] } = await AgendaApi.byEvent(
         cEventContext.value._id,
@@ -92,6 +96,12 @@ function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
       ),
     [isLoading, activitiesAttendee, allActivities],
   )
+
+  useEffect(() => {
+    if (typeof onProgressChange === 'function') {
+      onProgressChange(progressPercentValue)
+    }
+  }, [progressPercentValue])
 
   if (allActivities.length === 0) {
     return null

@@ -44,7 +44,7 @@ const EventOrganization = () => {
       }
       console.log('5. positionId', positionId, 'orgId', orgId)
       helperDispatch({
-        type: 'showRegister',
+        type: 'showLogin',
         visible: true,
         idOrganization: orgId,
         defaultPositionId: positionId,

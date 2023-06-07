@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
@@ -14,9 +14,11 @@ import initBroadcastViewers from '@containers/broadcastViewers'
 import withContext from '@context/withContext'
 import { useCurrentUser } from '@context/userContext'
 import { activityContentValues } from '@context/activityType/constants/ui'
-import { fireRealtime } from '@helpers/firebase'
+import { fireRealtime, firestore } from '@helpers/firebase'
 import Logger from '@Utilities/logger'
 import Presence from '@components/presence/Presence'
+import { ExtendedAgendaType } from '@Utilities/types/AgendaType'
+import { AgendaApi } from '@helpers/request'
 
 const { LOG, ERROR } = Logger('studentlanding')
 
@@ -35,11 +37,11 @@ const Ferias = loadable(() => import('../ferias/index'))
 const CertificadoLanding = loadable(() => import('../../certificates/cerLanding'))
 const MyAgendaIndepend = loadable(() => import('../../networking/myAgendaIndepend'))
 const NetworkingForm = loadable(() => import('../../networking'))
-const InformativeSection2 = loadable(() =>
-  import('../informativeSections/informativeSection2'),
+const InformativeSection2 = loadable(
+  () => import('../informativeSections/informativeSection2'),
 )
-const InformativeSection = loadable(() =>
-  import('../informativeSections/informativeSection'),
+const InformativeSection = loadable(
+  () => import('../informativeSections/informativeSection'),
 )
 const Noticias = loadable(() => import('../noticias'))
 const Productos = loadable(() => import('../producto/index'))
@@ -48,12 +50,12 @@ const ListVideoCard = loadable(() => import('../../shared/listVideoCard'))
 const Videos = loadable(() => import('../videos'))
 const InfoEvent = loadable(() => import('../../shared/InfoEvent'))
 const ResponsePayu = loadable(() => import('../../shared/InfoEvent'))
-const ActivityDisplayerPage = loadable(() =>
-  import('../activities/ActivityDisplayerPage'),
+const ActivityDisplayerPage = loadable(
+  () => import('../activities/ActivityDisplayerPage'),
 )
 const MySection = loadable(() => import('../newSection'))
-const ThisRouteCanBeDisplayed = loadable(() =>
-  import('./helpers/thisRouteCanBeDisplayed'),
+const ThisRouteCanBeDisplayed = loadable(
+  () => import('./helpers/thisRouteCanBeDisplayed'),
 )
 
 const EventSectionRoutes = (props) => {
@@ -277,6 +279,7 @@ const EventSectionRoutes = (props) => {
                 ...props?.generaltabs,
               }}
               key="activity"
+              eventProgressPercent={props.eventProgressPercent}
             />
           </ThisRouteCanBeDisplayed>
         </Route>
@@ -304,7 +307,7 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/evento`}>
           <ThisRouteCanBeDisplayed>
-            <EventHome key="evento" />
+            <EventHome key="evento" eventProgressPercent={props.eventProgressPercent} />
           </ThisRouteCanBeDisplayed>
         </Route>
 
@@ -347,6 +350,7 @@ const EventSectionRoutes = (props) => {
               activity={props.currentActivity}
               generalTabs={props.generalTabs}
               setVirtualConference={props.setVirtualConference}
+              eventProgressPercent={props.eventProgressPercent}
             />
           </ThisRouteCanBeDisplayed>
         </Route>

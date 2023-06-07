@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react'
+import { FunctionComponent, useMemo } from 'react'
 import { Badge, List } from 'antd'
 import { TruncatedAgenda } from '@Utilities/types/AgendaType'
 import { Link } from 'react-router-dom'
@@ -8,10 +8,25 @@ import { activityContentValues } from '@context/activityType/constants/ui'
 
 interface IListTheseActivitiesProps {
   dataSource: TruncatedAgenda[]
+  eventProgressPercent?: number
 }
 
 const ListTheseActivities: FunctionComponent<IListTheseActivitiesProps> = (props) => {
-  const { dataSource } = props
+  const { dataSource, eventProgressPercent } = props
+
+  const thereActivitiesRequireCompletion = useMemo(
+    () =>
+      dataSource
+        .map((activity) => {
+          if (eventProgressPercent === undefined) return
+          if (activity.require_completion === undefined) return
+          if (activity.require_completion > eventProgressPercent) return activity._id
+          return
+        })
+        .filter((activity) => activity !== undefined) as string[],
+
+    [dataSource, eventProgressPercent],
+  )
 
   return (
     <List
@@ -67,14 +82,35 @@ const ListTheseActivities: FunctionComponent<IListTheseActivitiesProps> = (props
                       )
                     })}
                 </div>
-                <Link to={item.link}>
+                <Link
+                  to={
+                    thereActivitiesRequireCompletion.includes(item._id!)
+                      ? false
+                      : item.link
+                  }
+                  title={
+                    thereActivitiesRequireCompletion.includes(item._id!)
+                      ? 'Requiere avanzar el progreso del curso'
+                      : 'Ir al curso'
+                  }
+                >
                   <div style={{ fontSize: '1.6rem' }}>
                     <ActivityCustomIcon
                       type={item.type!}
                       className="list-icon"
                       style={{ marginRight: '1em' }}
                     />
-                    <span>{item.title}</span>
+                    <span
+                      style={{
+                        textDecoration: thereActivitiesRequireCompletion.includes(
+                          item._id!,
+                        )
+                          ? 'line-through'
+                          : null,
+                      }}
+                    >
+                      {item.title}
+                    </span>
                   </div>
                 </Link>
                 <span style={{ fontSize: '1.6rem' }}>{item.name_host}</span>
@@ -99,9 +135,9 @@ const ListTheseActivities: FunctionComponent<IListTheseActivitiesProps> = (props
                     <Badge style={{ backgroundColor: '#999' }} count="Info" />
                   )}
                 </span>
-                <Link to={item.link}>
-                  {/* <span style={{ fontWeight: '100', fontSize: '1.2rem' }}>{item.timeString}</span> */}
-                </Link>
+                {/* <Link to={item.link}>
+                  {/* <span style={{ fontWeight: '100', fontSize: '1.2rem' }}>{item.timeString}</span> * /}
+                </Link> */}
               </div>
             </div>
           </List.Item>

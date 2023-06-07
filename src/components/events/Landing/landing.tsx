@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
 import { useEventContext } from '@context/eventContext'
 import { useCurrentUser } from '@context/userContext'
@@ -33,6 +33,9 @@ import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { AgendaApi } from '@helpers/request'
 
 import CourseProgressBar from '@components/events/courseProgressBar/CourseProgressBar'
+import { ExtendedAgendaType } from '@Utilities/types/AgendaType'
+import { firestore } from '@helpers/firebase'
+import { activityContentValues } from '@context/activityType/constants/ui'
 
 const EviusFooter = loadable(() => import('./EviusFooter'))
 const AppointmentModal = loadable(() => import('../../networking/appointmentModal'))
@@ -89,7 +92,10 @@ const Landing = (props) => {
     setRegister,
   } = useHelper()
 
-  const [activities, setActivities] = useState([])
+  const [activitiesAttendee, setActivitiesAttendee] = useState<any[]>([])
+  const [countableActivities, setCountableActivities] = useState<any[]>([])
+
+  const [activities, setActivities] = useState<ExtendedAgendaType[]>([])
   const location = useLocation()
 
   const loadData = async () => {
@@ -215,6 +221,45 @@ const Landing = (props) => {
     }
   }, [cEventContext.status, cEventUser.status, cEventUser.value, location])
 
+  // This can be a context or well
+
+  const activityFilter = (a: any) =>
+    [activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
+
+  useEffect(() => {
+    setActivitiesAttendee([])
+
+    const loadData = async () => {
+      const filteredData = activities
+        .filter(activityFilter)
+        .filter((activity) => !activity.is_info_only)
+      setCountableActivities(filteredData)
+
+      const existentActivities = filteredData.map(async (activity) => {
+        const activityAttendee = await firestore
+          .collection(`${activity._id}_event_attendees`)
+          .doc(cEventUser.value._id)
+          .get() //checkedin_at
+        if (activityAttendee.exists) return activityAttendee.data() as any
+        return null
+      })
+      // Filter existent activities and set the state
+      setActivitiesAttendee(
+        // Promises don't bite :)
+        (await Promise.all(existentActivities)).filter((item) => !!item),
+      )
+    }
+    loadData().then()
+  }, [activities])
+
+  const eventProgressPercent: number = useMemo(
+    () =>
+      Math.round(
+        ((activitiesAttendee.length || 0) / (countableActivities.length || 0)) * 100,
+      ),
+    [activitiesAttendee, countableActivities],
+  )
+
   if (cEventContext.status === 'LOADING') return <Spin />
 
   return (
@@ -244,6 +289,7 @@ const Landing = (props) => {
           eventId={cEventContext.value._id}
           activities={activities}
           eventUser={cEventUser.value}
+          eventProgressPercent={eventProgressPercent}
         />
         <EventSectionsInnerMenu />
         <MenuTablets />
@@ -265,6 +311,7 @@ const Landing = (props) => {
             <EventSectionRoutes
               generaltabs={generaltabs}
               currentActivity={currentActivity}
+              eventProgressPercent={eventProgressPercent}
             />
             <EviusFooter />
           </Content>
