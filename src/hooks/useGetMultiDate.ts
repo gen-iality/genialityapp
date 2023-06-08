@@ -7,7 +7,6 @@ export const useGetMultiDate = (eventId: string) => {
     const [multiDates, setmultiDates] = useState<DateRangeEvius[]>([])
     const [isLoading, setisLoading] = useState(true)
 
-
     const getDateStart = (format = 'll') => {
         if (multiDates[0]) {
             return moment(multiDates[0].start).format(format)

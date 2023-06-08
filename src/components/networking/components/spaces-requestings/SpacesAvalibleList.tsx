@@ -7,7 +7,9 @@ import TextArea from 'antd/lib/input/TextArea';
 import { getAccionButton, getDisabledAccionButton } from './utils/space-avalible-list.utils';
 import { IFormRequestSpace } from './interfaces/space-avalible.interfaces';
 import { useIntl } from 'react-intl';
-
+import { useGetMultiDate } from '@/hooks/useGetMultiDate';
+import { UseEventContext } from '@/context/eventContext';
+import useGetSpaces from '../../hooks/useGetSpaces';
 interface ListSpacesAvalibleProps {
   date: Moment;
   targetUserName: string;
@@ -23,18 +25,26 @@ interface ListSpacesAvalibleProps {
 
 const SpacesAvalibleList = ({
   date,
-  targetUserName,
   targetEventUserId,
   onSubmit,
   creatorEventUserId,
   loadingButton,
 }: ListSpacesAvalibleProps) => {
   const [clickedIndices, setClickedIndices] = useState<number>(-1);
-  const { spacesMeetingsToTargedUser, spacesMeetingsToTargedUserLoading } = useGetSpacesMeetingsByUser(
+  const eventContext = UseEventContext();
+  const { multiDates } = useGetMultiDate(eventContext.value._id)
+  const { spacesMeetingsToTargedUser, spacesMeetingsToTargedUserLoading } = useGetSpaces(
     date,
     targetEventUserId,
     creatorEventUserId
   );
+
+/*   const { spacesMeetingsToTargedUser, spacesMeetingsToTargedUserLoading } = useGetSpacesMeetingsByUser(
+    date,
+    targetEventUserId,
+    creatorEventUserId
+  ); */
+
   const intl = useIntl();
 
   const onAgendar = (index: number) => {
