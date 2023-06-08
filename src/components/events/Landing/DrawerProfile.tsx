@@ -86,7 +86,7 @@ const DrawerProfile: FunctionComponent<IDrawerProfileProps> = (props) => {
     if (resp._id) {
       StateMessage.show(null, 'success', `Usuario editado correctamente`)
       // TODO: fix possibity of being undefined
-      cEventUser.setUpdateUser(true)
+      cEventUser.requestUpdate()
       setOpenModal(false)
     } else {
       StateMessage.show(null, 'error', `No fue posible editar el Usuario`)

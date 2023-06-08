@@ -41,7 +41,7 @@ function AnonymousEvenUserForm() {
             }
             await app.auth().currentUser.reload()
             await AttendeeApi.create(cEvent.value._id, body)
-            cEventUser.setUpdateUser(true)
+            cEventUser.requestUpdate()
           })
       })
   }

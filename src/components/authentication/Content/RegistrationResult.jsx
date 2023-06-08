@@ -91,9 +91,8 @@ const RedirectUser = ({ basicDataUser, cEvent, dataEventUser }) => {
   const cEventUser = useUserEvent()
   const { helperDispatch } = useHelper()
   const intl = useIntl()
-  const [signInWithEmailAndPasswordError, setSignInWithEmailAndPasswordError] = useState(
-    false,
-  )
+  const [signInWithEmailAndPasswordError, setSignInWithEmailAndPasswordError] =
+    useState(false)
 
   useEffect(() => {
     setSignInWithEmailAndPasswordError(false)
@@ -103,7 +102,7 @@ const RedirectUser = ({ basicDataUser, cEvent, dataEventUser }) => {
         .signInWithEmailAndPassword(basicDataUser.email, basicDataUser.password)
         .then((response) => {
           if (response.user) {
-            cEventUser.setUpdateUser(true)
+            cEventUser.requestUpdate()
             helperDispatch({ type: 'showLogin', visible: false })
           }
         })
@@ -140,7 +139,7 @@ const RedirectUser = ({ basicDataUser, cEvent, dataEventUser }) => {
                 }
                 await app.auth().currentUser?.reload()
                 await AttendeeApi.create(cEvent.value._id, body)
-                cEventUser.setUpdateUser(true)
+                cEventUser.requestUpdate()
                 helperDispatch({ type: 'showLogin', visible: false })
               }
             })
