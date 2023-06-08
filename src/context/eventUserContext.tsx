@@ -9,15 +9,15 @@ export interface EventUserContextState {
   value: any
   error?: any
   resetEventUser: () => void
-  setuserEvent?: (eu: EventUserContextState) => void
-  setUpdateUser?: (value: boolean) => void
+  setuserEvent: (eu: EventUserContextState) => void
+  setUpdateUser: (value: boolean) => void
 }
 
 const initialContextState: EventUserContextState = {
   status: 'LOADING',
   value: null,
   resetEventUser: () => {},
-}
+} as EventUserContextState
 
 const EventUserContext = createContext<EventUserContextState>(initialContextState)
 
@@ -95,7 +95,7 @@ const UserEventProvider: FunctionComponent = (props) => {
       value={{
         ...eventUserContext,
         setuserEvent: setEventUserContext,
-        setUpdateUser: setUpdateUser,
+        setUpdateUser,
         resetEventUser,
       }}
     >
