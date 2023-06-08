@@ -1,4 +1,4 @@
-import { firestore } from '@helpers/firebase'
+import { FB } from '@helpers/firestore-request'
 
 async function setUserPointsPerSurvey(
   surveyId,
@@ -9,32 +9,22 @@ async function setUserPointsPerSurvey(
 ) {
   const { email, _id } = user
   const userName = user.names ? user.names : user.name ? user.name : 'Anonymous'
-  const doc = await firestore
-    .collection('surveys')
-    .doc(surveyId)
-    .collection('ranking')
-    .doc(_id)
-    .get()
+  const doc = await FB.Surveys.Ranking.get(surveyId, _id)
 
   let partialPoints = 0
-  if (doc && doc.data() && doc.data().correctAnswers) {
-    partialPoints = doc.data().correctAnswers
+  if (doc && doc.correctAnswers) {
+    partialPoints = doc.correctAnswers
   }
   //Guarda el puntaje del usuario
-  firestore
-    .collection('surveys')
-    .doc(surveyId)
-    .collection('ranking')
-    .doc(_id)
-    .set({
-      userId: _id,
-      userName: userName,
-      userEmail: email,
-      totalQuestions: totalQuestions,
-      correctAnswers: totalPoints + partialPoints,
-      registerDate: new Date(),
-      timeSpent: timeSpent,
-    })
+  await FB.Surveys.Ranking.edit(surveyId, _id, {
+    userId: _id,
+    userName: userName,
+    userEmail: email,
+    totalQuestions: totalQuestions,
+    correctAnswers: totalPoints + partialPoints,
+    registerDate: new Date(),
+    timeSpent: timeSpent,
+  })
 }
 
 export default setUserPointsPerSurvey

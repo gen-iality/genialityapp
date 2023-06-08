@@ -1,9 +1,10 @@
 import { Component } from 'react'
 import { Card, Row, Col } from 'antd'
-import { firestore, fireRealtime } from '@helpers/firebase'
+import { fireRealtime } from '@helpers/firebase'
 import SurveyItem from './surveyItem'
 import { StateMessage } from '@context/MessageService'
 import { sendCommunicationOpen } from './services'
+import { FB } from '@helpers/firestore-request'
 
 export default class SurveyManager extends Component {
   constructor(props) {
@@ -19,7 +20,7 @@ export default class SurveyManager extends Component {
   listenActivitySurveys = () => {
     const { event_id, activity_id } = this.props
     //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
-    let $query = firestore.collection('surveys')
+    let $query = FB.Surveys.collection()
 
     //Le agregamos el filtro por curso
     if (event_id) {
@@ -55,11 +56,9 @@ export default class SurveyManager extends Component {
       //Abril 2021 @todo migracion de estados de firestore a firebaserealtime
       const eventId = data.eventId || 'general'
       fireRealtime.ref('events/' + eventId + '/surveys/' + survey_id).update(data)
-      firestore
-        .collection('surveys')
-        .doc(survey_id)
-        .update({ ...data })
-        .then(() => resolve({ message: 'Evaluación actualizada', state: 'updated' }))
+      FB.Surveys.update(survey_id, data).then(() =>
+        resolve({ message: 'Evaluación actualizada', state: 'updated' }),
+      )
     })
   }
 

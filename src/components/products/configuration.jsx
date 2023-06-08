@@ -3,9 +3,10 @@ import { Col, Row, Spin, Switch } from 'antd'
 import { useHistory } from 'react-router'
 import ReactQuill from 'react-quill'
 import { toolbarEditor } from '@helpers/constants'
-import { firestore } from '@helpers/firebase'
+
 import Header from '@antdComponents/Header'
 import { StateMessage } from '@context/MessageService'
+import { FB } from '@helpers/firestore-request'
 
 const Configuration = (props) => {
   const [checkSubasta, setCheckSubasta] = useState(false)
@@ -20,9 +21,9 @@ const Configuration = (props) => {
       obtenerConfig()
     }
     async function obtenerConfig() {
-      const resp = await firestore.collection('config').doc(props.eventId).get()
-      if (resp.exists) {
-        const data = resp.data()
+      const resp = await FB.Configs.get(props.eventId)
+      if (resp) {
+        const data = resp
         setCheckSubasta(data.data.habilitar_subasta)
         setMessage(data.data.message)
       }
@@ -51,7 +52,7 @@ const Configuration = (props) => {
     }
 
     try {
-      const resp = await firestore.collection('config').doc(props.eventId).set({ data })
+      await FB.Configs.edit(props.eventId, { data })
       StateMessage.destroy('loading')
       StateMessage.show(null, 'success', 'Configuración guardada correctamente!')
     } catch (e) {

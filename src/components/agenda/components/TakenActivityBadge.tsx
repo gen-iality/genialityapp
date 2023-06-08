@@ -1,4 +1,4 @@
-import { firestore } from '@helpers/firebase'
+import { FB } from '@helpers/firestore-request'
 import { Badge } from 'antd'
 import { FunctionComponent, useEffect, useState } from 'react'
 
@@ -18,15 +18,9 @@ const TakenActivityBadge: FunctionComponent<ITakenActivityBadgeProps> = (props) 
   const [isTaken, setIsTaken] = useState(false)
 
   const requestAttendee = async () => {
-    const activity_attendee = await firestore
-      .collection(`${activityId}_event_attendees`)
-      .doc(eventUserId)
-      .get() //checkedin_at
-    if (activity_attendee && activity_attendee.exists) {
-      // If this activity existes, then it means the lesson was taken
-      return activity_attendee.data()?.checked_in as boolean
-    }
-    return false
+    const activity_attendee = await FB.Attendees.get(activityId!, eventUserId!)
+
+    return Boolean(activity_attendee?.checked_in)
   }
 
   useEffect(() => {

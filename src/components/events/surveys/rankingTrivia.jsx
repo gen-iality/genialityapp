@@ -7,6 +7,7 @@ import { useSurveysContext } from '@context/surveysContext'
 import { useCurrentUser } from '@context/userContext'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { useEventContext } from '@context/eventContext'
+import { FB } from '@helpers/firestore-request'
 
 function RankingTrivia() {
   const { setGameRanking, setMyScore } = useHelper()
@@ -21,10 +22,7 @@ function RankingTrivia() {
     let unsubscribe
     if (!(Object.keys(currentUser).length === 0)) {
       if (!currentSurvey) return
-      unsubscribe = firestore
-        .collection('surveys')
-        .doc(currentSurvey._id)
-        .collection('ranking')
+      unsubscribe = FB.Surveys.Ranking.collection(currentSurvey._id)
         .orderBy('timeSpent', 'asc')
         // .limit(10)
         .onSnapshot(async (querySnapshot) => {

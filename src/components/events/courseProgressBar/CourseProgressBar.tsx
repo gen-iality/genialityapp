@@ -10,7 +10,8 @@ import Step from './Step'
 import Line from './Line'
 
 import './CourseProgressBar.css'
-import { firestore } from '@helpers/firebase'
+
+import { FB } from '@helpers/firestore-request'
 import { ExtendedAgendaType } from '@Utilities/types/AgendaType'
 
 interface Activity extends ExtendedAgendaType {
@@ -53,12 +54,8 @@ function CourseProgressBar(props: CourseProgressBarProps) {
     console.debug('will request the attendee for', activities.length, 'activities')
     const existentActivities = activities.map(async (activity) => {
       // TODO: this can be imported from Landing
-      const activity_attendee = await firestore
-        .collection(`${activity._id}_event_attendees`)
-        .doc(eventUser._id)
-        .get() //checkedin_at
-      if (activity_attendee.exists) {
-        const newAttendee = activity_attendee.data()
+      const newAttendee = await FB.Attendees.get(activity._id!, eventUser._id)
+      if (newAttendee) {
         const oneActivity = {
           ...newAttendee,
           activity_id: activity._id!,

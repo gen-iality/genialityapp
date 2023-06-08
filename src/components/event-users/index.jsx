@@ -59,6 +59,7 @@ import { HelperContext } from '@context/helperContext/helperContext'
 import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton'
 import { UsersPerEventOrActivity } from './utils/utils'
 import LessonsInfoModal from './LessonsInfoModal'
+import { FB } from '@helpers/firestore-request'
 
 const { Title, Text } = Typography
 const { Option } = Select
@@ -79,13 +80,8 @@ const ModalWithLessonsInfo_ = ({
     if (allActivities.length == 0) return
 
     const existentActivities = await allActivities.map(async (activity) => {
-      const activity_attendee = await firestore
-        .collection(`${activity._id}_event_attendees`)
-        .doc(currentUser._id)
-        .get()
-      if (activity_attendee.exists) {
-        return activity
-      }
+      const activity_attendee = await FB.Attendees.get(activity._id, currentUser._id)
+      if (activity_attendee) return activity
       return null
     })
     // Filter non-null result that means that the user attendees them
@@ -179,13 +175,8 @@ const ColumnProgreso = ({
   useEffect(async () => {
     // Get all existent activities, after will filter it
     const existentActivities = await allActivities.map(async (activity) => {
-      const activity_attendee = await firestore
-        .collection(`${activity._id}_event_attendees`)
-        .doc(item._id)
-        .get()
-      if (activity_attendee.exists) {
-        return activity_attendee.data()
-      }
+      const activity_attendee = await FB.Attendees.get(activity._id, item._id)
+      if (activity_attendee) return activity
       return null
     })
     // Filter non-null result that means that the user attendees them
@@ -213,7 +204,6 @@ const ColumnProgreso = ({
   }
   return <>{attendee.length > 0 ? 'Visto' : 'No visto'}</>
 }
-window.firestore = firestore
 
 class ListEventUser extends Component {
   constructor(props) {
@@ -225,7 +215,6 @@ class ListEventUser extends Component {
       pageOfItems: [],
       listTickets: [],
       usersRef: firestore.collection(`${props.event._id}_event_attendees`),
-      pilaRef: firestore.collection('pila'),
       total: 0,
       totalCheckedIn: 0,
       totalCheckedInWithWeight: 0,
@@ -770,10 +759,7 @@ class ListEventUser extends Component {
           // The attribute `activityProperties` looks like unused, so I get the
           // attendee from Firebase... That's awful, but this is the effect non-thinking
           if (activityId) {
-            const collections = await firestore
-              .collection(`${activityId}_event_attendees`)
-              .get()
-            const docs = collections.docs
+            const docs = await FB.Attendees.docs(activityId)
 
             const userDataList = []
             docs.forEach((doc) => userDataList.push(doc.data()))
