@@ -1,4 +1,4 @@
-export type CertificateData = {
+export default interface CertificateType {
   name: string
   content: string
   background: string

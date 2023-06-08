@@ -33,7 +33,7 @@ import 'html2pdf-certs/dist/styles.css'
 import CertificateRows from './CertificateRows'
 import { availableTags, defaultCertificateBackground, defaultCertRows } from './constants'
 import { replaceAllTagValues } from './utils/replaceAllTagValues'
-import { CertificateData } from '@Utilities/types/CertificateType'
+import CertificateType from '@Utilities/types/CertificateType'
 
 const { confirm } = Modal
 
@@ -53,7 +53,7 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
   const location = useLocation<{ edit?: string }>()
   const locationState = location?.state || {} //si viene new o edit en el state, si es edit es un id
   const history = useHistory()
-  const [certificateData, setCertificateData] = useState<CertificateData>({
+  const [certificateData, setCertificateData] = useState<CertificateType>({
     content: initContent,
     background: defaultCertificateBackground,
     event_id: '',
@@ -420,15 +420,15 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
         </Col>
       </Row>
 
-      <Row wrap gutter={[16, 16]}>
-        <Col md={12} sm={24}>
+      <Row gutter={[16, 16]}>
+        <Col>
           <Form.Item name="cert_width" label="Dimensione ancho (opcional)">
-            <InputNumber placeholder="Ancho" />
+            <InputNumber placeholder="Ancho" style={{ width: '100%' }} />
           </Form.Item>
         </Col>
-        <Col md={12} sm={24}>
+        <Col>
           <Form.Item name="cert_height" label="Dimensione alto (opcional)">
-            <InputNumber placeholder="Altura" />
+            <InputNumber placeholder="Altura" style={{ width: '100%' }} />
           </Form.Item>
         </Col>
       </Row>
