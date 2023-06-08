@@ -1,7 +1,7 @@
 import { Fragment } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import CertificateListPage from './CertificateListPage'
-import CertificateEditor from './CertificateEditor'
+import CertificateEditor from './CertificateEditorPage'
 
 function CertificateRoutes(props: any) {
   const { event, matchUrl } = props
