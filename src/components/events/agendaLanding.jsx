@@ -31,6 +31,7 @@ import * as notificationsActions from '../../redux/notifications/actions'
 import { setTabs } from '../../redux/stage/actions'
 import ActivitiesList from '../agenda/components/ActivitiesList'
 import { FB } from '@helpers/firestore-request'
+import EventProgressContext from '@context/eventProgressContext'
 
 const attendee_states = {
   STATE_DRAFT: '5b0efc411d18160bce9bc706', //"DRAFT";
@@ -755,12 +756,16 @@ class AgendaLanding extends Component {
                           backgroundColor: 'white',
                         }}
                       >
-                        <ActivitiesList
-                          agendaList={this.state.data}
-                          eventId={this.props.cEvent.value._id}
-                          eventUserId={this.props.cEventUser.value?._id}
-                          eventProgressPercent={this.props.eventProgressPercent}
-                        />
+                        <EventProgressContext.Consumer>
+                          {(value) => (
+                            <ActivitiesList
+                              agendaList={this.state.data}
+                              eventId={this.props.cEvent.value._id}
+                              eventUserId={this.props.cEventUser.value?._id}
+                              eventProgressPercent={value?.progressWithoutAnySurveys}
+                            />
+                          )}
+                        </EventProgressContext.Consumer>
                       </div>
                     </>
                   )}
