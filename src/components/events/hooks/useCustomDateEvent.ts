@@ -13,7 +13,7 @@ export const dayToKey = (day: Date) => day.toISOString().substring(0, 10);
 
 const sortDates = (b: DateRangeEvius, a: DateRangeEvius) => new Date(b.start).getTime() - new Date(a.start).getTime();
 
-const parseDate = (date: Date) => {
+export const parseDate = (date: Date) => {
     const options: Intl.DateTimeFormatOptions = {
         day: '2-digit',
         month: 'short',
@@ -173,16 +173,12 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
                 const dateEnd = date.end;
 
 
-                console.log('fefefe', {
-                    start: parseDate(dateStart),
-                    end: parseDate(dateEnd),
-                })
                 return {
                     start: parseDate(dateStart),
                     end: parseDate(dateEnd),
                 };
             });
-
+            return console.log('payload', payload)
             if (payload.length === 0 || !payload) {
                 return notification.open({
                     message: 'Datos no guardados',

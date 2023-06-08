@@ -6,7 +6,7 @@ import { GetTokenUserFirebase } from '../helpers/HelperAuth';
 import { configEventsTemplate } from '../helpers/constants';
 import { firestore } from '@/helpers/firebase';
 import { useIntl } from 'react-intl';
-import { dayToKey } from '@/components/events/hooks/useCustomDateEvent';
+import { dayToKey, parseDate } from '@/components/events/hooks/useCustomDateEvent';
 import { dateToCustomDate } from '@/components/events/utils/CustomMultiDate';
 
 export const cNewEventContext = createContext();
@@ -334,9 +334,20 @@ export const NewEventProvider = ({ children }) => {
 
       const dateStart = new Date(data.datetime_from);
       const dateEnd = new Date(data.datetime_to);
-      
-      let newDateRanges = dateToCustomDate(dateStart, dateEnd)
-      data.dates = newDateRanges
+
+      let newDateRanges = dateToCustomDate(dateStart, dateEnd);
+
+      const parseDateRange = newDateRanges.map((date) => {
+        const dateStart = date.start;
+        const dateEnd = date.end;
+
+        return {
+          start: parseDate(dateStart),
+          end: parseDate(dateEnd),
+        };
+      });
+
+      data.dates = parseDateRange;
 
       const newMenu = {
         itemsMenu: {
@@ -362,10 +373,10 @@ export const NewEventProvider = ({ children }) => {
       //CREAR EVENTO
       try {
         let token = await GetTokenUserFirebase();
-        console.log('data=>',data)
+        console.log('data=>', data);
 
         const result = await Actions.create(`/api/events?token=${token}`, data);
-        console.log('result=>',result)
+        console.log('result=>', result);
         result._id = result._id ? result._id : result.data?._id;
         if (result._id) {
           let sectionsDefault = state.selectOrganization?.itemsMenu
@@ -393,22 +404,31 @@ export const NewEventProvider = ({ children }) => {
               if (templateId) {
                 template = await EventsApi.createTemplateEvent(result._id, templateId);
                 await firestore
-										.collection('events')
-										.doc(result._id)
-										.update(template);
+                  .collection('events')
+                  .doc(result._id)
+                  .update(template);
               }
               if (template) {
                 const data = {
                   useCountdown: true,
                   dateLimit: selectedDateEvent?.from + ':00',
-                  countdownMessage: intl.formatMessage({id: 'the_event_start_at', defaultMessage: 'El evento inicia en'}),
-                  countdownFinalMessage: intl.formatMessage({id: 'the_event_has_ended', defaultMessage: 'Ha terminado el evento'}),
+                  countdownMessage: intl.formatMessage({
+                    id: 'the_event_start_at',
+                    defaultMessage: 'El evento inicia en',
+                  }),
+                  countdownFinalMessage: intl.formatMessage({
+                    id: 'the_event_has_ended',
+                    defaultMessage: 'Ha terminado el evento',
+                  }),
                 };
                 const respApi = await EventsApi.editOne(data, result._id);
                 if (respApi?._id) {
                   DispatchMessageService({
                     type: 'success',
-                    msj: intl.formatMessage({id: 'event_successfully_created', defaultMessage: 'Evento creado correctamente...'}),
+                    msj: intl.formatMessage({
+                      id: 'event_successfully_created',
+                      defaultMessage: 'Evento creado correctamente...',
+                    }),
                     action: 'show',
                   });
                   window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
@@ -416,7 +436,10 @@ export const NewEventProvider = ({ children }) => {
               } else {
                 DispatchMessageService({
                   type: 'error',
-                  msj: intl.formatMessage({id: 'error_creating_event_with_template', defaultMessage: 'Error al crear evento con su template'}),
+                  msj: intl.formatMessage({
+                    id: 'error_creating_event_with_template',
+                    defaultMessage: 'Error al crear evento con su template',
+                  }),
                   action: 'show',
                 });
               }
@@ -424,7 +447,7 @@ export const NewEventProvider = ({ children }) => {
           } else {
             DispatchMessageService({
               type: 'error',
-              msj: intl.formatMessage({id: 'error_creating_event', defaultMessage: 'Error al crear el evento'}),
+              msj: intl.formatMessage({ id: 'error_creating_event', defaultMessage: 'Error al crear el evento' }),
               action: 'show',
             });
             dispatch({ type: 'COMPLETE' });
@@ -432,7 +455,7 @@ export const NewEventProvider = ({ children }) => {
         } else {
           DispatchMessageService({
             type: 'error',
-            msj: intl.formatMessage({id: 'error_creating_event', defaultMessage: 'Error al crear el evento'}),
+            msj: intl.formatMessage({ id: 'error_creating_event', defaultMessage: 'Error al crear el evento' }),
             action: 'show',
           });
           dispatch({ type: 'COMPLETE' });
@@ -441,7 +464,10 @@ export const NewEventProvider = ({ children }) => {
         console.error('CATCH==>', error);
         DispatchMessageService({
           type: 'error',
-          msj: intl.formatMessage({id: 'error_creating_event_catch', defaultMessage: 'Error al crear el evento catch'}),
+          msj: intl.formatMessage({
+            id: 'error_creating_event_catch',
+            defaultMessage: 'Error al crear el evento catch',
+          }),
           action: 'show',
         });
         dispatch({ type: 'COMPLETE' });
@@ -449,7 +475,7 @@ export const NewEventProvider = ({ children }) => {
     } else {
       DispatchMessageService({
         type: 'error',
-        msj: intl.formatMessage({id: 'select_organization', defaultMessage: 'Seleccione una organización'}),
+        msj: intl.formatMessage({ id: 'select_organization', defaultMessage: 'Seleccione una organización' }),
         action: 'show',
       });
     }
