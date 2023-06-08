@@ -33,7 +33,7 @@ import 'html2pdf-certs/dist/styles.css'
 import CertificateRows from './CertificateRows'
 import { availableTags, defaultCertificateBackground, defaultCertRows } from './constants'
 import { replaceAllTagValues } from './utils/replaceAllTagValues'
-import { CertificateData } from './types'
+import { CertificateData } from '@Utilities/types/CertificateType'
 
 const { confirm } = Modal
 
