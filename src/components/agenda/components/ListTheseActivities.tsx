@@ -84,7 +84,9 @@ const ListTheseActivities: FunctionComponent<IListTheseActivitiesProps> = (props
                   {thereActivitiesRequireCompletion.includes(item._id!) && (
                     <Badge
                       style={{ backgroundColor: '#FE2C00', marginRight: '3px' }}
-                      count="Requiere completar el curso"
+                      count={`Requiere completar el curso en ${
+                        item.require_completion ?? 0
+                      }%`}
                     />
                   )}
                 </div>
