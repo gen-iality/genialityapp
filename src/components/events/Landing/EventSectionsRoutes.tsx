@@ -14,11 +14,9 @@ import initBroadcastViewers from '@containers/broadcastViewers'
 import withContext from '@context/withContext'
 import { useCurrentUser } from '@context/userContext'
 import { activityContentValues } from '@context/activityType/constants/ui'
-import { fireRealtime, firestore } from '@helpers/firebase'
+import { fireRealtime } from '@helpers/firebase'
 import Logger from '@Utilities/logger'
 import Presence from '@components/presence/Presence'
-import { ExtendedAgendaType } from '@Utilities/types/AgendaType'
-import { AgendaApi } from '@helpers/request'
 
 const { LOG, ERROR } = Logger('studentlanding')
 
