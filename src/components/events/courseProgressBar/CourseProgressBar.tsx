@@ -13,6 +13,7 @@ import './CourseProgressBar.css'
 
 import { FB } from '@helpers/firestore-request'
 import { ExtendedAgendaType } from '@Utilities/types/AgendaType'
+import { useEventProgress } from '@context/eventProgressContext'
 
 interface Activity extends ExtendedAgendaType {
   _id: string
@@ -25,11 +26,10 @@ export interface CourseProgressBarProps {
   eventId: string
   eventUser: any
   activities: ExtendedAgendaType[]
-  eventProgressPercent?: number
 }
 
 function CourseProgressBar(props: CourseProgressBarProps) {
-  const { activities, eventUser, eventId, eventProgressPercent } = props
+  const { activities, eventUser, eventId } = props
 
   const [attendees, setAttendees] = useState<Activity[]>([])
   const [watchedActivityId, setWatchedActivityId] = useState<undefined | string>()
@@ -37,11 +37,14 @@ function CourseProgressBar(props: CourseProgressBarProps) {
 
   const location = useLocation()
 
+  const cEventProgress = useEventProgress()
+
   const isThisActivityBlockedByRequirement = (activity: ExtendedAgendaType): boolean => {
-    if (eventProgressPercent === undefined) return false
+    if (cEventProgress.progressWithoutAnySurveys === undefined) return false
     if (activity.require_completion === undefined) return false
 
-    if (activity.require_completion >= eventProgressPercent) return true
+    if (activity.require_completion >= cEventProgress.progressWithoutAnySurveys)
+      return true
     return false
   }
 
@@ -76,6 +79,7 @@ function CourseProgressBar(props: CourseProgressBarProps) {
 
   useEffect(() => {
     setIsLoading(true)
+    cEventProgress.updateAttendees()
     requestAttendees()
       .then()
       .finally(() => setIsLoading(false))

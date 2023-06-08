@@ -277,7 +277,6 @@ const EventSectionRoutes = (props) => {
                 ...props?.generaltabs,
               }}
               key="activity"
-              eventProgressPercent={props.eventProgressPercent}
             />
           </ThisRouteCanBeDisplayed>
         </Route>
@@ -305,7 +304,7 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/evento`}>
           <ThisRouteCanBeDisplayed>
-            <EventHome key="evento" eventProgressPercent={props.eventProgressPercent} />
+            <EventHome key="evento" />
           </ThisRouteCanBeDisplayed>
         </Route>
 
@@ -348,7 +347,6 @@ const EventSectionRoutes = (props) => {
               activity={props.currentActivity}
               generalTabs={props.generalTabs}
               setVirtualConference={props.setVirtualConference}
-              eventProgressPercent={props.eventProgressPercent}
             />
           </ThisRouteCanBeDisplayed>
         </Route>

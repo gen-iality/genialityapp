@@ -27,11 +27,7 @@ const EventHome = (props) => {
             span={24}
             /* sm={24} md={16} lg={18} xl={18} */ style={{ padding: '1rem' }}
           >
-            <EventLanding
-              event={cEvent.value}
-              eventUser={cEventUser.value}
-              eventProgressPercent={props.eventProgressPercent}
-            />
+            <EventLanding event={cEvent.value} eventUser={cEventUser.value} />
           </Col>
         </Row>
       ) : undefined}

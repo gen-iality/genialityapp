@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, FunctionComponent } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Moment from 'moment-timezone'
@@ -21,6 +21,7 @@ import Presence from '@components/presence/Presence'
 import { fireRealtime } from '@helpers/firebase'
 import Logger from '@Utilities/logger'
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
+import { useEventProgress } from '@context/eventProgressContext'
 
 const { setHasOpenSurveys } = SurveyActions
 
@@ -28,11 +29,7 @@ const { LOG, ERROR } = Logger('studentlanding-activity')
 
 Moment.locale(window.navigator.language)
 
-interface IActivityDisplayerPageProps {
-  eventProgressPercent?: number
-}
-
-const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
+const ActivityDisplayerPage: FunctionComponent = (props) => {
   const { HandleOpenCloseMenuRigth, currentActivity, helperDispatch } = useHelper()
   const [orderedHost, setOrderedHost] = useState<any[]>([])
   // const [videoStyles, setVideoStyles] = useState<any>(null)
@@ -49,6 +46,8 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
   const history = useHistory()
 
   const params = useParams<any>()
+
+  const cEventProgress = useEventProgress()
 
   useEffect(() => {
     AgendaApi.getOne(params.activity_id, cEvent.value._id).then((result) => {
@@ -109,12 +108,13 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
 
   const thisActivityRequiresCompletion = useMemo(() => {
     if (!activity) return false
-    if (props.eventProgressPercent === undefined) return false
+    if (cEventProgress.progressWithoutAnySurveys === undefined) return false
     if (activity.require_completion === undefined) return false
 
-    if (activity.require_completion >= props.eventProgressPercent) return true
+    if (activity.require_completion >= cEventProgress.progressWithoutAnySurveys)
+      return true
     return false
-  }, [activity, props.eventProgressPercent])
+  }, [activity, cEventProgress.progressWithoutAnySurveys])
 
   return (
     <div>

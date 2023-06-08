@@ -37,6 +37,7 @@ import { ExtendedAgendaType } from '@Utilities/types/AgendaType'
 
 import { activityContentValues } from '@context/activityType/constants/ui'
 import { FB } from '@helpers/firestore-request'
+import { EventProgressProvider } from '@context/eventProgressContext'
 
 const EviusFooter = loadable(() => import('./EviusFooter'))
 const AppointmentModal = loadable(() => import('../../networking/appointmentModal'))
@@ -290,7 +291,7 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
   if (cEventContext.status === 'LOADING') return <Spin />
 
   return (
-    <>
+    <EventProgressProvider>
       <ModalLoginHelpers />
       {cEventContext.value.visibility !== 'ANONYMOUS' && <ModalPermission />}
       <ModalFeedback />
@@ -316,7 +317,6 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
           eventId={cEventContext.value._id}
           activities={activities}
           eventUser={cEventUser.value}
-          eventProgressPercent={eventProgressPercent}
         />
         <EventSectionsInnerMenu />
         <MenuTablets />
@@ -358,7 +358,7 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
         <EnableAnalyticsByEVENT />
         <EnableFacebookPixelByEVENT />
       </Layout>
-    </>
+    </EventProgressProvider>
   )
 }
 
