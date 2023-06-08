@@ -1,6 +1,5 @@
 import { Button, Col, Form, List, Result, Row, Typography } from 'antd';
 import React, { useState } from 'react';
-import useGetSpacesMeetingsByUser from '../../hooks/useGetSpaceMeetingByUser';
 import moment, { Moment } from 'moment';
 import firebase from 'firebase/compat';
 import TextArea from 'antd/lib/input/TextArea';
@@ -39,11 +38,6 @@ const SpacesAvalibleList = ({
     creatorEventUserId
   );
 
-/*   const { spacesMeetingsToTargedUser, spacesMeetingsToTargedUserLoading } = useGetSpacesMeetingsByUser(
-    date,
-    targetEventUserId,
-    creatorEventUserId
-  ); */
 
   const intl = useIntl();
 
