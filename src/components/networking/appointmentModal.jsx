@@ -13,6 +13,7 @@ import locale_es from 'antd/es/date-picker/locale/es_ES';
 import locale_en from 'antd/es/date-picker/locale/en_GB';
 import locale_pt from 'antd/es/date-picker/locale/pt_BR';
 import { useIntl } from 'react-intl';
+import { FORMAT_WITHOUT_HOUR } from './utils/space-requesting.utils';
 
 function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, closeModal, cEvent }) {
   const [agendaMessage, setAgendaMessage] = useState('');
@@ -88,11 +89,11 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
     }
   };
   const disabledDate = (current) => {
-    const initial = moment(moment(cEvent?.value?.datetime_from).format('YYYY-MM-DD'));
-    const finish = moment(moment(cEvent?.value?.datetime_to).format('YYYY-MM-DD'));
-    const date_to_evaluate = moment(moment(current).format('YYYY-MM-DD'));
-
-    return !(date_to_evaluate.isSameOrAfter(initial) && date_to_evaluate.isSameOrBefore(finish));
+    const fechasPermitidas = cEvent?.value?.dates.map((dateRange) => {
+      return moment(dateRange.start).format(FORMAT_WITHOUT_HOUR);
+    });
+    const date_to_evaluate = moment(current).format(FORMAT_WITHOUT_HOUR);
+    return !fechasPermitidas.includes(date_to_evaluate);
   };
 
   return (

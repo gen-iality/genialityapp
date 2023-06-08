@@ -4,9 +4,9 @@ import { IMeetingRequestFirebase, SpaceMeeting, StatusSpace, TimeParameter } fro
 import firebase from 'firebase/compat';
 import { DateRange } from "react-big-calendar";
 
-const FORMATWITHHOUR = 'YYYY-MM-DD h:mm a'
-const FORMAT_WITHOUT_HOUR = 'YYYY-MM-DD'
-const FORMAT_HOUR = 'h:mm a'
+export const FORMATWITHHOUR = 'YYYY-MM-DD h:mm a'
+export const FORMAT_WITHOUT_HOUR = 'YYYY-MM-DD'
+export const FORMAT_HOUR = 'h:mm a'
 
 
 export const generateSpaceMeetings = (timeParametres: TimeParameter, date: Moment, userId: string, creatorId: string, requestMeetings: IMeetingRequestFirebase[]): SpaceMeeting[] => {
