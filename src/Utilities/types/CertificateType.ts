@@ -4,7 +4,7 @@ export default interface CertificateType {
   background: string
   event_id: string
   event: any
-  rol?: { _id: string; [key: string]: any }
+  rol_id?: string
   cert_width?: number
   cert_height?: number
   requirement_config?: {
