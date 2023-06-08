@@ -5,19 +5,19 @@ import { app } from '@helpers/firebase'
 import { useCurrentUser } from './userContext'
 
 export interface EventUserContextState {
-  status: 'LOADING' | 'LOADED'
+  status: 'LOADING' | 'LOADED' | 'ERROR'
   value: any
   error?: any
   resetEventUser: () => void
-  setuserEvent?: (eu: EventUserContextState) => void
-  setUpdateUser?: (value: boolean) => void
+  requestUpdate: () => void
+  setuserEvent: (eu: EventUserContextState) => void
 }
 
 const initialContextState: EventUserContextState = {
   status: 'LOADING',
   value: null,
   resetEventUser: () => {},
-}
+} as EventUserContextState
 
 const EventUserContext = createContext<EventUserContextState>(initialContextState)
 
@@ -67,6 +67,13 @@ const UserEventProvider: FunctionComponent = (props) => {
     setEventUserContext({ ...eventUserContext, status: 'LOADING', value: null })
   }
 
+  /**
+   * Active an update of the event user data
+   */
+  const requestUpdate = () => {
+    setUpdateUser(true)
+  }
+
   useEffect(() => {
     const unsubscribe = app.auth().onAuthStateChanged((user) => {
       if (!user?.isAnonymous && user) {
@@ -83,9 +90,12 @@ const UserEventProvider: FunctionComponent = (props) => {
 
     if (!eventId) return
 
-    if (cUser.value == null || cUser.value == undefined || updateUser == false) {
+    if (cUser.value == null || cUser.value == undefined) {
       return
     }
+
+    // If it is not needed an updating, then return
+    if (!updateUser) return
 
     requestEventUserData(eventId)
   }, [cEvent.value, cUser.value, updateUser])
@@ -95,7 +105,7 @@ const UserEventProvider: FunctionComponent = (props) => {
       value={{
         ...eventUserContext,
         setuserEvent: setEventUserContext,
-        setUpdateUser: setUpdateUser,
+        requestUpdate,
         resetEventUser,
       }}
     >

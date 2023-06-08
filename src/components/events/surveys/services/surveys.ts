@@ -1,7 +1,7 @@
-import { firestore } from '@helpers/firebase'
+import { FB } from '@helpers/firestore-request'
 
 export const getRef = (surveyId: string) => {
-  return firestore.collection('surveys').doc(surveyId)
+  return FB.Surveys.collection().doc(surveyId)
 }
 
 export const getUserProgressRef = (surveyId: string, userId: string) => {

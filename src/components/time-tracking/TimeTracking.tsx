@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 
 import { Result, Space, Typography, List, Button } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
-import { useHistory } from 'react-router-dom'
-import { firestore, fireRealtime } from '@helpers/firebase'
+
+import { fireRealtime } from '@helpers/firebase'
 
 import { useEventContext } from '@context/eventContext'
 import Logger from '@Utilities/logger'
@@ -12,6 +12,7 @@ import type { ExtendedAgendaType } from '@Utilities/types/AgendaType'
 import { useCurrentUser } from '@context/userContext'
 
 import Online from '@components/online/Online'
+import { FB } from '@helpers/firestore-request'
 
 type UserSessionInfo = {
   userId: string
@@ -42,8 +43,7 @@ function TimeTracking(props: TimeTrackingProps) {
     const activityList = await requestAllAgendaItems(eventId)
     const allActivities: any[] = await Promise.all(
       activityList.map(async (activity) => {
-        const result = await firestore
-          .collection(`${activity._id}_event_attendees`)
+        const result = await FB.Attendees.collection(activity._id!)
           .where('checked_in', '==', true)
           .get()
         return result.docs.map((doc) => doc.data())

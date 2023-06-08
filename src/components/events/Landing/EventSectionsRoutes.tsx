@@ -14,11 +14,9 @@ import initBroadcastViewers from '@containers/broadcastViewers'
 import withContext from '@context/withContext'
 import { useCurrentUser } from '@context/userContext'
 import { activityContentValues } from '@context/activityType/constants/ui'
-import { fireRealtime, firestore } from '@helpers/firebase'
+import { fireRealtime } from '@helpers/firebase'
 import Logger from '@Utilities/logger'
 import Presence from '@components/presence/Presence'
-import { ExtendedAgendaType } from '@Utilities/types/AgendaType'
-import { AgendaApi } from '@helpers/request'
 
 const { LOG, ERROR } = Logger('studentlanding')
 
@@ -279,7 +277,6 @@ const EventSectionRoutes = (props) => {
                 ...props?.generaltabs,
               }}
               key="activity"
-              eventProgressPercent={props.eventProgressPercent}
             />
           </ThisRouteCanBeDisplayed>
         </Route>
@@ -307,7 +304,7 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/evento`}>
           <ThisRouteCanBeDisplayed>
-            <EventHome key="evento" eventProgressPercent={props.eventProgressPercent} />
+            <EventHome key="evento" />
           </ThisRouteCanBeDisplayed>
         </Route>
 
@@ -350,7 +347,6 @@ const EventSectionRoutes = (props) => {
               activity={props.currentActivity}
               generalTabs={props.generalTabs}
               setVirtualConference={props.setVirtualConference}
-              eventProgressPercent={props.eventProgressPercent}
             />
           </ThisRouteCanBeDisplayed>
         </Route>

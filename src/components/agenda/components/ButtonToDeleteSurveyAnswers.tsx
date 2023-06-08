@@ -1,5 +1,5 @@
 import { FunctionComponent, useEffect, useState } from 'react'
-import { firestore } from '@helpers/firebase'
+
 import {
   getAnswersRef,
   getQuestionsRef,
@@ -8,6 +8,7 @@ import {
 import { getRef as getSurveyStatusRef } from '@components/events/surveys/services/surveyStatus'
 import { Button } from 'antd'
 import { DeleteOutlined, LoadingOutlined } from '@ant-design/icons'
+import { FB } from '@helpers/firestore-request'
 
 interface BasePropsType {
   userId: string
@@ -56,13 +57,7 @@ const ButtonToDeleteSurveyAnswers: FunctionComponent<
   }
 
   const requestActivityData = async () => {
-    const document = await firestore
-      .collection('events')
-      .doc(eventId)
-      .collection('activities')
-      .doc(props.activityId)
-      .get()
-    const activityData = document.data()
+    const activityData = await FB.Activities.get(eventId, props.activityId!)
     console.log('This activity is', activityData)
     if (!activityData) return
     const meetingId = activityData?.meeting_id as undefined | string

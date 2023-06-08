@@ -1,20 +1,43 @@
-import { createContext, useContext } from 'react'
+import { FunctionComponent, createContext, useContext } from 'react'
 import { app, firestore } from '@helpers/firebase'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import privateInstance from '@helpers/request'
 
-export const CurrentUserContext = createContext()
-const initialContextState = { status: 'LOADING', value: undefined }
+export interface UserContextState {
+  status: 'LOADING' | 'LOADED' | 'ERROR'
+  value: any
+  error?: any
+  resetUser: () => void
+  setCurrentUser: (value: any) => void
+}
 
-export function CurrentUserProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState(initialContextState)
+const initialContextState: UserContextState = {
+  status: 'LOADING',
+  value: null,
+} as UserContextState
+
+const UserContext = createContext<UserContextState>(initialContextState)
+export default UserContext
+
+export const CurrentUserContext = UserContext
+
+export const UserContextProvider: FunctionComponent = (props) => {
+  const { children } = props
+
+  const [userContext, setUserContext] = useState(initialContextState)
   const conectionRef = firestore.collection(`connections`)
+
+  const resetUser = () => {
+    console.log('call reset event user')
+    setUserContext({ ...userContext, status: 'LOADING', value: null })
+  }
 
   //seteando con el auth al current user || falta eventUser
   useEffect(() => {
-    let unsubscribe
-    async function asyncdata() {
+    let unsubscribe: undefined | (() => void)
+
+    async function requestUserData() {
       try {
         unsubscribe = app.auth().onAuthStateChanged((user) => {
           if (!user?.isAnonymous && user) {
@@ -29,18 +52,22 @@ export function CurrentUserProvider({ children }) {
                       email: user?.email,
                       lastSignInTime: lastSignInTime,
                     })
-                    setCurrentUser({ status: 'LOADED', value: response.data })
+                    setUserContext({
+                      ...userContext,
+                      status: 'LOADED',
+                      value: response.data,
+                    })
                   } else {
-                    setCurrentUser({ status: 'LOADED', value: null })
+                    setUserContext({ ...userContext, status: 'LOADED', value: null })
                   }
                 })
-                .catch((e) => {
+                .catch((err: any) => {
                   //ESTE CATCH SIRVE PARA CUANDO SE CAMBIA DE STAGIN A PROD// Usuarios que no se encuentran en la otra bd
+                  console.error(err)
                   app
                     .auth()
                     .signOut()
-                    .then(async (resp) => {
-                      console.debug({ resp })
+                    .then(async () => {
                       const docRef = await conectionRef
                         .where('email', '==', app.auth().currentUser?.email)
                         .get()
@@ -48,17 +75,25 @@ export function CurrentUserProvider({ children }) {
                         await conectionRef.doc(docRef.docs[0].id).delete()
                       }
 
-                      setCurrentUser({ status: 'LOADED', value: null })
+                      setUserContext({ ...userContext, status: 'LOADED', value: null })
                     })
-                    .catch(() => setCurrentUser({ status: 'LOADED', value: null }))
+                    .catch((err) => {
+                      console.error(err)
+                      setUserContext({ ...userContext, status: 'LOADED', value: null })
+                    })
                 })
             })
           } else if (user?.isAnonymous && user) {
             // Obtenert user
             const obtainDisplayName = () => {
-              if (app.auth().currentUser.displayName != null) {
-                /**para poder obtener el email y crear despues un eventUser se utiliza el parametro photoURL de firebas para almacenar el email */
-                setCurrentUser({
+              if (!!app.auth().currentUser?.displayName) {
+                /**
+                 * NOTE: IMPORTANT!!! - To get the email (and create the
+                 * EventUser object), this value is saved in the photoURL param
+                 * of firebase
+                 */
+                setUserContext({
+                  ...userContext,
                   status: 'LOADED',
                   value: {
                     names: user.displayName,
@@ -75,14 +110,14 @@ export function CurrentUserProvider({ children }) {
             }
             obtainDisplayName()
           } else {
-            setCurrentUser({ status: 'LOADED', value: null })
+            setUserContext({ ...userContext, status: 'LOADED', value: null })
           }
         })
       } catch (e) {
-        setCurrentUser({ status: 'ERROR', value: null })
+        setUserContext({ ...userContext, status: 'ERROR', value: null })
       }
     }
-    asyncdata()
+    requestUserData()
     return () => {
       unsubscribe && unsubscribe()
     }
@@ -90,12 +125,14 @@ export function CurrentUserProvider({ children }) {
 
   return (
     <CurrentUserContext.Provider
-      value={{ ...currentUser, setCurrentUser: setCurrentUser }}
+      value={{ ...userContext, resetUser, setCurrentUser: setUserContext }}
     >
       {children}
     </CurrentUserContext.Provider>
   )
 }
+
+export const CurrentUserProvider = UserContextProvider
 
 export function useCurrentUser() {
   const contextuser = useContext(CurrentUserContext)

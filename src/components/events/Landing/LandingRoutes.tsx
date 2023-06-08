@@ -34,8 +34,10 @@ import { AgendaApi } from '@helpers/request'
 
 import CourseProgressBar from '@components/events/courseProgressBar/CourseProgressBar'
 import { ExtendedAgendaType } from '@Utilities/types/AgendaType'
-import { firestore } from '@helpers/firebase'
+
 import { activityContentValues } from '@context/activityType/constants/ui'
+import { FB } from '@helpers/firestore-request'
+import { EventProgressProvider } from '@context/eventProgressContext'
 
 const EviusFooter = loadable(() => import('./EviusFooter'))
 const AppointmentModal = loadable(() => import('../../networking/appointmentModal'))
@@ -208,11 +210,8 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
     setCountableActivities(filteredData)
 
     const existentActivityPromises = filteredData.map(async (activity) => {
-      const activityAttendee = await firestore
-        .collection(`${activity._id}_event_attendees`)
-        .doc(cEventUser.value._id)
-        .get() //checkedin_at
-      if (activityAttendee.exists) return activityAttendee.data() as any
+      const activityAttendee = await FB.Attendees.get(activity._id!, cEventUser.value._id)
+      if (activityAttendee) return activityAttendee
       return null
     })
     // Filter existent activities and set the state
@@ -292,7 +291,7 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
   if (cEventContext.status === 'LOADING') return <Spin />
 
   return (
-    <>
+    <EventProgressProvider>
       <ModalLoginHelpers />
       {cEventContext.value.visibility !== 'ANONYMOUS' && <ModalPermission />}
       <ModalFeedback />
@@ -318,7 +317,6 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
           eventId={cEventContext.value._id}
           activities={activities}
           eventUser={cEventUser.value}
-          eventProgressPercent={eventProgressPercent}
         />
         <EventSectionsInnerMenu />
         <MenuTablets />
@@ -360,11 +358,11 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
         <EnableAnalyticsByEVENT />
         <EnableFacebookPixelByEVENT />
       </Layout>
-    </>
+    </EventProgressProvider>
   )
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: any) => ({
   currentActivity: state.stage.data.currentActivity,
   tabs: state.stage.data.tabs,
   view: state.topBannerReducer.view,

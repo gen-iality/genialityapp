@@ -1,24 +1,13 @@
+import { FB } from '@helpers/firestore-request'
+
 class Service {
-  constructor(instance) {
-    this.firestore = instance
-  }
+  constructor() {}
 
   validateHasVideoconference = (event_id, activity_id) => {
     // eslint-disable-next-line no-unused-vars
     return new Promise((resolve) => {
       if (!event_id || !activity_id) resolve(false)
-      this.firestore
-        .collection('events')
-        .doc(event_id)
-        .collection('activities')
-        .doc(activity_id)
-        .get()
-        .then((activity) => {
-          if (!activity.exists) {
-            resolve(false)
-          }
-          resolve(true)
-        })
+      FB.Activities.get(event_id, activity_id).then((activity) => resolve(!!activity))
     })
   }
 
@@ -42,45 +31,35 @@ class Service {
       return new Promise((resolve) => {
         this.validateHasVideoconference(event_id, activity_id).then((existActivity) => {
           if (existActivity) {
-            this.firestore
-              .collection('events')
-              .doc(event_id)
-              .collection('activities')
-              .doc(activity_id)
-              .update({
-                habilitar_ingreso,
-                platform,
-                meeting_id,
-                tabs,
-                isPublished: isPublished,
-                host_id,
-                host_name,
-                typeActivity: typeActivity || null,
-                transmition: roomInfo.transmition || null,
-                avalibleGames: roomInfo?.avalibleGames || [],
-              })
+            FB.Activities.update(event_id, activity_id, {
+              habilitar_ingreso,
+              platform,
+              meeting_id,
+              tabs,
+              isPublished: isPublished,
+              host_id,
+              host_name,
+              typeActivity: typeActivity || null,
+              transmition: roomInfo.transmition || null,
+              avalibleGames: roomInfo?.avalibleGames || [],
+            })
               .then(() =>
                 resolve({ message: 'Configuración actualizada', state: 'updated' }),
               )
               .catch((err) => console.error('11. ERROR==>', err))
           } else {
-            this.firestore
-              .collection('events')
-              .doc(event_id)
-              .collection('activities')
-              .doc(activity_id)
-              .set({
-                habilitar_ingreso,
-                platform,
-                meeting_id,
-                isPublished: isPublished || false,
-                host_id,
-                host_name,
-                tabs: tabsSchema,
-                typeActivity: typeActivity || null,
-                avalibleGames: roomInfo?.avalibleGames || [],
-                roomState: roomState || null,
-              })
+            FB.Activities.edit(event_id, activity_id, {
+              habilitar_ingreso,
+              platform,
+              meeting_id,
+              isPublished: isPublished || false,
+              host_id,
+              host_name,
+              tabs: tabsSchema,
+              typeActivity: typeActivity || null,
+              avalibleGames: roomInfo?.avalibleGames || [],
+              roomState: roomState || null,
+            })
               .then(() => resolve({ message: 'Configuración creada', state: 'created' }))
               .catch((err) => console.error('11. ERROR==>', err))
           }
@@ -89,17 +68,13 @@ class Service {
     }
   }
 
+  /** @deprecated ue helpers/firestore-request.ts FB.Activities.get instead */
   getConfiguration = (event_id, activity_id) => {
     return new Promise((resolve, reject) => {
-      this.firestore
-        .collection('events')
-        .doc(event_id)
-        .collection('activities')
-        .doc(activity_id)
-        .get()
+      FB.Activities.get(event_id, activity_id)
         .then((result) => {
-          if (result?.exists) {
-            resolve(result.data())
+          if (result) {
+            resolve(result)
           } else {
             resolve()
           }
@@ -110,14 +85,10 @@ class Service {
     })
   }
 
+  /** @deprecated use helpers/firestore-request.ts instead */
   deleteActivity = (event_id, activity_id) => {
     return new Promise((resolve, reject) => {
-      this.firestore
-        .collection('events')
-        .doc(event_id)
-        .collection('activities')
-        .doc(activity_id)
-        .delete()
+      FB.Activities.delete(event_id, activity_id)
         .then(() => resolve('Eliminado'))
         .catch((err) => {
           reject('Hubo un problema ', err)

@@ -5,7 +5,8 @@ import {
 } from '@ant-design/icons'
 import { StateMessage } from '@context/MessageService'
 import { checkinAttendeeInActivity } from '@helpers/HelperAuth'
-import { firestore } from '@helpers/firebase'
+
+import { FB } from '@helpers/firestore-request'
 import { EventsApi } from '@helpers/request'
 import { Button, Checkbox, List, Result, Row, Space, Typography, Modal } from 'antd'
 import { FunctionComponent, useEffect, useMemo, useState } from 'react'
@@ -27,13 +28,8 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
 
   const requestAllData = async () => {
     const existentActivities = await allActivities.map(async (activity) => {
-      const activity_attendee = await firestore
-        .collection(`${activity._id}_event_attendees`)
-        .doc(watchedUser._id)
-        .get()
-      if (activity_attendee.exists) {
-        return activity
-      }
+      const activity_attendee = await FB.Attendees.get(activity._id, watchedUser._id)
+      if (activity_attendee) return activity
       return null
     })
     // Filter non-null result that means that the user attendees them

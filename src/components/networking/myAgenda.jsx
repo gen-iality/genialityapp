@@ -16,11 +16,12 @@ import dayjs from 'dayjs'
 import { find, map, mergeRight, path, propEq } from 'ramda'
 import { isNonEmptyArray } from 'ramda-adjunct'
 import { useEffect, useMemo, useState } from 'react'
-import { firestore } from '@helpers/firebase'
+
 import { getDatesRange } from '@helpers/utils'
 import { deleteAgenda, getAcceptedAgendasFromEventUser } from './services'
 import { createChatRoom } from './agendaHook'
 import { isStagingOrProduccion } from '@Utilities/isStagingOrProduccion'
+import { FB } from '@helpers/firestore-request'
 
 const { TabPane } = Tabs
 const { Meta } = Card
@@ -41,12 +42,9 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   useEffect(() => {
     if (!event || !event._id) return
 
-    firestore
-      .collection('events')
-      .doc(event._id)
-      .onSnapshot(function (doc) {
-        setEnableMeetings(doc.data() && !!doc.data().enableMeetings)
-      })
+    FB.Events.ref(event._id).onSnapshot(function (doc) {
+      setEnableMeetings(doc.data() && !!doc.data().enableMeetings)
+    })
   }, [event])
 
   useEffect(() => {

@@ -46,7 +46,7 @@ const RegisterUserAndEventUserAnonymous = ({}: any) => {
               await app.auth().currentUser?.reload()
               AttendeeApi.create(cEvent.value._id, body).then((data) => {
                 console.log('response', data)
-                cEventUser.setUpdateUser(true)
+                cEventUser.requestUpdate()
                 helperDispatch({ type: 'showLogin', visible: false })
                 setIsLoading(false)
               })

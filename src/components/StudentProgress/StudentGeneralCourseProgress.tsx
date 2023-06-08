@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo, memo } from 'react'
-import { firestore } from '@helpers/firebase'
+
 import { AgendaApi } from '@helpers/request'
 
 import CourseProgress from './CourseProgress'
@@ -10,6 +10,7 @@ import { EventsApi } from '@helpers/request'
 
 import type AgendaType from '@Utilities/types/AgendaType'
 import { Spin } from 'antd'
+import { FB } from '@helpers/firestore-request'
 
 type CurrentEventAttendees = any // TODO: define this type and move to @Utilities/types/
 
@@ -66,24 +67,13 @@ function StudentGeneralCourseProgress(props: StudentGeneralCourseProgressProps) 
         (activity: AgendaType) => !activity.is_info_only,
       )
       setActivities(withoutInfoActivities)
-      const existentActivities = withoutInfoActivities.map(
-        async (activity: AgendaType) => {
-          const activity_attendee = await firestore
-            .collection(`${activity._id}_event_attendees`)
-            .doc(eventUserId)
-            .get() //checkedin_at
-          if (activity_attendee.exists) {
-            return activity_attendee.data()
-            // setActivities_attendee((past) => [...past, activity_attendee.data()]);
-          }
-          return null
-        },
+      const allAttendees = await FB.Attendees.getEventUserActivities(
+        withoutInfoActivities.map((activity) => activity._id as string),
+        eventUserId,
       )
+
       // Filter existent activities and set the state
-      setActivitiesAttendee(
-        // Promises don't bite :)
-        (await Promise.all(existentActivities)).filter((item) => !!item),
-      )
+      setActivitiesAttendee(allAttendees.filter((attendee) => attendee !== undefined))
     }
     loadData().then(() => setIsLoading(false))
   }, [eventId, eventUserId])

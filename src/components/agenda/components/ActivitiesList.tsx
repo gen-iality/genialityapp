@@ -1,10 +1,10 @@
-import { FunctionComponent, useContext, useMemo } from 'react'
-import { Spin, Collapse } from 'antd'
+import { FunctionComponent, useContext } from 'react'
+import { Spin } from 'antd'
 import { useState, useEffect } from 'react'
 import dayjs from 'dayjs'
 import { ExtendedAgendaType, TruncatedAgenda } from '@Utilities/types/AgendaType'
 import { ActivityType } from '@context/activityType/types/activityType'
-import { firestore } from '@helpers/firebase'
+
 import { activityContentValues } from '@context/activityType/constants/ui'
 import { useCurrentUser } from '@context/userContext'
 import Service from '@components/agenda/roomManager/service'
@@ -26,14 +26,14 @@ interface ActivitiesListProps {
   eventProgressPercent?: number
 }
 
-const ActivitiesList = (props: ActivitiesListProps) => {
+const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
   const {
     eventId, // The event ID
     eventUserId, // The event user ID
     eventProgressPercent,
   } = props
 
-  const service = new Service(firestore)
+  const service = new Service()
 
   const [isLoading, setIsLoading] = useState(true)
   const [loadedActivities, setLoadedActivities] = useState<ExtendedAgendaType[]>([])

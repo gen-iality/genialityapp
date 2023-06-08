@@ -147,8 +147,8 @@ const HeaderContainer: FunctionComponent<IHeaderContainerProps> = (props) => {
   const userLogOut = (callBack: any) => {
     const params = {
       user: cUser.value,
+      // TODO: replace setCurrentUser too
       setCurrentUser: cUser.setCurrentUser,
-      setuserEvent: cEventUser.setuserEvent,
       resetEventUser: cEventUser.resetEventUser,
       formatMessage: intl.formatMessage,
       handleChangeTypeModal: cHelper.handleChangeTypeModal,

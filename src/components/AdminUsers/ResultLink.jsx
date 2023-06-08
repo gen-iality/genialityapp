@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Result, Button, Typography, Grid } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
-import { firestore } from '@helpers/firebase'
+
 import { useIntl } from 'react-intl'
+import { FB } from '@helpers/firestore-request'
 
 const { useBreakpoint } = Grid
 
@@ -109,7 +110,7 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
                   <Button
                     onClick={async () => {
                       setIsLoading(true)
-                      const conectionRef = firestore.collection(`connections`)
+                      const conectionRef = FB.Connections.collection()
                       const docRef = await conectionRef.where('email', '==', data).get()
                       if (docRef.docs.length > 0) {
                         await conectionRef.doc(docRef.docs[0].id).delete()

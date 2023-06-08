@@ -1,6 +1,7 @@
-import { firestore, fireRealtime } from '@helpers/firebase'
+import { fireRealtime } from '@helpers/firebase'
 import { SurveysApi } from '@helpers/request'
 import countAnswers from './counstAnswersService'
+import { FB } from '@helpers/firestore-request'
 
 const surveyAnswers = {
   // Servicio para registrar votos para un usuario logeado
@@ -24,14 +25,7 @@ const surveyAnswers = {
       countAnswers(surveyId, questionId, optionQuantity, optionIndex, voteValue)
     }
 
-    firestore
-      .collection('surveys')
-      .doc(surveyId)
-      .collection('answers')
-      .doc(questionId)
-      .collection('responses')
-      .doc(uid)
-      .set(data)
+    FB.Surveys.Answers.Responses.edit(surveyId, questionId, uid, data)
   },
   // Servicio para registrar votos para un usuario sin logeo
   registerLikeGuest: async (surveyId, questionId, dataAnswer, counter) => {
@@ -56,21 +50,13 @@ const surveyAnswers = {
 
     countAnswers(surveyId, questionId, optionQuantity, optionIndex)
 
-    return new Promise((resolve, reject) => {
-      firestore
-        .collection('surveys')
-        .doc(surveyId)
-        .collection('answers')
-        .doc(questionId)
-        .collection('responses')
-        .add(data)
-        .then(() => {
-          resolve('Las respuestas han sido enviadas')
-        })
-        .catch((err) => {
-          reject(err)
-        })
-    })
+    try {
+      FB.Surveys.Answers.Responses.add(surveyId, questionId, data)
+      return 'Las respuestas han sido enviadas'
+    } catch (err) {
+      console.error(err)
+      return err
+    }
   },
   // Servicio para obtener el conteo de las respuestas y las opciones de las preguntas
   getAnswersQuestion: async (surveyId, questionId, eventId, updateData, operation) => {
@@ -124,18 +110,8 @@ const surveyAnswers = {
       }
     })
   },
-  getAnswersQuestionV2: async (surveyId, questionId, uid) => {
-    return (
-      firestore
-        //surveys/surveyId/answers/questionId/responses/uid
-        .collection('surveys')
-        .doc(surveyId)
-        .collection('answers')
-        .doc(questionId)
-        .collection('responses')
-        .doc(uid)
-        .get()
-    )
+  getAnswersQuestionV2: (surveyId, questionId, uid) => {
+    return FB.Surveys.Answers.Responses.get(surveyId, questionId, uid)
   },
 }
 

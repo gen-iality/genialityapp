@@ -5,7 +5,8 @@
  */
 
 import QuizProgress from '@components/quiz/QuizProgress'
-import { firestore } from '@helpers/firebase'
+
+import { FB } from '@helpers/firestore-request'
 import { FunctionComponent, useState, useEffect } from 'react'
 
 interface IQuizProgressFromActivityProps {
@@ -24,13 +25,7 @@ const QuizProgressFromActivity: FunctionComponent<IQuizProgressFromActivityProps
 
   useEffect(() => {
     ;(async () => {
-      const document: any = await firestore
-        .collection('events')
-        .doc(eventId)
-        .collection('activities')
-        .doc(activityId)
-        .get()
-      const activityData = document.data()
+      const activityData = await FB.Activities.get(eventId, activityId)
       console.log('This activity is', activityData)
       if (!activityData) return
       const meetingId = activityData?.meeting_id
