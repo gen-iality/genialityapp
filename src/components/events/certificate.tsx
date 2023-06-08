@@ -22,7 +22,7 @@ import {
 } from '@components/certificates/constants'
 import { CertRow, Html2PdfCerts, Html2PdfCertsRef } from 'html2pdf-certs'
 import 'html2pdf-certs/dist/styles.css'
-import { CertificateData } from '@components/certificates/types'
+import CertificateType from '@Utilities/types/CertificateType'
 import { replaceAllTagValues } from '@components/certificates/utils/replaceAllTagValues'
 import { FB } from '@helpers/firestore-request'
 
@@ -65,17 +65,18 @@ function Certificate(props: CertificateProps) {
   const [allActivities, setAllActivities] = useState<AgendaType[]>([])
 
   const [isGenerating, setIsGenerating] = useState(false)
-  const [certificateData, setCertificateData] = useState<CertificateData>({
+  const [certificateData, setCertificateData] = useState<CertificateType>({
     content: initContent,
     background: defaultCertificateBackground,
     event_id: '',
     name: '',
+    event: null,
   })
   const [readyCertToGenerate, setReadyCertToGenerate] = useState<
-    CertificateData | undefined
+    CertificateType | undefined
   >()
   const [finalCertRows, setFinalCertRows] = useState<CertRow[]>(JSON.parse(initContent))
-  const [lastRolCert, setLastRolCert] = useState<CertificateData | undefined>()
+  const [lastRolCert, setLastRolCert] = useState<CertificateType | undefined>()
 
   const pdfQuizGeneratorRef = useRef<Html2PdfCertsRef>(null)
   const pdfGeneralGeneratorRef = useRef<Html2PdfCertsRef>(null)
@@ -124,7 +125,7 @@ function Certificate(props: CertificateProps) {
     currentEvent.datetime_to = dayjs(currentEvent.datetime_to).format('DD/MM/YYYY')
 
     //Por defecto se trae el certificado sin rol
-    let rolCert: CertificateData | undefined = certs.find((cert: any) => !cert.rol_id)
+    let rolCert: CertificateType | undefined = certs.find((cert: any) => !cert.rol_id)
     //Si el asistente tiene rol_id y este corresponde con uno de los roles attendees, encuentra el certificado ligado
     const rolValidation = roles.find((rol: any) => rol._id === dataUser.rol_id)
     if (dataUser.rol_id && rolValidation) {

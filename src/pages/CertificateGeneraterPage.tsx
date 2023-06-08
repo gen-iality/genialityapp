@@ -10,7 +10,7 @@ import {
 
 import { CertRow, Html2PdfCerts, Html2PdfCertsRef } from 'html2pdf-certs'
 import 'html2pdf-certs/dist/styles.css'
-import { CertificateData } from '@components/certificates/types'
+import CertificateType from '@Utilities/types/CertificateType'
 
 import { replaceAllTagValues } from '@components/certificates/utils/replaceAllTagValues'
 import {
@@ -34,7 +34,7 @@ type CGState = {
   activity?: any
   eventUser?: any
   certRows?: CertRow[]
-  certificateData: CertificateData
+  certificateData: CertificateType
   // ID states
   // eventId?: string
   // activityId?: string
@@ -53,7 +53,7 @@ type CGAction =
   | { type: 'LOADED' }
   | { type: 'SET_DATA'; eventUser?: any; activity?: any; user?: any; event?: any }
   | { type: 'SET_CERT_ROWS'; certRows: CertRow[] }
-  | { type: 'SET_CERTIFICATE_DATA'; certificateData: CertificateData }
+  | { type: 'SET_CERTIFICATE_DATA'; certificateData: CertificateType }
 
 const reducerGC = (state: CGState, action: CGAction): CGState => {
   switch (action.type) {
@@ -90,6 +90,7 @@ const CertificateGeneraterPage: FunctionComponent = () => {
       background: defaultCertificateBackground,
       event_id: '',
       name: '',
+      event: null,
     },
   })
 
@@ -120,7 +121,7 @@ const CertificateGeneraterPage: FunctionComponent = () => {
       // Get the event user
       UsersApi.getEventUserByUser(params.eventId, params.userId),
       // Get the certs
-      CertsApi.byEvent(params.eventId) as Promise<any[]>,
+      CertsApi.byEvent(params.eventId) as Promise<CertificateType[]>,
       // Get the roles
       RolAttApi.byEvent(params.eventId) as Promise<any[]>,
     ])
@@ -141,7 +142,7 @@ const CertificateGeneraterPage: FunctionComponent = () => {
           },
         }
 
-        let rolCert: CertificateData | undefined = certs.find((cert: any) => !cert.rol_id)
+        let rolCert: CertificateType | undefined = certs.find((cert: any) => !cert.rol_id)
         // If the event user has rol_id and this matches with any attendee roles, then find the cert found
         const rolValidation = roles.find((rol: any) => rol._id === dataEventUser.rol_id)
         if (dataEventUser.rol_id && rolValidation) {
