@@ -178,7 +178,6 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
                     end: parseDate(dateEnd),
                 };
             });
-            return console.log('payload', payload)
             if (payload.length === 0 || !payload) {
                 return notification.open({
                     message: 'Datos no guardados',

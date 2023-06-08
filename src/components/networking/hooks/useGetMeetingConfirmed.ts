@@ -5,6 +5,7 @@ import * as servicesMeenting from '../services/meenting.service';
 import { IMeeting } from '../interfaces/Meetings.interfaces';
 import moment from 'moment';
 import { DailyMeeting } from '../interfaces/my-agenda.interfaces';
+import { DateRange } from 'react-big-calendar';
 
 
 const useGetMeetingConfirmed = () => {
@@ -38,23 +39,25 @@ const useGetMeetingConfirmed = () => {
 
 
     const getArraysDays = (meetingWithUser: IMeeting[]): DailyMeeting[] => {
-        const fechaInicial = new Date(eventContext.value.datetime_from);
-        const fechaFinal = new Date(eventContext.value.datetime_to);
-        const diasEnRango = [];
+        const diasEnRango: DailyMeeting[] = [];
         setHaveMeetings(false)
-        let fechaActual = new Date(fechaInicial);
-        while (fechaActual <= fechaFinal) {
-            const meeting = meetingWithUser.filter(meeting => moment(meeting.start).isSame(fechaActual, 'day'))
-            //Se valida asi debido a que pueden existir reuniones del cms que no son validas para mostrar en la landing
-            if (meeting.length > 0) {
-                setHaveMeetings(true)
-            }
-            const dia = {
-                date: moment(fechaActual).format('MMMM DD'),
-                meetings: meeting
-            };
-            diasEnRango.push(dia);
-            fechaActual.setDate(fechaActual.getDate() + 1);
+
+        if (Array.isArray(eventContext?.value?.dates)) {
+            eventContext?.value?.dates.forEach((element: DateRange) => {
+                const fechaActual = new Date(element.start)
+                const meeting = meetingWithUser.filter(meeting => {
+                    return moment(meeting.start).isSame(fechaActual, 'day') && moment(meeting.start).isSame(fechaActual, 'month') && moment(meeting.start).isSame(fechaActual, 'year')
+                })
+                if (meeting.length > 0) {
+                    setHaveMeetings(true)
+                }
+                const dia = {
+                    date: moment(fechaActual).format('MMMM DD'),
+                    meetings: meeting
+                };
+                diasEnRango.push(dia);
+                fechaActual.setDate(fechaActual.getDate() + 1);
+            });
         }
         return diasEnRango;
     };

@@ -107,6 +107,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
     >
       <Row justify='space-between' /* style={{ margin: 5 }} */>
         <DatePicker
+          allowClear={false}
           value={date}
           style={{ marginBottom: 10, width: '100%' }}
           format={'DD-MM-YYYY'}
