@@ -58,6 +58,7 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
     background: defaultCertificateBackground,
     event_id: '',
     name: '',
+    event: null,
   })
   const [roles, setRoles] = useState<any[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
@@ -88,7 +89,7 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
     form.setFieldsValue({ certRows: JSON.parse(data.content) })
   }
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async (values: CertificateType & { certRows: any; role: string }) => {
     console.log('submit', { values })
     StateMessage.show(
       'loading',
@@ -139,7 +140,7 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
     )
     if (locationState.edit) {
       confirm({
-        title: `¿Está seguro de eliminar la información?`,
+        title: '¿Está seguro de eliminar la información?',
         icon: <ExclamationCircleOutlined />,
         content: 'Una vez eliminado, no lo podrá recuperar',
         okText: 'Borrar',
