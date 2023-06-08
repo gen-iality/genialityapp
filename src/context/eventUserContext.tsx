@@ -5,7 +5,7 @@ import { app } from '@helpers/firebase'
 import { useCurrentUser } from './userContext'
 
 export interface EventUserContextState {
-  status: 'LOADING' | 'LOADED'
+  status: 'LOADING' | 'LOADED' | 'ERROR'
   value: any
   error?: any
   resetEventUser: () => void
