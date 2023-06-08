@@ -44,8 +44,13 @@ const formLayout = {
 
 const initContent: string = JSON.stringify(defaultCertRows)
 
-const CertificateEditor: FunctionComponent<any> = (props) => {
-  const location = useLocation()
+interface ICertificateEditorPageProps {
+  event: any
+  parentUrl: string
+}
+
+const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (props) => {
+  const location = useLocation<{ edit?: string }>()
   const locationState = location?.state || {} //si viene new o edit en el state, si es edit es un id
   const history = useHistory()
   const [certificateData, setCertificateData] = useState<CertificateData>({
@@ -356,7 +361,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
         save
         form
         remove={onRemoveId}
-        edit={locationState.edit}
+        edit={Boolean(locationState.edit)}
         extra={
           <Form.Item>
             <Row wrap gutter={[16, 8]}>
@@ -500,4 +505,4 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
   )
 }
 
-export default CertificateEditor
+export default CertificateEditorPage
