@@ -8,7 +8,7 @@ export async function GetTokenUserFirebase() {
       if (user) {
         user
           .getIdToken()
-          .then(async function(idToken) {
+          .then(async function (idToken) {
             resolve(idToken)
           })
           .catch((error) => {
@@ -21,15 +21,15 @@ export async function GetTokenUserFirebase() {
   })
 }
 
-export const checkinAttendeeInActivity = (attende, activityId) => {
+export const checkinAttendeeInActivity = (eventUser, activityId) => {
   /** We use the activity id plus _event_attendees to be able to reuse the checkIn component per event */
-  const userRef = firestore.collection(`${activityId}_event_attendees`).doc(attende._id)
+  const userRef = firestore.collection(`${activityId}_event_attendees`).doc(eventUser._id)
   return new Promise((resolve, reject) => {
-    userRef.get().then(function(doc) {
+    userRef.get().then(function (doc) {
       if (doc.exists) {
-        console.log('exist* attendee', `${activityId}_event_attendees`, attende._id)
+        console.log('exist* attendee', `${activityId}_event_attendees`, eventUser._id)
         if (!doc.data().checked_in) {
-          console.log('update* attendee', `${activityId}_event_attendees`, attende._id)
+          console.log('update* attendee', `${activityId}_event_attendees`, eventUser._id)
           userRef
             .update(
               {
@@ -42,12 +42,12 @@ export const checkinAttendeeInActivity = (attende, activityId) => {
             .then(() => resolve())
         }
       } else {
-        console.log('set* attendee', `${activityId}_event_attendees`, attende._id)
+        console.log('set* attendee', `${activityId}_event_attendees`, eventUser._id)
         firestore
           .collection(`${activityId}_event_attendees`)
-          .doc(attende._id)
+          .doc(eventUser._id)
           .set({
-            ...attende,
+            ...eventUser,
             checkinsList: app.firestore.FieldValue.arrayUnion(new Date()),
             checked_in: true,
             checkedin_at: new Date(),
@@ -61,7 +61,7 @@ export const checkinAttendeeInActivity = (attende, activityId) => {
 export const checkinAttendeeInEvent = (attende, eventId) => {
   const userRef = firestore.collection(`${eventId}_event_attendees`).doc(attende._id)
 
-  userRef.onSnapshot(function(doc) {
+  userRef.onSnapshot(function (doc) {
     if (doc.exists) {
       if (!doc.data().checked_in) {
         /** We register the checkIn by calling the back */
