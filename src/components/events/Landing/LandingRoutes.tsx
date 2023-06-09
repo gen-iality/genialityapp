@@ -196,7 +196,7 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
 
   const [generalTabs, setGeneralTabs] = useState(iniitalStateTabs)
   // eslint-disable-next-line prefer-const
-  const [totalNewMessages, setTotalNewMessages] = useState(0)
+  let [totalNewMessages, setTotalNewMessages] = useState(0)
 
   // This can be a context or well
 
