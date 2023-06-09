@@ -16,7 +16,9 @@ export const generateSpacesByDataRange = (timeParametres: TimeParameter, date: M
         let status: StatusSpace = 'avalible'
         const haveRequestMeeting = requestMeetings.filter(requestMeeting => (requestMeeting.dateStartTimestamp.isEqual(dateStart)))
         if (haveRequestMeeting && haveRequestMeeting.length > 0) {
+            let continueWithCicle = true
             haveRequestMeeting.forEach((requesMeeting) => {
+                if (!continueWithCicle) return
                 switch (requesMeeting.status) {
                     case "confirmed":
                         status = 'not_available'
@@ -25,8 +27,12 @@ export const generateSpacesByDataRange = (timeParametres: TimeParameter, date: M
                             (requesMeeting.user_from.id === userId && requesMeeting.user_to.id === creatorId)
                         ) {
                             status = 'accepted'
+                            continueWithCicle = false
                         }
-                        if ((requesMeeting.user_from.id === creatorId || requesMeeting.user_to.id === creatorId) && requesMeeting.user_from.id !== userId) status = 'busy-schedule'
+                        if ((requesMeeting.user_from.id === creatorId || requesMeeting.user_to.id === creatorId) && requesMeeting.user_from.id !== userId) {
+                            status = 'busy-schedule'
+                            continueWithCicle = false
+                        }
                         break
                     case "pending":
                         if (requesMeeting.user_from.id === creatorId && requesMeeting.user_to.id === userId) status = 'requested'
@@ -93,7 +99,7 @@ export const generateSpacesByDataRange = (timeParametres: TimeParameter, date: M
 
         timeSpaces.push(newSpace);
     }
-    
+
     return timeSpaces
 }
 
