@@ -14,6 +14,7 @@ import {
   Image as ImageAntD,
   InputNumber,
   Divider,
+  Switch,
 } from 'antd'
 import {
   ExclamationCircleOutlined,
@@ -33,7 +34,10 @@ import 'html2pdf-certs/dist/styles.css'
 import CertificateRows from './CertificateRows'
 import { availableTags, defaultCertificateBackground, defaultCertRows } from './constants'
 import { replaceAllTagValues } from './utils/replaceAllTagValues'
-import CertificateType from '@Utilities/types/CertificateType'
+import CertificateType, {
+  CertificateRequirementConfigType,
+} from '@Utilities/types/CertificateType'
+import { activityContentValues } from '@context/activityType/constants/ui'
 
 const { confirm } = Modal
 
@@ -43,6 +47,53 @@ const formLayout = {
 }
 
 const initContent: string = JSON.stringify(defaultCertRows)
+
+const RequirementConfigField: FunctionComponent<{
+  value?: CertificateRequirementConfigType
+  onChange?: (value: CertificateRequirementConfigType) => void
+}> = (props) => {
+  const { value, onChange } = props
+
+  const [loadedValue] = useState<CertificateRequirementConfigType>({
+    completion: value?.completion ?? 0,
+    enable: !!value?.enable,
+    ignore_event_type: value?.ignore_event_type ?? [],
+  })
+
+  const hanndleChange = (updates: CertificateRequirementConfigType) => {
+    if (typeof onChange !== 'function') return
+    onChange(updates)
+  }
+
+  return (
+    <>
+      <Form.Item {...formLayout} label="Porcentaje del curso requierido (optional)">
+        <InputNumber
+          value={value?.completion}
+          formatter={(value) => `${value}%`}
+          parser={(value) => {
+            if (value === undefined) return 0
+            return parseInt(value.replace('%', ''))
+          }}
+          onChange={(value) => hanndleChange({ ...loadedValue, completion: value ?? 0 })}
+        />
+      </Form.Item>
+      <Form.Item {...formLayout} label="Tipo de contenido ignorado">
+        <Select
+          mode="multiple"
+          value={value?.ignore_event_type}
+          options={Object.values(activityContentValues).map((v) => ({
+            label: v,
+            value: v,
+          }))}
+          onChange={(value) =>
+            hanndleChange({ ...loadedValue, ignore_event_type: value })
+          }
+        />
+      </Form.Item>
+    </>
+  )
+}
 
 interface ICertificateEditorPageProps {
   event: any
@@ -69,7 +120,9 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
   const [backUpNoFinalCertRows] = useState<CertRow[]>(JSON.parse(initContent))
   const [readyCertToGenerate, setReadyCertToGenerate] = useState<CertRow[] | undefined>()
 
-  const [form] = Form.useForm()
+  const [isEnabledRequirement, setIsEnabledRequirement] = useState(false)
+
+  const [form] = Form.useForm<CertificateType>()
 
   const pdfGeneratorRef = useRef<Html2PdfCertsRef>(null)
 
@@ -84,12 +137,17 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
     }
 
     setCertificateData({ ...data })
-    data.content && setNoFinalCertRows(JSON.parse(data.content))
+    data.content &&
+      setNoFinalCertRows(
+        Array.isArray(data.content) ? data.content : JSON.parse(data.content),
+      )
     form.setFieldsValue({ ...data })
-    form.setFieldsValue({ certRows: JSON.parse(data.content) })
+    form.setFieldsValue({
+      content: typeof data.content === 'string' ? JSON.parse(data.content) : data.content,
+    })
   }
 
-  const onSubmit = async (values: CertificateType & { certRows: any; role: string }) => {
+  const onSubmit = async (values: CertificateType) => {
     console.log('submit', { values })
     StateMessage.show(
       'loading',
@@ -105,12 +163,16 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
     const payload = {
       name: values.name,
       // rol_id: values.role, // TODO: check if this is the rol._id
-      content: JSON.stringify(values.certRows), // Parse to text
+      content:
+        typeof values.content === 'string'
+          ? values.content
+          : JSON.stringify(values.content),
       event_id: props.event._id,
       background: certificateData.background,
-      rol: values.role,
+      rol_id: values.rol_id,
       cert_width: values.cert_width,
       cert_height: values.cert_height,
+      requirement_config: values.requirement_config,
     }
 
     try {
@@ -330,6 +392,14 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
     requestRoles()
   }, [locationState.edit])
 
+  useEffect(() => {
+    setIsEnabledRequirement(
+      certificateData.requirement_config === undefined
+        ? false
+        : certificateData.requirement_config.enable,
+    )
+  }, [certificateData])
+
   // Watch and generate the PDF
   useEffect(() => {
     if (!pdfGeneratorRef.current) {
@@ -409,7 +479,7 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
           </Form.Item>
         </Col>
         <Col md={12} sm={24}>
-          <Form.Item name="role" label="Rol">
+          <Form.Item name="rol_id" label="Rol">
             <Select
               placeholder="Seleccione un rol"
               options={roles.map((role) => ({
@@ -431,6 +501,40 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
           <Form.Item name="cert_height" label="Dimensione alto (opcional)">
             <InputNumber placeholder="Altura" style={{ width: '100%' }} />
           </Form.Item>
+        </Col>
+      </Row>
+
+      <Row gutter={[16, 16]}>
+        <Col>
+          <Form.Item label="Habilitar requerimientos">
+            <Switch
+              checked={isEnabledRequirement}
+              checkedChildren="Con requerimientos"
+              unCheckedChildren="Sin requerimientos"
+              onChange={(checked) => {
+                setIsEnabledRequirement(checked)
+                const lastFormValues: CertificateType['requirement_config'] =
+                  form.getFieldValue('requirement_config')
+                form.setFieldsValue({
+                  requirement_config: {
+                    completion: lastFormValues?.completion ?? 100,
+                    ignore_event_type: lastFormValues?.ignore_event_type ?? [],
+                    enable: checked,
+                  },
+                })
+              }}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+
+      <Row gutter={[16, 16]}>
+        <Col>
+          {isEnabledRequirement && (
+            <Form.Item label="Requerimientos" name="requirement_config">
+              <RequirementConfigField />
+            </Form.Item>
+          )}
         </Col>
       </Row>
 
@@ -472,7 +576,7 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
 
       <Row gutter={[16, 16]}>
         <Col span={24}>
-          <Form.Item name="certRows" label="Filas" initialValue={noFinalCertRows}>
+          <Form.Item name="content" label="Filas" initialValue={noFinalCertRows}>
             <CertificateRows onChange={setNoFinalCertRows} />
           </Form.Item>
         </Col>
