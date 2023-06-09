@@ -762,7 +762,7 @@ class AgendaLandingSection extends Component {
                               agendaList={this.state.data}
                               eventId={this.props.cEvent.value._id}
                               eventUserId={this.props.cEventUser.value?._id}
-                              eventProgressPercent={value?.progressWithoutAnySurveys}
+                              eventProgressPercent={value?.progressFilteredActivities}
                             />
                           )}
                         </EventProgressContext.Consumer>

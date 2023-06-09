@@ -3,16 +3,20 @@ import { Progress, Tooltip } from 'antd'
 import { useEventProgress } from '@context/eventProgressContext'
 import { activityContentValues } from '@context/activityType/constants/ui'
 
-// interface IEventProgressProps {}
+interface IEventProgressProps {
+  event: any
+}
 
-const EventProgress: FunctionComponent /** <IEventProgressProps> */ = (/** props */) => {
+const EventProgress: FunctionComponent<IEventProgressProps> = () => {
+  // const { event } = props
+
   const [title, setTitle] = useState('')
 
   const cEventProgress = useEventProgress()
 
   const statsString = useMemo(
-    () => `${cEventProgress.progressWithoutAnySurveys}%`,
-    [cEventProgress.progressWithoutAnySurveys],
+    () => `${cEventProgress.progressFilteredActivities}%`,
+    [cEventProgress.progressFilteredActivities],
   )
 
   useEffect(() => {
@@ -49,7 +53,7 @@ const EventProgress: FunctionComponent /** <IEventProgressProps> */ = (/** props
 
   return (
     <Tooltip
-      title={`Curso en ${cEventProgress.progressWithoutAnySurveys}%, quices en ${cEventProgress.progressWithQuices}%`}
+      title={`Curso en ${cEventProgress.progressFilteredActivities}%, quices en ${cEventProgress.progressOfQuices}%`}
     >
       <p style={{ color: 'black', fontWeight: 'bold', lineHeight: 0 }}>{title}</p>
       <Progress
@@ -59,10 +63,10 @@ const EventProgress: FunctionComponent /** <IEventProgressProps> */ = (/** props
         }}
         trailColor="#E6E6E6"
         success={{
-          percent: cEventProgress.progressWithQuices,
-          strokeColor: 'red',
+          percent: cEventProgress.progressOfQuices,
+          strokeColor: '#f000002A',
         }}
-        percent={cEventProgress.progressWithoutAnySurveys}
+        percent={cEventProgress.progressFilteredActivities}
         status="active"
         format={() => statsString}
       />

@@ -18,31 +18,31 @@ type AttendeeType = any
 
 export interface EventProgressContextState {
   activities: ExtendedAgendaType[]
+  filteredActivities: ExtendedAgendaType[]
   checkedInActivities: AttendeeType[]
   isLoading: boolean
   progressAllActivities: number
-  progressWithoutQuices: number
-  progressWithoutAnySurveys: number
-  progressWithAnySurveys: number
-  progressWithQuices: number
+  progressFilteredActivities: number
+  progressOfQuices: number
   updateActivities: () => Promise<ExtendedAgendaType[]>
   updateAttendees: () => Promise<void>
   getAttendeesForActivities: (activityIds: string[]) => AttendeeType[]
+  calcProgress: (current: number, total: number) => number
 }
 
 const initialContextState: EventProgressContextState = {
   activities: [],
+  filteredActivities: [],
   checkedInActivities: [],
   isLoading: false,
   progressAllActivities: 0,
-  progressWithoutQuices: 0,
-  progressWithoutAnySurveys: 0,
-  progressWithAnySurveys: 0,
-  progressWithQuices: 0,
+  progressFilteredActivities: 0,
+  progressOfQuices: 0,
   updateActivities: () => Promise.resolve([]),
   updateAttendees: () => Promise.resolve(),
   getAttendeesForActivities: () => [],
-} as EventProgressContextState
+  calcProgress: () => 0,
+}
 
 const EventProgressContext = createContext<EventProgressContextState | undefined>(
   initialContextState,
@@ -58,6 +58,7 @@ export const EventProgressProvider: FunctionComponent = (props) => {
 
   const [isLoading, setIsLoading] = useState(false)
   const [activities, setActivities] = useState<ExtendedAgendaType[]>([])
+  const [filteredActivities, setFilteredActivities] = useState<ExtendedAgendaType[]>([])
   const [checkedInActivities, setCheckedInActivities] = useState<AttendeeType[]>([])
 
   const updateActivities = async () => {
@@ -94,17 +95,8 @@ export const EventProgressProvider: FunctionComponent = (props) => {
     console.log(`Got ${checkedInOnes.length} attendees`)
   }
 
-  const anySurveyFilter = (a: ExtendedAgendaType) =>
-    [activityContentValues.quizing, activityContentValues.survey].includes(
-      a.type?.name as any,
-    )
-
-  const nonAnySurveyFilter = (a: ExtendedAgendaType) => !anySurveyFilter(a)
-
   const quizingFilter = (a: ExtendedAgendaType) =>
     [activityContentValues.quizing].includes(a.type?.name as any)
-
-  const nonQuizingFilter = (a: ExtendedAgendaType) => !quizingFilter(a)
 
   const getAttendeesForActivities = useCallback(
     (activityIds: string[]): AttendeeType[] => {
@@ -138,22 +130,12 @@ export const EventProgressProvider: FunctionComponent = (props) => {
     [activities, checkedInActivities],
   )
 
-  const progressWithoutAnySurveys = useMemo(
-    () => calcProgressApplyingFilter(nonAnySurveyFilter),
-    [activities, checkedInActivities],
+  const progressFilteredActivities = useMemo(
+    () => calcProgress(checkedInActivities.length, filteredActivities.length),
+    [filteredActivities, checkedInActivities],
   )
 
-  const progressWithAnySurveys = useMemo(
-    () => calcProgressApplyingFilter(anySurveyFilter),
-    [activities, checkedInActivities],
-  )
-
-  const progressWithoutQuices = useMemo(
-    () => calcProgressApplyingFilter(nonQuizingFilter),
-    [activities, checkedInActivities],
-  )
-
-  const progressWithQuices = useMemo(
+  const progressOfQuices = useMemo(
     () => calcProgressApplyingFilter(quizingFilter),
     [activities, checkedInActivities],
   )
@@ -168,20 +150,69 @@ export const EventProgressProvider: FunctionComponent = (props) => {
       .finally(() => setIsLoading(false))
   }, [cEventContext.value, cEventUser.value])
 
+  /**
+   * We need take activities according of the event configuration:
+   *
+   * if it includes surveys, quiz ssurveys, info sections, etc...
+   */
+  useEffect(() => {
+    if (!cEventContext.value) return
+    const { progress_settings = {} } = cEventContext.value
+    const { enable_mode }: { enable_mode?: string[] } = progress_settings
+
+    if (enable_mode) {
+      const ignoreInfoSection = enable_mode.includes('info')
+      const ignoreRest = enable_mode.includes('rest')
+
+      // Prepare the filter by type
+      const byTypeFilter: string[] = []
+      if (enable_mode.includes('survey')) {
+        byTypeFilter.push(activityContentValues.survey)
+      }
+      if (enable_mode.includes('quiz')) {
+        byTypeFilter.push(activityContentValues.quizing)
+      }
+
+      const newFilteredActivities = activities
+        // Ignore info section
+        .filter((activity) => !(activity.is_info_only && ignoreInfoSection))
+        // Filter by event type
+        .filter((activity) => !byTypeFilter.includes(activity.type?.name as any))
+        // Filter the rest
+        .filter(() => !ignoreRest)
+
+      setFilteredActivities(newFilteredActivities)
+      console.info(
+        'event progress filters:',
+        'info section =',
+        ignoreInfoSection,
+        'by type=',
+        !!byTypeFilter,
+        'rest=',
+        ignoreRest,
+      )
+    } else {
+      // Filter all
+      const newFilteredActivities = activities.filter(() => true)
+      setFilteredActivities(newFilteredActivities)
+      console.info('event progress filters all activity')
+    }
+  }, [activities, cEventContext.value])
+
   return (
     <EventProgressContext.Provider
       value={{
         activities,
+        filteredActivities,
         checkedInActivities,
         isLoading,
         updateActivities,
         updateAttendees,
         getAttendeesForActivities,
         progressAllActivities,
-        progressWithoutQuices,
-        progressWithoutAnySurveys,
-        progressWithAnySurveys,
-        progressWithQuices,
+        progressFilteredActivities,
+        progressOfQuices,
+        calcProgress,
       }}
     >
       {children}

@@ -40,10 +40,10 @@ function CourseProgressBar(props: CourseProgressBarProps) {
   const cEventProgress = useEventProgress()
 
   const isThisActivityBlockedByRequirement = (activity: ExtendedAgendaType): boolean => {
-    if (cEventProgress.progressWithoutAnySurveys === undefined) return false
+    if (cEventProgress.progressFilteredActivities === undefined) return false
     if (activity.require_completion === undefined) return false
 
-    if (activity.require_completion >= cEventProgress.progressWithoutAnySurveys)
+    if (activity.require_completion >= cEventProgress.progressFilteredActivities)
       return true
     return false
   }
