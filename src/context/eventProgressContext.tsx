@@ -8,29 +8,40 @@ import {
   useState,
   useEffect,
   useMemo,
+  useCallback,
 } from 'react'
 import { useEventContext } from './eventContext'
 import { useUserEvent } from './eventUserContext'
 import { activityContentValues } from './activityType/constants/ui'
 
+type AttendeeType = any
+
 export interface EventProgressContextState {
   activities: ExtendedAgendaType[]
-  checkedInActivities: any[]
+  checkedInActivities: AttendeeType[]
   isLoading: boolean
+  progressAllActivities: number
   progressWithoutQuices: number
   progressWithoutAnySurveys: number
+  progressWithAnySurveys: number
+  progressWithQuices: number
   updateActivities: () => Promise<ExtendedAgendaType[]>
   updateAttendees: () => Promise<void>
+  getAttendeesForActivities: (activityIds: string[]) => AttendeeType[]
 }
 
 const initialContextState: EventProgressContextState = {
   activities: [],
   checkedInActivities: [],
   isLoading: false,
+  progressAllActivities: 0,
   progressWithoutQuices: 0,
   progressWithoutAnySurveys: 0,
+  progressWithAnySurveys: 0,
+  progressWithQuices: 0,
   updateActivities: () => Promise.resolve([]),
   updateAttendees: () => Promise.resolve(),
+  getAttendeesForActivities: () => [],
 } as EventProgressContextState
 
 const EventProgressContext = createContext<EventProgressContextState | undefined>(
@@ -47,7 +58,7 @@ export const EventProgressProvider: FunctionComponent = (props) => {
 
   const [isLoading, setIsLoading] = useState(false)
   const [activities, setActivities] = useState<ExtendedAgendaType[]>([])
-  const [checkedInActivities, setCheckedInActivities] = useState<any[]>([])
+  const [checkedInActivities, setCheckedInActivities] = useState<AttendeeType[]>([])
 
   const updateActivities = async () => {
     // Request for all the event activities
@@ -83,12 +94,23 @@ export const EventProgressProvider: FunctionComponent = (props) => {
   }
 
   const anySurveyFilter = (a: ExtendedAgendaType) =>
-    ![activityContentValues.quizing, activityContentValues.survey].includes(
+    [activityContentValues.quizing, activityContentValues.survey].includes(
       a.type?.name as any,
     )
 
+  const nonAnySurveyFilter = (a: ExtendedAgendaType) => !anySurveyFilter(a)
+
   const quizingFilter = (a: ExtendedAgendaType) =>
-    ![activityContentValues.quizing].includes(a.type?.name as any)
+    [activityContentValues.quizing].includes(a.type?.name as any)
+
+  const nonQuizingFilter = (a: ExtendedAgendaType) => !quizingFilter(a)
+
+  const getAttendeesForActivities = useCallback(
+    (activityIds: string[]): AttendeeType[] => {
+      return checkedInActivities.filter((attendee) => activityIds.includes(attendee._id))
+    },
+    [checkedInActivities],
+  )
 
   const calcProgress = (current: number, total: number) => {
     if (current === 0 || total === 0) return 0
@@ -98,25 +120,37 @@ export const EventProgressProvider: FunctionComponent = (props) => {
   const calcProgressApplyingFilter = (
     filter: (a: ExtendedAgendaType) => boolean,
   ): number => {
-    const UnwantedActivities = activities.filter(filter)
-    const UnwantedActivityIds = UnwantedActivities.map(
-      (activity) => activity._id as string,
-    )
+    const wantedActivityIds = activities
+      .filter(filter)
+      .map((activity) => activity._id as string)
 
-    const filteredAttendees = checkedInActivities.filter(
-      (attendee) => !UnwantedActivityIds.includes(attendee.activity_id),
-    )
+    const filteredAttendees = getAttendeesForActivities(wantedActivityIds)
 
     // Calc the progress
-    return calcProgress(filteredAttendees.length, UnwantedActivities.length)
+    return calcProgress(filteredAttendees.length, wantedActivityIds.length)
   }
 
+  const progressAllActivities = useMemo(
+    () => calcProgress(checkedInActivities.length, activities.length),
+    [activities, checkedInActivities],
+  )
+
   const progressWithoutAnySurveys = useMemo(
+    () => calcProgressApplyingFilter(nonAnySurveyFilter),
+    [activities, checkedInActivities],
+  )
+
+  const progressWithAnySurveys = useMemo(
     () => calcProgressApplyingFilter(anySurveyFilter),
     [activities, checkedInActivities],
   )
 
   const progressWithoutQuices = useMemo(
+    () => calcProgressApplyingFilter(nonQuizingFilter),
+    [activities, checkedInActivities],
+  )
+
+  const progressWithQuices = useMemo(
     () => calcProgressApplyingFilter(quizingFilter),
     [activities, checkedInActivities],
   )
@@ -139,8 +173,12 @@ export const EventProgressProvider: FunctionComponent = (props) => {
         isLoading,
         updateActivities,
         updateAttendees,
+        getAttendeesForActivities,
+        progressAllActivities,
         progressWithoutQuices,
         progressWithoutAnySurveys,
+        progressWithAnySurveys,
+        progressWithQuices,
       }}
     >
       {children}
