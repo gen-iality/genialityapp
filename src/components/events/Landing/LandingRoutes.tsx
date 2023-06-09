@@ -336,7 +336,7 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
           >
             {props.view && <TopBanner currentActivity={currentActivity} />}
             <EventSectionRoutes
-              generaltabs={generalTabs}
+              generalTabs={generalTabs}
               currentActivity={currentActivity}
               eventProgressPercent={eventProgressPercent}
             />
