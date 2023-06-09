@@ -1,3 +1,9 @@
+export interface CertificateRequirementConfigType {
+  enable: boolean
+  completion: number
+  ignore_event_type: string[]
+}
+
 export default interface CertificateType {
   name: string
   content: string
@@ -7,9 +13,5 @@ export default interface CertificateType {
   rol_id?: string
   cert_width?: number
   cert_height?: number
-  requirement_config?: {
-    enable: boolean
-    completion: number
-    ignore_event_type: string[]
-  }
+  requirement_config?: CertificateRequirementConfigType
 }
