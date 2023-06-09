@@ -81,6 +81,7 @@ export const EventProgressProvider: FunctionComponent = (props) => {
     const allAttendees = await FB.Attendees.getEventUserActivities(
       filteredData.map((activity) => activity._id as string),
       cEventUser.value._id,
+      true,
     )
 
     const checkedInOnes = allAttendees.filter((attendee) => {
@@ -107,7 +108,9 @@ export const EventProgressProvider: FunctionComponent = (props) => {
 
   const getAttendeesForActivities = useCallback(
     (activityIds: string[]): AttendeeType[] => {
-      return checkedInActivities.filter((attendee) => activityIds.includes(attendee._id))
+      return checkedInActivities.filter((attendee) =>
+        activityIds.includes(attendee.activityId),
+      )
     },
     [checkedInActivities],
   )
