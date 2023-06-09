@@ -1,14 +1,15 @@
-import { FunctionComponent, useEffect, useMemo, useState } from 'react'
-import { Progress, Tooltip } from 'antd'
+import { FunctionComponent, ReactNode, useEffect, useMemo, useState } from 'react'
+import { Badge, Progress, Tooltip } from 'antd'
 import { useEventProgress } from '@context/eventProgressContext'
 import { activityContentValues } from '@context/activityType/constants/ui'
 
 interface IEventProgressProps {
   event: any
+  nodeIfCompleted?: ReactNode
 }
 
-const EventProgress: FunctionComponent<IEventProgressProps> = () => {
-  // const { event } = props
+const EventProgress: FunctionComponent<IEventProgressProps> = (props) => {
+  const { nodeIfCompleted } = props
 
   const [title, setTitle] = useState('')
 
@@ -51,7 +52,7 @@ const EventProgress: FunctionComponent<IEventProgressProps> = () => {
     setTitle(report)
   }, [cEventProgress])
 
-  return (
+  const ProgressRender = () => (
     <Tooltip
       title={`Curso en ${cEventProgress.progressFilteredActivities}%, quices en ${cEventProgress.progressOfQuices}%`}
     >
@@ -71,6 +72,23 @@ const EventProgress: FunctionComponent<IEventProgressProps> = () => {
         format={() => statsString}
       />
     </Tooltip>
+  )
+
+  return nodeIfCompleted && cEventProgress.progressFilteredActivities > 99.99 ? (
+    <Badge.Ribbon
+      style={{
+        width: '15rem',
+        height: '2.5rem',
+        fontSize: '2rem',
+        paddingTop: '0.5rem',
+      }}
+      text={nodeIfCompleted}
+      color="#fb8500"
+    >
+      <ProgressRender />
+    </Badge.Ribbon>
+  ) : (
+    <ProgressRender />
   )
 }
 
