@@ -9,10 +9,9 @@ import { AgendaApi } from '@helpers/request'
 import { parseUrl } from '@helpers/constants'
 import ActivitiesList from '@components/agenda/components/ActivitiesList'
 import AdditionalEventInfo from '@components/agenda/components/AdditionalEventInfo'
-import StudentSelfCourseProgress from '../StudentProgress/StudentSelfCourseProgress'
-import { activityContentValues } from '@context/activityType/constants/ui'
 import QuizApprovedStatus from '../quiz/QuizApprovedStatus'
 import { useEventProgress } from '@context/eventProgressContext'
+import EventProgress from '@components/StudentProgress/EventProgress'
 
 interface EventLandingProps {
   event: any
@@ -66,14 +65,8 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
       {/* Condiciones de posicionamiento, solo para cuando no tiene contenido*/}
       {event && (
         <>
-          <StudentSelfCourseProgress
-            hasProgressLabel
-            customTitle="Avance"
-            activityFilter={(a) =>
-              ![activityContentValues.quizing, activityContentValues.survey].includes(
-                a.type?.name as any,
-              )
-            }
+          <EventProgress
+            event={event}
             nodeIfCompleted={
               !event.hide_certificate_link && (
                 <Link to={`/landing/${event._id}/certificate`}>
@@ -84,17 +77,6 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
               )
             }
           />
-          {event.is_examen_required ? (
-            <StudentSelfCourseProgress
-              hasProgressLabel
-              customTitle="Avance de exámenes"
-              activityFilter={(a) =>
-                [activityContentValues.quizing, activityContentValues.survey].includes(
-                  a.type?.name as any,
-                )
-              }
-            />
-          ) : undefined}
           <Card style={{ display: thereAreQuizingOrSurveys ? 'block' : 'none' }}>
             <Typography.Text>Estado del curso:</Typography.Text>{' '}
             <QuizApprovedStatus
@@ -128,7 +110,7 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
                 <ActivitiesList
                   eventId={event?._id}
                   eventUserId={eventUser?._id}
-                  eventProgressPercent={cEventProgress.progressWithoutAnySurveys}
+                  eventProgressPercent={cEventProgress.progressFilteredActivities}
                 />
               </div>
             </Col>
