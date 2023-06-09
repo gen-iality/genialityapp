@@ -220,7 +220,7 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
   }
 
   useEffect(() => {
-    if (!cEventUser.value._id) return
+    if (!cEventUser.value?._id) return
 
     loadActivityAttendeeData()
       .then(() => console.log('attendees updated successful'))
