@@ -78,7 +78,8 @@ const initialMenu: IMenuItem = {
   certs: {
     name: 'Certificados',
     position: 30,
-    section: 'certs',
+    // section: 'certs',
+    section: 'certificate',
     icon: 'FileDoneOutlined',
     checked: false,
     permissions: 'public',

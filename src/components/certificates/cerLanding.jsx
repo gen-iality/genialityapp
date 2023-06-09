@@ -18,6 +18,7 @@ const IconText = ({ icon, text, onSubmit }) => (
   </Button>
 )
 
+/** @deprecated use the other page to able the student to download the certificate instead */
 class CertificadoLanding extends Component {
   constructor(props) {
     super(props)

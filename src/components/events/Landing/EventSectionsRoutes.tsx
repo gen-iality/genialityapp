@@ -330,11 +330,11 @@ const EventSectionRoutes = (props) => {
           </ThisRouteCanBeDisplayed>
         </Route>
 
-        <Route path={`${path}/certs`}>
+        {/* <Route path={`${path}/certs`}>
           <ThisRouteCanBeDisplayed>
             <CertificadoLanding key="certs" />
           </ThisRouteCanBeDisplayed>
-        </Route>
+        </Route> */}
         <Route path={`${path}/producto`}>
           <ThisRouteCanBeDisplayed>
             <Productos key="producto" />
