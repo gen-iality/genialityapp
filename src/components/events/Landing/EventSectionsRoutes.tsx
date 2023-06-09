@@ -28,7 +28,7 @@ const FaqsForm = loadable(() => import('../../faqsLanding'))
 const Partners = loadable(() => import('../Partners'))
 const AgendaLanding = loadable(() => import('../agendaLanding'))
 const EventHome = loadable(() => import('../eventHome'))
-const Certificate = loadable(() => import('../CertificateLandingPage'))
+const CertificateLandingPage = loadable(() => import('../CertificateLandingPage'))
 const WallForm = loadable(() => import('../../wall/index'))
 const Ferias = loadable(() => import('../ferias/index'))
 // const VirtualConferenceBig = loadable(() => import('../virtualConferenceBig'))
@@ -230,7 +230,7 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/certificate`}>
           <ThisRouteCanBeDisplayed>
-            <Certificate key="certificate" />
+            <CertificateLandingPage key="certificate" />
           </ThisRouteCanBeDisplayed>
         </Route>
 

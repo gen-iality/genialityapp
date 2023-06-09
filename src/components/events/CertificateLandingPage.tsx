@@ -28,7 +28,7 @@ import { FB } from '@helpers/firestore-request'
 
 type CurrentEventAttendees = any // TODO: define this type and move to @Utilities/types/
 
-export interface CertificateProps {
+export interface ICertificateLandingPageProps {
   cEvent?: any
   cEventUser?: any
   cUser?: any
@@ -51,7 +51,7 @@ const IconText = ({
   </Button>
 )
 
-function Certificate(props: CertificateProps) {
+function CertificateLandingPage(props: ICertificateLandingPageProps) {
   const [wereEvaluationsPassed, setWereEvaluationsPassed] = useState<boolean | undefined>(
     undefined,
   )
@@ -415,4 +415,4 @@ function Certificate(props: CertificateProps) {
   )
 }
 
-export default withContext((props: any) => <Certificate {...props} />)
+export default withContext((props: any) => <CertificateLandingPage {...props} />)
