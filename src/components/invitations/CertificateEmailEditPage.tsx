@@ -1,4 +1,5 @@
 import { CheckCircleOutlined, LoadingOutlined } from '@ant-design/icons'
+import Header from '@antdComponents/Header'
 import EviusReactQuill from '@components/shared/eviusReactQuill'
 import { EventsApi } from '@helpers/request'
 import { Button, Form, Input, Typography } from 'antd'
@@ -40,7 +41,7 @@ const CertificateEmailEditPage: FunctionComponent<ICertificateEmailEditPageProps
 
   return (
     <Form form={form} onFinish={onSubmit}>
-      <Typography.Title>Edita el texto del correo de certificados</Typography.Title>
+      <Header title="Edita el texto del correo de certificados" back />
       <Form.Item
         name="action_text"
         label="Texto de acción (optional)"

@@ -711,6 +711,7 @@ class General extends Component {
         <Form onFinish={this.submit} {...formLayout}>
           <Header
             title="Datos del curso"
+            back
             save
             form
             remove={this.deleteEvent}

@@ -13,6 +13,7 @@ import { useCurrentUser } from '@context/userContext'
 
 import Online from '@components/online/Online'
 import { FB } from '@helpers/firestore-request'
+import Header from '@antdComponents/Header'
 
 type UserSessionInfo = {
   userId: string
@@ -112,7 +113,7 @@ function TimeTracking(props: TimeTrackingProps) {
   return (
     <>
       <section>
-        <Typography.Title>Time tracking for this event</Typography.Title>
+        <Header title="Time tracking" back description="Time tracking for this event" />
         <Button
           onClick={() => {
             if (cEvent.value?._id) {

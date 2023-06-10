@@ -438,6 +438,7 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
               ? 'Habilitar secciones del curso'
               : 'Secciones a habilitar para cada curso'
           }
+          back
           description="(Podrás guardar la configuración de tu menú en la parte inferior)"
           save
           form

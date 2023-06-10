@@ -1195,10 +1195,9 @@ class ListEventUser extends Component {
         />
         <Header
           title={
-            type == 'activity'
-              ? 'Inscripción de ' + nameActivity
-              : 'Inscripción de curso: '
+            type == 'activity' ? 'Inscripción a ' + nameActivity : 'Inscripción al curso'
           }
+          back
           titleToMergingOrAdaptIt={
             componentKey === 'activity-checkin'
               ? 'Check-in actividad: ' + nameActivity
