@@ -298,7 +298,7 @@ function OrgMembers(props) {
 
   return (
     <>
-      <Header title="Miembros" />
+      <Header title="Miembros" back />
 
       <p>
         <small>

@@ -822,6 +822,7 @@ class Datos extends Component {
                       : this.props.eventId
                   }
                   title="Plantillas de recoleccion de datos"
+                  back
                   addFn={() => this.setState({ visibleModal: true })}
                   columns={colsPlant}
                   editFn={(values) => {
