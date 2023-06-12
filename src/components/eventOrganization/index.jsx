@@ -241,7 +241,8 @@ const EventOrganization = () => {
                     <>
                       {/*  Si el curso es privado y no estoy inscrito no se ve en el listado de la organización*/}
                       {(event.visibility != 'PRIVATE' ||
-                        myEvents.filter((mye) => mye.event_id == event._id) > 0) && (
+                        myEvents.filter((mye) => mye.event_id == event._id).length >
+                          0) && (
                         <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
                           <EventCard
                             noDates
