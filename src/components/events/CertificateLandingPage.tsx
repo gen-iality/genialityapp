@@ -36,6 +36,8 @@ import 'html2pdf-certs/dist/styles.css'
 import CertificateType from '@Utilities/types/CertificateType'
 import { replaceAllTagValues } from '@components/certificates/utils/replaceAllTagValues'
 import { FB } from '@helpers/firestore-request'
+import { useEventContext } from '@context/eventContext'
+import { useEventProgress } from '@context/eventProgressContext'
 
 type CurrentEventAttendees = any // TODO: define this type and move to @Utilities/types/
 
@@ -75,6 +77,8 @@ function CertificateLandingPage(props: WithEviusContextProps) {
   const [selectedCertificateToDownload, setSelectedCertificateToDownload] = useState<
     CertificateType | undefined
   >()
+
+  const cEventProgress = useEventProgress()
 
   const pdfGeneratorRef = useRef<Html2PdfCertsRef>(null)
 
@@ -212,35 +216,6 @@ function CertificateLandingPage(props: WithEviusContextProps) {
   //     }
   //   })()
 
-  //   // Take the date for the finished course certificate
-  //   ;(async () => {
-  //     if (!cEvent?.value) return
-  //     if (!cEventUser?.value) return
-  //     console.log('start finding course stats')
-
-  //     setActivitiesAttendee([])
-
-  //     const activityFilter = (a: any) =>
-  //       ![activityContentValues.quizing, activityContentValues.survey].includes(
-  //         a.type?.name,
-  //       )
-
-  //     const { data }: { data: AgendaType[] } = await AgendaApi.byEvent(cEvent.value._id)
-  //     const filteredData = data
-  //       .filter(activityFilter)
-  //       .filter((activity) => !activity.is_info_only)
-
-  //     setAllActivities(filteredData)
-  //     const allAttendees = await FB.Attendees.getEventUserActivities(
-  //       filteredData.map((activity) => activity._id as string),
-  //       cEventUser?.value?._id,
-  //     )
-  //     const filteredAttendees = allAttendees.filter((attendee) => attendee !== undefined)
-  //     // Filter existent activities and set the state
-  //     setActivitiesAttendee(filteredAttendees)
-  //   })()
-  // }, [cUser?.value, cEvent?.value, cEventUser?.value])
-
   const generatePdfCertificate = () => {
     if (!selectedCertificateToDownload) {
       Modal.error({
@@ -265,16 +240,16 @@ function CertificateLandingPage(props: WithEviusContextProps) {
     const _roles = await RolAttApi.byEvent(cEvent.value._id)
     setRoles(_roles)
 
-    const _filteredCertificates: CertificateType[] = []
+    let _filteredCertificates: CertificateType[] = []
 
     // Take th default certificate
     const _defaultCertificate: CertificateType | undefined = certs.find(
       (cert: any) => !cert.rol_id,
     )
-    setSelectedCertificateToDownload(_defaultCertificate)
+
     if (_defaultCertificate) {
       _filteredCertificates.push(_defaultCertificate)
-      console.debug('there is default certificate')
+      console.debug('there is default certificate', _defaultCertificate)
     }
 
     // Search all certificate that has the same event user role
@@ -290,8 +265,73 @@ function CertificateLandingPage(props: WithEviusContextProps) {
         `there are ${certificatesByRoles.length} certificates by role of event user: ${cEventUser.value.rol_id}`,
       )
     }
-    console.log('_filteredCertificates', { _filteredCertificates })
+
+    // The certificates with no roles will be added too
+    certs
+      .filter((cert) => !cert.rol_id)
+      .forEach((cert) => {
+        if (_filteredCertificates.every((certificate) => certificate._id !== cert._id)) {
+          _filteredCertificates.push(cert)
+        }
+      })
+
+    console.log('_filteredCertificates (not filtered)', { _filteredCertificates })
+
+    // Some certificates need an event progress
+    _filteredCertificates = _filteredCertificates.filter((cert) => {
+      // If no problem, no problem
+      if (cert.requirement_config === undefined || !cert.requirement_config.enable) {
+        console.log('cert', cert.name, 'has no requirement config')
+        return true
+      }
+
+      /**
+       * we are using progressFilteredActivities that depends of the event
+       * configuration, but the certificates have another configuration when
+       * they have ignored activity type. The procedure will be:
+       * - Take the activities
+       * - Filter by ignored content type
+       * - Recalc the progress with the exported EventProgress context methods
+       * - Filter here again
+       */
+      const activityTypeToIgnore = cert.requirement_config.ignore_activity_type ?? []
+      const reFilteredActivities = cEventProgress.activities.filter(
+        (activity) => !activityTypeToIgnore.includes(activity.type?.name as any),
+      )
+      const reCalcedProgress = cEventProgress.calcProgress(
+        reFilteredActivities.length,
+        cEventProgress.getAttendeesForActivities(
+          reFilteredActivities.map((activity) => activity._id!),
+        ).length,
+      )
+      console.debug('recalc the progress got:', {
+        activityTypeToIgnore,
+        reFilteredActivities,
+        reCalcedProgress,
+      })
+      if (reCalcedProgress > (cert.requirement_config.completion ?? 0)) {
+        console.log(
+          'cert',
+          cert.name,
+          'has completion under progress:',
+          cert.requirement_config.completion,
+        )
+        return true
+      }
+      console.log(
+        'cert',
+        cert.name,
+        'has completion over progress:',
+        cert.requirement_config.completion,
+      )
+      return false
+    })
+    console.log('_filteredCertificates (filtered)', { _filteredCertificates })
+
     setFilteredCertificates(_filteredCertificates)
+
+    // The default certificate is the first, then:
+    setSelectedCertificateToDownload(_filteredCertificates[0])
   }
 
   useEffect(() => {
@@ -348,6 +388,19 @@ function CertificateLandingPage(props: WithEviusContextProps) {
       <Row gutter={[8, 8]} wrap justify="center">
         <Col span={24}>
           <Alert type="info" message="No hay certificados disponibles" />
+        </Col>
+      </Row>
+    )
+  }
+
+  if (filteredCertificates.length === 0) {
+    return (
+      <Row gutter={[8, 8]} wrap justify="center">
+        <Col span={24}>
+          <Alert
+            type="warning"
+            message="No hay certificados disponibles para este usuario"
+          />
         </Col>
       </Row>
     )
