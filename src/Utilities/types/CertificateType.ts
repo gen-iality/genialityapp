@@ -1,7 +1,7 @@
 export interface CertificateRequirementConfigType {
   enable: boolean
   completion: number
-  ignore_event_type: string[]
+  ignore_activity_type: string[]
 }
 
 export default interface CertificateType {

@@ -57,7 +57,7 @@ const RequirementConfigField: FunctionComponent<{
   const [loadedValue] = useState<CertificateRequirementConfigType>({
     completion: value?.completion ?? 0,
     enable: !!value?.enable,
-    ignore_event_type: value?.ignore_event_type ?? [],
+    ignore_activity_type: value?.ignore_activity_type ?? [],
   })
 
   const hanndleChange = (updates: CertificateRequirementConfigType) => {
@@ -81,13 +81,13 @@ const RequirementConfigField: FunctionComponent<{
       <Form.Item {...formLayout} label="Tipo de contenido ignorado">
         <Select
           mode="multiple"
-          value={value?.ignore_event_type}
+          value={value?.ignore_activity_type}
           options={Object.values(activityContentValues).map((v) => ({
             label: v,
             value: v,
           }))}
           onChange={(value) =>
-            hanndleChange({ ...loadedValue, ignore_event_type: value })
+            hanndleChange({ ...loadedValue, ignore_activity_type: value })
           }
         />
       </Form.Item>
@@ -518,7 +518,7 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
                 form.setFieldsValue({
                   requirement_config: {
                     completion: lastFormValues?.completion ?? 100,
-                    ignore_event_type: lastFormValues?.ignore_event_type ?? [],
+                    ignore_activity_type: lastFormValues?.ignore_activity_type ?? [],
                     enable: checked,
                   },
                 })
