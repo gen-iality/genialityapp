@@ -4,6 +4,7 @@ import { fireRealtime, firestore } from '@helpers/firebase'
 import { BadgeApi, EventsApi, RolAttApi } from '@helpers/request'
 import { AgendaApi, OrganizationApi } from '@helpers/request'
 import { checkinAttendeeInActivity } from '@helpers/HelperAuth'
+import ModalPassword from './ModalPassword'
 
 import UserModal from '../modal/modalUser'
 import ErrorServe from '../modal/serverError'
@@ -32,6 +33,7 @@ import {
   Select,
   Modal,
   Checkbox,
+  message,
 } from 'antd'
 
 import updateAttendees from './eventUserRealTime'
@@ -262,6 +264,52 @@ class ListEventUser extends Component {
   }
   static contextType = HelperContext
 
+  /* The above code is defining a function called `handleRecoveryPass` that takes an email as a
+parameter. The function calls an API method `changePasswordUser` with the email and the current URL
+as parameters. If the API call is successful, the function sets the state with a success message and
+hides a confirmation modal. If the API call fails, the function sets the state with an error message
+and displays an error message using the `message` component from the antd library. */
+  handleRecoveryPass = async (email) => {
+    try {
+      let resp = await EventsApi.changePasswordUser(email, window.location.href)
+      if (resp) {
+        this.setState({
+          recoveryMessage: `Se ha enviado correo nueva contraseña a: ${email}`,
+          resul: 'OK',
+          status: 'success',
+          showConfirm: false,
+        })
+        message.success(
+          `Se ha enviado el correo de recuperación de contraseña a: ${email}`,
+        )
+      }
+    } catch (error) {
+      this.setState({
+        recoveryMessage:
+          'Ocurrió un error al enviar el correo de recuperación de contraseña',
+        resul: 'Error',
+        status: 'error',
+        showConfirm: false,
+      })
+      message.error('Ocurrió un error al enviar el correo de recuperación de contraseña')
+    }
+  }
+
+  openModal = () => {
+    // Lógica a ejecutar cuando se abre el modal
+    this.setState({ showConfirm: true })
+  }
+
+  handleOk = () => {
+    // Lógica a ejecutar cuando se confirme el modal
+    this.setState({ showConfirm: false })
+  }
+
+  handleCancel = () => {
+    // Lógica a ejecutar cuando se cancele el modal
+    this.setState({ showConfirm: false })
+  }
+
   // eslint-disable-next-line no-unused-vars
   editcomponent = (text, item, index, badColumns) => {
     const newItem = JSON.parse(JSON.stringify(item))
@@ -273,15 +321,18 @@ class ListEventUser extends Component {
     newItem.properties = filteredProperties
     const { eventIsActive } = this.context
     return (
-      <Tooltip placement="topLeft" title="Editar">
-        <Button
-          type="primary"
-          icon={<EditOutlined />}
-          size="small"
-          onClick={() => this.openEditModalUser(newItem)}
-          disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
-        />
-      </Tooltip>
+      <Space>
+        <Tooltip placement="topLeft" title="Editar">
+          <Button
+            type="primary"
+            icon={<EditOutlined />}
+            size="small"
+            onClick={() => this.openEditModalUser(newItem)}
+            disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+          />
+        </Tooltip>
+        <ModalPassword onOk={() => this.handleRecoveryPass(item.email)} />
+      </Space>
     )
   }
 
@@ -687,7 +738,7 @@ class ListEventUser extends Component {
           for (let i = 0; i < updatedAttendees.length; i++) {
             // Arreglo temporal para que se muestre el listado de usuarios sin romperse
             // algunos campos no son string y no se manejan bien
-            extraFields.forEach(function (key) {
+            extraFields.forEach(function(key) {
               if (
                 !(
                   (updatedAttendees[i][key.name] &&
@@ -1091,7 +1142,10 @@ class ListEventUser extends Component {
     ),
     onFilter: (value, record) =>
       record[dataIndex]
-        ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+        ? record[dataIndex]
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
         : '',
     onFilterDropdownVisibleChange: (visible) => {
       if (visible) {
@@ -1214,21 +1268,19 @@ class ListEventUser extends Component {
           </div>
         )}
 
-        {
-          // localChanges &&
-          quantityUsersSync > 0 && localChanges === 'Local' && (
-            <Row gutter={8}>
-              <Col>
-                <p>
-                  <small>
-                    Cambios sin sincronizar :{' '}
-                    {quantityUsersSync < 0 ? 0 : quantityUsersSync}
-                  </small>
-                </p>
-              </Col>
-            </Row>
-          )
-        }
+        {// localChanges &&
+        quantityUsersSync > 0 && localChanges === 'Local' && (
+          <Row gutter={8}>
+            <Col>
+              <p>
+                <small>
+                  Cambios sin sincronizar :{' '}
+                  {quantityUsersSync < 0 ? 0 : quantityUsersSync}
+                </small>
+              </p>
+            </Col>
+          </Row>
+        )}
 
         {this.state.qrModalOpen && (
           <QrModal
