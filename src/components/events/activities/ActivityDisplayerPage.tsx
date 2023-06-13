@@ -100,7 +100,7 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
     if (cEventUser.status == 'LOADED' && cEventUser.value != null) {
       checkinAttendeeInActivity(cEventUser.value, params.activity_id)
     }
-  }, [currentActivity, cEventUser.status])
+  }, [currentActivity, cEventUser.status, params.activity_id])
 
   const goToActivityIdPage = async (activityId: string) => {
     history.push(`/landing/${cEvent?.value._id}/activity/${activityId}`)
@@ -108,13 +108,13 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
 
   const thisActivityRequiresCompletion = useMemo(() => {
     if (!activity) return false
-    if (cEventProgress.progressWithoutAnySurveys === undefined) return false
+    if (cEventProgress.progressFilteredActivities === undefined) return false
     if (activity.require_completion === undefined) return false
 
-    if (activity.require_completion >= cEventProgress.progressWithoutAnySurveys)
+    if (activity.require_completion >= cEventProgress.progressFilteredActivities)
       return true
     return false
-  }, [activity, cEventProgress.progressWithoutAnySurveys])
+  }, [activity, cEventProgress.progressFilteredActivities])
 
   return (
     <div>

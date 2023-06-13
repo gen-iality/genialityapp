@@ -14,6 +14,7 @@ import {
   Image as ImageAntD,
   InputNumber,
   Divider,
+  Switch,
 } from 'antd'
 import {
   ExclamationCircleOutlined,
@@ -33,7 +34,10 @@ import 'html2pdf-certs/dist/styles.css'
 import CertificateRows from './CertificateRows'
 import { availableTags, defaultCertificateBackground, defaultCertRows } from './constants'
 import { replaceAllTagValues } from './utils/replaceAllTagValues'
-import { CertificateData } from './types'
+import CertificateType, {
+  CertificateRequirementConfigType,
+} from '@Utilities/types/CertificateType'
+import { activityContentValues } from '@context/activityType/constants/ui'
 
 const { confirm } = Modal
 
@@ -44,15 +48,90 @@ const formLayout = {
 
 const initContent: string = JSON.stringify(defaultCertRows)
 
-const CertificateEditor: FunctionComponent<any> = (props) => {
-  const location = useLocation()
+const RequirementConfigField: FunctionComponent<{
+  value?: CertificateRequirementConfigType
+  onChange?: (value: CertificateRequirementConfigType) => void
+}> = (props) => {
+  const { value, onChange } = props
+
+  const [loadedValue, setLoadedValue] = useState<CertificateRequirementConfigType>({
+    completion: 0,
+    enable: false,
+    ignore_activity_type: [],
+  })
+
+  useEffect(() => {
+    setLoadedValue({
+      completion: value?.completion ?? 0,
+      enable: !!value?.enable,
+      ignore_activity_type: value?.ignore_activity_type ?? [],
+    })
+  }, [value])
+
+  const hanndleChange = (updates: CertificateRequirementConfigType) => {
+    if (typeof onChange !== 'function') return
+    onChange(updates)
+  }
+
+  return (
+    <>
+      <Form.Item {...formLayout} label="Porcentaje del curso requierido (optional)">
+        <InputNumber
+          value={value?.completion}
+          formatter={(value) => `${value}%`}
+          parser={(value) => {
+            if (value === undefined) return 0
+            return parseInt(value.replace('%', ''))
+          }}
+          onChange={(value) => {
+            const newValue: CertificateRequirementConfigType = {
+              ...loadedValue,
+              completion: value ?? 0,
+              enable: true,
+            }
+            setLoadedValue(newValue)
+            hanndleChange(newValue)
+          }}
+        />
+      </Form.Item>
+      <Form.Item {...formLayout} label="Tipo de contenido ignorado">
+        <Select
+          mode="multiple"
+          value={value?.ignore_activity_type}
+          options={Object.values(activityContentValues).map((v) => ({
+            label: v,
+            value: v,
+          }))}
+          onChange={(value) => {
+            const newValue: CertificateRequirementConfigType = {
+              ...loadedValue,
+              ignore_activity_type: value,
+              enable: true,
+            }
+            setLoadedValue(newValue)
+            hanndleChange(newValue)
+          }}
+        />
+      </Form.Item>
+    </>
+  )
+}
+
+interface ICertificateEditorPageProps {
+  event: any
+  parentUrl: string
+}
+
+const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (props) => {
+  const location = useLocation<{ edit?: string }>()
   const locationState = location?.state || {} //si viene new o edit en el state, si es edit es un id
   const history = useHistory()
-  const [certificateData, setCertificateData] = useState<CertificateData>({
+  const [certificateData, setCertificateData] = useState<CertificateType>({
     content: initContent,
     background: defaultCertificateBackground,
     event_id: '',
     name: '',
+    event: null,
   })
   const [roles, setRoles] = useState<any[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
@@ -63,7 +142,9 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
   const [backUpNoFinalCertRows] = useState<CertRow[]>(JSON.parse(initContent))
   const [readyCertToGenerate, setReadyCertToGenerate] = useState<CertRow[] | undefined>()
 
-  const [form] = Form.useForm()
+  const [isEnabledRequirement, setIsEnabledRequirement] = useState(false)
+
+  const [form] = Form.useForm<CertificateType>()
 
   const pdfGeneratorRef = useRef<Html2PdfCertsRef>(null)
 
@@ -78,12 +159,17 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
     }
 
     setCertificateData({ ...data })
-    data.content && setNoFinalCertRows(JSON.parse(data.content))
+    data.content &&
+      setNoFinalCertRows(
+        Array.isArray(data.content) ? data.content : JSON.parse(data.content),
+      )
     form.setFieldsValue({ ...data })
-    form.setFieldsValue({ certRows: JSON.parse(data.content) })
+    form.setFieldsValue({
+      content: typeof data.content === 'string' ? JSON.parse(data.content) : data.content,
+    })
   }
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async (values: CertificateType) => {
     console.log('submit', { values })
     StateMessage.show(
       'loading',
@@ -99,12 +185,16 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
     const payload = {
       name: values.name,
       // rol_id: values.role, // TODO: check if this is the rol._id
-      content: JSON.stringify(values.certRows), // Parse to text
+      content:
+        typeof values.content === 'string'
+          ? values.content
+          : JSON.stringify(values.content),
       event_id: props.event._id,
       background: certificateData.background,
-      rol: values.role,
+      rol_id: values.rol_id,
       cert_width: values.cert_width,
       cert_height: values.cert_height,
+      requirement_config: values.requirement_config,
     }
 
     try {
@@ -134,7 +224,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
     )
     if (locationState.edit) {
       confirm({
-        title: `¿Está seguro de eliminar la información?`,
+        title: '¿Está seguro de eliminar la información?',
         icon: <ExclamationCircleOutlined />,
         content: 'Una vez eliminado, no lo podrá recuperar',
         okText: 'Borrar',
@@ -324,6 +414,14 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
     requestRoles()
   }, [locationState.edit])
 
+  useEffect(() => {
+    setIsEnabledRequirement(
+      certificateData.requirement_config === undefined
+        ? false
+        : certificateData.requirement_config.enable,
+    )
+  }, [certificateData])
+
   // Watch and generate the PDF
   useEffect(() => {
     if (!pdfGeneratorRef.current) {
@@ -356,7 +454,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
         save
         form
         remove={onRemoveId}
-        edit={locationState.edit}
+        edit={Boolean(locationState.edit)}
         extra={
           <Form.Item>
             <Row wrap gutter={[16, 8]}>
@@ -403,7 +501,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
           </Form.Item>
         </Col>
         <Col md={12} sm={24}>
-          <Form.Item name="role" label="Rol">
+          <Form.Item name="rol_id" label="Rol">
             <Select
               placeholder="Seleccione un rol"
               options={roles.map((role) => ({
@@ -415,16 +513,50 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
         </Col>
       </Row>
 
-      <Row wrap gutter={[16, 16]}>
-        <Col md={12} sm={24}>
+      <Row gutter={[16, 16]}>
+        <Col>
           <Form.Item name="cert_width" label="Dimensione ancho (opcional)">
-            <InputNumber placeholder="Ancho" />
+            <InputNumber placeholder="Ancho" style={{ width: '100%' }} />
           </Form.Item>
         </Col>
-        <Col md={12} sm={24}>
+        <Col>
           <Form.Item name="cert_height" label="Dimensione alto (opcional)">
-            <InputNumber placeholder="Altura" />
+            <InputNumber placeholder="Altura" style={{ width: '100%' }} />
           </Form.Item>
+        </Col>
+      </Row>
+
+      <Row gutter={[16, 16]}>
+        <Col>
+          <Form.Item label="Habilitar requerimientos">
+            <Switch
+              checked={isEnabledRequirement}
+              checkedChildren="Con requerimientos"
+              unCheckedChildren="Sin requerimientos"
+              onChange={(checked) => {
+                setIsEnabledRequirement(checked)
+                const lastFormValues: CertificateType['requirement_config'] =
+                  form.getFieldValue('requirement_config')
+                form.setFieldsValue({
+                  requirement_config: {
+                    completion: lastFormValues?.completion ?? 100,
+                    ignore_activity_type: lastFormValues?.ignore_activity_type ?? [],
+                    enable: checked,
+                  },
+                })
+              }}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+
+      <Row gutter={[16, 16]}>
+        <Col>
+          {isEnabledRequirement && (
+            <Form.Item label="Requerimientos" name="requirement_config">
+              <RequirementConfigField />
+            </Form.Item>
+          )}
         </Col>
       </Row>
 
@@ -466,7 +598,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
 
       <Row gutter={[16, 16]}>
         <Col span={24}>
-          <Form.Item name="certRows" label="Filas" initialValue={noFinalCertRows}>
+          <Form.Item name="content" label="Filas" initialValue={noFinalCertRows}>
             <CertificateRows onChange={setNoFinalCertRows} />
           </Form.Item>
         </Col>
@@ -500,4 +632,4 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
   )
 }
 
-export default CertificateEditor
+export default CertificateEditorPage

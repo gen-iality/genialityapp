@@ -44,6 +44,7 @@ import {
   InputNumber,
   DatePicker,
   TimePicker,
+  Checkbox,
 } from 'antd'
 
 import Header from '@antdComponents/Header'
@@ -507,6 +508,7 @@ class General extends Component {
       is_examen_required: event.is_examen_required,
       hide_certificate_link: event.hide_certificate_link,
       published_at_home: event.published_at_home,
+      progress_settings: event.progress_settings,
       validity_days: event.validity_days,
       default_certification_description: event.default_certification_description,
       default_certification_hours: event.default_certification_hours,
@@ -1280,6 +1282,28 @@ class General extends Component {
                       // </Form.Item> */}
                     </>
                   )}
+
+                  <Form.Item label="Elementos tomados en cuenta en el progreso">
+                    <Checkbox.Group
+                      options={[
+                        { label: 'Lecciones general', value: 'rest' },
+                        { label: 'Encuestas', value: 'survey' },
+                        { label: 'Quices', value: 'quiz' },
+                        { label: 'Secciones informativas', value: 'info' },
+                      ]}
+                      value={event.progress_settings?.enable_mode ?? []}
+                      onChange={(value) => {
+                        console.log('checked ones:', value)
+                        this.handleChange(
+                          {
+                            ...event.progress_settings,
+                            enable_mode: value,
+                          },
+                          'progress_settings',
+                        )
+                      }}
+                    />
+                  </Form.Item>
                 </Col>
               </Row>
               <BackTop />

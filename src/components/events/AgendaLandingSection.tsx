@@ -43,7 +43,7 @@ const attendee_states = {
 
 const { setNotification } = notificationsActions
 
-class AgendaLanding extends Component {
+class AgendaLandingSection extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -762,7 +762,7 @@ class AgendaLanding extends Component {
                               agendaList={this.state.data}
                               eventId={this.props.cEvent.value._id}
                               eventUserId={this.props.cEventUser.value?._id}
-                              eventProgressPercent={value?.progressWithoutAnySurveys}
+                              eventProgressPercent={value?.progressFilteredActivities}
                             />
                           )}
                         </EventProgressContext.Consumer>
@@ -786,5 +786,5 @@ const mapDispatchToProps = {
   setTabs,
 }
 
-const AgendaWithContext = withContext(AgendaLanding)
+const AgendaWithContext = withContext(AgendaLandingSection)
 export default connect(mapStateToProps, mapDispatchToProps)(AgendaWithContext)

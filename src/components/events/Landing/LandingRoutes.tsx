@@ -196,7 +196,7 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
 
   const [generalTabs, setGeneralTabs] = useState(iniitalStateTabs)
   // eslint-disable-next-line prefer-const
-  const [totalNewMessages, setTotalNewMessages] = useState(0)
+  let [totalNewMessages, setTotalNewMessages] = useState(0)
 
   // This can be a context or well
 
@@ -220,7 +220,7 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
   }
 
   useEffect(() => {
-    if (!cEventUser.value._id) return
+    if (!cEventUser.value?._id) return
 
     loadActivityAttendeeData()
       .then(() => console.log('attendees updated successful'))
@@ -336,7 +336,7 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
           >
             {props.view && <TopBanner currentActivity={currentActivity} />}
             <EventSectionRoutes
-              generaltabs={generalTabs}
+              generalTabs={generalTabs}
               currentActivity={currentActivity}
               eventProgressPercent={eventProgressPercent}
             />

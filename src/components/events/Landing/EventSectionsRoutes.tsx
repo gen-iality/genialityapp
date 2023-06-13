@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { FunctionComponent, useEffect, useMemo, useState } from 'react'
 import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
@@ -11,7 +11,7 @@ import { checkinAttendeeInEvent } from '@helpers/HelperAuth'
 import loadable from '@loadable/component'
 import initUserPresence from '../../../containers/userPresenceInEvent'
 import initBroadcastViewers from '@containers/broadcastViewers'
-import withContext from '@context/withContext'
+import withContext, { WithEviusContextProps } from '@context/withContext'
 import { useCurrentUser } from '@context/userContext'
 import { activityContentValues } from '@context/activityType/constants/ui'
 import { fireRealtime } from '@helpers/firebase'
@@ -26,9 +26,9 @@ const SpeakersForm = loadable(() => import('../speakers'))
 const SurveyForm = loadable(() => import('../surveys'))
 const FaqsForm = loadable(() => import('../../faqsLanding'))
 const Partners = loadable(() => import('../Partners'))
-const AgendaLanding = loadable(() => import('../agendaLanding'))
+const AgendaLandingSection = loadable(() => import('../AgendaLandingSection'))
 const EventHome = loadable(() => import('../eventHome'))
-const Certificate = loadable(() => import('../certificate'))
+const CertificateLandingPage = loadable(() => import('../CertificateLandingPage'))
 const WallForm = loadable(() => import('../../wall/index'))
 const Ferias = loadable(() => import('../ferias/index'))
 // const VirtualConferenceBig = loadable(() => import('../virtualConferenceBig'))
@@ -56,9 +56,31 @@ const ThisRouteCanBeDisplayed = loadable(
   () => import('./helpers/thisRouteCanBeDisplayed'),
 )
 
-const EventSectionRoutes = (props) => {
+type MapStateToProps = {
+  viewVirtualconference: any
+  viewSocialZoneNetworking: any
+  sectionPermissions: any
+}
+
+const mapDispatchToProps = {
+  setVirtualConference,
+  setSpaceNetworking,
+  setSectionPermissions,
+}
+
+type MapDispatchToProps = typeof mapDispatchToProps
+
+interface IEventSectionRoutesProps extends MapStateToProps, MapDispatchToProps {
+  generalTabs: { [key: string]: boolean }
+  currentActivity: any
+  eventProgressPercent: number
+}
+
+const EventSectionRoutes: FunctionComponent<
+  WithEviusContextProps<IEventSectionRoutesProps>
+> = (props) => {
   const { path } = useRouteMatch()
-  const { event_id, event_name } = useParams()
+  const { event_id, event_name } = useParams<{ event_id?: string; event_name?: string }>()
   const { GetPermissionsEvent } = useHelper()
   const cEventUser = useUserEvent()
   const cUser = useCurrentUser()
@@ -70,8 +92,8 @@ const EventSectionRoutes = (props) => {
     const firstroute = Object.keys(props.cEvent.value.itemsMenu).filter(
       (item) => item !== 'tickets',
     )
-    const firstrouteValues = Object.values(props.cEvent.value.itemsMenu).filter(
-      (item) => item.section !== 'tickets',
+    const firstrouteValues = Object.values(props.cEvent.value.itemsMenu as any[]).filter(
+      (item: any) => item.section !== 'tickets',
     )
 
     let index = -1
@@ -230,7 +252,7 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/certificate`}>
           <ThisRouteCanBeDisplayed>
-            <Certificate key="certificate" />
+            <CertificateLandingPage key="certificate" />
           </ThisRouteCanBeDisplayed>
         </Route>
 
@@ -272,9 +294,10 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/activity/:activity_id`}>
           <ThisRouteCanBeDisplayed>
+            {/* TODO: socialzonetabs is no used */}
             <ActivityDisplayerPage
               socialzonetabs={{
-                ...props?.generaltabs,
+                ...props?.generalTabs,
               }}
               key="activity"
             />
@@ -330,11 +353,11 @@ const EventSectionRoutes = (props) => {
           </ThisRouteCanBeDisplayed>
         </Route>
 
-        <Route path={`${path}/certs`}>
+        {/* <Route path={`${path}/certs`}>
           <ThisRouteCanBeDisplayed>
             <CertificadoLanding key="certs" />
           </ThisRouteCanBeDisplayed>
-        </Route>
+        </Route> */}
         <Route path={`${path}/producto`}>
           <ThisRouteCanBeDisplayed>
             <Productos key="producto" />
@@ -342,7 +365,7 @@ const EventSectionRoutes = (props) => {
         </Route>
         <Route path={`${path}/agenda`}>
           <ThisRouteCanBeDisplayed>
-            <AgendaLanding
+            <AgendaLandingSection
               key="agenda"
               activity={props.currentActivity}
               generalTabs={props.generalTabs}
@@ -361,17 +384,11 @@ const EventSectionRoutes = (props) => {
   )
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: any) => ({
   viewVirtualconference: state.virtualConferenceReducer.view,
   viewSocialZoneNetworking: state.spaceNetworkingReducer.view,
   sectionPermissions: state.viewSectionPermissions.view,
 })
 
-const mapDispatchToProps = {
-  setVirtualConference,
-  setSpaceNetworking,
-  setSectionPermissions,
-}
-
-const eventSectionsContext = withContext(EventSectionRoutes)
+const eventSectionsContext = withContext<IEventSectionRoutesProps>(EventSectionRoutes)
 export default connect(mapStateToProps, mapDispatchToProps)(eventSectionsContext)
