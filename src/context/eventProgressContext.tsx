@@ -108,6 +108,9 @@ export const EventProgressProvider: FunctionComponent = (props) => {
   )
 
   const calcProgress = (current: number, total: number) => {
+    if (current > total) {
+      throw new Error('The parts cannot be greater than the whole (total), flaco')
+    }
     if (current === 0 || total === 0) return 0
     return Math.round((current / total) * 100)
   }
