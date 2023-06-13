@@ -31,7 +31,7 @@ export default function CustomDateEvent(props: Props) {
         {mustUpdateDate && (
           <Alert
             message='Formato de fecha incorrecto'
-            description={`Fecha inicio ${datesOld?.startDateOld} y fecha final ${datesOld?.endDateOld}`}
+            description={`Fecha inicio ${datesOld?.startDateOld} y fecha final ${datesOld?.endDateOld} Se han corregido las fechas al nuevo formato, confirme`}
             type='error'
             style={{ marginTop: '2rem' }}
           />

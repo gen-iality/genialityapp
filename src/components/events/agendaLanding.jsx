@@ -766,9 +766,6 @@ class Agenda extends Component {
                         paddingLeft: '25px',
                       }}>
                       {days.map((day, index) => {
-                         console.log('days',days)
-                        //  console.log('this.getActivitiesByDayVisibility(day)',this.getActivitiesByDayVisibility(day))
-                        //  console.log('this.getActivitiesByDayVisibility(day).length > 0',this.getActivitiesByDayVisibility(day).length > 0)
                         return (
                           this.getActivitiesByDayVisibility(day) &&
                           this.getActivitiesByDayVisibility(day).length > 0 && (

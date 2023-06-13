@@ -324,10 +324,14 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                 <Alert type='error' message='La fecha de la actividad no es una fecha del evento' />
               )}
               <SelectAntd
-                options={multiDates.map((date) => ({
-                  value: moment(date.start).format('YYYY-MM-DD'),
-                  label: moment(date.start).format('YYYY-MM-DD'),
-                }))}
+                options={
+                  multiDates.length > 0
+                    ? multiDates.map((date) => ({
+                        value: moment(date.start).format('YYYY-MM-DD'),
+                        label: moment(date.start).format('YYYY-MM-DD'),
+                      }))
+                    : allDays
+                }
                 value={formdata.date}
                 defaultValue={formdata.date}
                 onChange={(value) => handleChangeFormData('date', value)}
