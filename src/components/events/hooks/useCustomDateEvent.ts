@@ -115,7 +115,7 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
 
             const datesSelected = values.map((value) => value.toDate());
 
-            const newDateRangeList = datesSelected.map((date) => {
+            const newDateRangeList = datesSelected.map((date, index) => {
 
                 const currentDataRange = dates.find((dataRange) => dataRange.id === dayToKey(date));
 
@@ -124,15 +124,24 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
                     return currentDataRange
                 }
 
-                const today = new Date()
+                const lastStart = dates[index - 1].start
+                const lastEnd = dates[index - 1].end
 
-                date.setHours(today.getHours())
-                date.setMinutes(today.getMinutes())
+
+                const startDate = new Date(date)
+                const endDate = new Date(date)
+
+                startDate.setHours(lastStart.getHours())
+                startDate.setMinutes(lastStart.getMinutes())
+
+                endDate.setHours(lastEnd.getHours())
+                endDate.setMinutes(lastEnd.getMinutes())
+
 
                 return {
                     id: dayToKey(date),
-                    start: date,
-                    end: new Date(date.getTime() + 1000 * 60 * 60),
+                    start: startDate,
+                    end: endDate,
                 };
             });
 
