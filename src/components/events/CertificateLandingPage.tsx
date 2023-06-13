@@ -1,7 +1,7 @@
 import { useEffect, useState, createElement, useMemo, useRef } from 'react'
 import dayjs from 'dayjs'
 import { Row, Col, Card, Spin, Alert, Button, Modal, Typography } from 'antd'
-import withContext from '@context/withContext'
+import withContext, { WithEviusContextProps } from '@context/withContext'
 import {
   AgendaApi,
   CertsApi,
@@ -28,12 +28,6 @@ import { FB } from '@helpers/firestore-request'
 
 type CurrentEventAttendees = any // TODO: define this type and move to @Utilities/types/
 
-export interface ICertificateLandingPageProps {
-  cEvent?: any
-  cEventUser?: any
-  cUser?: any
-}
-
 const initContent: string = JSON.stringify(defaultCertRows)
 
 const IconText = ({
@@ -51,7 +45,9 @@ const IconText = ({
   </Button>
 )
 
-function CertificateLandingPage(props: ICertificateLandingPageProps) {
+function CertificateLandingPage(props: WithEviusContextProps) {
+  const { cEvent, cEventUser, cUser } = props
+
   const [wereEvaluationsPassed, setWereEvaluationsPassed] = useState<boolean | undefined>(
     undefined,
   )
@@ -84,7 +80,7 @@ function CertificateLandingPage(props: ICertificateLandingPageProps) {
 
   const getOrgMemberProperties = async (dataUser: any) => {
     const { data: orgMembers } = await OrganizationApi.getUsers(
-      props.cEvent.value.organiser._id,
+      cEvent.value.organiser._id,
     )
     const orgMember = orgMembers.find(
       (orgMember: any) => orgMember.account_id === dataUser.account_id,
@@ -119,11 +115,11 @@ function CertificateLandingPage(props: ICertificateLandingPageProps) {
       })
     }
 
-    const certs = await CertsApi.byEvent(props.cEvent.value._id)
+    const certs = await CertsApi.byEvent(cEvent.value._id)
     setAvailableCerts(certs)
 
-    const roles = await RolAttApi.byEvent(props.cEvent.value._id)
-    const currentEvent = { ...props.cEvent.value }
+    const roles = await RolAttApi.byEvent(cEvent.value._id)
+    const currentEvent = { ...cEvent.value }
     currentEvent.datetime_from = dayjs(currentEvent.datetime_from).format('DD/MM/YYYY')
     currentEvent.datetime_to = dayjs(currentEvent.datetime_to).format('DD/MM/YYYY')
 
@@ -201,10 +197,10 @@ function CertificateLandingPage(props: ICertificateLandingPageProps) {
   }, [readyCertToGenerate, pdfGeneralGeneratorRef.current])
 
   useEffect(() => {
-    if (!props.cUser?.value?._id) return
-    if (!props.cEvent?.value?._id) return // Take data to the evaluation certificates
+    if (!cUser?.value?._id) return
+    if (!cEvent?.value?._id) return // Take data to the evaluation certificates
     ;(async () => {
-      const surveys: SurveyData[] = await SurveysApi.byEvent(props.cEvent?.value?._id)
+      const surveys: SurveyData[] = await SurveysApi.byEvent(cEvent?.value?._id)
 
       let passed = 0
       let notPassed = 0
@@ -212,9 +208,9 @@ function CertificateLandingPage(props: ICertificateLandingPageProps) {
       for (let i = 0; i < surveys.length; i++) {
         const survey: SurveyData = surveys[i] as never
         const stats = await useAsyncPrepareQuizStats(
-          props.cEvent?.value?._id,
+          cEvent?.value?._id,
           survey._id!,
-          props.cUser?.value?._id,
+          cUser?.value?._id,
           survey,
         )
 
@@ -244,8 +240,8 @@ function CertificateLandingPage(props: ICertificateLandingPageProps) {
 
     // Take the date for the finished course certificate
     ;(async () => {
-      if (!props.cEvent?.value) return
-      if (!props.cEventUser?.value) return
+      if (!cEvent?.value) return
+      if (!cEventUser?.value) return
       console.log('start finding course stats')
 
       setActivitiesAttendee([])
@@ -255,9 +251,7 @@ function CertificateLandingPage(props: ICertificateLandingPageProps) {
           a.type?.name,
         )
 
-      const { data }: { data: AgendaType[] } = await AgendaApi.byEvent(
-        props.cEvent.value._id,
-      )
+      const { data }: { data: AgendaType[] } = await AgendaApi.byEvent(cEvent.value._id)
       const filteredData = data
         .filter(activityFilter)
         .filter((activity) => !activity.is_info_only)
@@ -265,20 +259,20 @@ function CertificateLandingPage(props: ICertificateLandingPageProps) {
       setAllActivities(filteredData)
       const allAttendees = await FB.Attendees.getEventUserActivities(
         filteredData.map((activity) => activity._id as string),
-        props.cEventUser?.value?._id,
+        cEventUser?.value?._id,
       )
       const filteredAttendees = allAttendees.filter((attendee) => attendee !== undefined)
       // Filter existent activities and set the state
       setActivitiesAttendee(filteredAttendees)
     })()
-  }, [props.cUser?.value, props.cEvent?.value, props.cEventUser?.value])
+  }, [cUser?.value, cEvent?.value, cEventUser?.value])
 
   // mimimi PRE-load the cert data to show the background image because client
   useEffect(() => {
-    if (!props.cEvent.value?._id) return
-    if (!props.cEventUser.value?._id) return
-    generateCert(props.cEventUser.value, true)
-  }, [props.cEvent.value, props.cEventUser.value])
+    if (!cEvent.value?._id) return
+    if (!cEventUser.value?._id) return
+    generateCert(cEventUser.value, true)
+  }, [cEvent.value, cEventUser.value])
 
   const progressPercentValue: number = useMemo(
     () =>
@@ -327,7 +321,7 @@ function CertificateLandingPage(props: ICertificateLandingPageProps) {
                       <IconText
                         text="Descargar certificado de evaluaciones"
                         icon={isGenerating ? LoadingOutlined : DownloadOutlined}
-                        onSubmit={() => generateCert(props.cEventUser.value)}
+                        onSubmit={() => generateCert(cEventUser.value)}
                       />
                       <br />
                       <Typography.Text strong>
@@ -369,7 +363,7 @@ function CertificateLandingPage(props: ICertificateLandingPageProps) {
 
               {progressPercentValue === 100 && (
                 <>
-                  {props.cEvent.value.hide_certificate_link ? (
+                  {cEvent.value.hide_certificate_link ? (
                     <Alert
                       message="Certificado bloqueado por administrador"
                       type="warning"
@@ -381,7 +375,7 @@ function CertificateLandingPage(props: ICertificateLandingPageProps) {
                       <IconText
                         text="Descargar certificado del curso"
                         icon={isGenerating ? LoadingOutlined : DownloadOutlined}
-                        onSubmit={() => generateCert(props.cEventUser.value)}
+                        onSubmit={() => generateCert(cEventUser.value)}
                       />
                       <br />
                       <Typography.Text strong>
