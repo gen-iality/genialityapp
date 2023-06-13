@@ -124,6 +124,19 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
                     return currentDataRange
                 }
 
+
+                if (dates.length === 0) {
+                    const today = new Date()
+
+                    date.setHours(today.getHours())
+                    date.setMinutes(today.getMinutes())
+
+                    return {
+                        id: dayToKey(date),
+                        start: date,
+                        end: new Date(date.getTime() + 1000 * 60 * 60),
+                    };
+                }
                 const lastStart = dates[index - 1].start
                 const lastEnd = dates[index - 1].end
 
