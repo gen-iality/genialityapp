@@ -1,6 +1,17 @@
 import { useEffect, useState, createElement, useMemo, useRef } from 'react'
 import dayjs from 'dayjs'
-import { Row, Col, Card, Spin, Alert, Button, Modal, Typography } from 'antd'
+import {
+  Row,
+  Col,
+  Card,
+  Spin,
+  Alert,
+  Button,
+  Modal,
+  Typography,
+  Form,
+  Select,
+} from 'antd'
 import withContext, { WithEviusContextProps } from '@context/withContext'
 import {
   AgendaApi,
@@ -30,21 +41,6 @@ type CurrentEventAttendees = any // TODO: define this type and move to @Utilitie
 
 const initContent: string = JSON.stringify(defaultCertRows)
 
-const IconText = ({
-  icon,
-  text,
-  onSubmit,
-}: {
-  icon: any
-  text: string
-  onSubmit: () => void
-}) => (
-  <Button htmlType="submit" type="primary" onClick={onSubmit}>
-    {createElement(icon, { style: { marginRight: 8 } })}
-    {text}
-  </Button>
-)
-
 function CertificateLandingPage(props: WithEviusContextProps) {
   const { cEvent, cEventUser, cUser } = props
 
@@ -72,11 +68,15 @@ function CertificateLandingPage(props: WithEviusContextProps) {
     CertificateType | undefined
   >()
   const [finalCertRows, setFinalCertRows] = useState<CertRow[]>(JSON.parse(initContent))
-  const [lastRolCert, setLastRolCert] = useState<CertificateType | undefined>()
-  const [availableCerts, setAvailableCerts] = useState<any[]>([])
+  const [roles, setRoles] = useState<any[]>([])
+  const [availableCerts, setAvailableCerts] = useState<CertificateType[]>([])
 
-  const pdfQuizGeneratorRef = useRef<Html2PdfCertsRef>(null)
-  const pdfGeneralGeneratorRef = useRef<Html2PdfCertsRef>(null)
+  const [filteredCertificates, setFilteredCertificates] = useState<CertificateType[]>([])
+  const [selectedCertificateToDownload, setSelectedCertificateToDownload] = useState<
+    CertificateType | undefined
+  >()
+
+  const pdfGeneratorRef = useRef<Html2PdfCertsRef>(null)
 
   const getOrgMemberProperties = async (dataUser: any) => {
     const { data: orgMembers } = await OrganizationApi.getUsers(
@@ -88,197 +88,260 @@ function CertificateLandingPage(props: WithEviusContextProps) {
     return orgMember?.properties || {}
   }
 
-  /**
-   * Generate the certificate.
-   *
-   * If you pass false in dryRun, a real certificate will be generated.
-   *
-   * @param dataUser The user data. Generally it is taken from the eventUser.
-   * @param dryRun true if you only want to show the certificate preview.
-   */
-  const generateCert = async (dataUser: any, dryRun: boolean = false) => {
-    const extraOrgMemberProperties = await getOrgMemberProperties(dataUser)
+  // /**
+  //  * Generate the certificate.
+  //  *
+  //  * If you pass false in dryRun, a real certificate will be generated.
+  //  *
+  //  * @param dataUser The user data. Generally it is taken from the eventUser.
+  //  * @param dryRun true if you only want to show the certificate preview.
+  //  */
+  // const generateCert = async (dataUser: any, dryRun: boolean = false) => {
+  //   const extraOrgMemberProperties = await getOrgMemberProperties(dataUser)
 
-    dataUser = {
-      ...dataUser,
-      properties: {
-        ...dataUser.properties,
-        ...extraOrgMemberProperties,
-      },
-    }
+  //   dataUser = {
+  //     ...dataUser,
+  //     properties: {
+  //       ...dataUser.properties,
+  //       ...extraOrgMemberProperties,
+  //     },
+  //   }
 
-    let modal: null | ReturnType<typeof Modal.success> = null
-    if (!dryRun) {
-      modal = Modal.success({
-        title: 'Generando certificado',
-        content: <Spin>Espera</Spin>,
+  //   let modal: null | ReturnType<typeof Modal.success> = null
+  //   if (!dryRun) {
+  //     modal = Modal.success({
+  //       title: 'Generando certificado',
+  //       content: <Spin>Espera</Spin>,
+  //     })
+  //   }
+
+  //   const certs = await CertsApi.byEvent(cEvent.value._id)
+  //   setAvailableCerts(certs)
+
+  //   const roles = await RolAttApi.byEvent(cEvent.value._id)
+  //   const currentEvent = { ...cEvent.value }
+  //   currentEvent.datetime_from = dayjs(currentEvent.datetime_from).format('DD/MM/YYYY')
+  //   currentEvent.datetime_to = dayjs(currentEvent.datetime_to).format('DD/MM/YYYY')
+
+  //   //Por defecto se trae el certificado sin rol
+  //   let rolCert: CertificateType | undefined = certs.find((cert: any) => !cert.rol_id)
+  //   //Si el asistente tiene rol_id y este corresponde con uno de los roles attendees, encuentra el certificado ligado
+  //   const rolValidation = roles.find((rol: any) => rol._id === dataUser.rol_id)
+  //   if (rolValidation) {
+  //     if (dataUser.rol_id) {
+  //       rolCert = certs.find((cert: any) => cert.rol._id === dataUser.rol_id)
+  //     }
+  //   }
+  //   (rolCert)
+
+  //   let currentCertRows: CertRow[] = defaultCertRows
+  //   console.debug('rolCert', { rolCert })
+  //   if (rolCert?.content) {
+  //     console.log('parse cert content from DB-saved')
+  //     currentCertRows = JSON.parse(rolCert?.content) as CertRow[]
+  //   }
+
+  //   // Put the user's data in the cert rows to print
+  //   const newCertRows = replaceAllTagValues(
+  //     currentEvent,
+  //     dataUser,
+  //     roles,
+  //     currentCertRows,
+  //   )
+
+  //   setCertificateData({
+  //     ...certificateData,
+  //     ...(rolCert || {}),
+  //     background:
+  //       rolCert?.background ?? certificateData.background ?? defaultCertificateBackground,
+  //   })
+  //   setFinalCertRows(newCertRows)
+
+  //   if (!dryRun) {
+  //     if (rolCert) {
+  //       setReadyCertToGenerate(rolCert)
+  //     } else {
+  //       console.warn('rolCert is undefined, create a cert in the CMS please')
+  //     }
+
+  //     modal && modal.destroy()
+  //   } else {
+  //     console.log('nothing was created because the dry-run mode is on')
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   if (!cUser?.value?._id) return
+  //   if (!cEvent?.value?._id) return // Take data to the evaluation certificates
+  //   ;(async () => {
+  //     const surveys: SurveyData[] = await SurveysApi.byEvent(cEvent?.value?._id)
+
+  //     let passed = 0
+  //     let notPassed = 0
+
+  //     for (let i = 0; i < surveys.length; i++) {
+  //       const survey: SurveyData = surveys[i] as never
+  //       const stats = await useAsyncPrepareQuizStats(
+  //         cEvent?.value?._id,
+  //         survey._id!,
+  //         cUser?.value?._id,
+  //         survey,
+  //       )
+
+  //       console.debug('stats', stats)
+  //       if (stats.minimum > 0) {
+  //         if (stats.right >= stats.minimum) {
+  //           passed = passed + 1
+  //         } else {
+  //           notPassed = notPassed + 1
+  //         }
+  //       }
+  //     }
+
+  //     console.debug('1. passed', passed)
+  //     console.debug('1. surveys.length', surveys.length)
+
+  //     if (surveys.length === 0) {
+  //       setThereAreEvaluations(false)
+  //     } else setThereAreEvaluations(true)
+
+  //     if (passed === surveys.length) {
+  //       setWereEvaluationsPassed(true)
+  //     } else {
+  //       setWereEvaluationsPassed(false)
+  //     }
+  //   })()
+
+  //   // Take the date for the finished course certificate
+  //   ;(async () => {
+  //     if (!cEvent?.value) return
+  //     if (!cEventUser?.value) return
+  //     console.log('start finding course stats')
+
+  //     setActivitiesAttendee([])
+
+  //     const activityFilter = (a: any) =>
+  //       ![activityContentValues.quizing, activityContentValues.survey].includes(
+  //         a.type?.name,
+  //       )
+
+  //     const { data }: { data: AgendaType[] } = await AgendaApi.byEvent(cEvent.value._id)
+  //     const filteredData = data
+  //       .filter(activityFilter)
+  //       .filter((activity) => !activity.is_info_only)
+
+  //     setAllActivities(filteredData)
+  //     const allAttendees = await FB.Attendees.getEventUserActivities(
+  //       filteredData.map((activity) => activity._id as string),
+  //       cEventUser?.value?._id,
+  //     )
+  //     const filteredAttendees = allAttendees.filter((attendee) => attendee !== undefined)
+  //     // Filter existent activities and set the state
+  //     setActivitiesAttendee(filteredAttendees)
+  //   })()
+  // }, [cUser?.value, cEvent?.value, cEventUser?.value])
+
+  const generatePdfCertificate = () => {
+    if (!selectedCertificateToDownload) {
+      Modal.error({
+        title: 'Error al generar',
+        content: 'Falta seleccionar el certificado a generar',
       })
+      return
     }
 
-    const certs = await CertsApi.byEvent(cEvent.value._id)
+    setIsGenerating(true)
+    setReadyCertToGenerate(selectedCertificateToDownload)
+  }
+
+  const requestCertificates = async () => {
+    const certs: CertificateType[] = await CertsApi.byEvent(cEvent.value._id)
     setAvailableCerts(certs)
-
-    const roles = await RolAttApi.byEvent(cEvent.value._id)
-    const currentEvent = { ...cEvent.value }
-    currentEvent.datetime_from = dayjs(currentEvent.datetime_from).format('DD/MM/YYYY')
-    currentEvent.datetime_to = dayjs(currentEvent.datetime_to).format('DD/MM/YYYY')
-
-    //Por defecto se trae el certificado sin rol
-    let rolCert: CertificateType | undefined = certs.find((cert: any) => !cert.rol_id)
-    //Si el asistente tiene rol_id y este corresponde con uno de los roles attendees, encuentra el certificado ligado
-    const rolValidation = roles.find((rol: any) => rol._id === dataUser.rol_id)
-    if (dataUser.rol_id && rolValidation) {
-      rolCert = certs.find((cert: any) => {
-        return cert.rol._id === dataUser.rol_id
-      })
+    if (certs.length === 0) {
+      console.info('No certificate available flaco')
+      return
     }
-    setLastRolCert(rolCert)
+
+    const _roles = await RolAttApi.byEvent(cEvent.value._id)
+    setRoles(_roles)
+
+    const _filteredCertificates: CertificateType[] = []
+
+    // Take th default certificate
+    const _defaultCertificate: CertificateType | undefined = certs.find(
+      (cert: any) => !cert.rol_id,
+    )
+    setSelectedCertificateToDownload(_defaultCertificate)
+    if (_defaultCertificate) {
+      _filteredCertificates.push(_defaultCertificate)
+      console.debug('there is default certificate')
+    }
+
+    // Search all certificate that has the same event user role
+    if (
+      cEventUser.value.rol_id &&
+      _roles.find((rol: any) => rol._id === cEventUser.value.rol_id)
+    ) {
+      const certificatesByRoles = certs.filter(
+        (cert) => cert.rol_id === cEventUser.value.rol_id,
+      )
+      _filteredCertificates.push(...certificatesByRoles)
+      console.debug(
+        `there are ${certificatesByRoles.length} certificates by role of event user: ${cEventUser.value.rol_id}`,
+      )
+    }
+    console.log('_filteredCertificates', { _filteredCertificates })
+    setFilteredCertificates(_filteredCertificates)
+  }
+
+  useEffect(() => {
+    if (!cEvent.value?._id) return
+    if (!cEventUser.value?._id) return
+    // Load available certificates
+    requestCertificates().then()
+  }, [cEvent.value, cEventUser.value])
+
+  // Watch and generate the PDF
+  useEffect(() => {
+    if (!pdfGeneratorRef.current) {
+      console.debug('ref to Html2PdfCerts is undefined')
+      return
+    }
+    if (readyCertToGenerate !== undefined) {
+      console.log('start generating the certificate')
+      pdfGeneratorRef.current.generatePdf()
+      setReadyCertToGenerate(undefined)
+    }
+  }, [readyCertToGenerate, pdfGeneratorRef.current])
+
+  useEffect(() => {
+    if (!selectedCertificateToDownload) return
 
     let currentCertRows: CertRow[] = defaultCertRows
-    console.debug('rolCert', { rolCert })
-    if (rolCert?.content) {
+    console.debug('selectedCertificateToDownload', { selectedCertificateToDownload })
+    if (selectedCertificateToDownload?.content) {
       console.log('parse cert content from DB-saved')
-      currentCertRows = JSON.parse(rolCert?.content) as CertRow[]
+      currentCertRows = JSON.parse(selectedCertificateToDownload?.content) as CertRow[]
     }
 
     // Put the user's data in the cert rows to print
     const newCertRows = replaceAllTagValues(
-      currentEvent,
-      dataUser,
+      cEvent.value,
+      cEventUser.value,
       roles,
       currentCertRows,
     )
 
     setCertificateData({
       ...certificateData,
-      ...(rolCert || {}),
+      ...(selectedCertificateToDownload || {}),
       background:
-        rolCert?.background ?? certificateData.background ?? defaultCertificateBackground,
+        selectedCertificateToDownload?.background ??
+        certificateData.background ??
+        defaultCertificateBackground,
     })
     setFinalCertRows(newCertRows)
-
-    if (!dryRun) {
-      if (rolCert) {
-        setReadyCertToGenerate(rolCert)
-      } else {
-        console.warn('rolCert is undefined, create a cert in the CMS please')
-      }
-
-      modal && modal.destroy()
-    } else {
-      console.log('nothing was created because the dry-run mode is on')
-    }
-  }
-
-  // Watch and generate the PDF for quiz
-  useEffect(() => {
-    if (!pdfQuizGeneratorRef.current) {
-      console.debug('ref to Html2PdfCerts is undefined')
-      return
-    }
-    if (readyCertToGenerate !== undefined) {
-      console.log('start generating the certificate')
-      pdfQuizGeneratorRef.current.generatePdf()
-      setReadyCertToGenerate(undefined)
-    }
-  }, [readyCertToGenerate, pdfQuizGeneratorRef.current])
-
-  // Watch and generate the PDF for general
-  useEffect(() => {
-    if (!pdfGeneralGeneratorRef.current) {
-      console.debug('ref to Html2PdfCerts is undefined')
-      return
-    }
-    if (readyCertToGenerate !== undefined) {
-      console.log('start generating the certificate')
-      pdfGeneralGeneratorRef.current.generatePdf()
-      setReadyCertToGenerate(undefined)
-    }
-  }, [readyCertToGenerate, pdfGeneralGeneratorRef.current])
-
-  useEffect(() => {
-    if (!cUser?.value?._id) return
-    if (!cEvent?.value?._id) return // Take data to the evaluation certificates
-    ;(async () => {
-      const surveys: SurveyData[] = await SurveysApi.byEvent(cEvent?.value?._id)
-
-      let passed = 0
-      let notPassed = 0
-
-      for (let i = 0; i < surveys.length; i++) {
-        const survey: SurveyData = surveys[i] as never
-        const stats = await useAsyncPrepareQuizStats(
-          cEvent?.value?._id,
-          survey._id!,
-          cUser?.value?._id,
-          survey,
-        )
-
-        console.debug('stats', stats)
-        if (stats.minimum > 0) {
-          if (stats.right >= stats.minimum) {
-            passed = passed + 1
-          } else {
-            notPassed = notPassed + 1
-          }
-        }
-      }
-
-      console.debug('1. passed', passed)
-      console.debug('1. surveys.length', surveys.length)
-
-      if (surveys.length === 0) {
-        setThereAreEvaluations(false)
-      } else setThereAreEvaluations(true)
-
-      if (passed === surveys.length) {
-        setWereEvaluationsPassed(true)
-      } else {
-        setWereEvaluationsPassed(false)
-      }
-    })()
-
-    // Take the date for the finished course certificate
-    ;(async () => {
-      if (!cEvent?.value) return
-      if (!cEventUser?.value) return
-      console.log('start finding course stats')
-
-      setActivitiesAttendee([])
-
-      const activityFilter = (a: any) =>
-        ![activityContentValues.quizing, activityContentValues.survey].includes(
-          a.type?.name,
-        )
-
-      const { data }: { data: AgendaType[] } = await AgendaApi.byEvent(cEvent.value._id)
-      const filteredData = data
-        .filter(activityFilter)
-        .filter((activity) => !activity.is_info_only)
-
-      setAllActivities(filteredData)
-      const allAttendees = await FB.Attendees.getEventUserActivities(
-        filteredData.map((activity) => activity._id as string),
-        cEventUser?.value?._id,
-      )
-      const filteredAttendees = allAttendees.filter((attendee) => attendee !== undefined)
-      // Filter existent activities and set the state
-      setActivitiesAttendee(filteredAttendees)
-    })()
-  }, [cUser?.value, cEvent?.value, cEventUser?.value])
-
-  // mimimi PRE-load the cert data to show the background image because client
-  useEffect(() => {
-    if (!cEvent.value?._id) return
-    if (!cEventUser.value?._id) return
-    generateCert(cEventUser.value, true)
-  }, [cEvent.value, cEventUser.value])
-
-  const progressPercentValue: number = useMemo(
-    () =>
-      Math.round(((activitiesAttendee.length || 0) / (allActivities.length || 0)) * 100),
-    [activitiesAttendee, allActivities],
-  )
+  }, [selectedCertificateToDownload])
 
   if (availableCerts.length === 0) {
     return (
@@ -294,127 +357,58 @@ function CertificateLandingPage(props: WithEviusContextProps) {
     <>
       <Row gutter={[8, 8]} wrap justify="center">
         <Col span={24}>
-          {thereAreEvaluations === undefined ? (
-            <Card style={{ textAlign: 'center' }}>
-              <Spin tip="Cargando..." />
-            </Card>
-          ) : (
-            <Card>
-              {thereAreEvaluations && (
-                <>
-                  {!wereEvaluationsPassed && (
-                    <>
-                      <Alert
-                        message="Certificado de evaluaciones NO disponible"
-                        type="error"
-                      />
-                      <br />
-                    </>
-                  )}
-                  {wereEvaluationsPassed && (
-                    <>
-                      <Alert
-                        message="Certificado de evaluaciones disponible"
-                        type="success"
-                      />
-                      <br />
-                      <IconText
-                        text="Descargar certificado de evaluaciones"
-                        icon={isGenerating ? LoadingOutlined : DownloadOutlined}
-                        onSubmit={() => generateCert(cEventUser.value)}
-                      />
-                      <br />
-                      <Typography.Text strong>
-                        Éste es una plantilla y no es el certificado final. Clic en
-                        descargar para obtener el certificado real.
-                      </Typography.Text>
-                      {lastRolCert ? (
-                        <Html2PdfCerts
-                          handler={pdfQuizGeneratorRef}
-                          rows={finalCertRows}
-                          imageUrl={
-                            certificateData.background ?? defaultCertificateBackground
-                          }
-                          backgroundColor="#005882"
-                          enableLinks={true}
-                          filename="certificate-quiz.pdf"
-                          format={[
-                            certificateData.cert_width ?? 1280,
-                            certificateData.cert_height ?? 720,
-                          ]}
-                          sizeStyle={{
-                            height: certificateData.cert_height ?? 720,
-                            width: certificateData.cert_width ?? 1280,
-                          }}
-                          transformationScale={0.5}
-                          unit="px"
-                          orientation="landscape"
-                          onEndGenerate={() => {
-                            setIsGenerating(false)
-                          }}
-                        />
-                      ) : (
-                        <p>Falla crear el certificado por el administrador</p>
-                      )}
-                    </>
-                  )}
-                </>
-              )}
-
-              {progressPercentValue === 100 && (
-                <>
-                  {cEvent.value.hide_certificate_link ? (
-                    <Alert
-                      message="Certificado bloqueado por administrador"
-                      type="warning"
-                    />
-                  ) : (
-                    <>
-                      <Alert message="Certificado de curso completo" type="success" />
-                      <br />
-                      <IconText
-                        text="Descargar certificado del curso"
-                        icon={isGenerating ? LoadingOutlined : DownloadOutlined}
-                        onSubmit={() => generateCert(cEventUser.value)}
-                      />
-                      <br />
-                      <Typography.Text strong>
-                        Éste es una plantilla y no es el certificado final. Clic en
-                        descargar para obtener el certificado real.
-                      </Typography.Text>
-                      {lastRolCert ? (
-                        <Html2PdfCerts
-                          handler={pdfGeneralGeneratorRef}
-                          rows={finalCertRows}
-                          imageUrl={
-                            certificateData.background ?? defaultCertificateBackground
-                          }
-                          backgroundColor="#005882"
-                          enableLinks={true}
-                          filename="certificate-general.pdf"
-                          format={[
-                            certificateData.cert_width ?? 1280,
-                            certificateData.cert_height ?? 720,
-                          ]}
-                          sizeStyle={{
-                            height: certificateData.cert_height ?? 720,
-                            width: certificateData.cert_width ?? 1280,
-                          }}
-                          transformationScale={0.5}
-                          unit="px"
-                          orientation="landscape"
-                          onEndGenerate={() => {
-                            setIsGenerating(false)
-                          }}
-                        />
-                      ) : (
-                        <p>Falla crear el certificado por el administrador</p>
-                      )}
-                    </>
-                  )}
-                </>
-              )}
-            </Card>
+          <Form.Item label="Certificados disponibles">
+            <Select
+              options={filteredCertificates.map((cert) => ({
+                label: cert.name,
+                value: cert._id,
+              }))}
+              value={selectedCertificateToDownload?._id}
+              onChange={(value) =>
+                // Set the select certificate
+                setSelectedCertificateToDownload(
+                  filteredCertificates.find((cert) => cert._id === value),
+                )
+              }
+            />
+          </Form.Item>
+          <Form.Item>
+            <Button
+              htmlType="submit"
+              type="primary"
+              onClick={() => generatePdfCertificate()}
+            >
+              {isGenerating ? <LoadingOutlined /> : <DownloadOutlined />} Descargar
+              certificado
+            </Button>
+          </Form.Item>
+          <Typography.Text strong>
+            Éste es una plantilla y no es el certificado final. Clic en descargar para
+            obtener el certificado real.
+          </Typography.Text>
+          {filteredCertificates.length > 0 && (
+            <Html2PdfCerts
+              handler={pdfGeneratorRef}
+              rows={finalCertRows}
+              imageUrl={certificateData.background ?? defaultCertificateBackground}
+              backgroundColor="#005882"
+              enableLinks={true}
+              filename="certificate-quiz.pdf"
+              format={[
+                certificateData.cert_width ?? 1280,
+                certificateData.cert_height ?? 720,
+              ]}
+              sizeStyle={{
+                height: certificateData.cert_height ?? 720,
+                width: certificateData.cert_width ?? 1280,
+              }}
+              transformationScale={0.5}
+              unit="px"
+              orientation="landscape"
+              onEndGenerate={() => {
+                setIsGenerating(false)
+              }}
+            />
           )}
         </Col>
       </Row>
