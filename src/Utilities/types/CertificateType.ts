@@ -5,6 +5,7 @@ export interface CertificateRequirementConfigType {
 }
 
 export default interface CertificateType {
+  _id?: string
   name: string
   content: string
   background: string
