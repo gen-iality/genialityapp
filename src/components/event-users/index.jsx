@@ -32,6 +32,7 @@ import {
   Select,
   Modal,
   Checkbox,
+  Spin,
 } from 'antd'
 
 import updateAttendees from './eventUserRealTime'
@@ -60,6 +61,7 @@ import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton'
 import { UsersPerEventOrActivity } from './utils/utils'
 import LessonsInfoModal from './LessonsInfoModal'
 import { FB } from '@helpers/firestore-request'
+import EventProgressWrapper from '@/wrappers/EventProgressWrapper'
 
 const { Title, Text } = Typography
 const { Option } = Select
@@ -92,50 +94,6 @@ const TimeTrackingStats = ({ user }) => {
   }, [user])
 
   return <>{timing.toFixed(2)} horas</>
-}
-
-const ColumnProgreso = ({
-  shownAll,
-  item,
-  allActivities,
-  onOpen,
-  updateAttendee,
-  updateCurrentUser,
-  ...props
-}) => {
-  const [attendee, setAttendee] = useState([])
-  const [shouldUpdate, setShouldUpdate] = useState(0)
-  useEffect(async () => {
-    // Get all existent activities, after will filter it
-    const existentActivities = await allActivities.map(async (activity) => {
-      const activity_attendee = await FB.Attendees.get(activity._id, item._id)
-      if (activity_attendee) return activity
-      return null
-    })
-    // Filter non-null result that means that the user attendees them
-    const gotAttendee = (await Promise.all(existentActivities)).filter(
-      (item) => item !== null,
-    )
-    setAttendee(gotAttendee)
-  }, [shouldUpdate])
-
-  if (!onOpen) onOpen = () => {}
-
-  if (shownAll) {
-    return (
-      <Button
-        onClick={() => {
-          updateAttendee(attendee)
-          updateCurrentUser(item)
-          setShouldUpdate((previus) => previus + 1)
-          onOpen()
-        }}
-      >
-        {`${attendee.length || 0}/${allActivities.length || 0}`}
-      </Button>
-    )
-  }
-  return <>{attendee.length > 0 ? 'Visto' : 'No visto'}</>
 }
 
 class ListEventUser extends Component {
@@ -509,14 +467,27 @@ class ListEventUser extends Component {
         sorter: (a, b) => true,
         render: (text, item, index) => (
           <>
-            <ColumnProgreso
-              shownAll={this.props.shownAll}
-              item={item}
-              onOpen={() => this.setState({ showModalOfProgress: true })}
-              updateAttendee={(attendee) => this.setState({ attendee })}
-              updateCurrentUser={(user) => this.setState({ currentUser: user })}
-              index={index}
-              allActivities={allActivities}
+            <EventProgressWrapper
+              event={this.props.event}
+              eventUser={item}
+              render={({ isLoading, activities, checkedInActivities }) => (
+                <>
+                  {isLoading && <Spin />}
+                  {this.props.shownAll ? (
+                    <Button
+                      onClick={() => {
+                        this.setState({
+                          attendee: checkedInActivities,
+                          currentUser: item,
+                          showModalOfProgress: true,
+                        })
+                      }}
+                    >{`${checkedInActivities.length}/${activities.length}`}</Button>
+                  ) : (
+                    <>{checkedInActivities.length > 0 ? 'Visto' : 'No visto'}</>
+                  )}
+                </>
+              )}
             />
           </>
         ),
