@@ -77,6 +77,7 @@ function CertificateLandingPage(props: ICertificateLandingPageProps) {
   >()
   const [finalCertRows, setFinalCertRows] = useState<CertRow[]>(JSON.parse(initContent))
   const [lastRolCert, setLastRolCert] = useState<CertificateType | undefined>()
+  const [availableCerts, setAvailableCerts] = useState<any[]>([])
 
   const pdfQuizGeneratorRef = useRef<Html2PdfCertsRef>(null)
   const pdfGeneralGeneratorRef = useRef<Html2PdfCertsRef>(null)
@@ -119,6 +120,8 @@ function CertificateLandingPage(props: ICertificateLandingPageProps) {
     }
 
     const certs = await CertsApi.byEvent(props.cEvent.value._id)
+    setAvailableCerts(certs)
+
     const roles = await RolAttApi.byEvent(props.cEvent.value._id)
     const currentEvent = { ...props.cEvent.value }
     currentEvent.datetime_from = dayjs(currentEvent.datetime_from).format('DD/MM/YYYY')
@@ -282,6 +285,16 @@ function CertificateLandingPage(props: ICertificateLandingPageProps) {
       Math.round(((activitiesAttendee.length || 0) / (allActivities.length || 0)) * 100),
     [activitiesAttendee, allActivities],
   )
+
+  if (availableCerts.length === 0) {
+    return (
+      <Row gutter={[8, 8]} wrap justify="center">
+        <Col span={24}>
+          <Alert type="info" message="No hay certificados disponibles" />
+        </Col>
+      </Row>
+    )
+  }
 
   return (
     <>
