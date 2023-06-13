@@ -15,6 +15,7 @@ import CertificateType from '@Utilities/types/CertificateType'
 import { replaceAllTagValues } from '@components/certificates/utils/replaceAllTagValues'
 
 import { useEventProgress } from '@context/eventProgressContext'
+import { StateMessage } from '@context/MessageService'
 
 const initContent: string = JSON.stringify(defaultCertRows)
 
@@ -173,7 +174,16 @@ function CertificateLandingPage(props: WithEviusContextProps) {
     if (!cEvent.value?._id) return
     if (!cEventUser.value?._id) return
     // Load available certificates
-    requestCertificates().then()
+    requestCertificates()
+      .then(() => StateMessage.show(null, 'success', 'Datos obtenidos', 3))
+      .catch((err) => {
+        console.error(err)
+        StateMessage.show(
+          null,
+          'error',
+          'No se ha podido obtener los datos de certificados',
+        )
+      })
   }, [cEvent.value, cEventUser.value])
 
   // Watch and generate the PDF
@@ -199,41 +209,46 @@ function CertificateLandingPage(props: WithEviusContextProps) {
       currentCertRows = JSON.parse(selectedCertificateToDownload?.content) as CertRow[]
     }
 
-    getOrgMemberProperties(cEventUser.value).then((extraOrgMemberProperties) => {
-      const newUserDataWithInjection = {
-        ...cEventUser.value,
-        properties: {
-          ...cEventUser.value.properties,
-          ...extraOrgMemberProperties,
-        },
-      }
+    getOrgMemberProperties(cEventUser.value)
+      .then((extraOrgMemberProperties) => {
+        const newUserDataWithInjection = {
+          ...cEventUser.value,
+          properties: {
+            ...cEventUser.value.properties,
+            ...extraOrgMemberProperties,
+          },
+        }
 
-      const eventWithDateOfToday = { ...cEvent.value }
-      eventWithDateOfToday.datetime_from = dayjs(
-        eventWithDateOfToday.datetime_from,
-      ).format('DD/MM/YYYY')
-      eventWithDateOfToday.datetime_to = dayjs(eventWithDateOfToday.datetime_to).format(
-        'DD/MM/YYYY',
-      )
+        const eventWithDateOfToday = { ...cEvent.value }
+        eventWithDateOfToday.datetime_from = dayjs(
+          eventWithDateOfToday.datetime_from,
+        ).format('DD/MM/YYYY')
+        eventWithDateOfToday.datetime_to = dayjs(eventWithDateOfToday.datetime_to).format(
+          'DD/MM/YYYY',
+        )
 
-      // Put the user's data in the cert rows to print
-      const newCertRows = replaceAllTagValues(
-        eventWithDateOfToday,
-        newUserDataWithInjection,
-        roles,
-        currentCertRows,
-      )
+        // Put the user's data in the cert rows to print
+        const newCertRows = replaceAllTagValues(
+          eventWithDateOfToday,
+          newUserDataWithInjection,
+          roles,
+          currentCertRows,
+        )
 
-      setCertificateData({
-        ...certificateData,
-        ...(selectedCertificateToDownload || {}),
-        background:
-          selectedCertificateToDownload?.background ??
-          certificateData.background ??
-          defaultCertificateBackground,
+        setCertificateData({
+          ...certificateData,
+          ...(selectedCertificateToDownload || {}),
+          background:
+            selectedCertificateToDownload?.background ??
+            certificateData.background ??
+            defaultCertificateBackground,
+        })
+        setFinalCertRows(newCertRows)
       })
-      setFinalCertRows(newCertRows)
-    })
+      .catch((err) => {
+        console.error('The organization user can not be gotten:', err)
+        StateMessage.show(null, 'error', 'No se ha podido obtener desde el servidor')
+      })
   }, [selectedCertificateToDownload])
 
   if (availableCerts.length === 0) {
