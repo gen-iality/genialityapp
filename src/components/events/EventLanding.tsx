@@ -12,19 +12,21 @@ import AdditionalEventInfo from '@components/agenda/components/AdditionalEventIn
 import StudentSelfCourseProgress from '../StudentProgress/StudentSelfCourseProgress'
 import { activityContentValues } from '@context/activityType/constants/ui'
 import QuizApprovedStatus from '../quiz/QuizApprovedStatus'
+import { useEventProgress } from '@context/eventProgressContext'
 
 interface EventLandingProps {
   event: any
   eventUser: any
-  eventProgressPercent?: number
 }
 
 const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
-  const { event, eventUser, eventProgressPercent } = props
+  const { event, eventUser } = props
 
   const [activityId, setActivityId] = useState<string | null>(null)
   const [activityDetail, setActivityDetail] = useState<any | null>(null)
   const [thereAreQuizingOrSurveys, setThereAreQuizingOrSurveys] = useState<boolean>(false)
+
+  const cEventProgress = useEventProgress()
 
   const isDescriptionVisible = useMemo(() => {
     if (
@@ -126,7 +128,7 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
                 <ActivitiesList
                   eventId={event?._id}
                   eventUserId={eventUser?._id}
-                  eventProgressPercent={eventProgressPercent}
+                  eventProgressPercent={cEventProgress.progressWithoutAnySurveys}
                 />
               </div>
             </Col>

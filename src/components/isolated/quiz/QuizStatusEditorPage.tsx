@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 
 import { Button, Input, Space, Alert } from 'antd'
 
-import { firestore } from '@helpers/firebase'
 import { SurveyStatus } from '@components/events/surveys/types'
+import { FB } from '@helpers/firestore-request'
 
 export interface QuizStatusEditorPageProps {}
 
@@ -17,23 +17,18 @@ async function setCurrentUserSurveyStatus(
   status: string,
   nextRight: number,
 ) {
-  const firebaseRef = firestore
-    .collection('votingStatusByUser')
-    .doc(userId)
-    .collection('surveyStatus')
-    .doc(surveyId)
+  const result = await FB.VotingStatus.SurveyStatus.get(userId, surveyId)
 
-  const result = await firebaseRef.get()
   const payload: SurveyStatus = {
     surveyCompleted: status,
     right: 0,
   }
-  if (result?.exists) {
-    const { right = 0 } = result.data() as typeof payload
+  if (result) {
+    const { right = 0 } = result as typeof payload
     payload.right = right + nextRight
   }
 
-  await firebaseRef.set(payload)
+  await FB.VotingStatus.SurveyStatus.edit(userId, surveyId, payload)
 }
 
 export function QuizStatusEditorPage(props: QuizStatusEditorPageProps) {

@@ -2,7 +2,6 @@ import { firestore, app } from '@helpers/firebase'
 import { remoteLogoutNotification } from './remoteLogoutNotification'
 import { logoutInterface } from '../interfaces/interfaces'
 
-const initialStateEvenUserContext = { status: 'LOADING', value: null }
 const initialStateUserContext = { status: 'LOADING', value: undefined }
 
 /**
@@ -15,7 +14,7 @@ export const logout = async ({ showNotification, params }: logoutInterface) => {
     formatMessage,
     user,
     handleChangeTypeModal,
-    setuserEvent,
+    resetEventUser,
     setCurrentUser,
     history,
   } = params
@@ -42,7 +41,7 @@ export const logout = async ({ showNotification, params }: logoutInterface) => {
       const weAreOnTheOrganizationLanding =
         routeUrl.includes('organization') && !routeUrl.includes('admin/organization')
       handleChangeTypeModal(null)
-      setuserEvent(initialStateEvenUserContext)
+      resetEventUser()
       setCurrentUser(initialStateUserContext)
       if (showNotification)
         remoteLogoutNotification({ type: 'info', names: user.names, formatMessage })

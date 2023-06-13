@@ -31,7 +31,7 @@ const ModalPermission = () => {
 
     if (resp._id) {
       StateMessage.show(null, 'success', `Usuario editado correctamente`)
-      cEventUser.setUpdateUser(true)
+      cEventUser.requestUpdate()
       handleChangeTypeModal(null)
     } else {
       StateMessage.show(null, 'error', `No fue posible editar el Usuario`)

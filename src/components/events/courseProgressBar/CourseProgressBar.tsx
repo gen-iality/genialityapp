@@ -10,8 +10,10 @@ import Step from './Step'
 import Line from './Line'
 
 import './CourseProgressBar.css'
-import { firestore } from '@helpers/firebase'
+
+import { FB } from '@helpers/firestore-request'
 import { ExtendedAgendaType } from '@Utilities/types/AgendaType'
+import { useEventProgress } from '@context/eventProgressContext'
 
 interface Activity extends ExtendedAgendaType {
   _id: string
@@ -24,11 +26,10 @@ export interface CourseProgressBarProps {
   eventId: string
   eventUser: any
   activities: ExtendedAgendaType[]
-  eventProgressPercent?: number
 }
 
 function CourseProgressBar(props: CourseProgressBarProps) {
-  const { activities, eventUser, eventId, eventProgressPercent } = props
+  const { activities, eventUser, eventId } = props
 
   const [attendees, setAttendees] = useState<Activity[]>([])
   const [watchedActivityId, setWatchedActivityId] = useState<undefined | string>()
@@ -36,11 +37,14 @@ function CourseProgressBar(props: CourseProgressBarProps) {
 
   const location = useLocation()
 
+  const cEventProgress = useEventProgress()
+
   const isThisActivityBlockedByRequirement = (activity: ExtendedAgendaType): boolean => {
-    if (eventProgressPercent === undefined) return false
+    if (cEventProgress.progressWithoutAnySurveys === undefined) return false
     if (activity.require_completion === undefined) return false
 
-    if (activity.require_completion > eventProgressPercent) return true
+    if (activity.require_completion >= cEventProgress.progressWithoutAnySurveys)
+      return true
     return false
   }
 
@@ -53,12 +57,8 @@ function CourseProgressBar(props: CourseProgressBarProps) {
     console.debug('will request the attendee for', activities.length, 'activities')
     const existentActivities = activities.map(async (activity) => {
       // TODO: this can be imported from Landing
-      const activity_attendee = await firestore
-        .collection(`${activity._id}_event_attendees`)
-        .doc(eventUser._id)
-        .get() //checkedin_at
-      if (activity_attendee.exists) {
-        const newAttendee = activity_attendee.data()
+      const newAttendee = await FB.Attendees.get(activity._id!, eventUser._id)
+      if (newAttendee) {
         const oneActivity = {
           ...newAttendee,
           activity_id: activity._id!,
@@ -79,6 +79,7 @@ function CourseProgressBar(props: CourseProgressBarProps) {
 
   useEffect(() => {
     setIsLoading(true)
+    cEventProgress.updateAttendees()
     requestAttendees()
       .then()
       .finally(() => setIsLoading(false))
@@ -118,6 +119,7 @@ function CourseProgressBar(props: CourseProgressBarProps) {
                     ? '#'
                     : `/landing/${eventId}/activity/${activity._id}`
                 }
+                replace
                 key={`key_${index}`}
               >
                 <Step

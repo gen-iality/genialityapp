@@ -1,12 +1,9 @@
 import { SurveyStatus } from '@components/events/surveys/types'
-import { firestore } from '@helpers/firebase'
+
+import { FB } from '@helpers/firestore-request'
 
 export const getRef = (surveyId: string, userId: string) => {
-  return firestore
-    .collection('votingStatusByUser')
-    .doc(userId)
-    .collection('surveyStatus')
-    .doc(surveyId)
+  return FB.VotingStatus.SurveyStatus.ref(userId, surveyId)
 }
 
 export const setStatus = async (

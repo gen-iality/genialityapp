@@ -1,16 +1,6 @@
 import { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
-import {
-  Row,
-  Col,
-  Avatar,
-  Card,
-  Space,
-  Badge,
-  Grid,
-  Button,
-  Typography,
-} from 'antd'
+import { Row, Col, Avatar, Card, Space, Badge, Grid, Button, Typography } from 'antd'
 import { useHistory } from 'react-router-dom'
 import Moment from 'moment-timezone'
 import './style.scss'
@@ -32,6 +22,7 @@ import QuizProgress from '@components/quiz/QuizProgress'
 import { activityContentValues } from '@context/activityType/constants/ui'
 import { useCurrentUser } from '@context/userContext'
 import { ActivityCustomIcon } from '@components/agenda/components/ActivityCustomIcon'
+import { FB } from '@helpers/firestore-request'
 
 const { gotoActivity } = StageActions
 const { useBreakpoint } = Grid
@@ -68,13 +59,11 @@ function AgendaActivityItem(props) {
 
     const loadData = async () => {
       // Ask if that activity (item) is stored in <ID>_event_attendees
-      const activity_attendee = await firestore
-        .collection(`${item._id}_event_attendees`)
-        .doc(cEventUser.value._id)
-        .get() //checkedin_at
-      if (activity_attendee.exists) {
+      const activity_attendee = await FB.Attendees.get(item._id, cEventUser.value._id)
+
+      if (activity_attendee) {
         // If this activity existes, then it means the lesson was taken
-        setIsTaken(activity_attendee.data().checked_in)
+        setIsTaken(activity_attendee.checked_in)
       }
     }
     loadData()
@@ -84,13 +73,7 @@ function AgendaActivityItem(props) {
   useEffect(() => {
     if (!item._id || !cEvent.value) return
     ;(async () => {
-      const document = await firestore
-        .collection('events')
-        .doc(cEvent.value._id)
-        .collection('activities')
-        .doc(`${item._id}`)
-        .get()
-      const activity = document.data()
+      const activity = await FB.Activities.get(cEvent.value._id, item._id)
       console.log('This activity is', activity)
       setMeetingId(activity?.meeting_id)
     })()
@@ -121,18 +104,13 @@ function AgendaActivityItem(props) {
   }, [])
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
-    firestore
-      .collection('events')
-      .doc(event_id)
-      .collection('activities')
-      .doc(activity_id)
-      .onSnapshot((infoActivity) => {
-        if (!infoActivity.exists) return
-        const { habilitar_ingreso } = infoActivity.data()
-        setMeetingState(habilitar_ingreso)
-        infoActivity?.data()?.typeActivity &&
-          setTypeActivity(infoActivity.data().typeActivity)
-      })
+    FB.Activities.ref(event_id, activity_id).onSnapshot((infoActivity) => {
+      if (!infoActivity.exists) return
+      const { habilitar_ingreso } = infoActivity.data()
+      setMeetingState(habilitar_ingreso)
+      infoActivity?.data()?.typeActivity &&
+        setTypeActivity(infoActivity.data().typeActivity)
+    })
   }
 
   const validateTypeActivity = (typeActivity) => {

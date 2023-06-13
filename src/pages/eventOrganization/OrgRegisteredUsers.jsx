@@ -292,7 +292,8 @@ function OrgRegisteredUsers(props) {
   return (
     <>
       <Header
-        title="Inscritos"
+        title="Inscritos a todos los cursos"
+        back
         description="Se muestran los usuarios inscritos a los cursos de la organización"
       />
 

@@ -57,6 +57,7 @@ import { Link } from 'react-router-dom'
 import { StateMessage } from '@context/MessageService'
 import { useIntl } from 'react-intl'
 import LessonsInfoModal from './LessonsInfoModal'
+import { FB } from '@helpers/firestore-request'
 
 interface ITimeTrackingStatsProps {
   user: any
@@ -115,20 +116,12 @@ const ProgressingColumn: FunctionComponent<IProgressingColumnProps> = (props) =>
 
   const requestAttendees = async () => {
     // Get all existent activities, after will filter it
-    const existentActivities = await allActivities.map(async (activity) => {
-      const activity_attendee = await firestore
-        .collection(`${activity._id}_event_attendees`)
-        .doc(item._id)
-        .get()
-      if (activity_attendee.exists) {
-        return activity_attendee.data()
-      }
-      return null
-    })
-    // Filter non-null result that means that the user attendees them
-    const gotAttendee = (await Promise.all(existentActivities)).filter(
-      (item) => item !== null,
+    const allAttendees = await FB.Attendees.getEventUserActivities(
+      allActivities.map((activity) => activity._id as string),
+      item._id,
     )
+    // Filter non-undefined result that means that the user attendees them
+    const gotAttendee = allAttendees.filter((attendee) => attendee !== undefined)
 
     return gotAttendee
   }
@@ -538,9 +531,10 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       <Header
         title={
           activity !== undefined
-            ? 'Inscripción de ' + activity.name
-            : 'Inscripción de curso: '
+            ? 'Inscripción a ' + activity.name
+            : 'Inscripción al curso'
         }
+        back
       />
       <Table
         size="small"

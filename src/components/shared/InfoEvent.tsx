@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react'
+import { FunctionComponent, useMemo } from 'react'
 /** React's libraries */
 import { FormattedMessage } from 'react-intl'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
@@ -23,6 +23,22 @@ const InfoEvent: FunctionComponent = () => {
   const { handleChangeTypeModal, eventIsActive } = useHelper()
   const cEventUser = useUserEvent()
   const cUser = useCurrentUser()
+
+  const isSignedInShown = useMemo(() => {
+    if (!cEvent.value) return false
+
+    if (recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT') {
+      if (cUser.value && cEventUser.value) {
+        // Show the badge
+        return true
+      } else {
+        return false
+      }
+    } else {
+      // For public event, show the badge
+      return true
+    }
+  }, [cUser.value, cEventUser.value, cEvent.value])
 
   return (
     <PageHeader
@@ -51,9 +67,7 @@ const InfoEvent: FunctionComponent = () => {
         </Typography.Title>
       }
       extra={
-        recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' &&
-        cUser?.value &&
-        cEventUser?.value ? (
+        isSignedInShown ? (
           <Badge
             style={{ backgroundColor: '#EA4602', marginRight: '3px' }}
             count="Inscrito"

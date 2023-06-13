@@ -17,10 +17,10 @@ import { columns } from './tableColums/membersTableColumns'
 
 /** Helpers and utils */
 import { OrganizationApi, EventsApi, AgendaApi, PositionsApi } from '@helpers/request'
-import { firestore } from '@helpers/firebase'
 
 /** Context */
 import withContext from '@context/withContext'
+import { FB } from '@helpers/firestore-request'
 
 function OrgMembers(props) {
   console.log('Props - OrgMembers (CMS) ->', props)
@@ -106,20 +106,13 @@ function OrgMembers(props) {
 
         const { data: activities } = await AgendaApi.byEvent(eventId)
 
-        const existentActivities = await activities.map(async (activity) => {
-          const activity_attendee = await firestore
-            .collection(`${activity._id}_event_attendees`)
-            .doc(eventUser._id)
-            .get()
-          if (activity_attendee.exists) {
-            return activity_attendee.data()
-          }
-          return null
-        })
-        // Filter non-null result that means that the user attendees them
-        const attendee = (await Promise.all(existentActivities)).filter(
-          (item) => item !== null,
+        const allAttendees = await FB.Attendees.getEventUserActivities(
+          activities.map((activity) => activity._id),
+          eventUser._id,
         )
+
+        // Filter non-null result that means that the user attendees them
+        const attendee = allAttendees.filter((attendee) => attendee !== undefined)
         totalActividades += activities.length
         totalActividadesVistas += attendee.length
       }
@@ -305,7 +298,7 @@ function OrgMembers(props) {
 
   return (
     <>
-      <Header title="Miembros" />
+      <Header title="Miembros" back />
 
       <p>
         <small>

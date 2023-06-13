@@ -5,6 +5,7 @@ import { firestore } from '@helpers/firebase'
 import { Table, Typography, Spin, Space, Button } from 'antd'
 import { ColumnType } from 'antd/lib/table'
 import { utils, writeFileXLSX } from 'xlsx'
+import { FB } from '@helpers/firestore-request'
 
 type UserResponse = {
   username: string
@@ -71,12 +72,7 @@ const TriviaResponsesPage: React.FunctionComponent<ITriviaResponsesPageProps> = 
     const promiseAllQuestionAndResponses = questions.map(async (question) => {
       const questionId = question.id
 
-      const responsesRef = firestore
-        .collection('surveys')
-        .doc(surveyId)
-        .collection('answers')
-        .doc(questionId)
-        .collection('responses')
+      const responsesRef = FB.Surveys.Answers.Responses.collection(surveyId, questionId)
 
       const responsesSnapshot = await responsesRef.get()
 

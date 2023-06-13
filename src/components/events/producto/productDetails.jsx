@@ -5,8 +5,9 @@ import { EventsApi } from '@helpers/request'
 import { IssuesCloseOutlined } from '@ant-design/icons'
 import 'react-responsive-carousel/lib/styles/carousel.min.css' // requires a loader
 import { Carousel } from 'react-responsive-carousel'
-import { firestore } from '@helpers/firebase'
+
 import OfertaProduct from './OfertaProducto'
+import { FB } from '@helpers/firestore-request'
 
 function DetailsProduct() {
   const { Title, Text } = Typography
@@ -23,18 +24,15 @@ function DetailsProduct() {
   useEffect(() => {
     const idProduct = params.id
     const eventId = params.event_id
-    firestore
-      .collection('config')
-      .doc(eventId)
-      .onSnapshot((onSnapshot) => {
-        if (onSnapshot.exists) {
-          const doc = onSnapshot.data()
-          setHability(doc.data.habilitar_subasta)
-          setMessage(doc.data.message)
-        } else {
-          setHability(false)
-        }
-      })
+    FB.Configs.ref(eventId).onSnapshot((onSnapshot) => {
+      if (onSnapshot.exists) {
+        const doc = onSnapshot.data()
+        setHability(doc.data.habilitar_subasta)
+        setMessage(doc.data.message)
+      } else {
+        setHability(false)
+      }
+    })
 
     if (idProduct && eventId && (!updateValue || updateValue)) {
       setEventId(eventId)

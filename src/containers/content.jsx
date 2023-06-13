@@ -28,9 +28,9 @@ import ModalUpdate from '@components/events/Landing/ModalUpdate'
 import DirectLoginPage from '@/pages/DirectLoginPage'
 import CertificateGeneraterPage from '@/pages/CertificateGeneraterPage'
 //Code splitting
-const Header = loadable(() => import('./header'))
+const HeaderContainer = loadable(() => import('./HeaderContainer'))
 const Home = loadable(() => import('../pages/home'))
-const Landing = loadable(() => import('../components/events/Landing/landing'))
+const LandingRoutes = loadable(() => import('../components/events/Landing/LandingRoutes'))
 const Transition = loadable(() => import('../components/shared/Animate_Img/index'))
 const NewEventPage = loadable(() =>
   import('../components/events/createEvent/NewEventPage'),
@@ -46,9 +46,7 @@ const AppointmentAccept = loadable(() =>
 )
 const NotFoundPage = loadable(() => import('../components/notFoundPage/NotFoundPage'))
 const ForbiddenPage = loadable(() => import('../components/forbiddenPage'))
-const QueryTesting = loadable(() =>
-  import('../components/events/surveys/components/queryTesting'),
-)
+
 const EventFinished = loadable(() => import('../components/eventFinished/eventFinished'))
 const LoginWithCode = loadable(() => import('../components/AdminUsers/WithCode'))
 const NoMatchPage = loadable(() => import('../components/notFoundPage/NoMatchPage'))
@@ -72,7 +70,7 @@ const ContentContainer = () => {
           />
           <RouteContext
             path={['/landing/:event_id', '/event/:event_name']}
-            component={Landing}
+            component={LandingRoutes}
           />
           {/*Ruta para ver resumen */}
           <PrivateRoute exact path="/myprofile/:tab" component={MainProfile} />
@@ -118,8 +116,7 @@ const ContentContainer = () => {
           <Route path="/policies" component={Policies} />
           <Route path="/about" component={About} />
           <Route path="/faqs" component={Faqs} />
-          {/* Ruta para realizar pruebas de consultas a firebase */}
-          <Route path="/queryTesting" component={QueryTesting} />
+
           <Route path="/api/generatorQr/:id" component={QRedirect} />
           <Route exact path="/transition/:event" component={Transition} />
           <Route exact path="/eventfinished" component={EventFinished} />
@@ -160,7 +157,7 @@ const RouteContext = ({ component: Component, ...rest }) => (
                       minHeight: '100vh',
                     }}
                   >
-                    <Header />
+                    <HeaderContainer />
                     <Component {...props} />
                     <ModalAuth />
                     <ModalAuthAnonymous />
@@ -190,7 +187,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
                 <AgendaContextProvider>
                   <SurveysProvider>
                     <Layout style={{ minHeight: '100vh' }}>
-                      <Header />
+                      <HeaderContainer />
                       {cUser.value ? (
                         <Component {...props} />
                       ) : cUser.value == null && cUser.status == 'LOADED' ? (

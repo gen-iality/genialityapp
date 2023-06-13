@@ -1,9 +1,10 @@
 import { Component } from 'react'
 import { Card, Row, Col } from 'antd'
-import { firestore } from '@helpers/firebase'
+
 import { ExternalSurvey } from '@helpers/request'
 import { EditOutlined } from '@ant-design/icons'
 import { StateMessage } from '@context/MessageService'
+import { FB } from '@helpers/firestore-request'
 
 export default class SurveyExternal extends Component {
   constructor(props) {
@@ -36,11 +37,9 @@ export default class SurveyExternal extends Component {
 
   updateSurvey = (survey_id, data) => {
     return new Promise((resolve) => {
-      firestore
-        .collection('surveys')
-        .doc(survey_id)
-        .update({ ...data })
-        .then(() => resolve({ message: 'Evaluación actualizada', state: 'updated' }))
+      FB.Surveys.update(survey_id, data).then(() =>
+        resolve({ message: 'Evaluación actualizada', state: 'updated' }),
+      )
     })
   }
 

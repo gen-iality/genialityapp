@@ -9,8 +9,8 @@ import { haveRequest, isMyContacts } from '@helpers/netWorkingFunctions'
 import { useEventContext } from '@context/eventContext'
 import { useUserEvent } from '@context/eventUserContext'
 import { setUserAgenda } from '../../../redux/networking/actions'
-import withContext from '@context/withContext'
-import { useEffect } from 'react'
+import withContext, { WithEviusContextProps } from '@context/withContext'
+import { FunctionComponent, useEffect } from 'react'
 import { useState } from 'react'
 import { useIntl, FormattedMessage } from 'react-intl'
 import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutline'
@@ -18,15 +18,31 @@ import { UsersApi } from '@helpers/request'
 import { StateMessage } from '@context/MessageService'
 import FormComponent from '../registrationForm/form'
 
-const DrawerProfile = (props) => {
+type MapStateToPropsType = {
+  viewPerfil: any
+  profileuser: any
+}
+
+const mapDispatchToProps = {
+  setViewPerfil,
+  setUserAgenda,
+}
+
+type IDrawerProfileProps = WithEviusContextProps<
+  MapStateToPropsType & typeof mapDispatchToProps
+>
+
+const DrawerProfile: FunctionComponent<IDrawerProfileProps> = (props) => {
   const cUser = useCurrentUser()
   const cEvent = useEventContext()
   const cEventUser = useUserEvent()
+
+  const cHelper = useHelper()
   const { propertiesProfile, requestSend } = useHelper()
-  const [userSelected, setUserSelected] = useState()
-  const [isMycontact, setIsMyContact] = useState()
-  const [isMe, setIsMe] = useState(false)
-  const [userPropertiesProfile, setUserPropertiesProfile] = useState()
+  const [userSelected, setUserSelected] = useState<any>()
+  const [isMycontact, setIsMyContact] = useState<any>()
+  const [isItMe, setItIsMe] = useState(false)
+  const [userPropertiesProfile, setUserPropertiesProfile] = useState<any>()
   const [openModal, setOpenModal] = useState(false)
 
   const intl = useIntl()
@@ -35,8 +51,8 @@ const DrawerProfile = (props) => {
     if (props.profileuser) {
       console.log(props.profileuser._id, cEventUser.value, props.profileuser)
       if (props.profileuser._id !== cEventUser.value?.account_id) {
-        const isContact = isMyContacts(props.profileuser, props.cHelper.contacts)
-        setIsMe(cUser.value._id == props.profileuser._id)
+        const isContact = isMyContacts(props.profileuser, cHelper.contacts)
+        setItIsMe(cUser.value._id == props.profileuser._id)
         setIsMyContact(isContact)
         setUserSelected(props.profileuser)
         setUserPropertiesProfile(propertiesProfile?.propertiesUserPerfil)
@@ -44,24 +60,19 @@ const DrawerProfile = (props) => {
         //Si es mi usuario, no estaba mostrando el perfil de los demás usuarios
         if (cEventUser.value == null) return
         const isContact = isMyContacts(cEventUser.value, props.cHelper.contacts)
-        setIsMe(cUser.value._id == cEventUser.value.user._id)
+        setItIsMe(cUser.value._id == cEventUser.value.user._id)
         setIsMyContact(isContact)
         setUserSelected(cEventUser.value)
         setUserPropertiesProfile(propertiesProfile?.propertiesUserPerfil)
       }
     }
   }, [props.profileuser, cEventUser.value, userSelected])
-  const haveRequestUser = (user) => {
+
+  const haveRequestUser = (user: any) => {
     return haveRequest(user, requestSend, 1)
   }
 
-  function closeOrOpenModal() {
-    setOpenModal((prevState) => {
-      return !prevState
-    })
-  }
-
-  async function updateEventUser(values) {
+  async function updateEventUser(values: any) {
     const eventUserBody = {
       properties: { ...values },
     }
@@ -74,7 +85,8 @@ const DrawerProfile = (props) => {
 
     if (resp._id) {
       StateMessage.show(null, 'success', `Usuario editado correctamente`)
-      cEventUser.setUpdateUser(true)
+      // TODO: fix possibity of being undefined
+      cEventUser.requestUpdate()
       setOpenModal(false)
     } else {
       StateMessage.show(null, 'error', `No fue posible editar el Usuario`)
@@ -88,8 +100,8 @@ const DrawerProfile = (props) => {
           zIndex={1}
           closable
           footer={false}
-          visible
-          onCancel={() => closeOrOpenModal()}
+          open
+          onCancel={() => setOpenModal(false)}
         >
           <div
             style={{
@@ -117,7 +129,7 @@ const DrawerProfile = (props) => {
                 backgroundColor: cEvent.value.styles.toolbarDefaultBg,
               }}
             />
-            {isMe ? (
+            {isItMe ? (
               <FormattedMessage
                 id="header.my_data_event"
                 defaultMessage="Mi perfil en el curso"
@@ -131,7 +143,7 @@ const DrawerProfile = (props) => {
           </Space>
         }
         zIndex={0}
-        visible={props.viewPerfil}
+        open={props.viewPerfil}
         closable
         onClose={() => props.setViewPerfil({ view: false, perfil: null })}
         width="52vh"
@@ -140,14 +152,14 @@ const DrawerProfile = (props) => {
         <Row justify="center" style={{ paddingLeft: '15px', paddingRight: '10px' }}>
           <Col span={24}>
             <Typography.Paragraph>
-              {isMe
+              {isItMe
                 ? 'Esta es tu información suministrada para el curso'
                 : ' Esta es la información suministrada para el curso'}
               <Typography.Text strong> {cEvent.value.name} </Typography.Text>
             </Typography.Paragraph>
           </Col>
 
-          {isMe && (
+          {isItMe && (
             <Col span={24}>
               <Button
                 onClick={() => {
@@ -157,7 +169,7 @@ const DrawerProfile = (props) => {
                 size="middle"
                 style={{ backgroundColor: '#F4F4F4', color: '#FAAD14' }}
               >
-                {props.cEvent.value.visibility === 'PUBLIC' && (
+                {cEvent.value.visibility === 'PUBLIC' && (
                   <>
                     {intl.formatMessage({
                       id: 'modal.title.update',
@@ -188,8 +200,8 @@ const DrawerProfile = (props) => {
               <List
                 bordered
                 style={{ borderRadius: '8px' }}
-                dataSource={userPropertiesProfile && userPropertiesProfile}
-                renderItem={(item) =>
+                dataSource={userPropertiesProfile}
+                renderItem={(item: any) =>
                   ((item?.visibleByContacts && isMycontact && !item?.sensibility) ||
                     !item.sensibility) &&
                   userSelected.properties[item?.name] &&
@@ -217,14 +229,12 @@ const DrawerProfile = (props) => {
   )
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: any): MapStateToPropsType => ({
   viewPerfil: state.viewPerfilReducer.view,
   profileuser: state.viewPerfilReducer.perfil,
 })
 
-const mapDispatchToProps = {
-  setViewPerfil,
-  setUserAgenda,
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(withContext(DrawerProfile))
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withContext<IDrawerProfileProps>(DrawerProfile))

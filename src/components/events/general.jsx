@@ -45,7 +45,7 @@ import {
   DatePicker,
   TimePicker,
 } from 'antd'
-import { firestore } from '@helpers/firebase'
+
 import Header from '@antdComponents/Header'
 import BackTop from '@antdComponents/BackTop'
 import { ExclamationCircleOutlined, BellOutlined } from '@ant-design/icons'
@@ -55,6 +55,7 @@ import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderD
 
 import { CurrentUserContext } from '@context/userContext'
 import { CardSelector } from './CardSelector'
+import { FB } from '@helpers/firestore-request'
 
 dayjs.locale('es')
 const { Option } = Select
@@ -345,10 +346,7 @@ class General extends Component {
   validateTabs = () => {
     const { event } = this.props
     return new Promise(function (resolve, reject) {
-      firestore
-        .collection('events')
-        .doc(event._id)
-        .get()
+      FB.Events.get(event._id)
         .then((result) => {
           if (result?.exists) {
             const data = result.data()
@@ -381,10 +379,7 @@ class General extends Component {
       if (response) {
         const updateData = { ...response, tabs: { ...tabs } }
 
-        firestore
-          .collection('events')
-          .doc(event._id)
-          .update(updateData)
+        FB.Events.update(event._id, updateData)
           .then(() => {
             const msg = intl.formatMessage({
               id: 'message.success.updated.tabs',
@@ -409,10 +404,7 @@ class General extends Component {
             )
           })
       } else {
-        firestore
-          .collection('events')
-          .doc(event._id)
-          .set({ tabs: { ...tabs } })
+        FB.Events.edit(event._id, { tabs: { ...tabs } })
           .then(() => {
             const msg = intl.formatMessage({
               id: 'message.success.initialized.tabs',
@@ -719,6 +711,7 @@ class General extends Component {
         <Form onFinish={this.submit} {...formLayout}>
           <Header
             title="Datos del curso"
+            back
             save
             form
             remove={this.deleteEvent}
@@ -1066,15 +1059,16 @@ class General extends Component {
                   <Form.Item
                     label={
                       <label style={{ marginTop: '2%' }}>
-                        Imagen general - miniatura del curso
+                        Elige una imagen para la miniatura del curso desde el escritorio o
+                        una carpeta. Tamaño recomendado 1440x960 px.
                       </label>
                     }
                   >
                     <ImageUploaderDragAndDrop
                       imageDataCallBack={(imageUrl) => this.handleImage(imageUrl)}
                       imageUrl={image}
-                      width="1080"
-                      height="1080"
+                      width="1440"
+                      height="960"
                     />
                   </Form.Item>
 

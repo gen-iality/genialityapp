@@ -63,7 +63,8 @@ const TriviaListPage: FunctionComponent<ITriviaListPageProps> = (props) => {
         <CMS
           API={SurveysApi}
           eventId={props.event._id}
-          title={'Evaluación'}
+          title={'Evaluaciones'}
+          back
           titleTooltip={'Agregue o edite las Agendas que se muestran en la aplicación'}
           addUrl={{
             pathname: `${props.matchUrl}/encuesta`,

@@ -1,11 +1,10 @@
 import { firestore, fireRealtime } from '@helpers/firebase'
+import { FB } from '@helpers/firestore-request'
 import dayjs from 'dayjs'
-
-const refSurvey = firestore.collection('surveys')
 
 export const validateSurveyCreated = (surveyId) => {
   return new Promise((resolve) => {
-    refSurvey.doc(surveyId).onSnapshot((survey) => {
+    FB.Surveys.ref(surveyId).onSnapshot((survey) => {
       if (!survey.exists) {
         resolve(false)
       }
@@ -22,15 +21,13 @@ export const createOrUpdateSurvey = (surveyId, status, surveyInfo) => {
 
     validateSurveyCreated(surveyId).then((existSurvey) => {
       if (existSurvey) {
-        refSurvey
-          .doc(surveyId)
-          .update({ ...status })
-          .then(() => resolve({ message: 'Evaluación actualizada', state: 'updated' }))
+        FB.Surveys.update(surveyId, { ...status }).then(() =>
+          resolve({ message: 'Evaluación actualizada', state: 'updated' }),
+        )
       } else {
-        refSurvey
-          .doc(surveyId)
-          .set({ ...surveyInfo, ...status })
-          .then(() => resolve({ message: 'Evaluación creada', state: 'created' }))
+        FB.Surveys.edit(surveyId, { ...surveyInfo, ...status }).then(() =>
+          resolve({ message: 'Evaluación creada', state: 'created' }),
+        )
       }
     })
   })
@@ -38,10 +35,9 @@ export const createOrUpdateSurvey = (surveyId, status, surveyInfo) => {
 
 export const deleteSurvey = (surveyId) => {
   return new Promise((resolve) => {
-    refSurvey
-      .doc(surveyId)
-      .delete()
-      .then(() => resolve({ message: 'Evaluación eliminada', state: 'deleted' }))
+    FB.Surveys.delete(surveyId).then(() =>
+      resolve({ message: 'Evaluación eliminada', state: 'deleted' }),
+    )
   })
 }
 
@@ -90,10 +86,7 @@ export const getAnswersByQuestion = (surveyId, questionId) => {
 export const getTriviaRanking = (surveyId) => {
   return new Promise((resolve, reject) => {
     const list = []
-    firestore
-      .collection('surveys')
-      .doc(surveyId)
-      .collection('ranking')
+    FB.Surveys.Ranking.collection(surveyId)
       .get()
       .then((result) => {
         if (!result.empty) {
@@ -120,15 +113,6 @@ export const getSurveyConfiguration = (surveyId) => {
       reject('Survey ID required')
     }
 
-    firestore
-      .collection('surveys')
-      .doc(surveyId)
-      .get()
-      .then((result) => {
-        if (result?.exists) {
-          const data = result.data()
-          resolve(data)
-        }
-      })
+    FB.Surveys.get(surveyId).then((data) => resolve(data))
   })
 }

@@ -8,6 +8,7 @@ import { Card } from 'antd'
 import * as SurveyActions from '../../../redux/survey/actions'
 import withContext from '@context/withContext'
 import { GetTokenUserFirebase } from '@helpers/HelperAuth'
+import { FB } from '@helpers/firestore-request'
 
 const { setCurrentSurvey, setSurveyVisible } = SurveyActions
 
@@ -54,7 +55,7 @@ class SurveyForm extends Component {
     const { activity } = this.props
 
     //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
-    let $query = firestore.collection('surveys')
+    let $query = FB.Surveys.collection()
 
     //Le agregamos el filtro por curso
     if (this.props.cEvent.value && this.props.cEvent.value._id) {

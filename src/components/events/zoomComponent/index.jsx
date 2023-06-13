@@ -9,7 +9,8 @@ import { fetchPermissions } from '../../../redux/permissions/actions'
 import { fetchRol } from '../../../redux/rols/actions'
 import ConferenceTabs from './conferenceTabs'
 
-import { firestore } from '@helpers/firebase'
+import { FB } from '@helpers/firestore-request'
+
 class ZoomComponent extends Component {
   constructor(props) {
     super(props)
@@ -106,12 +107,8 @@ class ZoomComponent extends Component {
 
     this.setUpUserForConference()
 
-    firestore
-      .collection('events')
-      .doc(this.state.event._id)
-      .collection('activities')
-      .doc(this.state.activity._id)
-      .onSnapshot((response) => {
+    FB.Activities.ref(this.state.event._id, this.state.activity._id).onSnapshot(
+      (response) => {
         const videoConference = response.data()
 
         this.setState({
@@ -139,7 +136,8 @@ class ZoomComponent extends Component {
               ? videoConference.tabs.attendees
               : false,
         })
-      })
+      },
+    )
   }
 
   async componentDidUpdate(prevProps, prevState) {

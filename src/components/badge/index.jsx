@@ -121,6 +121,7 @@ export default function Index(props) {
     <>
       <Header
         title="Configuración de escarapelas"
+        back
         description={
           ' Acontinuación podrás crear la escarapela para tu evento. Agrega los Campos o QR, edita el tamaño de letra de los campos o del QR'
         }

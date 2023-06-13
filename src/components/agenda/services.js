@@ -1,19 +1,13 @@
-import { firestore } from '@helpers/firebase'
-
-const refActivity = firestore.collection('events')
+import { FB } from '@helpers/firestore-request'
 
 export const validateActivityCreated = (activityId, event_id) => {
   return new Promise((resolve) => {
-    refActivity
-      .doc(event_id)
-      .collection('activities')
-      .doc(activityId)
-      .onSnapshot((survey) => {
-        if (!survey.exists) {
-          resolve(false)
-        }
-        resolve(true)
-      })
+    FB.Activities.ref(event_id, activityId).onSnapshot((survey) => {
+      if (!survey.exists) {
+        resolve(false)
+      }
+      resolve(true)
+    })
   })
 }
 
@@ -22,25 +16,15 @@ export const createOrUpdateActivity = (activityId, event_id, activityInfo, tabs)
   return new Promise((resolve) => {
     validateActivityCreated(activityId, event_id).then((existSurvey) => {
       if (existSurvey) {
-        refActivity
-          .doc(event_id)
-          .collection('activities')
-          .doc(activityId)
-          .update({
-            habilitar_ingreso: activityInfo,
-            tabs: tabs,
-          })
-          .then(() => resolve({ message: 'Configuración actualizada', state: 'updated' }))
+        FB.Activities.update(event_id, activityId, {
+          habilitar_ingreso: activityInfo,
+          tabs: tabs,
+        }).then(() => resolve({ message: 'Configuración actualizada', state: 'updated' }))
       } else {
-        refActivity
-          .doc(event_id)
-          .collection('activities')
-          .doc(activityId)
-          .set({
-            habilitar_ingreso: activityInfo,
-            tabs: tabsSchema,
-          })
-          .then(() => resolve({ message: 'Configuracioón Creada', state: 'created' }))
+        FB.Activities.edit(event_id, activityId, {
+          habilitar_ingreso: activityInfo,
+          tabs: tabsSchema,
+        }).then(() => resolve({ message: 'Configuracioón Creada', state: 'created' }))
       }
     })
   })
@@ -48,14 +32,10 @@ export const createOrUpdateActivity = (activityId, event_id, activityInfo, tabs)
 
 export const getConfiguration = (event_id, activityId) => {
   return new Promise((resolve, reject) => {
-    refActivity
-      .doc(event_id)
-      .collection('activities')
-      .doc(activityId)
-      .get()
+    FB.Activities.get(event_id, activityId)
       .then((result) => {
-        if (result?.exists) {
-          resolve(result.data())
+        if (result) {
+          resolve(result)
         } else {
           resolve()
         }
