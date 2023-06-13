@@ -17,6 +17,7 @@ import Account from '@2fd/ant-design-icons/lib/Account'
 import { StateMessage } from '@context/MessageService'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { useEventContext } from '@context/eventContext'
+import Header from '@antdComponents/Header'
 
 const { TabPane } = Tabs
 
@@ -323,89 +324,97 @@ const ChatExport = ({ eventId, event }) => {
   }
 
   return (
-    <Tabs defaultActiveKey="1" onChange={(getChat, getBlocketdUsers)}>
-      <TabPane tab="Gestión de chats del curso" key="1">
-        <Table
-          header={columns}
-          list={datamsjevent}
-          loading={isLoading}
-          actions
-          remove={remove}
-          extraFn={blockUser}
-          extraFnTitle="Bloquear usuarios"
-          extraFnType="ghost"
-          extraFnIcon={<AccountCancel />}
-          titleTable={
-            <Row gutter={[8, 8]} wrap>
-              <Col>
-                <Button onClick={getChat} type="primary" icon={<ReloadOutlined />}>
-                  Recargar
-                </Button>
-              </Col>
-              <Col>
-                {datamsjevent && datamsjevent.length > 0 && (
-                  <Button onClick={exportFile} type="primary" icon={<DownloadOutlined />}>
-                    Exportar
+    <>
+      <Header title="Gestión de chats" back />
+      <Tabs defaultActiveKey="1" onChange={(getChat, getBlocketdUsers)}>
+        <TabPane tab="Gestión de chats del curso" key="1">
+          <Table
+            header={columns}
+            list={datamsjevent}
+            loading={isLoading}
+            actions
+            remove={remove}
+            extraFn={blockUser}
+            extraFnTitle="Bloquear usuarios"
+            extraFnType="ghost"
+            extraFnIcon={<AccountCancel />}
+            titleTable={
+              <Row gutter={[8, 8]} wrap>
+                <Col>
+                  <Button onClick={getChat} type="primary" icon={<ReloadOutlined />}>
+                    Recargar
                   </Button>
-                )}
-              </Col>
-              <Col>
-                {datamsjevent && datamsjevent.length > 0 && (
+                </Col>
+                <Col>
+                  {datamsjevent && datamsjevent.length > 0 && (
+                    <Button
+                      onClick={exportFile}
+                      type="primary"
+                      icon={<DownloadOutlined />}
+                    >
+                      Exportar
+                    </Button>
+                  )}
+                </Col>
+                <Col>
+                  {datamsjevent && datamsjevent.length > 0 && (
+                    <Button
+                      onClick={deleteAllChat}
+                      type="danger"
+                      icon={<DeleteOutlined />}
+                      disabled={
+                        !eventIsActive &&
+                        window.location.toString().includes('eventadmin')
+                      }
+                    >
+                      Eliminar chat
+                    </Button>
+                  )}
+                </Col>
+              </Row>
+            }
+            search
+            setColumnsData={setColumnsData}
+          />
+        </TabPane>
+        <TabPane
+          tab={
+            <Badge count={listUsersBlocked.length} offset={[8, 0]}>
+              Usuarios bloqueados
+            </Badge>
+          }
+          key="2"
+        >
+          <Table
+            header={columnsUserBlocked}
+            list={listUsersBlocked}
+            loading={isLoading}
+            actions
+            extraFn={blockUser}
+            extraFnTitle="Desbloquear usuario"
+            extraFnType="ghost"
+            extraFnIcon={<Account />}
+            exportData
+            fileName="Usuarios bloqueados"
+            titleTable={
+              <Row gutter={[8, 8]} wrap>
+                <Col>
                   <Button
-                    onClick={deleteAllChat}
-                    type="danger"
-                    icon={<DeleteOutlined />}
-                    disabled={
-                      !eventIsActive && window.location.toString().includes('eventadmin')
-                    }
+                    onClick={getBlocketdUsers}
+                    type="primary"
+                    icon={<ReloadOutlined />}
                   >
-                    Eliminar chat
+                    Recargar
                   </Button>
-                )}
-              </Col>
-            </Row>
-          }
-          search
-          setColumnsData={setColumnsData}
-        />
-      </TabPane>
-      <TabPane
-        tab={
-          <Badge count={listUsersBlocked.length} offset={[8, 0]}>
-            Usuarios bloqueados
-          </Badge>
-        }
-        key="2"
-      >
-        <Table
-          header={columnsUserBlocked}
-          list={listUsersBlocked}
-          loading={isLoading}
-          actions
-          extraFn={blockUser}
-          extraFnTitle="Desbloquear usuario"
-          extraFnType="ghost"
-          extraFnIcon={<Account />}
-          exportData
-          fileName="Usuarios bloqueados"
-          titleTable={
-            <Row gutter={[8, 8]} wrap>
-              <Col>
-                <Button
-                  onClick={getBlocketdUsers}
-                  type="primary"
-                  icon={<ReloadOutlined />}
-                >
-                  Recargar
-                </Button>
-              </Col>
-            </Row>
-          }
-          search
-          setColumnsData={setColumnsData}
-        />
-      </TabPane>
-    </Tabs>
+                </Col>
+              </Row>
+            }
+            search
+            setColumnsData={setColumnsData}
+          />
+        </TabPane>
+      </Tabs>
+    </>
   )
 }
 

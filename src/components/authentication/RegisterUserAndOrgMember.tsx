@@ -134,7 +134,7 @@ const RegisterUserAndOrgMember = ({
         })
         setCurrent(current + 1)
       }
-    } catch (err: any) {
+    } catch (err) {
       if (err?.response?.data?.errors?.email[0] === 'email ya ha sido registrado.') {
         if (isAdminPage()) {
           setCurrent(current + 1)
@@ -440,7 +440,9 @@ const RegisterUserAndOrgMember = ({
               {validationGeneral.component && (
                 <Button
                   style={{ padding: 4, color: '#333F44', fontWeight: 'bold' }}
-                  onClick={() => helperDispatch({ type: 'showLogin' })} // REVISAR: Al parecer no está funcionando el dispatch
+                  onClick={() =>
+                    helperDispatch({ type: 'showLogin', idOrganization: idOrganization })
+                  } // REVISAR: Al parecer no está funcionando el dispatch
                   type="link"
                 >
                   {validationGeneral.component}

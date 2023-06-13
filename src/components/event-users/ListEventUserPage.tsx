@@ -531,9 +531,10 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       <Header
         title={
           activity !== undefined
-            ? 'Inscripción de ' + activity.name
-            : 'Inscripción de curso: '
+            ? 'Inscripción a ' + activity.name
+            : 'Inscripción al curso'
         }
+        back
       />
       <Table
         size="small"

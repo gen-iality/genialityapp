@@ -429,7 +429,7 @@ class Styles extends Component {
     return (
       <>
         <Form onFinish={this.submit} {...formLayout}>
-          <Header title="Configuración de Estilos" save form />
+          <Header title="Configuración de Estilos" back save form />
 
           <Row justify="center" wrap gutter={[8, 8]}>
             {stylesIsLoading ? (

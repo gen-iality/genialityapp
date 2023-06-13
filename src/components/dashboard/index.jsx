@@ -31,6 +31,7 @@ import { utils, writeFileXLSX } from 'xlsx'
 import API from '@helpers/request'
 import { GetTokenUserFirebase } from '@helpers/HelperAuth'
 import { StateMessage } from '@context/MessageService'
+import Header from '@antdComponents/Header'
 
 const { Title } = Typography
 // Estilos pagina pdf
@@ -423,6 +424,7 @@ class DashboardEvent extends Component {
     ]
     return !this.state.loadingMetrics ? (
       <>
+        <Header title="Estadisticas del curso / lecciones" back />
         <div ref={(el) => (this.componentRef = el)}>
           <Row justify="start">
             <img

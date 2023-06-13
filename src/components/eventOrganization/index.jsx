@@ -8,7 +8,7 @@ import ModalLoginHelpers from '../authentication/ModalLoginHelpers'
 import { EditOutlined } from '@ant-design/icons'
 import Loading from '@components/profile/loading'
 import { useCurrentUser } from '@context/userContext'
-import { OrganizationApi } from '@helpers/request'
+import { OrganizationApi, TicketsApi } from '@helpers/request'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 
 const { Title, Text, Paragraph } = Typography
@@ -23,6 +23,7 @@ const EventOrganization = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [isVisibleRegister, setIsVisibleRegister] = useState(false)
   const [organizationUser, setOrganizationUser] = useState(null)
+  const [myEvents, setMyEvents] = useState([])
 
   const [isAdminUser, setIsAdminUser] = useState(false)
 
@@ -44,7 +45,7 @@ const EventOrganization = () => {
       }
       console.log('5. positionId', positionId, 'orgId', orgId)
       helperDispatch({
-        type: 'showRegister',
+        type: 'showLogin',
         visible: true,
         idOrganization: orgId,
         defaultPositionId: positionId,
@@ -75,6 +76,13 @@ const EventOrganization = () => {
       console.debug('EventOrganization member rol:', orgUser?.rol)
       setIsAdminUser(orgUser?.rol?.type === 'admin')
     })
+
+    let load_minetickets = async () => {
+      let MyEvents = await TicketsApi.getAll()
+      setMyEvents(MyEvents)
+      console.log('mis eventos', MyEvents)
+    }
+    load_minetickets()
   }, [cUser.value, orgId])
 
   // Obtener los datos necesarios de la organización
@@ -226,17 +234,26 @@ const EventOrganization = () => {
                 <Title level={2}>Disponibles</Title>
               </Badge>
               <Row gutter={[16, 16]}>
+                {console.log('events', lastEvents)}
+
                 {lastEvents?.length > 0 ? (
                   lastEvents.map((event, index) => (
-                    <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
-                      <EventCard
-                        noDates
-                        bordered={false}
-                        key={event._id}
-                        event={event}
-                        action={{ name: 'Ver', url: `landing/${event._id}` }}
-                      />
-                    </Col>
+                    <>
+                      {/*  Si el curso es privado y no estoy inscrito no se ve en el listado de la organización*/}
+                      {(event.visibility != 'PRIVATE' ||
+                        myEvents.filter((mye) => mye.event_id == event._id).length >
+                          0) && (
+                        <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
+                          <EventCard
+                            noDates
+                            bordered={false}
+                            key={event._id}
+                            event={event}
+                            action={{ name: 'Ver', url: `landing/${event._id}` }}
+                          />
+                        </Col>
+                      )}
+                    </>
                   ))
                 ) : (
                   <div

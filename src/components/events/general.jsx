@@ -713,6 +713,7 @@ class General extends Component {
         <Form onFinish={this.submit} {...formLayout}>
           <Header
             title="Datos del curso"
+            back
             save
             form
             remove={this.deleteEvent}
@@ -1060,15 +1061,16 @@ class General extends Component {
                   <Form.Item
                     label={
                       <label style={{ marginTop: '2%' }}>
-                        Imagen general - miniatura del curso
+                        Elige una imagen para la miniatura del curso desde el escritorio o
+                        una carpeta. Tamaño recomendado 1440x960 px.
                       </label>
                     }
                   >
                     <ImageUploaderDragAndDrop
                       imageDataCallBack={(imageUrl) => this.handleImage(imageUrl)}
                       imageUrl={image}
-                      width="1080"
-                      height="1080"
+                      width="1440"
+                      height="960"
                     />
                   </Form.Item>
 

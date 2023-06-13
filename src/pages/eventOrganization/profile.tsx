@@ -84,7 +84,7 @@ function OrganizationInformation(props: { org: any }) {
   return (
     <div>
       <Form {...formLayout} name="nest-messages" onFinish={updateOrganization}>
-        <Header title="Información" save form />
+        <Header title="Información" back save form />
 
         <Tabs defaultActiveKey="1">
           <Tabs.TabPane tab="General" key="1">
