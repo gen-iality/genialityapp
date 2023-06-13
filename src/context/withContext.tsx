@@ -11,7 +11,9 @@ export type EviusContextProps = {
   cHelper: any
 }
 
-export type WithEviusContextProps<T> = T & EviusContextProps
+export type WithEviusContextProps<T = undefined> = T extends undefined
+  ? EviusContextProps
+  : T & EviusContextProps
 
 // eslint-disable-next-line no-undef
 export default function WithEviusContext<K>(
