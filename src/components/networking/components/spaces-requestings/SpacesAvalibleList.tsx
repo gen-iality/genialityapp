@@ -8,7 +8,7 @@ import { IFormRequestSpace } from './interfaces/space-avalible.interfaces';
 import { useIntl } from 'react-intl';
 import { useGetMultiDate } from '@/hooks/useGetMultiDate';
 import { UseEventContext } from '@/context/eventContext';
-import useGetSpaces from '../../hooks/useGetSpaces';
+import useGetGenerateSpaces from '../../hooks/useGetGenerateSpaces';
 interface ListSpacesAvalibleProps {
   date: Moment;
   targetUserName: string;
@@ -32,7 +32,7 @@ const SpacesAvalibleList = ({
   const [clickedIndices, setClickedIndices] = useState<number>(-1);
   const eventContext = UseEventContext();
   const { multiDates } = useGetMultiDate(eventContext.value._id)
-  const { spacesMeetingsToTargedUser, spacesMeetingsToTargedUserLoading } = useGetSpaces(
+  const { spacesMeetingsToTargedUser, spacesMeetingsToTargedUserLoading } = useGetGenerateSpaces(
     date,
     targetEventUserId,
     creatorEventUserId

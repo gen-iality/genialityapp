@@ -9,7 +9,7 @@ import { generateSpacesByDataRange } from '../utils/space-requesting.utils';
 
 
 
-const useGetSpaces = (date: Moment, targetEventUserId: string, creatorEventUserId: string) => {
+const useGetGenerateSpaces = (date: Moment, targetEventUserId: string, creatorEventUserId: string) => {
     const eventContext = UseEventContext();
     const [spacesMeetingsToTargedUserLoading, setspacesMeetingsToTargedUserLoading] = useState(true)
     const [requestMeetings, setRequestMeetings] = useState<IMeetingRequestFirebase[]>([])
@@ -48,4 +48,4 @@ const useGetSpaces = (date: Moment, targetEventUserId: string, creatorEventUserI
     }
 }
 
-export default useGetSpaces
+export default useGetGenerateSpaces
