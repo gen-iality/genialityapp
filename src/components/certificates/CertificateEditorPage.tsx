@@ -54,11 +54,19 @@ const RequirementConfigField: FunctionComponent<{
 }> = (props) => {
   const { value, onChange } = props
 
-  const [loadedValue] = useState<CertificateRequirementConfigType>({
-    completion: value?.completion ?? 0,
-    enable: !!value?.enable,
-    ignore_activity_type: value?.ignore_activity_type ?? [],
+  const [loadedValue, setLoadedValue] = useState<CertificateRequirementConfigType>({
+    completion: 0,
+    enable: false,
+    ignore_activity_type: [],
   })
+
+  useEffect(() => {
+    setLoadedValue({
+      completion: value?.completion ?? 0,
+      enable: !!value?.enable,
+      ignore_activity_type: value?.ignore_activity_type ?? [],
+    })
+  }, [value])
 
   const hanndleChange = (updates: CertificateRequirementConfigType) => {
     if (typeof onChange !== 'function') return
@@ -75,7 +83,15 @@ const RequirementConfigField: FunctionComponent<{
             if (value === undefined) return 0
             return parseInt(value.replace('%', ''))
           }}
-          onChange={(value) => hanndleChange({ ...loadedValue, completion: value ?? 0 })}
+          onChange={(value) => {
+            const newValue: CertificateRequirementConfigType = {
+              ...loadedValue,
+              completion: value ?? 0,
+              enable: true,
+            }
+            setLoadedValue(newValue)
+            hanndleChange(newValue)
+          }}
         />
       </Form.Item>
       <Form.Item {...formLayout} label="Tipo de contenido ignorado">
@@ -86,9 +102,15 @@ const RequirementConfigField: FunctionComponent<{
             label: v,
             value: v,
           }))}
-          onChange={(value) =>
-            hanndleChange({ ...loadedValue, ignore_activity_type: value })
-          }
+          onChange={(value) => {
+            const newValue: CertificateRequirementConfigType = {
+              ...loadedValue,
+              ignore_activity_type: value,
+              enable: true,
+            }
+            setLoadedValue(newValue)
+            hanndleChange(newValue)
+          }}
         />
       </Form.Item>
     </>
