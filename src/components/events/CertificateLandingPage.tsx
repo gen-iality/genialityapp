@@ -1,32 +1,10 @@
-import { useEffect, useState, createElement, useMemo, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import dayjs from 'dayjs'
-import {
-  Row,
-  Col,
-  Card,
-  Spin,
-  Alert,
-  Button,
-  Modal,
-  Typography,
-  Form,
-  Select,
-} from 'antd'
+import { Row, Col, Alert, Button, Modal, Typography, Form, Select } from 'antd'
 import withContext, { WithEviusContextProps } from '@context/withContext'
-import {
-  AgendaApi,
-  CertsApi,
-  OrganizationApi,
-  RolAttApi,
-  SurveysApi,
-} from '@helpers/request'
-import { SurveyData } from '@components/events/surveys/types'
-import useAsyncPrepareQuizStats from '../quiz/useAsyncPrepareQuizStats'
+import { CertsApi, OrganizationApi, RolAttApi } from '@helpers/request'
 import { DownloadOutlined, LoadingOutlined } from '@ant-design/icons'
 
-import { activityContentValues } from '@context/activityType/constants/ui'
-
-import AgendaType from '@Utilities/types/AgendaType'
 import {
   defaultCertificateBackground,
   defaultCertRows,
@@ -35,28 +13,13 @@ import { CertRow, Html2PdfCerts, Html2PdfCertsRef } from 'html2pdf-certs'
 import 'html2pdf-certs/dist/styles.css'
 import CertificateType from '@Utilities/types/CertificateType'
 import { replaceAllTagValues } from '@components/certificates/utils/replaceAllTagValues'
-import { FB } from '@helpers/firestore-request'
-import { useEventContext } from '@context/eventContext'
-import { useEventProgress } from '@context/eventProgressContext'
 
-type CurrentEventAttendees = any // TODO: define this type and move to @Utilities/types/
+import { useEventProgress } from '@context/eventProgressContext'
 
 const initContent: string = JSON.stringify(defaultCertRows)
 
 function CertificateLandingPage(props: WithEviusContextProps) {
-  const { cEvent, cEventUser, cUser } = props
-
-  const [wereEvaluationsPassed, setWereEvaluationsPassed] = useState<boolean | undefined>(
-    undefined,
-  )
-  const [thereAreEvaluations, setThereAreEvaluations] = useState<boolean | undefined>(
-    undefined,
-  )
-
-  const [activitiesAttendee, setActivitiesAttendee] = useState<CurrentEventAttendees[]>(
-    [],
-  )
-  const [allActivities, setAllActivities] = useState<AgendaType[]>([])
+  const { cEvent, cEventUser } = props
 
   const [isGenerating, setIsGenerating] = useState(false)
   const [certificateData, setCertificateData] = useState<CertificateType>({
@@ -91,130 +54,6 @@ function CertificateLandingPage(props: WithEviusContextProps) {
     )
     return orgMember?.properties || {}
   }
-
-  // /**
-  //  * Generate the certificate.
-  //  *
-  //  * If you pass false in dryRun, a real certificate will be generated.
-  //  *
-  //  * @param dataUser The user data. Generally it is taken from the eventUser.
-  //  * @param dryRun true if you only want to show the certificate preview.
-  //  */
-  // const generateCert = async (dataUser: any, dryRun: boolean = false) => {
-  //   const extraOrgMemberProperties = await getOrgMemberProperties(dataUser)
-
-  //   dataUser = {
-  //     ...dataUser,
-  //     properties: {
-  //       ...dataUser.properties,
-  //       ...extraOrgMemberProperties,
-  //     },
-  //   }
-
-  //   let modal: null | ReturnType<typeof Modal.success> = null
-  //   if (!dryRun) {
-  //     modal = Modal.success({
-  //       title: 'Generando certificado',
-  //       content: <Spin>Espera</Spin>,
-  //     })
-  //   }
-
-  //   const certs = await CertsApi.byEvent(cEvent.value._id)
-  //   setAvailableCerts(certs)
-
-  //   const roles = await RolAttApi.byEvent(cEvent.value._id)
-  //   const currentEvent = { ...cEvent.value }
-  //   currentEvent.datetime_from = dayjs(currentEvent.datetime_from).format('DD/MM/YYYY')
-  //   currentEvent.datetime_to = dayjs(currentEvent.datetime_to).format('DD/MM/YYYY')
-
-  //   //Por defecto se trae el certificado sin rol
-  //   let rolCert: CertificateType | undefined = certs.find((cert: any) => !cert.rol_id)
-  //   //Si el asistente tiene rol_id y este corresponde con uno de los roles attendees, encuentra el certificado ligado
-  //   const rolValidation = roles.find((rol: any) => rol._id === dataUser.rol_id)
-  //   if (rolValidation) {
-  //     if (dataUser.rol_id) {
-  //       rolCert = certs.find((cert: any) => cert.rol._id === dataUser.rol_id)
-  //     }
-  //   }
-  //   (rolCert)
-
-  //   let currentCertRows: CertRow[] = defaultCertRows
-  //   console.debug('rolCert', { rolCert })
-  //   if (rolCert?.content) {
-  //     console.log('parse cert content from DB-saved')
-  //     currentCertRows = JSON.parse(rolCert?.content) as CertRow[]
-  //   }
-
-  //   // Put the user's data in the cert rows to print
-  //   const newCertRows = replaceAllTagValues(
-  //     currentEvent,
-  //     dataUser,
-  //     roles,
-  //     currentCertRows,
-  //   )
-
-  //   setCertificateData({
-  //     ...certificateData,
-  //     ...(rolCert || {}),
-  //     background:
-  //       rolCert?.background ?? certificateData.background ?? defaultCertificateBackground,
-  //   })
-  //   setFinalCertRows(newCertRows)
-
-  //   if (!dryRun) {
-  //     if (rolCert) {
-  //       setReadyCertToGenerate(rolCert)
-  //     } else {
-  //       console.warn('rolCert is undefined, create a cert in the CMS please')
-  //     }
-
-  //     modal && modal.destroy()
-  //   } else {
-  //     console.log('nothing was created because the dry-run mode is on')
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   if (!cUser?.value?._id) return
-  //   if (!cEvent?.value?._id) return // Take data to the evaluation certificates
-  //   ;(async () => {
-  //     const surveys: SurveyData[] = await SurveysApi.byEvent(cEvent?.value?._id)
-
-  //     let passed = 0
-  //     let notPassed = 0
-
-  //     for (let i = 0; i < surveys.length; i++) {
-  //       const survey: SurveyData = surveys[i] as never
-  //       const stats = await useAsyncPrepareQuizStats(
-  //         cEvent?.value?._id,
-  //         survey._id!,
-  //         cUser?.value?._id,
-  //         survey,
-  //       )
-
-  //       console.debug('stats', stats)
-  //       if (stats.minimum > 0) {
-  //         if (stats.right >= stats.minimum) {
-  //           passed = passed + 1
-  //         } else {
-  //           notPassed = notPassed + 1
-  //         }
-  //       }
-  //     }
-
-  //     console.debug('1. passed', passed)
-  //     console.debug('1. surveys.length', surveys.length)
-
-  //     if (surveys.length === 0) {
-  //       setThereAreEvaluations(false)
-  //     } else setThereAreEvaluations(true)
-
-  //     if (passed === surveys.length) {
-  //       setWereEvaluationsPassed(true)
-  //     } else {
-  //       setWereEvaluationsPassed(false)
-  //     }
-  //   })()
 
   const generatePdfCertificate = () => {
     if (!selectedCertificateToDownload) {
@@ -281,7 +120,7 @@ function CertificateLandingPage(props: WithEviusContextProps) {
     _filteredCertificates = _filteredCertificates.filter((cert) => {
       // If no problem, no problem
       if (cert.requirement_config === undefined || !cert.requirement_config.enable) {
-        console.log('cert', cert.name, 'has no requirement config')
+        console.log(`cert ${cert.name} has no requirement config`)
         return true
       }
 
@@ -299,29 +138,25 @@ function CertificateLandingPage(props: WithEviusContextProps) {
         (activity) => !activityTypeToIgnore.includes(activity.type?.name as any),
       )
       const reCalcedProgress = cEventProgress.calcProgress(
-        reFilteredActivities.length,
         cEventProgress.getAttendeesForActivities(
           reFilteredActivities.map((activity) => activity._id!),
         ).length,
+        reFilteredActivities.length,
       )
-      console.debug('recalc the progress got:', {
+      console.debug('recalc the event progress and got:', {
         activityTypeToIgnore,
         reFilteredActivities,
         reCalcedProgress,
       })
-      if (reCalcedProgress > (cert.requirement_config.completion ?? 0)) {
+      if ((cert.requirement_config.completion ?? 0) > reCalcedProgress) {
         console.log(
-          'cert',
-          cert.name,
-          'has completion under progress:',
+          `cert ${cert.name} has completion over progress:`,
           cert.requirement_config.completion,
         )
         return true
       }
       console.log(
-        'cert',
-        cert.name,
-        'has completion over progress:',
+        `cert ${cert.name} has completion under progress:`,
         cert.requirement_config.completion,
       )
       return false
@@ -364,23 +199,41 @@ function CertificateLandingPage(props: WithEviusContextProps) {
       currentCertRows = JSON.parse(selectedCertificateToDownload?.content) as CertRow[]
     }
 
-    // Put the user's data in the cert rows to print
-    const newCertRows = replaceAllTagValues(
-      cEvent.value,
-      cEventUser.value,
-      roles,
-      currentCertRows,
-    )
+    getOrgMemberProperties(cEventUser.value).then((extraOrgMemberProperties) => {
+      const newUserDataWithInjection = {
+        ...cEventUser.value,
+        properties: {
+          ...cEventUser.value.properties,
+          ...extraOrgMemberProperties,
+        },
+      }
 
-    setCertificateData({
-      ...certificateData,
-      ...(selectedCertificateToDownload || {}),
-      background:
-        selectedCertificateToDownload?.background ??
-        certificateData.background ??
-        defaultCertificateBackground,
+      const eventWithDateOfToday = { ...cEvent.value }
+      eventWithDateOfToday.datetime_from = dayjs(
+        eventWithDateOfToday.datetime_from,
+      ).format('DD/MM/YYYY')
+      eventWithDateOfToday.datetime_to = dayjs(eventWithDateOfToday.datetime_to).format(
+        'DD/MM/YYYY',
+      )
+
+      // Put the user's data in the cert rows to print
+      const newCertRows = replaceAllTagValues(
+        eventWithDateOfToday,
+        newUserDataWithInjection,
+        roles,
+        currentCertRows,
+      )
+
+      setCertificateData({
+        ...certificateData,
+        ...(selectedCertificateToDownload || {}),
+        background:
+          selectedCertificateToDownload?.background ??
+          certificateData.background ??
+          defaultCertificateBackground,
+      })
+      setFinalCertRows(newCertRows)
     })
-    setFinalCertRows(newCertRows)
   }, [selectedCertificateToDownload])
 
   if (availableCerts.length === 0) {
