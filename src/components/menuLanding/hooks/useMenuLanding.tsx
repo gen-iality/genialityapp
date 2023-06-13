@@ -89,9 +89,9 @@ export default function useMenuLanding(props: MenuLandingProps) {
     } else {
       let updateOrganization: { _id: string; itemsMenu: Record<string, MenuItem> } = {
         ...organizationObj,
-        itemsMenu: { ...menuToSubmit },
+        itemsMenu: newMenu.itemsMenu,
       };
-      await OrganizationApi.editMenu({ itemsMenu: menuToSubmit }, updateOrganization._id);
+      await OrganizationApi.editMenu({ itemsMenu: newMenu.itemsMenu }, updateOrganization._id);
     }
     DispatchMessageService({
       key: 'loading',
