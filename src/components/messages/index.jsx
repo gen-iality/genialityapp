@@ -12,7 +12,9 @@ function Messages(props) {
         <Route
           exact
           path={`${match.url}/`}
-          render={() => <InvitationsList eventId={props.event._id} />}
+          render={() => (
+            <InvitationsList eventId={props.event._id} matchUrl={match.url} />
+          )}
           event={props.event}
           matchUrl={match.url}
           {...props}
