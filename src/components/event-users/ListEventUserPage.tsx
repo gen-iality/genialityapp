@@ -60,6 +60,7 @@ import { useIntl } from 'react-intl'
 import LessonsInfoModal from './LessonsInfoModal'
 import { FB } from '@helpers/firestore-request'
 import EventProgressWrapper from '@/wrappers/EventProgressWrapper'
+import EnrollEventUserFromOrganizationMember from './EnrollEventUserFromOrganizationMember'
 
 interface ITimeTrackingStatsProps {
   user: any
@@ -114,6 +115,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
 
   const [isProgressingModalOpened, setIsProgressingModalOpened] = useState(false)
   const [isRegistrationModalOpened, setIsRegistrationModalOpened] = useState(false)
+  const [isEnrollingModalOpened, setIsEnrollingModalOpened] = useState(false)
   const [watchedUserInProgressingModal, setWatchedUserInProgressingModal] =
     useState<any>()
 
@@ -576,7 +578,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
                 type="primary"
                 icon={<PlusCircleOutlined />}
                 size="middle"
-                onClick={() => setIsRegistrationModalOpened(true)}
+                onClick={() => setIsEnrollingModalOpened(true)}
                 disabled={
                   !Boolean(
                     'legacy checked if the event is active (eventIsActive) via HelperContext',
@@ -585,6 +587,13 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
               >
                 Agregar usuario
               </Button>
+              {isEnrollingModalOpened && (
+                <EnrollEventUserFromOrganizationMember
+                  eventId={event._id}
+                  orgId={event.organizer._id}
+                  onClose={() => setIsEnrollingModalOpened(false)}
+                />
+              )}
             </Col>
           </Row>
         )}
