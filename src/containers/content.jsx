@@ -104,7 +104,11 @@ const ContentContainer = () => {
           <RouteContext
             exact
             path="/organization/:id/events"
-            component={EventOrganization}
+            component={(props) => (
+              <OrganizationPaymentProvider>
+                <EventOrganization {...props} />
+              </OrganizationPaymentProvider>
+            )}
           />
           <RouteContext
             exact

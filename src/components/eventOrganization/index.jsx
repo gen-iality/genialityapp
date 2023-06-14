@@ -1,5 +1,5 @@
 import { Col, Row, Typography, Badge, Space, Divider, Image, Empty, Button } from 'antd'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { OrganizationFuction } from '@helpers/request'
 import EventCard from '../shared/eventCard'
@@ -14,6 +14,7 @@ import usePaymentStatehandler from '../../payments/usePaymentStatehandler'
 import PaymentConfirmaationModal from '../../payments/PaymentConfirmaationModal'
 import PaymentSuccessModal from '../../payments/PaymentSuccessModal'
 import PaymentModal from '../../payments/PaymentModal'
+import OrganizationPaymentContext from '@/payments/OrganizationPaymentContext'
 const { Title, Text, Paragraph } = Typography
 
 const EventOrganization = () => {
@@ -33,7 +34,9 @@ const EventOrganization = () => {
   const cUser = useCurrentUser()
   const { helperDispatch } = useHelper()
 
-  const [paymentState, paymentDispatch] = usePaymentStatehandler()
+  const { dispatch: paymentDispatch, ...paymentState } = useContext(
+    OrganizationPaymentContext,
+  )
 
   useEffect(() => {
     if (orgId) {
