@@ -21,7 +21,6 @@ import {
   Col,
   Drawer,
   Image,
-  List,
   Row,
   Statistic,
   Typography,
@@ -30,8 +29,6 @@ import {
   Space,
   Tooltip,
   Select,
-  Modal,
-  Checkbox,
   Spin,
 } from 'antd'
 
@@ -46,7 +43,6 @@ import {
   SearchOutlined,
   UsergroupAddOutlined,
   StarOutlined,
-  CheckOutlined,
 } from '@ant-design/icons'
 import QrModal from './qrModal'
 
@@ -62,8 +58,9 @@ import { UsersPerEventOrActivity } from './utils/utils'
 import LessonsInfoModal from './LessonsInfoModal'
 import { FB } from '@helpers/firestore-request'
 import EventProgressWrapper from '@/wrappers/EventProgressWrapper'
+import EnrollEventUserFromOrganizationMember from './EnrollEventUserFromOrganizationMember'
 
-const { Title, Text } = Typography
+const { Title } = Typography
 const { Option } = Select
 
 const TimeTrackingStats = ({ user }) => {
@@ -1269,7 +1266,7 @@ class ListEventUser extends Component {
                 </Link>
               </Col>
               <Col>
-                <Button
+                {/* <Button
                   type="primary"
                   icon={<PlusCircleOutlined />}
                   size="middle"
@@ -1279,7 +1276,25 @@ class ListEventUser extends Component {
                   }
                 >
                   Agregar usuario
+                </Button> */}
+                <Button
+                  icon={<PlusCircleOutlined />}
+                  type="primary"
+                  size="middle"
+                  onClick={() => this.setState({ btn: true })}
+                  disabled={
+                    !eventIsActive && window.location.toString().includes('eventadmin')
+                  }
+                >
+                  Agregar usuario
                 </Button>
+                {this.state.btn && (
+                  <EnrollEventUserFromOrganizationMember
+                    eventId={this.props.event._id}
+                    orgId={this.props.event.organizer._id}
+                    onClose={() => this.setState({ btn: false })}
+                  />
+                )}
               </Col>
             </Row>
           }
