@@ -9,7 +9,7 @@
 import { Avatar, Button, Comment, List, Modal, Result, Tabs } from 'antd'
 import { FunctionComponent, useEffect, useState } from 'react'
 import RegisterUserAndEventUser from '@components/authentication/RegisterUserAndEventUser'
-import { OrganizationApi } from '@helpers/request'
+import { AttendeeApi, OrganizationApi } from '@helpers/request'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import { UsersApi } from '@helpers/request'
 import { StateMessage } from '@context/MessageService'
@@ -41,10 +41,12 @@ const EnrollEventUserFromOrganizationMember: FunctionComponent<
   const { eventId, orgId, onClose = () => {} } = props
 
   const [isLoadingOrgMembers, setIsLoadingOrgMembers] = useState(false)
+  const [isLoadingEventUsers, setIsLoadingEventUsers] = useState(false)
   const [thisOrganizationMemberIsEnrolling, setThisOrganizationMemberIsEnrolling] =
     useState<string | undefined>()
   const [isModalOpened, setIsModalOpened] = useState(false)
   const [orgMembers, setOrgMembers] = useState<any[]>([])
+  const [eventUsers, setEventUsers] = useState<any[]>([])
   const [canEnrollFromOrganization, setCanEnrollFromOrganization] = useState(false)
 
   const intl = useIntl()
@@ -55,12 +57,27 @@ const EnrollEventUserFromOrganizationMember: FunctionComponent<
     setOrgMembers(orgUsers)
   }
 
+  const loadEventUsers = async () => {
+    const attendees = await AttendeeApi.getAll(eventId)
+    console.log('attendees:', attendees)
+    setEventUsers(attendees)
+  }
+
   const reloadOrganizationMember = () => {
     if (orgId) {
       setIsLoadingOrgMembers(true)
       loadOrganizationMember().finally(() => setIsLoadingOrgMembers(false))
     } else {
       setCanEnrollFromOrganization(true)
+    }
+  }
+
+  const reloadEventUsers = () => {
+    if (eventId) {
+      setIsLoadingEventUsers(true)
+      loadEventUsers().finally(() => setIsLoadingEventUsers(false))
+    } else {
+      setIsLoadingEventUsers(false)
     }
   }
 
@@ -101,6 +118,7 @@ const EnrollEventUserFromOrganizationMember: FunctionComponent<
     setIsModalOpened(true)
 
     reloadOrganizationMember()
+    reloadEventUsers()
   }, [orgId])
 
   return (
