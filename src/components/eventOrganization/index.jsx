@@ -115,6 +115,24 @@ const EventOrganization = () => {
     }
   }
 
+  useEffect(() => {
+    if (!organization || !organizationUser) return
+    if (organization.access_settings?.type === 'payment') {
+      console.log('organizationUser', organizationUser)
+      if (
+        organizationUser.payment_plan /* && organizationUser.payment_plan.date_until < Date.now() */
+      ) {
+        // Nothing, ok
+        console.log('This organization has paid access - the user too')
+      } else {
+        paymentDispatch({ type: 'REQUIRE_PAYMENT' })
+        console.log('This organization has paid access - the user CAN NOT')
+      }
+    } else {
+      console.log('This organization has free access :))))')
+    }
+  }, [organization, organizationUser])
+
   return (
     <div
       style={{
