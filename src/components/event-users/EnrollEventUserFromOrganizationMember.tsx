@@ -51,7 +51,7 @@ const EnrollEventUserFromOrganizationMember: FunctionComponent<
 
   const intl = useIntl()
 
-  const loadOrganizationMember = async () => {
+  const loadOrganizationMembers = async () => {
     const { data: orgUsers } = await OrganizationApi.getUsers(orgId)
     console.log('orgUsers', orgUsers)
     setOrgMembers(orgUsers)
@@ -63,10 +63,10 @@ const EnrollEventUserFromOrganizationMember: FunctionComponent<
     setEventUsers(attendees)
   }
 
-  const reloadOrganizationMember = () => {
+  const reloadOrganizationMembers = () => {
     if (orgId) {
       setIsLoadingOrgMembers(true)
-      loadOrganizationMember().finally(() => setIsLoadingOrgMembers(false))
+      loadOrganizationMembers().finally(() => setIsLoadingOrgMembers(false))
     } else {
       setCanEnrollFromOrganization(true)
     }
@@ -117,7 +117,7 @@ const EnrollEventUserFromOrganizationMember: FunctionComponent<
   useEffect(() => {
     setIsModalOpened(true)
 
-    reloadOrganizationMember()
+    reloadOrganizationMembers()
     reloadEventUsers()
   }, [orgId])
 
@@ -131,7 +131,7 @@ const EnrollEventUserFromOrganizationMember: FunctionComponent<
       }}
       footer={false}
     >
-      <Tabs onChange={() => reloadOrganizationMember()}>
+      <Tabs onChange={() => reloadOrganizationMembers()}>
         <Tabs.TabPane tab="Desde datos" key="from-data">
           <RegisterUserAndEventUser
             screens={[]}
