@@ -29,7 +29,7 @@ const PaymentModal = ({ isOpen, handleOk, handleCancel }) => {
     // @ts-ignore
     //if (window?.WidgetCheckout && money) {
     const eventId = 'asd'
-    const money = 1000
+    const money = 5000
     const price = Math.round(money) * 100
     const payload = {
       eventId,
@@ -59,6 +59,7 @@ const PaymentModal = ({ isOpen, handleOk, handleCancel }) => {
     // @ts-ignore
     checkout.open((result) => {
       console.log({ result })
+      alert('nos jodimos')
       //const transaction = result.transaction as Transaction;
       // console.log('Transaction ID: ', transaction.id);
       //console.log('Transaction object: ', transaction);
