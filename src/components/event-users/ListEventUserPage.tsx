@@ -199,7 +199,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
     setAllActivities(eventActivities.data)
 
     const newSimplifyOrgProperties = (org.user_properties || []).filter(
-      (property: any[]) => !['email', 'password', 'names'].includes(property.name),
+      (property: any) => !['email', 'password', 'names'].includes(property.name),
     )
     const newRolesList: any[] = await RolAttApi.byEventRolsGeneral()
     const newBadgeEvent = await BadgeApi.get(event._id)
