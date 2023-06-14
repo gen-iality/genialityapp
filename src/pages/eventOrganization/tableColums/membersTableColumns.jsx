@@ -4,7 +4,12 @@ import { useHistory } from 'react-router'
 
 /** Antd imports */
 import { Tooltip, Button, Row, Col, Popover, Image, Avatar, Empty, Spin } from 'antd'
-import { ClockCircleOutlined, EditOutlined, UserOutlined } from '@ant-design/icons'
+import {
+  ClockCircleOutlined,
+  EditOutlined,
+  RiseOutlined,
+  UserOutlined,
+} from '@ant-design/icons'
 
 /** Helpers and utils */
 import { membersGetColumnSearchProps } from '../searchFunctions/membersGetColumnSearchProps'
@@ -15,6 +20,7 @@ export const columns = (
   extraFields,
   userActivities,
   isStaticsLoading,
+  togglePaymentPlan,
 ) => {
   const history = useHistory()
   const [columns, setColumns] = useState([])
@@ -136,6 +142,16 @@ export const columns = (
                 editModalUser(item)
               }}
               icon={<EditOutlined />}
+            ></Button>
+          </Tooltip>
+          <Tooltip title={item.payment_plan ? 'Quitar premium' : 'Hace premium'}>
+            <Button
+              type={item.payment_plan ? 'ghost' : 'primary'}
+              size="small"
+              onClick={() => {
+                togglePaymentPlan(item)
+              }}
+              icon={<RiseOutlined />}
             ></Button>
           </Tooltip>
         </>
