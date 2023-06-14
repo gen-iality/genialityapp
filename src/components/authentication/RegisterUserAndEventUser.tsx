@@ -12,7 +12,6 @@ import createNewUser, { CREATE_NEW_USER_SUCCESS } from './ModalsFunctions/create
 import { useIntl } from 'react-intl'
 import { useEventContext } from '@context/eventContext'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
-import { StateMessage } from '@context/MessageService'
 
 const { Step } = Steps
 
@@ -67,29 +66,13 @@ const RegisterUserAndEventUser = ({
     setButtonStatus(status)
   }
 
-  const HandleHookForm = (e: any, fieldName: string, picture: any) => {
-    let value = ''
-    if (fieldName === 'picture') {
-      value = picture
-    } else {
-      value = e.target.value
-    }
+  const formDataHandler = (e: any, fieldName: string, picture: any) => {
+    const value = fieldName === 'picture' ? picture : e.target.value
 
-    if (current === 0) {
-      if (fieldName === 'picture') {
-        setBasicDataUser({ ...basicDataUser, [fieldName]: picture })
-      } else {
-        setBasicDataUser({
-          ...basicDataUser,
-          [fieldName]: value,
-        })
-      }
-    } else {
-      setDataEventUser({
-        ...dataEventUser,
-        [fieldName]: value,
-      })
-    }
+    setBasicDataUser((previous: any) => ({
+      ...previous,
+      [fieldName]: value,
+    }))
   }
 
   const onSubmit = (values: any) => {
@@ -100,7 +83,7 @@ const RegisterUserAndEventUser = ({
     {
       title: 'First',
       content: (
-        <RegisterFast basicDataUser={basicDataUser} formDataHandler={HandleHookForm} />
+        <RegisterFast basicDataUser={basicDataUser} formDataHandler={formDataHandler} />
       ),
       icon: <AccountOutlineIcon style={{ fontSize: '32px' }} />,
     },
@@ -111,7 +94,7 @@ const RegisterUserAndEventUser = ({
           hookValidations={hookValidations}
           dataEventUser={dataEventUser}
           basicDataUser={basicDataUser}
-          HandleHookForm={HandleHookForm}
+          HandleHookForm={formDataHandler}
           validateEventUser={validateEventUser}
           setvalidateEventUser={setValidateEventUser}
         />
@@ -232,8 +215,8 @@ const RegisterUserAndEventUser = ({
           setBasicDataUser({})
           setDataEventUser({})
         }
-      } catch (err) {
-        console.error('errorregistro', { err: err })
+      } catch (err: any) {
+        console.error('errorregistro', { err })
 
         if (err.response) {
           setValidationGeneral({

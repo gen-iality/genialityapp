@@ -13,6 +13,7 @@ import {
 import { useEventContext } from './eventContext'
 import { useUserEvent } from './eventUserContext'
 import { activityContentValues } from './activityType/constants/ui'
+import { calcProgress } from '@/wrappers/EventProgressWrapper'
 
 type AttendeeType = any
 
@@ -68,6 +69,7 @@ export const EventProgressProvider: FunctionComponent = (props) => {
     )
     console.log(`Update activities. Got ${data.length} activities`)
 
+    // TODO: This filter by whether the activity is info, should be after
     const filteredData = data.filter((activity) => !activity.is_info_only)
     setActivities(filteredData)
 
@@ -106,14 +108,6 @@ export const EventProgressProvider: FunctionComponent = (props) => {
     },
     [checkedInActivities],
   )
-
-  const calcProgress = (current: number, total: number) => {
-    if (current > total) {
-      throw new Error('The parts cannot be greater than the whole (total), flaco')
-    }
-    if (current === 0 || total === 0) return 0
-    return Math.round((current / total) * 100)
-  }
 
   const calcProgressApplyingFilter = (
     filter: (a: ExtendedAgendaType) => boolean,

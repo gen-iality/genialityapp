@@ -3,7 +3,7 @@ import { FormattedDate, FormattedTime } from 'react-intl'
 import { fireRealtime, firestore } from '@helpers/firebase'
 import { BadgeApi, EventsApi, RolAttApi } from '@helpers/request'
 import { AgendaApi, OrganizationApi } from '@helpers/request'
-import { checkinAttendeeInActivity } from '@helpers/HelperAuth'
+// import { checkinAttendeeInActivity } from '@helpers/HelperAuth'
 import ModalPassword from './ModalPassword'
 
 import UserModal from '../modal/modalUser'
@@ -22,7 +22,6 @@ import {
   Col,
   Drawer,
   Image,
-  List,
   Row,
   Statistic,
   Typography,
@@ -31,8 +30,7 @@ import {
   Space,
   Tooltip,
   Select,
-  Modal,
-  Checkbox,
+  Spin,
   message,
 } from 'antd'
 
@@ -47,7 +45,6 @@ import {
   SearchOutlined,
   UsergroupAddOutlined,
   StarOutlined,
-  CheckOutlined,
 } from '@ant-design/icons'
 import QrModal from './qrModal'
 
@@ -62,76 +59,11 @@ import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton'
 import { UsersPerEventOrActivity } from './utils/utils'
 import LessonsInfoModal from './LessonsInfoModal'
 import { FB } from '@helpers/firestore-request'
+import EventProgressWrapper from '@/wrappers/EventProgressWrapper'
+import EnrollEventUserFromOrganizationMember from './EnrollEventUserFromOrganizationMember'
 
-const { Title, Text } = Typography
+const { Title } = Typography
 const { Option } = Select
-
-const ModalWithLessonsInfo_ = ({
-  show,
-  onHidden,
-  allActivities,
-  attendee,
-  currentUser,
-}) => {
-  const [loaded, setLoaded] = useState(false)
-  const [activities, setActivities] = useState([])
-  const [shouldUpdate, setShouldUpdate] = useState(0)
-
-  useEffect(async () => {
-    if (!currentUser) return
-    if (allActivities.length == 0) return
-
-    const existentActivities = await allActivities.map(async (activity) => {
-      const activity_attendee = await FB.Attendees.get(activity._id, currentUser._id)
-      if (activity_attendee) return activity
-      return null
-    })
-    // Filter non-null result that means that the user attendees them
-    const viewedActivities = (await Promise.all(existentActivities)).filter(
-      (item) => item !== null,
-    )
-    setActivities(viewedActivities.map((activity) => activity.name))
-    setLoaded(true)
-  }, [allActivities, attendee, currentUser, shouldUpdate])
-
-  const Content = () => {
-    if (loaded) {
-      return (
-        <List
-          header={<Text strong>Lecciones vistas</Text>}
-          // bordered
-          dataSource={allActivities}
-          renderItem={(item) => (
-            <List.Item>
-              {activities.filter((activityname) => activityname == item.name).length ? (
-                <CheckOutlined />
-              ) : (
-                <Checkbox
-                  onChange={async () => {
-                    await checkinAttendeeInActivity(currentUser, item._id)
-                    setShouldUpdate((value) => value + 1)
-                  }}
-                />
-              )}{' '}
-              {item.name}
-            </List.Item>
-          )}
-        />
-      )
-      // return (activities.map((activity) => <p>{activity}</p>));
-    }
-
-    return <p>Cargando...</p>
-  }
-
-  return (
-    <Modal centered footer={null} visible={show} closable onCancel={onHidden}>
-      <Space direction="vertical">
-        <Content />
-      </Space>
-    </Modal>
-  )
-}
 
 const TimeTrackingStats = ({ user }) => {
   const [timing, setTiming] = useState(0)
@@ -161,50 +93,6 @@ const TimeTrackingStats = ({ user }) => {
   }, [user])
 
   return <>{timing.toFixed(2)} horas</>
-}
-
-const ColumnProgreso = ({
-  shownAll,
-  item,
-  allActivities,
-  onOpen,
-  updateAttendee,
-  updateCurrentUser,
-  ...props
-}) => {
-  const [attendee, setAttendee] = useState([])
-  const [shouldUpdate, setShouldUpdate] = useState(0)
-  useEffect(async () => {
-    // Get all existent activities, after will filter it
-    const existentActivities = await allActivities.map(async (activity) => {
-      const activity_attendee = await FB.Attendees.get(activity._id, item._id)
-      if (activity_attendee) return activity
-      return null
-    })
-    // Filter non-null result that means that the user attendees them
-    const gotAttendee = (await Promise.all(existentActivities)).filter(
-      (item) => item !== null,
-    )
-    setAttendee(gotAttendee)
-  }, [shouldUpdate])
-
-  if (!onOpen) onOpen = () => {}
-
-  if (shownAll) {
-    return (
-      <Button
-        onClick={() => {
-          updateAttendee(attendee)
-          updateCurrentUser(item)
-          setShouldUpdate((previus) => previus + 1)
-          onOpen()
-        }}
-      >
-        {`${attendee.length || 0}/${allActivities.length || 0}`}
-      </Button>
-    )
-  }
-  return <>{attendee.length > 0 ? 'Visto' : 'No visto'}</>
 }
 
 class ListEventUser extends Component {
@@ -627,14 +515,27 @@ and displays an error message using the `message` component from the antd librar
         sorter: (a, b) => true,
         render: (text, item, index) => (
           <>
-            <ColumnProgreso
-              shownAll={this.props.shownAll}
-              item={item}
-              onOpen={() => this.setState({ showModalOfProgress: true })}
-              updateAttendee={(attendee) => this.setState({ attendee })}
-              updateCurrentUser={(user) => this.setState({ currentUser: user })}
-              index={index}
-              allActivities={allActivities}
+            <EventProgressWrapper
+              event={this.props.event}
+              eventUser={item}
+              render={({ isLoading, activities, checkedInActivities }) => (
+                <>
+                  {isLoading && <Spin />}
+                  {this.props.shownAll ? (
+                    <Button
+                      onClick={() => {
+                        this.setState({
+                          attendee: checkedInActivities,
+                          currentUser: item,
+                          showModalOfProgress: true,
+                        })
+                      }}
+                    >{`${checkedInActivities.length}/${activities.length}`}</Button>
+                  ) : (
+                    <>{checkedInActivities.length > 0 ? 'Visto' : 'No visto'}</>
+                  )}
+                </>
+              )}
             />
           </>
         ),
@@ -738,7 +639,7 @@ and displays an error message using the `message` component from the antd librar
           for (let i = 0; i < updatedAttendees.length; i++) {
             // Arreglo temporal para que se muestre el listado de usuarios sin romperse
             // algunos campos no son string y no se manejan bien
-            extraFields.forEach(function(key) {
+            extraFields.forEach(function (key) {
               if (
                 !(
                   (updatedAttendees[i][key.name] &&
@@ -1142,10 +1043,7 @@ and displays an error message using the `message` component from the antd librar
     ),
     onFilter: (value, record) =>
       record[dataIndex]
-        ? record[dataIndex]
-            .toString()
-            .toLowerCase()
-            .includes(value.toLowerCase())
+        ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
         : '',
     onFilterDropdownVisibleChange: (visible) => {
       if (visible) {
@@ -1229,15 +1127,6 @@ and displays an error message using the `message` component from the antd librar
 
     return (
       <>
-        {/* <ModalWithLessonsInfo
-          show={this.state.showModalOfProgress}
-          onHidden={() => {
-            this.setState({ showModalOfProgress: false })
-          }}
-          allActivities={this.state.allActivities}
-          attendee={this.state.attendee}
-          currentUser={this.state.currentUser}
-        /> */}
         <LessonsInfoModal
           show={this.state.showModalOfProgress}
           onHidden={() => {
@@ -1268,19 +1157,21 @@ and displays an error message using the `message` component from the antd librar
           </div>
         )}
 
-        {// localChanges &&
-        quantityUsersSync > 0 && localChanges === 'Local' && (
-          <Row gutter={8}>
-            <Col>
-              <p>
-                <small>
-                  Cambios sin sincronizar :{' '}
-                  {quantityUsersSync < 0 ? 0 : quantityUsersSync}
-                </small>
-              </p>
-            </Col>
-          </Row>
-        )}
+        {
+          // localChanges &&
+          quantityUsersSync > 0 && localChanges === 'Local' && (
+            <Row gutter={8}>
+              <Col>
+                <p>
+                  <small>
+                    Cambios sin sincronizar :{' '}
+                    {quantityUsersSync < 0 ? 0 : quantityUsersSync}
+                  </small>
+                </p>
+              </Col>
+            </Row>
+          )
+        }
 
         {this.state.qrModalOpen && (
           <QrModal
@@ -1426,7 +1317,7 @@ and displays an error message using the `message` component from the antd librar
                 </Link>
               </Col>
               <Col>
-                <Button
+                {/* <Button
                   type="primary"
                   icon={<PlusCircleOutlined />}
                   size="middle"
@@ -1436,7 +1327,25 @@ and displays an error message using the `message` component from the antd librar
                   }
                 >
                   Agregar usuario
+                </Button> */}
+                <Button
+                  icon={<PlusCircleOutlined />}
+                  type="primary"
+                  size="middle"
+                  onClick={() => this.setState({ btn: true })}
+                  disabled={
+                    !eventIsActive && window.location.toString().includes('eventadmin')
+                  }
+                >
+                  Agregar usuario
                 </Button>
+                {this.state.btn && (
+                  <EnrollEventUserFromOrganizationMember
+                    eventId={this.props.event._id}
+                    orgId={this.props.event.organizer._id}
+                    onClose={() => this.setState({ btn: false })}
+                  />
+                )}
               </Col>
             </Row>
           }

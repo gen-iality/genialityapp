@@ -25,6 +25,7 @@ import {
   Result,
   Row,
   Space,
+  Spin,
   Table,
   Tag,
   Tooltip,
@@ -58,6 +59,9 @@ import { StateMessage } from '@context/MessageService'
 import { useIntl } from 'react-intl'
 import LessonsInfoModal from './LessonsInfoModal'
 import { FB } from '@helpers/firestore-request'
+import EventProgressWrapper from '@/wrappers/EventProgressWrapper'
+import EnrollEventUserFromOrganizationMember from './EnrollEventUserFromOrganizationMember'
+import ModalPassword from './ModalPassword'
 
 interface ITimeTrackingStatsProps {
   user: any
@@ -93,60 +97,6 @@ const TimeTrackingStats: FunctionComponent<ITimeTrackingStatsProps> = ({ user })
   return <>{timing.toFixed(2)} horas</>
 }
 
-interface IProgressingColumnProps {
-  shownAll?: boolean
-  item: any
-  allActivities: any[]
-  onOpen?: () => void
-  updateWatchedUser: (user: any) => void
-}
-
-const ProgressingColumn: FunctionComponent<IProgressingColumnProps> = (props) => {
-  const {
-    shownAll,
-    item,
-    allActivities,
-    onOpen,
-    // updateAttendee,
-    updateWatchedUser,
-  } = props
-
-  const [attendee, setAttendee] = useState<any[]>([])
-  const [shouldUpdate, setShouldUpdate] = useState(0)
-
-  const requestAttendees = async () => {
-    // Get all existent activities, after will filter it
-    const allAttendees = await FB.Attendees.getEventUserActivities(
-      allActivities.map((activity) => activity._id as string),
-      item._id,
-    )
-    // Filter non-undefined result that means that the user attendees them
-    const gotAttendee = allAttendees.filter((attendee) => attendee !== undefined)
-
-    return gotAttendee
-  }
-
-  useEffect(() => {
-    requestAttendees().then((gotAttendee) => setAttendee(gotAttendee))
-  }, [shouldUpdate])
-
-  if (shownAll) {
-    return (
-      <Button
-        onClick={() => {
-          // updateAttendee(attendee)
-          updateWatchedUser(item)
-          setShouldUpdate((previus) => previus + 1)
-          onOpen && onOpen()
-        }}
-      >
-        {`${attendee.length || 0}/${allActivities.length || 0}`}
-      </Button>
-    )
-  }
-  return <>{attendee.length > 0 ? 'Visto' : 'No visto'}</>
-}
-
 interface IListEventUserPageProps {
   event: any
   activityId?: string
@@ -166,6 +116,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
 
   const [isProgressingModalOpened, setIsProgressingModalOpened] = useState(false)
   const [isRegistrationModalOpened, setIsRegistrationModalOpened] = useState(false)
+  const [isEnrollingModalOpened, setIsEnrollingModalOpened] = useState(false)
   const [watchedUserInProgressingModal, setWatchedUserInProgressingModal] =
     useState<any>()
 
@@ -251,7 +202,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
     setAllActivities(eventActivities.data)
 
     const newSimplifyOrgProperties = (org.user_properties || []).filter(
-      (property: any[]) => !['email', 'password', 'names'].includes(property.name),
+      (property: any) => !['email', 'password', 'names'].includes(property.name),
     )
     const newRolesList: any[] = await RolAttApi.byEventRolsGeneral()
     const newBadgeEvent = await BadgeApi.get(event._id)
@@ -305,14 +256,27 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       ellipsis: true,
       sorter: () => 0,
       render: (item) => (
-        <ProgressingColumn
-          shownAll={activityId === undefined}
-          item={item}
-          onOpen={() => setIsProgressingModalOpened(true)}
-          // updateAttendee={(attendee) => this.setState({ attendee })}
-          allActivities={allActivities}
-          updateWatchedUser={setWatchedUserInProgressingModal}
-        />
+        <>
+          <EventProgressWrapper
+            event={event}
+            eventUser={item}
+            render={({ isLoading, activities, checkedInActivities }) => (
+              <>
+                {isLoading && <Spin />}
+                {activityId === undefined ? (
+                  <Button
+                    onClick={() => {
+                      setIsProgressingModalOpened(true)
+                      setWatchedUserInProgressingModal(item)
+                    }}
+                  >{`${checkedInActivities.length}/${activities.length}`}</Button>
+                ) : (
+                  <>{checkedInActivities.length > 0 ? 'Visto' : 'No visto'}</>
+                )}
+              </>
+            )}
+          />
+        </>
       ),
     }
 
@@ -431,17 +395,42 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       )
       newItem.properties = filteredProperties
       return (
-        <Tooltip placement="topLeft" title="Editar">
-          <Button
-            type="primary"
-            icon={<EditOutlined />}
-            size="small"
-            onClick={() => {
-              setWatchedUserInProgressingModal(newItem)
-              setIsRegistrationModalOpened(true)
+        <Space>
+          <Tooltip placement="topLeft" title="Editar">
+            <Button
+              type="primary"
+              icon={<EditOutlined />}
+              size="small"
+              onClick={() => {
+                setWatchedUserInProgressingModal(newItem)
+                setIsRegistrationModalOpened(true)
+              }}
+            />
+          </Tooltip>
+          {/* Improve this component */}
+          <ModalPassword
+            onOk={() => {
+              EventsApi.changePasswordUser(item.email, window.location.href)
+                .then((response) => {
+                  if (response) {
+                    StateMessage.show(
+                      null,
+                      'success',
+                      `Se ha enviado correo nueva contraseña a: ${item.email}`,
+                    )
+                  }
+                })
+                .catch((err) => {
+                  console.error(err)
+                  StateMessage.show(
+                    null,
+                    'error',
+                    'Ocurrió un error al enviar el correo de recuperación de contraseña',
+                  )
+                })
             }}
           />
-        </Tooltip>
+        </Space>
       )
     }
     const editColumn: ColumnType<any> = {
@@ -615,7 +604,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
                 type="primary"
                 icon={<PlusCircleOutlined />}
                 size="middle"
-                onClick={() => setIsRegistrationModalOpened(true)}
+                onClick={() => setIsEnrollingModalOpened(true)}
                 disabled={
                   !Boolean(
                     'legacy checked if the event is active (eventIsActive) via HelperContext',
@@ -624,6 +613,13 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
               >
                 Agregar usuario
               </Button>
+              {isEnrollingModalOpened && (
+                <EnrollEventUserFromOrganizationMember
+                  eventId={event._id}
+                  orgId={event.organizer._id}
+                  onClose={() => setIsEnrollingModalOpened(false)}
+                />
+              )}
             </Col>
           </Row>
         )}
