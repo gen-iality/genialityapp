@@ -21,6 +21,7 @@ import { OrganizationApi, EventsApi, AgendaApi, PositionsApi } from '@helpers/re
 /** Context */
 import withContext from '@context/withContext'
 import { FB } from '@helpers/firestore-request'
+import { StateMessage } from '@context/MessageService'
 
 function OrgMembers(props) {
   console.log('Props - OrgMembers (CMS) ->', props)
@@ -288,6 +289,27 @@ function OrgMembers(props) {
     })
   }
 
+  const togglePaymentPlan = async (organizationMember) => {
+    organizationMember = {
+      ...organizationMember,
+      payment_plan: organizationMember.payment_plan
+        ? null
+        : {
+            date_until: '<insert date here>',
+            more_config: '...',
+          },
+    }
+
+    await OrganizationApi.editUser(
+      organizationId,
+      organizationMember._id,
+      organizationMember,
+    )
+    setIsLoading(true)
+    await updateDataMembers()
+    StateMessage.show(null, 'success', 'Estado del usuario cambiado')
+  }
+
   const columnsData = {
     searchedColumn,
     setSearchedColumn,
@@ -318,6 +340,7 @@ function OrgMembers(props) {
           extraFields,
           userActivities,
           isStaticsLoading,
+          togglePaymentPlan,
         )}
         dataSource={membersDataSource}
         size="small"
