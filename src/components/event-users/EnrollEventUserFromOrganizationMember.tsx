@@ -11,6 +11,9 @@ import { FunctionComponent, useEffect, useState } from 'react'
 import RegisterUserAndEventUser from '@components/authentication/RegisterUserAndEventUser'
 import { OrganizationApi } from '@helpers/request'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
+import { UsersApi } from '@helpers/request'
+import { StateMessage } from '@context/MessageService'
+import { useIntl } from 'react-intl'
 
 const stylePaddingDesktop = {
   paddingLeft: '30px',
@@ -26,13 +29,16 @@ const stylePaddingMobile = {
 
 interface IEnrollEventUserFromOrganizationMemberProps {
   orgId?: string
+  eventId?: string
   onClose?: () => void
 }
+
+// TODO: take a enrolled user to show as added already
 
 const EnrollEventUserFromOrganizationMember: FunctionComponent<
   IEnrollEventUserFromOrganizationMemberProps
 > = (props) => {
-  const { orgId, onClose = () => {} } = props
+  const { eventId, orgId, onClose = () => {} } = props
 
   const [isLoadingOrgMembers, setIsLoadingOrgMembers] = useState(false)
   const [thisOrganizationMemberIsEnrolling, setThisOrganizationMemberIsEnrolling] =
@@ -40,6 +46,8 @@ const EnrollEventUserFromOrganizationMember: FunctionComponent<
   const [isModalOpened, setIsModalOpened] = useState(false)
   const [orgMembers, setOrgMembers] = useState<any[]>([])
   const [canEnrollFromOrganization, setCanEnrollFromOrganization] = useState(false)
+
+  const intl = useIntl()
 
   const loadOrganizationMember = async () => {
     const { data: orgUsers } = await OrganizationApi.getUsers(orgId)
@@ -56,8 +64,37 @@ const EnrollEventUserFromOrganizationMember: FunctionComponent<
     }
   }
 
-  const enrollOrganizationMember = (userId: string) => {
-    setThisOrganizationMemberIsEnrolling(userId)
+  const enrollOrganizationMember = async (user: any) => {
+    setThisOrganizationMemberIsEnrolling(user._id)
+
+    // Back-End says that the required params are:
+    const userProperties = {
+      properties: {
+        email: user.email,
+        names: user.names,
+      },
+    }
+    console.debug('send userProperties:', userProperties)
+    const noSendMail = true
+
+    try {
+      const respUser = await UsersApi.createOne(userProperties, eventId, noSendMail)
+      if (respUser && respUser._id) {
+        StateMessage.show(
+          null,
+          'success',
+          intl.formatMessage({
+            id: 'text_error.successfully_registered',
+            defaultMessage: 'Te has inscrito correctamente a este curso',
+          }),
+        )
+      }
+    } catch (err) {
+      console.error(err)
+      StateMessage.show(null, 'error', 'No se ha podido registrar a ese usuario')
+    } finally {
+      setThisOrganizationMemberIsEnrolling(undefined)
+    }
   }
 
   useEffect(() => {
@@ -110,7 +147,7 @@ const EnrollEventUserFromOrganizationMember: FunctionComponent<
                         key={0}
                         type="primary"
                         onClick={() => {
-                          enrollOrganizationMember(item.user._id)
+                          enrollOrganizationMember(item.user)
                         }}
                         disabled={thisOrganizationMemberIsEnrolling === item.user._id}
                         icon={
