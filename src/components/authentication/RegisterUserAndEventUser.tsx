@@ -67,29 +67,13 @@ const RegisterUserAndEventUser = ({
     setButtonStatus(status)
   }
 
-  const HandleHookForm = (e: any, fieldName: string, picture: any) => {
-    let value = ''
-    if (fieldName === 'picture') {
-      value = picture
-    } else {
-      value = e.target.value
-    }
+  const formDataHandler = (e: any, fieldName: string, picture: any) => {
+    const value = fieldName === 'picture' ? picture : e.target.value
 
-    if (current === 0) {
-      if (fieldName === 'picture') {
-        setBasicDataUser({ ...basicDataUser, [fieldName]: picture })
-      } else {
-        setBasicDataUser({
-          ...basicDataUser,
+    setBasicDataUser((previous: any) => ({
+      ...previous,
           [fieldName]: value,
-        })
-      }
-    } else {
-      setDataEventUser({
-        ...dataEventUser,
-        [fieldName]: value,
-      })
-    }
+    }))
   }
 
   const onSubmit = (values: any) => {
@@ -100,7 +84,7 @@ const RegisterUserAndEventUser = ({
     {
       title: 'First',
       content: (
-        <RegisterFast basicDataUser={basicDataUser} formDataHandler={HandleHookForm} />
+        <RegisterFast basicDataUser={basicDataUser} formDataHandler={formDataHandler} />
       ),
       icon: <AccountOutlineIcon style={{ fontSize: '32px' }} />,
     },
@@ -111,7 +95,7 @@ const RegisterUserAndEventUser = ({
           hookValidations={hookValidations}
           dataEventUser={dataEventUser}
           basicDataUser={basicDataUser}
-          HandleHookForm={HandleHookForm}
+          HandleHookForm={formDataHandler}
           validateEventUser={validateEventUser}
           setvalidateEventUser={setValidateEventUser}
         />
