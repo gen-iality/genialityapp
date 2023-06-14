@@ -1,9 +1,9 @@
 /**
  * NOTE: this module will be renamed to OrganizationInformation soom
  */
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { OrganizationApi, TypesApi } from '@helpers/request'
-import { Form, Input, Row, Col, Select, Tabs } from 'antd'
+import { Form, Input, Row, Col, Select, Tabs, Switch } from 'antd'
 import Header from '@antdComponents/Header'
 import { StateMessage } from '@context/MessageService'
 import { CardSelector } from '@components/events/CardSelector'
@@ -28,6 +28,7 @@ function OrganizationInformation(props: { org: any }) {
   const [typeOrgPermit, setTypeOrgPermit] = useState<number>(0)
   const [visibilityState, setVisibilityState] = useState<string>(visibility)
   const [allowRegister, setAllowRegister] = useState<boolean>(allow_register)
+  const [accessSettings, setAccessSettings] = useState(props.org.access_settings)
 
   useEffect(() => {
     if ((visibility === 'PUBLIC' || visibility === 'ANONYMOUS') && allow_register) {
@@ -76,6 +77,24 @@ function OrganizationInformation(props: { org: any }) {
     }
   }
 
+  const togglePaymentAccess = async () => {
+    const organizationData = { ...props.org }
+    if (accessSettings) {
+      organizationData.access_settings = null
+    } else {
+      organizationData.access_settings = {
+        type: 'payment',
+      }
+    }
+    setAccessSettings(organizationData.access_settings)
+    await OrganizationApi.editOne(organizationData, organizationId)
+  }
+
+  const isPaymentAccessEnabled = useMemo(() => {
+    if (!accessSettings) return false
+    return accessSettings.type === 'payment'
+  }, [accessSettings])
+
   useEffect(() => {
     // Get all the types
     TypesApi.getAll().then((data) => setTypeEvents(data))
@@ -84,7 +103,22 @@ function OrganizationInformation(props: { org: any }) {
   return (
     <div>
       <Form {...formLayout} name="nest-messages" onFinish={updateOrganization}>
-        <Header title="Información" back save form />
+        <Header
+          title="Información"
+          back
+          save
+          form
+          extra={
+            <>
+              <Switch
+                checked={isPaymentAccessEnabled}
+                onChange={togglePaymentAccess}
+                checkedChildren="Por pago"
+                unCheckedChildren="Entrada libre"
+              />
+            </>
+          }
+        />
 
         <Tabs defaultActiveKey="1">
           <Tabs.TabPane tab="General" key="1">
