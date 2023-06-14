@@ -10,7 +10,7 @@ import { Avatar, Button, Comment, List, Modal, Result, Tabs } from 'antd'
 import { FunctionComponent, useEffect, useState } from 'react'
 import RegisterUserAndEventUser from '@components/authentication/RegisterUserAndEventUser'
 import { AttendeeApi, OrganizationApi } from '@helpers/request'
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
+import { CheckOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import { UsersApi } from '@helpers/request'
 import { StateMessage } from '@context/MessageService'
 import { useIntl } from 'react-intl'
@@ -58,7 +58,7 @@ const EnrollEventUserFromOrganizationMember: FunctionComponent<
   }
 
   const loadEventUsers = async () => {
-    const attendees = await AttendeeApi.getAll(eventId)
+    const { data: attendees } = await AttendeeApi.getAll(eventId)
     console.log('attendees:', attendees)
     setEventUsers(attendees)
   }
@@ -114,6 +114,10 @@ const EnrollEventUserFromOrganizationMember: FunctionComponent<
     }
   }
 
+  const checkEnrolling = (userId: string) => {
+    return eventUsers.some((attendee) => attendee.account_id === userId)
+  }
+
   useEffect(() => {
     setIsModalOpened(true)
 
@@ -151,7 +155,7 @@ const EnrollEventUserFromOrganizationMember: FunctionComponent<
             <List
               bordered
               size="small"
-              loading={isLoadingOrgMembers}
+              loading={isLoadingOrgMembers || isLoadingEventUsers}
               header={<>Miembros de la organización</>}
               dataSource={orgMembers}
               renderItem={(item, index) => (
@@ -163,13 +167,18 @@ const EnrollEventUserFromOrganizationMember: FunctionComponent<
                     actions={[
                       <Button
                         key={0}
-                        type="primary"
+                        type={checkEnrolling(item.user._id) ? 'primary' : 'dashed'}
                         onClick={() => {
                           enrollOrganizationMember(item.user)
                         }}
-                        disabled={thisOrganizationMemberIsEnrolling === item.user._id}
+                        disabled={
+                          thisOrganizationMemberIsEnrolling === item.user._id ||
+                          checkEnrolling(item.user._id)
+                        }
                         icon={
-                          thisOrganizationMemberIsEnrolling === item.user._id ? (
+                          checkEnrolling(item.user._id) ? (
+                            <CheckOutlined />
+                          ) : thisOrganizationMemberIsEnrolling === item.user._id ? (
                             <LoadingOutlined />
                           ) : (
                             <PlusOutlined />
