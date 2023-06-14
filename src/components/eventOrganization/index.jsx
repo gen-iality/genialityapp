@@ -76,7 +76,6 @@ const EventOrganization = () => {
 
     OrganizationApi.getMeUser(orgId).then(({ data }) => {
       const [orgUser] = data
-
       setOrganizationUser(orgUser)
       console.debug('EventOrganization member rol:', orgUser?.rol)
       setIsAdminUser(orgUser?.rol?.type === 'admin')
@@ -139,6 +138,7 @@ const EventOrganization = () => {
         )}
 
         <PaymentSuccessModal
+          organizationUser={organizationUser}
           isOpen={paymentState.paymentstep == 'DISPLAYING_SUCCESS'}
           handleOk={() => paymentDispatch({ type: 'ABORT' })}
           handleCancel={() => paymentDispatch({ type: 'ABORT' })}
