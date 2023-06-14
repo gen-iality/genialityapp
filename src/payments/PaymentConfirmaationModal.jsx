@@ -21,9 +21,6 @@ const PaymentConfirmaationModal = ({ isOpen, handleOk, handleCancel }) => {
 
   return (
     <>
-      <Button type="primary" onClick={showModal}>
-        Open Modal
-      </Button>
       <Modal
         title="Payment confirmation"
         open={isOpen}

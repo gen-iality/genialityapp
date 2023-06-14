@@ -19,7 +19,10 @@ const actions = {
 }
 
 const usePaymentStatehandler = () => {
-  const [state, dispatch] = useReducer(reducer, { paymentstep: steps.RESTING })
+  const [state, dispatch] = useReducer(reducer, {
+    paymentstep: steps.RESTING,
+    result: {},
+  })
   console.log('payment state', state)
   function reducer(state, action) {
     console.log('payment state reducer', state, action)
@@ -33,8 +36,13 @@ const usePaymentStatehandler = () => {
           return { paymentstep: steps.DISPLAYING_REGISTRATION }
         case actions.DISPLAY_PAYMENT:
           return { paymentstep: steps.DISPLAYING_PAYMENT }
+
+        //con los resultados del pago
         case actions.DISPLAY_SUCCESS:
-          return { paymentstep: steps.DISPLAYING_SUCCESS }
+          return {
+            paymentstep: steps.DISPLAYING_SUCCESS,
+            result: action?.payload?.result,
+          }
         default:
           return { paymentstep: steps.ERROR }
         //throw new Error()

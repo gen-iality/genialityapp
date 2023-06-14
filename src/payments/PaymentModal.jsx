@@ -1,10 +1,15 @@
 import { useState, useEffect } from 'react'
 import { Button, Modal } from 'antd'
-import usePaymentStatehandler from './usePaymentStatehandler'
 
 const publicKey = process.env.VITE_WOMPI_DEV_PUB_API_KEY
 
-const PaymentModal = ({ isOpen, handleOk, handleCancel }) => {
+const PaymentModal = ({
+  paymentDispatch,
+  organizationUser,
+  isOpen,
+  handleOk,
+  handleCancel,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(true)
 
   const showModal = () => {
@@ -13,8 +18,6 @@ const PaymentModal = ({ isOpen, handleOk, handleCancel }) => {
   const closeModal = () => {
     setIsModalOpen(true)
   }
-
-  const [paymentState, paymentDispatch] = usePaymentStatehandler()
 
   //   const handleOkInner = () => {
   //     setIsModalOpen(false)
@@ -51,15 +54,34 @@ const PaymentModal = ({ isOpen, handleOk, handleCancel }) => {
       redirectUrl,
       customerData: {
         // Opcional
-        email: userInfo.email,
-        fullName: userInfo.names,
+        //organizationUser_id: organizationUser._id,
+        //email: userInfo.email,
+        fullName: organizationUser._id,
       },
     })
     console.log('checkout', checkout)
     // @ts-ignore
-    checkout.open((result) => {
+    //Cuando la pasarela WOMPI retorna un resultado de pago lo hacen  en este función en el parametro result
+    checkout.open(async (result) => {
       console.log({ result })
-      alert('nos jodimos')
+      //result.transaction //amountInCents // customerEmail //reference //status //customerData.fullName
+      //org, member,
+      //Si la transacción fue exitosa
+      if (result.transaction.status == 'APPROVED') {
+        let data = { payment_plan: true }
+        let result = await OrganizationApi.editUser(
+          organizationUser.organization_id,
+          organizationUser._id,
+          data,
+        )
+      }
+      console.log('miembro', { organizationUser, result })
+
+      //En cualquier caso enviamos la accion de respuesta de transacción recibida
+      paymentDispatch({
+        type: 'DISPLAY_SUCCESS',
+        payload: { result: result.transaction },
+      })
       //const transaction = result.transaction as Transaction;
       // console.log('Transaction ID: ', transaction.id);
       //console.log('Transaction object: ', transaction);
@@ -73,10 +95,6 @@ const PaymentModal = ({ isOpen, handleOk, handleCancel }) => {
 
   return (
     <>
-      <Button type="primary" onClick={showModal}>
-        Open Modal
-      </Button>
-      <p>{paymentState && paymentState.paymentstep}</p>
       {/* <Modal title="Payment" open={isOpen} onOk={handleOk} onCancel={handleCancel}>
         <p>Payment confirmation...</p>
         <p>Payment confirmation...</p>

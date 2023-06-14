@@ -37,6 +37,8 @@ const EventOrganization = () => {
     OrganizationPaymentContext,
   )
 
+  const refreshPage = () => window.location.reload(true)
+
   useEffect(() => {
     if (orgId) {
       fetchItem(orgId).then(() => setIsLoading(false))
@@ -140,10 +142,15 @@ const EventOrganization = () => {
       }}
     >
       <div>
-        <p>HOLA:</p>
-
+        <p>Estado: {paymentState && paymentState.paymentstep}</p>
+        <p>
+          Plan Pago :{' '}
+          {organizationUser &&
+            (organizationUser.payment_plan === true ? 'Pago' : 'gratuito')}
+        </p>
         {paymentState.paymentstep == 'REQUIRING_PAYMENT' && (
           <PaymentConfirmaationModal
+            organizationUser={organizationUser}
             isOpen={paymentState.paymentstep == 'REQUIRING_PAYMENT'}
             handleOk={() => paymentDispatch({ type: 'DISPLAY_PAYMENT' })}
             handleCancel={() => paymentDispatch({ type: 'ABORT' })}
@@ -151,6 +158,8 @@ const EventOrganization = () => {
         )}
         {paymentState.paymentstep == 'DISPLAYING_PAYMENT' && (
           <PaymentModal
+            organizationUser={organizationUser}
+            paymentDispatch={paymentDispatch}
             isOpen={paymentState.paymentstep == 'DISPLAYING_PAYMENT'}
             handleOk={() => paymentDispatch({ type: 'ABORT' })}
             handleCancel={() => paymentDispatch({ type: 'ABORT' })}
@@ -159,13 +168,18 @@ const EventOrganization = () => {
 
         <PaymentSuccessModal
           organizationUser={organizationUser}
+          result={paymentState.result}
           isOpen={paymentState.paymentstep == 'DISPLAYING_SUCCESS'}
-          handleOk={() => paymentDispatch({ type: 'ABORT' })}
-          handleCancel={() => paymentDispatch({ type: 'ABORT' })}
+          handleOk={() => {
+            refreshPage()
+            paymentDispatch({ type: 'ABORT' })
+          }}
+          handleCancel={() => {
+            refreshPage()
+            paymentDispatch({ type: 'ABORT' })
+          }}
         />
 
-        {paymentState && paymentState.paymentstep}
-        <p>fin</p>
         <Button onClick={() => paymentDispatch({ type: 'REQUIRE_PAYMENT' })}>
           REQUIRE_PAYMENT
         </Button>
@@ -309,18 +323,15 @@ const EventOrganization = () => {
                         myEvents.filter((mye) => mye.event_id == event._id).length >
                           0) && (
                         <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
-                          <p onClick={() => alert('asdf')}>sadf</p>
-                          <Link onClick={() => alert('asdf')}>
-                            <EventCard
-                              paymentDispatch={paymentDispatch}
-                              organizationUser={organizationUser}
-                              noDates
-                              bordered={false}
-                              key={event._id}
-                              event={event}
-                              action={{ name: 'Ver', url: `landing/${event._id}` }}
-                            />
-                          </Link>
+                          <EventCard
+                            paymentDispatch={paymentDispatch}
+                            organizationUser={organizationUser}
+                            noDates
+                            bordered={false}
+                            key={event._id}
+                            event={event}
+                            action={{ name: 'Ver', url: `landing/${event._id}` }}
+                          />
                         </Col>
                       )}
                     </>
