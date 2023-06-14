@@ -101,100 +101,68 @@ class EventCard extends Component {
             bordered={bordered}
             loading={loading}
             style={{ width: '100%' }}
+            onClick={(e) => {
+              alert('encard')
+              e.stopPropagation()
+              return false
+            }}
             cover={
-              event.picture ? (
-                <>
-                  {noAvailable ? (
-                    <>
-                      <Link to={location.pathname} onClick={() => this.openModal()}>
-                        <img
-                          className="animate__animated animate__fadeIn animate__slower"
-                          loading="lazy"
-                          style={{ objectFit: 'cover', height: '100%', width: '100%' }}
-                          src={
-                            typeof event.picture === 'object'
-                              ? event.picture[0]
-                              : event.picture
-                          }
-                          alt="geniality.com.co"
-                        />
-                      </Link>
-                    </>
-                  ) : (
-                    <Link to={`/landing/${event._id}/evento`}>
-                      {/* <a href={`/landing/${event._id}/evento`}> */}
-                      <img
-                        className="animate__animated animate__fadeIn animate__slower"
-                        loading="lazy"
-                        style={{ objectFit: 'cover', height: '100%', width: '100%' }}
-                        src={
-                          typeof event.picture === 'object'
+              <>
+                {noAvailable ? (
+                  <Link to={location.pathname} onClick={() => this.openModal()}>
+                    <img
+                      className="animate__animated animate__fadeIn animate__slower"
+                      loading="lazy"
+                      style={{ objectFit: 'cover', height: '180px', width: '100%' }}
+                      src={
+                        event.picture
+                          ? typeof event.picture === 'object'
                             ? event.picture[0]
                             : event.picture
-                        }
-                        alt="geniality.com.co"
-                      />
-                      {this.props.moreDetails && event._id && (
-                        <StudentGeneralCourseProgress eventId={event._id} />
-                      )}
-                      {this.props.moreDetails && (
-                        <QuizApprovedStatus
-                          eventId={event._id}
-                          approvedLink={`/landing/${event._id}/certificate`}
-                        />
-                      )}
-                      {/* </a> */}
-                    </Link>
-                  )}
-                </>
-              ) : (
-                <>
-                  {noAvailable ? (
-                    <Link to={location.pathname} onClick={() => this.openModal()}>
-                      <img
-                        className="animate__animated animate__fadeIn animate__slower"
-                        loading="lazy"
-                        style={{ objectFit: 'cover', height: '180px', width: '100%' }}
-                        src={
-                          event.styles
-                            ? event.styles.banner_image &&
-                              event.styles.banner_image !== undefined
-                              ? event.styles.banner_image
-                              : EventImage
+                          : event.styles &&
+                            event.styles.banner_image &&
+                            event.styles.banner_image !== undefined
+                          ? event.styles.banner_image
+                          : EventImage
+                      }
+                      alt="geniality.com.co"
+                    />
+                  </Link>
+                ) : (
+                  <a
+                    href={`/landing/${event._id}/evento`}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      e.nativeEvent.stopImmediatePropagation()
+                      return false
+                    }}
+                  >
+                    <img
+                      className="animate__animated animate__fadeIn animate__slower"
+                      loading="lazy"
+                      style={{ objectFit: 'cover', height: '180px', width: '100%' }}
+                      src={
+                        event.styles
+                          ? event.styles.banner_image &&
+                            event.styles.banner_image !== undefined
+                            ? event.styles.banner_image
                             : EventImage
-                        }
-                        alt="geniality.com.co"
+                          : EventImage
+                      }
+                      alt="geniality.com.co"
+                    />
+                    {this.props.moreDetails && event._id && (
+                      <StudentGeneralCourseProgress eventId={event._id} />
+                    )}
+                    {this.props.moreDetails && (
+                      <QuizApprovedStatus
+                        eventId={event._id}
+                        approvedLink={`/landing/${event._id}/certificate`}
                       />
-                    </Link>
-                  ) : (
-                    <a href={`/landing/${event._id}/evento`}>
-                      <img
-                        className="animate__animated animate__fadeIn animate__slower"
-                        loading="lazy"
-                        style={{ objectFit: 'cover', height: '180px', width: '100%' }}
-                        src={
-                          event.styles
-                            ? event.styles.banner_image &&
-                              event.styles.banner_image !== undefined
-                              ? event.styles.banner_image
-                              : EventImage
-                            : EventImage
-                        }
-                        alt="geniality.com.co"
-                      />
-                      {this.props.moreDetails && event._id && (
-                        <StudentGeneralCourseProgress eventId={event._id} />
-                      )}
-                      {this.props.moreDetails && (
-                        <QuizApprovedStatus
-                          eventId={event._id}
-                          approvedLink={`/landing/${event._id}/certificate`}
-                        />
-                      )}
-                    </a>
-                  )}
-                </>
-              )
+                    )}
+                  </a>
+                )}
+              </>
             }
             actions={right}
             bodyStyle={{ paddingLeft: '0px', paddingRight: '0px' }}
@@ -236,7 +204,14 @@ class EventCard extends Component {
                       </Space>
                     </Link>
                   ) : (
-                    <a href={`/landing/${event._id}/evento`}>
+                    <a
+                      href={`/landing/${event._id}/evento`}
+                      onClick={(e) => {
+                        alert('hola xxxx')
+                        e.stopPropagation()
+                        return false
+                      }}
+                    >
                       <Space size={1} direction="vertical">
                         <span style={{ fontSize: '12px' }}>
                           {!this.props.noDates && (
