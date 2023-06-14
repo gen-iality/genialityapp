@@ -1079,15 +1079,6 @@ class ListEventUser extends Component {
 
     return (
       <>
-        {/* <ModalWithLessonsInfo
-          show={this.state.showModalOfProgress}
-          onHidden={() => {
-            this.setState({ showModalOfProgress: false })
-          }}
-          allActivities={this.state.allActivities}
-          attendee={this.state.attendee}
-          currentUser={this.state.currentUser}
-        /> */}
         <LessonsInfoModal
           show={this.state.showModalOfProgress}
           onHidden={() => {
