@@ -27,12 +27,12 @@ const PaymentConfirmaationModal = ({ isOpen, handleOk, handleCancel }) => {
       <Modal
         title="Payment confirmation"
         open={isOpen}
+        okText={'Pagar'}
         onOk={handleOk}
         onCancel={handleCancel}
       >
-        <p>Payment confirmation...</p>
-        <p>Payment confirmation...</p>
-        <p>Payment confirmation...</p>
+        <p>Para ingresar a este contenido debes tener una cuenta con un plan pago</p>
+        <p>El costo del plan es: $5.000</p>
       </Modal>
     </>
   )

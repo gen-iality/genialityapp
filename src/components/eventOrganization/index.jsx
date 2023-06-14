@@ -10,7 +10,6 @@ import Loading from '@components/profile/loading'
 import { useCurrentUser } from '@context/userContext'
 import { OrganizationApi, TicketsApi } from '@helpers/request'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
-import usePaymentStatehandler from '../../payments/usePaymentStatehandler'
 import PaymentConfirmaationModal from '../../payments/PaymentConfirmaationModal'
 import PaymentSuccessModal from '../../payments/PaymentSuccessModal'
 import PaymentModal from '../../payments/PaymentModal'
@@ -146,7 +145,7 @@ const EventOrganization = () => {
         {paymentState.paymentstep == 'REQUIRING_PAYMENT' && (
           <PaymentConfirmaationModal
             isOpen={paymentState.paymentstep == 'REQUIRING_PAYMENT'}
-            handleOk={() => paymentDispatch({ type: 'ABORT' })}
+            handleOk={() => paymentDispatch({ type: 'DISPLAY_PAYMENT' })}
             handleCancel={() => paymentDispatch({ type: 'ABORT' })}
           />
         )}
@@ -310,13 +309,18 @@ const EventOrganization = () => {
                         myEvents.filter((mye) => mye.event_id == event._id).length >
                           0) && (
                         <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
-                          <EventCard
-                            noDates
-                            bordered={false}
-                            key={event._id}
-                            event={event}
-                            action={{ name: 'Ver', url: `landing/${event._id}` }}
-                          />
+                          <p onClick={() => alert('asdf')}>sadf</p>
+                          <Link onClick={() => alert('asdf')}>
+                            <EventCard
+                              paymentDispatch={paymentDispatch}
+                              organizationUser={organizationUser}
+                              noDates
+                              bordered={false}
+                              key={event._id}
+                              event={event}
+                              action={{ name: 'Ver', url: `landing/${event._id}` }}
+                            />
+                          </Link>
                         </Col>
                       )}
                     </>
