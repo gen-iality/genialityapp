@@ -61,6 +61,7 @@ import LessonsInfoModal from './LessonsInfoModal'
 import { FB } from '@helpers/firestore-request'
 import EventProgressWrapper from '@/wrappers/EventProgressWrapper'
 import EnrollEventUserFromOrganizationMember from './EnrollEventUserFromOrganizationMember'
+import ModalPassword from './ModalPassword'
 
 interface ITimeTrackingStatsProps {
   user: any
@@ -394,17 +395,42 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       )
       newItem.properties = filteredProperties
       return (
-        <Tooltip placement="topLeft" title="Editar">
-          <Button
-            type="primary"
-            icon={<EditOutlined />}
-            size="small"
-            onClick={() => {
-              setWatchedUserInProgressingModal(newItem)
-              setIsRegistrationModalOpened(true)
+        <Space>
+          <Tooltip placement="topLeft" title="Editar">
+            <Button
+              type="primary"
+              icon={<EditOutlined />}
+              size="small"
+              onClick={() => {
+                setWatchedUserInProgressingModal(newItem)
+                setIsRegistrationModalOpened(true)
+              }}
+            />
+          </Tooltip>
+          {/* Improve this component */}
+          <ModalPassword
+            onOk={() => {
+              EventsApi.changePasswordUser(item.email, window.location.href)
+                .then((response) => {
+                  if (response) {
+                    StateMessage.show(
+                      null,
+                      'success',
+                      `Se ha enviado correo nueva contraseña a: ${item.email}`,
+                    )
+                  }
+                })
+                .catch((err) => {
+                  console.error(err)
+                  StateMessage.show(
+                    null,
+                    'error',
+                    'Ocurrió un error al enviar el correo de recuperación de contraseña',
+                  )
+                })
             }}
           />
-        </Tooltip>
+        </Space>
       )
     }
     const editColumn: ColumnType<any> = {
