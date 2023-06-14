@@ -10,7 +10,7 @@ import Loading from '@components/profile/loading'
 import { useCurrentUser } from '@context/userContext'
 import { OrganizationApi, TicketsApi } from '@helpers/request'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
-
+import usePaymentStatehandler from '../../payments/usePaymentStatehandler'
 const { Title, Text, Paragraph } = Typography
 
 const EventOrganization = () => {
@@ -29,6 +29,8 @@ const EventOrganization = () => {
 
   const cUser = useCurrentUser()
   const { helperDispatch } = useHelper()
+
+  const [paymentState, paymentDispatch] = usePaymentStatehandler()
 
   useEffect(() => {
     if (orgId) {
@@ -115,6 +117,20 @@ const EventOrganization = () => {
         backgroundColor: `${organization?.styles?.containerBgColor || '#FFFFFF'}`,
       }}
     >
+      <div>
+        <p>HOLA:</p>
+        {paymentState && paymentState.paymentstep}
+        <p>fin</p>
+        <Button onClick={() => paymentDispatch({ type: 'REQUIRE_PAYMENT' })}>
+          REQUIRE_PAYMENT
+        </Button>
+        <Button onClick={() => paymentDispatch({ type: 'DISPLAY_REGISTRATION' })}>
+          DISPLAY_REGISTRATION
+        </Button>
+        <Button onClick={() => paymentDispatch({ type: 'DISPLAY_PAYMENT' })}>
+          DISPLAY_PAYMENT
+        </Button>
+      </div>
       <ModalLoginHelpers />
       {/* <RegisterMemberFromOrganizationUserModal
         organization={organization}
