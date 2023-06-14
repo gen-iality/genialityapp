@@ -12,7 +12,6 @@ import createNewUser, { CREATE_NEW_USER_SUCCESS } from './ModalsFunctions/create
 import { useIntl } from 'react-intl'
 import { useEventContext } from '@context/eventContext'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
-import { StateMessage } from '@context/MessageService'
 
 const { Step } = Steps
 
@@ -72,7 +71,7 @@ const RegisterUserAndEventUser = ({
 
     setBasicDataUser((previous: any) => ({
       ...previous,
-          [fieldName]: value,
+      [fieldName]: value,
     }))
   }
 
@@ -216,8 +215,8 @@ const RegisterUserAndEventUser = ({
           setBasicDataUser({})
           setDataEventUser({})
         }
-      } catch (err) {
-        console.error('errorregistro', { err: err })
+      } catch (err: any) {
+        console.error('errorregistro', { err })
 
         if (err.response) {
           setValidationGeneral({
