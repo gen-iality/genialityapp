@@ -92,10 +92,17 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
     const fechasPermitidas = cEvent?.value?.dates.map((dateRange) => {
       return moment(dateRange.start).format(FORMAT_WITHOUT_HOUR);
     });
+
     const date_to_evaluate = moment(current).format(FORMAT_WITHOUT_HOUR);
     return !fechasPermitidas.includes(date_to_evaluate);
   };
 
+  useEffect(() => {
+    if(cEvent?.value?.dates.length > 0){
+      const firstDate = moment(cEvent?.value?.dates[0].start)
+      setDate(firstDate)
+    }
+  }, [targetEventUserId])
   return (
     <Modal
       visible={!!targetEventUserId}
@@ -109,6 +116,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
         <DatePicker
           allowClear={false}
           value={date}
+          defaultValue={date}
           style={{ marginBottom: 10, width: '100%' }}
           format={'DD-MM-YYYY'}
           disabledDate={disabledDate}
