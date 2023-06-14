@@ -11,6 +11,8 @@ import { useCurrentUser } from '@context/userContext'
 import { OrganizationApi, TicketsApi } from '@helpers/request'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import usePaymentStatehandler from '../../payments/usePaymentStatehandler'
+import PaymentConfirmaationModal from '../../payments/PaymentConfirmaationModal'
+import PaymentSuccessModal from '../../payments/PaymentSuccessModal'
 const { Title, Text, Paragraph } = Typography
 
 const EventOrganization = () => {
@@ -119,6 +121,19 @@ const EventOrganization = () => {
     >
       <div>
         <p>HOLA:</p>
+
+        <PaymentConfirmaationModal
+          isOpen={paymentState.paymentstep == 'DISPLAYING_PAYMENT'}
+          handleOk={() => paymentDispatch({ type: 'ABORT' })}
+          handleCancel={() => paymentDispatch({ type: 'ABORT' })}
+        />
+
+        <PaymentSuccessModal
+          isOpen={paymentState.paymentstep == 'DISPLAYING_SUCCESS'}
+          handleOk={() => paymentDispatch({ type: 'ABORT' })}
+          handleCancel={() => paymentDispatch({ type: 'ABORT' })}
+        />
+
         {paymentState && paymentState.paymentstep}
         <p>fin</p>
         <Button onClick={() => paymentDispatch({ type: 'REQUIRE_PAYMENT' })}>
@@ -129,6 +144,10 @@ const EventOrganization = () => {
         </Button>
         <Button onClick={() => paymentDispatch({ type: 'DISPLAY_PAYMENT' })}>
           DISPLAY_PAYMENT
+        </Button>
+
+        <Button onClick={() => paymentDispatch({ type: 'DISPLAY_SUCCESS' })}>
+          DISPLAY_SUCCESS
         </Button>
       </div>
       <ModalLoginHelpers />
