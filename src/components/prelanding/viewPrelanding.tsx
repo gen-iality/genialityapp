@@ -283,7 +283,6 @@ const ViewPrelanding = ({ preview } : PropsPreLanding) => {
 							)}
 							{visibleSection('Actividades') && agenda.length > 0 && (
 								<Col span={24} order={obtenerOrder('Actividades')}>
-									{console.log(getNameOrAlias('Actividades'))}
 									<Card
 										id='Actividades_block'
 										bodyStyle={{ height: '100%' }}

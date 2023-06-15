@@ -43,6 +43,7 @@ const ActivityBlock = ({ preview, title }: PropsPreLanding) => {
         return '';
     }
   };
+  
   return (
     <>
       <Row justify='center' align='middle'>
