@@ -89,6 +89,22 @@ export const columns = (
     },
   }
 
+  const payment_plan = {
+    title: 'Valor pagado',
+    dataIndex: 'payment_plan',
+    key: 'payment_plan',
+    width: '140px',
+    ellipsis: true,
+    sorter: (a, b) => a.payment_plan - b.payment_plan,
+    ...membersGetColumnSearchProps('payment_plan'),
+    render(val, item) {
+      console.log('item', item)
+      if (item.payment_plan) {
+        return '5000'
+      }
+    },
+  }
+
   const created_at = {
     title: 'Creado',
     dataIndex: 'created_at',
@@ -180,6 +196,7 @@ export const columns = (
   useEffect(() => {
     const newColumns = [picture, ...dynamicColumns]
 
+    newColumns.push(payment_plan)
     newColumns.push(progressing)
     newColumns.push(created_at)
     newColumns.push(updated_at)

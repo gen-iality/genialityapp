@@ -22,15 +22,15 @@ const PaymentSuccessModal = ({
     console.log('miembro')
     if (!organizationUser) return
 
-    // let prueba = async () => {
-    //   let data = { payment_plan: false }
-    //   let result = await OrganizationApi.editUser(
-    //     organizationUser.organization_id,
-    //     organizationUser._id,
-    //     data,
-    //   )
-    //   console.log('miembro', { organizationUser, result })
-    // }
+    let prueba = async () => {
+      let data = { payment_plan: false }
+      let result = await OrganizationApi.editUser(
+        organizationUser.organization_id,
+        organizationUser._id,
+        data,
+      )
+      console.log('miembro', { organizationUser, result })
+    }
     //prueba()
   }, [organizationUser])
 
