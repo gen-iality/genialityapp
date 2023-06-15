@@ -46,51 +46,56 @@ const ActivityBlock = ({ preview }: PropsPreLanding) => {
   return (
     <>
       <Row justify='center' align='middle'>
-        <Col span={22}>
+        <Col span={isMobile ? 24 : 22}>
           <List 
             itemLayout={isMobile ? 'vertical' : 'horizontal'}
-            /* grid={{gutter: 6, column: 1}} */
+            grid={{gutter: 8, column: 1}}
             dataSource={activities}
             style={{paddingTop: 20}}
             renderItem={activity => (
-              <List.Item /* style={{border: 'none'}} */>
-                  {/* <Card hoverable bodyStyle={{padding: '0 20px 0px 0px'}}> */}
-                  <List.Item.Meta 
-                    avatar={
-                      <Space 
-                        size={0} 
-                        direction='vertical' 
-                        align='center' 
-                        style={{padding: '0px 20px'}}
-                      >
-                        <Typography.Text strong style={{textTransform: 'uppercase'}}>
-                          {dateFormat(activity?.datetime_start, 'MMM')}
-                        </Typography.Text>
-                        <Typography.Text strong style={{fontSize: 30}}>
-                          {dateFormat(activity?.datetime_start, 'DD')}
-                        </Typography.Text>
-                      </Space>
-                    }
-                    title={
-                      <Space size={4} wrap>
-                        <ClockTimeFourOutlineIcon />
-                        <Typography.Text>{dateFormat(activity?.datetime_start, 'hh:mm A')}</Typography.Text>
-                        <Typography.Text>-</Typography.Text>
-                        <Typography.Text>{dateFormat(activity?.datetime_end, 'hh:mm A')}</Typography.Text>
-                      </Space>
-                    }
-                    description={
-                      <Typography.Text strong>{activity?.name}</Typography.Text>
-                    }
-                  />
-                  <Avatar.Group maxCount={3} maxStyle={{ color: textColor, backgroundColor: bgColor }} style={isMobile ? {paddingLeft: 86} : {}}>
-                    {activity.hosts.length > 0 &&
-                      activity.hosts.map((host,index) => (
-                        <Avatar key={`key-${index}`} size={isMobile ? 'small' : 'large'} icon={<UserOutlined />} src={host.image || ''} />
-                      ))}
-                  </Avatar.Group>
-                  {/* </Card> */}
-                </List.Item>
+              <List.Item style={{border: 'none'}}>
+                <Card hoverable style={{borderRadius: 10, border: 'none'}} bodyStyle={isMobile || mobilePreview === 'tablet' || screens.sm ? {padding: 0} : {}}
+                
+                >
+                  <Row justify={isMobile ? 'start' : 'space-between'} >
+                    <Card.Meta 
+                      avatar={
+                        <Space 
+                          size={0} 
+                          direction='vertical' 
+                          align='center' 
+                          style={{padding: '0px 20px'}}
+                        >
+                          <Typography.Text strong style={{textTransform: 'uppercase'}}>
+                            {dateFormat(activity?.datetime_start, 'MMM')}
+                          </Typography.Text>
+                          <Typography.Text strong style={{fontSize: 30}}>
+                            {dateFormat(activity?.datetime_start, 'DD')}
+                          </Typography.Text>
+                        </Space>
+                      }
+                      title={
+                        <Space size={4} wrap>
+                          <ClockTimeFourOutlineIcon />
+                          <Typography.Text>{dateFormat(activity?.datetime_start, 'hh:mm A')}</Typography.Text>
+                          <Typography.Text>-</Typography.Text>
+                          <Typography.Text>{dateFormat(activity?.datetime_end, 'hh:mm A')}</Typography.Text>
+                        </Space>
+                      }
+                      description={
+                        <Typography.Text strong>{activity?.name}</Typography.Text>
+                      }
+                    />                  
+                    <Avatar.Group maxCount={3} maxStyle={{ color: textColor, backgroundColor: bgColor }} 
+                      style={isMobile || mobilePreview === 'tablet' || screens.sm ? {paddingLeft: 95, paddingTop: 10} : {}}>
+                      {activity.hosts.length > 0 &&
+                        activity.hosts.map((host,index) => (
+                          <Avatar key={`key-${index}`} size={isMobile ? 'small' : 'large'} icon={<UserOutlined />} src={host.image || ''} />
+                        ))}
+                    </Avatar.Group>
+                  </Row>
+                </Card>
+              </List.Item>
             )}
           />
         </Col>
