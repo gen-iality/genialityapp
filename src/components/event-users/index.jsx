@@ -367,7 +367,7 @@ and displays an error message using the `message` component from the antd librar
       fieldsForm.push({
         author: null,
         categories: [],
-        label: 'Inscrito',
+        label: 'El usuario asistió al curso.',
         mandatory: false,
         name: 'checked_in',
         organizer: null,
