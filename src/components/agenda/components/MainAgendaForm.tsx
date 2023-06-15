@@ -320,9 +320,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                 </label>
               }
               rules={[{ required: true, message: 'La fecha es requerida' }]}>
-              {haveDateNotIncluded && (
-                <Alert type='error' message='La fecha de la actividad no es una fecha del evento' />
-              )}
+             
               <SelectAntd
                 options={
                   multiDates.length > 0
@@ -336,6 +334,9 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                 defaultValue={formdata.date}
                 onChange={(value) => handleChangeFormData('date', value)}
               />
+               {haveDateNotIncluded && (
+                <Alert type='error' message='La fecha de la actividad no es una fecha del evento' />
+              )}
             </Form.Item>
             <Row wrap justify='center' gutter={[8, 8]}>
               <Col span={12}>
