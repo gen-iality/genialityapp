@@ -1,37 +1,21 @@
-import { useState } from 'react'
-import { Button, Modal } from 'antd'
+import { FunctionComponent, useContext } from 'react'
+import { Modal } from 'antd'
+import OrganizationPaymentContext from './OrganizationPaymentContext'
 
-const OrganizationPaymentConfirmationModal = ({ isOpen, handleOk, handleCancel }) => {
-  const [isModalOpen, setIsModalOpen] = useState(true)
-
-  const showModal = () => {
-    setIsModalOpen(true)
-  }
-  const closeModal = () => {
-    setIsModalOpen(true)
-  }
-
-  //   const handleOkInner = () => {
-  //     setIsModalOpen(false)
-  //   }
-
-  //   const handleCancelInner = () => {
-  //     setIsModalOpen(false)
-  //   }
+const OrganizationPaymentConfirmationModal: FunctionComponent = () => {
+  const { paymentStep, dispatch } = useContext(OrganizationPaymentContext)
 
   return (
-    <>
-      <Modal
-        title="Payment confirmation"
-        open={isOpen}
-        okText={'Pagar'}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <p>Para ingresar a este contenido debes tener una cuenta con un plan pago</p>
-        <p>El costo del plan es: $5.000</p>
-      </Modal>
-    </>
+    <Modal
+      title="Payment confirmation"
+      open={paymentStep === 'REQUIRING_PAYMENT'}
+      okText={'Pagar'}
+      onOk={() => dispatch({ type: 'DISPLAY_PAYMENT' })}
+      onCancel={() => dispatch({ type: 'ABORT' })}
+    >
+      <p>Para ingresar a este contenido debes tener una cuenta con un plan pago</p>
+      <p>El costo del plan es: $5.000</p>
+    </Modal>
   )
 }
 

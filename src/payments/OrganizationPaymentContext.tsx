@@ -1,6 +1,15 @@
 import { useReducer, type Dispatch } from 'react'
 import { FunctionComponent, createContext } from 'react'
 
+type AvailableStep =
+  | 'RESTING'
+  | 'REQUIRING_PAYMENT'
+  | 'DISPLAYING_REGISTRATION'
+  | 'DISPLAYING_PAYMENT'
+  | 'PAYING'
+  | 'ERROR'
+  | 'DISPLAYING_SUCCESS'
+
 type OPAction =
   | { type: 'ABORT' }
   | { type: 'REQUIRE_PAYMENT' }
@@ -9,12 +18,12 @@ type OPAction =
   | { type: 'DISPLAY_SUCCESS'; result?: string }
 
 type OPState = {
-  paymentStep: string
+  paymentStep: AvailableStep
   result?: string
   dispatch: Dispatch<OPAction>
 }
 
-const steps = {
+const steps: { [x: string]: AvailableStep } = {
   RESTING: 'RESTING',
   REQUIRING_PAYMENT: 'REQUIRING_PAYMENT',
   DISPLAYING_REGISTRATION: 'DISPLAYING_REGISTRATION',

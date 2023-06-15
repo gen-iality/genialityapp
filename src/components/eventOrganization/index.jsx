@@ -148,14 +148,7 @@ const EventOrganization = () => {
           {organizationUser &&
             (organizationUser.payment_plan === true ? 'Pago' : 'gratuito')}
         </p>
-        {paymentState.paymentStep == 'REQUIRING_PAYMENT' && (
-          <OrganizationPaymentConfirmationModal
-            organizationUser={organizationUser}
-            isOpen={paymentState.paymentStep == 'REQUIRING_PAYMENT'}
-            handleOk={() => paymentDispatch({ type: 'DISPLAY_PAYMENT' })}
-            handleCancel={() => paymentDispatch({ type: 'ABORT' })}
-          />
-        )}
+        <OrganizationPaymentConfirmationModal />
         {paymentState.paymentStep == 'DISPLAYING_PAYMENT' && (
           <PaymentModal
             organizationUser={organizationUser}
