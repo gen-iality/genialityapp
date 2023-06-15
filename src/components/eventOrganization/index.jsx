@@ -10,7 +10,7 @@ import Loading from '@components/profile/loading'
 import { useCurrentUser } from '@context/userContext'
 import { OrganizationApi, TicketsApi } from '@helpers/request'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
-import PaymentConfirmaationModal from '../../payments/PaymentConfirmaationModal'
+import OrganizationPaymentConfirmationModal from '../../payments/OrganizationPaymentConfirmationModal'
 import PaymentSuccessModal from '../../payments/PaymentSuccessModal'
 import PaymentModal from '../../payments/PaymentModal'
 import OrganizationPaymentContext from '@/payments/OrganizationPaymentContext'
@@ -149,7 +149,7 @@ const EventOrganization = () => {
             (organizationUser.payment_plan === true ? 'Pago' : 'gratuito')}
         </p>
         {paymentState.paymentStep == 'REQUIRING_PAYMENT' && (
-          <PaymentConfirmaationModal
+          <OrganizationPaymentConfirmationModal
             organizationUser={organizationUser}
             isOpen={paymentState.paymentStep == 'REQUIRING_PAYMENT'}
             handleOk={() => paymentDispatch({ type: 'DISPLAY_PAYMENT' })}

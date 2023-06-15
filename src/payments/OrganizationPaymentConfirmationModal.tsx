@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button, Modal } from 'antd'
 
-const PaymentConfirmaationModal = ({ isOpen, handleOk, handleCancel }) => {
+const OrganizationPaymentConfirmationModal = ({ isOpen, handleOk, handleCancel }) => {
   const [isModalOpen, setIsModalOpen] = useState(true)
 
   const showModal = () => {
@@ -35,4 +35,4 @@ const PaymentConfirmaationModal = ({ isOpen, handleOk, handleCancel }) => {
   )
 }
 
-export default PaymentConfirmaationModal
+export default OrganizationPaymentConfirmationModal
