@@ -23,7 +23,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
   const [reloadFlag, setReloadFlag] = useState(false);
   const intl = useIntl();
   const locale = intl.locale === 'en' ? locale_en : intl.locale === 'pt' ? locale_pt : locale_es;
-  const { multiDates, isLoading } = useGetMultiDate();
+  const { multiDates, isLoading } = useGetMultiDate(cEvent?.value?._id ?? '');
   const [mustUpdateDates, setmustUpdateDates] = useState(false);
   useEffect(() => {
     if (targetEventUserId === null || cEvent.value === null || cEventUser.value === null) return;
@@ -112,15 +112,17 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
     return !fechasPermitidas.includes(date_to_evaluate);
   };
 
-
   //todo: Luis: hacer que se valide correctamente que no tenga la fecha nueva
   useEffect(() => {
-      if (multiDates.length > 0) {
-        console.log(multiDates[0])
-        return setDate(moment(multiDates[0].start));
-      }
+    if (!targetEventUserId) return;
+    if (multiDates.length > 0) {
+      setDate(moment(multiDates[0].start));
+      setmustUpdateDates(false);
+    } else {
       setmustUpdateDates(true);
-  }, [isLoading,targetEventUserId]);
+    }
+  }, [isLoading, targetEventUserId]);
+
   return (
     <Modal
       visible={!!targetEventUserId}
@@ -134,7 +136,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       onCancel={resetModal}
       style={{ zIndex: 1031 }}
       bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}>
-      {mustUpdateDates ? (
+      {!mustUpdateDates ? (
         <>
           <Row justify='space-between' /* style={{ margin: 5 }} */>
             <DatePicker
