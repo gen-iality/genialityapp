@@ -32,3 +32,12 @@ export interface MenuLanding {
 }
 
 
+export interface Menu {
+  key: string | number | boolean;
+  drag: JSX.Element;
+  position: number;
+  name: string;
+  icons: string;
+  checked: boolean;
+  options: JSX.Element;
+};

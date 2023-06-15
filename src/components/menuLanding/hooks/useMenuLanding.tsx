@@ -3,7 +3,7 @@ import menu from '../utils/defaultMenu.json';
 import { Actions, OrganizationApi } from '@/helpers/request';
 import { GetTokenUserFirebase } from '@/helpers/HelperAuth';
 import { DispatchMessageService } from '@/context/MessageService';
-import { MenuBase, MenuItem, MenuLandingProps } from '../interfaces/menuLandingProps';
+import { Menu, MenuBase, MenuItem, MenuLandingProps } from '../interfaces/menuLandingProps';
 import { deepCopy } from '../utils/functions';
 
 export default function useMenuLanding(props: MenuLandingProps) {
@@ -12,6 +12,7 @@ export default function useMenuLanding(props: MenuLandingProps) {
   const [itemsMenu, setItemsMenu] = useState<Record<string, MenuItem>>(deepCopy(menu));
   const [keySelect, setKeySelect] = useState<number>(Date.now());
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [data, setData] = useState<Menu[]>([]);
 
   const ORGANIZATION_VALUE = 1;
 
@@ -48,7 +49,6 @@ export default function useMenuLanding(props: MenuLandingProps) {
   useEffect(() => {
     componentDidMount();
   }, []);
-
 
   function updateValue(key: string, value: string | number | boolean, property: string) {
     let itemsMenuDB =  { ...itemsMenu }
@@ -103,28 +103,28 @@ export default function useMenuLanding(props: MenuLandingProps) {
       action: 'show',
     });
   }
-
   function orderItemsMenu() {
     let itemsMenuData: MenuBase = {};
     let itemsMenuToSave: MenuBase = {};
     let items: MenuItem[] = Object.values(itemsMenu);
-
-    items.sort(function(a: MenuItem, b: MenuItem) {
-      if (a.position && b.position) {
+  
+    items.sort(function (a: MenuItem, b: MenuItem) {
+      if (a.section && b.section) {
         return a.position - b.position;
       } else {
         return 0;
       }
     });
-
+  
     for (let item of items) {
       itemsMenuData[item.section] = item;
     }
-
+  
     itemsMenuToSave = { ...itemsMenuData };
-
+  
     return itemsMenuToSave;
   }
+  
 
   /*   const validation = (key: string): boolean => {
     return (
@@ -143,6 +143,8 @@ export default function useMenuLanding(props: MenuLandingProps) {
     keySelect,
     isLoading,
     titleheader,
+    data, 
+    setData,
     updateValue,
     orderPosition,
     submit,
