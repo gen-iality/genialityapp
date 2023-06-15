@@ -142,25 +142,25 @@ const EventOrganization = () => {
       }}
     >
       <div>
-        <p>Estado: {paymentState && paymentState.paymentstep}</p>
+        <p>Estado: {paymentState && paymentState.paymentStep}</p>
         <p>
           Plan Pago :{' '}
           {organizationUser &&
             (organizationUser.payment_plan === true ? 'Pago' : 'gratuito')}
         </p>
-        {paymentState.paymentstep == 'REQUIRING_PAYMENT' && (
+        {paymentState.paymentStep == 'REQUIRING_PAYMENT' && (
           <PaymentConfirmaationModal
             organizationUser={organizationUser}
-            isOpen={paymentState.paymentstep == 'REQUIRING_PAYMENT'}
+            isOpen={paymentState.paymentStep == 'REQUIRING_PAYMENT'}
             handleOk={() => paymentDispatch({ type: 'DISPLAY_PAYMENT' })}
             handleCancel={() => paymentDispatch({ type: 'ABORT' })}
           />
         )}
-        {paymentState.paymentstep == 'DISPLAYING_PAYMENT' && (
+        {paymentState.paymentStep == 'DISPLAYING_PAYMENT' && (
           <PaymentModal
             organizationUser={organizationUser}
             paymentDispatch={paymentDispatch}
-            isOpen={paymentState.paymentstep == 'DISPLAYING_PAYMENT'}
+            isOpen={paymentState.paymentStep == 'DISPLAYING_PAYMENT'}
             handleOk={() => paymentDispatch({ type: 'ABORT' })}
             handleCancel={() => paymentDispatch({ type: 'ABORT' })}
           />
@@ -169,7 +169,7 @@ const EventOrganization = () => {
         <PaymentSuccessModal
           organizationUser={organizationUser}
           result={paymentState.result}
-          isOpen={paymentState.paymentstep == 'DISPLAYING_SUCCESS'}
+          isOpen={paymentState.paymentStep == 'DISPLAYING_SUCCESS'}
           handleOk={() => {
             refreshPage()
             paymentDispatch({ type: 'ABORT' })

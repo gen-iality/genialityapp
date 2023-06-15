@@ -1,3 +1,4 @@
+/* global WidgetCheckout */
 import { useState, useEffect } from 'react'
 import { Button, Modal } from 'antd'
 
