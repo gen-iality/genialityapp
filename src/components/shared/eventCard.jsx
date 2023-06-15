@@ -97,9 +97,11 @@ class EventCard extends Component {
                       <time dateTime={event.datetime_to}>{Moment(event.datetime_to).format('DD MMM YYYY')}</time>
                     </Space>
                   </span>
-                  <Typography.Text ellipsis={isAdmin ? true : false} style={isAdmin ? styleAdmin : styleNormal}>
-                    {event.name}
-                  </Typography.Text>
+                  <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
+                    <Typography.Text ellipsis={isAdmin ? true : false} style={isAdmin ? styleAdmin : styleNormal}>
+                      {event.name}
+                    </Typography.Text>
+                  </Link>
                   <span>
                     {event.organizer?.name
                       ? event.organizer?.name
