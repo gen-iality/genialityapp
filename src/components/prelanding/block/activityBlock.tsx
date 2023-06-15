@@ -11,7 +11,7 @@ import useDateFormat from '@/components/networking/hooks/useDateFormat';
 
 const { useBreakpoint } = Grid;
 
-const ActivityBlock = ({ preview }: PropsPreLanding) => {
+const ActivityBlock = ({ preview, title }: PropsPreLanding) => {
   const mobilePreview = preview ? preview : '';
   const screens = useBreakpoint();
   const cEvent = useContext(CurrentEventContext);
@@ -47,15 +47,16 @@ const ActivityBlock = ({ preview }: PropsPreLanding) => {
     <>
       <Row justify='center' align='middle'>
         <Col span={isMobile ? 24 : 22}>
+          <Typography.Title level={4}>{title}</Typography.Title>
           <List 
             itemLayout={isMobile ? 'vertical' : 'horizontal'}
             grid={{gutter: 8, column: 1}}
             dataSource={activities}
-            style={{paddingTop: 20}}
+            style={{paddingTop: 10}}
             renderItem={activity => (
               <List.Item style={{border: 'none'}}>
-                <Card hoverable style={{borderRadius: 10, border: 'none'}} bodyStyle={isMobile || mobilePreview === 'tablet' || screens.sm ? {padding: 0} : {}}
-                
+                <Card hoverable style={{borderRadius: 10, border: 'none'}} 
+                bodyStyle={isMobile || mobilePreview === 'tablet' || screens.sm ? {padding: 10} : {}}
                 >
                   <Row justify={isMobile ? 'start' : 'space-between'} >
                     <Card.Meta 
