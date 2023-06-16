@@ -15,11 +15,11 @@ type OPAction =
   | { type: 'REQUIRE_PAYMENT' }
   | { type: 'DISPLAY_REGISTRATION' }
   | { type: 'DISPLAY_PAYMENT' }
-  | { type: 'DISPLAY_SUCCESS'; result?: string }
+  | { type: 'DISPLAY_SUCCESS'; result?: any }
 
 type OPState = {
   paymentStep: AvailableStep
-  result?: string
+  result?: any
   dispatch: Dispatch<OPAction>
 }
 

@@ -1,54 +1,50 @@
-import { useState, useEffect } from 'react'
-import { Button, Modal } from 'antd'
+import { useEffect, FunctionComponent, useContext } from 'react'
+import { Modal } from 'antd'
 import { OrganizationApi } from '@helpers/request'
-const PaymentSuccessModal = ({
-  result,
-  organizationUser,
-  isOpen,
-  handleOk,
-  handleCancel,
-}) => {
-  const [isModalOpen, setIsModalOpen] = useState(true)
+import { OrganizationUserType } from '@Utilities/types/OrganizationUserType'
+import OrganizationPaymentContext from './OrganizationPaymentContext'
 
-  const showModal = () => {
-    setIsModalOpen(true)
-  }
-  const closeModal = () => {
-    setIsModalOpen(true)
+interface IOrganizationPaymentSuccessModalProps {
+  organizationUser: OrganizationUserType
+}
+
+const OrganizationPaymentSuccessModal: FunctionComponent<
+  IOrganizationPaymentSuccessModalProps
+> = (props) => {
+  const { organizationUser } = props
+
+  const { paymentStep, result, dispatch } = useContext(OrganizationPaymentContext)
+
+  const makeUserAsPaidPlan = async () => {
+    const data = {
+      payment_plan: {
+        price: 5000, // TODO: Take from organization.access_settings.price
+        date_until: Date.now(), // TODO: Change to organization.access_settings.date_until
+      },
+    }
+    await OrganizationApi.editUser(
+      organizationUser.organization_id,
+      organizationUser._id,
+      data,
+    )
   }
 
-  console.log({ result })
   useEffect(() => {
-    console.log('miembro')
     if (!organizationUser) return
 
-    let prueba = async () => {
-      let data = { payment_plan: false }
-      let result = await OrganizationApi.editUser(
-        organizationUser.organization_id,
-        organizationUser._id,
-        data,
-      )
-      console.log('miembro', { organizationUser, result })
-    }
-    //prueba()
+    // makeUserAsPaidPlan()
   }, [organizationUser])
-
-  //   const handleOkInner = () => {
-  //     setIsModalOpen(false)
-  //   }
-
-  //   const handleCancelInner = () => {
-  //     setIsModalOpen(false)
-  //   }
 
   return (
     <>
       <Modal
-        title="Payment Success"
-        open={isOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        title="Pago exitoso"
+        open={paymentStep == 'DISPLAYING_SUCCESS'}
+        onOk={() => {
+          dispatch({ type: 'ABORT' })
+          window.location.reload() // This does not make sense
+        }}
+        onCancel={() => dispatch({ type: 'ABORT' })}
       >
         <p> Referencia {result && result.reference}</p>
         <p> Estado: {result && result.status}</p>
@@ -58,4 +54,4 @@ const PaymentSuccessModal = ({
   )
 }
 
-export default PaymentSuccessModal
+export default OrganizationPaymentSuccessModal

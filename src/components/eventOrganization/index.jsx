@@ -11,7 +11,7 @@ import { useCurrentUser } from '@context/userContext'
 import { OrganizationApi, TicketsApi } from '@helpers/request'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import OrganizationPaymentConfirmationModal from '../../payments/OrganizationPaymentConfirmationModal'
-import PaymentSuccessModal from '../../payments/OrganizationPaymentSuccessModal'
+import OrganizationPaymentSuccessModal from '../../payments/OrganizationPaymentSuccessModal'
 import OrganizationPaymentModal from '../../payments/OrganizationPaymentModal'
 import OrganizationPaymentContext from '@/payments/OrganizationPaymentContext'
 const { Title, Text, Paragraph } = Typography
@@ -36,8 +36,6 @@ const EventOrganization = () => {
   const { dispatch: paymentDispatch, ...paymentState } = useContext(
     OrganizationPaymentContext,
   )
-
-  const refreshPage = () => window.location.reload(true)
 
   useEffect(() => {
     if (orgId) {
@@ -154,19 +152,7 @@ const EventOrganization = () => {
           organization={organization}
         />
 
-        <PaymentSuccessModal
-          organizationUser={organizationUser}
-          result={paymentState.result}
-          isOpen={paymentState.paymentStep == 'DISPLAYING_SUCCESS'}
-          handleOk={() => {
-            refreshPage()
-            paymentDispatch({ type: 'ABORT' })
-          }}
-          handleCancel={() => {
-            refreshPage()
-            paymentDispatch({ type: 'ABORT' })
-          }}
-        />
+        <OrganizationPaymentSuccessModal organizationUser={organizationUser} />
 
         <Button onClick={() => paymentDispatch({ type: 'REQUIRE_PAYMENT' })}>
           REQUIRE_PAYMENT
