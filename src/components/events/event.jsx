@@ -209,9 +209,9 @@ class Event extends Component {
     if (error)
       return (
         <Result
-          status='error'
-          title='Error inesperado'
-          subTitle={`Lo sentimos, hubo un error de tipo: ${handleRequestError(error).message}`}
+          status='404'
+          title='Evento no encontrado'
+          subTitle={`Lo sentimos, hubo un error inesperado`}
           extra={[
             <Link to={`/`}>
               <Button type='primary' key='eventData'>
