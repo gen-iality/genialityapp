@@ -1,5 +1,5 @@
 import { CurrentEventContext } from '@/context/eventContext';
-import { Avatar, Row, Space, Tag, Timeline, Typography, Grid, List, Col, Card } from 'antd';
+import { Avatar, Row, Space, Tag, Timeline, Typography, Grid, List, Col, Card, Comment } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import FlagCheckeredIcon from '@2fd/ant-design-icons/lib/FlagCheckered';
 import ClockTimeFourOutlineIcon from '@2fd/ant-design-icons/lib/ClockTimeFourOutline';
@@ -85,7 +85,12 @@ const ActivityBlock = ({ preview, title }: PropsPreLanding) => {
                         </Space>
                       }
                       description={
-                        <Typography.Text strong>{activity?.name}</Typography.Text>
+                        <Space direction='vertical' size={0}>
+                          <Typography.Text strong>{activity?.name}</Typography.Text>
+                          {activity?.type?.name &&
+                            <Typography.Text type='secondary' style={{fontSize: '12px'}}>{determineType(activity.type.name)}</Typography.Text>
+                          }
+                        </Space>
                       }
                     />             
                     <Avatar.Group maxCount={3} maxStyle={{ color: textColor, backgroundColor: bgColor }} 
