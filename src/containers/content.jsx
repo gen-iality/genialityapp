@@ -27,6 +27,7 @@ import ModalAuthAnonymous from '@components/authentication/ModalAuthAnonymous'
 import ModalUpdate from '@components/events/Landing/ModalUpdate'
 import DirectLoginPage from '@/pages/DirectLoginPage'
 import CertificateGeneraterPage from '@/pages/CertificateGeneraterPage'
+import { OrganizationPaymentProvider } from '@/payments/OrganizationPaymentContext'
 //Code splitting
 const HeaderContainer = loadable(() => import('./HeaderContainer'))
 const Home = loadable(() => import('../pages/home'))
@@ -103,9 +104,21 @@ const ContentContainer = () => {
           <RouteContext
             exact
             path="/organization/:id/events"
-            component={EventOrganization}
+            component={(props) => (
+              <OrganizationPaymentProvider>
+                <EventOrganization {...props} />
+              </OrganizationPaymentProvider>
+            )}
           />
-          <RouteContext exact path="/organization/:id" component={EventOrganization} />
+          <RouteContext
+            exact
+            path="/organization/:id"
+            component={(props) => (
+              <OrganizationPaymentProvider>
+                <EventOrganization {...props} />
+              </OrganizationPaymentProvider>
+            )}
+          />
           <PrivateRoute path="/admin/organization/:id" component={Organization} />
           <PrivateRoute
             path="/noaccesstocms/:id/:withoutPermissions"
