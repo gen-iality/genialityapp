@@ -1,108 +1,113 @@
 /* global WidgetCheckout */
-import { useState, useEffect } from 'react'
-import { Button, Modal } from 'antd'
+import { useEffect, FunctionComponent, useContext, useMemo } from 'react'
+import OrganizationPaymentContext from './OrganizationPaymentContext'
+import { OrganizationUserType } from '@Utilities/types/OrganizationUserType'
 
-const publicKey = process.env.VITE_WOMPI_DEV_PUB_API_KEY
+const publicKey: string = import.meta.env.VITE_WOMPI_DEV_PUB_API_KEY
 
-const PaymentModal = ({
-  paymentDispatch,
-  organizationUser,
-  isOpen,
-  handleOk,
-  handleCancel,
-}) => {
-  const [isModalOpen, setIsModalOpen] = useState(true)
+interface IOrganizationPaymentModalProps {
+  organization: any
+  organizationUser: OrganizationUserType
+}
 
-  const showModal = () => {
-    setIsModalOpen(true)
-  }
-  const closeModal = () => {
-    setIsModalOpen(true)
-  }
+const money = 5000
+const price = Math.round(money) * 100
+const lang = 'ES'
 
-  //   const handleOkInner = () => {
-  //     setIsModalOpen(false)
-  //   }
+const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps> = (
+  props,
+) => {
+  const { organizationUser, organization } = props
+  console.log('organizationUser', organizationUser)
 
-  //   const handleCancelInner = () => {
-  //     setIsModalOpen(false)
-  //   }
+  const { paymentStep, dispatch } = useContext(OrganizationPaymentContext)
 
-  useEffect(() => {
-    paymentDispatch({ type: 'ABORT' })
-    // @ts-ignore
-    //if (window?.WidgetCheckout && money) {
-    const eventId = 'asd'
-    const money = 5000
-    const price = Math.round(money) * 100
-    const payload = {
-      eventId,
-      price,
+  const query = useMemo(() => {
+    if (!organizationUser) return
+
+    const params = {
+      finish: 'true',
+      payment_event: 'true',
+      user_id: organizationUser.account_id,
+      'assigned_to.names': organizationUser.user.names,
+      'assigned_to.email': organizationUser.user.email,
+      lang,
     }
-    const userInfo = { _id: 1, names: 'a', email: 'a' }
-    const lang = 'ES'
-    // TODO: JUST FOR TEST PURPOSES
-    const redirectUrl = encodeURI(
-      `http://${window.location.host}/${eventId}?finish=true&payment_event=true&event_id=${payload.eventId}&user_id=${userInfo._id}&assigned_to.names=${userInfo.names}&assigned_to.email=${userInfo.email}&lang=${lang}`,
-    )
+    return new URLSearchParams(params)
+  }, [organizationUser])
 
-    // @ts-ignore
-    const checkout = new WidgetCheckout({
+  const redirectUrl = useMemo(() => {
+    if (!query || !organization) return
+
+    return encodeURI(
+      `http://${window.location.host}/paid-organization/${
+        organization._id
+      }?${query.toString()}`,
+    )
+  }, [query, organization])
+
+  const checkout = useMemo(() => {
+    if (!redirectUrl || !organizationUser) return
+
+    const moreCustomData: any = {}
+    if (organizationUser.properties.phone) {
+      moreCustomData.phoneNumber = organizationUser.properties.phone
+      moreCustomData.phoneNumberPrefix = '+57'
+    }
+    if (organizationUser.properties.ID) {
+      moreCustomData.legalId = organizationUser.properties.ID
+      moreCustomData.legalIdType = 'CC'
+    }
+
+    console.log('moreCustomData:', moreCustomData)
+
+    /// @ts-ignore
+    return new WidgetCheckout({
       currency: 'COP',
       amountInCents: price,
-      reference: new Date().getTime() + eventId + userInfo._id,
+      reference: `${new Date().getTime()}-${organization._id}-${
+        organizationUser.account_id
+      }`,
       publicKey: publicKey,
       redirectUrl,
       customerData: {
-        // Opcional
-        //organizationUser_id: organizationUser._id,
-        //email: userInfo.email,
-        fullName: organizationUser._id,
+        email: organizationUser.user.email,
+        fullName: organizationUser.user.names,
+        ...moreCustomData,
       },
     })
-    console.log('checkout', checkout)
-    // @ts-ignore
-    //Cuando la pasarela WOMPI retorna un resultado de pago lo hacen  en este función en el parametro result
-    checkout.open(async (result) => {
-      console.log({ result })
-      //result.transaction //amountInCents // customerEmail //reference //status //customerData.fullName
-      //org, member,
-      //Si la transacción fue exitosa
-      if (result.transaction.status == 'APPROVED') {
-        let data = { payment_plan: true }
-        let result = await OrganizationApi.editUser(
-          organizationUser.organization_id,
-          organizationUser._id,
-          data,
-        )
-      }
-      console.log('miembro', { organizationUser, result })
+  }, [redirectUrl, organizationUser])
 
-      //En cualquier caso enviamos la accion de respuesta de transacción recibida
-      paymentDispatch({
-        type: 'DISPLAY_SUCCESS',
-        payload: { result: result.transaction },
+  useEffect(() => {
+    if (paymentStep == 'DISPLAYING_PAYMENT') {
+      if (!checkout) return
+
+      dispatch({ type: 'ABORT' })
+
+      checkout.open(async (result: any) => {
+        console.log({ result })
+
+        if (result.transaction.status == 'APPROVED') {
+          // let data = { payment_plan: true }
+          // let result = await OrganizationApi.editUser(
+          //   organizationUser.organization_id,
+          //   organizationUser._id,
+          //   data,
+          // )
+          console.log('paid')
+        }
+        console.debug('member', { organizationUser, result })
+
+        //En cualquier caso enviamos la accion de respuesta de transacción recibida
+        dispatch({
+          type: 'DISPLAY_SUCCESS',
+          result: result.transaction,
+        })
       })
-      //const transaction = result.transaction as Transaction;
-      // console.log('Transaction ID: ', transaction.id);
-      //console.log('Transaction object: ', transaction);
+    }
+  }, [paymentStep, checkout])
 
-      //setPayment(transaction)
-      //setcurrent(1)
-    })
-
-    paymentDispatch({ type: 'ABORT' })
-  }, [])
-
-  return (
-    <>
-      {/* <Modal title="Payment" open={isOpen} onOk={handleOk} onCancel={handleCancel}>
-        <p>Payment confirmation...</p>
-        <p>Payment confirmation...</p>
-        <p>Payment confirmation...</p>
-      </Modal> */}
-    </>
-  )
+  return <></>
 }
 
-export default PaymentModal
+export default OrganizationPaymentModal

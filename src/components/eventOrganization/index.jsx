@@ -12,7 +12,7 @@ import { OrganizationApi, TicketsApi } from '@helpers/request'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import OrganizationPaymentConfirmationModal from '../../payments/OrganizationPaymentConfirmationModal'
 import PaymentSuccessModal from '../../payments/PaymentSuccessModal'
-import PaymentModal from '../../payments/OrganizationPaymentModal'
+import OrganizationPaymentModal from '../../payments/OrganizationPaymentModal'
 import OrganizationPaymentContext from '@/payments/OrganizationPaymentContext'
 const { Title, Text, Paragraph } = Typography
 
@@ -149,15 +149,10 @@ const EventOrganization = () => {
             (organizationUser.payment_plan === true ? 'Pago' : 'gratuito')}
         </p>
         <OrganizationPaymentConfirmationModal />
-        {paymentState.paymentStep == 'DISPLAYING_PAYMENT' && (
-          <PaymentModal
-            organizationUser={organizationUser}
-            paymentDispatch={paymentDispatch}
-            isOpen={paymentState.paymentStep == 'DISPLAYING_PAYMENT'}
-            handleOk={() => paymentDispatch({ type: 'ABORT' })}
-            handleCancel={() => paymentDispatch({ type: 'ABORT' })}
-          />
-        )}
+        <OrganizationPaymentModal
+          organizationUser={organizationUser}
+          organization={organization}
+        />
 
         <PaymentSuccessModal
           organizationUser={organizationUser}
