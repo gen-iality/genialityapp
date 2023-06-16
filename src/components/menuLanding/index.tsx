@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Spin, Form, Switch, Table, Button, Typography, Tag } from 'antd';
 import Header from '@/antdComponents/Header';
 import BackTop from '@/antdComponents/BackTop';
 import useMenuLanding from './hooks/useMenuLanding';
 import { MenuLandingProps } from './interfaces/menuLandingProps';
-import { DragOutlined, EditOutlined } from '@ant-design/icons';
 import * as iconComponents from '@ant-design/icons';
+import DragIcon from '@2fd/ant-design-icons/lib/DragVertical';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import BottonOpenModal from './hooks/BottonOpenModal';
 
 export default function MenuLanding(props: MenuLandingProps) {
-  const { menu, isLoading, titleheader, data, setData, updateValue, submit, checkedItem } = useMenuLanding(props);
+  const { menu, isLoading, titleheader, data, formValues, setData, updateValue, submit, checkedItem } = useMenuLanding(props);
 
   useEffect(() => {
     const updatedData = Object.keys(menu).map((key: string, index) => {
       return {
         key: key,
-        drag: <DragOutlined />,
+        drag: <DragIcon />,
         position: menu[key].position,
         name: menu[key].name,
         icons: menu[key].icon,
         checked: menu[key].checked,
-        options: <EditOutlined />,
+        options: <iconComponents.EditOutlined />,
       };
     });
     setData(updatedData);
@@ -43,22 +43,22 @@ export default function MenuLanding(props: MenuLandingProps) {
     setData(items);
   };
 
-  // const renderIcon = (record) => {
-  //   const icon = record.icons;
-  //   const IconComponent = iconComponents[icon];
-  //   return IconComponent ? <IconComponent /> : null;
-  // };
+  const renderIcon = (iconName: string) => {
+    const IconComponent = iconComponents[iconName];
+    return IconComponent ? <IconComponent /> : null;
+  };
 
   const columns = [
     {
       title: '',
+      className: 'drag-visible',
       dataIndex: 'drag',
-      width: 100,
+      width:30,
     },
     {
       title: 'Orden',
       dataIndex: 'position',
-      width: 100,
+      width: 20,
       render: (text: number, record, index: number) => <Tag>{`#${index + 1}`}</Tag>,
     },
     {
@@ -68,17 +68,24 @@ export default function MenuLanding(props: MenuLandingProps) {
       render: (text: string, record) => <Typography.Text>{record.name}</Typography.Text>,
     },
     {
+			title: 'Alias',
+			dataIndex: 'label',
+			className: 'drag-visible',
+      width: 100,
+      render: (text: string, record) => <Typography.Text>{record.name}</Typography.Text>,
+		},
+    {
       title: 'Iconos',
       dataIndex: 'icons',
       width: 100,
-      // render: (record) => renderIcon(record)
+      render: (text: string, record) => renderIcon(record.icons),
     },
     {
       title: 'Habilitado',
       dataIndex: 'checked',
       width: 100,
       render: (text: string, record) => (
-        <Switch checked={text} onChange={(checked) => checkedItem(record.key, checked)} />
+        <Switch checked={text} onChange={(checked) => record.key && checkedItem(record.key, checked)} />
       ),
     },
     {
@@ -87,9 +94,9 @@ export default function MenuLanding(props: MenuLandingProps) {
       width: 100,
       render: (text: string, record) =>
         record.checked ? (
-          <BottonOpenModal updateValue={updateValue} checkedItem={checkedItem} />
+          <BottonOpenModal updateValue={updateValue} checkedItem={checkedItem} formValues={formValues} />
         ) : (
-          <Button type='primary' icon={<EditOutlined />} disabled />
+          <Button type='primary' icon={<iconComponents.EditOutlined />} disabled />
         ),
     },
   ];

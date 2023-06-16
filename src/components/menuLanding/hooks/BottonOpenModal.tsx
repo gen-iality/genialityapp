@@ -1,32 +1,32 @@
 import { EditOutlined } from '@ant-design/icons';
 import { Button, Modal, Form, Input, Switch, Select } from 'antd';
-import React, { useState } from 'react';
-import * as iconComponents from '@ant-design/icons'
-import useMenuLanding from './useMenuLanding';
+import { useState } from 'react';
 import { MenuLandingProps } from '../interfaces/menuLandingProps';
 
-export default function BottonOpenModal(props:  MenuLandingProps) {
-  const { menu, isLoading, titleheader, updateValue, submit, checkedItem } = useMenuLanding(props);
+export default function BottonOpenModal(props: MenuLandingProps) {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [name, setName] = useState('');
+  const [form] = Form.useForm();
+
   const iconList = [
     { value: 'EditOutlined', label: 'Editar' },
     { value: 'DeleteOutlined', label: 'Eliminar' },
     { value: 'SearchOutlined', label: 'Buscar' },
   ];
-  
 
   const openModal = () => {
     setIsModalVisible(true);
   };
 
   const handleOk = () => {
-    updateValue('key', name, 'name');
-
-    setIsModalVisible(false);
+    form.submit();
   };
 
   const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const onFinish = (values: any) => {
+    console.log('Form values:', values);
     setIsModalVisible(false);
   };
 
@@ -34,20 +34,15 @@ export default function BottonOpenModal(props:  MenuLandingProps) {
     <div>
       <Button type='primary' size='small' onClick={openModal} icon={<EditOutlined />} />
       <Modal title='Editar' visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-        <Form>
-          <Form.Item label='Nombre'>
-            <Input
-              size='small'
-              onChange={(e) => {
-                e && updateValue('key', e, 'name');
-              }}
-            />
+        <Form form={form} onFinish={onFinish}>
+          <Form.Item label='Nombre' name='name'>
+            <Input size='small' />
           </Form.Item>
-          <Form.Item label='Iconos'>
+          <Form.Item label='Iconos' name='icon'>
             <Select defaultValue='Eliminar' style={{ width: 120 }} options={iconList} />
           </Form.Item>
-          <Form.Item label='Habilitado'>
-            <Switch checked={true} onChange={(checked) => checkedItem('key', checked)} />
+          <Form.Item label='Habilitado' name='enabled' valuePropName='checked'>
+            <Switch />
           </Form.Item>
         </Form>
       </Modal>

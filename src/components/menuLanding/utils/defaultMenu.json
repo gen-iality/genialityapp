@@ -134,7 +134,7 @@
     "name": "Producto",
     "section": "producto",
     "position": 30,
-    "icon": "ShopOutlined ",
+    "icon": "ShopOutlined",
     "checked": false,
     "permissions": "public"
   },

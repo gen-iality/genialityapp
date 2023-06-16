@@ -13,20 +13,37 @@ export default function useMenuLanding(props: MenuLandingProps) {
   const [keySelect, setKeySelect] = useState<number>(Date.now());
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [data, setData] = useState<Menu[]>([]);
+  const [formValues, setFormValues] = useState({ name: '', icon: '', enabled: true });
+
 
   const ORGANIZATION_VALUE = 1;
 
+  // const checkedItem = (key: string, value: boolean) => {
+  //   const menuBase: MenuBase = { ...menu };
+  //   const itemsMenuDB = { ...itemsMenu };
+  //   itemsMenuDB[key].checked = value;
+  //   if (!value) {
+  //     itemsMenuDB[key].name = menuBase[key].name;
+  //     itemsMenuDB[key].position = menuBase[key].position;
+  //   }
+  //   setItemsMenu(itemsMenuDB);
+  // };
   const checkedItem = (key: string, value: boolean) => {
     const menuBase: MenuBase = { ...menu };
     const itemsMenuDB = { ...itemsMenu };
-    itemsMenuDB[key].checked = value;
-    if (!value) {
-      itemsMenuDB[key].name = menuBase[key].name;
-      itemsMenuDB[key].position = menuBase[key].position;
+  
+    if (itemsMenuDB[key]) {
+      itemsMenuDB[key].checked = value;
+      
+      if (!value) {
+        itemsMenuDB[key].name = menuBase[key].name;
+        itemsMenuDB[key].position = menuBase[key].position;
+      }
+      
+      setItemsMenu(itemsMenuDB);
     }
-    setItemsMenu(itemsMenuDB);
   };
-
+  
   async function componentDidMount() {
     let menuLanding: { itemsMenu: MenuBase } | null = null;
     if (organization !== ORGANIZATION_VALUE) {
@@ -50,13 +67,19 @@ export default function useMenuLanding(props: MenuLandingProps) {
     componentDidMount();
   }, []);
 
+  // function updateValue(key: string, value: string | number | boolean, property: string) {
+  //   let itemsMenuDB =  { ...itemsMenu }
+  //   if (value && itemsMenuDB[key]) itemsMenuDB[key][property] = value;
+  //   setItemsMenu(itemsMenuDB);
+  //   if (property === 'permissions') setKeySelect(Date.now());
+  // }
   function updateValue(key: string, value: string | number | boolean, property: string) {
-    let itemsMenuDB =  { ...itemsMenu }
-    if (value && itemsMenuDB[key]) itemsMenuDB[key][property] = value;
-    setItemsMenu(itemsMenuDB);
-    if (property === 'permissions') setKeySelect(Date.now());
+    setFormValues((prevFormValues) => ({
+      ...prevFormValues,
+      [property]: value
+    }));
   }
-
+  
 
   function orderPosition(key: string, order: string | number): void {
     let itemsMenuToOrder = Object.assign({}, itemsMenu);
@@ -144,6 +167,7 @@ export default function useMenuLanding(props: MenuLandingProps) {
     isLoading,
     titleheader,
     data, 
+    formValues,
     setData,
     updateValue,
     orderPosition,
