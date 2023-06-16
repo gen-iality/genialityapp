@@ -24,7 +24,6 @@ import { FB } from '@helpers/firestore-request'
 import { StateMessage } from '@context/MessageService'
 
 function OrgMembers(props) {
-  console.log('Props - OrgMembers (CMS) ->', props)
   const { _id: organizationId } = props.org
 
   /** Data States */
@@ -295,7 +294,7 @@ function OrgMembers(props) {
       payment_plan: organizationMember.payment_plan
         ? null
         : {
-            date_until: '<insert date here>',
+            date_until: dayjs(Date.now()).add(7, 'day').toDate(),
             more_config: '...',
           },
     }
