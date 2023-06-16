@@ -11,7 +11,7 @@ import { useCurrentUser } from '@context/userContext'
 import { OrganizationApi, TicketsApi } from '@helpers/request'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import OrganizationPaymentConfirmationModal from '../../payments/OrganizationPaymentConfirmationModal'
-import PaymentSuccessModal from '../../payments/PaymentSuccessModal'
+import PaymentSuccessModal from '../../payments/OrganizationPaymentSuccessModal'
 import OrganizationPaymentModal from '../../payments/OrganizationPaymentModal'
 import OrganizationPaymentContext from '@/payments/OrganizationPaymentContext'
 const { Title, Text, Paragraph } = Typography
