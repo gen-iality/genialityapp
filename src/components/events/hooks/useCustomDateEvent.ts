@@ -1,9 +1,10 @@
 import { EventsApi } from '@/helpers/request';
 import { notification } from 'antd';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import { useEffect, useState } from 'react';
 import { DateObject } from 'react-multi-date-picker';
 import { dateToCustomDate } from '../utils/CustomMultiDate';
+import { FORMAT_WITHOUT_HOUR } from '@/components/networking/utils/space-requesting.utils';
 
 interface UseCustomDateEventProps {
     eventId: string;
@@ -107,61 +108,45 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
         }
     };
 
-    const handleInterceptor = (values: DateObject | DateObject[] | null) => {
-        if (Array.isArray(values)) {
 
-            const datesSelected = values.map((value) => value.toDate());
+    const disabledDate = (current: Moment) => {
+        const fechasPermitidas = dates.map((dateRange) => {
+            return moment(dateRange.start).format(FORMAT_WITHOUT_HOUR);
+        });
 
-            const newDateRangeList = datesSelected.map((date, index) => {
-
-                const currentDataRange = dates.find((dataRange) => dataRange.id === dayToKey(date));
-
-
-                if (currentDataRange) {
-                    return currentDataRange
-                }
-
-
-                if (dates.length === 0) {
-                    const today = new Date()
-
-                    date.setHours(today.getHours())
-                    date.setMinutes(today.getMinutes())
-
-                    return {
-                        id: dayToKey(date),
-                        start: date,
-                        end: new Date(date.getTime() + 1000 * 60 * 60),
-                    };
-                }
-                const lastStart = dates[index - 1].start
-                const lastEnd = dates[index - 1].end
-
-
-                const startDate = new Date(date)
-                const endDate = new Date(date)
-
-                startDate.setHours(lastStart.getHours())
-                startDate.setMinutes(lastStart.getMinutes())
-
-                endDate.setHours(lastEnd.getHours())
-                endDate.setMinutes(lastEnd.getMinutes())
-
-
-                return {
-                    id: dayToKey(date),
-                    start: startDate,
-                    end: endDate,
-                };
-            });
-
-
-            newDateRangeList.sort((a, b) => a.start.getTime() - b.start.getTime());
-
-            setDates(newDateRangeList);
-            setDays(datesSelected);
-        }
+        const date_to_evaluate = moment(current).format(FORMAT_WITHOUT_HOUR);
+        return fechasPermitidas.includes(date_to_evaluate);
     };
+
+    const handleInterceptor = (fecha: Moment, horaInicio: Moment, horaFin: Moment) => {
+        const currentDate = fecha.toDate()
+
+        currentDate.setHours(horaInicio.toDate().getHours())
+        currentDate.setMinutes(horaInicio.toDate().getMinutes())
+
+        const currentDateStart = new Date(currentDate)
+        const currentDateEnd = new Date(currentDate)
+
+        currentDateEnd.setHours(horaFin.toDate().getHours())
+        currentDateEnd.setMinutes(horaFin.toDate().getMinutes())
+
+        const currentDates = [...dates]
+
+
+        const newDateRangeEvius: DateRangeEvius = {
+            id: dayToKey(currentDate),
+            start: currentDateStart,
+            end: currentDateEnd,
+        }
+
+        currentDates.push(newDateRangeEvius)
+
+        currentDates.sort((a, b) => a.start.getTime() - b.start.getTime());
+
+        setDates(currentDates);
+    };
+
+
 
     const handleUpdateTime = (
         dateKey: string,
@@ -226,5 +211,6 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
         handleInterceptor,
         mustUpdateDate,
         datesOld,
+        disabledDate
     };
 };
