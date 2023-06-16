@@ -3,23 +3,25 @@ import { Modal } from 'antd'
 import { OrganizationApi } from '@helpers/request'
 import { OrganizationUserType } from '@Utilities/types/OrganizationUserType'
 import OrganizationPaymentContext from './OrganizationPaymentContext'
+import dayjs from 'dayjs'
 
 interface IOrganizationPaymentSuccessModalProps {
   organizationUser: OrganizationUserType
+  organization: any
 }
 
 const OrganizationPaymentSuccessModal: FunctionComponent<
   IOrganizationPaymentSuccessModalProps
 > = (props) => {
-  const { organizationUser } = props
+  const { organizationUser, organization } = props
 
   const { paymentStep, result, dispatch } = useContext(OrganizationPaymentContext)
 
   const makeUserAsPaidPlan = async () => {
     const data = {
       payment_plan: {
-        price: 5000, // TODO: Take from organization.access_settings.price
-        date_until: Date.now(), // TODO: Change to organization.access_settings.date_until
+        price: organization.access_settings?.price ?? 0,
+        date_until: dayjs(Date.now()).add(organization.access_settings?.days ?? 0, 'day'),
       },
     }
     await OrganizationApi.editUser(

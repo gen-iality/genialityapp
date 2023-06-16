@@ -31,6 +31,7 @@ const EventCard = ({
   noDates,
   organizationUser,
   paymentDispatch,
+  organization,
 }) => {
   let history = useHistory()
   //let location = useLocation()
@@ -112,8 +113,8 @@ const EventCard = ({
                   href={`/landing/${event._id}/evento`}
                   onClick={(e) => {
                     if (
-                      !organizationUser?.payment_plan ||
-                      organizationUser?.payment_plan == 'false'
+                      !organizationUser?.payment_plan &&
+                      organization?.access_settings?.type === 'payment'
                     ) {
                       paymentDispatch({ type: 'REQUIRE_PAYMENT' })
                       e.preventDefault()
@@ -196,8 +197,8 @@ const EventCard = ({
                     href={`/landing/${event._id}/evento`}
                     onClick={(e) => {
                       if (
-                        !organizationUser?.payment_plan ||
-                        organizationUser?.payment_plan == 'false'
+                        !organizationUser?.payment_plan &&
+                        organization?.access_settings?.type === 'payment'
                       ) {
                         paymentDispatch({ type: 'REQUIRE_PAYMENT' })
                         e.preventDefault()

@@ -118,9 +118,22 @@ const EventOrganization = () => {
     if (!organization || !organizationUser) return
     if (organization.access_settings?.type === 'payment') {
       console.log('organizationUser', organizationUser)
-      if (
-        organizationUser.payment_plan /* && organizationUser.payment_plan.date_until < Date.now() */
-      ) {
+
+      // Check if the organization user has an available payment plan
+      let memberHadPaid = false
+      if (organizationUser.payment_plan?.date_until !== undefined) {
+        const today = dayjs(Date.now())
+        const memberDateUntil = dayjs(organizationUser.payment_plan.date_until)
+        if (memberDateUntil.isValid()) {
+          const diff = memberDateUntil.diff(today, 'day')
+          if (diff > 0) {
+            /* Congratulation!!! */
+            memberHadPaid = true
+          }
+        }
+      }
+
+      if (memberHadPaid) {
         // Nothing, ok
         console.log('This organization has paid access - the user too')
       } else {
@@ -152,7 +165,10 @@ const EventOrganization = () => {
           organization={organization}
         />
 
-        <OrganizationPaymentSuccessModal organizationUser={organizationUser} />
+        <OrganizationPaymentSuccessModal
+          organizationUser={organizationUser}
+          organization={organization}
+        />
 
         <Button onClick={() => paymentDispatch({ type: 'REQUIRE_PAYMENT' })}>
           REQUIRE_PAYMENT
@@ -300,6 +316,7 @@ const EventOrganization = () => {
                           <EventCard
                             paymentDispatch={paymentDispatch}
                             organizationUser={organizationUser}
+                            organization={organization}
                             noDates
                             bordered={false}
                             key={event._id}
@@ -348,6 +365,9 @@ const EventOrganization = () => {
                         event={event}
                         action={{ name: 'Ver', url: `landing/${event._id}` }}
                         noAvailable
+                        paymentDispatch={paymentDispatch}
+                        organizationUser={organizationUser}
+                        organization={organization}
                       />
                     </Col>
                   ))

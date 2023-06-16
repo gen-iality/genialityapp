@@ -21,6 +21,7 @@ export const columns = (
   userActivities,
   isStaticsLoading,
   togglePaymentPlan,
+  organization,
 ) => {
   const history = useHistory()
   const [columns, setColumns] = useState([])
@@ -95,13 +96,10 @@ export const columns = (
     key: 'payment_plan',
     width: '140px',
     ellipsis: true,
-    sorter: (a, b) => a.payment_plan - b.payment_plan,
+    sorter: (a, b) => (a.payment_plan?.price ?? 0) - (b.payment_plan?.price ?? 0),
     ...membersGetColumnSearchProps('payment_plan'),
-    render(val, item) {
-      console.log('item', item)
-      if (item.payment_plan) {
-        return '5000'
-      }
+    render(payment_plan) {
+      return payment_plan?.price ?? 0
     },
   }
 
@@ -160,16 +158,18 @@ export const columns = (
               icon={<EditOutlined />}
             ></Button>
           </Tooltip>
-          <Tooltip title={item.payment_plan ? 'Quitar premium' : 'Hace premium'}>
-            <Button
-              type={item.payment_plan ? 'ghost' : 'primary'}
-              size="small"
-              onClick={() => {
-                togglePaymentPlan(item)
-              }}
-              icon={<RiseOutlined />}
-            ></Button>
-          </Tooltip>
+          {organization.access_settings?.type === 'payment' && (
+            <Tooltip title={item.payment_plan ? 'Quitar premium' : 'Hace premium'}>
+              <Button
+                type={item.payment_plan ? 'ghost' : 'primary'}
+                size="small"
+                onClick={() => {
+                  togglePaymentPlan(item)
+                }}
+                icon={<RiseOutlined />}
+              ></Button>
+            </Tooltip>
+          )}
         </>
       )
     },
@@ -196,7 +196,7 @@ export const columns = (
   useEffect(() => {
     const newColumns = [picture, ...dynamicColumns]
 
-    newColumns.push(payment_plan)
+    organization.access_settings?.type === 'payment' && newColumns.push(payment_plan)
     newColumns.push(progressing)
     newColumns.push(created_at)
     newColumns.push(updated_at)

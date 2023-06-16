@@ -88,12 +88,6 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
         console.log({ result })
 
         if (result.transaction.status == 'APPROVED') {
-          // let data = { payment_plan: true }
-          // let result = await OrganizationApi.editUser(
-          //   organizationUser.organization_id,
-          //   organizationUser._id,
-          //   data,
-          // )
           console.log('paid')
         }
         console.debug('member', { organizationUser, result })

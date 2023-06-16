@@ -24,7 +24,7 @@ import { FB } from '@helpers/firestore-request'
 import { StateMessage } from '@context/MessageService'
 
 function OrgMembers(props) {
-  const { _id: organizationId } = props.org
+  const { _id: organizationId, access_settings } = props.org
 
   /** Data States */
   const [membersDataSource, setMembersDataSource] = useState([])
@@ -292,10 +292,12 @@ function OrgMembers(props) {
     organizationMember = {
       ...organizationMember,
       payment_plan: organizationMember.payment_plan
-        ? null
+        ? undefined
         : {
-            date_until: dayjs(Date.now()).add(7, 'day').toDate(),
-            more_config: '...',
+            date_until: dayjs(Date.now())
+              .add(access_settings?.days ?? 15, 'day')
+              .toDate(),
+            price: access_settings?.price ?? 0,
           },
     }
 
@@ -340,6 +342,7 @@ function OrgMembers(props) {
           userActivities,
           isStaticsLoading,
           togglePaymentPlan,
+          props.org,
         )}
         dataSource={membersDataSource}
         size="small"
