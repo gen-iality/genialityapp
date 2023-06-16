@@ -57,7 +57,7 @@ const ActivityBlock = ({ preview, title }: PropsPreLanding) => {
             renderItem={activity => (
               <List.Item style={{border: 'none'}}>
                 <Card hoverable style={{borderRadius: 10, border: 'none'}} 
-                bodyStyle={isMobile || mobilePreview === 'tablet' || screens.sm ? {padding: 10} : {}}
+                bodyStyle={isMobile || mobilePreview === 'tablet' || screens.sm ? {padding: 20} : {}}
                 >
                   <Row justify={isMobile ? 'start' : 'space-between'} >
                     <Card.Meta 
@@ -87,7 +87,7 @@ const ActivityBlock = ({ preview, title }: PropsPreLanding) => {
                       description={
                         <Typography.Text strong>{activity?.name}</Typography.Text>
                       }
-                    />                  
+                    />             
                     <Avatar.Group maxCount={3} maxStyle={{ color: textColor, backgroundColor: bgColor }} 
                       style={isMobile || mobilePreview === 'tablet' || screens.sm ? {paddingLeft: 95, paddingTop: 10} : {}}>
                       {activity.hosts.length > 0 &&
