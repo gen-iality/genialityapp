@@ -9,6 +9,7 @@ import {
   updateAttendeeInActivityRealTime,
   checkinAttendeeInActivity,
 } from '@helpers/HelperAuth'
+import { Badge } from 'antd'
 
 const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
   const { activity } = props
@@ -80,10 +81,19 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
     <>
       <HeaderColumnswithContext isVisible activityState={activityState} />
       <div className="mediaplayer" style={{ aspectRatio: '16/9' }}>
-        <p>
-          Progreso: {viewedVideoProgress}% &nbsp; Completo:{' '}
-          {attendeeRealTime?.checked_in === true ? 'COMPLETO' : 'AÚN NO'}
-        </p>
+        <div>
+          <Badge
+            count={`Progreso: ${viewedVideoProgress}%`}
+            style={{ backgroundColor: '#0E594A', color: 'while' }}
+          />
+          <Badge
+            count={`${
+              attendeeRealTime?.checked_in === true ? 'Completo' : 'No completado'
+            }`}
+            style={{ backgroundColor: '#BA1D36', color: 'while' }}
+          />
+        </div>
+
         {isItAnFrame ? (
           <iframe
             style={{ aspectRatio: '16/9' }}
