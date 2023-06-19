@@ -99,7 +99,7 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
     if (!currentActivity) return
     if (!activity) return
     if (cEventUser.status == 'LOADED' && cEventUser.value != null) {
-      if (['url', 'vimeo', 'cargarvideo'].includes(activity.type?.name)) {
+      if (['url', 'vimeo'].includes(activity.type?.name)) {
         checkinAttendeeInActivity(cEventUser.value, params.activity_id)
       }
     }

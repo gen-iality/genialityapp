@@ -41,25 +41,31 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
     if (!ref.current) return
     if (!activity?._id) return
 
-    try {
-      const unsubscrubeCallback = FB.Attendees.ref(
-        activity._id,
-        cEventUser.value._id,
-      ).onSnapshot((doc) => {
-        const data = doc.data()
-        if (!data) return
+    if (activity.type.name === 'cargarvideo') {
+      setIsItAnFrame(true)
+    } else {
+      setIsItAnFrame(false)
 
-        setAttendeeRealTime(data)
-        console.log('vimeo asistente ', data)
-        if (parseFloat(data.viewProgress) && data.viewProgess > viewedVideoProgress) {
-          setViewedVideoProgress(data.viewProgess)
-          console.log('vimeo timeupdate in database', data)
-          ref.current!.seekTo(data.viewProgess)
-        }
-      })
-      setRealtimeUnsubscribe(unsubscrubeCallback)
-    } catch (e) {
-      console.log('vimeo error', { e })
+      try {
+        const unsubscrubeCallback = FB.Attendees.ref(
+          activity._id,
+          cEventUser.value._id,
+        ).onSnapshot((doc) => {
+          const data = doc.data()
+          if (!data) return
+
+          setAttendeeRealTime(data)
+          console.log('vimeo asistente ', data)
+          if (parseFloat(data.viewProgress) && data.viewProgess > viewedVideoProgress) {
+            setViewedVideoProgress(data.viewProgess)
+            console.log('vimeo timeupdate in database', data)
+            ref.current!.seekTo(data.viewProgess)
+          }
+        })
+        setRealtimeUnsubscribe(unsubscrubeCallback)
+      } catch (e) {
+        console.log('vimeo error', { e })
+      }
     }
   }, [activity, ref.current])
 
