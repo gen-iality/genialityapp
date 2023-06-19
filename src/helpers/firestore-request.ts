@@ -13,6 +13,9 @@ const Attendees = {
   collections: async (activityId: string) => {
     return await Attendees.collection(activityId).get()
   },
+  ref: (activityId: string, eventUserId: string) => {
+    return Attendees.collection(activityId).doc(eventUserId)
+  },
   docs: async (activityId: string) => {
     return (await Attendees.collections(activityId)).docs
   },
