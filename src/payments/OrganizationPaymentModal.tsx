@@ -2,6 +2,7 @@
 import { useEffect, FunctionComponent, useContext, useMemo } from 'react'
 import OrganizationPaymentContext from './OrganizationPaymentContext'
 import { OrganizationUserType } from '@Utilities/types/OrganizationUserType'
+import { StateMessage } from '@context/MessageService'
 
 const publicKey: string = import.meta.env.VITE_WOMPI_DEV_PUB_API_KEY
 
@@ -85,18 +86,18 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
       dispatch({ type: 'ABORT' })
 
       checkout.open(async (result: any) => {
-        console.log({ result })
+        console.debug('member', { organizationUser, result })
 
         if (result.transaction.status == 'APPROVED') {
           console.log('paid')
+          dispatch({
+            type: 'DISPLAY_SUCCESS',
+            result: result.transaction,
+          })
+        } else {
+          dispatch({ type: 'ABORT' })
+          StateMessage.show(null, 'error', 'No se pudo realizar el pago')
         }
-        console.debug('member', { organizationUser, result })
-
-        //En cualquier caso enviamos la accion de respuesta de transacción recibida
-        dispatch({
-          type: 'DISPLAY_SUCCESS',
-          result: result.transaction,
-        })
       })
     }
   }, [paymentStep, checkout])
