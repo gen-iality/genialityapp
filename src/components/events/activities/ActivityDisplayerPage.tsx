@@ -103,7 +103,7 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
         checkinAttendeeInActivity(cEventUser.value, params.activity_id)
       }
     }
-  }, [currentActivity, cEventUser.status, params.activity_id])
+  }, [currentActivity, cEventUser.status, params.activity_id, activity])
 
   const goToActivityIdPage = async (activityId: string) => {
     history.push(`/landing/${cEvent?.value._id}/activity/${activityId}`)
