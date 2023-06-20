@@ -1,9 +1,10 @@
 import { useEffect, FunctionComponent, useContext } from 'react'
 import { Modal } from 'antd'
-import { OrganizationApi } from '@helpers/request'
+import { EventsApi, OrganizationApi } from '@helpers/request'
 import { OrganizationUserType } from '@Utilities/types/OrganizationUserType'
 import OrganizationPaymentContext from './OrganizationPaymentContext'
 import dayjs from 'dayjs'
+import { StateMessage } from '@context/MessageService'
 
 interface IOrganizationPaymentSuccessModalProps {
   organizationUser: OrganizationUserType
@@ -18,6 +19,19 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
   const { paymentStep, result, dispatch } = useContext(OrganizationPaymentContext)
 
   const makeUserAsPaidPlan = async () => {
+    StateMessage.show('presend', 'info', 'Espera...')
+
+    if (!organizationUser.properties?.email) {
+      StateMessage.destroy('presend')
+      StateMessage.show(
+        null,
+        'error',
+        `El miembro "${organizationUser.user.names}" no tiene correo`,
+      )
+      // Anybody knows, this can happen (?
+      return
+    }
+
     const data = {
       payment_plan: {
         price: organization.access_settings?.price ?? 0,
@@ -28,6 +42,21 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
       organizationUser.organization_id,
       organizationUser._id,
       data,
+    )
+    // Do request to send email
+    await EventsApi.sendGenericMail(
+      /*organizationUser.properties.email*/ 'testdb@yopmail.com',
+      `http://${window.location.host}/organization/${organization._id}`,
+      `Has sido inscrito a como miembro pago a la organización "${organization.name}". Puedes acceder también desde el enlace proporcionado`,
+      'Ir a la organización',
+      'Inscripción cursos pagos',
+    )
+
+    StateMessage.destroy('presend')
+    StateMessage.show(
+      null,
+      'success',
+      'todo bonito, todo contento, inscripción en progreso',
     )
   }
 
@@ -44,7 +73,7 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
         open={paymentStep == 'DISPLAYING_SUCCESS'}
         onOk={() => {
           dispatch({ type: 'ABORT' })
-          window.location.reload() // This does not make sense
+          makeUserAsPaidPlan().then(() => window.location.reload())
         }}
         onCancel={() => dispatch({ type: 'ABORT' })}
       >
