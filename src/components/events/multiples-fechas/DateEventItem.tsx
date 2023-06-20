@@ -1,16 +1,24 @@
-import { Card, CardProps, Col, Row, Space, TimePicker, Typography } from 'antd';
+import { Button, Card, CardProps, Col, Row, Space, TimePicker, Typography } from 'antd';
 import { DateRangeEvius } from '../hooks/useCustomDateEvent';
 import moment from 'moment';
+import * as IconsAntDesing from '@ant-design/icons';
 
 interface Props extends CardProps {
   date: DateRangeEvius;
+  handledDelete: (idToDelete: string) => void;
 }
 
 const format = 'hh:mm A';
 
-export const DateEventItem = ({ date, ...cardProps }: Props) => {
+export const DateEventItem = ({ date, onClick, handledDelete, ...cardProps }: Props) => {
   return (
-    <Card hoverable {...cardProps}>
+    <Card
+      hoverable
+      {...cardProps}
+      actions={[
+        <Button type='text' icon={<IconsAntDesing.EditOutlined />} onClick={onClick} />,
+        <Button type='text' icon={<IconsAntDesing.DeleteOutlined />} onClick={() => handledDelete(date.id)} />,
+      ]}>
       <Row gutter={[10, 2]}>
         <Col
           span={6}

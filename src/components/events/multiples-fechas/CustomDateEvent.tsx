@@ -6,6 +6,7 @@ import { DateEventItem } from './DateEventItem';
 import { PlusOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { DateModal } from './DateModal';
+
 interface Props {
   eventId: string;
   updateEvent: () => void;
@@ -23,6 +24,8 @@ export default function CustomDateEvent(props: Props) {
     mustUpdateDate,
     datesOld,
     disabledDate,
+    handledDelete,
+    handledEdit,
   } = useCustomDateEvent({
     eventId,
   });
@@ -48,10 +51,12 @@ export default function CustomDateEvent(props: Props) {
       <Col xs={24} lg={24}>
         {openModal && (
           <DateModal
+            closeModal={closeModal}
+            handledEdit={handledEdit}
             footer={false}
             disabledDate={disabledDate}
             setOpenModal={setOpenModal}
-            handleInterceptor={handleInterceptor}
+            handledInterceptor={handleInterceptor}
             date={selectedDate}
             visible={openModal}
             onCancel={closeModal}
@@ -71,7 +76,14 @@ export default function CustomDateEvent(props: Props) {
         <Typography.Title level={5}>Fechas seleccionadas</Typography.Title>
         <Space wrap>
           {!!dates.length &&
-            dates.map((date) => <DateEventItem key={date.id} date={date} onClick={() => openEditDate(date)} />)}
+            dates.map((date) => (
+              <DateEventItem
+                key={date.id}
+                date={date}
+                onClick={() => openEditDate(date)}
+                handledDelete={handledDelete}
+              />
+            ))}
           <Card onClick={openCreateNewDate} hoverable>
             <PlusOutlined />
           </Card>

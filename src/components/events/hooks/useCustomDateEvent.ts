@@ -145,8 +145,41 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
 
         setDates(currentDates);
     };
+    const handledEdit = (fecha: Moment, horaInicio: Moment, horaFin: Moment, idToEdit: string) => {
+        const currentDate = fecha.toDate()
+        currentDate.setHours(horaInicio.toDate().getHours())
+        currentDate.setMinutes(horaInicio.toDate().getMinutes())
+
+        const currentDateStart = new Date(currentDate)
+        const currentDateEnd = new Date(currentDate)
+
+        currentDateEnd.setHours(horaFin.toDate().getHours())
+        currentDateEnd.setMinutes(horaFin.toDate().getMinutes())
+
+        const currentDates = [...dates]
 
 
+        const newDateRangeEvius: DateRangeEvius = {
+            id: dayToKey(currentDate),
+            start: currentDateStart,
+            end: currentDateEnd,
+        }
+
+        const newDates = currentDates.map((dateRange => {
+            if (dateRange.id === idToEdit) {
+                return newDateRangeEvius
+            }
+            return dateRange
+        }))
+
+        newDates.sort((a, b) => a.start.getTime() - b.start.getTime());
+
+        setDates(newDates);
+    };
+
+    const handledDelete = (idToDelete: string) => {
+        setDates(dates.filter((dateRange: DateRangeEvius) => dateRange.id !== idToDelete))
+    }
 
     const handleUpdateTime = (
         dateKey: string,
@@ -185,7 +218,7 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
             if (payload.length === 0 || !payload) {
                 return notification.open({
                     message: 'Datos no guardados',
-                    description: 'Debe seleccionar por lo menos una fecha especifica',
+                    description: 'Debe crear por lo menos una fecha especifica',
                 });
             }
             await EventsApi.editOne({ dates: payload }, props.eventId);
@@ -211,6 +244,8 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
         handleInterceptor,
         mustUpdateDate,
         datesOld,
-        disabledDate
+        disabledDate,
+        handledDelete,
+        handledEdit
     };
 };
