@@ -152,38 +152,33 @@ const EventOrganization = () => {
         backgroundColor: `${organization?.styles?.containerBgColor || '#FFFFFF'}`,
       }}
     >
-      <div>
-        <p>Estado: {paymentState && paymentState.paymentStep}</p>
-        <p>
-          Plan Pago :{' '}
-          {organizationUser &&
-            (organizationUser.payment_plan === true ? 'Pago' : 'gratuito')}
-        </p>
-        <OrganizationPaymentConfirmationModal />
-        <OrganizationPaymentModal
-          organizationUser={organizationUser}
-          organization={organization}
-        />
+      <OrganizationPaymentConfirmationModal />
+      <OrganizationPaymentModal
+        organizationUser={organizationUser}
+        organization={organization}
+      />
 
-        <OrganizationPaymentSuccessModal
-          organizationUser={organizationUser}
-          organization={organization}
-        />
+      <OrganizationPaymentSuccessModal
+        organizationUser={organizationUser}
+        organization={organization}
+      />
+      {(import.meta.env.MODE || '').includes('staging') && (
+        <div>
+          <Button onClick={() => paymentDispatch({ type: 'REQUIRE_PAYMENT' })}>
+            REQUIRE_PAYMENT
+          </Button>
+          <Button onClick={() => paymentDispatch({ type: 'DISPLAY_REGISTRATION' })}>
+            DISPLAY_REGISTRATION
+          </Button>
+          <Button onClick={() => paymentDispatch({ type: 'DISPLAY_PAYMENT' })}>
+            DISPLAY_PAYMENT
+          </Button>
 
-        <Button onClick={() => paymentDispatch({ type: 'REQUIRE_PAYMENT' })}>
-          REQUIRE_PAYMENT
-        </Button>
-        <Button onClick={() => paymentDispatch({ type: 'DISPLAY_REGISTRATION' })}>
-          DISPLAY_REGISTRATION
-        </Button>
-        <Button onClick={() => paymentDispatch({ type: 'DISPLAY_PAYMENT' })}>
-          DISPLAY_PAYMENT
-        </Button>
-
-        <Button onClick={() => paymentDispatch({ type: 'DISPLAY_SUCCESS' })}>
-          DISPLAY_SUCCESS
-        </Button>
-      </div>
+          <Button onClick={() => paymentDispatch({ type: 'DISPLAY_SUCCESS' })}>
+            DISPLAY_SUCCESS
+          </Button>
+        </div>
+      )}
       <ModalLoginHelpers />
       {/* <RegisterMemberFromOrganizationUserModal
         organization={organization}
