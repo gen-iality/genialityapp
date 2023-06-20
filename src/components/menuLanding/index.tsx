@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Spin, Form, Switch, Table, Button, Typography, Tag } from 'antd';
 import Header from '@/antdComponents/Header';
 import BackTop from '@/antdComponents/BackTop';
@@ -7,26 +7,20 @@ import { Menu, MenuLandingProps } from './interfaces/menuLandingProps';
 import * as iconComponents from '@ant-design/icons';
 import DragIcon from '@2fd/ant-design-icons/lib/DragVertical';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import BottonOpenModal from './hooks/BottonOpenModal';
+import ModalEdit from './components/ModalEdit';
 import { SortEndHandler, SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { ColumnType } from 'antd/lib/table';
-interface DataItem {
-  key: string;
-  drag: JSX.Element;
-  position: number;
-  name: string;
-  icons: string;
-  checked: boolean;
-  options: JSX.Element;
-}
+
 
 export default function MenuLanding(props: MenuLandingProps) {
   const { menu, isLoading, titleheader, data, setData, updateValue, submit, checkedItem } = useMenuLanding(
     props
   );
+  const [visibility, setVisibility] = useState(false)
+  const [itemEdit, setItemEdit] = useState<Menu>({} as Menu)
 
   useEffect(() => {
-    const updatedData: DataItem[] = Object.keys(menu).map((key: string, index: number) => {
+    const updatedData: Menu[] = Object.keys(menu).map((key: string, index: number) => {
       return {
         key: key,
         drag: <DragIcon />,
@@ -77,13 +71,16 @@ export default function MenuLanding(props: MenuLandingProps) {
     const IconComponent = iconComponents[iconName];
     return IconComponent ? <IconComponent /> : iconName;
   };
-
+  const showDrawe = (item : Menu) => {
+    setItemEdit(item)
+    setVisibility(true)
+  }
   const columns = [
     {
       title: '',
       className: 'drag-visible',
       dataIndex: 'drag',
-      width: 30,
+      width: 20,
       //@ts-ignore
       render: () => <DragHandle />,
     },
@@ -91,50 +88,47 @@ export default function MenuLanding(props: MenuLandingProps) {
       title: 'Orden',
       dataIndex: 'position',
       width: 20,
-      render: (text: number, record: DataItem, index: number) => <Tag>{`#${index + 1}`}</Tag>,
+      render: (text: number, record: Menu, index: number) => <Tag>{`#${index + 1}`}</Tag>,
     },
     {
       title: 'Nombre',
       dataIndex: 'name',
-      width: 100,
-      render: (text: string, record: DataItem) => <Typography.Text>{record.name}</Typography.Text>,
+      width: 70,
+      render: (text: string, record: Menu) => <Typography.Text>{record.name}</Typography.Text>,
     },
     {
       title: 'Alias',
       dataIndex: 'label',
       className: 'drag-visible',
-      width: 100,
+      width: 70,
     },
     {
       title: 'Icono',
       dataIndex: 'icon',
-      width: 100,
-      render: (text: string, record: DataItem) => renderIcon(record.icons),
+      width: 10,
+      render: (text: string, record: Menu) => renderIcon(record.icons),
     },
     {
       title: 'Habilitado',
       dataIndex: 'checked',
-      width: 100,
-      render: (checked: boolean, record: DataItem) => (
-        <Switch checked={checked} onChange={(checked) => record.key && checkedItem(record.key, checked)} />
+      width: 10,
+      render: (checked: boolean, record: Menu) => (
+        <Switch checked={checked} checkedChildren={'si'} unCheckedChildren={'No'} onChange={(checked) => record.key && checkedItem(record.key, checked)} />
       ),
     },
     {
       title: 'Opciones',
       dataIndex: 'options',
-      width: 100,
-      render: (text: string, record: DataItem) =>
-        record.checked ? (
-          <BottonOpenModal />
-        ) : (
-          <Button type='primary' icon={<iconComponents.EditOutlined />} disabled />
-        ),
+      width: 10,
+      render: (text: string, record: Menu) =>
+          <Button type='primary' onClick={()=> showDrawe(record)} icon={<iconComponents.EditOutlined />} disabled={!record.checked}  />
     },
   ];
 
   return (
     <Form onFinish={submit}>
       <Header title={titleheader} save form />
+      <ModalEdit item={itemEdit} visibility={visibility} setVisibility={setVisibility} />
       <Spin tip='Cargando...' size='large' spinning={isLoading}>
         <DragDropContext onDragEnd={handleDragEnd}>
           <Droppable droppableId='menu'>
