@@ -1283,6 +1283,30 @@ class General extends Component {
                     </>
                   )}
 
+                  <Form.Item label="Porcentaje progreso para marcar una lección como completada">
+                    <InputNumber
+                      value={event.progress_settings?.lesson_percent_to_completed || 0}
+                      formatter={(value) => `${value}%`}
+                      parser={(value) => {
+                        if (value === undefined) return 0
+                        return parseInt(value.replace('%', ''))
+                      }}
+                      onChange={(value) => {
+                        this.handleChange(
+                          {
+                            ...event.progress_settings,
+                            lesson_percent_to_completed: value ?? '',
+                          },
+                          'progress_settings',
+                        )
+                      }}
+                    />
+                    <p>
+                      Porcentaje de 0% marca la lección cómo completada directo cuando se
+                      ingresa
+                    </p>
+                  </Form.Item>
+
                   <Form.Item label="Elementos tomados en cuenta en el progreso">
                     <Checkbox.Group
                       options={[
