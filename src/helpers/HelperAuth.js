@@ -21,6 +21,29 @@ export async function GetTokenUserFirebase() {
   })
 }
 
+// TODO: this function should be here, move to another nice file
+export const updateAttendeeInActivityRealTime = (eventUser, activityId, data) => {
+  const userRef = firestore.collection(`${activityId}_event_attendees`).doc(eventUser._id)
+  return new Promise((resolve) => {
+    userRef.get().then(function (doc) {
+      if (doc.exists) {
+        console.log('exist* attendee', `${activityId}_event_attendees`, eventUser._id)
+        userRef.update(data, { merge: true }).then(() => resolve())
+      } else {
+        console.log('set* attendee', `${activityId}_event_attendees`, eventUser._id)
+        firestore
+          .collection(`${activityId}_event_attendees`)
+          .doc(eventUser._id)
+          .set({
+            ...eventUser,
+            ...data,
+          })
+          .then(() => resolve())
+      }
+    })
+  })
+}
+
 export const checkinAttendeeInActivity = (eventUser, activityId) => {
   /** We use the activity id plus _event_attendees to be able to reuse the checkIn component per event */
   const userRef = firestore.collection(`${activityId}_event_attendees`).doc(eventUser._id)
