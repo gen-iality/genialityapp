@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, FunctionComponent } from 'react'
+import { useState, useEffect, useMemo, type FunctionComponent } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Moment from 'moment-timezone'
@@ -22,6 +22,7 @@ import { fireRealtime } from '@helpers/firebase'
 import Logger from '@Utilities/logger'
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import { useEventProgress } from '@context/eventProgressContext'
+import { StateMessage } from '@context/MessageService'
 
 const { setHasOpenSurveys } = SurveyActions
 
@@ -39,6 +40,8 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
   const [nextActivityID, setNextActivityID] = useState<any>(null)
   const [previousActivityID, setPreviousctivityID] = useState<any>(null)
 
+  const [wasNotifiedForProgress, setWasNotifiedForProgress] = useState(false)
+
   const cUser = useCurrentUser()
   const cEventUser = useUserEvent()
   const cEvent = useEventContext()
@@ -48,6 +51,23 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
   const params = useParams<any>()
 
   const cEventProgress = useEventProgress()
+
+  const activityProgressCallback = (progress: any) => {
+    const percentajeRequired =
+      cEvent.value?.progress_settings?.lesson_percent_to_completed ?? 0
+
+    console.debug('percentajeRequired:', percentajeRequired)
+
+    if (progress >= percentajeRequired) {
+      checkinAttendeeInActivity(cEventUser.value, params?.activity_id).then((info) => {
+        console.log('attendee creating/updating:', info)
+        if (!wasNotifiedForProgress) {
+          StateMessage.show(null, 'success', 'Actividad marcada como vista', 3)
+        }
+        setWasNotifiedForProgress(true)
+      })
+    }
+  }
 
   useEffect(() => {
     AgendaApi.getOne(params.activity_id, cEvent.value._id).then((result) => {
@@ -99,11 +119,12 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
     if (!currentActivity) return
     if (!activity) return
     if (cEventUser.status == 'LOADED' && cEventUser.value != null) {
-      if (['url', 'vimeo'].includes(activity.type?.name)) {
-        checkinAttendeeInActivity(cEventUser.value, params.activity_id)
+      if (!['url', 'vimeo'].includes(activity.type?.name)) {
+        // checkinAttendeeInActivity(cEventUser.value, params.activity_id)
+        activityProgressCallback(100)
       }
     }
-  }, [currentActivity, cEventUser.status, params.activity_id, activity])
+  }, [currentActivity, cEventUser.status, activity])
 
   const goToActivityIdPage = async (activityId: string) => {
     history.push(`/landing/${cEvent?.value._id}/activity/${activityId}`)
@@ -141,7 +162,10 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
               subTitle="Se requiere avanzar más en el curso para habilitar esta sección"
             />
           ) : (
-            <ActivityDisplayer activity={activity} />
+            <ActivityDisplayer
+              activity={activity}
+              onActivityProgress={activityProgressCallback}
+            />
           )}
           <Row gutter={[8, 8]} justify="end">
             {previousActivityID && (

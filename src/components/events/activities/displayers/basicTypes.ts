@@ -3,4 +3,5 @@
  */
 export interface IBasicActivityProps {
   activity: any
+  onActivityProgress?: (percent: number) => void
 }
