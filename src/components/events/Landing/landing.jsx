@@ -259,15 +259,15 @@ const Landing = (props) => {
         <ModalRegister register={register} setRegister={setRegister} event={cEventContext.value} />
       )}
       <Layout>
-        <AppointmentModal
+      {cEventUser.value && props.userAgenda && <AppointmentModal
           targetEventUserId={props.userAgenda?.eventUserId}
-          targetEventUser={props.userAgenda}
+          targetEventUser={{...props.userAgenda,user:props.userAgenda.properties}}
           cEventUser={cEventUser}
           cEvent={cEventContext}
           closeModal={() => {
             props.setUserAgenda(null);
           }}
-        />
+        />}
 
         <EventSectionsInnerMenu />
         <MenuTablets />
