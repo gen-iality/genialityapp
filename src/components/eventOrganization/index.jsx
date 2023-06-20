@@ -215,6 +215,14 @@ const EventOrganization = () => {
               paddingTop: '0.5vw',
             }}
           >
+            {organizationUser && (
+              <Badge
+                count={`${organizationUser.payment_plan ? 'Modo pago' : 'Modo gratuito'}`}
+                style={{
+                  backgroundColor: organizationUser.payment_plan ? '#F51C31' : '#1C9A1D',
+                }}
+              />
+            )}
             {isAdminUser && (
               <Link
                 to={`/admin/organization/${orgId}`}
