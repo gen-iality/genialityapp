@@ -72,7 +72,7 @@ const OrganizationAccessSettingsField: FunctionComponent<
             <InputNumber
               value={availableDays}
               placeholder="Días"
-              onChange={(value) => setAvailableDays(value ?? 0)}
+              onChange={(value) => setAvailableDays(value ?? 30)}
             />
           </Form.Item>
         </>
