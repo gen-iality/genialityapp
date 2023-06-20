@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Spin, Form, Switch, Table, Button, Typography, Tag } from 'antd';
 import Header from '@/antdComponents/Header';
 import BackTop from '@/antdComponents/BackTop';
@@ -6,14 +6,26 @@ import useMenuLanding from './hooks/useMenuLanding';
 import { MenuLandingProps } from './interfaces/menuLandingProps';
 import * as iconComponents from '@ant-design/icons';
 import DragIcon from '@2fd/ant-design-icons/lib/DragVertical';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import BottonOpenModal from './hooks/BottonOpenModal';
+import { SortEndHandler, SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
+interface DataItem {
+  key: string;
+  drag: JSX.Element;
+  position: number;
+  name: string;
+  icons: string;
+  checked: boolean;
+  options: JSX.Element;
+}
 
 export default function MenuLanding(props: MenuLandingProps) {
-  const { menu, isLoading, titleheader, data, formValues, setData, updateValue, submit, checkedItem } = useMenuLanding(props);
+  const { menu, isLoading, titleheader, data, formValues, setData, updateValue, submit, checkedItem } = useMenuLanding(
+    props
+  );
 
   useEffect(() => {
-    const updatedData = Object.keys(menu).map((key: string, index) => {
+    const updatedData: DataItem[] = Object.keys(menu).map((key: string, index: number) => {
       return {
         key: key,
         drag: <DragIcon />,
@@ -27,25 +39,41 @@ export default function MenuLanding(props: MenuLandingProps) {
     setData(updatedData);
   }, [menu]);
 
-  const handleDragEnd = (result: any) => {
-    if (!result.destination) return;
+  const handleDragEnd: SortEndHandler = ({ oldIndex, newIndex }: any) => {
+    if (oldIndex !== newIndex) {
+      const enabledItems = data.filter((item) => item.checked);
+      const disabledItems = data.filter((item) => !item.checked);
 
-    const { source, destination } = result;
-    const items = Array.from(data);
-    const reorderedItem = items[source.index];
-    const targetItem = items[destination.index];
-    if (!reorderedItem.checked || !targetItem.checked) {
-      return;
+      const movedItem = enabledItems.splice(oldIndex, 1)[0];
+      enabledItems.splice(newIndex, 0, movedItem);
+
+      const updatedData = [...enabledItems, ...disabledItems];
+      const updatedDataWithPositions = updatedData.map((item, index) => ({
+        ...item,
+        position: item.checked ? index + 1 : item.position,
+      }));
+
+      setData(updatedDataWithPositions);
     }
-    items.splice(source.index, 1);
-    items.splice(destination.index, 0, reorderedItem);
-
-    setData(items);
   };
+
+  
+  const DragHandle = SortableHandle(() => (
+    <DragIcon
+      style={{
+        cursor: 'move',
+        color: '#999999',
+        fontSize: '22px',
+      }}
+    />
+  ));
+
+  const SortableItem = SortableElement((props: any) => <tr {...props} />);
+  const SortableBody = SortableContainer((props: any) => <tbody {...props} />);
 
   const renderIcon = (iconName: string) => {
     const IconComponent = iconComponents[iconName];
-    return IconComponent ? <IconComponent /> : null;
+    return IconComponent ? <IconComponent /> : iconName;
   };
 
   const columns = [
@@ -53,38 +81,38 @@ export default function MenuLanding(props: MenuLandingProps) {
       title: '',
       className: 'drag-visible',
       dataIndex: 'drag',
-      width:30,
+      width: 30,
+      render: () => <DragHandle />,
     },
     {
       title: 'Orden',
       dataIndex: 'position',
       width: 20,
-      render: (text: number, record, index: number) => <Tag>{`#${index + 1}`}</Tag>,
+      render: (text: number, record: DataItem, index: number) => <Tag>{`#${index + 1}`}</Tag>,
     },
     {
       title: 'Nombre',
       dataIndex: 'name',
       width: 100,
-      render: (text: string, record) => <Typography.Text>{record.name}</Typography.Text>,
+      render: (text: string, record: DataItem) => <Typography.Text>{record.name}</Typography.Text>,
     },
     {
-			title: 'Alias',
-			dataIndex: 'label',
-			className: 'drag-visible',
+      title: 'Alias',
+      dataIndex: 'label',
+      className: 'drag-visible',
       width: 100,
-      render: (text: string, record) => <Typography.Text>{record.name}</Typography.Text>,
-		},
+    },
     {
       title: 'Iconos',
       dataIndex: 'icons',
       width: 100,
-      render: (text: string, record) => renderIcon(record.icons),
+      render: (text: string, record: DataItem) => renderIcon(record.icons),
     },
     {
       title: 'Habilitado',
       dataIndex: 'checked',
       width: 100,
-      render: (text: string, record) => (
+      render: (text: string, record: DataItem) => (
         <Switch checked={text} onChange={(checked) => record.key && checkedItem(record.key, checked)} />
       ),
     },
@@ -92,7 +120,7 @@ export default function MenuLanding(props: MenuLandingProps) {
       title: 'Opciones',
       dataIndex: 'options',
       width: 100,
-      render: (text: string, record) =>
+      render: (text: string, record: DataItem) =>
         record.checked ? (
           <BottonOpenModal updateValue={updateValue} checkedItem={checkedItem} formValues={formValues} />
         ) : (
@@ -118,22 +146,11 @@ export default function MenuLanding(props: MenuLandingProps) {
                 components={{
                   body: {
                     wrapper: (props) => (
-                      <tbody {...props} ref={provided.innerRef}>
-                        {props.children}
-                        {provided.placeholder}
-                      </tbody>
+                      <SortableBody {...props} useDragHandle helperClass="row-dragging" onSortEnd={handleDragEnd} />
                     ),
-                    row: (props) => (
-                      <Draggable draggableId={props['data-row-key']} index={props.index}>
-                        {(provided) => (
-                          <tr ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                            {props.children}
-                          </tr>
-                        )}
-                      </Draggable>
-                    ),
+                    row: (props) => <SortableItem index={props["data-row-key"]} {...props} />,
                   },
-                }}
+                }}                
                 onRow={(record: any, index: number | undefined) => ({
                   index,
                   'data-row-key': record.key,
