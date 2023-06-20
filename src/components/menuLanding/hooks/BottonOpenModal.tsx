@@ -3,7 +3,7 @@ import { Button, Modal, Form, Input, Switch, Select } from 'antd';
 import { useState } from 'react';
 import { MenuLandingProps } from '../interfaces/menuLandingProps';
 
-export default function BottonOpenModal(props: MenuLandingProps) {
+export default function BottonOpenModal() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
 
@@ -32,7 +32,7 @@ export default function BottonOpenModal(props: MenuLandingProps) {
 
   return (
     <div>
-      <Button type='primary' size='small' onClick={openModal} icon={<EditOutlined />} />
+      <Button type='primary'  onClick={openModal} icon={<EditOutlined />} />
       <Modal title='Editar' visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
         <Form form={form} onFinish={onFinish}>
           <Form.Item label='Nombre' name='name'>

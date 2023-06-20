@@ -3,12 +3,13 @@ import { Spin, Form, Switch, Table, Button, Typography, Tag } from 'antd';
 import Header from '@/antdComponents/Header';
 import BackTop from '@/antdComponents/BackTop';
 import useMenuLanding from './hooks/useMenuLanding';
-import { MenuLandingProps } from './interfaces/menuLandingProps';
+import { Menu, MenuLandingProps } from './interfaces/menuLandingProps';
 import * as iconComponents from '@ant-design/icons';
 import DragIcon from '@2fd/ant-design-icons/lib/DragVertical';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import BottonOpenModal from './hooks/BottonOpenModal';
 import { SortEndHandler, SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
+import { ColumnType } from 'antd/lib/table';
 interface DataItem {
   key: string;
   drag: JSX.Element;
@@ -20,7 +21,7 @@ interface DataItem {
 }
 
 export default function MenuLanding(props: MenuLandingProps) {
-  const { menu, isLoading, titleheader, data, formValues, setData, updateValue, submit, checkedItem } = useMenuLanding(
+  const { menu, isLoading, titleheader, data, setData, updateValue, submit, checkedItem } = useMenuLanding(
     props
   );
 
@@ -68,10 +69,11 @@ export default function MenuLanding(props: MenuLandingProps) {
     />
   ));
 
-  const SortableItem = SortableElement((props: any) => <tr {...props} />);
-  const SortableBody = SortableContainer((props: any) => <tbody {...props} />);
+  const SortableItem : any = SortableElement((props: any) => <tr {...props} />);
+  const SortableBody : any = SortableContainer((props: any) => <tbody {...props} />);
 
   const renderIcon = (iconName: string) => {
+    //@ts-ignore
     const IconComponent = iconComponents[iconName];
     return IconComponent ? <IconComponent /> : iconName;
   };
@@ -82,6 +84,7 @@ export default function MenuLanding(props: MenuLandingProps) {
       className: 'drag-visible',
       dataIndex: 'drag',
       width: 30,
+      //@ts-ignore
       render: () => <DragHandle />,
     },
     {
@@ -103,8 +106,8 @@ export default function MenuLanding(props: MenuLandingProps) {
       width: 100,
     },
     {
-      title: 'Iconos',
-      dataIndex: 'icons',
+      title: 'Icono',
+      dataIndex: 'icon',
       width: 100,
       render: (text: string, record: DataItem) => renderIcon(record.icons),
     },
@@ -112,8 +115,8 @@ export default function MenuLanding(props: MenuLandingProps) {
       title: 'Habilitado',
       dataIndex: 'checked',
       width: 100,
-      render: (text: string, record: DataItem) => (
-        <Switch checked={text} onChange={(checked) => record.key && checkedItem(record.key, checked)} />
+      render: (checked: boolean, record: DataItem) => (
+        <Switch checked={checked} onChange={(checked) => record.key && checkedItem(record.key, checked)} />
       ),
     },
     {
@@ -122,7 +125,7 @@ export default function MenuLanding(props: MenuLandingProps) {
       width: 100,
       render: (text: string, record: DataItem) =>
         record.checked ? (
-          <BottonOpenModal updateValue={updateValue} checkedItem={checkedItem} formValues={formValues} />
+          <BottonOpenModal />
         ) : (
           <Button type='primary' icon={<iconComponents.EditOutlined />} disabled />
         ),
@@ -135,22 +138,23 @@ export default function MenuLanding(props: MenuLandingProps) {
       <Spin tip='Cargando...' size='large' spinning={isLoading}>
         <DragDropContext onDragEnd={handleDragEnd}>
           <Droppable droppableId='menu'>
-            {(provided) => (
+            {() => (
               <Table
                 style={{ padding: '30px 0' }}
                 dataSource={data}
-                columns={columns}
+                columns={columns as ColumnType<Menu>[]}
                 pagination={false}
-                bordered
+                bordered={false}
                 size='small'
                 components={{
                   body: {
-                    wrapper: (props) => (
+                    wrapper: (props : any) => (
                       <SortableBody {...props} useDragHandle helperClass="row-dragging" onSortEnd={handleDragEnd} />
                     ),
-                    row: (props) => <SortableItem index={props["data-row-key"]} {...props} />,
+                    row: (props : any) => <SortableItem index={props["data-row-key"]} {...props} />,
                   },
-                }}                
+                }}  
+                //@ts-ignore              
                 onRow={(record: any, index: number | undefined) => ({
                   index,
                   'data-row-key': record.key,
