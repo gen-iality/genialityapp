@@ -1,5 +1,5 @@
 import { LockOutlined } from '@ant-design/icons'
-import { Button } from 'antd'
+import { Button, Tooltip } from 'antd'
 import useModal from 'antd/lib/modal/useModal'
 
 export default function ModalPassword({ onOk }) {
@@ -13,9 +13,9 @@ export default function ModalPassword({ onOk }) {
     })
   }
   return (
-    <div>
+    <Tooltip placement="topLeft" title="Enviar correo de cambio de contraseña">
       <Button type={'primary'} size="small" onClick={openModal} icon={<LockOutlined />} />
       {contextHolder}
-    </div>
+    </Tooltip>
   )
 }
