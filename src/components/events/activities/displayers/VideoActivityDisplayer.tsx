@@ -76,6 +76,8 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
 
     updateAttendeeInActivityRealTime(cEventUser.value, activity._id, {
       viewProgess: viewedVideoProgress,
+      checked_in: false,
+      checkedin_at: null,
     })
 
     // Save the progress when it is over 99

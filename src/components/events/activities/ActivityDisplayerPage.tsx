@@ -40,6 +40,8 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
   const [nextActivityID, setNextActivityID] = useState<any>(null)
   const [previousActivityID, setPreviousctivityID] = useState<any>(null)
 
+  const [wasNotifiedForProgress, setWasNotifiedForProgress] = useState(false)
+
   const cUser = useCurrentUser()
   const cEventUser = useUserEvent()
   const cEvent = useEventContext()
@@ -57,8 +59,13 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
     console.debug('percentajeRequired:', percentajeRequired)
 
     if (progress >= percentajeRequired) {
-      checkinAttendeeInActivity(cEventUser.value, params?.activity_id)
-      StateMessage.show(null, 'success', 'Actividad marcada como vista', 3)
+      checkinAttendeeInActivity(cEventUser.value, params?.activity_id).then((info) => {
+        console.log('attendee creating/updating:', info)
+        if (!wasNotifiedForProgress) {
+          StateMessage.show(null, 'success', 'Actividad marcada como vista', 3)
+        }
+        setWasNotifiedForProgress(true)
+      })
     }
   }
 
