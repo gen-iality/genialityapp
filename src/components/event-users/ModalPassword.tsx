@@ -2,7 +2,11 @@ import { LockOutlined } from '@ant-design/icons'
 import { Button, Tooltip } from 'antd'
 import useModal from 'antd/lib/modal/useModal'
 
-export default function ModalPassword({ onOk }) {
+interface IModalPasswordProps {
+  onOk?: () => void
+}
+
+export default function ModalPassword({ onOk }: IModalPasswordProps) {
   const [modal, contextHolder] = useModal()
 
   const openModal = () => {
