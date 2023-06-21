@@ -17,12 +17,8 @@ export const DateEventItem = ({ date, onClick, handledDelete, ...cardProps }: Pr
   return (
     <Card
       hoverable
-      style={{borderRadius: 10/* , border: 'none' */}}
+      style={{borderRadius: 10, height: '100%'/* , border: 'none' */}}
       {...cardProps}
-      /* actions={[
-        <Button type='text' icon={<IconsAntDesing.EditOutlined />} onClick={onClick} />,
-        <Button type='text' icon={<IconsAntDesing.DeleteOutlined />} onClick={() => handledDelete(date.id)} />,
-      ]} */
     >
       <Row gutter={[8, 8]}>
         <Card.Meta 
@@ -53,42 +49,6 @@ export const DateEventItem = ({ date, onClick, handledDelete, ...cardProps }: Pr
           <Button type='default' icon={<IconsAntDesing.EditOutlined />} onClick={onClick} />
           <Button danger type='default' icon={<IconsAntDesing.DeleteOutlined />} onClick={() => handledDelete(date.id)} />
         </Space>
-        {/* <Col
-          span={6}
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            flexDirection: 'column',
-          }}>
-          <Typography
-            style={{
-              textAlign: 'center',
-            }}>
-            {date.start.getDate()}
-          </Typography>
-          <Typography
-            style={{
-              textAlign: 'center',
-            }}>
-            {date.start.toLocaleString('default', { month: 'long' })}
-          </Typography>
-        </Col>
-        <Col span={18}>
-          <Space wrap>
-            <Typography
-              style={{
-                textAlign: 'center',
-              }}>
-              {moment(date.start, format).format(format)}
-            </Typography>
-            <Typography
-              style={{
-                textAlign: 'center',
-              }}>
-              {moment(date.end, format).format(format)}
-            </Typography>
-          </Space>
-        </Col> */}
       </Row>
     </Card>
   );

@@ -31,6 +31,7 @@ export default function CustomDateEvent(props: Props) {
   });
   const [openModal, setOpenModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState<DateRangeEvius>();
+
   if (isFetching) return <Loading />;
 
   const openCreateNewDate = () => {
@@ -62,14 +63,21 @@ export default function CustomDateEvent(props: Props) {
               visible={openModal}
               onCancel={closeModal}
               handleUpdateTime={handleUpdateTime}
+              destroyOnClose={true}
             />
           )}
           {mustUpdateDate && (
             <Alert
-              message='Formato de fecha incorrecto'
-              description={`Fecha inicio ${datesOld?.startDateOld} y fecha final ${datesOld?.endDateOld} Se han corregido las fechas al nuevo formato, confirme`}
+              message={<Typography.Text strong>Formato de fecha incorrecto</Typography.Text>}
+              description={
+                <Typography.Paragraph>
+                  Las fechas se han modificado a un nuevo formato, 
+                  para continuar con la configuración correcta debe guardar los cambios dando clic al botón 
+                  <Typography.Text strong> Guardar fechas</Typography.Text>, el mismo realizará el cambio y este mensaje desaparecerá. 
+                  La fecha de inicio es {datesOld?.startDateOld} y la fecha final es {datesOld?.endDateOld}
+                </Typography.Paragraph>
+              }
               type='error'
-              style={{ marginTop: '2rem' }}
             />
           )}
         </Col>
@@ -78,9 +86,10 @@ export default function CustomDateEvent(props: Props) {
           <Space wrap>
             <List 
               grid={{gutter: 8, column: 2}}
+              split={false}
               dataSource={dates}
               renderItem={date => (
-                <List.Item style={{border: 'none'}}>
+                <List.Item>
                   <DateEventItem
                     key={date.id}
                     date={date}
@@ -90,6 +99,17 @@ export default function CustomDateEvent(props: Props) {
                 </List.Item>
               )}
             >
+              <List.Item >
+                <Row justify={'center'}>
+                  <Col span={12}>
+                    <Card onClick={openCreateNewDate} hoverable style={{borderRadius: 10, border: '1px solid #C4C4C490'}}>
+                      <Row justify='center' align='middle'>
+                        <PlusOutlined />
+                      </Row>
+                    </Card>
+                  </Col>
+                </Row>
+              </List.Item>
             </List>
             {/* {!!dates.length &&
               dates.map((date) => (
@@ -107,11 +127,11 @@ export default function CustomDateEvent(props: Props) {
         </Col>
         <Col span={24}>
           <Row justify='end' gutter={[8, 8]} wrap>
-            <Col>
+            {/* <Col>
               <Button icon={<PlusCircleOutlined />} type='default' onClick={openCreateNewDate}>
                 Agregar
               </Button>
-            </Col>
+            </Col> */}
             <Col>
               <Button icon={<SaveOutlined />} type='primary' onClick={handleSubmit} loading={isSaving}>
                 Guardar fechas
