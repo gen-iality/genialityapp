@@ -1,5 +1,5 @@
 import { Col, Row, Typography, Badge, Space, Divider, Image, Empty, Button } from 'antd'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { OrganizationFuction } from '@helpers/request'
 import EventCard from '../shared/eventCard'
@@ -8,9 +8,12 @@ import ModalLoginHelpers from '../authentication/ModalLoginHelpers'
 import { EditOutlined } from '@ant-design/icons'
 import Loading from '@components/profile/loading'
 import { useCurrentUser } from '@context/userContext'
-import { OrganizationApi } from '@helpers/request'
+import { OrganizationApi, TicketsApi } from '@helpers/request'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
-
+import OrganizationPaymentConfirmationModal from '../../payments/OrganizationPaymentConfirmationModal'
+import OrganizationPaymentSuccessModal from '../../payments/OrganizationPaymentSuccessModal'
+import OrganizationPaymentModal from '../../payments/OrganizationPaymentModal'
+import OrganizationPaymentContext from '@/payments/OrganizationPaymentContext'
 const { Title, Text, Paragraph } = Typography
 
 const EventOrganization = () => {
@@ -23,11 +26,16 @@ const EventOrganization = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [isVisibleRegister, setIsVisibleRegister] = useState(false)
   const [organizationUser, setOrganizationUser] = useState(null)
+  const [myEvents, setMyEvents] = useState([])
 
   const [isAdminUser, setIsAdminUser] = useState(false)
 
   const cUser = useCurrentUser()
   const { helperDispatch } = useHelper()
+
+  const { dispatch: paymentDispatch, ...paymentState } = useContext(
+    OrganizationPaymentContext,
+  )
 
   useEffect(() => {
     if (orgId) {
@@ -44,7 +52,7 @@ const EventOrganization = () => {
       }
       console.log('5. positionId', positionId, 'orgId', orgId)
       helperDispatch({
-        type: 'showRegister',
+        type: 'showLogin',
         visible: true,
         idOrganization: orgId,
         defaultPositionId: positionId,
@@ -70,11 +78,17 @@ const EventOrganization = () => {
 
     OrganizationApi.getMeUser(orgId).then(({ data }) => {
       const [orgUser] = data
-
       setOrganizationUser(orgUser)
       console.debug('EventOrganization member rol:', orgUser?.rol)
       setIsAdminUser(orgUser?.rol?.type === 'admin')
     })
+
+    let load_minetickets = async () => {
+      let MyEvents = await TicketsApi.getAll()
+      setMyEvents(MyEvents)
+      console.log('mis eventos', MyEvents)
+    }
+    load_minetickets()
   }, [cUser.value, orgId])
 
   // Obtener los datos necesarios de la organización
@@ -100,6 +114,37 @@ const EventOrganization = () => {
     }
   }
 
+  useEffect(() => {
+    if (!organization || !organizationUser) return
+    if (organization.access_settings?.type === 'payment') {
+      console.log('organizationUser', organizationUser)
+
+      // Check if the organization user has an available payment plan
+      let memberHadPaid = false
+      if (organizationUser.payment_plan?.date_until !== undefined) {
+        const today = dayjs(Date.now())
+        const memberDateUntil = dayjs(organizationUser.payment_plan.date_until)
+        if (memberDateUntil.isValid()) {
+          const diff = memberDateUntil.diff(today, 'day')
+          if (diff > 0) {
+            /* Congratulation!!! */
+            memberHadPaid = true
+          }
+        }
+      }
+
+      if (memberHadPaid) {
+        // Nothing, ok
+        console.log('This organization has paid access - the user too')
+      } else {
+        paymentDispatch({ type: 'REQUIRE_PAYMENT' })
+        console.log('This organization has paid access - the user CAN NOT')
+      }
+    } else {
+      console.log('This organization has free access :))))')
+    }
+  }, [organization, organizationUser])
+
   return (
     <div
       style={{
@@ -107,6 +152,33 @@ const EventOrganization = () => {
         backgroundColor: `${organization?.styles?.containerBgColor || '#FFFFFF'}`,
       }}
     >
+      <OrganizationPaymentConfirmationModal />
+      <OrganizationPaymentModal
+        organizationUser={organizationUser}
+        organization={organization}
+      />
+
+      <OrganizationPaymentSuccessModal
+        organizationUser={organizationUser}
+        organization={organization}
+      />
+      {(import.meta.env.MODE || '').includes('staging') && (
+        <div>
+          <Button onClick={() => paymentDispatch({ type: 'REQUIRE_PAYMENT' })}>
+            REQUIRE_PAYMENT
+          </Button>
+          <Button onClick={() => paymentDispatch({ type: 'DISPLAY_REGISTRATION' })}>
+            DISPLAY_REGISTRATION
+          </Button>
+          <Button onClick={() => paymentDispatch({ type: 'DISPLAY_PAYMENT' })}>
+            DISPLAY_PAYMENT
+          </Button>
+
+          <Button onClick={() => paymentDispatch({ type: 'DISPLAY_SUCCESS' })}>
+            DISPLAY_SUCCESS
+          </Button>
+        </div>
+      )}
       <ModalLoginHelpers />
       {/* <RegisterMemberFromOrganizationUserModal
         organization={organization}
@@ -143,6 +215,14 @@ const EventOrganization = () => {
               paddingTop: '0.5vw',
             }}
           >
+            {organizationUser && (
+              <Badge
+                count={`${organizationUser.payment_plan ? 'Modo pago' : 'Modo gratuito'}`}
+                style={{
+                  backgroundColor: organizationUser.payment_plan ? '#F51C31' : '#1C9A1D',
+                }}
+              />
+            )}
             {isAdminUser && (
               <Link
                 to={`/admin/organization/${orgId}`}
@@ -226,17 +306,29 @@ const EventOrganization = () => {
                 <Title level={2}>Disponibles</Title>
               </Badge>
               <Row gutter={[16, 16]}>
+                {console.log('events', lastEvents)}
+
                 {lastEvents?.length > 0 ? (
                   lastEvents.map((event, index) => (
-                    <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
-                      <EventCard
-                        noDates
-                        bordered={false}
-                        key={event._id}
-                        event={event}
-                        action={{ name: 'Ver', url: `landing/${event._id}` }}
-                      />
-                    </Col>
+                    <>
+                      {/*  Si el curso es privado y no estoy inscrito no se ve en el listado de la organización*/}
+                      {(event.visibility != 'PRIVATE' ||
+                        myEvents.filter((mye) => mye.event_id == event._id).length >
+                          0) && (
+                        <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
+                          <EventCard
+                            paymentDispatch={paymentDispatch}
+                            organizationUser={organizationUser}
+                            organization={organization}
+                            noDates
+                            bordered={false}
+                            key={event._id}
+                            event={event}
+                            action={{ name: 'Ver', url: `landing/${event._id}` }}
+                          />
+                        </Col>
+                      )}
+                    </>
                   ))
                 ) : (
                   <div
@@ -276,6 +368,9 @@ const EventOrganization = () => {
                         event={event}
                         action={{ name: 'Ver', url: `landing/${event._id}` }}
                         noAvailable
+                        paymentDispatch={paymentDispatch}
+                        organizationUser={organizationUser}
+                        organization={organization}
                       />
                     </Col>
                   ))

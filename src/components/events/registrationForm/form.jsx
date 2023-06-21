@@ -36,6 +36,7 @@ import { useUserEvent } from '@context/eventUserContext'
 import { useEventContext } from '@context/eventContext'
 import { useCurrentUser } from '@context/userContext'
 import { StateMessage } from '@context/MessageService'
+import dayjs from 'dayjs'
 
 /**TODO::ocaciona error en ios */
 
@@ -420,6 +421,12 @@ const FormRegister = ({
       }
     } else {
       delete values.picture
+    }
+
+    if (values.checked_in === false) {
+      values.checkedin_at = null
+    } else {
+      values.checkedin_at = new Date()
     }
 
     if (callback) {

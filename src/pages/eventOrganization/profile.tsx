@@ -1,12 +1,13 @@
 /**
  * NOTE: this module will be renamed to OrganizationInformation soom
  */
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { OrganizationApi, TypesApi } from '@helpers/request'
-import { Form, Input, Row, Col, Select, Tabs } from 'antd'
+import { Form, Input, Row, Col, Select, Tabs, Switch, InputNumber } from 'antd'
 import Header from '@antdComponents/Header'
 import { StateMessage } from '@context/MessageService'
 import { CardSelector } from '@components/events/CardSelector'
+import OrganizationAccessSettingsField from './OrganizationAccessSettingsField'
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -22,6 +23,7 @@ function OrganizationInformation(props: { org: any }) {
     visibility,
     allow_register,
     enable_notification_providers = [],
+    access_settings,
   } = props.org
 
   const [typeEvents, setTypeEvents] = useState<any[]>([])
@@ -76,6 +78,8 @@ function OrganizationInformation(props: { org: any }) {
     }
   }
 
+  // await OrganizationApi.editOne(organizationData, organizationId)
+
   useEffect(() => {
     // Get all the types
     TypesApi.getAll().then((data) => setTypeEvents(data))
@@ -84,7 +88,7 @@ function OrganizationInformation(props: { org: any }) {
   return (
     <div>
       <Form {...formLayout} name="nest-messages" onFinish={updateOrganization}>
-        <Header title="Información" save form />
+        <Header title="Información" back save form />
 
         <Tabs defaultActiveKey="1">
           <Tabs.TabPane tab="General" key="1">
@@ -132,6 +136,13 @@ function OrganizationInformation(props: { org: any }) {
                       { label: 'WhatsApp', value: 'whatsapp', disabled: true },
                     ]}
                   />
+                </Form.Item>
+                <Form.Item
+                  label="¿Inscripción paga?"
+                  name={['organization', 'access_settings']}
+                  initialValue={access_settings}
+                >
+                  <OrganizationAccessSettingsField />
                 </Form.Item>
               </Col>
             </Row>

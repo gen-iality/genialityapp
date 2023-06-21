@@ -2,7 +2,10 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
     <meta name="theme-color" content="#000000" />
     <!-- removing cache this is by mocion-->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
@@ -28,13 +31,13 @@
     <script type="module">
       // si esta en producción retorna el dominio evius.co si está en modo desarrollo retorna localhost
       if (location.hostname === 'beta.geniality.com.co') {
-        document.domain = 'beta.geniality.com.co';
+        document.domain = 'beta.geniality.com.co'
       } else if (location.hostname.includes('.geniality.com.co')) {
-        document.domain = location.hostname;
+        document.domain = location.hostname
       } else if (location.hostname.includes('.netlify.app')) {
-        document.domain = location.hostname;
+        document.domain = location.hostname
       } else {
-        document.domain = /(\w+)(.\w+)?$/.exec(location.hostname)[0];
+        document.domain = /(\w+)(.\w+)?$/.exec(location.hostname)[0]
       }
     </script>
 
@@ -44,7 +47,10 @@
       integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"
+    />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -58,8 +64,27 @@
         defer: true,
         env: 'development',
         javascriptEnabled: true,
-      };
+      }
     </script>
+
+    <!-- TODO: Change public key test for prod in production -->
+    <script
+      id="wompi"
+      src="https://cdn.wompi.co/libs/js/v1.js"
+      data-public-key="pub_test_UGgvjUcTWcZv0Q57IhQrI4XcNObpSQe4"
+      onload="
+      $wompi.initialize(function (data, error) {
+        console.log('Enter into the function!');
+        if (error === null) {
+          var sessionId = data.sessionId;
+          sessionStorage.setItem('sessionId', sessionId);
+          console.log('SessionId saved succesfully!');
+        }
+      });
+    "
+    ></script>
+    <!-- Wompi Widget Script -->
+    <script type="text/javascript" src="https://checkout.wompi.co/widget.js"></script>
 
     <!-- WOWZA -->
     <!-- <script defer type="module" src="//player.wowza.com/player/latest/wowzaplayer.min.js"></script> -->
@@ -68,9 +93,7 @@
   </head>
 
   <body class="<%- globalPortalClassName %>" id="evius-body">
-    <noscript>
-      You need to enable JavaScript to run this app.
-    </noscript>
+    <noscript> You need to enable JavaScript to run this app. </noscript>
     <div id="root">
       <div class="preloaderBg" id="preloader">
         <div class="preloader"></div>
@@ -79,14 +102,18 @@
     </div>
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script type="module" defer src="https://www.googletagmanager.com/gtag/js?id=UA-72179148-1"></script>
+    <script
+      type="module"
+      defer
+      src="https://www.googletagmanager.com/gtag/js?id=UA-72179148-1"
+    ></script>
     <script type="module">
-      window.dataLayer = window.dataLayer || [];
+      window.dataLayer = window.dataLayer || []
       function gtag() {
-        dataLayer.push(arguments);
+        dataLayer.push(arguments)
       }
-      gtag('js', new Date());
-      gtag('config', 'UA-72179148-1');
+      gtag('js', new Date())
+      gtag('config', 'UA-72179148-1')
     </script>
 
     <!-- Google Tag Manager (noscript) -->
@@ -95,7 +122,7 @@
         src="https://www.googletagmanager.com/ns.html?id=GTM-MQJQCS9"
         height="0"
         width="0"
-        style="display:none;visibility:hidden"
+        style="display: none; visibility: hidden"
       ></iframe
     ></noscript>
     <!-- End Google Tag Manager (noscript) -->
@@ -111,7 +138,7 @@
     <!-- Google maps callback init -->
     <script type="module">
       function initMap() {
-        return true;
+        return true
       }
     </script>
     <!-- <script
@@ -122,30 +149,30 @@
 
     <!-- Facebook Pixel Code -->
     <script type="module">
-      !(function(f, b, e, v, n, t, s) {
-        if (f.fbq) return;
-        n = f.fbq = function() {
-          n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
-        };
-        if (!f._fbq) f._fbq = n;
-        n.push = n;
-        n.loaded = !0;
-        n.version = '2.0';
-        n.queue = [];
-        t = b.createElement(e);
-        t.defer = !0;
-        t.src = v;
-        s = b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t, s);
-      })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
-      fbq('init', '1224063924627255');
-      fbq('track', 'Lead');
+      !(function (f, b, e, v, n, t, s) {
+        if (f.fbq) return
+        n = f.fbq = function () {
+          n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+        }
+        if (!f._fbq) f._fbq = n
+        n.push = n
+        n.loaded = !0
+        n.version = '2.0'
+        n.queue = []
+        t = b.createElement(e)
+        t.defer = !0
+        t.src = v
+        s = b.getElementsByTagName(e)[0]
+        s.parentNode.insertBefore(t, s)
+      })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js')
+      fbq('init', '1224063924627255')
+      fbq('track', 'Lead')
     </script>
     <noscript
       ><img
         height="1"
         width="1"
-        style="display:none"
+        style="display: none"
         src="https://www.facebook.com/tr?id=1224063924627255&ev=PageView&noscript=1"
     /></noscript>
     <!-- End Facebook Pixel Code -->

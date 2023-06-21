@@ -21,10 +21,10 @@ import { OrganizationApi, EventsApi, AgendaApi, PositionsApi } from '@helpers/re
 /** Context */
 import withContext from '@context/withContext'
 import { FB } from '@helpers/firestore-request'
+import { StateMessage } from '@context/MessageService'
 
 function OrgMembers(props) {
-  console.log('Props - OrgMembers (CMS) ->', props)
-  const { _id: organizationId } = props.org
+  const { _id: organizationId, access_settings } = props.org
 
   /** Data States */
   const [membersDataSource, setMembersDataSource] = useState([])
@@ -288,6 +288,29 @@ function OrgMembers(props) {
     })
   }
 
+  const togglePaymentPlan = async (organizationMember) => {
+    organizationMember = {
+      ...organizationMember,
+      payment_plan: organizationMember.payment_plan
+        ? undefined
+        : {
+            date_until: dayjs(Date.now())
+              .add(access_settings?.days ?? 15, 'day')
+              .toDate(),
+            price: access_settings?.price ?? 0,
+          },
+    }
+
+    await OrganizationApi.editUser(
+      organizationId,
+      organizationMember._id,
+      organizationMember,
+    )
+    setIsLoading(true)
+    await updateDataMembers()
+    StateMessage.show(null, 'success', 'Estado del usuario cambiado')
+  }
+
   const columnsData = {
     searchedColumn,
     setSearchedColumn,
@@ -298,7 +321,7 @@ function OrgMembers(props) {
 
   return (
     <>
-      <Header title="Miembros" />
+      <Header title="Miembros" back />
 
       <p>
         <small>
@@ -318,6 +341,8 @@ function OrgMembers(props) {
           extraFields,
           userActivities,
           isStaticsLoading,
+          togglePaymentPlan,
+          props.org,
         )}
         dataSource={membersDataSource}
         size="small"

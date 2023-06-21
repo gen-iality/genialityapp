@@ -15,9 +15,13 @@ import HtmlActivityDisplayer from './displayers/HtmlActivityDisplayer'
 
 interface IActivityDisplayerProps {
   activity: any
+  onActivityProgress?: (percent: number) => void
 }
 
-function switchActivity(activity: IActivityDisplayerProps['activity']) {
+function switchActivity(
+  activity: IActivityDisplayerProps['activity'],
+  onActivityProgress?: IActivityDisplayerProps['onActivityProgress'],
+) {
   console.debug(activity)
   const activityType: string | undefined = activity.type?.name
   console.debug('HOC: activityType', activityType)
@@ -26,39 +30,78 @@ function switchActivity(activity: IActivityDisplayerProps['activity']) {
     case 'eviusMeet':
     case 'vimeo':
     case 'youTube':
-      return <StreamingActivityDisplayer activity={activity} />
+      return (
+        <StreamingActivityDisplayer
+          activity={activity}
+          onActivityProgress={onActivityProgress}
+        />
+      )
     case 'meeting':
-      return <MeetingActivityDisplayer activity={activity} />
+      return (
+        <MeetingActivityDisplayer
+          activity={activity}
+          onActivityProgress={onActivityProgress}
+        />
+      )
     case 'url':
     case 'cargarvideo':
-      return <VideoActivityDisplayer activity={activity} />
+      return (
+        <VideoActivityDisplayer
+          activity={activity}
+          onActivityProgress={onActivityProgress}
+        />
+      )
     case 'pdf':
     case 'pdf2':
-      return <PdfActivityDisplayer activity={activity} />
+      return (
+        <PdfActivityDisplayer
+          activity={activity}
+          onActivityProgress={onActivityProgress}
+        />
+      )
     case 'quiz':
     case 'quizing':
       return (
         <SurveyProvider>
-          <QuizActivityDisplayer activity={activity} />
+          <QuizActivityDisplayer
+            activity={activity}
+            onActivityProgress={onActivityProgress}
+          />
         </SurveyProvider>
       )
     case 'survey':
       return (
         <SurveyProvider>
-          <SurveyActivityDisplayer activity={activity} />
+          <SurveyActivityDisplayer
+            activity={activity}
+            onActivityProgress={onActivityProgress}
+          />
         </SurveyProvider>
       )
     case 'html':
-      return <HtmlActivityDisplayer activity={activity} />
+      return (
+        <HtmlActivityDisplayer
+          activity={activity}
+          onActivityProgress={onActivityProgress}
+        />
+      )
     default:
-      return <GenericActivityDisplayer activity={activity} />
+      return (
+        <GenericActivityDisplayer
+          activity={activity}
+          onActivityProgress={onActivityProgress}
+        />
+      )
   }
 }
 
-const ActivityDisplayer: FunctionComponent<IActivityDisplayerProps> = ({ activity }) => {
+const ActivityDisplayer: FunctionComponent<IActivityDisplayerProps> = ({
+  activity,
+  onActivityProgress,
+}) => {
   return (
     <header>
-      <div>{switchActivity(activity)}</div>
+      <div>{switchActivity(activity, onActivityProgress)}</div>
     </header>
   )
 }

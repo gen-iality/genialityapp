@@ -51,6 +51,7 @@ const ReportList = (props) => {
         API={AgendaApi}
         eventId={props.event._id}
         title="Inscripción a la lección"
+        back
         description="Para actualizar valores, refrescar la página"
         columns={columns}
         search

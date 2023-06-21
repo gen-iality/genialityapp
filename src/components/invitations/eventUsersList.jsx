@@ -312,7 +312,7 @@ class EventUsersList extends Component {
 
     return (
       <>
-        <Header title="Enviar información o correo a asistentes" />
+        <Header title="Enviar información o correo a asistentes" back />
         <div>
           <small>
             <Tag>

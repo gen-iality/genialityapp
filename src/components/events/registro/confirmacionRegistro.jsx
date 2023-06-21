@@ -58,6 +58,7 @@ function ConfirmacionRegistro(props) {
       <Form onFinish={saveData} {...formLayout}>
         <Header
           title="Confirmación de Inscripción"
+          back
           description="El siguiente mensaje le llegará a las personas inscritas en el curso o lección"
           save
           form

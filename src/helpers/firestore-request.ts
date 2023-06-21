@@ -13,6 +13,9 @@ const Attendees = {
   collections: async (activityId: string) => {
     return await Attendees.collection(activityId).get()
   },
+  ref: (activityId: string, eventUserId: string) => {
+    return Attendees.collection(activityId).doc(eventUserId)
+  },
   docs: async (activityId: string) => {
     return (await Attendees.collections(activityId)).docs
   },
@@ -22,12 +25,20 @@ const Attendees = {
    * @param eventUserId Event user ID.
    * @returns An attendee.
    */
-  get: async (activityId: string, eventUserId: string) => {
+  get: async (activityId: string, eventUserId: string, injectActivityId?: boolean) => {
     const document = await firestore
       .collection(`${activityId}_event_attendees`)
       .doc(eventUserId)
       .get()
     if (!document.exists) return
+
+    if (injectActivityId) {
+      return {
+        ...document.data(),
+        activityId,
+        activity_id: activityId,
+      }
+    }
     return document.data()
   },
   /**
@@ -38,9 +49,13 @@ const Attendees = {
   delete: async (activityId: string, eventUserId: string) => {
     await firestore.collection(`${activityId}_event_attendees`).doc(eventUserId).delete()
   },
-  getEventUserActivities: async (activityIds: string[], eventUserId: string) => {
+  getEventUserActivities: async (
+    activityIds: string[],
+    eventUserId: string,
+    injectActivityId?: boolean,
+  ) => {
     const ps = activityIds.map(async (activityId) =>
-      Attendees.get(activityId, eventUserId),
+      Attendees.get(activityId, eventUserId, injectActivityId),
     )
     return await Promise.all(ps)
   },

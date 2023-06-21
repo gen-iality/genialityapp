@@ -3,7 +3,8 @@ import { FormattedDate, FormattedTime } from 'react-intl'
 import { fireRealtime, firestore } from '@helpers/firebase'
 import { BadgeApi, EventsApi, RolAttApi } from '@helpers/request'
 import { AgendaApi, OrganizationApi } from '@helpers/request'
-import { checkinAttendeeInActivity } from '@helpers/HelperAuth'
+// import { checkinAttendeeInActivity } from '@helpers/HelperAuth'
+import ModalPassword from './ModalPassword'
 
 import UserModal from '../modal/modalUser'
 import ErrorServe from '../modal/serverError'
@@ -21,7 +22,6 @@ import {
   Col,
   Drawer,
   Image,
-  List,
   Row,
   Statistic,
   Typography,
@@ -30,8 +30,8 @@ import {
   Space,
   Tooltip,
   Select,
-  Modal,
-  Checkbox,
+  Spin,
+  message,
 } from 'antd'
 
 import updateAttendees from './eventUserRealTime'
@@ -45,7 +45,6 @@ import {
   SearchOutlined,
   UsergroupAddOutlined,
   StarOutlined,
-  CheckOutlined,
 } from '@ant-design/icons'
 import QrModal from './qrModal'
 
@@ -60,76 +59,11 @@ import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton'
 import { UsersPerEventOrActivity } from './utils/utils'
 import LessonsInfoModal from './LessonsInfoModal'
 import { FB } from '@helpers/firestore-request'
+import EventProgressWrapper from '@/wrappers/EventProgressWrapper'
+import EnrollEventUserFromOrganizationMember from './EnrollEventUserFromOrganizationMember'
 
-const { Title, Text } = Typography
+const { Title } = Typography
 const { Option } = Select
-
-const ModalWithLessonsInfo_ = ({
-  show,
-  onHidden,
-  allActivities,
-  attendee,
-  currentUser,
-}) => {
-  const [loaded, setLoaded] = useState(false)
-  const [activities, setActivities] = useState([])
-  const [shouldUpdate, setShouldUpdate] = useState(0)
-
-  useEffect(async () => {
-    if (!currentUser) return
-    if (allActivities.length == 0) return
-
-    const existentActivities = await allActivities.map(async (activity) => {
-      const activity_attendee = await FB.Attendees.get(activity._id, currentUser._id)
-      if (activity_attendee) return activity
-      return null
-    })
-    // Filter non-null result that means that the user attendees them
-    const viewedActivities = (await Promise.all(existentActivities)).filter(
-      (item) => item !== null,
-    )
-    setActivities(viewedActivities.map((activity) => activity.name))
-    setLoaded(true)
-  }, [allActivities, attendee, currentUser, shouldUpdate])
-
-  const Content = () => {
-    if (loaded) {
-      return (
-        <List
-          header={<Text strong>Lecciones vistas</Text>}
-          // bordered
-          dataSource={allActivities}
-          renderItem={(item) => (
-            <List.Item>
-              {activities.filter((activityname) => activityname == item.name).length ? (
-                <CheckOutlined />
-              ) : (
-                <Checkbox
-                  onChange={async () => {
-                    await checkinAttendeeInActivity(currentUser, item._id)
-                    setShouldUpdate((value) => value + 1)
-                  }}
-                />
-              )}{' '}
-              {item.name}
-            </List.Item>
-          )}
-        />
-      )
-      // return (activities.map((activity) => <p>{activity}</p>));
-    }
-
-    return <p>Cargando...</p>
-  }
-
-  return (
-    <Modal centered footer={null} visible={show} closable onCancel={onHidden}>
-      <Space direction="vertical">
-        <Content />
-      </Space>
-    </Modal>
-  )
-}
 
 const TimeTrackingStats = ({ user }) => {
   const [timing, setTiming] = useState(0)
@@ -159,50 +93,6 @@ const TimeTrackingStats = ({ user }) => {
   }, [user])
 
   return <>{timing.toFixed(2)} horas</>
-}
-
-const ColumnProgreso = ({
-  shownAll,
-  item,
-  allActivities,
-  onOpen,
-  updateAttendee,
-  updateCurrentUser,
-  ...props
-}) => {
-  const [attendee, setAttendee] = useState([])
-  const [shouldUpdate, setShouldUpdate] = useState(0)
-  useEffect(async () => {
-    // Get all existent activities, after will filter it
-    const existentActivities = await allActivities.map(async (activity) => {
-      const activity_attendee = await FB.Attendees.get(activity._id, item._id)
-      if (activity_attendee) return activity
-      return null
-    })
-    // Filter non-null result that means that the user attendees them
-    const gotAttendee = (await Promise.all(existentActivities)).filter(
-      (item) => item !== null,
-    )
-    setAttendee(gotAttendee)
-  }, [shouldUpdate])
-
-  if (!onOpen) onOpen = () => {}
-
-  if (shownAll) {
-    return (
-      <Button
-        onClick={() => {
-          updateAttendee(attendee)
-          updateCurrentUser(item)
-          setShouldUpdate((previus) => previus + 1)
-          onOpen()
-        }}
-      >
-        {`${attendee.length || 0}/${allActivities.length || 0}`}
-      </Button>
-    )
-  }
-  return <>{attendee.length > 0 ? 'Visto' : 'No visto'}</>
 }
 
 class ListEventUser extends Component {
@@ -258,9 +148,56 @@ class ListEventUser extends Component {
       qrModalOpen: false,
       unSusCribeConFigFast: () => {},
       unSuscribeAttendees: () => {},
+      progressMap: {},
     }
   }
   static contextType = HelperContext
+
+  /* The above code is defining a function called `handleRecoveryPass` that takes an email as a
+parameter. The function calls an API method `changePasswordUser` with the email and the current URL
+as parameters. If the API call is successful, the function sets the state with a success message and
+hides a confirmation modal. If the API call fails, the function sets the state with an error message
+and displays an error message using the `message` component from the antd library. */
+  handleRecoveryPass = async (email) => {
+    try {
+      let resp = await EventsApi.changePasswordUser(email, window.location.href)
+      if (resp) {
+        this.setState({
+          recoveryMessage: `Se ha enviado correo nueva contraseña a: ${email}`,
+          resul: 'OK',
+          status: 'success',
+          showConfirm: false,
+        })
+        message.success(
+          `Se ha enviado el correo de recuperación de contraseña a: ${email}`,
+        )
+      }
+    } catch (error) {
+      this.setState({
+        recoveryMessage:
+          'Ocurrió un error al enviar el correo de recuperación de contraseña',
+        resul: 'Error',
+        status: 'error',
+        showConfirm: false,
+      })
+      message.error('Ocurrió un error al enviar el correo de recuperación de contraseña')
+    }
+  }
+
+  openModal = () => {
+    // Lógica a ejecutar cuando se abre el modal
+    this.setState({ showConfirm: true })
+  }
+
+  handleOk = () => {
+    // Lógica a ejecutar cuando se confirme el modal
+    this.setState({ showConfirm: false })
+  }
+
+  handleCancel = () => {
+    // Lógica a ejecutar cuando se cancele el modal
+    this.setState({ showConfirm: false })
+  }
 
   // eslint-disable-next-line no-unused-vars
   editcomponent = (text, item, index, badColumns) => {
@@ -273,15 +210,18 @@ class ListEventUser extends Component {
     newItem.properties = filteredProperties
     const { eventIsActive } = this.context
     return (
-      <Tooltip placement="topLeft" title="Editar">
-        <Button
-          type="primary"
-          icon={<EditOutlined />}
-          size="small"
-          onClick={() => this.openEditModalUser(newItem)}
-          disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
-        />
-      </Tooltip>
+      <Space>
+        <Tooltip placement="topLeft" title="Editar">
+          <Button
+            type="primary"
+            icon={<EditOutlined />}
+            size="small"
+            onClick={() => this.openEditModalUser(newItem)}
+            disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+          />
+        </Tooltip>
+        <ModalPassword onOk={() => this.handleRecoveryPass(item.email)} />
+      </Space>
     )
   }
 
@@ -428,7 +368,7 @@ class ListEventUser extends Component {
       fieldsForm.push({
         author: null,
         categories: [],
-        label: 'Inscrito',
+        label: 'El usuario asistió al curso.',
         mandatory: false,
         name: 'checked_in',
         organizer: null,
@@ -576,14 +516,34 @@ class ListEventUser extends Component {
         sorter: (a, b) => true,
         render: (text, item, index) => (
           <>
-            <ColumnProgreso
-              shownAll={this.props.shownAll}
-              item={item}
-              onOpen={() => this.setState({ showModalOfProgress: true })}
-              updateAttendee={(attendee) => this.setState({ attendee })}
-              updateCurrentUser={(user) => this.setState({ currentUser: user })}
-              index={index}
-              allActivities={allActivities}
+            <EventProgressWrapper
+              event={this.props.event}
+              eventUser={item}
+              render={({ isLoading, activities, checkedInActivities }) => (
+                <>
+                  {this.setState({
+                    ...this.state,
+                    progressMap: {
+                      ...this.state.progressMap,
+                      [item._id]: `${checkedInActivities.length}/${activities.length}`,
+                    },
+                  })}
+                  {isLoading && <Spin />}
+                  {this.props.shownAll ? (
+                    <Button
+                      onClick={() => {
+                        this.setState({
+                          attendee: checkedInActivities,
+                          currentUser: item,
+                          showModalOfProgress: true,
+                        })
+                      }}
+                    >{`${checkedInActivities.length}/${activities.length}`}</Button>
+                  ) : (
+                    <>{checkedInActivities.length > 0 ? 'Visto' : 'No visto'}</>
+                  )}
+                </>
+              )}
             />
           </>
         ),
@@ -851,11 +811,26 @@ class ListEventUser extends Component {
     e.preventDefault()
     e.stopPropagation()
 
-    const attendees = [...this.state.users].sort((a, b) => b.created_at - a.created_at)
+    let attendees = [...this.state.users].sort((a, b) => b.created_at - a.created_at)
 
     console.info('attendees', attendees)
 
     const joint = [...this.state.extraFields, ...this.state.simplifyOrgProperties]
+
+    // Inject the progress
+    attendees = attendees.map((attendee) => {
+      return {
+        ...attendee,
+        properties: {
+          ...attendee.properties,
+          eventProgress: this.state.progressMap[attendee._id] ?? 'Sin dato',
+        },
+      }
+    })
+    joint.push({
+      name: 'eventProgress',
+      label: 'Progreso de curso',
+    })
 
     const data = await parseData2Excel(attendees, joint, this.state.rolesList)
     const ws = utils.json_to_sheet(data)
@@ -1175,15 +1150,6 @@ class ListEventUser extends Component {
 
     return (
       <>
-        {/* <ModalWithLessonsInfo
-          show={this.state.showModalOfProgress}
-          onHidden={() => {
-            this.setState({ showModalOfProgress: false })
-          }}
-          allActivities={this.state.allActivities}
-          attendee={this.state.attendee}
-          currentUser={this.state.currentUser}
-        /> */}
         <LessonsInfoModal
           show={this.state.showModalOfProgress}
           onHidden={() => {
@@ -1195,10 +1161,9 @@ class ListEventUser extends Component {
         />
         <Header
           title={
-            type == 'activity'
-              ? 'Inscripción de ' + nameActivity
-              : 'Inscripción de curso: '
+            type == 'activity' ? 'Inscripción a ' + nameActivity : 'Inscripción al curso'
           }
+          back
           titleToMergingOrAdaptIt={
             componentKey === 'activity-checkin'
               ? 'Check-in actividad: ' + nameActivity
@@ -1375,7 +1340,7 @@ class ListEventUser extends Component {
                 </Link>
               </Col>
               <Col>
-                <Button
+                {/* <Button
                   type="primary"
                   icon={<PlusCircleOutlined />}
                   size="middle"
@@ -1385,7 +1350,25 @@ class ListEventUser extends Component {
                   }
                 >
                   Agregar usuario
+                </Button> */}
+                <Button
+                  icon={<PlusCircleOutlined />}
+                  type="primary"
+                  size="middle"
+                  onClick={() => this.setState({ btn: true })}
+                  disabled={
+                    !eventIsActive && window.location.toString().includes('eventadmin')
+                  }
+                >
+                  Agregar usuario
                 </Button>
+                {this.state.btn && (
+                  <EnrollEventUserFromOrganizationMember
+                    eventId={this.props.event._id}
+                    orgId={this.props.event.organizer._id}
+                    onClose={() => this.setState({ btn: false })}
+                  />
+                )}
               </Col>
             </Row>
           }

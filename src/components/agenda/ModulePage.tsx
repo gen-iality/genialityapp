@@ -10,6 +10,7 @@ import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
 import './ModulePage.css'
+import Header from '@antdComponents/Header'
 
 interface DraggableBodyRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
   index: number
@@ -200,13 +201,16 @@ function ModulePage(props: any) {
         direction="horizontal"
         style={{ display: 'flex', justifyContent: 'space-between' }}
       >
-        <Typography.Text>
-          Agregue o edite los modules disponibles en este curso
-        </Typography.Text>
+        <Header
+          title="Módulos"
+          back
+          description="Agregue o edite los modules disponibles en este curso"
+        />
         <Button type="primary" onClick={openModal}>
           Agregar módulo
         </Button>
       </Space>
+
       <DndProvider backend={HTML5Backend}>
         <Table
           pagination={false}

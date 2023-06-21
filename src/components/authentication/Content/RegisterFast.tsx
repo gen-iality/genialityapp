@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, FunctionComponent } from 'react'
 import {
   PictureOutlined,
   MailOutlined,
@@ -18,18 +18,36 @@ import Camera from 'react-html5-camera-photo'
 import 'react-html5-camera-photo/build/css/index.css'
 import './RegisterFast.css'
 
-function getBase64(img, callback) {
+function getBase64(img: any, callback: (data: any) => void) {
   const reader = new FileReader()
   reader.addEventListener('load', () => callback(reader.result))
   reader.readAsDataURL(img)
 }
 
-const RegisterFast = ({ basicDataUser, formDataHandler }) => {
+// TODO: rename to SignUpFastForm
+
+interface IRegisterFastProps {
+  /** @deprecated use userData instead */
+  basicDataUser?: any
+  userData?: any
+  formDataHandler?: (e: any, fieldName: string, picture?: any) => void
+}
+
+const RegisterFast: FunctionComponent<IRegisterFastProps> = (props) => {
+  const {
+    basicDataUser: _basicDataUser,
+    userData: _userData,
+    formDataHandler = () => {},
+  } = props
+
+  const basicDataUser = _basicDataUser ?? _userData
+
+  const [takingPhoto, setTakingPhoto] = useState(false)
+  const [imageAvatar, setImageAvatar] = useState<any>(null)
+
+  const [form] = Form.useForm()
   const intl = useIntl()
   const cEvent = useEventContext()
-  const [takingPhoto, setTakingPhoto] = useState(false)
-  const [imageAvatar, setImageAvatar] = useState(null)
-  const [form] = Form.useForm()
 
   /* Toca hacerlo, porque por alguna razón cuando se actualiza basicDataUser.picture  no se renderiza el componente 
    y no se ve la imagen en el preview
@@ -54,7 +72,7 @@ const RegisterFast = ({ basicDataUser, formDataHandler }) => {
     }
   }, [basicDataUser.picture])
 
-  const handleTakePhotoAnimationDone = (dataUri) => {
+  const handleTakePhotoAnimationDone = (dataUri: string) => {
     const pic = [
       {
         uid: '1',
@@ -64,12 +82,13 @@ const RegisterFast = ({ basicDataUser, formDataHandler }) => {
         thumbUrl: dataUri,
       },
     ]
+
     formDataHandler(null, 'picture', pic)
     setImageAvatar(dataUri)
     setTakingPhoto(false)
   }
 
-  const ruleEmail = [
+  const ruleEmail: any[] = [
     {
       type: 'email',
       message: intl.formatMessage({
@@ -86,7 +105,7 @@ const RegisterFast = ({ basicDataUser, formDataHandler }) => {
     },
   ]
 
-  const rulePassword = [
+  const rulePassword: any[] = [
     {
       required: true,
       message: intl.formatMessage({
@@ -105,7 +124,7 @@ const RegisterFast = ({ basicDataUser, formDataHandler }) => {
     },
   ]
 
-  const ruleCedula = [
+  const ruleCedula: any[] = [
     { required: true, message: 'Ingrese una cedula para su cuenta en Evius' },
     {
       type: 'string',
@@ -124,8 +143,9 @@ const RegisterFast = ({ basicDataUser, formDataHandler }) => {
     },
   ]
 
-  function onFinish(values) {
+  function onFinish(values: any) {
     // handleNext(values); it is undefined
+    console.log('nothing to do with:', values)
   }
 
   return (
@@ -251,7 +271,7 @@ const RegisterFast = ({ basicDataUser, formDataHandler }) => {
           <Form.Item
             label={intl.formatMessage({
               id: 'modal.label.password',
-              defaultMessage: 'Documento de identidad', // TODO: Antes contraseña
+              defaultMessage: 'Contraseña', // TODO: Antes contraseña
             })}
             name="password"
             hasFeedback
@@ -264,7 +284,7 @@ const RegisterFast = ({ basicDataUser, formDataHandler }) => {
               size="large"
               placeholder={intl.formatMessage({
                 id: 'modal.label.password',
-                defaultMessage: 'Documento de identidad', // TODO: Antes contraseña
+                defaultMessage: 'Contraseña', // TODO: Antes contraseña
               })}
               prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
             />

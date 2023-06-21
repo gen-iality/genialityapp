@@ -77,7 +77,7 @@ function OrganizationPositionsPage(props: Props) {
       }}
       defaultValue={props.org.default_position_id}
     >
-      <Header title="Cargos" />
+      <Header title="Cargos" back />
       <Table
         columns={positionsTableColumns(modalHandler.open, orgEventsData, props.path)}
         dataSource={positionsData}

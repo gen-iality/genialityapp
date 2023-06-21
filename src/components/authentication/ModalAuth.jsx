@@ -160,11 +160,19 @@ const ModalAuth = (props) => {
     form1.resetFields()
     switch (key) {
       case 'login':
-        helperDispatch({ type: 'showLogin', visible: true })
+        helperDispatch({
+          type: 'showLogin',
+          visible: true,
+          idOrganization: controllerLoginVisible?.idOrganization,
+        })
         break
 
       case 'register':
-        helperDispatch({ type: 'showRegister', visible: true })
+        helperDispatch({
+          type: 'showRegister',
+          visible: true,
+          idOrganization: controllerLoginVisible?.idOrganization,
+        })
         break
 
       default:

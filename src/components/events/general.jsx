@@ -44,6 +44,7 @@ import {
   InputNumber,
   DatePicker,
   TimePicker,
+  Checkbox,
 } from 'antd'
 
 import Header from '@antdComponents/Header'
@@ -507,6 +508,7 @@ class General extends Component {
       is_examen_required: event.is_examen_required,
       hide_certificate_link: event.hide_certificate_link,
       published_at_home: event.published_at_home,
+      progress_settings: event.progress_settings,
       validity_days: event.validity_days,
       default_certification_description: event.default_certification_description,
       default_certification_hours: event.default_certification_hours,
@@ -711,6 +713,7 @@ class General extends Component {
         <Form onFinish={this.submit} {...formLayout}>
           <Header
             title="Datos del curso"
+            back
             save
             form
             remove={this.deleteEvent}
@@ -1058,15 +1061,16 @@ class General extends Component {
                   <Form.Item
                     label={
                       <label style={{ marginTop: '2%' }}>
-                        Imagen general - miniatura del curso
+                        Elige una imagen para la miniatura del curso desde el escritorio o
+                        una carpeta. Tamaño recomendado 1440x960 px.
                       </label>
                     }
                   >
                     <ImageUploaderDragAndDrop
                       imageDataCallBack={(imageUrl) => this.handleImage(imageUrl)}
                       imageUrl={image}
-                      width="1080"
-                      height="1080"
+                      width="1440"
+                      height="960"
                     />
                   </Form.Item>
 
@@ -1278,6 +1282,52 @@ class General extends Component {
                       // </Form.Item> */}
                     </>
                   )}
+
+                  <Form.Item label="Porcentaje progreso para marcar una lección como completada">
+                    <InputNumber
+                      value={event.progress_settings?.lesson_percent_to_completed || 0}
+                      formatter={(value) => `${value}%`}
+                      parser={(value) => {
+                        if (value === undefined) return 0
+                        return parseInt(value.replace('%', ''))
+                      }}
+                      onChange={(value) => {
+                        this.handleChange(
+                          {
+                            ...event.progress_settings,
+                            lesson_percent_to_completed: value ?? '',
+                          },
+                          'progress_settings',
+                        )
+                      }}
+                    />
+                    <p>
+                      Porcentaje de 0% marca la lección cómo completada directo cuando se
+                      ingresa
+                    </p>
+                  </Form.Item>
+
+                  <Form.Item label="Elementos tomados en cuenta en el progreso">
+                    <Checkbox.Group
+                      options={[
+                        { label: 'Lecciones general', value: 'rest' },
+                        { label: 'Encuestas', value: 'survey' },
+                        { label: 'Quices', value: 'quiz' },
+                        { label: 'Secciones informativas', value: 'info' },
+                      ]}
+                      value={event.progress_settings?.enable_mode ?? []}
+                      onChange={(value) => {
+                        console.log('checked ones:', value)
+                        this.handleChange(
+                          {
+                            ...event.progress_settings,
+                            enable_mode: value,
+                          },
+                          'progress_settings',
+                        )
+                      }}
+                    />
+                  </Form.Item>
                 </Col>
               </Row>
               <BackTop />

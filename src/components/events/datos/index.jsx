@@ -632,7 +632,7 @@ class Datos extends Component {
           {this.props.type !== 'organization' && (
             <TabPane tab="Configuración General" key="1">
               <Fragment>
-                <Header title="Interacción con la plataforma" />
+                <Header title="Interacción con la plataforma" back />
                 <small>
                   {`Configure los datos que desea recolectar de los asistentes ${
                     this.organization ? 'de la organización' : 'del curso'
@@ -822,6 +822,7 @@ class Datos extends Component {
                       : this.props.eventId
                   }
                   title="Plantillas de recoleccion de datos"
+                  back
                   addFn={() => this.setState({ visibleModal: true })}
                   columns={colsPlant}
                   editFn={(values) => {

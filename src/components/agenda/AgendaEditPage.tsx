@@ -143,7 +143,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
 
       StateMessage.show(null, 'success', 'Información guardada correctamente!')
     },
-    [selectedDocuments],
+    [currentTab, selectedDocuments, currentAgenda, location.state, props],
   )
 
   /**

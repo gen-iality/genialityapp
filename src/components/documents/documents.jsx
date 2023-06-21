@@ -20,6 +20,7 @@ const Documents = (props) => {
       API={DocumentsApi}
       eventId={props.event._id}
       title="Documentos"
+      back
       titleTooltip="Agregue o edite los Documentos que se muestran en la aplicación"
       addUrl={{
         pathname: `${props.parentUrl}/document`,

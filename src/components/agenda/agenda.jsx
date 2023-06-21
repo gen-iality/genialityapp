@@ -97,6 +97,7 @@ const Agenda = (props) => {
       API={AgendaApi}
       eventId={props.event._id}
       title="Temas"
+      back
       titleTooltip="Agregue o edite las Agendas que se muestran en la aplicación"
       addUrl={{
         pathname: `${props.parentUrl}/create-activity`,

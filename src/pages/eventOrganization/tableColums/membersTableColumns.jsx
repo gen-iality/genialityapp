@@ -4,7 +4,12 @@ import { useHistory } from 'react-router'
 
 /** Antd imports */
 import { Tooltip, Button, Row, Col, Popover, Image, Avatar, Empty, Spin } from 'antd'
-import { ClockCircleOutlined, EditOutlined, UserOutlined } from '@ant-design/icons'
+import {
+  ClockCircleOutlined,
+  EditOutlined,
+  RiseOutlined,
+  UserOutlined,
+} from '@ant-design/icons'
 
 /** Helpers and utils */
 import { membersGetColumnSearchProps } from '../searchFunctions/membersGetColumnSearchProps'
@@ -15,6 +20,8 @@ export const columns = (
   extraFields,
   userActivities,
   isStaticsLoading,
+  togglePaymentPlan,
+  organization,
 ) => {
   const history = useHistory()
   const [columns, setColumns] = useState([])
@@ -83,6 +90,19 @@ export const columns = (
     },
   }
 
+  const payment_plan = {
+    title: 'Valor pagado',
+    dataIndex: 'payment_plan',
+    key: 'payment_plan',
+    width: '140px',
+    ellipsis: true,
+    sorter: (a, b) => (a.payment_plan?.price ?? 0) - (b.payment_plan?.price ?? 0),
+    ...membersGetColumnSearchProps('payment_plan'),
+    render(payment_plan) {
+      return payment_plan?.price ?? 0
+    },
+  }
+
   const created_at = {
     title: 'Creado',
     dataIndex: 'created_at',
@@ -138,6 +158,18 @@ export const columns = (
               icon={<EditOutlined />}
             ></Button>
           </Tooltip>
+          {organization.access_settings?.type === 'payment' && (
+            <Tooltip title={item.payment_plan ? 'Quitar premium' : 'Hace premium'}>
+              <Button
+                type={item.payment_plan ? 'ghost' : 'primary'}
+                size="small"
+                onClick={() => {
+                  togglePaymentPlan(item)
+                }}
+                icon={<RiseOutlined />}
+              ></Button>
+            </Tooltip>
+          )}
         </>
       )
     },
@@ -164,6 +196,7 @@ export const columns = (
   useEffect(() => {
     const newColumns = [picture, ...dynamicColumns]
 
+    organization.access_settings?.type === 'payment' && newColumns.push(payment_plan)
     newColumns.push(progressing)
     newColumns.push(created_at)
     newColumns.push(updated_at)
