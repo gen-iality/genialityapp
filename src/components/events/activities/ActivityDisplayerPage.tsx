@@ -65,6 +65,9 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
           StateMessage.show(null, 'success', 'Actividad marcada como vista', 3)
         }
         setWasNotifiedForProgress(true)
+
+        // Request to update the attendees
+        cEventProgress.updateAttendees()
       })
     }
   }
@@ -123,6 +126,10 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
       }
     }
   }, [currentActivity, cEventUser.status])
+
+  useEffect(() => {
+    cEventProgress.saveProgressReport()
+  }, [cEventProgress.checkedInActivities])
 
   const goToActivityIdPage = async (activityId: string) => {
     history.push(`/landing/${cEvent?.value._id}/activity/${activityId}`)
