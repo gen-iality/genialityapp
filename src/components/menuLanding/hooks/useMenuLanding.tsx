@@ -91,7 +91,7 @@ export default function useMenuLanding(props: MenuLandingProps) {
         position: item.checked ? enabledItems.findIndex((enabledItem) => enabledItem === item) + 1 : item.position,
       }));
       setData(updatedDataWithPositions);
-      setItemsMenuFromData(updatedDataWithPositions);
+      // setItemsMenuFromData(updatedDataWithPositions);
     }
   };
   const setItemsMenuFromData = (updatedData: any[]) => {

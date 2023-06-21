@@ -25,7 +25,6 @@ export default function MenuLanding(props: MenuLandingProps) {
     const updatedData: Menu[] = Object.keys(menu).map((key: string, index: number) => {
       return {
         key: key,
-        drag: <DragIcon />,
         position: menu[key].position,
         name: menu[key].name,
         icon: menu[key].icon,
@@ -61,6 +60,14 @@ export default function MenuLanding(props: MenuLandingProps) {
     setItemEdit(item);
     setVisibility(true);
   };
+  const DragHandle = SortableHandle(() => (
+    <DragIcon
+      style={{
+        cursor: 'move',
+        fontSize: '22px',
+      }}
+    />
+  ));
   const columns = [
     {
       title: '',
