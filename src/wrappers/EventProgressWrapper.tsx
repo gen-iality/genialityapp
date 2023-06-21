@@ -9,7 +9,7 @@ interface IWrappedProps {
   isLoading?: boolean
   activities: ExtendedAgendaType[]
   checkedInActivities: any[]
-  reload: () => Promise<void>
+  reload: (forceRefresh?: boolean) => Promise<void>
 }
 
 interface IEventProgressWrapperProps {
@@ -19,11 +19,12 @@ interface IEventProgressWrapperProps {
 }
 
 export const calcProgress = (current: number, total: number) => {
-  if (current > total) {
-    throw new Error('The parts cannot be greater than the whole (total), flaco')
-  }
   if (current === 0 || total === 0) return 0
-  return Math.round((current / total) * 100)
+  const percent = Math.round((current / total) * 100)
+  if (current > total) {
+    console.error(`The parts cannot be greater than the whole (total), got: ${percent}%`)
+  }
+  return percent
 }
 
 const EventProgressWrapper: FunctionComponent<IEventProgressWrapperProps> = (props) => {
@@ -66,7 +67,16 @@ const EventProgressWrapper: FunctionComponent<IEventProgressWrapperProps> = (pro
     console.log(`Got ${checkedInOnes.length} attendees`)
   }
 
-  const reload = async () => {
+  const reload = async (forceRefresh?: boolean) => {
+    const _forceRefresh = typeof forceRefresh === 'undefined' ? true : false
+
+    if (!_forceRefresh && eventUser.activity_progresses) {
+      const { activities, checked_in_activities } = eventUser.activity_progresses
+      setActivities(activities)
+      setCheckedInActivities(checked_in_activities)
+      return
+    }
+
     const activities = await updateActivities()
     await updateAttendees(activities)
   }
@@ -76,7 +86,7 @@ const EventProgressWrapper: FunctionComponent<IEventProgressWrapperProps> = (pro
     if (!eventUser) return
 
     setIsLoading(true)
-    reload().finally(() => setIsLoading(false))
+    reload(false).finally(() => setIsLoading(false))
   }, [event, eventUser])
 
   return render({

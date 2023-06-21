@@ -12,7 +12,7 @@ import {
 import { Badge } from 'antd'
 
 const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
-  const { activity } = props
+  const { activity, onActivityProgress } = props
   const urlVideo = activity?.video
 
   const [activityState] = useState('')
@@ -71,16 +71,20 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
 
   useEffect(() => {
     if (!viewedVideoProgress) return
-    if (Math.round(viewedVideoProgress / 1) !== viewedVideoProgress) return
+    // if (Math.round(viewedVideoProgress / 1) !== viewedVideoProgress) return
     console.log('vimeo timeupdate', activity, viewedVideoProgress)
 
     updateAttendeeInActivityRealTime(cEventUser.value, activity._id, {
       viewProgess: viewedVideoProgress,
+      checked_in: false,
+      checkedin_at: null,
     })
 
     // Save the progress when it is over 99
-    if (viewedVideoProgress >= 99)
-      checkinAttendeeInActivity(cEventUser.value, activity._id)
+    // if (viewedVideoProgress >= 99)
+    //   checkinAttendeeInActivity(cEventUser.value, activity._id)
+    if (typeof onActivityProgress === 'function')
+      onActivityProgress(viewedVideoProgress * 100)
   }, [viewedVideoProgress])
 
   return (
@@ -89,7 +93,7 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
       <div className="mediaplayer" style={{ aspectRatio: '16/9' }}>
         <div>
           <Badge
-            count={`Progreso: ${viewedVideoProgress}%`}
+            count={`Progreso: ${Math.round(viewedVideoProgress * 100)}%`}
             style={{ backgroundColor: '#0E594A', color: 'while' }}
           />
           <Badge

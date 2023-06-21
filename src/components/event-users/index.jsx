@@ -148,6 +148,7 @@ class ListEventUser extends Component {
       qrModalOpen: false,
       unSusCribeConFigFast: () => {},
       unSuscribeAttendees: () => {},
+      progressMap: {},
     }
   }
   static contextType = HelperContext
@@ -520,6 +521,13 @@ and displays an error message using the `message` component from the antd librar
               eventUser={item}
               render={({ isLoading, activities, checkedInActivities }) => (
                 <>
+                  {this.setState({
+                    ...this.state,
+                    progressMap: {
+                      ...this.state.progressMap,
+                      [item._id]: `${checkedInActivities.length}/${activities.length}`,
+                    },
+                  })}
                   {isLoading && <Spin />}
                   {this.props.shownAll ? (
                     <Button
@@ -803,11 +811,26 @@ and displays an error message using the `message` component from the antd librar
     e.preventDefault()
     e.stopPropagation()
 
-    const attendees = [...this.state.users].sort((a, b) => b.created_at - a.created_at)
+    let attendees = [...this.state.users].sort((a, b) => b.created_at - a.created_at)
 
     console.info('attendees', attendees)
 
     const joint = [...this.state.extraFields, ...this.state.simplifyOrgProperties]
+
+    // Inject the progress
+    attendees = attendees.map((attendee) => {
+      return {
+        ...attendee,
+        properties: {
+          ...attendee.properties,
+          eventProgress: this.state.progressMap[attendee._id] ?? 'Sin dato',
+        },
+      }
+    })
+    joint.push({
+      name: 'eventProgress',
+      label: 'Progreso de curso',
+    })
 
     const data = await parseData2Excel(attendees, joint, this.state.rolesList)
     const ws = utils.json_to_sheet(data)
