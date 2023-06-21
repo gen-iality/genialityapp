@@ -8,12 +8,12 @@ import * as iconComponents from '@ant-design/icons';
 import DragIcon from '@2fd/ant-design-icons/lib/DragVertical';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import ModalEdit from './components/ModalEdit';
-import { SortEndHandler, SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
+import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { ColumnType } from 'antd/lib/table';
 
 
 export default function MenuLanding(props: MenuLandingProps) {
-  const { menu, isLoading, titleheader, data, setData, updateValue, submit, checkedItem } = useMenuLanding(
+  const { menu, isLoading, titleheader, data, setData, handleDragEnd, submit, checkedItem } = useMenuLanding(
     props
   );
   const [visibility, setVisibility] = useState(false)
@@ -34,23 +34,6 @@ export default function MenuLanding(props: MenuLandingProps) {
     setData(updatedData);
   }, [menu]);
 
-  const handleDragEnd: SortEndHandler = ({ oldIndex, newIndex }: any) => {
-    if (oldIndex !== newIndex) {
-      const enabledItems = data.filter((item) => item.checked);
-      const disabledItems = data.filter((item) => !item.checked);
-
-      const movedItem = enabledItems.splice(oldIndex, 1)[0];
-      enabledItems.splice(newIndex, 0, movedItem);
-
-      const updatedData = [...enabledItems, ...disabledItems];
-      const updatedDataWithPositions = updatedData.map((item, index) => ({
-        ...item,
-        position: item.checked ? index + 1 : item.position,
-      }));
-
-      setData(updatedDataWithPositions);
-    }
-  };
 
   
   const DragHandle = SortableHandle(() => (
