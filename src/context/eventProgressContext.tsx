@@ -47,9 +47,7 @@ const initialContextState: EventProgressContextState = {
   saveProgressReport: () => Promise.resolve(),
 }
 
-const EventProgressContext = createContext<EventProgressContextState | undefined>(
-  initialContextState,
-)
+const EventProgressContext = createContext<EventProgressContextState>(initialContextState)
 
 export default EventProgressContext
 
