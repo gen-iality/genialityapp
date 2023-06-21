@@ -33,7 +33,7 @@ export interface MenuLanding {
 
 
 export interface Menu {
-  key: string | number | boolean;
+  key: string
   drag: JSX.Element;
   position: number;
   name: string;
@@ -41,3 +41,9 @@ export interface Menu {
   checked: boolean;
   options: JSX.Element;
 };
+
+export interface PropsEditModal {
+  item : Menu,
+  visibility : boolean
+  setVisibility : React.Dispatch<React.SetStateAction<boolean>>
+}
