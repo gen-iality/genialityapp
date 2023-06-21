@@ -5,6 +5,8 @@ import { GetTokenUserFirebase } from '@/helpers/HelperAuth';
 import { DispatchMessageService } from '@/context/MessageService';
 import { Menu, MenuBase, MenuItem, MenuLandingProps } from '../interfaces/menuLandingProps';
 import { deepCopy } from '../utils/functions';
+import { SortEndHandler } from 'react-sortable-hoc';
+import debounce from 'lodash/debounce';
 
 export default function useMenuLanding(props: MenuLandingProps) {
 
@@ -14,7 +16,7 @@ export default function useMenuLanding(props: MenuLandingProps) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [data, setData] = useState<Menu[]>([]);
 
-
+  const debouncedSubmit = debounce(submit, 500);
   const ORGANIZATION_VALUE = 1;
 
   const checkedItem = (key: string, value: boolean) => {
@@ -26,22 +28,9 @@ export default function useMenuLanding(props: MenuLandingProps) {
       itemsMenuDB[key].position = menuBase[key].position;
     }
     setItemsMenu(itemsMenuDB);
+    debouncedSubmit()
   };
-  // const checkedItem = (key: string, value: boolean) => {
-  //   const menuBase: MenuBase = { ...menu };
-  //   const itemsMenuDB = { ...itemsMenu };
-  
-  //   if (itemsMenuDB[key]) {
-  //     itemsMenuDB[key].checked = value;
-      
-  //     if (!value) {
-  //       itemsMenuDB[key].name = menuBase[key].name;
-  //       itemsMenuDB[key].position = menuBase[key].position;
-  //     }
-      
-  //     setItemsMenu(itemsMenuDB);
-  //   }
-  // };
+
 
   async function componentDidMount() {
     let menuLanding: { itemsMenu: MenuBase } | null = null;
@@ -72,12 +61,7 @@ export default function useMenuLanding(props: MenuLandingProps) {
     setItemsMenu(itemsMenuDB);
     if (property === 'permissions') setKeySelect(Date.now());
   }
-  // function updateValue(key: string, value: string | number | boolean, property: string) {
-  //   setFormValues((prevFormValues) => ({
-  //     ...prevFormValues,
-  //     [property]: value
-  //   }));
-  // }
+
   
 
   function orderPosition(key: string, order: string | number): void {
@@ -94,6 +78,24 @@ export default function useMenuLanding(props: MenuLandingProps) {
       }
     }
     return menuFilter;
+  };
+  const handleDragEnd: SortEndHandler = ({ oldIndex, newIndex }: any) => {
+    if (oldIndex !== newIndex) {
+      const enabledItems = data.filter((item) => item.checked);
+      const disabledItems = data.filter((item) => !item.checked);
+
+      const movedItem = enabledItems.splice(oldIndex, 1)[0];
+      enabledItems.splice(newIndex, 0, movedItem);
+
+      const updatedData = [...enabledItems, ...disabledItems];
+      const updatedDataWithPositions = updatedData.map((item, index) => ({
+        ...item,
+        position: item.checked ? index + 1 : item.position,
+      }));
+
+      setData(updatedDataWithPositions);
+      
+    }
   };
 
   async function submit() {
@@ -125,27 +127,7 @@ export default function useMenuLanding(props: MenuLandingProps) {
       action: 'show',
     });
   }
-  // function orderItemsMenu() {
-  //   let itemsMenuData: MenuBase = {};
-  //   let itemsMenuToSave: MenuBase = {};
-  //   let items: MenuItem[] = Object.values(itemsMenu);
-  
-  //   items.sort(function (a: MenuItem, b: MenuItem) {
-  //     if (a.section && b.section) {
-  //       return a.position - b.position;
-  //     } else {
-  //       return 0;
-  //     }
-  //   });
-  
-  //   for (let item of items) {
-  //     itemsMenuData[item.section] = item;
-  //   }
-  
-  //   itemsMenuToSave = { ...itemsMenuData };
-  
-  //   return itemsMenuToSave;
-  // }
+
   function orderItemsMenu() {
     let itemsMenuData: MenuBase = {};
     let itemsMenuToSave: MenuBase = {};
@@ -185,6 +167,7 @@ export default function useMenuLanding(props: MenuLandingProps) {
     data, 
     setData,
     updateValue,
+    handleDragEnd,
     submit,
     // validation,
     checkedItem,
