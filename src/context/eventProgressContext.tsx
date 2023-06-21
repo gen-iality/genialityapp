@@ -1,6 +1,6 @@
 import { ExtendedAgendaType } from '@Utilities/types/AgendaType'
 import { FB } from '@helpers/firestore-request'
-import { AgendaApi } from '@helpers/request'
+import { AgendaApi, UsersApi } from '@helpers/request'
 import {
   createContext,
   useContext,
@@ -29,6 +29,7 @@ export interface EventProgressContextState {
   updateAttendees: () => Promise<void>
   getAttendeesForActivities: (activityIds: string[]) => AttendeeType[]
   calcProgress: (current: number, total: number) => number
+  saveProgressReport: () => Promise<void>
 }
 
 const initialContextState: EventProgressContextState = {
@@ -43,6 +44,7 @@ const initialContextState: EventProgressContextState = {
   updateAttendees: () => Promise.resolve(),
   getAttendeesForActivities: () => [],
   calcProgress: () => 0,
+  saveProgressReport: () => Promise.resolve(),
 }
 
 const EventProgressContext = createContext<EventProgressContextState | undefined>(
@@ -118,6 +120,29 @@ export const EventProgressProvider: FunctionComponent = (props) => {
 
     // Calc the progress
     return calcProgress(filteredAttendees.length, wantedActivityIds.length)
+  }
+
+  const saveProgressReport = async () => {
+    const eventUser = cEventUser.value
+    eventUser.activity_progresses = {
+      // ID list of activities
+      activities: activities.map((activity) => activity._id!),
+      filtered_activities: filteredActivities.map((activity) => activity._id!),
+      checked_in_activities: checkedInActivities.map((attendee) => attendee._id!),
+      // Calced progresses
+      progress_all_activities: progressAllActivities,
+      progress_filtered_activities: progressFilteredActivities,
+      progress_of_quices: progressOfQuices,
+    }
+    // More injection of data
+    eventUser.activity_progresses.viewed_activity_map = Object.fromEntries(
+      eventUser.activity_progresses.activities.map((activityId: string) => [
+        activityId,
+        eventUser.activity_progresses.checked_in_activities.includes(activityId),
+      ]),
+    )
+    console.debug('save new eventUser with progresses:', eventUser)
+    await UsersApi.editEventUser(eventUser, cEventContext.value._id, eventUser._id)
   }
 
   const progressAllActivities = useMemo(
@@ -208,6 +233,7 @@ export const EventProgressProvider: FunctionComponent = (props) => {
         progressFilteredActivities,
         progressOfQuices,
         calcProgress,
+        saveProgressReport,
       }}
     >
       {children}
