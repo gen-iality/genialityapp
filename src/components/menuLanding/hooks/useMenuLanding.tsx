@@ -5,6 +5,8 @@ import { GetTokenUserFirebase } from '@/helpers/HelperAuth';
 import { DispatchMessageService } from '@/context/MessageService';
 import { Menu, MenuBase, MenuItem, MenuLandingProps } from '../interfaces/menuLandingProps';
 import { deepCopy } from '../utils/functions';
+import { SortEndHandler } from 'react-sortable-hoc';
+import debounce from 'lodash/debounce';
 
 export default function useMenuLanding(props: MenuLandingProps) {
 
@@ -14,7 +16,7 @@ export default function useMenuLanding(props: MenuLandingProps) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [data, setData] = useState<Menu[]>([]);
 
-
+  const debouncedSubmit = debounce(submit, 500);
   const ORGANIZATION_VALUE = 1;
 
   const checkedItem = (key: string, value: boolean) => {
@@ -26,6 +28,7 @@ export default function useMenuLanding(props: MenuLandingProps) {
       itemsMenuDB[key].position = menuBase[key].position;
     }
     setItemsMenu(itemsMenuDB);
+    debouncedSubmit()
   };
 
   async function componentDidMount() {
@@ -74,6 +77,24 @@ export default function useMenuLanding(props: MenuLandingProps) {
     }
     return menuFilter;
   };
+  const handleDragEnd: SortEndHandler = ({ oldIndex, newIndex }: any) => {
+    if (oldIndex !== newIndex) {
+      const enabledItems = data.filter((item) => item.checked);
+      const disabledItems = data.filter((item) => !item.checked);
+
+      const movedItem = enabledItems.splice(oldIndex, 1)[0];
+      enabledItems.splice(newIndex, 0, movedItem);
+
+      const updatedData = [...enabledItems, ...disabledItems];
+      const updatedDataWithPositions = updatedData.map((item, index) => ({
+        ...item,
+        position: item.checked ? index + 1 : item.position,
+      }));
+
+      setData(updatedDataWithPositions);
+      
+    }
+  };
 
   async function submit() {
     setIsLoading(true);
@@ -112,6 +133,7 @@ export default function useMenuLanding(props: MenuLandingProps) {
     setIsLoading(false);
   }
 
+
   function orderItemsMenu() {
     let itemsMenuData: MenuBase = {};
     let itemsMenuToSave: MenuBase = {};
@@ -143,6 +165,7 @@ export default function useMenuLanding(props: MenuLandingProps) {
     data, 
     setData,
     updateValue,
+    handleDragEnd,
     submit,
     setItemsMenu,
     // validation,

@@ -1,7 +1,8 @@
 import { Agenda, Description, LandingBlock, Speaker, Sponsor } from "."
 
 export interface PropsPreLanding {
-    preview: TypeDivices
+    preview: TypeDivices,
+    title?: string
 }
 export interface PropsSponsor {
     sponsors: Sponsor[]

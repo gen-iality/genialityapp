@@ -1,13 +1,14 @@
 import { Button, Col, Form, List, Result, Row, Typography } from 'antd';
 import React, { useState } from 'react';
-import useGetSpacesMeetingsByUser from '../../hooks/useGetSpaceMeetingByUser';
 import moment, { Moment } from 'moment';
 import firebase from 'firebase/compat';
 import TextArea from 'antd/lib/input/TextArea';
 import { getAccionButton, getDisabledAccionButton } from './utils/space-avalible-list.utils';
 import { IFormRequestSpace } from './interfaces/space-avalible.interfaces';
 import { useIntl } from 'react-intl';
-
+import { useGetMultiDate } from '@/hooks/useGetMultiDate';
+import { UseEventContext } from '@/context/eventContext';
+import useGetGenerateSpaces from '../../hooks/useGetGenerateSpaces';
 interface ListSpacesAvalibleProps {
   date: Moment;
   targetUserName: string;
@@ -23,18 +24,21 @@ interface ListSpacesAvalibleProps {
 
 const SpacesAvalibleList = ({
   date,
-  targetUserName,
   targetEventUserId,
   onSubmit,
   creatorEventUserId,
   loadingButton,
 }: ListSpacesAvalibleProps) => {
   const [clickedIndices, setClickedIndices] = useState<number>(-1);
-  const { spacesMeetingsToTargedUser, spacesMeetingsToTargedUserLoading } = useGetSpacesMeetingsByUser(
+  const eventContext = UseEventContext();
+  const { multiDates } = useGetMultiDate(eventContext.value._id)
+  const { spacesMeetingsToTargedUser, spacesMeetingsToTargedUserLoading } = useGetGenerateSpaces(
     date,
     targetEventUserId,
     creatorEventUserId
   );
+
+
   const intl = useIntl();
 
   const onAgendar = (index: number) => {
