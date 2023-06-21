@@ -72,9 +72,11 @@ export default function CustomDateEvent(props: Props) {
               description={
                 <Typography.Paragraph>
                   Las fechas se han modificado a un nuevo formato, 
-                  para continuar con la configuración correcta debe guardar los cambios dando clic al botón 
-                  <Typography.Text strong> Guardar fechas</Typography.Text>, el mismo realizará el cambio y este mensaje desaparecerá. 
-                  La fecha de inicio es {datesOld?.startDateOld} y la fecha final es {datesOld?.endDateOld}
+                  para continuar con la configuración correcta por favor verifique las fechas y horas respectivas del evento
+                  (Fecha de inicio {datesOld?.startDateOld}, fecha final {datesOld?.endDateOld}). <br />  
+                  Una vez que haya verificado las fechas y horas, debe guardar los cambios dando clic al botón 
+                  <Typography.Text strong> Guardar fechas</Typography.Text>, el cual realizará el cambio y hará desaparecer este mensaje. 
+                  
                 </Typography.Paragraph>
               }
               type='error'
@@ -82,10 +84,10 @@ export default function CustomDateEvent(props: Props) {
           )}
         </Col>
         <Col xs={24} lg={24}>
-          <Typography.Text strong>Fechas seleccionadas</Typography.Text>
+          <Typography.Text strong>Fechas seleccionadas</Typography.Text> <br />
           <Space wrap>
             <List 
-              grid={{gutter: 8, column: 2}}
+              grid={{gutter: 8, column: dates.length > 1 ? 2 : 1}}
               split={false}
               dataSource={dates}
               renderItem={date => (
