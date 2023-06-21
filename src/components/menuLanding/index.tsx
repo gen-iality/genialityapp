@@ -3,7 +3,7 @@ import { Spin, Form, Switch, Table, Button, Typography, Tag } from 'antd';
 import Header from '@/antdComponents/Header';
 import BackTop from '@/antdComponents/BackTop';
 import useMenuLanding from './hooks/useMenuLanding';
-import { Menu, MenuLandingProps } from './interfaces/menuLandingProps';
+import { Menu, MenuItem, MenuLandingProps } from './interfaces/menuLandingProps';
 import * as iconComponents from '@ant-design/icons';
 import DragIcon from '@2fd/ant-design-icons/lib/DragVertical';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
@@ -12,27 +12,36 @@ import { SortableContainer, SortableElement, SortableHandle } from 'react-sortab
 import { ColumnType } from 'antd/lib/table';
 
 export default function MenuLanding(props: MenuLandingProps) {
-  const { menu, isLoading, titleheader, data, setData, handleDragEnd, submit, checkedItem } = useMenuLanding(props);
-  const [visibility, setVisibility] = useState(false);
-  const [itemEdit, setItemEdit] = useState<Menu>({} as Menu);
+  const { menu, isLoading, titleheader, data, setData, handleDragEnd, submit, checkedItem ,setItemsMenu} = useMenuLanding(
+    props
+  );
+  const [visibility, setVisibility] = useState(false)
+  const [itemEdit, setItemEdit] = useState<Menu>({} as Menu)
+  const [send, setSend] = useState<boolean>(false)
+ 
+  
 
   useEffect(() => {
     const updatedData: Menu[] = Object.keys(menu).map((key: string, index: number) => {
-      const menuItem = menu[key];
       return {
         key: key,
-        position: menuItem.position,
-        name: menuItem.name,
-        icons: menuItem.icon,
-        checked: menuItem.checked,
+        drag: <DragIcon />,
+        position: menu[key].position,
+        name: menu[key].name,
+        icon: menu[key].icon,
+        checked: menu[key].checked,
+        label: menu[key].label,
         options: <iconComponents.EditOutlined />,
       };
     });
-  
-    setData(updatedData);    
+    setData(updatedData);
+    if(send) {
+      submit()
+      setSend(false)
+    }
   }, [menu]);
 
-  const DragHandle = SortableHandle(() => (
+
     <DragIcon
       style={{
         cursor: 'move',
@@ -40,11 +49,9 @@ export default function MenuLanding(props: MenuLandingProps) {
         fontSize: '22px',
       }}
     />
-  ));
 
   const SortableItem: any = SortableElement((props: any) => <tr {...props} />);
   const SortableBody: any = SortableContainer((props: any) => <tbody {...props} />);
-
   const renderIcon = (iconName: string) => {
     //@ts-ignore
     const IconComponent = iconComponents[iconName];
@@ -85,20 +92,15 @@ export default function MenuLanding(props: MenuLandingProps) {
       title: 'Icono',
       dataIndex: 'icon',
       width: 10,
-      render: (text: string, record: Menu) => renderIcon(record.icons),
+      render: (text: string, record: Menu) => renderIcon(record.icon),
     },
     {
       title: 'Habilitado',
       dataIndex: 'checked',
       width: 10,
       render: (checked: boolean, record: Menu) => (
-        <Switch
-          checked={checked}
-          checkedChildren={'si'}
-          unCheckedChildren={'No'}
-          onChange={(checked) => record.key && checkedItem(record.key, checked)}
-        />
-      ),
+        <Switch checked={checked} checkedChildren={'si'} unCheckedChildren={'No'} onChange={(checked) => record.key && checkedItem(record.key, checked)} />
+      )
     },
     {
       title: 'Opciones',
@@ -115,16 +117,35 @@ export default function MenuLanding(props: MenuLandingProps) {
     },
   ];
 
+  const handleOk = () => {
+    const { checked, icon, position, label } = itemEdit;
+    const menuCopy = { ...menu };
+    menuCopy[itemEdit.key] = {
+      ...menu[itemEdit.key],
+      checked,
+      icon,
+      position,
+      label: label ?? '',
+    };
+    setItemsMenu(menuCopy)
+    setVisibility(false)
+    setSend(true)
+  }
+  const handleCancel = () => {
+    setVisibility(false);
+    setItemEdit({} as Menu)
+  };
   return (
+ 
     <Form onFinish={submit}>
       <Header title={titleheader} save form />
-      <ModalEdit item={itemEdit} visibility={visibility} setVisibility={setVisibility} />
+     <ModalEdit item={itemEdit} handleOk={handleOk} handleCancel={handleCancel} visibility={visibility} loading={isLoading} setItemEdit={setItemEdit} />
       <Spin tip='Cargando...' size='large' spinning={isLoading}>
         <DragDropContext onDragEnd={handleDragEnd}>
           <Droppable droppableId='menu'>
-            {(provider: any) => (
+            {(provided : any) => (
               <Table
-                ref={provider.innerRef}
+                ref={provided.innerRef} 
                 style={{ padding: '30px 0' }}
                 dataSource={data}
                 columns={columns as ColumnType<Menu>[]}
@@ -133,10 +154,10 @@ export default function MenuLanding(props: MenuLandingProps) {
                 size='small'
                 components={{
                   body: {
-                    wrapper: (props: any) => (
-                      <SortableBody {...props} useDragHandle helperClass='row-dragging' onSortEnd={handleDragEnd} />
+                    wrapper: (props : any) => (
+                      <SortableBody {...props} useDragHandle helperClass="row-dragging" onSortEnd={handleDragEnd} />
                     ),
-                    row: (props: any) => <SortableItem index={props['data-row-key']} {...props} />,
+                    row: (props : any) => <SortableItem index={props["data-row-key"]} {...props} />,
                   },
                 }}
                 //@ts-ignore

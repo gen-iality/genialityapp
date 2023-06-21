@@ -31,7 +31,6 @@ export default function useMenuLanding(props: MenuLandingProps) {
     debouncedSubmit()
   };
 
-
   async function componentDidMount() {
     let menuLanding: { itemsMenu: MenuBase } | null = null;
     if (organization !== ORGANIZATION_VALUE) {
@@ -62,7 +61,6 @@ export default function useMenuLanding(props: MenuLandingProps) {
     if (property === 'permissions') setKeySelect(Date.now());
   }
 
-  
 
   function orderPosition(key: string, order: string | number): void {
     let itemsMenuToOrder = Object.assign({}, itemsMenu);
@@ -107,6 +105,7 @@ export default function useMenuLanding(props: MenuLandingProps) {
     setItemsMenu(updatedItemsMenu);
   };
   async function submit() {
+    setIsLoading(true);
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
@@ -114,8 +113,13 @@ export default function useMenuLanding(props: MenuLandingProps) {
       action: 'show',
     });
     let menuToSubmit = orderItemsMenu();
+   
+    
     let newMenu = { itemsMenu: filterMenu(menuToSubmit) };
+
     if (organization !== 1) {
+     
+      
       let token = await GetTokenUserFirebase();
       await Actions.put(`api/events/${event._id}?token=${token}`, newMenu);
     } else {
@@ -134,7 +138,9 @@ export default function useMenuLanding(props: MenuLandingProps) {
       msj: 'Información guardada correctamente',
       action: 'show',
     });
+    setIsLoading(false);
   }
+
 
   function orderItemsMenu() {
     let itemsMenuData: MenuBase = {};
@@ -155,14 +161,6 @@ export default function useMenuLanding(props: MenuLandingProps) {
   }
   
 
-  /*   const validation = (key: string): boolean => {
-    return (
-      (menu[key].section === 'networking' ||
-        menu[key].section === 'interviews' ||
-        menu[key].section === 'my_sessions') &&
-      event?.visibility === 'ANONYMOUS'
-    );
-  }; */
 
   const titleheader =
     organization !== ORGANIZATION_VALUE ? 'Habilitar secciones del evento' : 'Secciones a habilitar para cada evento';
@@ -177,6 +175,7 @@ export default function useMenuLanding(props: MenuLandingProps) {
     updateValue,
     handleDragEnd,
     submit,
+    setItemsMenu,
     // validation,
     checkedItem,
   };

@@ -22,6 +22,7 @@ export interface MenuItem {
   icon: string;
   checked: boolean;
   permissions: string;
+  label: string
   [key: string]: string | number | boolean;
 }
 export interface MenuBase {
@@ -36,13 +37,17 @@ export interface Menu {
   key:string;
   position: number;
   name: string;
-  icons: string;
+  label? : string
+  icon: string;
   checked: boolean;
   options: JSX.Element;
 };
 
 export interface PropsEditModal {
-  item : Menu,
+  item: Menu,
+  loading: boolean,
+  handleCancel: () => void
+  handleOk: (data : any) => void
   visibility : boolean
-  setVisibility : React.Dispatch<React.SetStateAction<boolean>>
+  setItemEdit : React.Dispatch<React.SetStateAction<Menu>>
 }

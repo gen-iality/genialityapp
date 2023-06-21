@@ -1,0 +1,15 @@
+.icons {
+    padding: 4px;
+    border-radius: 20%;
+
+}
+
+.icons:hover {
+    scale: 1.3;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.rowIcons {
+    overflow: auto;
+    height: 70%;
+    font-size: 24px;
+}

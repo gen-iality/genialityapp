@@ -1,72 +1,62 @@
-import { EditOutlined } from '@ant-design/icons';
-import { Button, Modal, Drawer, Form, Input, Switch, Select, Row, Col } from 'antd';
-import { useEffect, useState } from 'react';
-import { Menu, MenuLandingProps, PropsEditModal } from '../interfaces/menuLandingProps';
-import { icon } from '@/helpers/constants';
+import { Button, Drawer, Form, Input, Switch, Row, Col, Typography, Space } from 'antd';
+import { PropsEditModal } from '../interfaces/menuLandingProps';
 import * as iconComponents from '@ant-design/icons';
-export default function ModalEdit(props : PropsEditModal) {
-  const [iconSelect, seticonSelect] = useState<any>(props.item.icons)
-  const [form] = Form.useForm();
+import '../styles/index.css';
+export default function ModalEdit({ item, handleCancel, handleOk, visibility, setItemEdit, loading }: PropsEditModal) {
 
-  useEffect(()=>{
-      console.log();
-      
-  })
-  const iconList = [
-    { value: 'EditOutlined', label: 'Editar' },
-    { value: 'DeleteOutlined', label: 'Eliminar' },
-    { value: 'SearchOutlined', label: 'Buscar' },
-  ];
+  const IconsKeys = Object.keys(iconComponents).filter((key) => key.includes('Outlined'));
+  //@ts-ignore
+  const IconList = IconsKeys.map((key) => iconComponents[key]);
 
-
-  const handleOk = () => {
-    form.submit();
-  };
-
-  const handleCancel = () => {
-    props.setVisibility(false);
-  };
-
-  const onFinish = (values: any) => {
-    console.log('Form values:', values);
-    //setIsModalVisible(false);
-  };
-  const renderIcon = (iconName: string) => {
-    
-    //@ts-ignore
-    const IconComponent = iconComponents[iconName];
-    return IconComponent ? <IconComponent /> : iconName;
-  };
-const IconList = (selected : any) => {
-    let icons = Object.values(iconComponents);
-    icons = icons.filter(item => typeof item === 'object')    
-    // console.log(icons);
-    
-    return  icons
+  const changeIcon = (index: number) => {
+    const icon = IconsKeys[index];
+    if (icon) setItemEdit({ ...item, icon: icon });
   };
 
   return (
     <div>
-      <Drawer title={props.item.name} visible={props.visibility} width={500} onClose={handleCancel} footer={<Button type='primary'/>}>
-        <Form form={form} onFinish={onFinish} layout='vertical'>
-          <Form.Item label='Alias' name='label'>
-            <Input size='middle' />
-          </Form.Item>
-          <Form.Item label='Habilitado' name='checked'>
-            <Switch checkedChildren={'si'} unCheckedChildren={'No'} />
-          </Form.Item>
-        </Form>
-        {/* {renderIcon(icons)} */}
-        <Row style={{ overflow: 'auto', height: '400px', fontSize: 20}}>
-        {IconList(iconSelect).map((Icon, index)=> (
-          <Col span={2} key={`icon-key${index}`}>
-            {/* @ts-ignore */}
-            <div style={{ border :  Icon === iconComponents[props.item.icons]  ? '2px solid red' :`2px solid transparent`}}>
-            {/* @ts-ignore */}
-            <Icon/>
-            </div>
-          </Col>
-        ))}
+      <Drawer
+        title={<Typography.Text strong>{item.name}</Typography.Text>}
+        visible={visibility}
+        width={600}
+        footer={
+          <Button loading={loading} type='primary' onClick={handleOk} key={'saveBtn'}>
+            Guardar
+          </Button>
+        }
+        onClose={handleCancel}>
+        <Space direction='vertical' style={{ width: '100%', marginBottom: 10 }}>
+          <Typography.Title level={5}>Alias</Typography.Title>
+          <Input
+            size='middle'
+            placeholder='Escriba un alias para la seccion'
+            value={item.label}
+            onChange={(e) => setItemEdit({ ...item, label: e.target.value })}
+          />
+
+          <Typography.Title level={5}>Habilitado</Typography.Title>
+          <Switch
+            checkedChildren={'si'}
+            unCheckedChildren={'No'}
+            checked={item.checked}
+            onChange={(value) => setItemEdit({ ...item, checked: value })}
+          />
+        </Space>
+        <Row className='rowIcons'>
+          {IconList.map((Icon, index) => (
+            <Col style={{ margin: 6 }} key={`icon-key${index}`}>
+              <div
+                className={`icons ${
+                  IconsKeys[index] === item.icon ? 'animate__animated animate__heartBeat animate__infinite' : ''
+                }`}
+                style={{
+                  border: `4px solid ${IconsKeys[index] === item.icon ? 'black' : 'transparent'}`,
+                }}
+                onClick={() => changeIcon(index)}>
+                {<Icon />}
+              </div>
+            </Col>
+          ))}
         </Row>
       </Drawer>
     </div>
