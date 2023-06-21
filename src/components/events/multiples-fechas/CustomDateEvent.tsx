@@ -87,7 +87,7 @@ export default function CustomDateEvent(props: Props) {
           <Typography.Text strong>Fechas seleccionadas</Typography.Text> <br />
           <Space wrap>
             <List 
-              grid={{gutter: 8, column: 2}}
+              grid={{gutter: 8, column: dates.length > 1 ? 2 : 1}}
               split={false}
               dataSource={dates}
               renderItem={date => (
