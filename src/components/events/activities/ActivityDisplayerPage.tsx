@@ -117,14 +117,12 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
 
   useEffect(() => {
     if (!currentActivity) return
-    if (!activity) return
     if (cEventUser.status == 'LOADED' && cEventUser.value != null) {
-      if (!['url', 'vimeo'].includes(activity.type?.name)) {
-        // checkinAttendeeInActivity(cEventUser.value, params.activity_id)
+      if (!['url', 'vimeo'].includes(currentActivity.type?.name)) {
         activityProgressCallback(100)
       }
     }
-  }, [currentActivity, cEventUser.status, activity])
+  }, [currentActivity, cEventUser.status])
 
   const goToActivityIdPage = async (activityId: string) => {
     history.push(`/landing/${cEvent?.value._id}/activity/${activityId}`)
