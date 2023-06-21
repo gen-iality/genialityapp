@@ -4,8 +4,8 @@ import { useHelper } from '@/context/helperContext/hooks/useHelper';
 import { CurrentUserContext } from '@/context/userContext';
 import { SectionsPrelanding } from '@/helpers/constants';
 import { AgendaApi, EventsApi, SpeakersApi } from '@/helpers/request';
-import { ArrowUpOutlined } from '@ant-design/icons';
-import { Col, Row, Layout, Card, Grid, BackTop, Avatar } from 'antd';
+import { ArrowUpOutlined, LoadingOutlined  } from '@ant-design/icons';
+import { Col, Row, Layout, Card, Grid, BackTop, Avatar, Spin } from 'antd';
 /** ant design */
 
 import { useContext, useEffect, useState } from 'react';
@@ -166,6 +166,24 @@ const ViewPrelanding = ({ preview } : PropsPreLanding) => {
 		setSponsors(companies as Sponsor[] || []);
 	}, [companies]);
 
+	if (!cEventContext.value?.styles) {
+		return (
+		  <div
+			style={{
+			  minHeight: '80vh',
+			  display: 'flex',
+			  justifyContent: 'center',
+			  alignContent: 'center',
+			  flexDirection: 'column',
+			}}>
+				
+			<Spin tip='Cargando' size='large' indicator={<LoadingOutlined style={{fontSize:'70px'}}/>}>
+			</Spin>
+		  </div>
+		);
+	  }
+
+	  
 	return (
 		<Layout>
 			{(cEventContext.value?.styles?.show_banner === undefined ||

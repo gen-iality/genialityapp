@@ -1,4 +1,4 @@
-import { Button, DatePicker, Modal, notification, Row, Typography } from 'antd';
+import { Button, DatePicker, Modal, notification, Result, Row, Typography } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { SmileOutlined } from '@ant-design/icons';
@@ -13,6 +13,8 @@ import locale_es from 'antd/es/date-picker/locale/es_ES';
 import locale_en from 'antd/es/date-picker/locale/en_GB';
 import locale_pt from 'antd/es/date-picker/locale/pt_BR';
 import { useIntl } from 'react-intl';
+import { FORMAT_WITHOUT_HOUR } from './utils/space-requesting.utils';
+import { useGetMultiDate } from '@/hooks/useGetMultiDate';
 
 function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, closeModal, cEvent }) {
   const [agendaMessage, setAgendaMessage] = useState('');
@@ -21,7 +23,8 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
   const [reloadFlag, setReloadFlag] = useState(false);
   const intl = useIntl();
   const locale = intl.locale === 'en' ? locale_en : intl.locale === 'pt' ? locale_pt : locale_es;
-
+  const { multiDates, isLoading } = useGetMultiDate(cEvent?.value?._id ?? '');
+  const [mustUpdateDates, setmustUpdateDates] = useState(false);
   useEffect(() => {
     if (targetEventUserId === null || cEvent.value === null || cEventUser.value === null) return;
     setAgendaMessage('');
@@ -31,8 +34,12 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
     if (!resp) return;
     setReloadFlag(!reloadFlag);
     notification.open({
-      message: intl.formatMessage({id: 'request_sent', defaultMessage: 'Solicitud enviada'}),
-      description: intl.formatMessage({id: 'networking_notification_email_confirmation', defaultMessage: 'Le llegará un correo a la persona notificandole la solicitud, quien la aceptara o recharaza y le llegará un correo de vuelta confirmando la respuesta'}),
+      message: intl.formatMessage({ id: 'request_sent', defaultMessage: 'Solicitud enviada' }),
+      description: intl.formatMessage({
+        id: 'networking_notification_email_confirmation',
+        defaultMessage:
+          'Le llegará un correo a la persona notificandole la solicitud, quien la aceptara o recharaza y le llegará un correo de vuelta confirmando la respuesta',
+      }),
       icon: <SmileOutlined style={{ color: '#108ee9' }} />,
       duration: 30,
     });
@@ -44,7 +51,10 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       emailEmited: 'email@gmail.com',
       message: `${cEventUser.value.names ||
         cEventUser.value.user.names ||
-        cEventUser.value.user.name} ${intl.formatMessage({id: 'networking_sent_an_appointment', defaultMessage: 'te ha enviado cita'})}`,
+        cEventUser.value.user.name} ${intl.formatMessage({
+        id: 'networking_sent_an_appointment',
+        defaultMessage: 'te ha enviado cita',
+      })}`,
       name: 'notification.name',
       type: 'agenda',
       state: '0',
@@ -58,9 +68,12 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
     setAgendaMessage('');
   };
 
-  const onSubmit = async (message,startDate, endDate) => {
+  const onSubmit = async (message, startDate, endDate) => {
     try {
-      if (!date) return notification.warning({ message: intl.formatMessage({id: 'networking_select_date', defaultMessage: 'Debes seleccionar una fecha'}) });
+      if (!date)
+        return notification.warning({
+          message: intl.formatMessage({ id: 'networking_select_date', defaultMessage: 'Debes seleccionar una fecha' }),
+        });
       setLoading(true);
       const eventId = cEvent?.value?._id;
 
@@ -81,48 +94,75 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       DispatchMessageService({
         action: 'show',
         type: 'error',
-        msj: intl.formatMessage({id: 'networking_error_meet', formatMessage: 'No se pudo programar la reunión, intentelo más tarde'}),
+        msj: intl.formatMessage({
+          id: 'networking_error_meet',
+          formatMessage: 'No se pudo programar la reunión, intentelo más tarde',
+        }),
       });
       setLoading(false);
       closeModal();
     }
   };
   const disabledDate = (current) => {
-    const initial = moment(moment(cEvent?.value?.datetime_from).format('YYYY-MM-DD'));
-    const finish = moment(moment(cEvent?.value?.datetime_to).format('YYYY-MM-DD'));
-    const date_to_evaluate = moment(moment(current).format('YYYY-MM-DD'));
+    const fechasPermitidas = cEvent?.value?.dates.map((dateRange) => {
+      return moment(dateRange.start).format(FORMAT_WITHOUT_HOUR);
+    });
 
-    return !(date_to_evaluate.isSameOrAfter(initial) && date_to_evaluate.isSameOrBefore(finish));
+    const date_to_evaluate = moment(current).format(FORMAT_WITHOUT_HOUR);
+    return !fechasPermitidas.includes(date_to_evaluate);
   };
+
+  //todo: Luis: hacer que se valide correctamente que no tenga la fecha nueva
+  useEffect(() => {
+    if (!targetEventUserId) return;
+    if (multiDates.length > 0) {
+      setDate(moment(multiDates[0].start));
+      setmustUpdateDates(false);
+    } else {
+      setmustUpdateDates(true);
+    }
+  }, [isLoading, targetEventUserId]);
 
   return (
     <Modal
       visible={!!targetEventUserId}
-      title={<Typography.Text ellipsis style={{width: 450}}>{intl.formatMessage({id: 'schedule_an_appointment_with', defaultMessage: 'Agendar cita con '})}<strong>{targetEventUser?.user?.names}</strong></Typography.Text>}
+      title={
+        <Typography.Text ellipsis style={{ width: 450 }}>
+          {intl.formatMessage({ id: 'schedule_an_appointment_with', defaultMessage: 'Agendar cita con ' })}
+          <strong>{targetEventUser?.user?.names}</strong>
+        </Typography.Text>
+      }
       footer={null}
       onCancel={resetModal}
       style={{ zIndex: 1031 }}
-      bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}
-    >
-      <Row justify='space-between' /* style={{ margin: 5 }} */>
-        <DatePicker
-          value={date}
-          style={{ marginBottom: 10, width: '100%' }}
-          format={'DD-MM-YYYY'}
-          disabledDate={disabledDate}
-          onChange={setDate}
-          locale={locale}
-        />
-      </Row>
-      {date && (
-        <SpacesAvalibleList
-          date={date}
-          targetEventUserId={targetEventUserId}
-          targetUserName={targetEventUser?.user?.names}
-          onSubmit={onSubmit}
-          creatorEventUserId={cEventUser.value._id}
-          loadingButton={loading}
-        />
+      bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}>
+      {!mustUpdateDates ? (
+        <>
+          <Row justify='space-between' /* style={{ margin: 5 }} */>
+            <DatePicker
+              allowClear={false}
+              value={date}
+              defaultValue={date}
+              style={{ marginBottom: 10, width: '100%' }}
+              format={'DD-MM-YYYY'}
+              disabledDate={disabledDate}
+              onChange={setDate}
+              locale={locale}
+            />
+          </Row>
+          {date && (
+            <SpacesAvalibleList
+              date={date}
+              targetEventUserId={targetEventUserId}
+              targetUserName={targetEventUser?.user?.names}
+              onSubmit={onSubmit}
+              creatorEventUserId={cEventUser.value._id}
+              loadingButton={loading}
+            />
+          )}
+        </>
+      ) : (
+        <Result title='Formato de fechas no configuradas' icon={' '} />
       )}
     </Modal>
   );
