@@ -122,12 +122,19 @@ const ViewPrelanding = ({ preview } : PropsPreLanding) => {
 	};
 
 	const visibleSection = ( name: string ) => {
-		return sections && sections.main_landing_blocks?.filter(section => section.name == name && section.status).length > 0
+		return sections && sections.main_landing_blocks?.filter(section => section.name === name && section.status).length > 0
 	};
 
 	const isVisibleCardSections = () => {
 		return sections && sections.main_landing_blocks?.filter(section => section.status).length > 1 
 	};
+
+	const getNameOrAlias = (name: string) => {
+		const nameOrAlias = sections && sections.main_landing_blocks?.filter(section => section.name === name)
+		if(nameOrAlias[0].label) return nameOrAlias[0].label;
+		else return nameOrAlias[0].name;
+	}
+
 	useEffect(() => {
 		if (!cEventContext.value) return;
 
@@ -154,7 +161,6 @@ const ViewPrelanding = ({ preview } : PropsPreLanding) => {
 			const agendaFiltered = agendaConfig?.filter(
 				agendaCfg => agendaCfg.isPublished || agendaCfg.isPublished == undefined
 			);
-          
             
 			setDescription(sectionsDescription?.data || []);
 			setSpeakers(speakersFiltered || []);
@@ -306,7 +312,7 @@ const ViewPrelanding = ({ preview } : PropsPreLanding) => {
 											backgroundColor: bgColor,
 											border: 'none',
 										}}>
-										<ActivityBlock preview={mobilePreview} />
+										<ActivityBlock preview={mobilePreview} title={getNameOrAlias('Actividades')} />
 									</Card>
 								</Col>
 							)}

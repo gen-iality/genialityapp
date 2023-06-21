@@ -129,7 +129,7 @@ const RouteContext = ({ component: Component, ...rest }) => (
   <Route
     { ...rest }
     render={ (props) => (
-      <CurrentEventProvider>
+      <CurrentEventProvider {...props}>
         <CurrentUserEventProvider>
           <CurrentUserProvider>
             <AgendaContextProvider>
@@ -192,7 +192,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
     <Route
       { ...rest }
       render={ (props) => (
-        <CurrentEventProvider>
+        <CurrentEventProvider {...props}>
           <CurrentUserEventProvider>
             <CurrentUserProvider>
               <NewEventProvider>
