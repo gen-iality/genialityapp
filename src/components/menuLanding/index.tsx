@@ -3,7 +3,7 @@ import { Spin, Form, Switch, Table, Button, Typography, Tag } from 'antd';
 import Header from '@/antdComponents/Header';
 import BackTop from '@/antdComponents/BackTop';
 import useMenuLanding from './hooks/useMenuLanding';
-import { Menu, MenuLandingProps } from './interfaces/menuLandingProps';
+import { Menu, MenuItem, MenuLandingProps } from './interfaces/menuLandingProps';
 import * as iconComponents from '@ant-design/icons';
 import DragIcon from '@2fd/ant-design-icons/lib/DragVertical';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
@@ -13,11 +13,14 @@ import { ColumnType } from 'antd/lib/table';
 
 
 export default function MenuLanding(props: MenuLandingProps) {
-  const { menu, isLoading, titleheader, data, setData, updateValue, submit, checkedItem } = useMenuLanding(
+  const { menu, isLoading, titleheader, data, setData, submit, checkedItem , setItemsMenu} = useMenuLanding(
     props
   );
   const [visibility, setVisibility] = useState(false)
   const [itemEdit, setItemEdit] = useState<Menu>({} as Menu)
+  const [send, setSend] = useState<boolean>(false)
+ 
+  
 
   useEffect(() => {
     const updatedData: Menu[] = Object.keys(menu).map((key: string, index: number) => {
@@ -26,12 +29,17 @@ export default function MenuLanding(props: MenuLandingProps) {
         drag: <DragIcon />,
         position: menu[key].position,
         name: menu[key].name,
-        icons: menu[key].icon,
+        icon: menu[key].icon,
         checked: menu[key].checked,
+        label: menu[key].label,
         options: <iconComponents.EditOutlined />,
       };
     });
     setData(updatedData);
+    if(send) {
+      submit()
+      setSend(false)
+    }
   }, [menu]);
 
   const handleDragEnd: SortEndHandler = ({ oldIndex, newIndex }: any) => {
@@ -106,7 +114,7 @@ export default function MenuLanding(props: MenuLandingProps) {
       title: 'Icono',
       dataIndex: 'icon',
       width: 10,
-      render: (text: string, record: Menu) => renderIcon(record.icons),
+      render: (text: string, record: Menu) => renderIcon(record.icon),
     },
     {
       title: 'Habilitado',
@@ -124,16 +132,35 @@ export default function MenuLanding(props: MenuLandingProps) {
           <Button type='primary' onClick={()=> showDrawe(record)} icon={<iconComponents.EditOutlined />} disabled={!record.checked}  />
     },
   ];
+  const handleOk = () => {
+    const { checked, icon, position, label } = itemEdit;
+    const menuCopy = { ...menu };
+    menuCopy[itemEdit.key] = {
+      ...menu[itemEdit.key],
+      checked,
+      icon,
+      position,
+      label: label ?? '',
+    };
+    setItemsMenu(menuCopy)
+    setVisibility(false)
+    setSend(true)
+  }
 
+  const handleCancel = () => {
+    setVisibility(false);
+    setItemEdit({} as Menu)
+  };
   return (
     <Form onFinish={submit}>
       <Header title={titleheader} save form />
-      <ModalEdit item={itemEdit} visibility={visibility} setVisibility={setVisibility} />
+     <ModalEdit item={itemEdit} handleOk={handleOk} handleCancel={handleCancel} visibility={visibility} loading={isLoading} setItemEdit={setItemEdit} />
       <Spin tip='Cargando...' size='large' spinning={isLoading}>
         <DragDropContext onDragEnd={handleDragEnd}>
           <Droppable droppableId='menu'>
-            {() => (
+            {(provided : any) => (
               <Table
+                ref={provided.innerRef} 
                 style={{ padding: '30px 0' }}
                 dataSource={data}
                 columns={columns as ColumnType<Menu>[]}

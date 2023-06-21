@@ -27,21 +27,6 @@ export default function useMenuLanding(props: MenuLandingProps) {
     }
     setItemsMenu(itemsMenuDB);
   };
-  // const checkedItem = (key: string, value: boolean) => {
-  //   const menuBase: MenuBase = { ...menu };
-  //   const itemsMenuDB = { ...itemsMenu };
-  
-  //   if (itemsMenuDB[key]) {
-  //     itemsMenuDB[key].checked = value;
-      
-  //     if (!value) {
-  //       itemsMenuDB[key].name = menuBase[key].name;
-  //       itemsMenuDB[key].position = menuBase[key].position;
-  //     }
-      
-  //     setItemsMenu(itemsMenuDB);
-  //   }
-  // };
 
   async function componentDidMount() {
     let menuLanding: { itemsMenu: MenuBase } | null = null;
@@ -72,13 +57,7 @@ export default function useMenuLanding(props: MenuLandingProps) {
     setItemsMenu(itemsMenuDB);
     if (property === 'permissions') setKeySelect(Date.now());
   }
-  // function updateValue(key: string, value: string | number | boolean, property: string) {
-  //   setFormValues((prevFormValues) => ({
-  //     ...prevFormValues,
-  //     [property]: value
-  //   }));
-  // }
-  
+
 
   function orderPosition(key: string, order: string | number): void {
     let itemsMenuToOrder = Object.assign({}, itemsMenu);
@@ -97,6 +76,7 @@ export default function useMenuLanding(props: MenuLandingProps) {
   };
 
   async function submit() {
+    setIsLoading(true);
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
@@ -104,8 +84,13 @@ export default function useMenuLanding(props: MenuLandingProps) {
       action: 'show',
     });
     let menuToSubmit = orderItemsMenu();
+   
+    
     let newMenu = { itemsMenu: filterMenu(menuToSubmit) };
+
     if (organization !== 1) {
+     
+      
       let token = await GetTokenUserFirebase();
       await Actions.put(`api/events/${event._id}?token=${token}`, newMenu);
     } else {
@@ -124,28 +109,9 @@ export default function useMenuLanding(props: MenuLandingProps) {
       msj: 'Información guardada correctamente',
       action: 'show',
     });
+    setIsLoading(false);
   }
-  // function orderItemsMenu() {
-  //   let itemsMenuData: MenuBase = {};
-  //   let itemsMenuToSave: MenuBase = {};
-  //   let items: MenuItem[] = Object.values(itemsMenu);
-  
-  //   items.sort(function (a: MenuItem, b: MenuItem) {
-  //     if (a.section && b.section) {
-  //       return a.position - b.position;
-  //     } else {
-  //       return 0;
-  //     }
-  //   });
-  
-  //   for (let item of items) {
-  //     itemsMenuData[item.section] = item;
-  //   }
-  
-  //   itemsMenuToSave = { ...itemsMenuData };
-  
-  //   return itemsMenuToSave;
-  // }
+
   function orderItemsMenu() {
     let itemsMenuData: MenuBase = {};
     let itemsMenuToSave: MenuBase = {};
@@ -165,14 +131,6 @@ export default function useMenuLanding(props: MenuLandingProps) {
   }
   
 
-  /*   const validation = (key: string): boolean => {
-    return (
-      (menu[key].section === 'networking' ||
-        menu[key].section === 'interviews' ||
-        menu[key].section === 'my_sessions') &&
-      event?.visibility === 'ANONYMOUS'
-    );
-  }; */
 
   const titleheader =
     organization !== ORGANIZATION_VALUE ? 'Habilitar secciones del evento' : 'Secciones a habilitar para cada evento';
@@ -186,6 +144,7 @@ export default function useMenuLanding(props: MenuLandingProps) {
     setData,
     updateValue,
     submit,
+    setItemsMenu,
     // validation,
     checkedItem,
   };
