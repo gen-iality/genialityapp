@@ -68,7 +68,7 @@ const EventProgressWrapper: FunctionComponent<IEventProgressWrapperProps> = (pro
   }
 
   const reload = async (forceRefresh?: boolean) => {
-    const _forceRefresh = typeof forceRefresh === 'undefined' ? true : false
+    const _forceRefresh = typeof forceRefresh === 'undefined' ? true : forceRefresh
 
     if (!_forceRefresh && eventUser.activity_progresses) {
       const { activities, checked_in_activities } = eventUser.activity_progresses
