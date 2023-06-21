@@ -73,8 +73,8 @@ export default function CustomDateEvent(props: Props) {
                 Las fechas se han modificado a un nuevo formato, 
                 para continuar con la configuración correcta por favor verifique las fechas y horas respectivas del evento
                 (Fecha de inicio {datesOld?.startDateOld}, fecha final {datesOld?.endDateOld}). <br />  
-                Una vez que haya verificado las fechas y horas, debe guardar los cambios dando clic al botón 
-                <Typography.Text strong> Guardar fechas</Typography.Text>, el cual realizará el cambio y hará desaparecer este mensaje. 
+                Una vez validado guarde los cambios dando clic al botón 
+                <Typography.Text strong> Guardar fechas</Typography.Text>, al realizarse el cambio este mensaje desaparecerá. 
                 
               </Typography.Paragraph>
             }
