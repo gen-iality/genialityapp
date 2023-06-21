@@ -69,11 +69,9 @@ export const EventProgressProvider: FunctionComponent = (props) => {
     )
     console.log(`Update activities. Got ${data.length} activities`)
 
-    // TODO: This filter by whether the activity is info, should be after
-    const filteredData = data.filter((activity) => !activity.is_info_only)
-    setActivities(filteredData)
+    setActivities(data)
 
-    return filteredData
+    return data
   }
 
   const updateAttendees = async (theseActivities?: ExtendedAgendaType[]) => {
