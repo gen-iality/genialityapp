@@ -17,7 +17,7 @@ export const DateEventItem = ({ date, onClick, handledDelete, ...cardProps }: Pr
   return (
     <Card
       hoverable
-      style={{borderRadius: 10, height: '100%'/* , border: 'none' */}}
+      style={{borderRadius: 10, height: '100%'}}
       {...cardProps}
     >
       <Row gutter={[8, 8]}>
