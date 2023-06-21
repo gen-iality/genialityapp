@@ -83,21 +83,29 @@ export default function useMenuLanding(props: MenuLandingProps) {
     if (oldIndex !== newIndex) {
       const enabledItems = data.filter((item) => item.checked);
       const disabledItems = data.filter((item) => !item.checked);
-
+  
       const movedItem = enabledItems.splice(oldIndex, 1)[0];
       enabledItems.splice(newIndex, 0, movedItem);
-
+  
       const updatedData = [...enabledItems, ...disabledItems];
       const updatedDataWithPositions = updatedData.map((item, index) => ({
         ...item,
-        position: item.checked ? index + 1 : item.position,
+        position: item.checked ? enabledItems.findIndex((enabledItem) => enabledItem === item) + 1 : item.position,
       }));
-
       setData(updatedDataWithPositions);
-      
+      setItemsMenuFromData(updatedDataWithPositions);
     }
   };
-
+  const setItemsMenuFromData = (updatedData: any[]) => {
+    const updatedItemsMenu = deepCopy(itemsMenu);
+    updatedData.forEach((item) => {
+      const menuItem = updatedItemsMenu[item.id];
+      if (menuItem) {
+        menuItem.position = item.position;
+      }
+    });
+    setItemsMenu(updatedItemsMenu);
+  };
   async function submit() {
     DispatchMessageService({
       type: 'loading',

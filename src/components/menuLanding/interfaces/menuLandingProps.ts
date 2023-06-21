@@ -33,8 +33,7 @@ export interface MenuLanding {
 
 
 export interface Menu {
-  key: string
-  drag: JSX.Element;
+  key:string;
   position: number;
   name: string;
   icons: string;

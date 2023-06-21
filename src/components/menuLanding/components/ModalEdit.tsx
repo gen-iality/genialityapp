@@ -40,7 +40,7 @@ export default function ModalEdit(props : PropsEditModal) {
 const IconList = (selected : any) => {
     let icons = Object.values(iconComponents);
     icons = icons.filter(item => typeof item === 'object')    
-    console.log(icons);
+    // console.log(icons);
     
     return  icons
   };
@@ -60,7 +60,9 @@ const IconList = (selected : any) => {
         <Row style={{ overflow: 'auto', height: '400px', fontSize: 20}}>
         {IconList(iconSelect).map((Icon, index)=> (
           <Col span={2} key={`icon-key${index}`}>
+            {/* @ts-ignore */}
             <div style={{ border :  Icon === iconComponents[props.item.icons]  ? '2px solid red' :`2px solid transparent`}}>
+            {/* @ts-ignore */}
             <Icon/>
             </div>
           </Col>
