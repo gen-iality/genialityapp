@@ -64,7 +64,7 @@ export default function CustomDateEvent(props: Props) {
           destroyOnClose={true}
         />
       )}
-      <Space direction='vertical'>
+      <Space direction='vertical' style={{width: '100%'}}>
         {mustUpdateDate && (
           <Alert
             message={<Typography.Text strong>Formato de fecha incorrecto</Typography.Text>}
@@ -82,7 +82,26 @@ export default function CustomDateEvent(props: Props) {
           />
         )}
         <Typography.Text strong>Fechas seleccionadas</Typography.Text>
-        <List 
+        <Row gutter={[8, 8]} wrap>
+          {dates.length > 0 && dates.map(date => (
+            <Col span={12}>
+              <DateEventItem
+                key={date.id}
+                date={date}
+                onClick={() => openEditDate(date)}
+                handledDelete={handledDelete}
+              />
+            </Col>
+          ))}
+          <Col span={12}>
+            <Card onClick={openCreateNewDate} hoverable style={{borderRadius: 10, border: '1px solid #C4C4C490', height: '100%'}}>
+              <Row justify='center' align='middle'>
+                <Col><PlusOutlined style={dates.length%2 === 0 ? {} : {paddingTop: 20}} /></Col>
+              </Row>
+            </Card>
+          </Col>
+        </Row>
+        {/* <List 
           grid={{gutter: 8, column: 2}}
           split={false}
           dataSource={dates}
@@ -99,16 +118,10 @@ export default function CustomDateEvent(props: Props) {
         >
           <List.Item >
             <Row justify={'center'}>
-              <Col span={12}>
-                <Card onClick={openCreateNewDate} hoverable style={{borderRadius: 10, border: '1px solid #C4C4C490'}}>
-                  <Row justify='center' align='middle'>
-                    <PlusOutlined />
-                  </Row>
-                </Card>
-              </Col>
+              
             </Row>
           </List.Item>
-        </List>
+        </List> */}
         <Row justify='end' gutter={[8, 8]} wrap>
           <Col>
             <Button icon={<SaveOutlined />} type='primary' onClick={handleSubmit} loading={isSaving}>
