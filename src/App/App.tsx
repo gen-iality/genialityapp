@@ -8,6 +8,7 @@ import ContentContainer from '@containers/content'
 import { PreloaderApp } from '@/PreloaderApp/PreloaderApp'
 import { Layout } from 'antd'
 import InternetConnectionAlert from '@components/InternetConnectionAlert/InternetConnectionAlert'
+import { FB } from '@helpers/firestore-request'
 
 const App = () => {
   const cUser = useCurrentUser()
@@ -27,3 +28,5 @@ export default App
 window.dayjs = dayjs
 // @ts-expect-error
 window.firestore = firestore
+// @ts-expect-error
+window.FB = FB
