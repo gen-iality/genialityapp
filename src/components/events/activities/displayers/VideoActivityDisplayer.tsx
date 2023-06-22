@@ -1,15 +1,15 @@
-import { useState, useEffect, FunctionComponent, useRef } from 'react'
+import { useState, useEffect, FunctionComponent } from 'react'
 import ReactPlayer from 'react-player'
 import HeaderColumnswithContext from '../HeaderColumns'
 import { IBasicActivityProps } from './basicTypes'
-import { FB } from '@helpers/firestore-request'
+import { Badge } from 'antd'
 
 import { useUserEvent } from '@context/eventUserContext'
 import {
   updateAttendeeInActivityRealTime,
-  checkinAttendeeInActivity,
+  monitorAttendeeInActivityRealTime,
+  getAttendeeInActivity,
 } from '@helpers/HelperAuth'
-import { Badge } from 'antd'
 
 const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
   const { activity, onActivityProgress } = props
@@ -17,93 +17,106 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
 
   const [activityState] = useState('')
   const [isItAnFrame, setIsItAnFrame] = useState(false)
-  const [viewedVideoProgress, setViewedVideoProgress] = useState(0)
-  const [attendeeRealTime, setAttendeeRealTime] = useState<any>({})
-  const [realtimeUnsubscribe, setRealtimeUnsubscribe] = useState<(() => void) | null>(
-    null,
-  )
+  const [viewprogress, setViewProgress] = useState(0)
+  const [reactPlayervideoState, setReactPlayervideoState] = useState({
+    duration: 0,
+    videostate: {},
+  })
 
-  const ref = useRef<ReactPlayer>()
+  const [realTimeAsistenteActividad, setRealTimeAsistenteActividad] = useState({})
 
   const cEventUser = useUserEvent()
 
-  // Unsubscribe the realtime mechanism when the componet gets be unmounted
-  useEffect(
-    () => () => {
-      if (typeof realtimeUnsubscribe === 'function') {
-        realtimeUnsubscribe()
+  const updateViewedVideoProgress = (state: any) => {
+    let newProgress = Math.round(state.played * 100 * 10) / 10
+    if (newProgress != viewprogress) setViewProgress(newProgress)
+  }
+
+  const handleOnDuration = (duration: any) => {
+    console.log('vimeo dura', duration)
+    setReactPlayervideoState((state) => {
+      return { ...state, duration: duration }
+    })
+  }
+  const handleOnPlayerReady = async (videostate: any) => {
+    setReactPlayervideoState((state) => {
+      return { ...state, videostate: videostate }
+    })
+  }
+
+  //Con duración y estado consideramos en player listo
+  useEffect(() => {
+    if (!(reactPlayervideoState.duration && reactPlayervideoState.videostate)) return
+    storedProgressUpdate(reactPlayervideoState)
+  }, [reactPlayervideoState])
+
+  const storedProgressUpdate = async ({ duration, videostate }) => {
+    try {
+      let doc = await getAttendeeInActivity(cEventUser.value, activity._id)
+      let data = doc.data()
+      if (!data || !data.viewProgess) return
+      //Initial load check: Stored progress of current activity
+      if (data.viewProgess && data.viewProgess > viewprogress) {
+        setViewProgress(data.viewProgess)
+        videostate.seekTo((data.viewProgess / 100) * duration)
       }
-    },
-    [realtimeUnsubscribe],
-  )
+    } catch (e) {
+      console.log('vimeo error', { e })
+    }
+  }
 
   useEffect(() => {
-    if (!ref.current) return
-    if (!activity?._id) return
+    if (!(cEventUser.value && activity._id)) return
+    return monitorAttendeeInActivityRealTime(
+      cEventUser.value,
+      activity._id,
+      (data: any) => {
+        console.log('vimeo data', data)
+        setRealTimeAsistenteActividad(data)
+      },
+    )
+  }, [cEventUser, activity])
 
+  useEffect(() => {
+    if (!viewprogress) return
+
+    //actualizamos la base de datos solo con números enteros
+    if (Math.round(viewprogress / 1) !== viewprogress) return
+    updateAttendeeInActivityRealTime(cEventUser.value, activity._id, {
+      viewProgess: viewprogress,
+    })
+
+    //External callback on progress
+    if (onActivityProgress) onActivityProgress(viewprogress)
+  }, [viewprogress])
+
+  useEffect(() => {
     if (activity.type.name === 'cargarvideo') {
       setIsItAnFrame(true)
     } else {
       setIsItAnFrame(false)
-
-      try {
-        const unsubscrubeCallback = FB.Attendees.ref(
-          activity._id,
-          cEventUser.value._id,
-        ).onSnapshot((doc) => {
-          const data = doc.data()
-          if (!data) return
-
-          setAttendeeRealTime(data)
-          console.log('vimeo asistente ', data)
-          if (parseFloat(data.viewProgress) && data.viewProgess > viewedVideoProgress) {
-            setViewedVideoProgress(data.viewProgess)
-            console.log('vimeo timeupdate in database', data)
-            ref.current!.seekTo(data.viewProgess)
-          }
-        })
-        setRealtimeUnsubscribe(unsubscrubeCallback)
-      } catch (e) {
-        console.log('vimeo error', { e })
-      }
     }
-  }, [activity, ref.current])
-
-  useEffect(() => {
-    if (!viewedVideoProgress) return
-    // if (Math.round(viewedVideoProgress / 1) !== viewedVideoProgress) return
-    console.log('vimeo timeupdate', activity, viewedVideoProgress)
-
-    updateAttendeeInActivityRealTime(cEventUser.value, activity._id, {
-      viewProgess: viewedVideoProgress,
-      checked_in: false,
-      checkedin_at: null,
-    })
-
-    // Save the progress when it is over 99
-    // if (viewedVideoProgress >= 99)
-    //   checkinAttendeeInActivity(cEventUser.value, activity._id)
-    if (typeof onActivityProgress === 'function')
-      onActivityProgress(viewedVideoProgress * 100)
-  }, [viewedVideoProgress])
+  }, [activity])
 
   return (
     <>
       <HeaderColumnswithContext isVisible activityState={activityState} />
       <div className="mediaplayer" style={{ aspectRatio: '16/9' }}>
-        <div>
-          <Badge
-            count={`Progreso: ${Math.round(viewedVideoProgress * 100)}%`}
-            style={{ backgroundColor: '#0E594A', color: 'while' }}
-          />
-          <Badge
-            count={`${
-              attendeeRealTime?.checked_in === true ? 'Completo' : 'No completado'
-            }`}
-            style={{ backgroundColor: '#BA1D36', color: 'while' }}
-          />
-        </div>
-
+        {true && (
+          <div className="animate__animated animate__bounceIn animate__delay-2s">
+            <Badge count={`Progreso: ${viewprogress}%`} status="processing" />
+            <Badge
+              count={`${
+                realTimeAsistenteActividad?.checked_in === true
+                  ? 'Completo'
+                  : 'No completado'
+              }`}
+              status={
+                realTimeAsistenteActividad?.checked_in === true ? 'success' : 'default'
+              }
+            />
+          </div>
+        )}
         {isItAnFrame ? (
           <iframe
             style={{ aspectRatio: '16/9' }}
@@ -115,12 +128,13 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
           ></iframe>
         ) : (
           <ReactPlayer
+            onReady={handleOnPlayerReady}
+            onDuration={handleOnDuration}
+            onProgress={updateViewedVideoProgress}
             style={{ objectFit: 'cover' }}
-            ref={ref}
             width="100%"
             height="100%"
             url={urlVideo}
-            onProgress={(state) => setViewedVideoProgress(state.played)}
             controls
           />
         )}
