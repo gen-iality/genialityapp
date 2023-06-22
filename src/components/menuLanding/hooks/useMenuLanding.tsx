@@ -23,7 +23,10 @@ export default function useMenuLanding(props: MenuLandingProps) {
     setIsLoading(true)
     const menuBase: MenuBase = { ...menu };
     const itemsMenuDB = { ...itemsMenu };
+    const enabledItems = data.filter((item) => item.checked);
+    const position = enabledItems[enabledItems.length - 1].position
     itemsMenuDB[key].checked = value;
+    itemsMenuDB[key].position = position + 1;
     if (!value) {
       itemsMenuDB[key].name = menuBase[key].name;
       itemsMenuDB[key].position = menuBase[key].position;
@@ -88,6 +91,8 @@ export default function useMenuLanding(props: MenuLandingProps) {
       enabledItems.splice(newIndex, 0, movedItem);
   
       const updatedData = [...enabledItems, ...disabledItems];
+
+      
       const updatedDataWithPositions : MenuItem[] = updatedData.map((item, index) => ({
         checked : item.checked,
         icon : item.icon,

@@ -35,7 +35,7 @@ export default function MenuLanding(props: MenuLandingProps) {
       };
     })
     .toSorted((a, b) => a.position   - b.position )
-    console.log(newdata);
+    
     
     setData(newdata);
     if(send) {
