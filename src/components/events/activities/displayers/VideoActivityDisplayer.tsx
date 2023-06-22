@@ -5,10 +5,7 @@ import { IBasicActivityProps } from './basicTypes'
 import { FB } from '@helpers/firestore-request'
 
 import { useUserEvent } from '@context/eventUserContext'
-import {
-  updateAttendeeInActivityRealTime,
-  checkinAttendeeInActivity,
-} from '@helpers/HelperAuth'
+import { updateAttendeeInActivityRealTime } from '@helpers/HelperAuth'
 import { Badge } from 'antd'
 
 const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
@@ -19,6 +16,7 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
   const [isItAnFrame, setIsItAnFrame] = useState(false)
   const [viewedVideoProgress, setViewedVideoProgress] = useState(0)
   const [attendeeRealTime, setAttendeeRealTime] = useState<any>({})
+  const [viewProgress, setViewProgress] = useState(0)
 
   const ref = useRef<ReactPlayer>()
 
@@ -30,66 +28,36 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
     if (!activity?._id) return
     if (!cEventUser.value?._id) return
 
-    FB.Attendees.get(activity._id, cEventUser.value._id).then((data: any) => {
-      if (parseFloat(data.viewProgress) && data.viewProgress > viewedVideoProgress) {
-        console.log('load video to:', data.viewProgress * 100, '%')
-        setViewedVideoProgress(data.viewProgress)
-        ref.current!.seekTo(data.viewProgress * ref.current!.getDuration())
-      }
-    })
-
-    let unsubscribeCallback: (() => void) | null = null
-
     if (activity.type.name === 'cargarvideo') {
       setIsItAnFrame(true)
     } else {
       setIsItAnFrame(false)
 
-      try {
-        unsubscribeCallback = FB.Attendees.ref(
-          activity._id,
-          cEventUser.value._id,
-        ).onSnapshot((doc) => {
-          const data = doc.data()
-          if (!data) return
-
-          setAttendeeRealTime(data)
-          console.log('vimeo asistente ', data)
-          if (parseFloat(data.viewProgress) && data.viewProgress > viewedVideoProgress) {
-            setViewedVideoProgress(data.viewProgress)
-            console.log('vimeo timeupdate in database', data)
-            ref.current!.seekTo(data.viewProgress * ref.current!.getDuration())
-          }
-        })
-      } catch (e) {
-        console.error('vimeo error', { e })
-      }
-    }
-
-    return () => {
-      if (typeof unsubscribeCallback === 'function') {
-        unsubscribeCallback()
-      }
+      // Load the current view progress (with R after the G)
+      FB.Attendees.get(activity._id, cEventUser.value._id).then((data: any) => {
+        setAttendeeRealTime(data)
+        if (parseFloat(data.viewProgress)) {
+          console.log('load video to:', data.viewProgress * 100, '%')
+          setViewedVideoProgress(data.viewProgress)
+          setViewProgress(data.viewProgress)
+        }
+      })
     }
   }, [activity, cEventUser.value, ref.current])
 
   useEffect(() => {
     if (!viewedVideoProgress) return
-    // if (Math.round(viewedVideoProgress / 1) !== viewedVideoProgress) return
     console.log('vimeo timeupdate', activity, viewedVideoProgress)
 
-    updateAttendeeInActivityRealTime(cEventUser.value, activity._id, {
-      viewProgress: viewedVideoProgress,
-      checked_in: false,
-      checkedin_at: null,
-    })
-
-    // Save the progress when it is over 99
-    // if (viewedVideoProgress >= 99)
-    //   checkinAttendeeInActivity(cEventUser.value, activity._id)
     if (typeof onActivityProgress === 'function')
       onActivityProgress(viewedVideoProgress * 100)
   }, [viewedVideoProgress])
+
+  useEffect(() => {
+    if (!ref.current) return
+    if (viewProgress === 0) return
+    ref.current.seekTo(viewProgress * ref.current.getDuration())
+  }, [viewProgress, ref.current])
 
   return (
     <>
@@ -124,7 +92,24 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
             width="100%"
             height="100%"
             url={urlVideo}
-            onProgress={(state) => setViewedVideoProgress(state.played)}
+            onReady={() => {
+              if (ref.current && viewProgress) {
+                console.log('ready: call seekTo')
+                setTimeout(() => {
+                  ref.current!.seekTo(viewProgress * ref.current!.getDuration())
+                }, 2000)
+              }
+            }}
+            onProgress={(state) => {
+              if (state.played === 0) return
+
+              setViewedVideoProgress(state.played)
+              updateAttendeeInActivityRealTime(cEventUser.value, activity._id, {
+                viewProgress: state.played,
+                checked_in: false,
+                checkedin_at: null,
+              })
+            }}
             controls
           />
         )}
