@@ -146,6 +146,7 @@ function OrgMembers(props) {
         position: orgUser.position?.position_name || 'Sin cargo',
         position_id: orgUser.position?._id || null,
         stats: userActivities[orgUser.account_id],
+        payment_plan: orgUser.payment_plan,
       }
 
       allMemberFields.push(properties)

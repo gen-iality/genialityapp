@@ -21,6 +21,20 @@ export async function GetTokenUserFirebase() {
   })
 }
 
+export const monitorAttendeeInActivityRealTime = (eventUser, activityId, callback) => {
+  return firestore
+    .collection(`${activityId}_event_attendees`)
+    .doc(eventUser._id)
+    .onSnapshot((doc) => {
+      //console.log("Current data: ", doc.data());
+      callback(doc.data())
+    })
+}
+
+export const getAttendeeInActivity = (eventUser, activityId) => {
+  return firestore.collection(`${activityId}_event_attendees`).doc(eventUser._id).get()
+}
+
 // TODO: this function should be here, move to another nice file
 export const updateAttendeeInActivityRealTime = (eventUser, activityId, data) => {
   const userRef = firestore.collection(`${activityId}_event_attendees`).doc(eventUser._id)
@@ -37,6 +51,8 @@ export const updateAttendeeInActivityRealTime = (eventUser, activityId, data) =>
           .set({
             ...eventUser,
             ...data,
+            checked_in: false,
+            checkedin_at: null,
           })
           .then(() => resolve())
       }
