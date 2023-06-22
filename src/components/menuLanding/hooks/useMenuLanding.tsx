@@ -16,7 +16,7 @@ export default function useMenuLanding(props: MenuLandingProps) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [data, setData] = useState<Menu[]>([]);
 
-  const debouncedSubmit = debounce(submit, 500);
+  const debouncedSubmit = debounce(submit, 1000);
   const ORGANIZATION_VALUE = 1;
 
   const checkedItem = (key: string, value: boolean) => {
@@ -58,6 +58,7 @@ export default function useMenuLanding(props: MenuLandingProps) {
     let itemsMenuDB =  { ...itemsMenu }
     if (value && itemsMenuDB[key]) itemsMenuDB[key][property] = value;
     setItemsMenu(itemsMenuDB);
+    debouncedSubmit()
     if (property === 'permissions') setKeySelect(Date.now());
   }
 
@@ -91,19 +92,13 @@ export default function useMenuLanding(props: MenuLandingProps) {
         position: item.checked ? enabledItems.findIndex((enabledItem) => enabledItem === item) + 1 : item.position,
       }));
       setData(updatedDataWithPositions);
-      // setItemsMenuFromData(updatedDataWithPositions);
+      // con esto se rompe el arrastre en cms revisar 
+      updatedDataWithPositions.forEach((item) => {                
+        updateValue(item.key, item.position, 'position');
+      });
     }
   };
-  const setItemsMenuFromData = (updatedData: any[]) => {
-    const updatedItemsMenu = deepCopy(itemsMenu);
-    updatedData.forEach((item) => {
-      const menuItem = updatedItemsMenu[item.id];
-      if (menuItem) {
-        menuItem.position = item.position;
-      }
-    });
-    setItemsMenu(updatedItemsMenu);
-  };
+  
   async function submit() {
     setIsLoading(true);
     DispatchMessageService({
