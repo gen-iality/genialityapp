@@ -96,7 +96,7 @@ export default function CustomDateEvent(props: Props) {
           <Col span={12}>
             <Card onClick={openCreateNewDate} hoverable style={{borderRadius: 10, border: '1px solid #C4C4C490', height: '100%'}}>
               <Row justify='center' align='middle'>
-                <Col><PlusOutlined style={dates.length%2 === 0 ? {} : {paddingTop: 20}} /></Col>
+                <Col><PlusOutlined style={dates.length%2 === 0 ? {} : {paddingTop: 10, fontSize: 30}} /></Col>
               </Row>
             </Card>
           </Col>
