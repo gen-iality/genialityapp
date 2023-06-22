@@ -3,7 +3,6 @@ import { PropsEditModal } from '../interfaces/menuLandingProps';
 import * as iconComponents from '@ant-design/icons';
 import '../styles/index.css';
 export default function ModalEdit({ item, handleCancel, handleOk, visibility, setItemEdit, loading }: PropsEditModal) {
-
   const IconsKeys = Object.keys(iconComponents).filter((key) => key.includes('Outlined'));
   //@ts-ignore
   const IconList = IconsKeys.map((key) => iconComponents[key]);
@@ -12,7 +11,11 @@ export default function ModalEdit({ item, handleCancel, handleOk, visibility, se
     const icon = IconsKeys[index];
     if (icon) setItemEdit({ ...item, icon: icon });
   };
-
+  const renderIcon = (iconName: string) => {
+    //@ts-ignore
+    const IconComponent = iconComponents[iconName];
+    return IconComponent ? <IconComponent /> : iconName;
+  };
   return (
     <div>
       <Drawer
@@ -24,40 +27,49 @@ export default function ModalEdit({ item, handleCancel, handleOk, visibility, se
             Guardar
           </Button>
         }
+        extra={
+          <Space direction='horizontal' style={{ display: 'flex', alignItems: 'start' }}>
+            <Typography.Title level={5}>Habilitado:</Typography.Title>
+            <Switch
+              checkedChildren={'si'}
+              unCheckedChildren={'No'}
+              checked={item.checked}
+              onChange={(value) => setItemEdit({ ...item, checked: value })}
+            />
+          </Space>
+        }
         onClose={handleCancel}>
         <Space direction='vertical' style={{ width: '100%', marginBottom: 10 }}>
           <Typography.Title level={5}>Alias</Typography.Title>
           <Input
             size='middle'
-            placeholder='Escriba un alias para la seccion'
+            placeholder={item.name}
             value={item.label}
+            max={15}
+            min={4}
             onChange={(e) => setItemEdit({ ...item, label: e.target.value })}
           />
-
-          <Typography.Title level={5}>Habilitado</Typography.Title>
-          <Switch
-            checkedChildren={'si'}
-            unCheckedChildren={'No'}
-            checked={item.checked}
-            onChange={(value) => setItemEdit({ ...item, checked: value })}
-          />
         </Space>
-        <Row className='rowIcons'>
-          {IconList.map((Icon, index) => (
-            <Col style={{ margin: 6 }} key={`icon-key${index}`}>
-              <div
-                className={`icons ${
-                  IconsKeys[index] === item.icon ? 'animate__animated animate__heartBeat animate__infinite' : ''
-                }`}
-                style={{
-                  border: `4px solid ${IconsKeys[index] === item.icon ? 'black' : 'transparent'}`,
-                }}
-                onClick={() => changeIcon(index)}>
-                {<Icon />}
-              </div>
-            </Col>
-          ))}
-        </Row>
+        <Typography.Title level={5}>Iconos</Typography.Title>
+        <div className='iconsContainer'>
+          <div key={item.icon} className='iconCurrent animate__animated animate__bounceIn'>{renderIcon(item.icon)}</div>
+          <Row className='rowIcons'>
+            {IconList.map((Icon, index) => (
+              <Col style={{ margin: 6 }} key={`icon-key${index}`}>
+                <div
+                  className={`icons ${
+                    IconsKeys[index] === item.icon ? 'animate__animated animate__heartBeat animate__infinite' : ''
+                  }`}
+                  style={{
+                    border: `4px solid ${IconsKeys[index] === item.icon ? 'black' : 'transparent'}`,
+                  }}
+                  onClick={() => changeIcon(index)}>
+                  {<Icon />}
+                </div>
+              </Col>
+            ))}
+          </Row>
+        </div>
       </Drawer>
     </div>
   );
