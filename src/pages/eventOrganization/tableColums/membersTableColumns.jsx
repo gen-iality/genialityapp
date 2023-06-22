@@ -91,7 +91,7 @@ export const columns = (
   }
 
   const payment_plan = {
-    title: 'Valor pagado',
+    title: 'Plan de pago',
     dataIndex: 'payment_plan',
     key: 'payment_plan',
     width: '140px',
@@ -99,7 +99,8 @@ export const columns = (
     sorter: (a, b) => (a.payment_plan?.price ?? 0) - (b.payment_plan?.price ?? 0),
     ...membersGetColumnSearchProps('payment_plan'),
     render(payment_plan) {
-      return payment_plan?.price ?? 0
+      console.log('payment_plan', payment_plan)
+      return payment_plan?.price ? 'Premium' : 'Free'
     },
   }
 
