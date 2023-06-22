@@ -46,10 +46,10 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
 
           setAttendeeRealTime(data)
           console.log('vimeo asistente ', data)
-          if (parseFloat(data.viewProgress) && data.viewProgess > viewedVideoProgress) {
-            setViewedVideoProgress(data.viewProgess)
+          if (parseFloat(data.viewProgress) && data.viewProgress > viewedVideoProgress) {
+            setViewedVideoProgress(data.viewProgress)
             console.log('vimeo timeupdate in database', data)
-            ref.current!.seekTo(data.viewProgess)
+            ref.current!.seekTo(data.viewProgress * ref.current!.getDuration())
           }
         })
       } catch (e) {
@@ -70,7 +70,7 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
     console.log('vimeo timeupdate', activity, viewedVideoProgress)
 
     updateAttendeeInActivityRealTime(cEventUser.value, activity._id, {
-      viewProgess: viewedVideoProgress,
+      viewProgress: viewedVideoProgress,
       checked_in: false,
       checkedin_at: null,
     })
