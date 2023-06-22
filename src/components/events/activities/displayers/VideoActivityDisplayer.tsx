@@ -25,9 +25,18 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
   const cEventUser = useUserEvent()
 
   useEffect(() => {
-    console.log(ref.current, activity?._id)
+    console.log(ref.current, activity?._id, cEventUser.value?._id)
     if (!ref.current) return
     if (!activity?._id) return
+    if (!cEventUser.value?._id) return
+
+    FB.Attendees.get(activity._id, cEventUser.value._id).then((data: any) => {
+      if (parseFloat(data.viewProgress) && data.viewProgress > viewedVideoProgress) {
+        console.log('load video to:', data.viewProgress * 100, '%')
+        setViewedVideoProgress(data.viewProgress)
+        ref.current!.seekTo(data.viewProgress * ref.current!.getDuration())
+      }
+    })
 
     let unsubscribeCallback: (() => void) | null = null
 
@@ -53,7 +62,7 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
           }
         })
       } catch (e) {
-        console.log('vimeo error', { e })
+        console.error('vimeo error', { e })
       }
     }
 
@@ -62,7 +71,7 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
         unsubscribeCallback()
       }
     }
-  }, [activity, ref.current])
+  }, [activity, cEventUser.value, ref.current])
 
   useEffect(() => {
     if (!viewedVideoProgress) return
