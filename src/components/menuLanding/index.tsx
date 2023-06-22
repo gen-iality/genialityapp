@@ -22,7 +22,7 @@ export default function MenuLanding(props: MenuLandingProps) {
   
 
   useEffect(() => {
-    const updatedData: Menu[] = Object.keys(menu).map((key: string, index: number) => {
+    const newdata: Menu[] = Object.keys(menu).map((key: string, index: number) => {
       return {
         key: key,
         position: menu[key].position,
@@ -30,10 +30,14 @@ export default function MenuLanding(props: MenuLandingProps) {
         icon: menu[key].icon,
         checked: menu[key].checked,
         label: menu[key].label,
+        permissions : menu[key].permissions,
         options: <iconComponents.EditOutlined />,
       };
-    });
-    setData(updatedData);
+    })
+    .toSorted((a, b) => a.position   - b.position )
+    console.log(newdata);
+    
+    setData(newdata);
     if(send) {
       submit()
       setSend(false)
@@ -41,13 +45,7 @@ export default function MenuLanding(props: MenuLandingProps) {
   }, [menu]);
 
 
-    <DragIcon
-      style={{
-        cursor: 'move',
-        color: '#999999',
-        fontSize: '22px',
-      }}
-    />
+
 
   const SortableItem: any = SortableElement((props: any) => <tr {...props} />);
   const SortableBody: any = SortableContainer((props: any) => <tbody {...props} />);
@@ -81,7 +79,7 @@ export default function MenuLanding(props: MenuLandingProps) {
       title: 'Orden',
       dataIndex: 'position',
       width: 20,
-      render: (text: number, record: Menu, index: number) => <Tag>{`#${index + 1}`}</Tag>,
+      render: (position: number, record: Menu, index: number) => <Tag>{`#${index + 1}`}</Tag>,
     },
     {
       title: 'Nombre',

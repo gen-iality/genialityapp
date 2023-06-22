@@ -15,3 +15,12 @@ export function deepCopy(obj : Record<string, any>) : Record<string, any>{
     return copy;
   }
   
+ export  const convertArrayToObject  = <T,>(array : Array<T>, key : keyof T) => {
+    const initialValue = {};
+    return array.reduce((obj, item) => {
+      return {
+        ...obj,
+        [item[key] as string]: item,
+      };
+    }, initialValue);
+  }

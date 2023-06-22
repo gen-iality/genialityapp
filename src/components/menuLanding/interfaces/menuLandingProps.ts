@@ -40,6 +40,7 @@ export interface Menu {
   label? : string
   icon: string;
   checked: boolean;
+  permissions: string,
   options: JSX.Element;
 };
 

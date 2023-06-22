@@ -4,7 +4,7 @@ import { Actions, OrganizationApi } from '@/helpers/request';
 import { GetTokenUserFirebase } from '@/helpers/HelperAuth';
 import { DispatchMessageService } from '@/context/MessageService';
 import { Menu, MenuBase, MenuItem, MenuLandingProps } from '../interfaces/menuLandingProps';
-import { deepCopy } from '../utils/functions';
+import { convertArrayToObject, deepCopy } from '../utils/functions';
 import { SortEndHandler } from 'react-sortable-hoc';
 import debounce from 'lodash/debounce';
 
@@ -16,10 +16,11 @@ export default function useMenuLanding(props: MenuLandingProps) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [data, setData] = useState<Menu[]>([]);
 
-  const debouncedSubmit = debounce(submit, 1000);
+  const debouncedSubmit = debounce(submit, 500);
   const ORGANIZATION_VALUE = 1;
 
   const checkedItem = (key: string, value: boolean) => {
+    setIsLoading(true)
     const menuBase: MenuBase = { ...menu };
     const itemsMenuDB = { ...itemsMenu };
     itemsMenuDB[key].checked = value;
@@ -87,15 +88,19 @@ export default function useMenuLanding(props: MenuLandingProps) {
       enabledItems.splice(newIndex, 0, movedItem);
   
       const updatedData = [...enabledItems, ...disabledItems];
-      const updatedDataWithPositions = updatedData.map((item, index) => ({
-        ...item,
+      const updatedDataWithPositions : MenuItem[] = updatedData.map((item, index) => ({
+        checked : item.checked,
+        icon : item.icon,
+        name : item.name,
+        label : item.label ?? '',
+        section : item.key,
+        permissions : item.permissions,
         position: item.checked ? enabledItems.findIndex((enabledItem) => enabledItem === item) + 1 : item.position,
-      }));
-      setData(updatedDataWithPositions);
-      // con esto se rompe el arrastre en cms revisar 
-      updatedDataWithPositions.forEach((item) => {                
-        updateValue(item.key, item.position, 'position');
-      });
+      })); 
+      const newMenu = convertArrayToObject<MenuItem>(updatedDataWithPositions,'section')
+      setItemsMenu(newMenu)
+     ;
+      
     }
   };
   
