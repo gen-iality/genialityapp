@@ -19,27 +19,17 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
   const [isItAnFrame, setIsItAnFrame] = useState(false)
   const [viewedVideoProgress, setViewedVideoProgress] = useState(0)
   const [attendeeRealTime, setAttendeeRealTime] = useState<any>({})
-  const [realtimeUnsubscribe, setRealtimeUnsubscribe] = useState<(() => void) | null>(
-    null,
-  )
 
   const ref = useRef<ReactPlayer>()
 
   const cEventUser = useUserEvent()
 
-  // Unsubscribe the realtime mechanism when the componet gets be unmounted
-  useEffect(
-    () => () => {
-      if (typeof realtimeUnsubscribe === 'function') {
-        realtimeUnsubscribe()
-      }
-    },
-    [realtimeUnsubscribe],
-  )
-
   useEffect(() => {
+    console.log(ref.current, activity?._id)
     if (!ref.current) return
     if (!activity?._id) return
+
+    let unsubscribeCallback: (() => void) | null = null
 
     if (activity.type.name === 'cargarvideo') {
       setIsItAnFrame(true)
@@ -47,7 +37,7 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
       setIsItAnFrame(false)
 
       try {
-        const unsubscrubeCallback = FB.Attendees.ref(
+        unsubscribeCallback = FB.Attendees.ref(
           activity._id,
           cEventUser.value._id,
         ).onSnapshot((doc) => {
@@ -62,9 +52,14 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
             ref.current!.seekTo(data.viewProgess)
           }
         })
-        setRealtimeUnsubscribe(unsubscrubeCallback)
       } catch (e) {
         console.log('vimeo error', { e })
+      }
+    }
+
+    return () => {
+      if (typeof unsubscribeCallback === 'function') {
+        unsubscribeCallback()
       }
     }
   }, [activity, ref.current])
