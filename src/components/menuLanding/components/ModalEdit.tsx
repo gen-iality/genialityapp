@@ -1,4 +1,4 @@
-import { Button, Drawer, Form, Input, Switch, Row, Col, Typography, Space } from 'antd';
+import { Button, Drawer, Form, Input, Switch, Row, Col, Typography, Space, Tooltip } from 'antd';
 import { PropsEditModal } from '../interfaces/menuLandingProps';
 import * as iconComponents from '@ant-design/icons';
 import '../styles/index.css';
@@ -41,18 +41,24 @@ export default function ModalEdit({ item, handleCancel, handleOk, visibility, se
         onClose={handleCancel}>
         <Space direction='vertical' style={{ width: '100%', marginBottom: 10 }}>
           <Typography.Title level={5}>Alias</Typography.Title>
-          <Input
-            size='middle'
-            placeholder={item.name}
-            value={item.label}
-            max={15}
-            min={4}
-            onChange={(e) => setItemEdit({ ...item, label: e.target.value })}
-          />
+          <Tooltip
+            title='Aquí puedes cambiar el nombre que se visualizará en la landing menu del evento'
+            overlayStyle={{ color: 'white', fontSize: '12px' }}>
+            <Input
+              size='middle'
+              placeholder={item.name}
+              value={item.label}
+              max={15}
+              min={4}
+              onChange={(e) => setItemEdit({ ...item, label: e.target.value })}
+            />
+          </Tooltip>
         </Space>
         <Typography.Title level={5}>Iconos</Typography.Title>
         <div className='iconsContainer'>
-          <div key={item.icon} className='iconCurrent animate__animated animate__bounceIn'>{renderIcon(item.icon)}</div>
+          <div key={item.icon} className='iconCurrent animate__animated animate__bounceIn'>
+            {renderIcon(item.icon)}
+          </div>
           <Row className='rowIcons'>
             {IconList.map((Icon, index) => (
               <Col style={{ margin: 6 }} key={`icon-key${index}`}>
