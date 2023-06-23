@@ -9,7 +9,6 @@ import { SortEndHandler } from 'react-sortable-hoc';
 import debounce from 'lodash/debounce';
 
 export default function useMenuLanding(props: MenuLandingProps) {
-
   const { organizationObj, organization, event } = props;
   const [itemsMenu, setItemsMenu] = useState<Record<string, MenuItem>>(deepCopy(menu));
   const [keySelect, setKeySelect] = useState<number>(Date.now());
@@ -20,19 +19,34 @@ export default function useMenuLanding(props: MenuLandingProps) {
   const ORGANIZATION_VALUE = 1;
 
   const checkedItem = (key: string, value: boolean) => {
-    setIsLoading(true)
     const menuBase: MenuBase = { ...menu };
     const itemsMenuDB = { ...itemsMenu };
     const enabledItems = data.filter((item) => item.checked);
-    const position = enabledItems[enabledItems.length - 1].position
-    itemsMenuDB[key].checked = value;
-    itemsMenuDB[key].position = position + 1;
-    if (!value) {
-      itemsMenuDB[key].name = menuBase[key].name;
-      itemsMenuDB[key].position = menuBase[key].position;
+    let save = value || (!value && enabledItems.length !== 1);
+    if (value) {
+      const firstPosition = enabledItems.length === 0;
+      const position = firstPosition ? 1 : enabledItems[enabledItems.length - 1].position;
+      itemsMenuDB[key].checked = value;
+      itemsMenuDB[key].position = firstPosition ? position : position + 1;
+    } else {
+      if (save) {
+        itemsMenuDB[key].checked = value;
+        itemsMenuDB[key].name = menuBase[key].name;
+        itemsMenuDB[key].position = menuBase[key].position;
+      }
     }
-    setItemsMenu(itemsMenuDB);
-    debouncedSubmit()
+    if (save) {
+      setIsLoading(true);
+      setItemsMenu(itemsMenuDB);
+      debouncedSubmit();
+    } else {
+      DispatchMessageService({
+        action: 'show',
+        msj: 'Debe existir una sección habilitada',
+        type: 'warning',
+        duration: 1,
+      });
+    }
   };
 
   async function componentDidMount() {
@@ -41,7 +55,7 @@ export default function useMenuLanding(props: MenuLandingProps) {
       let token = await GetTokenUserFirebase();
       menuLanding = await Actions.getAll(`/api/events/${event?._id}?token=${token}`);
     } else {
-      menuLanding = { itemsMenu : organizationObj.itemsMenu || []}    
+      menuLanding = { itemsMenu: organizationObj.itemsMenu || [] };
     }
 
     if (menuLanding) {
@@ -59,13 +73,12 @@ export default function useMenuLanding(props: MenuLandingProps) {
   }, []);
 
   function updateValue(key: string, value: string | number | boolean, property: string) {
-    let itemsMenuDB =  { ...itemsMenu }
+    let itemsMenuDB = { ...itemsMenu };
     if (value && itemsMenuDB[key]) itemsMenuDB[key][property] = value;
     setItemsMenu(itemsMenuDB);
-    debouncedSubmit()
+    debouncedSubmit();
     if (property === 'permissions') setKeySelect(Date.now());
   }
-
 
   function orderPosition(key: string, order: string | number): void {
     let itemsMenuToOrder = Object.assign({}, itemsMenu);
@@ -82,33 +95,32 @@ export default function useMenuLanding(props: MenuLandingProps) {
     }
     return menuFilter;
   };
-  const handleDragEnd: SortEndHandler = ({ oldIndex, newIndex }: any) => {
-    if (oldIndex !== newIndex) {
-      const enabledItems = data.filter((item) => item.checked);
+  const handleDragEnd = ({ oldIndex, newIndex }: any) => {
+
+    if (oldIndex !== newIndex && data[oldIndex].checked) {
+      const enabledItems = data.filter((item) => item?.checked);
       const disabledItems = data.filter((item) => !item.checked);
-  
+      
+
       const movedItem = enabledItems.splice(oldIndex, 1)[0];
       enabledItems.splice(newIndex, 0, movedItem);
-  
+
       const updatedData = [...enabledItems, ...disabledItems];
 
-      
-      const updatedDataWithPositions : MenuItem[] = updatedData.map((item, index) => ({
-        checked : item.checked,
-        icon : item.icon,
-        name : item.name,
-        label : item.label ?? '',
-        section : item.key,
-        permissions : item.permissions,
+      const updatedDataWithPositions: MenuItem[] = updatedData.map((item, index) => ({
+        checked: item.checked,
+        icon: item.icon,
+        name: item.name,
+        label: item.label ?? '',
+        section: item.key,
+        permissions: item.permissions,
         position: item.checked ? enabledItems.findIndex((enabledItem) => enabledItem === item) + 1 : item.position,
-      })); 
-      const newMenu = convertArrayToObject<MenuItem>(updatedDataWithPositions,'section')
-      setItemsMenu(newMenu)
-     ;
-      
+      }));
+      const newMenu = convertArrayToObject<MenuItem>(updatedDataWithPositions, 'section');
+      setItemsMenu(newMenu);
     }
   };
-  
+
   async function submit() {
     setIsLoading(true);
     DispatchMessageService({
@@ -118,13 +130,10 @@ export default function useMenuLanding(props: MenuLandingProps) {
       action: 'show',
     });
     let menuToSubmit = orderItemsMenu();
-   
-    
+
     let newMenu = { itemsMenu: filterMenu(menuToSubmit) };
 
     if (organization !== 1) {
-     
-      
       let token = await GetTokenUserFirebase();
       await Actions.put(`api/events/${event._id}?token=${token}`, newMenu);
     } else {
@@ -146,26 +155,23 @@ export default function useMenuLanding(props: MenuLandingProps) {
     setIsLoading(false);
   }
 
-
   function orderItemsMenu() {
     let itemsMenuData: MenuBase = {};
     let itemsMenuToSave: MenuBase = {};
     let items: MenuItem[] = Object.values(itemsMenu);
-  
-    items.sort(function (a: MenuItem, b: MenuItem) {
+
+    items.sort(function(a: MenuItem, b: MenuItem) {
       return a.position - b.position;
     });
-  
+
     for (let item of items) {
       itemsMenuData[item.section] = item;
     }
-  
+
     itemsMenuToSave = { ...itemsMenuData };
-  
+
     return itemsMenuToSave;
   }
-  
-
 
   const titleheader =
     organization !== ORGANIZATION_VALUE ? 'Habilitar secciones del evento' : 'Secciones a habilitar para cada evento';
@@ -175,7 +181,7 @@ export default function useMenuLanding(props: MenuLandingProps) {
     keySelect,
     isLoading,
     titleheader,
-    data, 
+    data,
     setData,
     updateValue,
     handleDragEnd,
