@@ -1,9 +1,10 @@
 import { Button, Col, DatePicker, Form, Modal, ModalProps, Row, Space, TimePicker } from 'antd';
-import moment, { Moment } from 'moment';
+import moment, { Moment, isMoment } from 'moment';
 import { DateRangeEvius } from '../hooks/useCustomDateEvent';
 import { useEffect, useState } from 'react';
 import { useForm } from 'antd/es/form/Form';
 import { CloseCircleOutlined, SaveOutlined } from '@ant-design/icons';
+import { getArrayUntilNumber } from './utils/validate-hours.utils';
 
 interface Props extends ModalProps {
   date?: DateRangeEvius;
@@ -19,8 +20,7 @@ const format = 'hh:mm A';
 
 interface FormDateRange {
   date: Moment;
-  timeStart: Moment;
-  timeEnd: Moment;
+  times: Moment[];
 }
 
 export const DateModal = ({
@@ -37,14 +37,15 @@ export const DateModal = ({
   const [form] = useForm<FormDateRange>();
 
   const onCreate = () => {
+    const times = form.getFieldValue('times');
     if (date) {
-      handledEdit(form.getFieldValue('date'), form.getFieldValue('timeStart'), form.getFieldValue('timeEnd'), date.id);
+      handledEdit(form.getFieldValue('date'), times[0], times[1], date.id);
       setOpenModal(false);
       closeModal();
       return;
     }
     closeModal();
-    handleInterceptor(form.getFieldValue('date'), form.getFieldValue('timeStart'), form.getFieldValue('timeEnd'));
+    handleInterceptor(form.getFieldValue('date'), times[0], times[1]);
     setOpenModal(false);
   };
 
@@ -52,14 +53,12 @@ export const DateModal = ({
     if (date) {
       return form.setFieldsValue({
         date: moment(date.start),
-        timeStart: moment(date.start),
-        timeEnd: moment(date.end),
+        times: [moment(date.start), moment(date.end)],
       });
     }
     form.setFieldsValue({
       date: '',
-      timeEnd: '',
-      timeStart: '',
+      times: [],
     });
   }, [date]);
 
@@ -82,40 +81,18 @@ export const DateModal = ({
             // @ts-ignore
           />
         </Form.Item>
-        <Row gutter={[8, 8]}>
-          <Col span={12}>
-            <Form.Item
-              label='Hora de inicio'
-              rules={[{ required: true, message: 'La hora de inicio es obligatoria' }]}
-              name={'timeStart'}>
-              {/* @ts-ignore */}
-              <TimePicker
-                value={currentDate}
-                style={{ marginBottom: 10, width: '100%' }}
-                format={format}
-                // @ts-ignore
-              />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item
-              label='Hora final'
-              rules={[{ required: true, message: 'La hora final es obligatoria' }]}
-              name={'timeEnd'}>
-              {/* @ts-ignore */}
-              <TimePicker
-                allowClear={false}
-                value={currentDate}
-                style={{ marginBottom: 10, width: '100%' }}
-                format={format}
-                // @ts-ignore
-              />
-            </Form.Item>
-          </Col>
-        </Row>
+        <Form.Item
+          label='Horas'
+          name={'times'}
+          rules={[{ required: true, message: 'Debe escoger las horas inicio y fin' }]}>
+          {/* @ts-ignore */}
+          <TimePicker.RangePicker allowClear={false} style={{ marginBottom: 10, width: '100%' }} format={format} />
+        </Form.Item>
         <Row justify='end' wrap gutter={[8, 8]}>
           <Col>
-            <Button danger onClick={() => setOpenModal(false)} icon={<CloseCircleOutlined />}>Cancelar</Button>
+            <Button danger onClick={() => setOpenModal(false)} icon={<CloseCircleOutlined />}>
+              Cancelar
+            </Button>
           </Col>
           <Col>
             <Button type='primary' htmlType='submit' icon={<SaveOutlined />}>

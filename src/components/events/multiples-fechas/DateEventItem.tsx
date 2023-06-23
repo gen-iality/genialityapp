@@ -17,7 +17,7 @@ export const DateEventItem = ({ date, onClick, handledDelete, ...cardProps }: Pr
   return (
     <Card
       hoverable
-      style={{borderRadius: 10, height: '100%'/* , border: 'none' */}}
+      style={{borderRadius: 10, height: '100%'}}
       {...cardProps}
     >
       <Row gutter={[8, 8]}>
@@ -45,7 +45,7 @@ export const DateEventItem = ({ date, onClick, handledDelete, ...cardProps }: Pr
             </Space>
           }
         />
-        <Space wrap style={{paddingLeft: 45}}>
+        <Space wrap align='center' style={{position: 'absolute', right: 20, top: 30}}>
           <Button type='default' icon={<IconsAntDesing.EditOutlined />} onClick={onClick} />
           <Button danger type='default' icon={<IconsAntDesing.DeleteOutlined />} onClick={() => handledDelete(date.id)} />
         </Space>
