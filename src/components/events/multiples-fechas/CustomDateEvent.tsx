@@ -49,102 +49,87 @@ export default function CustomDateEvent(props: Props) {
 
   return (
     <Card style={{borderRadius: 20}} hoverable>
-      <Row gutter={[16, 16]}>
-        <Col xs={24} lg={24}>
-          {openModal && (
-            <DateModal
-              closeModal={closeModal}
-              handledEdit={handledEdit}
-              footer={false}
-              disabledDate={disabledDate}
-              setOpenModal={setOpenModal}
-              handledInterceptor={handleInterceptor}
-              date={selectedDate}
-              visible={openModal}
-              onCancel={closeModal}
-              handleUpdateTime={handleUpdateTime}
-              destroyOnClose={true}
-            />
-          )}
-          {mustUpdateDate && (
-            <Alert
-              message={<Typography.Text strong>Formato de fecha incorrecto</Typography.Text>}
-              description={
-                <Typography.Paragraph>
-                  Las fechas se han modificado a un nuevo formato, 
-                  para continuar con la configuración correcta por favor verifique las fechas y horas respectivas del evento
-                  (Fecha de inicio {datesOld?.startDateOld}, fecha final {datesOld?.endDateOld}). <br />  
-                  Una vez que haya verificado las fechas y horas, debe guardar los cambios dando clic al botón 
-                  <Typography.Text strong> Guardar fechas</Typography.Text>, el cual realizará el cambio y hará desaparecer este mensaje. 
-                  
-                </Typography.Paragraph>
-              }
-              type='error'
-            />
-          )}
-        </Col>
-        <Col xs={24} lg={24}>
-          <Typography.Text strong>Fechas seleccionadas</Typography.Text> <br />
-          <Space wrap>
-            <List 
-              grid={{gutter: 8, column: dates.length > 1 ? 2 : 1}}
-              split={false}
-              dataSource={dates}
-              renderItem={date => (
-                <List.Item>
-                  <DateEventItem
-                    key={date.id}
-                    date={date}
-                    onClick={() => openEditDate(date)}
-                    handledDelete={handledDelete}
-                  />
-                </List.Item>
-              )}
-            >
-              <List.Item >
-                <Row justify={'center'}>
-                  <Col span={12}>
-                    <Card onClick={openCreateNewDate} hoverable style={{borderRadius: 10, border: '1px solid #C4C4C490'}}>
-                      <Row justify='center' align='middle'>
-                        <PlusOutlined />
-                      </Row>
-                    </Card>
-                  </Col>
-                </Row>
-              </List.Item>
-            </List>
-            {/* {!!dates.length &&
-              dates.map((date) => (
-                <DateEventItem
-                  key={date.id}
-                  date={date}
-                  onClick={() => openEditDate(date)}
-                  handledDelete={handledDelete}
-                />
-              ))} */}
-            {/* <Card onClick={openCreateNewDate} hoverable>
-              <PlusOutlined />
-            </Card> */}
-          </Space>
-        </Col>
-        <Col span={24}>
-          <Row justify='end' gutter={[8, 8]} wrap>
-            {/* <Col>
-              <Button icon={<PlusCircleOutlined />} type='default' onClick={openCreateNewDate}>
-                Agregar
-              </Button>
-            </Col> */}
-            <Col>
-              <Button icon={<SaveOutlined />} type='primary' onClick={handleSubmit} loading={isSaving}>
-                Guardar fechas
-              </Button>
+      {openModal && (
+        <DateModal
+          closeModal={closeModal}
+          handledEdit={handledEdit}
+          footer={false}
+          disabledDate={disabledDate}
+          setOpenModal={setOpenModal}
+          handledInterceptor={handleInterceptor}
+          date={selectedDate}
+          visible={openModal}
+          onCancel={closeModal}
+          handleUpdateTime={handleUpdateTime}
+          destroyOnClose={true}
+        />
+      )}
+      <Space direction='vertical' style={{width: '100%'}}>
+        {mustUpdateDate && (
+          <Alert
+            message={<Typography.Text strong>Formato de fecha incorrecto</Typography.Text>}
+            description={
+              <Typography.Paragraph>
+                Las fechas se han modificado a un nuevo formato, 
+                para continuar con la configuración correcta por favor verifique las fechas y horas respectivas del evento
+                (Fecha de inicio {datesOld?.startDateOld}, fecha final {datesOld?.endDateOld}). <br />  
+                Una vez validado guarde los cambios dando clic al botón 
+                <Typography.Text strong> Guardar fechas</Typography.Text>, al realizarse el cambio este mensaje desaparecerá. 
+                
+              </Typography.Paragraph>
+            }
+            type='error'
+          />
+        )}
+        <Typography.Text strong>Fechas seleccionadas</Typography.Text>
+        <Row gutter={[8, 8]} wrap>
+          {dates.length > 0 && dates.map(date => (
+            <Col span={12}>
+              <DateEventItem
+                key={date.id}
+                date={date}
+                onClick={() => openEditDate(date)}
+                handledDelete={handledDelete}
+              />
             </Col>
-          </Row>
-          {/* <Button style={{ marginTop: 16 }} type='primary' onClick={handleSubmit} loading={isSaving}>
-            Guardar
-          </Button> */}
-        </Col>
-      </Row>
+          ))}
+          <Col span={12}>
+            <Card onClick={openCreateNewDate} hoverable style={{borderRadius: 10, border: '1px solid #C4C4C490', height: '100%'}}>
+              <Row justify='center' align='middle'>
+                <Col><PlusOutlined style={dates.length%2 === 0 ? {} : {paddingTop: 10, fontSize: 30}} /></Col>
+              </Row>
+            </Card>
+          </Col>
+        </Row>
+        {/* <List 
+          grid={{gutter: 8, column: 2}}
+          split={false}
+          dataSource={dates}
+          renderItem={date => (
+            <List.Item>
+              <DateEventItem
+                key={date.id}
+                date={date}
+                onClick={() => openEditDate(date)}
+                handledDelete={handledDelete}
+              />
+            </List.Item>
+          )}
+        >
+          <List.Item >
+            <Row justify={'center'}>
+              
+            </Row>
+          </List.Item>
+        </List> */}
+        <Row justify='end' gutter={[8, 8]} wrap>
+          <Col>
+            <Button icon={<SaveOutlined />} type='primary' onClick={handleSubmit} loading={isSaving}>
+              Guardar fechas
+            </Button>
+          </Col>
+        </Row>
+      </Space>
     </Card>
   );
 }
