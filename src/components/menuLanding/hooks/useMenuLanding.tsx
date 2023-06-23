@@ -22,31 +22,20 @@ export default function useMenuLanding(props: MenuLandingProps) {
     const menuBase: MenuBase = { ...menu };
     const itemsMenuDB = { ...itemsMenu };
     const enabledItems = data.filter((item) => item.checked);
-    let save = value || (!value && enabledItems.length !== 1);
     if (value) {
       const firstPosition = enabledItems.length === 0;
       const position = firstPosition ? 1 : enabledItems[enabledItems.length - 1].position;
       itemsMenuDB[key].checked = value;
       itemsMenuDB[key].position = firstPosition ? position : position + 1;
     } else {
-      if (save) {
         itemsMenuDB[key].checked = value;
         itemsMenuDB[key].name = menuBase[key].name;
         itemsMenuDB[key].position = menuBase[key].position;
-      }
     }
-    if (save) {
       setIsLoading(true);
       setItemsMenu(itemsMenuDB);
       debouncedSubmit();
-    } else {
-      DispatchMessageService({
-        action: 'show',
-        msj: 'Debe existir una sección habilitada',
-        type: 'warning',
-        duration: 1,
-      });
-    }
+
   };
 
   async function componentDidMount() {
