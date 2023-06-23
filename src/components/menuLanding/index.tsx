@@ -17,7 +17,6 @@ export default function MenuLanding(props: MenuLandingProps) {
   );
   const [visibility, setVisibility] = useState(false)
   const [itemEdit, setItemEdit] = useState<Menu>({} as Menu)
-  const [send, setSend] = useState<boolean>(false)
  
   
 
@@ -38,10 +37,6 @@ export default function MenuLanding(props: MenuLandingProps) {
     
     
     setData(newdata);
-    if(send) {
-      submit()
-      setSend(false)
-    }
   }, [menu]);
 
 
@@ -123,18 +118,15 @@ export default function MenuLanding(props: MenuLandingProps) {
   ];
 
   const handleOk = () => {
-    const { checked, icon, position, label } = itemEdit;
-    const menuCopy = { ...menu };
-    menuCopy[itemEdit.key] = {
-      ...menu[itemEdit.key],
-      checked,
+    const { checked, icon, label, key } = itemEdit;
+    menu[key] = {
+      ...menu[key],
       icon,
-      position,
       label: label ?? '',
     };
-    setItemsMenu(menuCopy)
+    checkedItem(key,checked)
     setVisibility(false)
-    setSend(true)
+
   }
   const handleCancel = () => {
     setVisibility(false);

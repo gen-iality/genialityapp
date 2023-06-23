@@ -64,7 +64,7 @@ export default function ModalEdit({ item, handleCancel, handleOk, visibility, se
               <Col style={{ margin: 6 }} key={`icon-key${index}`}>
                 <div
                   className={`icons ${
-                    IconsKeys[index] === item.icon ? 'animate__animated animate__heartBeat animate__infinite' : ''
+                    IconsKeys[index] === item.icon ? 'animate__animated animate__heartBeat' : ''
                   }`}
                   style={{
                     border: `4px solid ${IconsKeys[index] === item.icon ? 'black' : 'transparent'}`,
