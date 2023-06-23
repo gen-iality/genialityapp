@@ -151,7 +151,8 @@ export default function MenuLanding(props: MenuLandingProps) {
             {(provided : any) => (
               <Table
                 ref={provided.innerRef} 
-                style={{ padding: '30px 0' }}
+                tableLayout='auto'
+                style={{ padding: '30px 0', cursor: 'pointer' }}
                 dataSource={data}
                 columns={columns as ColumnType<Menu>[]}
                 pagination={false}
