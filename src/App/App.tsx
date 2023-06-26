@@ -1,6 +1,6 @@
 import './App.less'
 import dayjs from 'dayjs'
-import { useCurrentUser } from './../context/userContext'
+import { useCurrentUser } from '@/context/userContext'
 import { firestore } from '@helpers/firebase'
 
 import ContentContainer from '@containers/content'
@@ -13,7 +13,9 @@ import { FB } from '@helpers/firestore-request'
 const App = () => {
   const cUser = useCurrentUser()
   if (cUser.status == 'LOADING') return <PreloaderApp />
-
+  {
+    console.log('usuario app', cUser.status)
+  }
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <InternetConnectionAlert />
