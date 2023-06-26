@@ -1,6 +1,6 @@
 import { useReducer, type Dispatch } from 'react'
 import { FunctionComponent, createContext } from 'react'
-import { useCurrentUser } from '@/context/userContext'
+
 type AvailableStep =
   | 'RESTING'
   | 'REQUIRING_PAYMENT'
@@ -46,29 +46,18 @@ const OrganizationPaymentContext = createContext<OPState>({
   dispatch: null as any,
 })
 
-console.log('usuario arrancando el paymentcontext')
-
 const reducerOP = (state: OPState, action: OPAction): OPState => {
   console.log('payment state reducer', state, action)
-  console.log('usuario  en reducer context')
+
   switch (action.type) {
     case 'ABORT':
       return { ...state, paymentStep: steps.RESTING }
     case 'REQUIRE_PAYMENT':
-      console.log('usuario  requoere', state)
       return { ...state, paymentStep: steps.REQUIRING_PAYMENT }
     case 'DISPLAY_REGISTRATION':
       return { ...state, paymentStep: steps.DISPLAYING_REGISTRATION }
     case 'DISPLAY_PAYMENT':
-      let newstate = {}
-      //Tiene que estar logueado para que esto suceda
-      if (!state.cUser?.value) {
-        newstate = { ...state, paymentStep: steps.DISPLAYING_REGISTRATION }
-      } else {
-        newstate = { ...state, paymentStep: steps.DISPLAYING_PAYMENT }
-      }
-      console.log('usuario status', state, newstate)
-      return newstate
+      return { ...state, paymentStep: steps.DISPLAYING_PAYMENT }
     case 'DISPLAY_SUCCESS':
       // With the payment result
       return {
@@ -84,17 +73,10 @@ const reducerOP = (state: OPState, action: OPAction): OPState => {
 export const OrganizationPaymentProvider: FunctionComponent = (props) => {
   const { children } = props
 
-  const cUser = useCurrentUser()
-
-  {
-    console.log('usuario', cUser)
-  }
-
   const [state, dispatch] = useReducer(reducerOP, {
     paymentStep: steps.RESTING,
     result: undefined,
     dispatch: null as any,
-    cUser: cUser,
   })
 
   return (
