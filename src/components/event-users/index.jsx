@@ -1,7 +1,7 @@
 import { Component, useState, useEffect } from 'react'
 import { FormattedDate, FormattedTime } from 'react-intl'
 import { fireRealtime, firestore } from '@helpers/firebase'
-import { BadgeApi, EventsApi, RolAttApi } from '@helpers/request'
+import { BadgeApi, EventsApi, RolAttApi, UsersApi } from '@helpers/request'
 import { AgendaApi, OrganizationApi } from '@helpers/request'
 // import { checkinAttendeeInActivity } from '@helpers/HelperAuth'
 import ModalPassword from './ModalPassword'
@@ -613,7 +613,18 @@ and displays an error message using the `message` component from the antd librar
         },
         async (snapshot) => {
           const currentAttendees = [...this.state.usersReq]
-          const updatedAttendees = updateAttendees(currentAttendees, snapshot)
+          // This block requests event user data from MongoDB because they have
+          // the activity_progresses, Firestore does not. Also, Firestore usage
+          // is going to be deprecated soon
+          const updatedAttendees = await Promise.all(
+            updateAttendees(currentAttendees, snapshot).map(async (attendee) => {
+              const moreFkData = await UsersApi.getOne(this.props.event._id, attendee._id)
+              return {
+                ...moreFkData,
+                ...attendee,
+              }
+            }),
+          )
           console.log('updatedAttendees', updatedAttendees)
 
           const totalCheckedIn = updatedAttendees.reduce(
