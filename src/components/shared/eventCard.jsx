@@ -26,7 +26,6 @@ const EventCard = ({
   isAdmin,
   blockedEvent,
   noAvailable,
-  location,
   moreDetails,
   noDates,
   organizationUser,
@@ -34,7 +33,7 @@ const EventCard = ({
   organization,
 }) => {
   let history = useHistory()
-  //let location = useLocation()
+  let location = useLocation()
 
   const [isOpenModal, setIsOpenModal] = useState(false)
 

@@ -56,7 +56,7 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
     const percentajeRequired =
       cEvent.value?.progress_settings?.lesson_percent_to_completed ?? 0
 
-    console.debug('percentajeRequired:', percentajeRequired)
+    console.debug('percentajeRequired:', percentajeRequired, 'current:', progress)
 
     if (progress >= percentajeRequired) {
       checkinAttendeeInActivity(cEventUser.value, params?.activity_id).then((info) => {
