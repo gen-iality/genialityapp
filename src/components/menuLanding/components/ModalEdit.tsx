@@ -2,7 +2,6 @@ import { Button, Drawer, Form, Input, Switch, Row, Col, Typography, Space, Toolt
 import { PropsEditModal } from '../interfaces/menuLandingProps';
 import * as iconComponents from '@ant-design/icons';
 import '../styles/index.css';
-import { fontSize } from '@/components/badge/constants';
 
 export default function ModalEdit({ item, handleCancel, handleOk, visibility, setItemEdit, loading }: PropsEditModal) {
   const IconsKeys = Object.keys(iconComponents).filter((key) => key.includes('Outlined'));
@@ -67,20 +66,23 @@ export default function ModalEdit({ item, handleCancel, handleOk, visibility, se
               </Form.Item>
                 <Form.Item label={'Iconos'}>
                   <Space direction='vertical'>
-                    {/* <Card 
-                      style={{borderRadius: 10}} 
-                      bodyStyle={{padding: 10}}
-                      title={renderIcon(item.icon, 20)} 
-                      extra={<Typography.Text type='secondary'>Éste es el icono seleccionado</Typography.Text>}
-                    >
-                    </Card> */}
-                    <Tag color='default' style={{padding: 5}}><Space wrap align='center'>{renderIcon(item.icon, 25)} Éste es el icono seleccionado</Space></Tag>
+                    <Tag color='default' style={{padding: 5}}>
+                      <Space wrap align='center'>{renderIcon(item.icon, 25)} Icono seleccionado</Space>
+                    </Tag>
                     
                     <Card style={{borderRadius: 10}} bodyStyle={{padding: 0}}>
-                      <Row gutter={[8, 8]} style={{height: 300, overflowY: 'scroll'}} className='desplazar'>
+                      <Row gutter={[8, 8]} style={{height: 280, overflowY: 'scroll'}} className='desplazar'>
                         {IconList.map((Icon, index) => (
                           <Col span={4} key={`icon-key${index}`}>
-                            <Card hoverable style={{border: `2px solid ${IconsKeys[index] === item.icon ? 'black' : 'transparent'}`, borderRadius: 10}} bodyStyle={{padding: 15}} onClick={() => changeIcon(index)}>
+                            <Card 
+                              hoverable 
+                              style={{
+                                border: `2px solid ${IconsKeys[index] === item.icon ? '#C4C4C480' : 'transparent'}`, 
+                                borderRadius: 10
+                              }} 
+                              bodyStyle={{padding: 15}} 
+                                onClick={() => changeIcon(index)}
+                            >
                               <Row justify='center' align='middle'>
                                 {<Icon style={{fontSize: 30}} />}
                               </Row>
@@ -90,26 +92,6 @@ export default function ModalEdit({ item, handleCancel, handleOk, visibility, se
                       </Row>
                     </Card>
                   </Space>
-                
-                
-                {/* <div className='iconsContainer'>
-                  <Row className='rowIcons'>
-                    {IconList.map((Icon, index) => (
-                      <Col style={{ margin: 6 }} key={`icon-key${index}`}>
-                        <div
-                          className={`icons ${
-                            IconsKeys[index] === item.icon ? 'animate__animated animate__heartBeat animate__infinite' : ''
-                          }`}
-                          style={{
-                            border: `4px solid ${IconsKeys[index] === item.icon ? 'black' : 'transparent'}`,
-                          }}
-                          onClick={() => changeIcon(index)}>
-                          {<Icon />}
-                        </div>
-                      </Col>
-                    ))}
-                  </Row>
-                </div> */}
               </Form.Item>
               <Form.Item label={'Habilitado'}>
                 <Switch
