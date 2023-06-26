@@ -1,7 +1,8 @@
-import { Button, Drawer, Form, Input, Switch, Row, Col, Typography, Space, Tooltip, Card } from 'antd';
+import { Button, Drawer, Form, Input, Switch, Row, Col, Typography, Space, Tooltip, Card, Tag } from 'antd';
 import { PropsEditModal } from '../interfaces/menuLandingProps';
 import * as iconComponents from '@ant-design/icons';
 import '../styles/index.css';
+import { fontSize } from '@/components/badge/constants';
 
 export default function ModalEdit({ item, handleCancel, handleOk, visibility, setItemEdit, loading }: PropsEditModal) {
   const IconsKeys = Object.keys(iconComponents).filter((key) => key.includes('Outlined'));
@@ -28,7 +29,8 @@ export default function ModalEdit({ item, handleCancel, handleOk, visibility, se
             <Typography.Text strong>{item.name}</Typography.Text>
           </Space>
         }
-        headerStyle={{ border: 'none' }}
+        bodyStyle={{ padding: 10}}
+        headerStyle={{ border: 'none', padding: 10 }}
         footerStyle={{ border: 'none' }}
         visible={visibility}
         width={450}
@@ -50,7 +52,7 @@ export default function ModalEdit({ item, handleCancel, handleOk, visibility, se
             <Space direction='vertical'>
               <Form.Item label={'Alias'} 
                 help={
-                  <Typography.Text type='secondary'>
+                  <Typography.Text type='secondary' style={{fontSize: 12}}>
                     Aquí puedes cambiar el nombre que se visualizará en la landing menú del evento
                   </Typography.Text>}
                 >
@@ -63,20 +65,33 @@ export default function ModalEdit({ item, handleCancel, handleOk, visibility, se
                   onChange={(e) => setItemEdit({ ...item, label: e.target.value })}
                 />
               </Form.Item>
-              <Form.Item label={'Iconos'}>
-                <Card style={{borderRadius: 10}} bodyStyle={{padding: 0}}>
-                  <Row gutter={[8, 8]} style={{height: 300, backgroundColor: 'red', overflowY: 'scroll'}}>
-                    {IconList.map((Icon, index) => (
-                      <Col span={4} key={`icon-key${index}`}>
-                        <Card hoverable style={{border: 'none'}} onClick={() => changeIcon(index)}>
-                          {<Icon />}
-                        </Card>
-                      </Col>
-                    ))}
-                  </Row>
-                </Card>
+                <Form.Item label={'Iconos'}>
+                  <Space direction='vertical'>
+                    {/* <Card 
+                      style={{borderRadius: 10}} 
+                      bodyStyle={{padding: 10}}
+                      title={renderIcon(item.icon, 20)} 
+                      extra={<Typography.Text type='secondary'>Éste es el icono seleccionado</Typography.Text>}
+                    >
+                    </Card> */}
+                    <Tag color='default' style={{padding: 5}}><Space wrap align='center'>{renderIcon(item.icon, 25)} Éste es el icono seleccionado</Space></Tag>
+                    
+                    <Card style={{borderRadius: 10}} bodyStyle={{padding: 0}}>
+                      <Row gutter={[8, 8]} style={{height: 300, overflowY: 'scroll'}} className='desplazar'>
+                        {IconList.map((Icon, index) => (
+                          <Col span={4} key={`icon-key${index}`}>
+                            <Card hoverable style={{border: `2px solid ${IconsKeys[index] === item.icon ? 'black' : 'transparent'}`, borderRadius: 10}} bodyStyle={{padding: 15}} onClick={() => changeIcon(index)}>
+                              <Row justify='center' align='middle'>
+                                {<Icon style={{fontSize: 30}} />}
+                              </Row>
+                            </Card>
+                          </Col>
+                        ))}
+                      </Row>
+                    </Card>
+                  </Space>
                 
-
+                
                 {/* <div className='iconsContainer'>
                   <Row className='rowIcons'>
                     {IconList.map((Icon, index) => (
