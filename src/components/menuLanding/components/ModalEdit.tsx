@@ -2,9 +2,10 @@ import { Button, Drawer, Form, Input, Switch, Row, Col, Typography, Space, Toolt
 import { PropsEditModal } from '../interfaces/menuLandingProps';
 import * as iconComponents from '@ant-design/icons';
 import '../styles/index.css';
+import { logos } from '../utils/blackList';
 
 export default function ModalEdit({ item, handleCancel, handleOk, visibility, setItemEdit, loading }: PropsEditModal) {
-  const IconsKeys = Object.keys(iconComponents).filter((key) => key.includes('Outlined'));
+  const IconsKeys = Object.keys(iconComponents).filter((key) => key.includes('Outlined') && !logos.includes(key));
   //@ts-ignore
   const IconList = IconsKeys.map((key) => iconComponents[key]);
 
@@ -64,34 +65,34 @@ export default function ModalEdit({ item, handleCancel, handleOk, visibility, se
                   onChange={(e) => setItemEdit({ ...item, label: e.target.value })}
                 />
               </Form.Item>
-                <Form.Item label={'Iconos'}>
-                  <Space direction='vertical'>
-                    <Tag color='default' style={{padding: 5}}>
-                      <Space wrap align='center'>{renderIcon(item.icon, 25)} Icono seleccionado</Space>
-                    </Tag>
-                    
-                    <Card style={{borderRadius: 10}} bodyStyle={{padding: 0}}>
-                      <Row gutter={[8, 8]} style={{height: 280, overflowY: 'scroll'}} className='desplazar'>
-                        {IconList.map((Icon, index) => (
-                          <Col span={4} key={`icon-key${index}`}>
-                            <Card 
-                              hoverable 
-                              style={{
-                                border: `2px solid ${IconsKeys[index] === item.icon ? '#C4C4C480' : 'transparent'}`, 
-                                borderRadius: 10
-                              }} 
-                              bodyStyle={{padding: 15}} 
-                                onClick={() => changeIcon(index)}
-                            >
-                              <Row justify='center' align='middle'>
-                                {<Icon style={{fontSize: 30}} />}
-                              </Row>
-                            </Card>
-                          </Col>
-                        ))}
-                      </Row>
-                    </Card>
-                  </Space>
+              <Form.Item label={'Iconos'}>
+                <Space direction='vertical'>
+                  <Tag color='default' style={{padding: 5}}>
+                    <Space wrap align='center'>{renderIcon(item.icon, 25)} Icono seleccionado</Space>
+                  </Tag>
+                  
+                  <Card style={{borderRadius: 10}} bodyStyle={{padding: 0}}>
+                    <Row gutter={[8, 8]} style={{height: 280, overflowY: 'scroll'}} className='desplazar'>
+                      {IconList.map((Icon, index) => (
+                        <Col span={4} key={`icon-key${index}`}>
+                          <Card 
+                            hoverable 
+                            style={{
+                              border: `2px solid ${IconsKeys[index] === item.icon ? '#C4C4C480' : 'transparent'}`, 
+                              borderRadius: 10
+                            }} 
+                            bodyStyle={{padding: 15}} 
+                              onClick={() => changeIcon(index)}
+                          >
+                            <Row justify='center' align='middle'>
+                              {<Icon style={{fontSize: 30}} />}
+                            </Row>
+                          </Card>
+                        </Col>
+                      ))}
+                    </Row>
+                  </Card>
+                </Space>
               </Form.Item>
               <Form.Item label={'Habilitado'}>
                 <Switch
