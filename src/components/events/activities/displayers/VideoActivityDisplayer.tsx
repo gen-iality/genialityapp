@@ -54,11 +54,11 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
     try {
       let doc = await getAttendeeInActivity(cEventUser.value, activity._id)
       let data = doc.data()
-      if (!data || !data.viewProgess) return
+      if (!data || !data.viewProgress) return
       //Initial load check: Stored progress of current activity
-      if (data.viewProgess && data.viewProgess > viewprogress) {
-        setViewProgress(data.viewProgess)
-        videostate.seekTo((data.viewProgess / 100) * duration)
+      if (data.viewProgress && data.viewProgress > viewprogress) {
+        setViewProgress(data.viewProgress)
+        videostate.seekTo((data.viewProgress / 100) * duration)
       }
     } catch (e) {
       console.log('vimeo error', { e })
@@ -83,7 +83,7 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
     //actualizamos la base de datos solo con números enteros
     if (Math.round(viewprogress / 1) !== viewprogress) return
     updateAttendeeInActivityRealTime(cEventUser.value, activity._id, {
-      viewProgess: viewprogress,
+      viewProgress: viewprogress,
     })
 
     //External callback on progress
