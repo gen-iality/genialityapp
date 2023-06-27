@@ -5,7 +5,7 @@ import {
   OrganizationApi,
   RolAttApi,
 } from '@helpers/request'
-import { FunctionComponent, useEffect, useMemo, useState } from 'react'
+import { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react'
 
 import {
   fieldNameEmailFirst,
@@ -20,6 +20,8 @@ import {
   Checkbox,
   Col,
   Image,
+  Input,
+  InputRef,
   List,
   Modal,
   Result,
@@ -48,6 +50,7 @@ import {
   LoadingOutlined,
   PlusCircleOutlined,
   SafetyCertificateOutlined,
+  SearchOutlined,
   StarOutlined,
   UploadOutlined,
   UsergroupAddOutlined,
@@ -62,6 +65,7 @@ import { FB } from '@helpers/firestore-request'
 import EventProgressWrapper from '@/wrappers/EventProgressWrapper'
 import EnrollEventUserFromOrganizationMember from './EnrollEventUserFromOrganizationMember'
 import ModalPassword from './ModalPassword'
+import { FilterConfirmProps } from 'antd/lib/table/interface'
 
 interface ITimeTrackingStatsProps {
   user: any
@@ -126,6 +130,11 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
   const [allActivities, setAllActivities] = useState<any[]>([])
 
   const [eventUsersRef] = useState(firestore.collection(`${event._id}_event_attendees`))
+
+  // Utiful to able the searcher thing
+  const [searchText, setSearchText] = useState('')
+  const [searchedColumn, setSearchedColumn] = useState('')
+  const inputRef = useRef<InputRef>(null)
 
   const intl = useIntl()
 
@@ -194,6 +203,104 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
     return checkInStatus
   }
 
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: (param?: FilterConfirmProps) => void,
+    dataIndex: string,
+  ) => {
+    confirm()
+    setSearchText(selectedKeys[0])
+    setSearchedColumn(dataIndex)
+  }
+
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters()
+    setSearchText('')
+  }
+
+  const getColumnSearchProps = (
+    alias: string,
+    howToRender: (value: any) => string,
+  ): ColumnType<any> => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={inputRef}
+          placeholder={`Search ${alias}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, alias)}
+          style={{ marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys as string[], confirm, alias)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Reset
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({ closeDropdown: false })
+              setSearchText((selectedKeys as string[])[0])
+              setSearchedColumn(alias)
+            }}
+          >
+            Filter
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              close()
+            }}
+          >
+            close
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+    ),
+    onFilter: (value, record) => {
+      return howToRender(record)
+        .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase())
+    },
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => inputRef.current?.select(), 100)
+      }
+    },
+    render: (item) => {
+      const renderedText = howToRender(item)
+      return searchedColumn === alias ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={renderedText ? renderedText.toString() : ''}
+        />
+      ) : (
+        renderedText
+      )
+    },
+  })
+
   const getAllAttendees = async () => {
     const orgId = event.organizer._id
     const org = await OrganizationApi.getOne(orgId)
@@ -254,7 +361,9 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
     const progressingColumn: ColumnType<any> = {
       title: 'Progreso',
       ellipsis: true,
-      sorter: () => 0,
+      sorter: (a: any, b: any) =>
+        a.activity_progresses?.progress_all_activities -
+        b.activity_progresses?.progress_all_activities,
       render: (item) => (
         <>
           <EventProgressWrapper
@@ -290,16 +399,8 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
     const rolColumn: ColumnType<any> = {
       title: 'Rol',
       ellipsis: true,
-      sorter: (a, b) => a.rol_id.length - b.rol_id.length,
-      // ...self.getColumnSearchProps('rol_name'),
-      render: (item) => {
-        for (const role of rolesList) {
-          if (item.rol_id == role._id) {
-            item['rol_name'] = role.name
-            return <span>{role.name}</span>
-          }
-        }
-      },
+      sorter: (a, b) => a.rol?.name?.length - b.rol?.name?.length,
+      ...getColumnSearchProps('rol', (value) => value.rol?.name || 'Sin rol'),
     }
 
     const createdAtColumn: ColumnType<any> = {
@@ -307,7 +408,6 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       width: 140,
       ellipsis: true,
       sorter: (a, b) => a.created_at - b.created_at,
-      // ...self.getColumnSearchProps('created_at'),
       render: (item) => {
         if (item.created_at !== null) {
           const createdAt = item?.created_at || new Date()
@@ -332,10 +432,8 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       width: 140,
       ellipsis: true,
       sorter: (a, b) => a.updated_at - b.updated_at,
-      // ...self.getColumnSearchProps('updated_at'),
       render: (item) => {
         const updatedAt = item?.updated_at
-
         return (
           <>
             {updatedAt ? (
@@ -356,10 +454,9 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       .map((item) => {
         return {
           title: item.label,
-          // dataIndex: item.name,
           ellipsis: true,
           sorter: (a, b) => a[item.name]?.length - b[item.name]?.length,
-          // ...self.getColumnSearchProps(item.name),
+          ...getColumnSearchProps(item.label, (value) => value[item.name]),
           render: (key) => {
             switch (item.type) {
               /** When using the ant datePicker it saves the date with the time, therefore, since only the date is needed, the following split is performed */
@@ -529,6 +626,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         size="small"
         loading={isLoading}
         dataSource={dataSource}
+        scroll={{ x: 'max-content' }}
         columns={columns}
         title={() => (
           <Row wrap justify="end" gutter={[8, 8]}>
