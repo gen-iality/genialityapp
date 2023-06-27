@@ -7,19 +7,7 @@
  */
 
 import { FunctionComponent, useEffect, useRef, useState } from 'react'
-import {
-  Avatar,
-  Button,
-  Comment,
-  Input,
-  InputRef,
-  List,
-  Modal,
-  Result,
-  Space,
-  Table,
-  Tabs,
-} from 'antd'
+import { Avatar, Button, Input, InputRef, Modal, Result, Space, Table, Tabs } from 'antd'
 import Highlighter from 'react-highlight-words'
 import RegisterUserAndEventUser from '@components/authentication/RegisterUserAndEventUser'
 import { AttendeeApi, OrganizationApi } from '@helpers/request'
@@ -172,57 +160,7 @@ const EnrollEventUserFromOrganizationMember: FunctionComponent<
     },
   })
 
-  const [columns] = useState<ColumnsType>([
-    {
-      title: '',
-      dataIndex: 'picture',
-      render: (element) => <Avatar src={element} />,
-    },
-    {
-      title: 'Cargo',
-      render: (item) => <>{item.position_name || 'Sin cargo'}</>,
-      sorter: (a: any, b: any) => a.position_name?.length - b.position_name?.length,
-      ...getColumnSearchProps('cargo', (item) => item.position_name || 'Sin cargo'),
-    },
-    {
-      title: 'Nombre',
-      render: (item) => <>{item.user.names}</>,
-      sorter: (a: any, b: any) => a.user.names.length - b.user.names.length,
-      ...getColumnSearchProps('nombre', (item) => item.user.names),
-    },
-    {
-      title: 'Email',
-      render: (item) => <>{item.user.email}</>,
-      sorter: (a: any, b: any) => a.user.email.length - b.user.email.length,
-      ...getColumnSearchProps('correo', (item) => item.user.email),
-    },
-    {
-      title: 'Opciones',
-      render: (member) => (
-        <Button
-          key={member._id}
-          type={checkEnrolling(member.user._id) ? 'primary' : 'dashed'}
-          onClick={() => {
-            console.log('enroll', { user: member.user })
-            enrollOrganizationMember(member.user).then(() => loadEventUsers())
-          }}
-          disabled={
-            thisOrganizationMemberIsEnrolling === member.user._id ||
-            checkEnrolling(member.user._id)
-          }
-          icon={
-            checkEnrolling(member.user._id) ? (
-              <CheckOutlined />
-            ) : thisOrganizationMemberIsEnrolling === member.user._id ? (
-              <LoadingOutlined />
-            ) : (
-              <PlusOutlined />
-            )
-          }
-        ></Button>
-      ),
-    },
-  ])
+  const [columns, setColumns] = useState<ColumnsType>([])
 
   const intl = useIntl()
 
@@ -290,7 +228,7 @@ const EnrollEventUserFromOrganizationMember: FunctionComponent<
   }
 
   const checkEnrolling = (userId: string) => {
-    return eventUsers.some((attendee) => attendee.user._id === userId)
+    return eventUsers.some((attendee) => attendee.account_id === userId)
   }
 
   useEffect(() => {
@@ -299,6 +237,60 @@ const EnrollEventUserFromOrganizationMember: FunctionComponent<
     reloadOrganizationMembers()
     reloadEventUsers()
   }, [orgId])
+
+  useEffect(() => {
+    setColumns([
+      {
+        title: '',
+        dataIndex: 'picture',
+        render: (element) => <Avatar src={element} />,
+      },
+      {
+        title: 'Cargo',
+        render: (item) => <>{item.position_name || 'Sin cargo'}</>,
+        sorter: (a: any, b: any) => a.position_name?.length - b.position_name?.length,
+        ...getColumnSearchProps('cargo', (item) => item.position_name || 'Sin cargo'),
+      },
+      {
+        title: 'Nombre',
+        render: (item) => <>{item.user.names}</>,
+        sorter: (a: any, b: any) => a.user.names.length - b.user.names.length,
+        ...getColumnSearchProps('nombre', (item) => item.user.names),
+      },
+      {
+        title: 'Email',
+        render: (item) => <>{item.user.email}</>,
+        sorter: (a: any, b: any) => a.user.email.length - b.user.email.length,
+        ...getColumnSearchProps('correo', (item) => item.user.email),
+      },
+      {
+        title: 'Opciones',
+        render: (member) => (
+          <Button
+            key={member._id}
+            type={checkEnrolling(member.account_id) ? 'primary' : 'dashed'}
+            onClick={() => {
+              console.log('enroll', { user: member.user })
+              enrollOrganizationMember(member.user).then(() => loadEventUsers())
+            }}
+            disabled={
+              thisOrganizationMemberIsEnrolling === member.user._id ||
+              checkEnrolling(member.account_id)
+            }
+            icon={
+              checkEnrolling(member.account_id) ? (
+                <CheckOutlined />
+              ) : thisOrganizationMemberIsEnrolling === member.user._id ? (
+                <LoadingOutlined />
+              ) : (
+                <PlusOutlined />
+              )
+            }
+          ></Button>
+        ),
+      },
+    ])
+  }, [orgMembers, eventUsers])
 
   return (
     <Modal
