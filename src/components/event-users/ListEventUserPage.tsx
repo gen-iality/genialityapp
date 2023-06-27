@@ -387,7 +387,10 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
                         setIsProgressingModalOpened(true)
                         setWatchedUserInProgressingModal(item)
                       }}
-                    >{`${checkedInActivities.length}/${activities.length}`}</Button>
+                    >{`${checkedInActivities.length}/${Math.max(
+                      activities.length,
+                      allActivities.length,
+                    )}`}</Button>
                   ) : (
                     <>{checkedInActivities.length > 0 ? 'Visto' : 'No visto'}</>
                   )}
