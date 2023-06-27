@@ -6,7 +6,7 @@
  * NOTE: The name can change in a future...
  */
 
-import { Avatar, Button, Comment, List, Modal, Result, Tabs } from 'antd'
+import { Avatar, Button, Comment, List, Modal, Result, Table, Tabs } from 'antd'
 import { FunctionComponent, useEffect, useState } from 'react'
 import RegisterUserAndEventUser from '@components/authentication/RegisterUserAndEventUser'
 import { AttendeeApi, OrganizationApi } from '@helpers/request'
@@ -14,6 +14,7 @@ import { CheckOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import { UsersApi } from '@helpers/request'
 import { StateMessage } from '@context/MessageService'
 import { useIntl } from 'react-intl'
+import { ColumnsType } from 'antd/lib/table'
 
 const stylePaddingDesktop = {
   paddingLeft: '30px',
@@ -48,6 +49,53 @@ const EnrollEventUserFromOrganizationMember: FunctionComponent<
   const [orgMembers, setOrgMembers] = useState<any[]>([])
   const [eventUsers, setEventUsers] = useState<any[]>([])
   const [canEnrollFromOrganization, setCanEnrollFromOrganization] = useState(false)
+  console.log(eventUsers)
+
+  const [columns] = useState<ColumnsType>([
+    {
+      title: '',
+      dataIndex: 'picture',
+      render: (element) => <Avatar src={element} />,
+    },
+    {
+      title: '',
+      dataIndex: 'position_name',
+      render: (element) => <>{element || 'Sin cargo'}</>,
+    },
+    {
+      title: 'Nombre',
+      dataIndex: 'user',
+      render: (user) => <>{user.names}</>,
+    },
+    {
+      title: 'Opciones',
+      render: (member) => (
+        <Button
+          key={member._id}
+          type={checkEnrolling(member.user._id) ? 'primary' : 'dashed'}
+          onClick={() => {
+            console.log('enroll', { user: member.user })
+            enrollOrganizationMember(member.user).then(() => loadEventUsers())
+          }}
+          disabled={
+            thisOrganizationMemberIsEnrolling === member.user._id ||
+            checkEnrolling(member.user._id)
+          }
+          icon={
+            checkEnrolling(member.user._id) ? (
+              <CheckOutlined />
+            ) : thisOrganizationMemberIsEnrolling === member.user._id ? (
+              <LoadingOutlined />
+            ) : (
+              <PlusOutlined />
+            )
+          }
+        >
+          Inscribir
+        </Button>
+      ),
+    },
+  ])
 
   const intl = useIntl()
 
@@ -115,7 +163,7 @@ const EnrollEventUserFromOrganizationMember: FunctionComponent<
   }
 
   const checkEnrolling = (userId: string) => {
-    return eventUsers.some((attendee) => attendee.account_id === userId)
+    return eventUsers.some((attendee) => attendee.user._id === userId)
   }
 
   useEffect(() => {
@@ -152,45 +200,10 @@ const EnrollEventUserFromOrganizationMember: FunctionComponent<
               subTitle="No se puede usar esto porque no se ha proporcionado datos de la organización"
             />
           ) : (
-            <List
-              bordered
-              size="small"
-              loading={isLoadingOrgMembers || isLoadingEventUsers}
-              header={<>Miembros de la organización</>}
+            <Table
+              loading={isLoadingEventUsers || isLoadingOrgMembers}
               dataSource={orgMembers}
-              renderItem={(item, index) => (
-                <List.Item key={index}>
-                  <Comment
-                    author={item.user.names}
-                    content={item.position_name ?? 'Sin cargo'}
-                    avatar={<Avatar src={item.picture} />}
-                    actions={[
-                      <Button
-                        key={0}
-                        type={checkEnrolling(item.user._id) ? 'primary' : 'dashed'}
-                        onClick={() => {
-                          enrollOrganizationMember(item.user)
-                        }}
-                        disabled={
-                          thisOrganizationMemberIsEnrolling === item.user._id ||
-                          checkEnrolling(item.user._id)
-                        }
-                        icon={
-                          checkEnrolling(item.user._id) ? (
-                            <CheckOutlined />
-                          ) : thisOrganizationMemberIsEnrolling === item.user._id ? (
-                            <LoadingOutlined />
-                          ) : (
-                            <PlusOutlined />
-                          )
-                        }
-                      >
-                        Inscribir
-                      </Button>,
-                    ]}
-                  />
-                </List.Item>
-              )}
+              columns={columns}
             />
           )}
         </Tabs.TabPane>
