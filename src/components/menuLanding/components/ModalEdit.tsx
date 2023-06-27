@@ -14,10 +14,10 @@ export default function ModalEdit({ item, handleCancel, handleOk, visibility, se
     if (icon) setItemEdit({ ...item, icon: icon });
   };
 
-  const renderIcon = (iconName: string, size?: number) => {
+  const renderIcon = (iconName: string, size?: number, animate?: string) => {
     //@ts-ignore
     const IconComponent = iconComponents[iconName];
-    return IconComponent ? <IconComponent style={size ? {fontSize: size} : {}} /> : iconName;
+    return IconComponent ? <IconComponent style={size ? {fontSize: size} : {}} className={animate} /> : iconName;
   };
 
   return (
@@ -25,7 +25,7 @@ export default function ModalEdit({ item, handleCancel, handleOk, visibility, se
       <Drawer
         title={
           <Space wrap align='center'>
-            {renderIcon(item.icon, 20)}
+            {/* {renderIcon(item.icon, 20)} */}
             <Typography.Text strong>{item.name}</Typography.Text>
           </Space>
         }
@@ -53,7 +53,7 @@ export default function ModalEdit({ item, handleCancel, handleOk, visibility, se
               <Form.Item label={'Alias'} 
                 help={
                   <Typography.Text type='secondary' style={{fontSize: 12}}>
-                    Aquí puedes cambiar el nombre que se visualizará en la landing menú del evento
+                    Aquí puedes cambiar el nombre que se visualizará en el menú la landing.
                   </Typography.Text>}
                 >
                 <Input
@@ -67,8 +67,8 @@ export default function ModalEdit({ item, handleCancel, handleOk, visibility, se
               </Form.Item>
               <Form.Item label={'Iconos'}>
                 <Space direction='vertical'>
-                  <Tag color='default' style={{padding: 5}}>
-                    <Space wrap align='center'>{renderIcon(item.icon, 25)} Icono seleccionado</Space>
+                  <Tag color='default' style={{padding: 5, borderColor: '#2593FC50'}}>
+                    <Space wrap align='center'>{renderIcon(item.icon, 25, 'animate__animated animate__heartBeat')} Icono seleccionado</Space>
                   </Tag>
                   
                   <Card style={{borderRadius: 10}} bodyStyle={{padding: 0}}>
