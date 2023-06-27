@@ -35,13 +35,13 @@ const MenuEvent = ({ isMobile }) => {
               }
 
               let icon =
-                event._id === '62c5e89176dfb307163c05a9' && event.itemsMenu[key].icon == 'AudioOutlined'
+                event._id === '62c5e89176dfb307163c05a9' && event.itemsMenu[key].icon === 'AudioOutlined'
                   ? 'RocketOutlined'
                   : event.itemsMenu[key].icon;
 
               let IconoComponente = iconComponents[icon];
 
-              return key == 'networking' ? (
+              return key === 'networking' ? (
                 <Menu.Item key={event.itemsMenu[key].section} className='MenuItem_event'>
                   <Badge key={event.itemsMenu[key].section} count={totalsolicitudes} offset={[-30, -2]}>
                     <Link
@@ -82,7 +82,7 @@ const MenuEvent = ({ isMobile }) => {
                             color: event.styles.textMenu,
                             justifyContent: 'center',
                           }}>
-                          {` ${event.itemsMenu[key].name}`}
+                          {` ${event.itemsMenu[key].label ? event.itemsMenu[key].label : event.itemsMenu[key].name}`}
                         </span>
                       </Link>
                     </Menu.Item>
