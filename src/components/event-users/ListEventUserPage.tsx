@@ -377,7 +377,10 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
             render={({ isLoading, activities, checkedInActivities }) => {
               setProgressMap((previous) => ({
                 ...previous,
-                [item._id]: `${checkedInActivities.length}/${activities.length}`,
+                [item._id]: `${checkedInActivities.length}/${Math.max(
+                  activities.length,
+                  preAllActivities.length,
+                )}`,
               }))
               return (
                 <>
