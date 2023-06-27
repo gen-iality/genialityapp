@@ -117,6 +117,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
   const [simplifyOrgProperties, setSimplifyOrgProperties] = useState<any[]>([])
   const [badgeEvent, setBadgeEvent] = useState<any>()
   const [dataSource, setDataSource] = useState<any[]>([])
+  const [filteredDataSource, setFilteredDataSource] = useState<any[]>([])
 
   const [isProgressingModalOpened, setIsProgressingModalOpened] = useState(false)
   const [isRegistrationModalOpened, setIsRegistrationModalOpened] = useState(false)
@@ -571,7 +572,12 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
   }
 
   const handleExportFile = async () => {
-    const attendees = [...dataSource].sort((a, b) => b.created_at - a.created_at)
+    // To take filtered data source when user use filters or sort the content
+    const source =
+      Array.isArray(filteredDataSource) && filteredDataSource.length > 0
+        ? filteredDataSource
+        : dataSource
+    const attendees = [...source].sort((a, b) => b.created_at - a.created_at)
 
     console.info('attendees', attendees)
 
@@ -628,6 +634,9 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         dataSource={dataSource}
         scroll={{ x: 'max-content' }}
         columns={columns}
+        onChange={(pagination, filters, sorter, extra) => {
+          setFilteredDataSource(extra.currentDataSource)
+        }}
         title={() => (
           <Row wrap justify="end" gutter={[8, 8]}>
             {!activityId && (
