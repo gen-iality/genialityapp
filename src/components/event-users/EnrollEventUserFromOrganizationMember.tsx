@@ -61,11 +61,19 @@ const EnrollEventUserFromOrganizationMember: FunctionComponent<
       title: '',
       dataIndex: 'position_name',
       render: (element) => <>{element || 'Sin cargo'}</>,
+      sorter: (a: any, b: any) => a.position_name?.length - b.position_name?.length,
     },
     {
       title: 'Nombre',
       dataIndex: 'user',
       render: (user) => <>{user.names}</>,
+      sorter: (a: any, b: any) => a.user.names.length - b.user.names.length,
+    },
+    {
+      title: 'Email',
+      dataIndex: 'user',
+      render: (user) => <>{user.email}</>,
+      sorter: (a: any, b: any) => a.user.email.length - b.user.email.length,
     },
     {
       title: 'Opciones',
