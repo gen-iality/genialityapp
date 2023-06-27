@@ -119,6 +119,8 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
   const [dataSource, setDataSource] = useState<any[]>([])
   const [filteredDataSource, setFilteredDataSource] = useState<any[]>([])
 
+  const [progressMap, setProgressMap] = useState<any>({})
+
   const [isProgressingModalOpened, setIsProgressingModalOpened] = useState(false)
   const [isRegistrationModalOpened, setIsRegistrationModalOpened] = useState(false)
   const [isEnrollingModalOpened, setIsEnrollingModalOpened] = useState(false)
@@ -365,26 +367,33 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       sorter: (a: any, b: any) =>
         a.activity_progresses?.progress_all_activities -
         b.activity_progresses?.progress_all_activities,
+      ...getColumnSearchProps('progreso', (value) => value.postprocess_progress),
       render: (item) => (
         <>
           <EventProgressWrapper
             event={event}
             eventUser={item}
-            render={({ isLoading, activities, checkedInActivities }) => (
-              <>
-                {isLoading && <Spin />}
-                {activityId === undefined ? (
-                  <Button
-                    onClick={() => {
-                      setIsProgressingModalOpened(true)
-                      setWatchedUserInProgressingModal(item)
-                    }}
-                  >{`${checkedInActivities.length}/${activities.length}`}</Button>
-                ) : (
-                  <>{checkedInActivities.length > 0 ? 'Visto' : 'No visto'}</>
-                )}
-              </>
-            )}
+            render={({ isLoading, activities, checkedInActivities }) => {
+              setProgressMap((previous) => ({
+                ...previous,
+                [item._id]: `${checkedInActivities.length}/${activities.length}`,
+              }))
+              return (
+                <>
+                  {isLoading && <Spin />}
+                  {activityId === undefined ? (
+                    <Button
+                      onClick={() => {
+                        setIsProgressingModalOpened(true)
+                        setWatchedUserInProgressingModal(item)
+                      }}
+                    >{`${checkedInActivities.length}/${activities.length}`}</Button>
+                  ) : (
+                    <>{checkedInActivities.length > 0 ? 'Visto' : 'No visto'}</>
+                  )}
+                </>
+              )
+            }}
           />
         </>
       ),
@@ -560,6 +569,19 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         if (data.created_at) data.created_at = dayjs(data.created_at.toDate())
         if (data.updated_at) data.updated_at = dayjs(data.updated_at.toDate())
 
+        // Ant Design wont calc progresses of non-rendered component, then we have
+        // to pre-calc this value in a way non-reactable
+        type ActivityProgressesType = {
+          activities?: any[]
+          checked_in_activities?: any[]
+        }
+        const { activities, checked_in_activities }: ActivityProgressesType =
+          data.activity_progresses ?? {}
+        // Use % or n/N? ... use n/N for now
+        data.postprocess_progress = `${(checked_in_activities ?? []).length}/${
+          (activities ?? []).length
+        }`
+
         allEventUserData.push({
           // the organization user properties here... (for now, nothing)
           ...data.properties,
@@ -577,11 +599,27 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       Array.isArray(filteredDataSource) && filteredDataSource.length > 0
         ? filteredDataSource
         : dataSource
-    const attendees = [...source].sort((a, b) => b.created_at - a.created_at)
+    let attendees = [...source].sort((a, b) => b.created_at - a.created_at)
 
     console.info('attendees', attendees)
 
     const joint = [...extraFields, ...simplifyOrgProperties]
+
+    // Inject the progress
+    attendees = attendees.map((attendee) => {
+      const finalValue = progressMap[attendee._id] ?? attendee.postprocess_progress
+      return {
+        ...attendee,
+        properties: {
+          ...attendee.properties,
+          eventProgress: finalValue ?? 'Sin dato',
+        },
+      }
+    })
+    joint.push({
+      name: 'eventProgress',
+      label: 'Progreso de curso',
+    })
 
     const data = await parseData2Excel(attendees, joint, rolesList)
     const ws = utils.json_to_sheet(data)
