@@ -770,7 +770,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         )}
       />
 
-      {isRegistrationModalOpened && (
+      {isRegistrationModalOpened && !!watchedUserInProgressingModal && (
         <UserModal
           handleModal={() => setIsRegistrationModalOpened(false)}
           modal={!!watchedUserInProgressingModal}
