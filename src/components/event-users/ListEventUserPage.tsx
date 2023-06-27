@@ -579,7 +579,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
           data.activity_progresses ?? {}
         // Use % or n/N? ... use n/N for now
         data.postprocess_progress = `${(checked_in_activities ?? []).length}/${
-          (activities ?? []).length
+          (activities ?? allActivities ?? []).length
         }`
 
         allEventUserData.push({
