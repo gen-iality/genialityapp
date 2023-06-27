@@ -1,6 +1,8 @@
-import { useReducer, type Dispatch } from 'react'
+import { useReducer, useEffect, useContext, type Dispatch } from 'react'
 import { FunctionComponent, createContext } from 'react'
 import { useCurrentUser } from '@/context/userContext'
+import { HelperContext } from '@/context/helperContext/helperContext'
+
 type AvailableStep =
   | 'RESTING'
   | 'REQUIRING_PAYMENT'
@@ -12,19 +14,23 @@ type AvailableStep =
 
 type OPAction =
   | { type: 'ABORT' }
+  | { type: 'SET_ATTENDEE' }
   | { type: 'REQUIRE_PAYMENT' }
   | { type: 'DISPLAY_REGISTRATION' }
   | { type: 'DISPLAY_PAYMENT' }
   | { type: 'DISPLAY_SUCCESS'; result?: any }
+  | { type: 'GO_REST'; result?: any }
 
 type OPState = {
   paymentStep: AvailableStep
   result?: any
+  cUser?: any
   dispatch: Dispatch<OPAction>
 }
 
 const steps: { [x: string]: AvailableStep } = {
   RESTING: 'RESTING',
+
   REQUIRING_PAYMENT: 'REQUIRING_PAYMENT',
   DISPLAYING_REGISTRATION: 'DISPLAYING_REGISTRATION',
   DISPLAYING_PAYMENT: 'DISPLAYING_PAYMENT',
@@ -35,6 +41,8 @@ const steps: { [x: string]: AvailableStep } = {
 
 export const actions: { [x: string]: OPAction['type'] } = {
   ABORT: 'ABORT',
+  GO_REST: 'GO_REST',
+  SET_ATTENDEE: 'SET_ATTENDEE',
   REQUIRE_PAYMENT: 'REQUIRE_PAYMENT',
   DISPLAY_REGISTRATION: 'DISPLAY_REGISTRATION',
   DISPLAY_PAYMENT: 'DISPLAY_PAYMENT',
@@ -52,6 +60,9 @@ const reducerOP = (state: OPState, action: OPAction): OPState => {
   console.log('payment state reducer', state, action)
   console.log('usuario  en reducer context')
   switch (action.type) {
+    case 'SET_ATTENDEE':
+      console.log('usuario action', action?.payload?.cUser)
+      return { ...state, cUser: action?.payload?.cUser, paymentStep: steps.RESTING }
     case 'ABORT':
       return { ...state, paymentStep: steps.RESTING }
     case 'REQUIRE_PAYMENT':
@@ -62,7 +73,7 @@ const reducerOP = (state: OPState, action: OPAction): OPState => {
     case 'DISPLAY_PAYMENT':
       let newstate = {}
       //Tiene que estar logueado para que esto suceda
-      if (!state.cUser?.value) {
+      if (!state.cUser) {
         newstate = { ...state, paymentStep: steps.DISPLAYING_REGISTRATION }
       } else {
         newstate = { ...state, paymentStep: steps.DISPLAYING_PAYMENT }
@@ -84,11 +95,18 @@ const reducerOP = (state: OPState, action: OPAction): OPState => {
 export const OrganizationPaymentProvider: FunctionComponent = (props) => {
   const { children } = props
 
+  //const { helperDispatch } = cHelper
+
   const cUser = useCurrentUser()
+  const cHelper = useContext(HelperContext)
 
   {
-    console.log('usuario', cUser)
+    console.log('usuario data', cUser, cHelper.helperDispatch)
   }
+
+  useEffect(() => {
+    dispatch({ type: 'SET_ATTENDEE', payload: { cUser: cUser.value } })
+  }, [cUser.value])
 
   const [state, dispatch] = useReducer(reducerOP, {
     paymentStep: steps.RESTING,
@@ -96,6 +114,15 @@ export const OrganizationPaymentProvider: FunctionComponent = (props) => {
     dispatch: null as any,
     cUser: cUser,
   })
+
+  if (state.paymentStep == steps.DISPLAYING_REGISTRATION) {
+    cHelper.helperDispatch({
+      type: 'showLogin',
+      visible: true,
+      organization: null,
+    })
+    dispatch({ type: 'GO_REST' })
+  }
 
   return (
     <OrganizationPaymentContext.Provider

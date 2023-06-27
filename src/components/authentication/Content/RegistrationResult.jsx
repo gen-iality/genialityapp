@@ -62,7 +62,7 @@ const RegistrationResult = ({
         <>
           {!validationGeneral.status ? (
             <Result
-              status="warning"
+              status={validationGeneral.type ? validationGeneral.type : 'warning'}
               title={
                 (basicDataUser ? basicDataUser?.email : '') +
                 ' ' +

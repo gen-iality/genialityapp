@@ -52,11 +52,13 @@ const RegisterUserAndOrgMember = ({
   const [buttonStatus, setButtonStatus] = useState(true)
   const [validationGeneral, setValidationGeneral] = useState<{
     status: boolean
+    type: string
     textError: string
     isLoading: boolean
     component?: ReactNode
   }>({
     status: false,
+    type: 'success',
     textError: '',
     isLoading: false,
     component: undefined,
@@ -131,6 +133,7 @@ const RegisterUserAndOrgMember = ({
           isLoading: false,
           status: false,
           textError: '',
+          type: 'success',
         })
         setCurrent(current + 1)
       }
@@ -221,6 +224,7 @@ const RegisterUserAndOrgMember = ({
         if (respUser && respUser.account_id) {
           setValidationGeneral({
             status: true,
+            type: 'success',
             isLoading: false,
             textError: intl.formatMessage({
               // TODO: No se debería llamar TextError, si el texto es una respuesta afirmativa.
