@@ -578,9 +578,10 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         const { activities, checked_in_activities }: ActivityProgressesType =
           data.activity_progresses ?? {}
         // Use % or n/N? ... use n/N for now
-        data.postprocess_progress = `${(checked_in_activities ?? []).length}/${
-          (activities ?? allActivities ?? []).length
-        }`
+        data.postprocess_progress = `${(checked_in_activities ?? []).length}/${Math.max(
+          (activities ?? []).length,
+          (allActivities ?? []).length,
+        )}`
 
         allEventUserData.push({
           // the organization user properties here... (for now, nothing)
