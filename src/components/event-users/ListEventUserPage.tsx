@@ -309,6 +309,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
     const org = await OrganizationApi.getOne(orgId)
 
     const eventActivities = await AgendaApi.byEvent(event._id)
+    const preAllActivities = eventActivities.data
     setAllActivities(eventActivities.data)
 
     const newSimplifyOrgProperties = (org.user_properties || []).filter(
@@ -389,7 +390,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
                       }}
                     >{`${checkedInActivities.length}/${Math.max(
                       activities.length,
-                      allActivities.length,
+                      preAllActivities.length,
                     )}`}</Button>
                   ) : (
                     <>{checkedInActivities.length > 0 ? 'Visto' : 'No visto'}</>
@@ -583,7 +584,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         // Use % or n/N? ... use n/N for now
         data.postprocess_progress = `${(checked_in_activities ?? []).length}/${Math.max(
           (activities ?? []).length,
-          (allActivities ?? []).length,
+          (preAllActivities ?? []).length,
         )}`
 
         allEventUserData.push({
