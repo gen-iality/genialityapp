@@ -276,7 +276,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
     ),
     onFilter: (value, record) => {
-      return howToRender(record)
+      return (howToRender(record) ?? '')
         .toString()
         .toLowerCase()
         .includes((value as string).toLowerCase())
