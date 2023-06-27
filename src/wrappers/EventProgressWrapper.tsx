@@ -70,15 +70,24 @@ const EventProgressWrapper: FunctionComponent<IEventProgressWrapperProps> = (pro
   const reload = async (forceRefresh?: boolean) => {
     const _forceRefresh = typeof forceRefresh === 'undefined' ? true : forceRefresh
 
-    if (!_forceRefresh && eventUser.activity_progresses) {
+    const { activities, checked_in_activities } = eventUser.activity_progresses ?? {}
+    setActivities(activities || [])
+    setCheckedInActivities(checked_in_activities || [])
+    return
+
+    if (
+      !_forceRefresh &&
+      (Array.isArray(eventUser.activity_progresses?.activities) ||
+        Array.isArray(eventUser.activity_progresses?.checked_in_activities))
+    ) {
       const { activities, checked_in_activities } = eventUser.activity_progresses
       setActivities(activities)
       setCheckedInActivities(checked_in_activities)
       return
     }
 
-    const activities = await updateActivities()
-    await updateAttendees(activities)
+    // const activities = await updateActivities()
+    // await updateAttendees(activities)
   }
 
   useEffect(() => {
