@@ -65,7 +65,6 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
     }
 
     console.log('moreCustomData:', moreCustomData)
-
     /// @ts-ignore
     return new WidgetCheckout({
       currency: 'COP',
@@ -85,12 +84,13 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
 
   useEffect(() => {
     if (paymentStep == 'DISPLAYING_PAYMENT') {
+      //alert('pago', checkout)
       if (!checkout) return
 
       dispatch({ type: 'ABORT' })
 
       checkout.open(async (result: any) => {
-        console.debug('member', { organizationUser, result })
+        console.debug('payment member', { organizationUser, result })
 
         if (result.transaction.status == 'APPROVED') {
           console.log('paid')

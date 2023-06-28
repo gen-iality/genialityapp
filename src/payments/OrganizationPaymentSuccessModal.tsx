@@ -20,8 +20,15 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
 
   const makeUserAsPaidPlan = async () => {
     StateMessage.show('presend', 'info', 'Espera...')
+    console.log(
+      'payment initresult ',
+      { organizationUser },
+      { email: organizationUser?.email },
+      { prop: organizationUser?.properties },
+    )
 
-    if (!organizationUser.properties?.email) {
+    if (!organizationUser?.user?.email) {
+      //if (!organizationUser.properties?.email) {
       StateMessage.destroy('presend')
       StateMessage.show(
         null,
@@ -32,20 +39,23 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
       return
     }
 
+    console.log('payment initresult progress')
     const data = {
       payment_plan: {
         price: organization.access_settings?.price ?? 0,
         date_until: dayjs(Date.now()).add(organization.access_settings?.days ?? 0, 'day'),
       },
     }
-    await OrganizationApi.editUser(
+    console.log('payment initresult data', data)
+    const result = await OrganizationApi.editUser(
       organizationUser.organization_id,
       organizationUser._id,
       data,
     )
+    console.log('payment result fin', data, result)
     // Do request to send email
     await EventsApi.sendGenericMail(
-      /*organizationUser.properties.email*/ 'testdb@yopmail.com',
+      organizationUser?.user?.email,
       `http://${window.location.host}/organization/${organization._id}`,
       `Has sido inscrito a como miembro pago a la organización "${organization.name}". Puedes acceder también desde el enlace proporcionado`,
       'Ir a la organización',
@@ -72,10 +82,13 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
         title="Pago exitoso"
         open={paymentStep == 'DISPLAYING_SUCCESS'}
         onOk={() => {
+          makeUserAsPaidPlan().then(() => false)
           dispatch({ type: 'ABORT' })
-          makeUserAsPaidPlan().then(() => window.location.reload())
         }}
-        onCancel={() => dispatch({ type: 'ABORT' })}
+        onCancel={() => {
+          makeUserAsPaidPlan().then(() => false)
+          dispatch({ type: 'ABORT' })
+        }}
       >
         <p> Referencia {result && result.reference}</p>
         <p> Estado: {result && result.status}</p>

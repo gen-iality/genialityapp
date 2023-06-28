@@ -21,7 +21,7 @@ const OrganizationPaymentConfirmationModal: FunctionComponent<
 
   return (
     <Modal
-      title="Payment confirmation"
+      title="Confirmación Pago"
       open={paymentStep === 'REQUIRING_PAYMENT'}
       okText={'Pagar'}
       onOk={() => dispatch({ type: 'DISPLAY_PAYMENT' })}

@@ -133,13 +133,14 @@ const EventOrganization = () => {
         }
       }
 
-      if (memberHadPaid) {
-        // Nothing, ok
-        console.log('This organization has paid access - the user too')
-      } else {
-        paymentDispatch({ type: 'REQUIRE_PAYMENT' })
-        console.log('This organization has paid access - the user CAN NOT')
-      }
+      // TIENE UN BUG SIEMPRE SALE NO SE QUE HACE EL CODIGO BIEN
+      // if (memberHadPaid) {
+      //   // Nothing, ok
+      //   console.log('This organization has paid access - the user too')
+      // } else {
+      //   paymentDispatch({ type: 'REQUIRE_PAYMENT' })
+      //   console.log('This organization has paid access - the user CAN NOT')
+      // }
     } else {
       console.log('This organization has free access :))))')
     }
@@ -217,9 +218,11 @@ const EventOrganization = () => {
           >
             {organizationUser && (
               <Badge
-                count={`${organizationUser.payment_plan ? 'Modo pago' : 'Modo gratuito'}`}
+                count={`${
+                  organizationUser.payment_plan ? 'Plan Premium' : 'Plan gratuito'
+                }`}
                 style={{
-                  backgroundColor: organizationUser.payment_plan ? '#F51C31' : '#1C9A1D',
+                  backgroundColor: organizationUser.payment_plan ? '#797' : '#777',
                 }}
               />
             )}
