@@ -20,7 +20,7 @@ const ListTheseActivities: FunctionComponent<IListTheseActivitiesProps> = (props
         .map((activity) => {
           if (eventProgressPercent === undefined) return
           if (activity.require_completion === undefined) return
-          if (typeof activity.require_completion !== 'number') return activity._id
+          if (typeof activity.require_completion !== 'number') return
           if (activity.require_completion >= eventProgressPercent) return activity._id
           return
         })
