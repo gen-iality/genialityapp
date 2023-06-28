@@ -1,7 +1,8 @@
 import { useReducer, useEffect, useContext, type Dispatch } from 'react'
 import { FunctionComponent, createContext } from 'react'
-import { useCurrentUser } from '@/context/userContext'
-import { HelperContext } from '@/context/helperContext/helperContext'
+
+import { useCurrentUser } from '@context/userContext'
+import { HelperContext } from '@context/helperContext/helperContext'
 
 type AvailableStep =
   | 'RESTING'
@@ -14,7 +15,7 @@ type AvailableStep =
 
 type OPAction =
   | { type: 'ABORT' }
-  | { type: 'SET_ATTENDEE' }
+  | { type: 'SET_ATTENDEE'; payload: { cUser: any } } // That sucks, but they use `payload` so...
   | { type: 'REQUIRE_PAYMENT' }
   | { type: 'DISPLAY_REGISTRATION' }
   | { type: 'DISPLAY_PAYMENT' }
@@ -54,11 +55,9 @@ const OrganizationPaymentContext = createContext<OPState>({
   dispatch: null as any,
 })
 
-console.log('usuario arrancando el paymentcontext')
-
 const reducerOP = (state: OPState, action: OPAction): OPState => {
   console.log('payment state reducer', state, action)
-  console.log('usuario  en reducer context')
+
   switch (action.type) {
     case 'SET_ATTENDEE':
       console.log('usuario action', action?.payload?.cUser)
@@ -66,20 +65,17 @@ const reducerOP = (state: OPState, action: OPAction): OPState => {
     case 'ABORT':
       return { ...state, paymentStep: steps.RESTING }
     case 'REQUIRE_PAYMENT':
-      console.log('usuario  requoere', state)
       return { ...state, paymentStep: steps.REQUIRING_PAYMENT }
     case 'DISPLAY_REGISTRATION':
       return { ...state, paymentStep: steps.DISPLAYING_REGISTRATION }
     case 'DISPLAY_PAYMENT':
-      let newstate = {}
-      //Tiene que estar logueado para que esto suceda
-      if (!state.cUser) {
-        newstate = { ...state, paymentStep: steps.DISPLAYING_REGISTRATION }
-      } else {
-        newstate = { ...state, paymentStep: steps.DISPLAYING_PAYMENT }
+      // They have to be logged in to this works
+      return {
+        ...state,
+        paymentStep: !state.cUser
+          ? steps.DISPLAYING_REGISTRATION
+          : steps.DISPLAYING_PAYMENT,
       }
-      console.log('usuario status', state, newstate)
-      return newstate
     case 'DISPLAY_SUCCESS':
       // With the payment result
       return {
@@ -112,7 +108,7 @@ export const OrganizationPaymentProvider: FunctionComponent = (props) => {
     paymentStep: steps.RESTING,
     result: undefined,
     dispatch: null as any,
-    cUser: cUser,
+    cUser,
   })
 
   if (state.paymentStep == steps.DISPLAYING_REGISTRATION) {

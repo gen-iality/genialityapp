@@ -47,7 +47,7 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
       },
     }
     console.log('payment initresult data', data)
-    let result = await OrganizationApi.editUser(
+    const result = await OrganizationApi.editUser(
       organizationUser.organization_id,
       organizationUser._id,
       data,

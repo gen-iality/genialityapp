@@ -127,7 +127,6 @@ const EventCard = ({
                     return false
                   }}
                 >
-                  {console.log('imagen grandota', event)}
                   <img
                     className="animate__animated animate__fadeIn animate__slower"
                     loading="lazy"
