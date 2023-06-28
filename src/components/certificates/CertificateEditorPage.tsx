@@ -533,8 +533,8 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
             <Select
               mode="multiple"
               options={[
-                { label: 'En vivo', value: 'En vivo' },
-                { label: 'Diferido', value: 'Diferido' },
+                { label: 'En vivo', value: 'live' },
+                { label: 'Diferido', value: 'deferred' },
               ]}
             />
           </Form.Item>

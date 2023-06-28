@@ -149,7 +149,7 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
   const thisActivityRequiresAttendeeType = useMemo(() => {
     if (!activity) return false
     if (activity.type?.name !== 'url') return false
-    if (cEventUser.value?.properties?.tipoDeAsistente === 'En vivo') return true
+    if (cEventUser.value?.properties?.tipoDeAsistente === 'live') return true
     else return false
   }, [activity])
 
