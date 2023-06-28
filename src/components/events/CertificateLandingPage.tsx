@@ -119,6 +119,30 @@ function CertificateLandingPage(props: WithEviusContextProps) {
 
     // Some certificates need an event progress
     _filteredCertificates = _filteredCertificates.filter((cert) => {
+      // Filter by attendee type
+      if (Array.isArray(cert.required_attendee_type)) {
+        // If the admin forgot set the requirement, then they are lol
+        if (cert.required_attendee_type.length === 0) return true
+
+        if (!cEventUser.value?.properties?.tipoDeAsistente) {
+          // Sure the admin set some require attendee type, BUT the user has no one
+          console.info(`${cEventUser.value.user?.names} has no attendee type`)
+          return false
+        }
+
+        if (
+          cert.required_attendee_type.includes(
+            cEventUser.value.properties.tipoDeAsistente,
+          )
+        ) {
+          console.log('Yuuuuuuu, you are a', cEventUser.value.properties.tipoDeAsistente)
+          return true
+        } else {
+          console.log('No limited for now...')
+          return true
+        }
+      }
+
       // If no problem, no problem
       if (cert.requirement_config === undefined || !cert.requirement_config.enable) {
         console.log(`cert ${cert.name} has no requirement config`)

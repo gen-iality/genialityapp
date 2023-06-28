@@ -15,4 +15,5 @@ export default interface CertificateType {
   cert_width?: number
   cert_height?: number
   requirement_config?: CertificateRequirementConfigType
+  required_attendee_type?: string[]
 }
