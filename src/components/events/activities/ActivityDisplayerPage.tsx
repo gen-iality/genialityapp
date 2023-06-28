@@ -145,6 +145,13 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
     return false
   }, [activity, cEventProgress.progressFilteredActivities])
 
+  const thisActivityRequiresAttendeeType = useMemo(() => {
+    if (!activity) return false
+    if (activity.type?.name !== 'url') return false
+    if (cEventUser.value?.properties?.tipoDeAsistente === 'En vivo') return true
+    else return false
+  }, [activity])
+
   return (
     <div>
       {cUser.value?._id && cEvent.value?._id && activity?._id && (
@@ -165,6 +172,12 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
               status="403"
               title="Esta sección está bloqueado"
               subTitle="Se requiere avanzar más en el curso para habilitar esta sección"
+            />
+          ) : thisActivityRequiresAttendeeType ? (
+            <Result
+              //status="403"
+              title="Esta sección está deshabilitado por que estuviste en la sesión 'En vivo'"
+              subTitle="Comunicate con el administrador del curso"
             />
           ) : (
             <ActivityDisplayer
