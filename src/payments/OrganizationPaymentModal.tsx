@@ -11,8 +11,7 @@ interface IOrganizationPaymentModalProps {
   organizationUser: OrganizationUserType
 }
 
-const money = 5000
-const price = Math.round(money) * 100
+const calcPrice = (money: number) => Math.round(money) * 100
 const lang = 'ES'
 
 const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps> = (
@@ -20,6 +19,11 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
 ) => {
   const { organizationUser, organization } = props
   console.log('organizationUser', organizationUser)
+
+  const money = useMemo(
+    () => organization?.access_settings?.price ?? 5000,
+    [organization],
+  )
 
   const { paymentStep, dispatch } = useContext(OrganizationPaymentContext)
 
@@ -65,7 +69,7 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
     /// @ts-ignore
     return new WidgetCheckout({
       currency: 'COP',
-      amountInCents: price,
+      amountInCents: calcPrice(money),
       reference: `${new Date().getTime()}-${organization._id}-${
         organizationUser.account_id
       }`,
@@ -77,7 +81,7 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
         ...moreCustomData,
       },
     })
-  }, [redirectUrl, organizationUser])
+  }, [redirectUrl, organizationUser, money])
 
   useEffect(() => {
     if (paymentStep == 'DISPLAYING_PAYMENT') {

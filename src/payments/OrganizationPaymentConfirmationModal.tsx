@@ -1,9 +1,23 @@
-import { FunctionComponent, useContext } from 'react'
+import { FunctionComponent, useContext, useEffect, useState } from 'react'
 import { Modal } from 'antd'
 import OrganizationPaymentContext from './OrganizationPaymentContext'
 
-const OrganizationPaymentConfirmationModal: FunctionComponent = () => {
+interface IOrganizationPaymentConfirmationModalProps {
+  organization: any
+}
+
+const OrganizationPaymentConfirmationModal: FunctionComponent<
+  IOrganizationPaymentConfirmationModalProps
+> = (props) => {
+  const { organization } = props
   const { paymentStep, dispatch } = useContext(OrganizationPaymentContext)
+  const [money, setMoney] = useState(5000)
+
+  useEffect(() => {
+    if (organization?.access_settings?.price) {
+      setMoney(organization.access_settings.price)
+    }
+  }, [organization])
 
   return (
     <Modal
@@ -14,7 +28,7 @@ const OrganizationPaymentConfirmationModal: FunctionComponent = () => {
       onCancel={() => dispatch({ type: 'ABORT' })}
     >
       <p>Para ingresar a este contenido debes tener una cuenta con un plan pago</p>
-      <p>El costo del plan es: $5.000</p>
+      <p>El costo del plan es: ${money}</p>
     </Modal>
   )
 }

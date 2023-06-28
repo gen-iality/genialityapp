@@ -152,7 +152,7 @@ const EventOrganization = () => {
         backgroundColor: `${organization?.styles?.containerBgColor || '#FFFFFF'}`,
       }}
     >
-      <OrganizationPaymentConfirmationModal />
+      <OrganizationPaymentConfirmationModal organization={organization} />
       <OrganizationPaymentModal
         organizationUser={organizationUser}
         organization={organization}
