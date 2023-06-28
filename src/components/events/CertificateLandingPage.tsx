@@ -139,7 +139,7 @@ function CertificateLandingPage(props: WithEviusContextProps) {
           return true
         } else {
           console.log('No limited for now...')
-          return true
+          return false
         }
       }
 
