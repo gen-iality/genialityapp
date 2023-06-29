@@ -148,7 +148,6 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
 
   const thisActivityRequiresAttendeeType = useMemo(() => {
     if (!activity) return false
-    if (activity.type?.name !== 'url') return false
     if (cEventUser.value?.properties?.tipoDeAsistente === 'live') return true
     else return false
   }, [activity])
@@ -177,7 +176,7 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
           ) : thisActivityRequiresAttendeeType ? (
             <Result
               //status="403"
-              title="Esta sección está deshabilitado por que estuviste en la sesión 'En vivo'"
+              title="No tienes acceso a esta actividad"
               subTitle="Comunicate con el administrador del curso"
             />
           ) : (
