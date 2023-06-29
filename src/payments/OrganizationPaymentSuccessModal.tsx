@@ -86,8 +86,8 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
           dispatch({ type: 'ABORT' })
         }}
         onCancel={() => {
-          makeUserAsPaidPlan().then(() => false)
           dispatch({ type: 'ABORT' })
+          makeUserAsPaidPlan().then(() => false) //window.location.reload())
         }}
       >
         <p> Referencia {result && result.reference}</p>
