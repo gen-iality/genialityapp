@@ -135,12 +135,14 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
                 (agenda.type?.name as any) ||
                   !(import.meta.env.MODE || '').includes('staging'),
               ) ? (
-                <ButtonToDeleteSurveyAnswers
+                <>
+                  {/* <ButtonToDeleteSurveyAnswers
                   userId={currentUser.value._id}
                   eventId={eventId}
                   activityId={agenda._id!}
                   onDelete={() => setAnswersIsDeleted(true)}
-                />
+                /> */}
+                </>
               ) : (
                 <></>
               ),
