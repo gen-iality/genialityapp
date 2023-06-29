@@ -54,7 +54,7 @@ const InfoEvent = ({ paddingOff, preview }) => {
 			}
 			footer={
 				<Space direction='vertical' size={4} style={{ color: textColor, fontSize: '16px' }}>
-					<Space wrap size={'large'}>
+					<Space wrap size={screens.xs ? 0 : 'large'}>
 						<Space wrap>
 							<Space>
 								<CalendarFilled />
@@ -78,14 +78,18 @@ const InfoEvent = ({ paddingOff, preview }) => {
 							</Space>
 						)}
 					</Space>
-					{cEventValues?.type_event !== 'onlineEvent' && (
+					{cEventValues?.type_event !== 'onlineEvent' && (cEventValues?.address || cEventValues?.venue) && (
 						<Space>
 							<EnvironmentFilled />
 							<Space wrap split={screens.xs ? null : '/'}>
-								<Typography.Text style={{ color: textColor }}>{cEventValues?.address}</Typography.Text>
-								<Typography.Text style={{ color: textColor }} italic>
-									{cEventValues?.venue}
-								</Typography.Text>
+								{cEventValues.address && 
+									<Typography.Text style={{ color: textColor }}>{cEventValues?.address}</Typography.Text>
+								}
+								{cEventValues.venue &&
+									<Typography.Text style={{ color: textColor }} italic>
+										{cEventValues?.venue}
+									</Typography.Text>
+								}
 							</Space>
 						</Space>
 					)}
