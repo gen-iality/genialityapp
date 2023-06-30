@@ -395,7 +395,9 @@ class EventAdminRoutes extends Component {
                 path={`${match.url}/checkin-actividad`}
                 url={match.url}
                 event={event}
-                render={() => <ReportList eventId={event._id} event={event} />}
+                render={() => (
+                  <ReportList eventId={event._id} event={event} matchUrl={match.url} />
+                )}
               />
               <Protected
                 path={`${match.url}/informativesection`}

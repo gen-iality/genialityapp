@@ -58,7 +58,7 @@ const ReportList = (props) => {
         setColumnsData={setColumnsData}
         actions
         noRemove
-        extraPath={`${props.url}/checkin`}
+        extraPath={`${props.matchUrl}/checkin`}
         extraPathIcon={<RightOutlined />}
         extraPathTitle="Detalle"
         exportData
