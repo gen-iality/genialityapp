@@ -57,8 +57,9 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
     await EventsApi.sendGenericMail(
       organizationUser?.user?.email,
       `http://${window.location.host}/organization/${organization._id}`,
-      `Has sido inscrito a como miembro pago a la organización "${organization.name}". Puedes acceder también desde el enlace proporcionado`,
-      'Ir a la organización',
+      `Bienvenido, has sido inscrito de manera satisfactoria  a "${organization.name}". Podrás disfrutar de todo el contenido del portal de conocimiento en endocrinologia más grande de America latina.
+      En la parte inferior encontraras un enlace de acceso rápido.`,
+      'Ir a ' + organization.name,
       'Inscripción cursos pagos',
     )
 
