@@ -67,6 +67,7 @@ const EventCard = ({
           height: 'auto',
           overflowWrap: 'break-word',
           whiteSpace: 'normal',
+          opacity: '0.8',
         }}
         text={
           <span style={{ fontSize: '12px' }}>
@@ -127,10 +128,11 @@ const EventCard = ({
                     return false
                   }}
                 >
+                  {console.log('imagen grandota', event)}
                   <img
                     className="animate__animated animate__fadeIn animate__slower"
                     loading="lazy"
-                    style={{ objectFit: 'cover', height: '180px', width: '100%' }}
+                    style={{ objectFit: 'cover', minHeight: '220px', width: '100%' }}
                     src={
                       event.picture
                         ? event.picture

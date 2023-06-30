@@ -82,12 +82,12 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
         title="Pago exitoso"
         open={paymentStep == 'DISPLAYING_SUCCESS'}
         onOk={() => {
-          makeUserAsPaidPlan().then(() => false)
+          makeUserAsPaidPlan().then(() => window.location.reload())
           dispatch({ type: 'ABORT' })
         }}
         onCancel={() => {
           dispatch({ type: 'ABORT' })
-          makeUserAsPaidPlan().then(() => false) //window.location.reload())
+          makeUserAsPaidPlan().then(() => window.location.reload())
         }}
       >
         <p> Referencia {result && result.reference}</p>
