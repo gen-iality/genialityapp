@@ -197,9 +197,7 @@ const ViewPrelanding = ({ preview } : PropsPreLanding) => {
 			<Helmet>
 			<title>{cEventContext.value?.name}</title>
 			<meta name="description" content={cEventContext.value?.organizer?.name} />
-			<meta itemProp="description" content={cEventContext.value?.organizer?.name} />
 			</Helmet>
-			{/* {console.log(cEventContext.value?.organizer?.name)} */}
 			<Layout>
 			{(cEventContext.value?.styles?.show_banner === undefined ||
 				cEventContext.value?.styles?.show_banner === 'true') && (
