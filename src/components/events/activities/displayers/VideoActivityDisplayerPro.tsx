@@ -23,6 +23,10 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
   const cEventUser = useUserEvent()
 
   useEffect(() => {
+    if (onActivityProgress !== undefined) onActivityProgress(0)
+  }, [])
+
+  useEffect(() => {
     console.log(ref.current, activity?._id, cEventUser.value?._id)
     if (!ref.current) return
     if (!activity?._id) return

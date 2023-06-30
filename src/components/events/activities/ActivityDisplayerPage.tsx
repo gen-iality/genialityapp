@@ -139,11 +139,18 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
     if (!activity) return false
     if (cEventProgress.progressFilteredActivities === undefined) return false
     if (activity.require_completion === undefined) return false
+    if (activity.require_completion === null) return false
 
     if (activity.require_completion >= cEventProgress.progressFilteredActivities)
       return true
     return false
   }, [activity, cEventProgress.progressFilteredActivities])
+
+  const thisActivityRequiresAttendeeType = useMemo(() => {
+    if (!activity) return false
+    if (cEventUser.value?.properties?.tipoDeAsistente === 'live') return true
+    else return false
+  }, [activity])
 
   return (
     <div>
@@ -165,6 +172,12 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
               status="403"
               title="Esta sección está bloqueado"
               subTitle="Se requiere avanzar más en el curso para habilitar esta sección"
+            />
+          ) : thisActivityRequiresAttendeeType ? (
+            <Result
+              //status="403"
+              title="No tienes acceso a esta actividad"
+              subTitle="Comunicate con el administrador del curso"
             />
           ) : (
             <ActivityDisplayer

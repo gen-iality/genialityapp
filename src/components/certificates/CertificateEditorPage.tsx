@@ -195,6 +195,7 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
       cert_width: values.cert_width,
       cert_height: values.cert_height,
       requirement_config: values.requirement_config,
+      required_attendee_type: values.required_attendee_type,
     }
 
     try {
@@ -522,6 +523,20 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
         <Col>
           <Form.Item name="cert_height" label="Dimensione alto (opcional)">
             <InputNumber placeholder="Altura" style={{ width: '100%' }} />
+          </Form.Item>
+        </Col>
+      </Row>
+
+      <Row gutter={[16, 16]}>
+        <Col>
+          <Form.Item name="required_attendee_type" label="Tipos de asistente (opcional)">
+            <Select
+              mode="multiple"
+              options={[
+                { label: 'En vivo', value: 'live' },
+                { label: 'Diferido', value: 'deferred' },
+              ]}
+            />
           </Form.Item>
         </Col>
       </Row>

@@ -67,6 +67,7 @@ const EventCard = ({
           height: 'auto',
           overflowWrap: 'break-word',
           whiteSpace: 'normal',
+          opacity: '0.8',
         }}
         text={
           <span style={{ fontSize: '12px' }}>
@@ -84,7 +85,7 @@ const EventCard = ({
         <Card
           bordered={bordered}
           loading={loading}
-          style={{ width: '100%' }}
+          style={{ maxWidth: '100%' }}
           cover={
             <>
               {noAvailable ? (
@@ -111,30 +112,32 @@ const EventCard = ({
                 <a
                   href={`/landing/${event._id}/evento`}
                   onClick={(e) => {
+                    console.log('usuario tipo de organizacion ', organization)
                     if (
-                      !organizationUser?.payment_plan &&
-                      organization?.access_settings?.type === 'payment'
+                      organization?.access_settings?.type === 'payment' &&
+                      //si no esta logueado o si no ha pagado miramos si requiere pago
+                      (!organizationUser || !organizationUser?.payment_plan)
                     ) {
                       paymentDispatch({ type: 'REQUIRE_PAYMENT' })
                       e.preventDefault()
                       e.stopPropagation()
                       e.nativeEvent.stopImmediatePropagation()
                     }
-                    console.log('organizationUser', organizationUser)
+                    console.log('organizationUser')
 
                     return false
                   }}
                 >
+                  {console.log('imagen grandota', event)}
                   <img
                     className="animate__animated animate__fadeIn animate__slower"
                     loading="lazy"
-                    style={{ objectFit: 'cover', height: '180px', width: '100%' }}
+                    style={{ objectFit: 'cover', minHeight: '220px', width: '100%' }}
                     src={
-                      event.styles
-                        ? event.styles.banner_image &&
-                          event.styles.banner_image !== undefined
-                          ? event.styles.banner_image
-                          : EventImage
+                      event.picture
+                        ? event.picture
+                        : event?.styles?.banner_image
+                        ? event.styles.banner_image
                         : EventImage
                     }
                     alt="geniality.com.co"

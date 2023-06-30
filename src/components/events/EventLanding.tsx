@@ -71,7 +71,7 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
               !event.hide_certificate_link && (
                 <Link to={`/landing/${event._id}/certificate`}>
                   <Typography.Text strong style={{ color: '#FFFFFF' }}>
-                    Obtener certificado
+                    Ir a certificados
                   </Typography.Text>
                 </Link>
               )
