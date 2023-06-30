@@ -25,7 +25,9 @@ import useInjectScript from './hooks/useInjectScript';
 import { scriptGoogleTagManagerAudi, scriptTeadesAudi, scriptTeadeBodyAudi } from './constants/constants';
 import { PropsPreLanding } from './types/Prelanding';
 import { Agenda, ApiGeneric, DataSource, Description, Speaker, Sponsor } from './types';
-import { style } from './constants'
+import { style } from './constants';
+import {Helmet} from "react-helmet";
+
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
 
@@ -191,7 +193,13 @@ const ViewPrelanding = ({ preview } : PropsPreLanding) => {
 
 	  
 	return (
-		<Layout>
+		<>
+			<Helmet>
+			<title>{cEventContext.value?.name}</title>
+			<meta name="description" content={cEventContext.value?.organizer?.name} />
+			</Helmet>
+			{/* {console.log(cEventContext.value?.organizer?.name)} */}
+			<Layout>
 			{(cEventContext.value?.styles?.show_banner === undefined ||
 				cEventContext.value?.styles?.show_banner === 'true') && (
 				<Row className='headerContainer'>
@@ -362,6 +370,8 @@ const ViewPrelanding = ({ preview } : PropsPreLanding) => {
 					}}></Avatar>
 			</BackTop>
 		</Layout>
+	</>
+		
 	);
 };
 
