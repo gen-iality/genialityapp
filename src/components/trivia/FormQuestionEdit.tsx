@@ -206,16 +206,16 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
       image.onload = function () {
         const height = this.height
         const width = this.width
-        if (height > 300 || width > 600) {
-          setDimensions({
-            width: width,
-            height: height,
-          })
-          setDefaultImgValue(undefined)
-          setWrongDimensions(true)
+        // if (height > 300 || width > 600) {
+        //   setDimensions({
+        //     width: width,
+        //     height: height,
+        //   })
+        //   setDefaultImgValue(undefined)
+        //   setWrongDimensions(true)
 
-          return false
-        }
+        //   return false
+        // }
         return true
       }
     }
@@ -612,7 +612,7 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
                   <Tooltip
                     title={
                       <div style={{ background: 'white', padding: '10px' }}>
-                        <Text type="secondary">
+                        {/* <Text type="secondary">
                           Tenga en cuenta que la dimensión de la imagen deben coincidir
                           con la siguiente tabla.
                         </Text>
@@ -622,7 +622,7 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
                           columns={columns}
                           pagination={false}
                           size="small"
-                        />
+                        /> */}
                       </div>
                     }
                   >
