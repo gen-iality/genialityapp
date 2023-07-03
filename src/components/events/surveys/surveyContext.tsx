@@ -178,7 +178,7 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({
 
   const surveyStatsString = useMemo(() => {
     // Beware of editing this without thinking
-    if (!state.surveyStatus || !state.survey) return 'Cuestionario sin datos'
+    if (!state.surveyStatus || !state.survey) return ''
 
     const tried = state.surveyStatus.tried || 0
     return `${tried} ${tried > 1 ? 'intentos' : 'intento'} de ${state.survey?.tries || 1}`

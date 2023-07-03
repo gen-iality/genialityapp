@@ -3,8 +3,9 @@ import { useState, useEffect, useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import useAsyncPrepareQuizStats from '@components/quiz/useAsyncPrepareQuizStats'
 import useSurveyQuery from './hooks/useSurveyQuery'
-import { Card, Result, Button, Space, Spin } from 'antd'
+import { Card, Result, Button, Space, Spin, Col, Row } from 'antd'
 import { connect } from 'react-redux'
+import { PreloaderApp } from '@/PreloaderApp/PreloaderApp'
 
 /** Helpers */
 import { SurveysApi } from '@helpers/request'
@@ -96,11 +97,40 @@ const SurveyDetailPage = ({ surveyId, cEvent }: SurveyDetailPageProps) => {
   }, [currentUser?.value?._id, cEvent.value])
 
   if (!cEvent || !surveyId) {
-    return <h1>Cargando..</h1>
+    return (
+      <>
+        <Space
+          direction="vertical"
+          size="middle"
+          align="center"
+          style={{ display: 'flex' }}
+        >
+          <h1>CARGANDO ...</h1>
+        </Space>
+        <PreloaderApp />
+      </>
+    )
   }
 
   if (!cSurvey.survey) {
-    return <h1>No hay nada publicado {surveyId}</h1>
+    return <h1>Aún no se ha publicado este contenido {surveyId}</h1>
+  }
+
+  /*This is the most important part it loads the full survey status for current attendee */
+  if (!cSurvey.surveyStatus) {
+    return (
+      <>
+        <Space
+          direction="vertical"
+          size="middle"
+          align="center"
+          style={{ display: 'flex' }}
+        >
+          <h1>CARGANDO ...</h1>
+        </Space>
+        <PreloaderApp />
+      </>
+    )
   }
 
   return (
@@ -112,7 +142,7 @@ const SurveyDetailPage = ({ surveyId, cEvent }: SurveyDetailPageProps) => {
           align="center"
           style={{ display: 'flex' }}
         >
-          <em>{cSurvey.surveyStatsString}</em>
+          <em>Ya contestaste {cSurvey.surveyStatsString}</em>
           <Result
             style={{ height: '50%', padding: '75px 75px 20px' }}
             status="success"
@@ -160,9 +190,13 @@ const SurveyDetailPage = ({ surveyId, cEvent }: SurveyDetailPageProps) => {
       ) : (
         <Card className="surveyCard">
           <SurveyComponent eventId={cEvent.value?._id} queryData={query.data} />
-          <em>{cSurvey.surveyStatsString}</em>
         </Card>
       )}
+      <Row>
+        <Col span={24} type="flex" align="middle">
+          {cSurvey.surveyStatsString}
+        </Col>
+      </Row>
     </div>
   )
 }
