@@ -17,10 +17,13 @@ function ResultsPanel(props) {
       questionId, // current question
       currentUser.value._id, // who
     )
-    return userAnswer.data()
+    //console.log('respusuario userAnswer', userAnswer)
+
+    return userAnswer
   }
 
   useEffect(() => {
+    //console.log('respusuario', currentUser, query)
     if (!query.data) return
     if (!idSurvey || !currentUser.value._id) return
 
