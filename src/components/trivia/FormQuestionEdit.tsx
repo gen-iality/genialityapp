@@ -91,7 +91,7 @@ export interface IFormQuestionEditProps {
   surveyId: string
   closeModal: any
   toggleConfirmLoading: any
-  gradableSurvey: any
+  gradableSurvey: boolean
   unmountForm: any
 }
 
@@ -223,7 +223,6 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
 
   useEffect(() => {
     setIsLoading(true)
-    const state = gradableSurvey === 'true' ? true : false
     console.log('valuesQuestion', valuesQuestion)
 
     setDefaultValues(valuesQuestion)
@@ -244,7 +243,7 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
       setRatingCorrectAnswer(valuesQuestion.correctAnswer || 0)
     }
 
-    setAllowGradableSurvey(state)
+    setAllowGradableSurvey(gradableSurvey)
 
     if (Array.isArray(valuesQuestion.correctAnswerIndex)) {
       setCorrectAnswerIndex(valuesQuestion.correctAnswerIndex)
