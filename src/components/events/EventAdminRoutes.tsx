@@ -347,7 +347,7 @@ class EventAdminRoutes extends Component {
                 render={() => <ReportNetworking event={event} />}
               />
               <Protected
-                path={`${match.url}/assistants`}
+                path={`${match.url}/assistants.old`}
                 event={event}
                 url={match.url}
                 render={() => (
@@ -355,7 +355,7 @@ class EventAdminRoutes extends Component {
                 )}
               />
               <Protected
-                path={`${match.url}/assistants.new`}
+                path={`${match.url}/assistants`}
                 event={event}
                 url={match.url}
                 render={() => <ListEventUserPage event={event} parentUrl={match.url} />}
