@@ -1,5 +1,5 @@
 /** Hooks and CustomHooks */
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, FunctionComponent } from 'react'
 import { useHistory } from 'react-router-dom'
 import useAsyncPrepareQuizStats from '@components/quiz/useAsyncPrepareQuizStats'
 import useSurveyQuery from './hooks/useSurveyQuery'
@@ -13,7 +13,7 @@ import { SurveysApi } from '@helpers/request'
 /** Contexts */
 import { useCurrentUser } from '@context/userContext'
 import { useSurveyContext } from './surveyContext'
-import WithEviusContext from '@context/withContext'
+import WithEviusContext, { WithEviusContextProps } from '@context/withContext'
 
 /** Components */
 import SurveyComponent from './SurveyComponent'
@@ -21,14 +21,13 @@ import ResultsPanel from './resultsPanel'
 import QuizProgress from '@components/quiz/QuizProgress'
 
 interface SurveyDetailPageProps {
-  cEvent: any
-  cUser: any
-  cEventUser: any
-  cHelper: any
   surveyId: string
 }
 
-const SurveyDetailPage = ({ surveyId, cEvent }: SurveyDetailPageProps) => {
+const SurveyDetailPage: FunctionComponent<
+  WithEviusContextProps<SurveyDetailPageProps>
+> = (props) => {
+  const { surveyId, cEvent } = props
   const handleGoToCertificate = useCallback(() => {
     history.push(`/landing/${cEvent.value?._id}/certificate`)
   }, [cEvent.value])
@@ -48,11 +47,13 @@ const SurveyDetailPage = ({ surveyId, cEvent }: SurveyDetailPageProps) => {
     cSurvey.loadSurvey({ ...(query.data as any) })
   }, [query.data])
 
-  function showResultsPanel() {
+  const showResultsPanel = () => {
     setShowingResultsPanel(true)
   }
 
-  useEffect(() => cSurvey.stopAnswering(), [])
+  useEffect(() => {
+    cSurvey.stopAnswering()
+  }, [])
 
   useEffect(() => {
     if (!cEvent.value?._id) return
@@ -146,8 +147,8 @@ const SurveyDetailPage = ({ surveyId, cEvent }: SurveyDetailPageProps) => {
             <Alert
               message={
                 cSurvey.shouldDisplaySurveyClosedMenssage()
-                  ? 'EXÁMEN CERRADO'
-                  : 'EXÁMEN ABIERTO'
+                  ? 'Examen Cerrado'
+                  : 'Examen Abierto'
               }
               type="warning"
               showIcon

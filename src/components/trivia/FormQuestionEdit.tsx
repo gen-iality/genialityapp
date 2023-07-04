@@ -109,7 +109,7 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
   const [questionId, setQuestionId] = useState<string>('')
   const [questionIndex, setQuestionIndex] = useState(0)
   const [allowGradableSurvey, setAllowGradableSurvey] = useState(false)
-  const [correctAnswerIndex, setCorrectAnswerIndex] = useState<number[]>([])
+  const [correctAnswerIndex, setCorrectAnswerIndex] = useState<number[] | null>([])
   const [questionType, setQuestionType] = useState<string | undefined>()
   const [defaultImgValue, setDefaultImgValue] = useState<any[] | undefined>()
   const [isLoading, setIsLoading] = useState(false)
@@ -291,7 +291,7 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
     setCorrectAnswerIndex(value === 'radiogroup' ? null : [])
   }
 
-  const fieldValidation = (rule, value) => {
+  const fieldValidation = (rule: any, value: any) => {
     if (value) {
       toggleConfirmLoading()
       return Promise.resolve()
@@ -308,7 +308,7 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
    * @param {number[]} ranking The options' order.
    * @returns {number[]}
    */
-  const sortChoicesByRanking = (choices, ranking) => {
+  const sortChoicesByRanking = (choices: any[], ranking: any[]) => {
     const pairs = choices.map((value, i) => ({ value, r: ranking[i] }))
     console.debug('pairs', pairs)
     const result = pairs.sort((a, b) => {
@@ -329,7 +329,7 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
     return result.map((r) => r.value)
   }
 
-  const onFinish = async (values) => {
+  const onFinish = async (values: any) => {
     StateMessage.show(
       'loading',
       'loading',

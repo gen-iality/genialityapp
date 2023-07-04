@@ -2,16 +2,18 @@ import { FunctionComponent, useEffect, useState } from 'react'
 import SurveyDetailPage from '../../surveys/SurveyDetailPage'
 import HeaderColumnswithContext from '../HeaderColumns'
 
-import WithEviusContext from '@context/withContext'
+import WithEviusContext, { WithEviusContextProps } from '@context/withContext'
 import { Spin } from 'antd'
 
 import { IBasicActivityProps } from './basicTypes'
 import { getActivityFirestoreData } from './getActivityFirestoreData'
 
-const QuizActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
+const QuizActivityDisplayer: FunctionComponent<
+  WithEviusContextProps<IBasicActivityProps>
+> = (props) => {
   const { activity } = props
 
-  const [activityState, setActivityState] = useState('')
+  const [activityState, setActivityState] = useState<any>()
 
   useEffect(() => {
     if (!activity || !props.cEvent) return
