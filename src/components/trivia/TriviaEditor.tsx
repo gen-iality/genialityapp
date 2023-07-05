@@ -44,7 +44,7 @@ interface ITriviaEditorProps {
   surveyId?: string
   onCreated?: (surveyId: string) => void
   onSave?: (surveyId: string) => void
-  onDelete?: () => void
+  onDelete?: (surveyId: string) => void
   /**
    * Set the mode of the trivia. Default "survey"
    */
@@ -216,16 +216,18 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
       // Survey config
       allow_anonymous_answers:
         firebaseSurvey.allow_anonymous_answers ?? Update.allow_anonymous_answers,
-      allow_gradable_survey: firebaseSurvey.allow_gradable_survey,
-      hasMinimumScore: firebaseSurvey.hasMinimumScore ?? Update.hasMinimumScore,
+      allow_gradable_survey:
+        firebaseSurvey.allow_gradable_survey ?? Update.allow_gradable_survey,
+      hasMinimumScore: firebaseSurvey.hasMinimumScore ?? Update.hasMinimumScore ?? false,
 
-      isGlobal: firebaseSurvey.isGlobal ?? Update.isGlobal,
-      showNoVotos: firebaseSurvey.showNoVotos ?? Update.showNoVotos,
+      isGlobal: firebaseSurvey.isGlobal ?? Update.isGlobal ?? false,
+      showNoVotos: firebaseSurvey.showNoVotos ?? Update.showNoVotos ?? false,
 
       // Survey state
-      freezeGame: firebaseSurvey.freezeGame ?? Update.freezeGame,
-      isOpened: firebaseSurvey.isOpened ?? Update.open ?? Update.isOpened,
-      isPublished: firebaseSurvey.isPublished ?? Update.published ?? Update.isPublished,
+      freezeGame: firebaseSurvey.freezeGame ?? Update.freezeGame ?? false,
+      isOpened: firebaseSurvey.isOpened ?? Update.open ?? Update.isOpened ?? false,
+      isPublished:
+        firebaseSurvey.isPublished ?? Update.published ?? Update.isPublished ?? false,
 
       tries: firebaseSurvey.tries ?? Update.tries ?? 1,
       random_survey: firebaseSurvey.random_survey ?? Update.random_survey ?? false,
@@ -235,8 +237,8 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
       survey: Update.survey,
       show_horizontal_bar: Update.show_horizontal_bar ?? true,
       graphyType: Update.graphyType ? Update.graphyType : 'y',
-      allow_vote_value_per_user: Update.allow_vote_value_per_user,
-      activity_id: Update.activity_id,
+      allow_vote_value_per_user: Update.allow_vote_value_per_user ?? false,
+      activity_id: Update.activity_id ?? '',
 
       points: Update.points ? Update.points : 1,
       initialMessage: Update.initialMessage
@@ -247,7 +249,7 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
       neutral_Message: Update.neutral_Message ?? '',
       lose_Message: Update.lose_Message ?? '',
       ranking: Update.rankingVisible,
-      displayGraphsInSurveys: Update.displayGraphsInSurveys,
+      displayGraphsInSurveys: Update.displayGraphsInSurveys ?? false,
 
       minimumScore: Update.minimumScore ?? 0,
     })
@@ -261,27 +263,27 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
       {
         name: data.survey,
         //Survey config
-        allow_anonymous_answers: data.allow_anonymous_answers,
-        allow_gradable_survey: data.allow_gradable_survey,
-        hasMinimumScore: data.hasMinimumScore,
-        isGlobal: data.isGlobal,
-        showNoVotos: data.showNoVotos,
-        time_limit: data.time_limit,
+        allow_anonymous_answers: data.allow_anonymous_answers ?? false,
+        allow_gradable_survey: data.allow_gradable_survey ?? false,
+        hasMinimumScore: data.hasMinimumScore ?? false,
+        isGlobal: data.isGlobal ?? false,
+        showNoVotos: data.showNoVotos ?? false,
+        time_limit: data.time_limit ?? 0,
 
         // Survey State
-        freezeGame: data.freezeGame,
-        isOpened: data.isOpened,
-        isPublished: data.isPublished,
-        rankingVisible: data.rankingVisible,
-        displayGraphsInSurveys: data.displayGraphsInSurveys,
+        freezeGame: data.freezeGame ?? false,
+        isOpened: data.isOpened ?? false,
+        isPublished: data.isPublished ?? false,
+        rankingVisible: data.rankingVisible ?? false,
+        displayGraphsInSurveys: data.displayGraphsInSurveys ?? false,
 
-        minimumScore: data.minimumScore,
-        activity_id: data.activity_id,
+        minimumScore: data.minimumScore ?? '',
+        activity_id: data.activity_id ?? '',
 
         // Rossie history inspired this feature
-        tries: data.tries,
-        random_survey: data.random_survey,
-        random_survey_count: data.random_survey_count,
+        tries: data.tries ?? 1,
+        random_survey: data.random_survey ?? false,
+        random_survey_count: data.random_survey_count ?? 1,
       },
       { eventId, name: data.survey, category: 'none' },
     )
@@ -369,9 +371,10 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
       StateMessage.destroy('updating')
       // Save too in Firebase
       const setDataInFire = await sendToFirebase(data)
-      onSave(surveyId)
       StateMessage.destroy('updating')
       StateMessage.show('updating', 'success', setDataInFire.message)
+      console.log('updated the survey')
+      onSave(surveyId!)
     } catch (err) {
       console.error(err)
       StateMessage.show(null, 'error', 'Ha ocurrido un inconveniente')
@@ -465,7 +468,7 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
             await SurveysApi.deleteOne(surveyId, eventId)
             await deleteSurvey(surveyId)
             StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
-            onDelete()
+            onDelete(surveyId)
           } catch (e) {
             StateMessage.show(null, 'error', handleRequestError(e).message)
           } finally {
@@ -638,12 +641,18 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
                       name="isPublished"
                       label="Publicar"
                       labelCol={{ span: 14 }}
+                      valuePropName="checked"
                     >
                       <Switch checkedChildren="Sí" unCheckedChildren="No" />
                     </Form.Item>
                   </Col>
                   <Col>
-                    <Form.Item name="isOpened" label="Abrir" labelCol={{ span: 14 }}>
+                    <Form.Item
+                      name="isOpened"
+                      label="Abrir"
+                      labelCol={{ span: 14 }}
+                      valuePropName="checked"
+                    >
                       <Switch checkedChildren="Sí" unCheckedChildren="No" />
                     </Form.Item>
                   </Col>
@@ -705,6 +714,7 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
               <Form.Item
                 name="displayGraphsInSurveys"
                 label={`Mostrar gráficas en ${internalTitle.toLowerCase()}`}
+                valuePropName="checked"
               >
                 <Switch />
               </Form.Item>
@@ -722,6 +732,7 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
                   <Form.Item
                     name="showNoVotos"
                     label="Mostrar porcentaje de participantes sin votar en las gráficas"
+                    valuePropName="checked"
                   >
                     <Switch />
                   </Form.Item>
@@ -731,6 +742,7 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
               <Form.Item
                 name="isGlobal"
                 label={`${internalTitle} global (visible en todas las lecciones)`}
+                valuePropName="checked"
               >
                 <Switch />
               </Form.Item>
@@ -755,6 +767,7 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
               <Form.Item
                 name="allow_vote_value_per_user"
                 label="Permitir valor de la respuesta por usuario"
+                valuePropName="checked"
               >
                 <Switch />
               </Form.Item>
@@ -762,17 +775,23 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
               <Form.Item
                 name="allow_gradable_survey"
                 label={`${internalTitle} es calificable`}
+                valuePropName="checked"
               >
                 <Switch />
               </Form.Item>
               {shouldAllowGradableSurvey && (
                 <>
-                  <Form.Item name="ranking" label="Habilitar ranking">
+                  <Form.Item
+                    name="ranking"
+                    label="Habilitar ranking"
+                    valuePropName="checked"
+                  >
                     <Switch />
                   </Form.Item>
                   <Form.Item
                     name="hasMinimumScore"
                     label="Requiere puntaje mínimo para aprobar"
+                    valuePropName="checked"
                   >
                     <Switch />
                   </Form.Item>
@@ -812,6 +831,7 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
               <Form.Item
                 name="random_survey"
                 label={`${internalTitle} con preguntas aleatorias`}
+                valuePropName="checked"
               >
                 <Switch />
               </Form.Item>
