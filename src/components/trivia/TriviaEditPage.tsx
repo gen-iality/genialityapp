@@ -205,9 +205,14 @@ class TriviaEdit extends Component<TriviaEditProps, TriviaEditState> {
       showNoVotos: firebaseSurvey.showNoVotos || this.state.showNoVotos,
 
       // Survey State
-      freezeGame: firebaseSurvey.freezeGame || this.state.freezeGame,
-      isOpened: firebaseSurvey.isOpened || this.state.isOpened,
-      isPublished: firebaseSurvey.isPublished || this.state.isPublished,
+      freezeGame: firebaseSurvey.freezeGame ?? this.state.freezeGame,
+      isOpened:
+        firebaseSurvey.isOpened ?? Update.open ?? Update.isOpened ?? this.state.isOpened,
+      isPublished:
+        firebaseSurvey.isPublished ??
+        Update.published ??
+        Update.isPublished ??
+        this.state.isPublished,
 
       tries: firebaseSurvey.tries ?? Update.tries ?? 1,
       random_survey: firebaseSurvey.random_survey ?? Update.random_survey ?? false,
