@@ -177,16 +177,19 @@ class TriviaEdit extends Component<TriviaEditProps, TriviaEditState> {
   async getSurveyFromEditing(surveyId: string, isCreated?: boolean) {
     console.debug('getSurveyFromEditing is called', surveyId, isCreated)
     //Se obtiene el estado y la confiugracion de la encuesta de Firebase
-    const firebaseSurvey = await getSurveyConfiguration(surveyId)
+    /** NOTE: I disabled this because the firebsae does not get be update */
+    const firebaseSurvey: any = {} /* await getSurveyConfiguration(surveyId) */
     console.log('firebaseSurvey', firebaseSurvey)
 
     //Consulta  a Mongo del información del curso
     const Update = await SurveysApi.getOne(this.props.event._id, surveyId)
+    console.log('Update', Update)
 
     //Se obtiene el listado de lecciones del curso para listarlas en la lista desplegable para relacionar la encuesta con una lección
     const dataAgenda = await AgendaApi.byEvent(this.props.event._id)
 
     //Se envian al estado para poderlos utilizar en el markup
+    console.log('new update:', firebaseSurvey.isOpened, this.state.isOpened)
     this.setState({
       isLoading: false,
       idSurvey: Update._id,
@@ -206,9 +209,10 @@ class TriviaEdit extends Component<TriviaEditProps, TriviaEditState> {
       isOpened: firebaseSurvey.isOpened || this.state.isOpened,
       isPublished: firebaseSurvey.isPublished || this.state.isPublished,
 
-      tries: firebaseSurvey.tries || 1,
-      random_survey: firebaseSurvey.random_survey || false,
-      random_survey_count: firebaseSurvey.random_survey_count || 0,
+      tries: firebaseSurvey.tries ?? Update.tries ?? 1,
+      random_survey: firebaseSurvey.random_survey ?? Update.random_survey ?? false,
+      random_survey_count:
+        firebaseSurvey.random_survey_count ?? Update.random_survey_count ?? 0,
 
       survey: Update.survey,
       show_horizontal_bar: Update.show_horizontal_bar || true,
@@ -221,9 +225,9 @@ class TriviaEdit extends Component<TriviaEditProps, TriviaEditState> {
         ? Update.initialMessage.replace(/<br \/>/g, '\n')
         : null,
       time_limit: Update.time_limit ? parseInt(Update.time_limit) : 0,
-      win_Message: Update.win_Message ? Update.win_Message : '',
-      neutral_Message: Update.neutral_Message ? Update.neutral_Message : '',
-      lose_Message: Update.lose_Message ? Update.lose_Message : '',
+      win_Message: Update.win_Message ?? '',
+      neutral_Message: Update.neutral_Message ?? '',
+      lose_Message: Update.lose_Message ?? '',
       ranking: Update.rankingVisible,
       displayGraphsInSurveys: Update.displayGraphsInSurveys,
 
@@ -344,6 +348,7 @@ class TriviaEdit extends Component<TriviaEditProps, TriviaEditState> {
         random_survey: this.state.random_survey,
         random_survey_count: this.state.random_survey_count,
       }
+      console.log('data 2', data)
       try {
         // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del curso que viene desde props
         const save = await SurveysApi.createOne(this.props.event._id, data)
