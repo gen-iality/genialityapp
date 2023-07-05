@@ -71,7 +71,7 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
 
   const [isLoading, setIsLoading] = useState(false)
   const [surveyId, setSurveyId] = useState(incomingSurveyId)
-  const [surveyData, setsurveyData] = useState<any>({})
+  const [surveyData, setSurveyData] = useState<any>({})
   const [allActivities, setAllActivities] = useState<any[]>([])
 
   const [currentQuestion, setCurrentQuestion] = useState<any>({})
@@ -87,6 +87,7 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
   const editRef = useRef<FormInstance>(null)
 
   const [form] = Form.useForm()
+  window.form = form // Remove after the development
   const shouldDisplayGraphsInSurveys = Form.useWatch('displayGraphsInSurveys', form)
   const shouldBeGlobal = Form.useWatch('isGlobal', form)
   const shouldAllowGradableSurvey = Form.useWatch('allow_gradable_survey', form)
@@ -109,6 +110,8 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
 
   const addNewQuestion = () => {
     const uid = generateUUID()
+    setIsModalOpened(true)
+    setIsProcessLoading(true)
     setCurrentQuestion({ id: uid })
   }
 
@@ -212,12 +215,12 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
     form.setFieldsValue({
       // Survey config
       allow_anonymous_answers:
-        firebaseSurvey.allow_anonymous_answers || Update.allow_anonymous_answers,
+        firebaseSurvey.allow_anonymous_answers ?? Update.allow_anonymous_answers,
       allow_gradable_survey: firebaseSurvey.allow_gradable_survey,
-      hasMinimumScore: firebaseSurvey.hasMinimumScore || Update.hasMinimumScore,
+      hasMinimumScore: firebaseSurvey.hasMinimumScore ?? Update.hasMinimumScore,
 
       isGlobal: firebaseSurvey.isGlobal ?? Update.isGlobal,
-      showNoVotos: firebaseSurvey.showNoVotos || Update.showNoVotos,
+      showNoVotos: firebaseSurvey.showNoVotos ?? Update.showNoVotos,
 
       // Survey state
       freezeGame: firebaseSurvey.freezeGame ?? Update.freezeGame,
@@ -230,7 +233,7 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
         firebaseSurvey.random_survey_count ?? Update.random_survey_count ?? 0,
 
       survey: Update.survey,
-      show_horizontal_bar: Update.show_horizontal_bar || true,
+      show_horizontal_bar: Update.show_horizontal_bar ?? true,
       graphyType: Update.graphyType ? Update.graphyType : 'y',
       allow_vote_value_per_user: Update.allow_vote_value_per_user,
       activity_id: Update.activity_id,
@@ -308,8 +311,8 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
       // Validate the question format
       let isValid = false
       if (questions.length) {
-        if (questions.some((question) => !question.correctAnswer)) {
-          isValid = false
+        if (questions.every((question) => !!question.correctAnswer)) {
+          isValid = true
         }
       }
 
@@ -506,7 +509,7 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
     }
     closeModal()
     setCurrentQuestion({})
-    setIsProcessLoading(false)
+    setIsLoading(false)
   }
 
   const internalTitle = useMemo(() => {
@@ -544,7 +547,7 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
   }, [surveyId, eventId])
 
   useEffect(() => {
-    form.setFieldValue('survey', surveyData.survey ?? '')
+    form.setFieldsValue({ ...surveyData })
   }, [surveyData])
 
   useEffect(() => {
@@ -775,7 +778,7 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
                   </Form.Item>
                   {shouldHaveMinimumScore && (
                     <Form.Item name="minimumScore" label="Puntaje mínimo para aprobar">
-                      <Input />
+                      <InputNumber min={0} />
                     </Form.Item>
                   )}
 
@@ -857,6 +860,7 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
             textAlign: 'center',
           }}
           open={isModalOpened}
+          onOk={() => setIsProcessLoading(true)}
           onCancel={closeModal}
           maskClosable={false}
           footer={[
@@ -896,7 +900,7 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
               eventId={eventId}
               surveyId={surveyId}
               closeModal={closeFormInModal}
-              toggleConfirmLoading={() => setIsProcessLoading((previous) => !previous)}
+              toggleConfirmLoading={() => setIsProcessLoading(false)}
               gradableSurvey={form.getFieldValue('allow_gradable_survey')}
               unmountForm={() => setCurrentQuestion({})}
             />
