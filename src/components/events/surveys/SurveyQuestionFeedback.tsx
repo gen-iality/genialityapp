@@ -5,6 +5,8 @@ import stateMessages from './functions/stateMessagesV2'
 export interface SurveyQuestionFeedbackProps {
   questions: any[]
   onNextClick: () => void
+  showAsFinished?: boolean
+  finishText?: string
 }
 
 function SurveyQuestionFeedback(props: SurveyQuestionFeedbackProps) {
@@ -25,8 +27,13 @@ function SurveyQuestionFeedback(props: SurveyQuestionFeedbackProps) {
       className="animate__animated animate__fadeIn"
       {...newProps}
       extra={[
-        <Button key="0" type="primary" onClick={props.onNextClick}>
-          Siguiente
+        <Button
+          key="0"
+          type="primary"
+          danger={props.showAsFinished}
+          onClick={props.onNextClick}
+        >
+          {props.showAsFinished ? props.finishText ?? 'Finalizar' : 'Siguiente'}
         </Button>,
       ]}
     />

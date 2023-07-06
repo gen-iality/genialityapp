@@ -301,6 +301,8 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
             <SurveyQuestionFeedback
               questions={currentQuestionsForFeedback}
               onNextClick={handleCloseFeedBack}
+              finishText="Finalizar y enviar"
+              showAsFinished={surveyModel.pageCount === surveyModel.currentPageNo + 1}
             />
           </Drawer>
           <div>
