@@ -698,7 +698,7 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
         ),
       },
     ])
-  }, [eventIsActive])
+  }, [eventIsActive, questions])
 
   if (isLoading) {
     return <Loading />
