@@ -22,7 +22,7 @@ import { useCurrentUser } from '@context/userContext'
 import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFromEvent'
 import { addTriesNumber, addRightPoints } from './services/surveyStatus'
 import { useSurveyContext } from './surveyContext'
-import SurveyQuestionsFeedback from './SurveyQuestionsFeedback'
+import SurveyQuestionFeedback from './SurveyQuestionFeedback'
 import { SurveyPreModel } from './types'
 import { LoadingOutlined } from '@ant-design/icons'
 
@@ -257,7 +257,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
             </p>
           )}
           {showingFeedback && (
-            <SurveyQuestionsFeedback
+            <SurveyQuestionFeedback
               questions={currentQuestionsForFeedback}
               onNextClick={() => {
                 setShowingFeedback(false)
