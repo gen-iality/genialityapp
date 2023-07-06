@@ -43,7 +43,7 @@ function createSurveyModel(survey: SurveyPreModel) {
   // Este se esta implementando para no usar el titulo de la encuesta y se muestre dos veces
   // uno en el header y otro encima del botón de inicio de encuesta
   delete surveyModelData.localizableStrings.title.values.default
-  surveyModelData.pageNextText = 'Siguiente'
+  // surveyModelData.pageNextText = 'Siguiente'
   return surveyModelData
 }
 
@@ -261,6 +261,9 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
     if (surveyModel.state === 'completed') {
       setIsSaveButtonShown(true)
       setCurrentPage(queryData._id, currentUser.value._id, 0)
+
+      setIsSavingPoints(true)
+      saveSurveyStatus().then(() => setIsSavingPoints(false))
     }
   }
 
@@ -318,14 +321,22 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <Button
                 type="primary"
+                disabled={isSavingPoints}
                 onClick={() => {
-                  saveSurveyStatus().then(() =>
-                    history.push(`/landing/${eventId}/evento`),
-                  )
+                  // saveSurveyStatus().then(() =>
+                  //   history.push(`/landing/${eventId}/evento`),
+                  // )
+                  history.push(`/landing/${eventId}/evento`)
                 }}
-                danger
               >
-                Confirmar respuestas {isSavingPoints && <Spin />}
+                {isSavingPoints ? (
+                  <>
+                    <Spin />
+                    Cerrando...
+                  </>
+                ) : (
+                  'Volver'
+                )}
               </Button>
             </div>
           )}
