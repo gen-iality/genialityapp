@@ -106,7 +106,7 @@ const SurveyDetailPage: FunctionComponent<
           align="center"
           style={{ display: 'flex' }}
         >
-          <h1>CARGANDO ...</h1>
+          <h1>Cargando...</h1>
         </Space>
         <PreloaderApp />
       </>
@@ -127,7 +127,7 @@ const SurveyDetailPage: FunctionComponent<
           align="center"
           style={{ display: 'flex' }}
         >
-          <h1>CARGANDO ...</h1>
+          <h1>Cargando...</h1>
         </Space>
         <PreloaderApp />
       </>
