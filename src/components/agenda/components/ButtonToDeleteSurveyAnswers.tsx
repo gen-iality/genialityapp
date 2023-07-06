@@ -87,7 +87,8 @@ const ButtonToDeleteSurveyAnswers: FunctionComponent<
     }
   }, [props.surveyId, props.activityId])
 
-  if (!userId || !surveyId) return <>{userId}</>
+  if (!userId) return <>Cargando usuario...</>
+  if (!surveyId) return null
 
   return (
     <Button
