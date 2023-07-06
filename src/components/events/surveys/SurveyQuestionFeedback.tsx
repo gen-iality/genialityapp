@@ -26,7 +26,7 @@ function SurveyQuestionFeedback(props: SurveyQuestionFeedbackProps) {
       {...newProps}
       extra={[
         <Button key="0" type="primary" onClick={props.onNextClick}>
-          Next
+          Siguiente
         </Button>,
       ]}
     />
