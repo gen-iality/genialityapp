@@ -43,6 +43,7 @@ function createSurveyModel(survey: SurveyPreModel) {
   // Este se esta implementando para no usar el titulo de la encuesta y se muestre dos veces
   // uno en el header y otro encima del botón de inicio de encuesta
   delete surveyModelData.localizableStrings.title.values.default
+  surveyModelData.pageNextText = 'Siguiente'
   return surveyModelData
 }
 
@@ -256,7 +257,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
               Guardando puntos <LoadingOutlined />
             </p>
           )}
-          {showingFeedback && (
+          {showingFeedback && !isSaveButtonShown && (
             <SurveyQuestionFeedback
               questions={currentQuestionsForFeedback}
               onNextClick={() => {
@@ -287,6 +288,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
                     history.push(`/landing/${eventId}/evento`),
                   )
                 }}
+                danger
               >
                 Confirmar respuestas {isSavingPoints && <Spin />}
               </Button>
