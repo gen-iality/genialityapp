@@ -19,6 +19,7 @@ import WithEviusContext, { WithEviusContextProps } from '@context/withContext'
 import SurveyComponent from './SurveyComponent'
 import ResultsPanel from './resultsPanel'
 import QuizProgress from '@components/quiz/QuizProgress'
+import { LoadingOutlined } from '@ant-design/icons'
 
 interface SurveyDetailPageProps {
   surveyId: string
@@ -136,76 +137,76 @@ const SurveyDetailPage: FunctionComponent<
 
   return (
     <>
-      {cSurvey.shouldDisplaySurveyAnswered ? (
-        <>
-          <Space
-            direction="vertical"
-            size="middle"
-            align="center"
-            style={{ display: 'flex' }}
-          >
-            <Alert
-              message={
-                cSurvey.shouldDisplaySurveyClosedMenssage
-                  ? 'Examen Cerrado'
-                  : 'Examen Abierto'
-              }
-              type="warning"
-              showIcon
-            />
-            <Alert message="Ya has contestado este exámen" type="success" showIcon />
-            {/* <Result
+      {cSurvey.shouldDisplaySurveyIsNotLoaded ? (
+        <Result icon={<LoadingOutlined />} title="Espere mientras se cargan los datos" />
+      ) : cSurvey.shouldDisplaySurveyAnswered ? (
+        <Space
+          direction="vertical"
+          size="middle"
+          align="center"
+          style={{ display: 'flex' }}
+        >
+          <Alert
+            message={
+              cSurvey.shouldDisplaySurveyClosedMenssage
+                ? 'Examen Cerrado'
+                : 'Examen Abierto'
+            }
+            type="warning"
+            showIcon
+          />
+          <Alert message="Ya has contestado este exámen" type="success" showIcon />
+          {/* <Result
             // style={{ height: '50%', padding: '75px 75px 20px' }}
             status="success"
             title="Ya has contestado este exámen"
           /> */}
-            <QuizProgress
-              eventId={cEvent.value._id}
-              userId={currentUser.value._id}
-              surveyId={surveyId}
+          <QuizProgress
+            eventId={cEvent.value._id}
+            userId={currentUser.value._id}
+            surveyId={surveyId}
+          />
+          <Button onClick={() => showResultsPanel()} type="primary" key="console">
+            Ver mis respuestas
+          </Button>
+
+          {cSurvey.shouldDisplaySurveyClosedMenssage ? (
+            <Alert message="Examen cerrado" type="warning" showIcon />
+          ) : (
+            <>
+              {cSurvey.checkThereIsAnotherTry && (
+                <Button
+                  onClick={() => {
+                    setIsResetingSurvey(true)
+                    cSurvey.resetSurveyStatus(currentUser.value._id).then(() => {
+                      cSurvey.startAnswering()
+                      setIsResetingSurvey(false)
+                    })
+                  }}
+                  type="primary"
+                  key="console"
+                  disabled={isResetingSurvey}
+                >
+                  Responder de nuevo {isResetingSurvey && <Spin />}
+                </Button>
+              )}
+            </>
+          )}
+
+          {showingResultsPanel && (
+            <ResultsPanel
+              eventId={cEvent.value?._id}
+              currentUser={currentUser}
+              idSurvey={surveyId}
             />
-            <Button onClick={() => showResultsPanel()} type="primary" key="console">
-              Ver mis respuestas
+          )}
+
+          {enableGoToCertificate && (
+            <Button type="primary" onClick={handleGoToCertificate}>
+              Descargar certificado
             </Button>
-
-            {cSurvey.shouldDisplaySurveyClosedMenssage ? (
-              <Alert message="Examen cerrado" type="warning" showIcon />
-            ) : (
-              <>
-                {cSurvey.checkThereIsAnotherTry && (
-                  <Button
-                    onClick={() => {
-                      setIsResetingSurvey(true)
-                      cSurvey.resetSurveyStatus(currentUser.value._id).then(() => {
-                        cSurvey.startAnswering()
-                        setIsResetingSurvey(false)
-                      })
-                    }}
-                    type="primary"
-                    key="console"
-                    disabled={isResetingSurvey}
-                  >
-                    Responder de nuevo {isResetingSurvey && <Spin />}
-                  </Button>
-                )}
-              </>
-            )}
-
-            {showingResultsPanel && (
-              <ResultsPanel
-                eventId={cEvent.value?._id}
-                currentUser={currentUser}
-                idSurvey={surveyId}
-              />
-            )}
-
-            {enableGoToCertificate && (
-              <Button type="primary" onClick={handleGoToCertificate}>
-                Descargar certificado
-              </Button>
-            )}
-          </Space>
-        </>
+          )}
+        </Space>
       ) : cSurvey.shouldDisplaySurveyClosedMenssage ? (
         <Result title="Este exámen se  encuentra cerrado" />
       ) : (
