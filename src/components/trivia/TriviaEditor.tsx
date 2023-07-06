@@ -40,7 +40,7 @@ import {
 
 import { createOrUpdateSurvey, getSurveyConfiguration, deleteSurvey } from './services'
 
-interface ITriviaEditorProps {
+export interface ITriviaEditorProps {
   surveyId?: string
   onCreated?: (surveyId: string) => void
   onSave?: (surveyId: string) => void
@@ -51,6 +51,11 @@ interface ITriviaEditorProps {
   mode?: 'quiz' | 'survey'
   availableActivities?: any[]
   eventId: string
+  // Blocked to a activity ID
+  activityId?: string
+  // Antoher force mechanisms
+  forceNonGlobal?: boolean
+  forceGradable?: boolean
 }
 
 interface ITrivia {
@@ -101,6 +106,9 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
     onDelete = () => {},
     onSave = () => {},
     onCreated = () => {},
+    activityId,
+    forceGradable,
+    forceNonGlobal,
   } = props
 
   const [isLoading, setIsLoading] = useState(false)
@@ -251,10 +259,15 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
       allow_anonymous_answers:
         firebaseSurvey.allow_anonymous_answers ?? update.allow_anonymous_answers,
       allow_gradable_survey:
-        firebaseSurvey.allow_gradable_survey ?? update.allow_gradable_survey,
+        typeof forceGradable !== 'undefined'
+          ? forceGradable
+          : firebaseSurvey.allow_gradable_survey ?? update.allow_gradable_survey,
       hasMinimumScore: firebaseSurvey.hasMinimumScore ?? update.hasMinimumScore ?? false,
 
-      isGlobal: firebaseSurvey.isGlobal ?? update.isGlobal ?? false,
+      isGlobal:
+        typeof forceNonGlobal !== 'undefined'
+          ? false
+          : firebaseSurvey.isGlobal ?? update.isGlobal ?? false,
       showNoVotos: firebaseSurvey.showNoVotos ?? update.showNoVotos ?? false,
 
       // Survey state
@@ -272,7 +285,7 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
       show_horizontal_bar: update.show_horizontal_bar ?? true,
       graphyType: update.graphyType ? update.graphyType : 'y',
       allow_vote_value_per_user: update.allow_vote_value_per_user ?? false,
-      activity_id: update.activity_id ?? '',
+      activity_id: typeof activityId === 'string' ? activityId : update.activity_id ?? '',
 
       points: update.points ? update.points : 1,
       initialMessage: update.initialMessage
@@ -298,7 +311,10 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
         name: data.survey,
         //Survey config
         allow_anonymous_answers: data.allow_anonymous_answers ?? false,
-        allow_gradable_survey: data.allow_gradable_survey ?? false,
+        allow_gradable_survey:
+          typeof forceGradable !== 'undefined'
+            ? forceGradable
+            : data.allow_gradable_survey ?? false,
         hasMinimumScore: data.hasMinimumScore ?? false,
         isGlobal: data.isGlobal ?? false,
         showNoVotos: data.showNoVotos ?? false,
@@ -335,7 +351,10 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
     }
 
     // Validate for gradable survey
-    if (values.allow_gradable_survey) {
+    if (
+      values.allow_gradable_survey ||
+      (typeof forceGradable !== 'undefined' && forceGradable)
+    ) {
       if (!values.initialMessage) {
         return StateMessage.show(
           null,
@@ -379,10 +398,13 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
       displayGraphsInSurveys: values.displayGraphsInSurveys,
       graphyType: values.graphyType ?? 'y',
       showNoVotos: values.showNoVotos ?? false,
-      isGlobal: values.isGlobal,
-      activity_id: values.activity_id ?? '',
+      isGlobal: typeof forceNonGlobal !== 'undefined' ? false : values.isGlobal,
+      activity_id: typeof activityId === 'string' ? activityId : values.activity_id ?? '',
       allow_vote_value_per_user: values.allow_vote_value_per_user,
-      allow_gradable_survey: values.allow_gradable_survey,
+      allow_gradable_survey:
+        typeof forceGradable !== 'undefined'
+          ? forceGradable
+          : values.allow_gradable_survey,
       rankingVisible: values.ranking ?? false,
       ranking: values.ranking ?? false,
       hasMinimumScore: values.hasMinimumScore,
@@ -442,10 +464,10 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
       displayGraphsInSurveys: false,
       graphyType: 'y',
       showNoVotos: false,
-      isGlobal: false,
-      activity_id: '',
+      isGlobal: typeof forceNonGlobal !== 'undefined' ? false : false,
+      activity_id: activityId ?? '',
       allow_vote_value_per_user: false,
-      allow_gradable_survey: false,
+      allow_gradable_survey: typeof forceGradable !== 'undefined' ? forceGradable : false,
       rankingVisible: false,
       ranking: false,
       hasMinimumScore: false,
@@ -784,22 +806,33 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
                 name="isGlobal"
                 label={`${internalTitle} global (visible en todas las lecciones)`}
                 valuePropName="checked"
+                initialValue={typeof forceNonGlobal !== 'undefined' ? false : undefined}
               >
-                <Switch />
+                <Switch
+                  disabled={typeof forceNonGlobal !== 'undefined'}
+                  checked={typeof forceNonGlobal !== 'undefined' ? false : undefined}
+                />
               </Form.Item>
               {!shouldBeGlobal && (
                 <>
                   <Form.Item
                     name="activity_id"
                     label={`Vincular ${internalTitle.toLowerCase()} con una lección`}
+                    initialValue={activityId}
                   >
                     <Select
-                      options={[{ label: 'No relacionar', value: '' }].concat(
-                        allActivities.map((activity) => ({
-                          label: activity.name,
-                          value: activity._id,
-                        })),
-                      )}
+                      value={typeof activityId === 'string' ? activityId : undefined}
+                      disabled={typeof activityId === 'string'}
+                      options={
+                        typeof activityId === 'string'
+                          ? [{ value: activityId, label: 'Actividad vinculada' }]
+                          : [{ label: 'No relacionar', value: '' }].concat(
+                              allActivities.map((activity) => ({
+                                label: activity.name,
+                                value: activity._id,
+                              })),
+                            )
+                      }
                     />
                   </Form.Item>
                 </>
@@ -817,8 +850,16 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
                 name="allow_gradable_survey"
                 label={`${internalTitle} es calificable`}
                 valuePropName="checked"
+                initialValue={
+                  typeof forceGradable !== 'undefined' ? forceGradable : undefined
+                }
               >
-                <Switch />
+                <Switch
+                  disabled={typeof forceGradable !== 'undefined'}
+                  checked={
+                    typeof forceGradable !== 'undefined' ? forceGradable : undefined
+                  }
+                />
               </Form.Item>
               {shouldAllowGradableSurvey && (
                 <>
@@ -962,7 +1003,11 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
               surveyId={surveyId}
               closeModal={closeFormInModal}
               toggleConfirmLoading={() => setIsProcessLoading(false)}
-              gradableSurvey={form.getFieldValue('allow_gradable_survey')}
+              gradableSurvey={
+                typeof forceGradable !== 'undefined'
+                  ? forceGradable
+                  : form.getFieldValue('allow_gradable_survey')
+              }
               unmountForm={() => setCurrentQuestion({})}
             />
           </>
