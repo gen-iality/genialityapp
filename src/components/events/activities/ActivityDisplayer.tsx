@@ -100,9 +100,9 @@ const ActivityDisplayer: FunctionComponent<IActivityDisplayerProps> = ({
   onActivityProgress,
 }) => {
   return (
-    <header>
+    <section>
       <div>{switchActivity(activity, onActivityProgress)}</div>
-    </header>
+    </section>
   )
 }
 
