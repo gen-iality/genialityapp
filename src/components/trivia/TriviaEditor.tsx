@@ -212,15 +212,15 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
     })
   }
 
-  const getQuestions = async (Update: any) => {
+  const getQuestions = async (update: any) => {
     const questionList: any[] = []
-    for (const prop in Update.questions) {
+    for (const prop in update.questions) {
       selectOptions.forEach((option) => {
-        if (Update.questions[prop].type === option.value)
-          Update.questions[prop].type = option.text
+        if (update.questions[prop].type === option.value)
+          update.questions[prop].type = option.text
       })
 
-      questionList.push(Update.questions[prop])
+      questionList.push(update.questions[prop])
     }
     console.debug(questionList)
     setQuestions(questionList)
@@ -243,52 +243,52 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
     const firebaseSurvey: any = {} /* await getSurveyConfiguration(surveyId) */
     console.log('firebaseSurvey', firebaseSurvey)
 
-    const Update = await SurveysApi.getOne(eventId, surveyId)
-    console.log('Update', Update)
+    const update = await SurveysApi.getOne(eventId, surveyId)
+    console.log('Update', update)
 
     form.setFieldsValue({
       // Survey config
       allow_anonymous_answers:
-        firebaseSurvey.allow_anonymous_answers ?? Update.allow_anonymous_answers,
+        firebaseSurvey.allow_anonymous_answers ?? update.allow_anonymous_answers,
       allow_gradable_survey:
-        firebaseSurvey.allow_gradable_survey ?? Update.allow_gradable_survey,
-      hasMinimumScore: firebaseSurvey.hasMinimumScore ?? Update.hasMinimumScore ?? false,
+        firebaseSurvey.allow_gradable_survey ?? update.allow_gradable_survey,
+      hasMinimumScore: firebaseSurvey.hasMinimumScore ?? update.hasMinimumScore ?? false,
 
-      isGlobal: firebaseSurvey.isGlobal ?? Update.isGlobal ?? false,
-      showNoVotos: firebaseSurvey.showNoVotos ?? Update.showNoVotos ?? false,
+      isGlobal: firebaseSurvey.isGlobal ?? update.isGlobal ?? false,
+      showNoVotos: firebaseSurvey.showNoVotos ?? update.showNoVotos ?? false,
 
       // Survey state
-      freezeGame: firebaseSurvey.freezeGame ?? Update.freezeGame ?? false,
-      isOpened: firebaseSurvey.isOpened ?? Update.open ?? Update.isOpened ?? false,
+      freezeGame: firebaseSurvey.freezeGame ?? update.freezeGame ?? false,
+      isOpened: firebaseSurvey.isOpened ?? update.open ?? update.isOpened ?? false,
       isPublished:
-        firebaseSurvey.isPublished ?? Update.published ?? Update.isPublished ?? false,
+        firebaseSurvey.isPublished ?? update.published ?? update.isPublished ?? false,
 
-      tries: firebaseSurvey.tries ?? Update.tries ?? 1,
-      random_survey: firebaseSurvey.random_survey ?? Update.random_survey ?? false,
+      tries: firebaseSurvey.tries ?? update.tries ?? 1,
+      random_survey: firebaseSurvey.random_survey ?? update.random_survey ?? false,
       random_survey_count:
-        firebaseSurvey.random_survey_count ?? Update.random_survey_count ?? 0,
+        firebaseSurvey.random_survey_count ?? update.random_survey_count ?? 0,
 
-      survey: Update.survey,
-      show_horizontal_bar: Update.show_horizontal_bar ?? true,
-      graphyType: Update.graphyType ? Update.graphyType : 'y',
-      allow_vote_value_per_user: Update.allow_vote_value_per_user ?? false,
-      activity_id: Update.activity_id ?? '',
+      survey: update.survey,
+      show_horizontal_bar: update.show_horizontal_bar ?? true,
+      graphyType: update.graphyType ? update.graphyType : 'y',
+      allow_vote_value_per_user: update.allow_vote_value_per_user ?? false,
+      activity_id: update.activity_id ?? '',
 
-      points: Update.points ? Update.points : 1,
-      initialMessage: Update.initialMessage
-        ? Update.initialMessage.replace(/<br \/>/g, '\n')
+      points: update.points ? update.points : 1,
+      initialMessage: update.initialMessage
+        ? update.initialMessage.replace(/<br \/>/g, '\n')
         : null,
-      time_limit: Update.time_limit ? parseInt(Update.time_limit) : 0,
-      win_Message: Update.win_Message ?? '',
-      neutral_Message: Update.neutral_Message ?? '',
-      lose_Message: Update.lose_Message ?? '',
-      ranking: Update.rankingVisible,
-      displayGraphsInSurveys: Update.displayGraphsInSurveys ?? false,
+      time_limit: update.time_limit ? parseInt(update.time_limit) : 0,
+      win_Message: update.win_Message ?? '',
+      neutral_Message: update.neutral_Message ?? '',
+      lose_Message: update.lose_Message ?? '',
+      ranking: update.rankingVisible,
+      displayGraphsInSurveys: update.displayGraphsInSurveys ?? false,
 
-      minimumScore: Update.minimumScore ?? 0,
+      minimumScore: update.minimumScore ?? 0,
     })
 
-    if (!isJustCreated) getQuestions(Update)
+    if (!isJustCreated) getQuestions(update)
   }
 
   const sendToFirebase = async (data: ITrivia) => {
