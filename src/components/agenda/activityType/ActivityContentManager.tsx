@@ -198,12 +198,9 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
           <>
             {!contentSource && <Alert type="info" message="Cargando contenido..." />}
             <QuizCMS
-              title="Evaluación"
+              eventId={eventContext.value._id}
+              surveyId={contentSource!}
               activityId={activityEdit}
-              event={eventContext.value}
-              matchUrl={props.matchUrl}
-              savedSurveyId={contentSource!}
-              inserted
               onSave={(quizId: string) => {
                 console.debug('call onSave from QuizCMS. quizId will be', quizId)
                 if (contentSource !== quizId) {
@@ -225,12 +222,9 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
           <>
             {!contentSource && <Alert type="info" message="Cargando contenido..." />}
             <SurveyCMS
-              title="Encuesta"
+              eventId={eventContext.value._id}
+              surveyId={contentSource!}
               activityId={activityEdit}
-              event={eventContext.value}
-              matchUrl={props.matchUrl}
-              savedSurveyId={contentSource!}
-              inserted
               onSave={(surveyId: string) => {
                 console.debug('call onSave from SurveyCMS. surveyId will be', surveyId)
                 if (contentSource !== surveyId) {
