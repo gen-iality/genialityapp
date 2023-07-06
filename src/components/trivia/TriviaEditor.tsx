@@ -53,6 +53,40 @@ interface ITriviaEditorProps {
   eventId: string
 }
 
+interface ITrivia {
+  _id?: string
+  tries: number
+  survey: string
+  activity_id: string
+  points: number
+  allow_anonymous_answers: boolean
+  allow_gradable_survey: boolean
+  random_survey: boolean
+  random_survey_count: number
+  hasMinimumScore: boolean
+  isGlobal: boolean
+  showNoVotos: boolean
+
+  freezeGame: boolean
+  isOpened: boolean
+  isPublished: boolean
+  time_limit: number
+  show_horizontal_bar: boolean
+  allow_vote_value_per_user: boolean
+  ranking: boolean
+  displayGraphsInSurveys: boolean
+  rankingVisible: boolean
+
+  initialMessage: string | null
+  win_Message: string | null
+  neutral_Message: string | null
+  lose_Message: string | null
+  graphyType: string
+
+  // Puntaje mínimo de aprobación
+  minimumScore: number
+}
+
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
@@ -86,8 +120,8 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
 
   const editRef = useRef<FormInstance>(null)
 
-  const [form] = Form.useForm()
-  window.form = form // Remove after the development
+  const [form] = Form.useForm<ITrivia>()
+
   const shouldDisplayGraphsInSurveys = Form.useWatch('displayGraphsInSurveys', form)
   const shouldBeGlobal = Form.useWatch('isGlobal', form)
   const shouldAllowGradableSurvey = Form.useWatch('allow_gradable_survey', form)
@@ -257,7 +291,7 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
     if (!isJustCreated) getQuestions(Update)
   }
 
-  const sendToFirebase = async (data: any) => {
+  const sendToFirebase = async (data: ITrivia) => {
     const setDataInFire = await createOrUpdateSurvey(
       surveyId,
       {
@@ -290,7 +324,7 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
     return setDataInFire
   }
 
-  const updateSurvey = async (values: any) => {
+  const updateSurvey = async (values: ITrivia) => {
     // Validate the question amount
     if (values.isPublished && questions.length === 0) {
       return StateMessage.show(
@@ -338,7 +372,10 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
       survey: values.survey,
       // Rossie history inspired this feature
       tries: Math.max(values.tries ?? 1, 1),
-      time_limit: parseInt(values.time_limit),
+      time_limit:
+        typeof values.time_limit === 'number'
+          ? values.time_limit
+          : parseInt(values.time_limit),
       displayGraphsInSurveys: values.displayGraphsInSurveys,
       graphyType: values.graphyType ?? 'y',
       showNoVotos: values.showNoVotos ?? false,
@@ -349,7 +386,10 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
       rankingVisible: values.ranking ?? false,
       ranking: values.ranking ?? false,
       hasMinimumScore: values.hasMinimumScore,
-      minimumScore: parseInt(values.minimumScore ?? 0),
+      minimumScore:
+        typeof values.minimumScore === 'number'
+          ? values.minimumScore
+          : parseInt(values.minimumScore ?? 0),
       initialMessage: values.initialMessage,
       neutral_Message: values.neutral_Message,
       win_Message: values.win_Message,
@@ -359,7 +399,8 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
 
       // Orphan properties
       show_horizontal_bar: values.show_horizontal_bar,
-      points: values.points ? parseInt(values.points) : 1,
+      points:
+        typeof values.points === 'number' ? values.points : parseInt(values.points ?? 1),
       allow_anonymous_answers: values.allow_anonymous_answers,
     }
 
@@ -381,14 +422,14 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
     }
   }
 
-  const createSurvey = async (values: any) => {
+  const createSurvey = async (values: ITrivia) => {
     StateMessage.show(
       'loading',
       'loading',
       'Por favor espere mientras se guarda la información...',
     )
 
-    const data = {
+    const data: ITrivia = {
       //Survey State
       freezeGame: false,
       isOpened: false,
@@ -441,7 +482,7 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
     }
   }
 
-  const handleSubmit = (values: any) => {
+  const handleSubmit = (values: ITrivia) => {
     if (surveyId) {
       updateSurvey(values)
     } else {
@@ -468,7 +509,7 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
             await SurveysApi.deleteOne(surveyId, eventId)
             await deleteSurvey(surveyId)
             StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
-            onDelete(surveyId)
+            onDelete(surveyId!)
           } catch (e) {
             StateMessage.show(null, 'error', handleRequestError(e).message)
           } finally {
