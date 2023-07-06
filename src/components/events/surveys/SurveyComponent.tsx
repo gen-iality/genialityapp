@@ -23,7 +23,7 @@ import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFrom
 import { addTriesNumber, addRightPoints } from './services/surveyStatus'
 import { useSurveyContext } from './surveyContext'
 import SurveyQuestionsFeedback from './SurveyQuestionsFeedback'
-import { SurveyPreModel } from './models/types'
+import { SurveyPreModel } from './types'
 import { LoadingOutlined } from '@ant-design/icons'
 
 // Configuración para poder relacionar el id de la pregunta en la base de datos
@@ -211,7 +211,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
     const responseIndex = await getResponsesIndex(question)
     const optionIndex = responseIndex
 
-    optionQuantity = question.choices.length
+    optionQuantity = (question.choices ?? []).length
 
     const infoOptionQuestion =
       queryData.allow_gradable_survey === 'true'
