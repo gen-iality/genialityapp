@@ -136,7 +136,7 @@ const SurveyDetailPage: FunctionComponent<
 
   return (
     <>
-      {cSurvey.shouldDisplaySurveyAnswered() ? (
+      {cSurvey.shouldDisplaySurveyAnswered ? (
         <>
           <Space
             direction="vertical"
@@ -146,14 +146,14 @@ const SurveyDetailPage: FunctionComponent<
           >
             <Alert
               message={
-                cSurvey.shouldDisplaySurveyClosedMenssage()
+                cSurvey.shouldDisplaySurveyClosedMenssage
                   ? 'Examen Cerrado'
                   : 'Examen Abierto'
               }
               type="warning"
               showIcon
             />
-            <Alert message={'Ya has contestado este exámen'} type="success" showIcon />
+            <Alert message="Ya has contestado este exámen" type="success" showIcon />
             {/* <Result
             // style={{ height: '50%', padding: '75px 75px 20px' }}
             status="success"
@@ -168,11 +168,11 @@ const SurveyDetailPage: FunctionComponent<
               Ver mis respuestas
             </Button>
 
-            {cSurvey.shouldDisplaySurveyClosedMenssage() ? (
-              <Alert message={'EXÁMEN CERRADO'} type="warning" showIcon />
+            {cSurvey.shouldDisplaySurveyClosedMenssage ? (
+              <Alert message="Examen cerrado" type="warning" showIcon />
             ) : (
               <>
-                {cSurvey.checkThereIsAnotherTry() && (
+                {cSurvey.checkThereIsAnotherTry && (
                   <Button
                     onClick={() => {
                       setIsResetingSurvey(true)
@@ -206,7 +206,7 @@ const SurveyDetailPage: FunctionComponent<
             )}
           </Space>
         </>
-      ) : cSurvey.shouldDisplaySurveyClosedMenssage() ? (
+      ) : cSurvey.shouldDisplaySurveyClosedMenssage ? (
         <Result title="Este exámen se  encuentra cerrado" />
       ) : (
         <Card className="surveyCard">
@@ -214,9 +214,7 @@ const SurveyDetailPage: FunctionComponent<
         </Card>
       )}
       <Row>
-        <Col span={24} type="flex" align="middle">
-          Llevas {cSurvey.surveyStatsString}
-        </Col>
+        <Col span={24}>Llevas {cSurvey.surveyStatsString}</Col>
       </Row>
     </>
   )
