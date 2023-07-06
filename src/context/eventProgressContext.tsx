@@ -86,9 +86,8 @@ export const EventProgressProvider: FunctionComponent = (props) => {
     )
 
     const checkedInOnes = allAttendees.filter((attendee) => {
-      // NOTE: Can be implemented of checking of .checkIn, but for now, we
-      // only check if exists
-      return attendee !== undefined
+      if (attendee === undefined) return false
+      return attendee.checked_in
     })
 
     setCheckedInActivities(checkedInOnes)
