@@ -1,6 +1,7 @@
-import { Button, Result } from 'antd'
+import { Button, Result, Typography } from 'antd'
 import { useMemo } from 'react'
 import stateMessages from './functions/stateMessagesV2'
+import useIsDev from '@/hooks/useIsDev'
 
 export interface SurveyQuestionFeedbackProps {
   questions: any[]
@@ -10,6 +11,7 @@ export interface SurveyQuestionFeedbackProps {
 }
 
 function SurveyQuestionFeedback(props: SurveyQuestionFeedbackProps) {
+  const isDev = useIsDev()
   const points = useMemo(
     () =>
       props.questions
@@ -21,6 +23,15 @@ function SurveyQuestionFeedback(props: SurveyQuestionFeedbackProps) {
   )
 
   const newProps = useMemo(() => stateMessages(points ? 'success' : 'error'), [points])
+
+  const debugQuestionData = useMemo(
+    () =>
+      props.questions.map((question) => ({
+        answer: question.questionValue,
+        correct: question.correctAnswer,
+      })),
+    [],
+  )
 
   return (
     <Result
@@ -36,6 +47,19 @@ function SurveyQuestionFeedback(props: SurveyQuestionFeedbackProps) {
           {props.showAsFinished ? props.finishText ?? 'Finalizar' : 'Siguiente'}
         </Button>,
       ]}
+      subTitle={
+        isDev && (
+          <Typography.Text type="secondary">
+            {debugQuestionData.map((info) => (
+              <small>
+                <small>
+                  <code>{JSON.stringify(info)}</code>
+                </small>
+              </small>
+            ))}
+          </Typography.Text>
+        )
+      }
     />
   )
 }
