@@ -288,7 +288,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
                   )
                 }}
               >
-                Volver al curso {isSavingPoints && <Spin />}
+                Confirmar respuestas {isSavingPoints && <Spin />}
               </Button>
             </div>
           )}
