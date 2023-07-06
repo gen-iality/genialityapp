@@ -40,7 +40,7 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
       // Load the current view progress (with R after the G)
       FB.Attendees.get(activity._id, cEventUser.value._id).then((data: any) => {
         setAttendeeRealTime(data)
-        if (parseFloat(data.viewProgress)) {
+        if (data && parseFloat(data.viewProgress)) {
           console.log('load video to:', data.viewProgress * 100, '%')
           setViewedVideoProgress(data.viewProgress)
           setViewProgress(data.viewProgress)
