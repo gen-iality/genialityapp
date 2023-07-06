@@ -31,7 +31,7 @@ export interface CourseProgressBarProps {
 function CourseProgressBar(props: CourseProgressBarProps) {
   const { activities, eventUser, eventId } = props
 
-  const [attendees, setAttendees] = useState<Activity[]>([])
+  const [attendees, setAttendees] = useState<(Activity & { checked_in?: boolean })[]>([])
   const [watchedActivityId, setWatchedActivityId] = useState<undefined | string>()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -100,7 +100,9 @@ function CourseProgressBar(props: CourseProgressBarProps) {
     () =>
       activities.map((activity) => ({
         ...activity,
-        isViewed: attendees.some((attende) => attende.activity_id == activity._id),
+        isViewed: attendees.some(
+          (attende) => attende.activity_id == activity._id && attende.checked_in,
+        ),
       })),
     [activities, attendees],
   )

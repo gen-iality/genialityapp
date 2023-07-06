@@ -11,6 +11,9 @@ import {
   getAttendeeInActivity,
 } from '@helpers/HelperAuth'
 
+/**
+ * @deprecated use VideoActivityDisplayerPro instead
+ */
 const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
   const { activity, onActivityProgress } = props
   const urlVideo = activity?.video
