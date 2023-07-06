@@ -116,7 +116,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
   const [rolesList, setRolesList] = useState<any[]>([])
   const [simplifyOrgProperties, setSimplifyOrgProperties] = useState<any[]>([])
   const [badgeEvent, setBadgeEvent] = useState<any>()
-  const [dataSource, setDataSource] = useState<any[]>([])
+  const [dataSource, setDataSource] = useState<undefined | any[]>(undefined) // We NEED the initial undefined value
   const [filteredDataSource, setFilteredDataSource] = useState<any[]>([])
 
   const [progressMap, setProgressMap] = useState<any>({})
@@ -565,7 +565,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       editColumn,
     ])
 
-    eventUsersRef.onSnapshot((observer) => {
+    const unsubscribe = eventUsersRef.onSnapshot((observer) => {
       const allEventUserData: any[] = []
       observer.forEach((result) => {
         const data = result.data()
@@ -599,6 +599,8 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
 
       setDataSource(allEventUserData)
     })
+
+    return unsubscribe
   }
 
   const handleExportFile = async () => {
@@ -606,7 +608,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
     const source =
       Array.isArray(filteredDataSource) && filteredDataSource.length > 0
         ? filteredDataSource
-        : dataSource
+        : dataSource || []
     let attendees = [...source].sort((a, b) => b.created_at - a.created_at)
 
     console.info('attendees', attendees)
@@ -637,8 +639,8 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
   }
 
   const activityStats = useMemo(() => {
-    const total = dataSource.length
-    const checkedInTotal = dataSource.filter(
+    const total = (dataSource || []).length
+    const checkedInTotal = (dataSource || []).filter(
       (data) => data.checkedin_at !== undefined,
     ).length
     const checkedInPercent = total === 0 ? 0 : Math.round((checkedInTotal / total) * 100)
@@ -652,7 +654,18 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
 
   useEffect(() => {
     setIsLoading(true)
-    getAllAttendees().finally(() => setIsLoading(false))
+    let unsubscribe: any
+    getAllAttendees()
+      .then((callback) => {
+        unsubscribe = callback
+      })
+      .finally(() => setIsLoading(false))
+
+    return () => {
+      if (typeof unsubscribe !== 'function') {
+        unsubscribe()
+      }
+    }
   }, [])
 
   return (
@@ -676,8 +689,8 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       />
       <Table
         size="small"
-        loading={isLoading}
-        dataSource={dataSource}
+        loading={isLoading || dataSource === undefined}
+        dataSource={dataSource || []}
         scroll={{ x: 'max-content' }}
         columns={columns}
         onChange={(pagination, filters, sorter, extra) => {

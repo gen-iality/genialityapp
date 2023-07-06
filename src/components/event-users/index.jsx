@@ -95,6 +95,9 @@ const TimeTrackingStats = ({ user }) => {
   return <>{timing.toFixed(2)} horas</>
 }
 
+/**
+ * @deprecated use ListEventUserPage (ListEventUserPage.tsx) instead. This class will be removed
+ */
 class ListEventUser extends Component {
   constructor(props) {
     super(props)
@@ -1528,4 +1531,7 @@ and displays an error message using the `message` component from the antd librar
   }
 }
 
+/**
+ * @deprecated use ListEventUserPage (ListEventUserPage.tsx) instead. This class will be removed
+ */
 export default withRouter(ListEventUser)

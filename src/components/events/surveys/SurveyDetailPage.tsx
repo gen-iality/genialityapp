@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import useAsyncPrepareQuizStats from '@components/quiz/useAsyncPrepareQuizStats'
 import useSurveyQuery from './hooks/useSurveyQuery'
-import { Card, Result, Button, Space, Spin, Col, Row } from 'antd'
+import { Card, Result, Button, Space, Spin, Col, Row, Alert } from 'antd'
 import { connect } from 'react-redux'
 import { PreloaderApp } from '@/PreloaderApp/PreloaderApp'
 
@@ -117,7 +117,7 @@ const SurveyDetailPage = ({ surveyId, cEvent }: SurveyDetailPageProps) => {
   }
 
   /*This is the most important part it loads the full survey status for current attendee */
-  if (!cSurvey.surveyStatus) {
+  if (!cSurvey.surveyStatus === undefined) {
     return (
       <>
         <Space
@@ -134,59 +134,79 @@ const SurveyDetailPage = ({ surveyId, cEvent }: SurveyDetailPageProps) => {
   }
 
   return (
-    <div>
+    <>
       {cSurvey.shouldDisplaySurveyAnswered() ? (
-        <Space
-          direction="vertical"
-          size="middle"
-          align="center"
-          style={{ display: 'flex' }}
-        >
-          <em>Ya contestaste {cSurvey.surveyStatsString}</em>
-          <Result
-            style={{ height: '50%', padding: '75px 75px 20px' }}
-            status="success"
-            title="Ya has contestado esta evaluación"
-          />
-          <QuizProgress
-            eventId={cEvent.value._id}
-            userId={currentUser.value._id}
-            surveyId={surveyId}
-          />
-          <Button onClick={() => showResultsPanel()} type="primary" key="console">
-            Ver mis respuestas
-          </Button>
-          {cSurvey.checkThereIsAnotherTry() && (
-            <Button
-              onClick={() => {
-                setIsResetingSurvey(true)
-                cSurvey.resetSurveyStatus(currentUser.value._id).then(() => {
-                  cSurvey.startAnswering()
-                  setIsResetingSurvey(false)
-                })
-              }}
-              type="primary"
-              key="console"
-              disabled={isResetingSurvey}
-            >
-              Responder de nuevo {isResetingSurvey && <Spin />}
-            </Button>
-          )}
-          {showingResultsPanel && (
-            <ResultsPanel
-              eventId={cEvent.value?._id}
-              currentUser={currentUser}
-              idSurvey={surveyId}
+        <>
+          <Space
+            direction="vertical"
+            size="middle"
+            align="center"
+            style={{ display: 'flex' }}
+          >
+            <Alert
+              message={
+                cSurvey.shouldDisplaySurveyClosedMenssage()
+                  ? 'EXÁMEN CERRADO'
+                  : 'EXÁMEN ABIERTO'
+              }
+              type="warning"
+              showIcon
             />
-          )}
-          {enableGoToCertificate && (
-            <Button type="primary" onClick={handleGoToCertificate}>
-              Descargar certificado
+            <Alert message={'Ya has contestado este exámen'} type="success" showIcon />
+            {/* <Result
+            // style={{ height: '50%', padding: '75px 75px 20px' }}
+            status="success"
+            title="Ya has contestado este exámen"
+          /> */}
+            <QuizProgress
+              eventId={cEvent.value._id}
+              userId={currentUser.value._id}
+              surveyId={surveyId}
+            />
+            <Button onClick={() => showResultsPanel()} type="primary" key="console">
+              Ver mis respuestas
             </Button>
-          )}
-        </Space>
+
+            {cSurvey.shouldDisplaySurveyClosedMenssage() ? (
+              <Alert message={'EXÁMEN CERRADO'} type="warning" showIcon />
+            ) : (
+              <>
+                {cSurvey.checkThereIsAnotherTry() && (
+                  <Button
+                    onClick={() => {
+                      setIsResetingSurvey(true)
+                      cSurvey.resetSurveyStatus(currentUser.value._id).then(() => {
+                        cSurvey.startAnswering()
+                        setIsResetingSurvey(false)
+                      })
+                    }}
+                    type="primary"
+                    key="console"
+                    disabled={isResetingSurvey}
+                  >
+                    Responder de nuevo {isResetingSurvey && <Spin />}
+                  </Button>
+                )}
+              </>
+            )}
+
+            {showingResultsPanel && (
+              <ResultsPanel
+                eventId={cEvent.value?._id}
+                currentUser={currentUser}
+                idSurvey={surveyId}
+              />
+            )}
+
+            {enableGoToCertificate && (
+              <Button type="primary" onClick={handleGoToCertificate}>
+                Descargar certificado
+              </Button>
+            )}
+          </Space>
+        </>
       ) : cSurvey.shouldDisplaySurveyClosedMenssage() ? (
-        <Result title="Esta evaluación ha sido cerrada" />
+        <Result title="Este exámen se  encuentra cerrado" />
       ) : (
         <Card className="surveyCard">
           <SurveyComponent eventId={cEvent.value?._id} queryData={query.data} />
@@ -194,10 +214,10 @@ const SurveyDetailPage = ({ surveyId, cEvent }: SurveyDetailPageProps) => {
       )}
       <Row>
         <Col span={24} type="flex" align="middle">
-          {cSurvey.surveyStatsString}
+          Llevas {cSurvey.surveyStatsString}
         </Col>
       </Row>
-    </div>
+    </>
   )
 }
 

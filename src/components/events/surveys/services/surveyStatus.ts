@@ -116,6 +116,7 @@ export const addRightPoints = async (
 }
 
 export const getStatus = async (surveyId: string, userId: string): Promise<any> => {
+  console.log('getStatus inner', surveyId, userId)
   const firebaseRef = getRef(surveyId, userId)
 
   try {
@@ -125,10 +126,10 @@ export const getStatus = async (surveyId: string, userId: string): Promise<any> 
       console.debug(`surveyId:${surveyId}, userId:${userId}`, document)
       return document
     } else {
-      throw new Error('no found')
+      return {}
     }
   } catch (err) {
-    console.error(`surveyId:${surveyId}, userId:${userId}`, err)
+    console.error(err.message, `surveyId:${surveyId}, userId:${userId}`, err)
   }
 }
 

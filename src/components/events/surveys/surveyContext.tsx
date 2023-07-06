@@ -46,7 +46,7 @@ export type CustomContextMethodType = {
 const initialContextState: SurveyContextType = {
   status: 'LOADING',
   survey: null,
-  surveyStatus: null,
+  surveyStatus: undefined, //El valor es indefinido hasta que no cargue. puede ser vacio o traer los datos
   answering: false,
 }
 
@@ -90,8 +90,9 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({
     if (!cEventContext || !cEventContext.value) return
     if (!cUser || !cUser.value) return
     if (!state.survey?._id) return
-
+    console.log('getStatus effect', cEventContext, cUser, state.survey)
     getSurveyStatus(state.survey._id, cUser.value._id).then((data) => {
+      console.log('getStatus despachando', cEventContext, cUser, state.survey)
       dispatch({ type: SurveyContextAction.SURVEY_STATUS_LOADED, surveyStatus: data })
     })
   }, [cEventContext, cUser, state.survey])
@@ -137,7 +138,7 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({
     if (!state.survey) {
       return false
     }
-    return state.survey.isOpened === 'false'
+    return state.survey.isOpened === 'false' || state.survey.isOpened === false
   }
 
   const shouldDisplayGraphics = () => {
