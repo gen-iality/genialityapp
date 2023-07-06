@@ -106,6 +106,9 @@ interface TriviaEditState {
   minimumScore: number
 }
 
+/**
+ * @deprecated use ImprovedTriviaEditPage instead
+ */
 class TriviaEdit extends Component<TriviaEditProps, TriviaEditState> {
   formEditRef: RefObject<FormInstance>
 
@@ -1350,4 +1353,7 @@ class TriviaEdit extends Component<TriviaEditProps, TriviaEditState> {
   }
 }
 
+/**
+ * @deprecated use ImprovedTriviaEditPage instead
+ */
 export default withRouter(TriviaEdit)
