@@ -4,7 +4,7 @@ function multipleAnswerType(question) {
     question.value.forEach((value) => {
       optionIndex = [
         ...optionIndex,
-        question.choices.findIndex(
+        (question.choices ?? []).findIndex(
           (item) => item.propertyHash.value === value || item.itemValue === value,
         ),
       ]
