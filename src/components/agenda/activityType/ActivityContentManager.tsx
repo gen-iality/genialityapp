@@ -183,6 +183,20 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
     )
   }
 
+  const updateSurveyIDAsContentSource = (
+    id: string,
+    contentValue: ActivityType.ContentValue,
+  ) => {
+    console.debug('survey/quiz ID will be', id)
+    if (contentSource !== id) {
+      saveActivityContent(contentValue, id)
+    } else {
+      console.info(
+        `Resaving stopped because contentSource = current ID ${id} (for ${contentValue})`,
+      )
+    }
+  }
+
   if (
     [activityContentValues.survey, activityContentValues.quizing].includes(
       activityContentType as ActivityType.ContentValue,
@@ -202,14 +216,10 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
               surveyId={contentSource!}
               activityId={activityEdit}
               onSave={(quizId: string) => {
-                console.debug('call onSave from QuizCMS. quizId will be', quizId)
-                if (contentSource !== quizId) {
-                  saveActivityContent(activityContentType, quizId)
-                } else {
-                  console.info(
-                    `Resaving stopped because contentSource = quizId ${quizId}`,
-                  )
-                }
+                updateSurveyIDAsContentSource(quizId, activityContentType)
+              }}
+              onCreated={(quizId) => {
+                updateSurveyIDAsContentSource(quizId, activityContentType)
               }}
               onDelete={() => {
                 console.debug('quiz will delete')
@@ -226,14 +236,10 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
               surveyId={contentSource!}
               activityId={activityEdit}
               onSave={(surveyId: string) => {
-                console.debug('call onSave from SurveyCMS. surveyId will be', surveyId)
-                if (contentSource !== surveyId) {
-                  saveActivityContent(activityContentType, surveyId)
-                } else {
-                  console.info(
-                    `Resaving stopped because contentSource = surveyId ${surveyId}`,
-                  )
-                }
+                updateSurveyIDAsContentSource(surveyId, activityContentType)
+              }}
+              onCreated={(surveyId) => {
+                updateSurveyIDAsContentSource(surveyId, activityContentType)
               }}
               onDelete={() => {
                 console.debug('survey will delete')
