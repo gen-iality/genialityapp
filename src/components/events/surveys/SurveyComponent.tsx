@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom'
 import { setCurrentPage } from './services/surveys'
 
 /** Antd services */
-import { Spin, Button } from 'antd'
+import { Spin, Button, Drawer } from 'antd'
 
 /** Funciones externas */
 import messageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey'
@@ -248,6 +248,22 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
     await messageWhenCompletingSurvey(surveyModel, queryData, currentUser.value._id)
   }
 
+  const handleCloseFeedBack = () => {
+    if (!surveyModel) {
+      console.warn(
+        'You are calling to handleCloseFeedBack method but surveyModel is',
+        surveyModel,
+      )
+      return
+    }
+    setShowingFeedback(false)
+    surveyModel.nextPage()
+    if (surveyModel.state === 'completed') {
+      setIsSaveButtonShown(true)
+      setCurrentPage(queryData._id, currentUser.value._id, 0)
+    }
+  }
+
   return (
     <>
       {surveyModel && (
@@ -257,7 +273,10 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
               Guardando puntos <LoadingOutlined />
             </p>
           )}
-          {showingFeedback && !isSaveButtonShown && (
+          {/* NOTE: Left here if you wanna restaure the last feature.
+          Remember edit the next DIV tag too
+          to add it the style of display:block|none */}
+          {/* {showingFeedback && (
             <SurveyQuestionFeedback
               questions={currentQuestionsForFeedback}
               onNextClick={() => {
@@ -269,8 +288,22 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
                 }
               }}
             />
-          )}
-          <div style={{ display: showingFeedback || isSavingPoints ? 'none' : 'block' }}>
+          )} */}
+          <Drawer
+            title="Retroalimentación"
+            placement="right"
+            closable={false}
+            open={showingFeedback}
+            onClose={handleCloseFeedBack}
+            getContainer={false}
+            style={{ position: 'absolute' }}
+          >
+            <SurveyQuestionFeedback
+              questions={currentQuestionsForFeedback}
+              onNextClick={handleCloseFeedBack}
+            />
+          </Drawer>
+          <div>
             <Survey.Survey
               model={surveyModel}
               onCurrentPageChanging={displayFeedbackAfterEachQuestion}
