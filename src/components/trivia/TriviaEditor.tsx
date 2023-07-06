@@ -342,6 +342,11 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
   }
 
   const updateSurvey = async (values: ITrivia) => {
+    if (!surveyId) {
+      StateMessage.show(null, 'error', 'No se ha cargado el ID de encuesta correctamente')
+      console.error(`surveyId is "${surveyId}". Nobody can update with that`)
+      return
+    }
     // Validate the question amount
     if (values.isPublished && questions.length === 0) {
       return StateMessage.show(
@@ -434,11 +439,11 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
 
       StateMessage.destroy('updating')
       // Save too in Firebase
-      const setDataInFire = await sendToFirebase(surveyId!, data)
+      const setDataInFire = await sendToFirebase(surveyId, data)
       StateMessage.destroy('updating')
       StateMessage.show('updating', 'success', setDataInFire.message)
       console.log('updated the survey')
-      onSave(surveyId!)
+      onSave(surveyId)
     } catch (err) {
       console.error(err)
       StateMessage.show(null, 'error', 'Ha ocurrido un inconveniente')
@@ -528,12 +533,20 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
       okType: 'danger',
       cancelText: 'Cancelar',
       onOk: () => {
+        if (!surveyId) {
+          StateMessage.show(
+            null,
+            'error',
+            'No se ha cargado el ID de encuesta correctamente',
+          )
+          return
+        }
         const onHandlerRemove = async () => {
           try {
             await SurveysApi.deleteOne(surveyId, eventId)
             await deleteSurvey(surveyId)
             StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
-            onDelete(surveyId!)
+            onDelete(surveyId)
           } catch (e) {
             StateMessage.show(null, 'error', handleRequestError(e).message)
           } finally {
