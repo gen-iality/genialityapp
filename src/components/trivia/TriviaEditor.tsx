@@ -304,7 +304,8 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
     if (!isJustCreated) getQuestions(update)
   }
 
-  const sendToFirebase = async (data: ITrivia) => {
+  const sendToFirebase = async (surveyId: string, data: ITrivia) => {
+    console.log('will save in firebase for surveyId:', surveyId)
     const setDataInFire = await createOrUpdateSurvey(
       surveyId,
       {
@@ -433,7 +434,7 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
 
       StateMessage.destroy('updating')
       // Save too in Firebase
-      const setDataInFire = await sendToFirebase(data)
+      const setDataInFire = await sendToFirebase(surveyId!, data)
       StateMessage.destroy('updating')
       StateMessage.show('updating', 'success', setDataInFire.message)
       console.log('updated the survey')
@@ -489,10 +490,11 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
 
     try {
       const saved = await SurveysApi.createOne(eventId, data)
-      await sendToFirebase(data)
+      console.log('saved at database', saved)
 
+      // Important use saved._id as surveyId and save the new surveyId
+      await sendToFirebase(saved._id, data)
       onCreated(saved._id)
-
       setSurveyId(saved._id)
       loadSurveyDataById(saved._id, eventId)
 
