@@ -39,6 +39,7 @@ import {
 } from '@ant-design/icons'
 
 import { createOrUpdateSurvey, getSurveyConfiguration, deleteSurvey } from './services'
+import RequiredStar from '@components/agenda/components/RequiredStar'
 
 export interface ITriviaEditorProps {
   surveyId?: string
@@ -349,11 +350,17 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
     }
     // Validate the question amount
     if (values.isPublished && questions.length === 0) {
-      return StateMessage.show(
-        null,
-        'error',
-        `${internalTitle} no cuenta con respuestas posibles`,
-      )
+      // return StateMessage.show(
+      //   null,
+      //   'error',
+      //   `${internalTitle} no cuenta con respuestas posibles`,
+      // )
+      Modal.error({
+        title: 'Faltan datos',
+        content: `${internalTitle} no cuenta con respuestas posibles`,
+        centered: true,
+      })
+      return
     }
 
     // Validate for gradable survey
@@ -362,11 +369,17 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
       (typeof forceGradable !== 'undefined' && forceGradable)
     ) {
       if (!values.initialMessage) {
-        return StateMessage.show(
-          null,
-          'error',
-          `${internalTitle} es calificable, debe asignar un mensaje inicial`,
-        )
+        // return StateMessage.show(
+        //   null,
+        //   'error',
+        //   `${internalTitle} es calificable, debe asignar un mensaje inicial`,
+        // )
+        Modal.error({
+          title: 'Faltan datos',
+          content: `${internalTitle} es calificable, debe asignar un mensaje inicial`,
+          centered: true,
+        })
+        return
       }
 
       // Validate the question format
@@ -378,11 +391,17 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
       }
 
       if (!isValid) {
-        return StateMessage.show(
-          null,
-          'error',
-          `${internalTitle} es calificable, hay preguntas sin respuesta correcta asignada`,
-        )
+        // return StateMessage.show(
+        //   null,
+        //   'error',
+        //   `${internalTitle} es calificable, hay preguntas sin respuesta correcta asignada`,
+        // )
+        Modal.error({
+          title: 'Faltan datos',
+          content: `${internalTitle} es calificable, hay preguntas sin respuesta correcta asignada`,
+          centered: true,
+        })
+        return
       }
     }
 
@@ -900,25 +919,41 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
 
                   <Form.Item
                     name="initialMessage"
-                    label={`Mensaje pantalla inicial de ${internalTitle.toLowerCase()}`}
+                    label={
+                      <RequiredStar
+                        label={`Mensaje pantalla inicial de ${internalTitle.toLowerCase()}`}
+                      />
+                    }
                   >
                     <RichTextEditor />
                   </Form.Item>
                   <Form.Item
                     name="neutral_Message"
-                    label={`Mensaje pantalla final de ${internalTitle.toLowerCase()}`}
+                    label={
+                      <RequiredStar
+                        label={`Mensaje pantalla final de ${internalTitle.toLowerCase()}`}
+                      />
+                    }
                   >
                     <RichTextEditor />
                   </Form.Item>
                   <Form.Item
                     name="win_Message"
-                    label={`Mensaje al ganar ${internalTitle.toLowerCase()}`}
+                    label={
+                      <RequiredStar
+                        label={`Mensaje al ganar ${internalTitle.toLowerCase()}`}
+                      />
+                    }
                   >
                     <RichTextEditor />
                   </Form.Item>
                   <Form.Item
                     name="lose_Message"
-                    label={`Mensaje al perder ${internalTitle.toLowerCase()}`}
+                    label={
+                      <RequiredStar
+                        label={`Mensaje al perder ${internalTitle.toLowerCase()}`}
+                      />
+                    }
                   >
                     <RichTextEditor />
                   </Form.Item>
