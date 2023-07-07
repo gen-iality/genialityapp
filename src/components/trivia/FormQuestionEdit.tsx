@@ -131,6 +131,8 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
   const [ratingCorrectAnswer, setRatingCorrectAnswer] = useState<any | undefined>()
   // For the likert scale surveys
   const [likertScaleData, setLikertScaleData] = useState<any | undefined>()
+  // For the text type
+  const [rawText, setRawText] = useState('')
 
   const [form] = Form.useForm()
 
@@ -272,6 +274,15 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
       })
     }
 
+    if (valuesQuestion.type === 'Texto') {
+      console.debug('load text')
+      setRawText(
+        Array.isArray(valuesQuestion.correctAnswer)
+          ? valuesQuestion.correctAnswer[0]
+          : valuesQuestion.correctAnswer ?? '',
+      )
+    }
+
     setTimeout(() => {
       setIsLoading(false)
     }, 500)
@@ -397,6 +408,12 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
           values['correctAnswerIndex'] = fixedCorrectAnswerIndex
           break
 
+        case 'text':
+          values['isRequired'] = true
+          values['correctAnswer'] = rawText
+          values['correctAnswerIndex'] = 0
+          break
+
         default:
           break
       }
@@ -413,6 +430,8 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
       values['rateMax'] = rateMax
       values['minRateDescription'] = minRateDescription
       values['rateMin'] = rateMin
+    } else if (questionType === 'text') {
+      values['choices'] = []
     }
 
     if (values.type.indexOf(' ') > 0) {
@@ -945,27 +964,41 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
                             onEdit={(x) => setLikertScaleData(x)}
                           />
                         </Space>
+                      ) : questionType === 'text' ? (
+                        <Form.Item label="Texto">
+                          <Input
+                            value={rawText}
+                            onChange={(e) => {
+                              setCorrectAnswerIndex(0)
+                              setRawText(e.target.value ?? '')
+                            }}
+                          />
+                        </Form.Item>
                       ) : (
                         <p>Tipo desconocido</p>
                       )}
                     </Space>
-                    {fields.length < 15 && questionType !== 'rating' && (
-                      <Form.Item>
-                        <Button
-                          type="dashed"
-                          onClick={() => {
-                            add()
-                            if (questionType === 'ranking') {
-                              // Only for ranking
-                              buildFakeCorrectAnswerIndexForRankingType(fields.length + 1)
-                            }
-                          }}
-                        >
-                          <PlusOutlined /> Agregar otra{' '}
-                          {questionType === 'ranking' ? 'opción' : 'respuesta'}
-                        </Button>
-                      </Form.Item>
-                    )}
+                    {fields.length < 15 &&
+                      questionType !== 'rating' &&
+                      questionType !== 'text' && (
+                        <Form.Item>
+                          <Button
+                            type="dashed"
+                            onClick={() => {
+                              add()
+                              if (questionType === 'ranking') {
+                                // Only for ranking
+                                buildFakeCorrectAnswerIndexForRankingType(
+                                  fields.length + 1,
+                                )
+                              }
+                            }}
+                          >
+                            <PlusOutlined /> Agregar otra{' '}
+                            {questionType === 'ranking' ? 'opción' : 'respuesta'}
+                          </Button>
+                        </Form.Item>
+                      )}
                   </>
                 )
               }}
