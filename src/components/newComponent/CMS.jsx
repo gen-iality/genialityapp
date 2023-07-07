@@ -24,6 +24,7 @@ const CMS = (props) => {
     pagination,
     actions,
     editPath,
+    editByParam,
     search,
     setColumnsData,
     draggable,
@@ -162,6 +163,7 @@ const CMS = (props) => {
         pagination={pagination}
         actions={actions}
         editPath={editPath}
+        editByParam={editByParam}
         editFn={editFn}
         remove={remove}
         noRemove={noRemove}

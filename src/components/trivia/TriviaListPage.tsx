@@ -67,12 +67,13 @@ const TriviaListPage: FunctionComponent<ITriviaListPageProps> = (props) => {
           back
           titleTooltip={'Agregue o edite las Agendas que se muestran en la aplicación'}
           addUrl={{
-            pathname: `${props.matchUrl}/encuesta`,
+            pathname: `${props.matchUrl}/edit`,
             state: { new: true },
           }}
           columns={columns}
           key="_id"
-          editPath={`${props.matchUrl}/encuesta`}
+          editPath={`${props.matchUrl}/edit`}
+          editByParam
           pagination={false}
           actions
           search

@@ -91,7 +91,7 @@ export interface IFormQuestionEditProps {
   surveyId: string
   closeModal: any
   toggleConfirmLoading: any
-  gradableSurvey: any
+  gradableSurvey: boolean
   unmountForm: any
 }
 
@@ -109,7 +109,7 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
   const [questionId, setQuestionId] = useState<string>('')
   const [questionIndex, setQuestionIndex] = useState(0)
   const [allowGradableSurvey, setAllowGradableSurvey] = useState(false)
-  const [correctAnswerIndex, setCorrectAnswerIndex] = useState<number[]>([])
+  const [correctAnswerIndex, setCorrectAnswerIndex] = useState<number[] | null>([])
   const [questionType, setQuestionType] = useState<string | undefined>()
   const [defaultImgValue, setDefaultImgValue] = useState<any[] | undefined>()
   const [isLoading, setIsLoading] = useState(false)
@@ -131,6 +131,8 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
   const [ratingCorrectAnswer, setRatingCorrectAnswer] = useState<any | undefined>()
   // For the likert scale surveys
   const [likertScaleData, setLikertScaleData] = useState<any | undefined>()
+  // For the text type
+  const [rawText, setRawText] = useState('')
 
   const [form] = Form.useForm()
 
@@ -223,7 +225,6 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
 
   useEffect(() => {
     setIsLoading(true)
-    const state = gradableSurvey === 'true' ? true : false
     console.log('valuesQuestion', valuesQuestion)
 
     setDefaultValues(valuesQuestion)
@@ -244,7 +245,7 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
       setRatingCorrectAnswer(valuesQuestion.correctAnswer || 0)
     }
 
-    setAllowGradableSurvey(state)
+    setAllowGradableSurvey(gradableSurvey)
 
     if (Array.isArray(valuesQuestion.correctAnswerIndex)) {
       setCorrectAnswerIndex(valuesQuestion.correctAnswerIndex)
@@ -273,6 +274,15 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
       })
     }
 
+    if (valuesQuestion.type === 'Texto') {
+      console.debug('load text')
+      setRawText(
+        Array.isArray(valuesQuestion.correctAnswer)
+          ? valuesQuestion.correctAnswer[0]
+          : valuesQuestion.correctAnswer ?? '',
+      )
+    }
+
     setTimeout(() => {
       setIsLoading(false)
     }, 500)
@@ -291,7 +301,7 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
     setCorrectAnswerIndex(value === 'radiogroup' ? null : [])
   }
 
-  const fieldValidation = (rule, value) => {
+  const fieldValidation = (rule: any, value: any) => {
     if (value) {
       toggleConfirmLoading()
       return Promise.resolve()
@@ -308,7 +318,7 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
    * @param {number[]} ranking The options' order.
    * @returns {number[]}
    */
-  const sortChoicesByRanking = (choices, ranking) => {
+  const sortChoicesByRanking = (choices: any[], ranking: any[]) => {
     const pairs = choices.map((value, i) => ({ value, r: ranking[i] }))
     console.debug('pairs', pairs)
     const result = pairs.sort((a, b) => {
@@ -329,7 +339,7 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
     return result.map((r) => r.value)
   }
 
-  const onFinish = async (values) => {
+  const onFinish = async (values: any) => {
     StateMessage.show(
       'loading',
       'loading',
@@ -398,6 +408,12 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
           values['correctAnswerIndex'] = fixedCorrectAnswerIndex
           break
 
+        case 'text':
+          values['isRequired'] = true
+          values['correctAnswer'] = rawText
+          values['correctAnswerIndex'] = 0
+          break
+
         default:
           break
       }
@@ -414,6 +430,8 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
       values['rateMax'] = rateMax
       values['minRateDescription'] = minRateDescription
       values['rateMin'] = rateMin
+    } else if (questionType === 'text') {
+      values['choices'] = []
     }
 
     if (values.type.indexOf(' ') > 0) {
@@ -946,27 +964,41 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
                             onEdit={(x) => setLikertScaleData(x)}
                           />
                         </Space>
+                      ) : questionType === 'text' ? (
+                        <Form.Item label="Texto">
+                          <Input
+                            value={rawText}
+                            onChange={(e) => {
+                              setCorrectAnswerIndex(0)
+                              setRawText(e.target.value ?? '')
+                            }}
+                          />
+                        </Form.Item>
                       ) : (
                         <p>Tipo desconocido</p>
                       )}
                     </Space>
-                    {fields.length < 15 && questionType !== 'rating' && (
-                      <Form.Item>
-                        <Button
-                          type="dashed"
-                          onClick={() => {
-                            add()
-                            if (questionType === 'ranking') {
-                              // Only for ranking
-                              buildFakeCorrectAnswerIndexForRankingType(fields.length + 1)
-                            }
-                          }}
-                        >
-                          <PlusOutlined /> Agregar otra{' '}
-                          {questionType === 'ranking' ? 'opción' : 'respuesta'}
-                        </Button>
-                      </Form.Item>
-                    )}
+                    {fields.length < 15 &&
+                      questionType !== 'rating' &&
+                      questionType !== 'text' && (
+                        <Form.Item>
+                          <Button
+                            type="dashed"
+                            onClick={() => {
+                              add()
+                              if (questionType === 'ranking') {
+                                // Only for ranking
+                                buildFakeCorrectAnswerIndexForRankingType(
+                                  fields.length + 1,
+                                )
+                              }
+                            }}
+                          >
+                            <PlusOutlined /> Agregar otra{' '}
+                            {questionType === 'ranking' ? 'opción' : 'respuesta'}
+                          </Button>
+                        </Form.Item>
+                      )}
                   </>
                 )
               }}

@@ -183,6 +183,20 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
     )
   }
 
+  const updateSurveyIDAsContentSource = (
+    id: string,
+    contentValue: ActivityType.ContentValue,
+  ) => {
+    console.debug('survey/quiz ID will be', id)
+    if (contentSource !== id) {
+      saveActivityContent(contentValue, id)
+    } else {
+      console.info(
+        `Resaving stopped because contentSource = current ID ${id} (for ${contentValue})`,
+      )
+    }
+  }
+
   if (
     [activityContentValues.survey, activityContentValues.quizing].includes(
       activityContentType as ActivityType.ContentValue,
@@ -198,21 +212,14 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
           <>
             {!contentSource && <Alert type="info" message="Cargando contenido..." />}
             <QuizCMS
-              title="Evaluación"
+              eventId={eventContext.value._id}
+              surveyId={contentSource!}
               activityId={activityEdit}
-              event={eventContext.value}
-              matchUrl={props.matchUrl}
-              savedSurveyId={contentSource!}
-              inserted
               onSave={(quizId: string) => {
-                console.debug('call onSave from QuizCMS. quizId will be', quizId)
-                if (contentSource !== quizId) {
-                  saveActivityContent(activityContentType, quizId)
-                } else {
-                  console.info(
-                    `Resaving stopped because contentSource = quizId ${quizId}`,
-                  )
-                }
+                updateSurveyIDAsContentSource(quizId, activityContentType)
+              }}
+              onCreated={(quizId) => {
+                updateSurveyIDAsContentSource(quizId, activityContentType)
               }}
               onDelete={() => {
                 console.debug('quiz will delete')
@@ -225,21 +232,14 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
           <>
             {!contentSource && <Alert type="info" message="Cargando contenido..." />}
             <SurveyCMS
-              title="Encuesta"
+              eventId={eventContext.value._id}
+              surveyId={contentSource!}
               activityId={activityEdit}
-              event={eventContext.value}
-              matchUrl={props.matchUrl}
-              savedSurveyId={contentSource!}
-              inserted
               onSave={(surveyId: string) => {
-                console.debug('call onSave from SurveyCMS. surveyId will be', surveyId)
-                if (contentSource !== surveyId) {
-                  saveActivityContent(activityContentType, surveyId)
-                } else {
-                  console.info(
-                    `Resaving stopped because contentSource = surveyId ${surveyId}`,
-                  )
-                }
+                updateSurveyIDAsContentSource(surveyId, activityContentType)
+              }}
+              onCreated={(surveyId) => {
+                updateSurveyIDAsContentSource(surveyId, activityContentType)
               }}
               onDelete={() => {
                 console.debug('survey will delete')

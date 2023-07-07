@@ -31,6 +31,7 @@ const Table = (props) => {
     draggable,
     actions,
     editPath,
+    editByParam,
     remove,
     noRemove,
     search,
@@ -169,7 +170,13 @@ const Table = (props) => {
                   <Link
                     key={`editAction${item.index}`}
                     id={`editAction${item.index}`}
-                    to={{ pathname: editPath, state: { edit: item._id } }}
+                    to={
+                      editByParam
+                        ? {
+                            pathname: `${editPath}/${item._id}`,
+                          }
+                        : { pathname: editPath, state: { edit: item._id } }
+                    }
                   >
                     <Button icon={<EditOutlined />} type="primary" size="small" />
                   </Link>

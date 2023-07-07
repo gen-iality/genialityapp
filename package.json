@@ -27,7 +27,7 @@
     "@sentry/react": "^6.18.1",
     "@sentry/tracing": "^6.18.1",
     "animate.css": "^4.1.0",
-    "antd": "^4.19.5",
+    "antd": "^4.24.12",
     "antd-img-crop": "^3.14.2",
     "array-move": "^3.0.1",
     "async": "^2.6.3",
@@ -126,7 +126,7 @@
     "redux-thunk": "^2.3.0",
     "sass": "~1.49.9",
     "source-map-explorer": "^2.5.2",
-    "survey-react": "^1.8.56",
+    "survey-react": "^1.9.96",
     "swiper": "^6.0.4",
     "url-loader": "^4.1.1",
     "vite-tsconfig-paths": "^3.4.1",
@@ -135,7 +135,6 @@
     "yup": "^0.29.2"
   },
   "devDependencies": {
-    "@types/antd": "^1.0.0",
     "@types/loadable__component": "^5.13.4",
     "@types/mocha": "^9.1.0",
     "@types/react": "^17.0.40",

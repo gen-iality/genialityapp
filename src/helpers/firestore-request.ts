@@ -201,6 +201,9 @@ const Surveys = {
         if (!document.exists) return
         return document.data()
       },
+      delete: async (surveyId: string, answerId: string, questionId: string) => {
+        await Surveys.Answers.Responses.ref(surveyId, answerId, questionId).delete()
+      },
       edit: async (
         surveyId: string,
         answerId: string,

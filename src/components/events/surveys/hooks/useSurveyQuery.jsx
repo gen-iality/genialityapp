@@ -24,7 +24,12 @@ function useSurveyQuery(eventId, idSurvey, isResetingSurvey) {
     if (innerQuery === undefined || innerRealTimeQuery === undefined) return
     console.log('prueba que no carga tanto')
     setQuery((prev) => {
-      return { ...prev, loading: false, data: { ...innerQuery, ...innerRealTimeQuery } }
+      return {
+        ...prev,
+        loading: false,
+        /** NOTE: I had to disable realtime because the CMS does not update to Firebase, so... */
+        data: { ...innerQuery /*...innerRealTimeQuery*/ },
+      }
     })
   }, [innerQuery, innerRealTimeQuery])
 

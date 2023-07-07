@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom'
 import { setCurrentPage } from './services/surveys'
 
 /** Antd services */
-import { Spin, Button } from 'antd'
+import { Spin, Button, Drawer } from 'antd'
 
 /** Funciones externas */
 import messageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey'
@@ -22,9 +22,10 @@ import { useCurrentUser } from '@context/userContext'
 import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFromEvent'
 import { addTriesNumber, addRightPoints } from './services/surveyStatus'
 import { useSurveyContext } from './surveyContext'
-import SurveyQuestionsFeedback from './SurveyQuestionsFeedback'
-import { SurveyPreModel } from './models/types'
+import SurveyQuestionFeedback from './SurveyQuestionFeedback'
+import { SurveyPreModel } from './types'
 import { LoadingOutlined } from '@ant-design/icons'
+import calcRightAnswers from './calcRightAnswers'
 
 // Configuración para poder relacionar el id de la pregunta en la base de datos
 // con la encuesta visible para poder almacenar las respuestas
@@ -43,6 +44,7 @@ function createSurveyModel(survey: SurveyPreModel) {
   // Este se esta implementando para no usar el titulo de la encuesta y se muestre dos veces
   // uno en el header y otro encima del botón de inicio de encuesta
   delete surveyModelData.localizableStrings.title.values.default
+  // surveyModelData.pageNextText = 'Siguiente'
   return surveyModelData
 }
 
@@ -195,7 +197,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
 
     let question
     let optionQuantity = 0
-    let correctAnswer = false
+    let correctAnswer: boolean | undefined = false
 
     if (surveyQuestions.length === 1) {
       question = surveyModel.currentPage.questions[0]
@@ -204,17 +206,27 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
     }
 
     // Funcion que retorna si la opcion escogida es la respuesta correcta
+    const { badCount, rightCount } = calcRightAnswers(
+      [question],
+      /**
+       * This question types need calc the answers with the restrict mode on
+       */
+      ['ranking'],
+    )
     correctAnswer =
-      question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined
+      question.correctAnswer !== undefined ? badCount === 0 && rightCount == 1 : undefined
 
     /** funcion para validar tipo de respuesta multiple o unica */
     const responseIndex = await getResponsesIndex(question)
     const optionIndex = responseIndex
 
-    optionQuantity = question.choices.length
+    optionQuantity = (question.choices ?? []).length
 
     const infoOptionQuestion =
-      queryData.allow_gradable_survey === 'true'
+      (typeof queryData.allow_gradable_survey === 'string' &&
+        queryData.allow_gradable_survey === 'true') ||
+      (typeof queryData.allow_gradable_survey === 'boolean' &&
+        queryData.allow_gradable_survey)
         ? { optionQuantity, optionIndex, correctAnswer }
         : { optionQuantity, optionIndex }
 
@@ -247,6 +259,25 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
     await messageWhenCompletingSurvey(surveyModel, queryData, currentUser.value._id)
   }
 
+  const handleCloseFeedBack = () => {
+    if (!surveyModel) {
+      console.warn(
+        'You are calling to handleCloseFeedBack method but surveyModel is',
+        surveyModel,
+      )
+      return
+    }
+    setShowingFeedback(false)
+    surveyModel.nextPage()
+    if (surveyModel.state === 'completed') {
+      setIsSaveButtonShown(true)
+      setCurrentPage(queryData._id, currentUser.value._id, 0)
+
+      setIsSavingPoints(true)
+      saveSurveyStatus().then(() => setIsSavingPoints(false))
+    }
+  }
+
   return (
     <>
       {surveyModel && (
@@ -256,8 +287,11 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
               Guardando puntos <LoadingOutlined />
             </p>
           )}
-          {showingFeedback && (
-            <SurveyQuestionsFeedback
+          {/* NOTE: Left here if you wanna restaure the last feature.
+          Remember edit the next DIV tag too
+          to add it the style of display:block|none */}
+          {/* {showingFeedback && (
+            <SurveyQuestionFeedback
               questions={currentQuestionsForFeedback}
               onNextClick={() => {
                 setShowingFeedback(false)
@@ -268,8 +302,24 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
                 }
               }}
             />
-          )}
-          <div style={{ display: showingFeedback || isSavingPoints ? 'none' : 'block' }}>
+          )} */}
+          <Drawer
+            title="Retroalimentación"
+            placement="right"
+            closable={false}
+            open={showingFeedback}
+            onClose={handleCloseFeedBack}
+            getContainer={false}
+            style={{ position: 'absolute' }}
+          >
+            <SurveyQuestionFeedback
+              questions={currentQuestionsForFeedback}
+              onNextClick={handleCloseFeedBack}
+              finishText="Finalizar y enviar"
+              showAsFinished={surveyModel.pageCount === surveyModel.currentPageNo + 1}
+            />
+          </Drawer>
+          <div>
             <Survey.Survey
               model={surveyModel}
               onCurrentPageChanging={displayFeedbackAfterEachQuestion}
@@ -282,13 +332,22 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <Button
                 type="primary"
+                disabled={isSavingPoints}
                 onClick={() => {
-                  saveSurveyStatus().then(() =>
-                    history.push(`/landing/${eventId}/evento`),
-                  )
+                  // saveSurveyStatus().then(() =>
+                  //   history.push(`/landing/${eventId}/evento`),
+                  // )
+                  history.push(`/landing/${eventId}/evento`)
                 }}
               >
-                Volver al curso {isSavingPoints && <Spin />}
+                {isSavingPoints ? (
+                  <>
+                    <Spin />
+                    Cerrando...
+                  </>
+                ) : (
+                  'Volver'
+                )}
               </Button>
             </div>
           )}
