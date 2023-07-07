@@ -2,6 +2,7 @@ import { Button, Result, Typography } from 'antd'
 import { useMemo } from 'react'
 import stateMessages from './functions/stateMessagesV2'
 import useIsDev from '@/hooks/useIsDev'
+import calcRightAnswers from './calcRightAnswers'
 
 export interface SurveyQuestionFeedbackProps {
   questions: any[]
@@ -12,15 +13,25 @@ export interface SurveyQuestionFeedbackProps {
 
 function SurveyQuestionFeedback(props: SurveyQuestionFeedbackProps) {
   const isDev = useIsDev()
-  const points = useMemo(
-    () =>
+  // const points = useMemo(
+  //   () =>
+  //     props.questions
+  //       .map((question) =>
+  //         question.correctAnswerCount ? question.correctAnswerCount : 0,
+  //       )
+  //       .reduce((a, b) => a + b, 0),
+  //   [props.questions],
+  // )
+  const points = useMemo(() => {
+    const { rightCount } = calcRightAnswers(
       props.questions
-        .map((question) =>
-          question.correctAnswerCount ? question.correctAnswerCount : 0,
-        )
-        .reduce((a, b) => a + b, 0),
-    [props.questions],
-  )
+      /**
+       * This question types need calc the answers with the restrict mode on
+       */,
+      ['ranking'],
+    )
+    return rightCount
+  }, [props.questions])
 
   const newProps = useMemo(() => stateMessages(points ? 'success' : 'error'), [points])
 
@@ -30,7 +41,7 @@ function SurveyQuestionFeedback(props: SurveyQuestionFeedbackProps) {
         answer: question.questionValue,
         correct: question.correctAnswer,
       })),
-    [],
+    [props.questions],
   )
 
   return (

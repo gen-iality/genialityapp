@@ -25,6 +25,7 @@ import { useSurveyContext } from './surveyContext'
 import SurveyQuestionFeedback from './SurveyQuestionFeedback'
 import { SurveyPreModel } from './types'
 import { LoadingOutlined } from '@ant-design/icons'
+import calcRightAnswers from './calcRightAnswers'
 
 // Configuración para poder relacionar el id de la pregunta en la base de datos
 // con la encuesta visible para poder almacenar las respuestas
@@ -196,7 +197,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
 
     let question
     let optionQuantity = 0
-    let correctAnswer = false
+    let correctAnswer: boolean | undefined = false
 
     if (surveyQuestions.length === 1) {
       question = surveyModel.currentPage.questions[0]
@@ -205,8 +206,15 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
     }
 
     // Funcion que retorna si la opcion escogida es la respuesta correcta
+    const { badCount, rightCount } = calcRightAnswers(
+      [question],
+      /**
+       * This question types need calc the answers with the restrict mode on
+       */
+      ['ranking'],
+    )
     correctAnswer =
-      question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined
+      question.correctAnswer !== undefined ? badCount === 0 && rightCount == 1 : undefined
 
     /** funcion para validar tipo de respuesta multiple o unica */
     const responseIndex = await getResponsesIndex(question)
@@ -215,7 +223,10 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
     optionQuantity = (question.choices ?? []).length
 
     const infoOptionQuestion =
-      queryData.allow_gradable_survey === 'true'
+      (typeof queryData.allow_gradable_survey === 'string' &&
+        queryData.allow_gradable_survey === 'true') ||
+      (typeof queryData.allow_gradable_survey === 'boolean' &&
+        queryData.allow_gradable_survey)
         ? { optionQuantity, optionIndex, correctAnswer }
         : { optionQuantity, optionIndex }
 
