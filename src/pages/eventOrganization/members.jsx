@@ -34,15 +34,13 @@ function OrgMembers(props) {
         _id: membersData._id,
         created_at: membersData.created_at,
         updated_at: membersData.updated_at,
-        position: membersData.rol_id,
-        // names: membersData?.user?.name || membersData?.user?.names,
-        // email: membersData?.user?.email,
+        position: membersData?.rol?.name ?? 'NaN', //Si no viene Rol validar que deba traerlo
         ...membersData.properties,
       };
-
+      
       fieldsMembersData.push(properties);
     });
-
+    
     setMembersData(fieldsMembersData);
     setIsLoading(false);
   }
