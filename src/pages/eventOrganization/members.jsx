@@ -11,6 +11,7 @@ import moment from 'moment';
 import withContext from '../../context/withContext';
 import { utils, writeFileXLSX } from 'xlsx';
 import Header from '../../antdComponents/Header';
+import { ModalAddAndEditUsers } from './components/ModalAddAndEditUsers';
 
 function OrgMembers(props) {
   const [membersData, setMembersData] = useState([]);
@@ -142,7 +143,7 @@ function OrgMembers(props) {
           </Row>
         )}
       />
-      {addOrEditUser && (
+      {/* {addOrEditUser && (
         <ModalMembers
           handleModal={closeOrOpenModalMembers}
           modal={addOrEditUser}
@@ -153,6 +154,12 @@ function OrgMembers(props) {
           closeOrOpenModalMembers={closeOrOpenModalMembers}
           organizationId={organizationId}
           startingComponent={startingComponent}
+        />
+      )} */}
+      {addOrEditUser && (
+        <ModalAddAndEditUsers
+        visible={addOrEditUser}
+        onCancel={()=>setAddOrEditUser(false)}
         />
       )}
     </>
