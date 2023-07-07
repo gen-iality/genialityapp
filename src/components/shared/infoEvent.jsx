@@ -5,6 +5,7 @@ import Moment from 'moment';
 import { UseEventContext } from '../../context/eventContext';
 import EventAccessActionContainer from './eventAccessAction/EventAccessActionContainer';
 import { useIntl } from 'react-intl';
+import { useGetMultiDate } from '@/hooks/useGetMultiDate';
 
 const { useBreakpoint } = Grid;
 
@@ -13,14 +14,14 @@ const InfoEvent = ({ paddingOff, preview }) => {
 	let cEvent = UseEventContext();
 	let cEventValues = cEvent.value;
 	const screens = useBreakpoint();
-	
 	// console.log('Soy una landing');
-
+	
 	const bgColor = cEventValues?.styles?.toolbarDefaultBg;
 	const textColor = cEventValues?.styles?.textMenu;
 	//Validacion temporal para el evento audi
 	const idEvent = cEventValues?._id;
 	const intl = useIntl();
+	const {getDateStart, getDateEnd, getStartTime, getEndTime  }  =useGetMultiDate(idEvent)
 
 	return (
 		<PageHeader
@@ -53,38 +54,42 @@ const InfoEvent = ({ paddingOff, preview }) => {
 			}
 			footer={
 				<Space direction='vertical' size={4} style={{ color: textColor, fontSize: '16px' }}>
-					<Space wrap size={'large'}>
+					<Space wrap size={screens.xs ? 0 : 'large'}>
 						<Space wrap>
 							<Space>
 								<CalendarFilled />
-								<time>{Moment(cEventValues?.datetime_from).format('ll')}</time>
+								<time>{getDateStart()}</time>
 							</Space>
 							<Space>
 								<ClockCircleFilled />
-								<time>{Moment(cEventValues?.datetime_from).format('LT')}</time>
+								<time>{getStartTime()}</time>
 							</Space>
 						</Space>
 						{idEvent !== '6334782dc19fe2710a0b8753' && (
 							<Space wrap>
 								<Space>
 									<CalendarFilled />
-									<time>{Moment(cEventValues?.datetime_to).format('ll')}</time>
+									<time>{getDateEnd()}</time>
 								</Space>
 								<Space>
 									<ClockCircleFilled />
-									<time>{Moment(cEventValues?.datetime_to).format('LT')}</time>
+									<time>{getEndTime()}</time>
 								</Space>
 							</Space>
 						)}
 					</Space>
-					{cEventValues?.type_event !== 'onlineEvent' && (
+					{cEventValues?.type_event !== 'onlineEvent' && (cEventValues?.address || cEventValues?.venue) && (
 						<Space>
 							<EnvironmentFilled />
 							<Space wrap split={screens.xs ? null : '/'}>
-								<Typography.Text style={{ color: textColor }}>{cEventValues?.address}</Typography.Text>
-								<Typography.Text style={{ color: textColor }} italic>
-									{cEventValues?.venue}
-								</Typography.Text>
+								{cEventValues.address && 
+									<Typography.Text style={{ color: textColor }}>{cEventValues?.address}</Typography.Text>
+								}
+								{cEventValues.venue &&
+									<Typography.Text style={{ color: textColor }} italic>
+										{cEventValues?.venue}
+									</Typography.Text>
+								}
 							</Space>
 						</Space>
 					)}

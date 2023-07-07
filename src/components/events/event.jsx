@@ -20,7 +20,7 @@ import EmpresasRoutes from '../empresas';
 import TriviaRoutes from '../trivia';
 import DocumentsRoutes from '../documents';
 import Speakers from '../speakers';
-import MenuLanding from '../menuLanding';
+import MenuLanding from '../menuLanding/index';
 import ReportList from '../agenda/report';
 import ConferenceRoute from '../zoom/index';
 import NetworkingPage from '../networking/Networking.page';
@@ -209,9 +209,9 @@ class Event extends Component {
     if (error)
       return (
         <Result
-          status='error'
-          title='Error inesperado'
-          subTitle={`Lo sentimos, hubo un error de tipo: ${handleRequestError(error).message}`}
+          status='404'
+          title='Evento no encontrado'
+          subTitle={`Lo sentimos, hubo un error inesperado`}
           extra={[
             <Link to={`/`}>
               <Button type='primary' key='eventData'>

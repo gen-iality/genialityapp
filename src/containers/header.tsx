@@ -258,20 +258,22 @@ const Headers = (props: Props) => {
 							/>
 						) : !dataGeneral.userEvent ? (
 							screens.xs ? (
-								<Space>
-									<Dropdown overlay={MenuMobile}>
-										<Button
-											style={{
-												backgroundColor: '#3681E3',
-												color: '#FFFFFF',
-												border: 'none',
-											}}
-											size='large'
-											shape='circle'
-											icon={<AccountCircleIcon style={{ fontSize: '28px' }} />}
-										/>
-									</Dropdown>
-								</Space>
+								<div style={{position:'absolute', right:15, top:6}}>
+									<Space>
+										<Dropdown overlay={MenuMobile}>
+											<Button
+												style={{
+													backgroundColor: '#3681E3',
+													color: '#FFFFFF',
+													border: 'none',
+												}}
+												size='large'
+												shape='circle'
+												icon={<AccountCircleIcon style={{ fontSize: '28px' }} />}
+											/>
+										</Dropdown>
+									</Space>
+								</div>
 							) : (
 								<Space>
 									{showButtons.buttonlogin ? (
@@ -332,22 +334,24 @@ const Headers = (props: Props) => {
 								</Space>
 							)
 						) : dataGeneral.userEvent != null && !dataGeneral.anonimususer ? (
-							<UserStatusAndMenu
-								user={dataGeneral.user}
-								menuOpen={dataGeneral.menuOpen}
-								colorHeader={bgcolorContainer}
-								photo={
-									dataGeneral.photo
-										? dataGeneral.photo
-										: 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
-								}
-								name={dataGeneral.name ? dataGeneral.name : ''}
-								userEvent={dataGeneral.userEvent}
-								eventId={dataGeneral.eventId}
-								logout={(callBack: any) => userLogOut(callBack)}
-								openMenu={() => openMenu()}
-								loginInfo={loginInfo}
-							/>
+							<div style={screens.xs ? {position:'absolute', right:20, top:0}:undefined}>
+								<UserStatusAndMenu
+									user={dataGeneral.user}
+									menuOpen={dataGeneral.menuOpen}
+									colorHeader={bgcolorContainer}
+									photo={
+										dataGeneral.photo
+											? dataGeneral.photo
+											: 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
+									}
+									name={dataGeneral.name ? dataGeneral.name : ''}
+									userEvent={dataGeneral.userEvent}
+									eventId={dataGeneral.eventId}
+									logout={(callBack: any) => userLogOut(callBack)}
+									openMenu={() => openMenu()}
+									loginInfo={loginInfo}
+								/>
+							</div>
 						) : (
 							dataGeneral.userEvent != null &&
 							dataGeneral.anonimususer && (

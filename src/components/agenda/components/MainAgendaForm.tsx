@@ -3,7 +3,7 @@ import { SetStateAction, Dispatch } from 'react';
 import { useEffect, useRef, useMemo, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import { Row, Col, Space, Typography, Button, Form, Input, InputRef, Switch, Card, TimePicker } from 'antd';
+import { Row, Col, Space, Typography, Button, Form, Input, InputRef, Switch, Card, TimePicker, Alert } from 'antd';
 import { Select as SelectAntd } from 'antd';
 import { ExclamationCircleOutlined, SettingOutlined } from '@ant-design/icons';
 
@@ -30,6 +30,7 @@ import AgendaType from '@Utilities/types/AgendaType';
 import ActivityTypeSelector from '../activityType/ActivityTypeSelector';
 import loadExtraAgendaData from '../hooks/useLoadExtraAgendaData';
 import useHourWithAdditionalMinutes from '../hooks/useHourWithAdditionalMinutes';
+import { useGetMultiDate } from '@/hooks/useGetMultiDate';
 
 const { Text } = Typography;
 const { Option } = SelectAntd;
@@ -65,14 +66,13 @@ export interface MainAgendaFormProps {
   savedFormData: FormDataType;
   agenda: AgendaType | null;
   setFormData: (x: FormDataType) => void;
-  previousFormData: FormDataType,
+  previousFormData: FormDataType;
   setShowPendingChangesModal: (b: boolean) => void;
 }
 
 function MainAgendaForm(props: MainAgendaFormProps) {
   const { agendaContext, formdata, savedFormData, agenda, setFormData, setShowPendingChangesModal } = props;
   const { previousFormData } = props;
-
   const [isLoaded, setIsLoaded] = useState(false);
   const [thisIsLoading, setThisIsLoading] = useState<{ [key: string]: boolean }>({ categories: true });
   const [allDays, setAllDays] = useState<SelectOptionType[]>([]);
@@ -81,10 +81,10 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   const [allCategories, setAllCategories] = useState<SelectOptionType[]>([]); // info.selectedCategories modifies that
   const [allRoles, setAllRoles] = useState<SelectOptionType[]>([]);
   const [allTickets, setAllTickets] = useState<SelectOptionType[]>([]);
-
+  const { multiDates } = useGetMultiDate(props.event?._id);
+  const [haveDateNotIncluded, sethaveDateNotIncluded] = useState(false);
   const history = useHistory();
   const nameInputRef = useRef<InputRef>(null);
-
   const processDateFromAgendaDocument = useProcessDateFromAgendaDocument();
   const hourWithAdditionalMinutes = useHourWithAdditionalMinutes();
 
@@ -139,6 +139,24 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     // Focus the first field
     if (!formdata.name) nameInputRef.current?.focus();
   }, [nameInputRef.current]);
+
+  useEffect(() => {
+    if (multiDates && agenda === null) handleChangeFormData('date', moment(multiDates[0]?.start).format('YYYY-MM-DD'));
+  }, [multiDates]);
+
+  useEffect(() => {
+    if (multiDates.length === 0) return;
+    const existDate = multiDates.find((dateRange) => {
+      const exist = moment(dateRange.start).format('YYYY-MM-DD') === moment(formdata.date).format('YYYY-MM-DD');
+      return exist;
+    });
+
+    if (!existDate) {
+      sethaveDateNotIncluded(true);
+    } else {
+      sethaveDateNotIncluded(false);
+    }
+  }, [formdata.date, multiDates]);
 
   /**
    * Custom hooks
@@ -302,12 +320,23 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                 </label>
               }
               rules={[{ required: true, message: 'La fecha es requerida' }]}>
+             
               <SelectAntd
-                options={allDays}
+                options={
+                  multiDates.length > 0
+                    ? multiDates.map((date) => ({
+                        value: moment(date.start).format('YYYY-MM-DD'),
+                        label: moment(date.start).format('YYYY-MM-DD'),
+                      }))
+                    : allDays
+                }
                 value={formdata.date}
                 defaultValue={formdata.date}
                 onChange={(value) => handleChangeFormData('date', value)}
               />
+               {haveDateNotIncluded && (
+                <Alert type='error' message='La fecha de la actividad no es una fecha del evento' />
+              )}
             </Form.Item>
             <Row wrap justify='center' gutter={[8, 8]}>
               <Col span={12}>

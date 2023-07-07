@@ -3,7 +3,7 @@ import { UseEventContext } from '@/context/eventContext';
 import { UseUserEvent } from '@/context/eventUserContext';
 import { useHelper } from '@/context/helperContext/hooks/useHelper';
 import { firestore } from '@/helpers/firebase';
-import { Alert, Button, Space } from 'antd';
+import { Alert, Button, Space, Grid } from 'antd';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import {
@@ -13,6 +13,8 @@ import {
 } from '../interfaces/interfaces';
 import { assignStatusAccordingToAction } from './utils/utils';
 import { useIntl } from 'react-intl';
+
+const { useBreakpoint } = Grid;
 
 const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 	let cEvent = UseEventContext();
@@ -24,6 +26,8 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 	const bgColor = cEvent?.value?.styles?.toolbarDefaultBg;
 	const textColor = cEvent?.value?.styles?.textMenu;
 	const [eventData, setEventData] = useState<any>({});
+	const screens = useBreakpoint();
+
 
 	//Validacion temporal para el evento audi
 	const idEvent = cEvent?.value?._id;
@@ -98,6 +102,7 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 								color: idEvent !== '6334782dc19fe2710a0b8753' ? bgColor : '#c55a95',
 								backgroundColor: textColor,
 								border: 'none',
+								width: screens.xs ? '300px' : ''
 							}}
 							type='primary'
 							size='large'

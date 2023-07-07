@@ -196,33 +196,6 @@ export default function Initial({ active, ConfigTime, show }: networkingGlobalCo
                       </Space>
                     } 
                   </Col>
-                  <Col span={24}>
-                    <Space direction='vertical'>
-                      <Typography.Text strong>Rango de fechas para las reuniones</Typography.Text>
-                      <Space align='center'>
-                        <Button
-                          icon={<CalendarTodayIcon style={{ fontSize: 20, color: 'rgba(0, 0, 0, 0.45)' }} />}
-                          type='text'
-                          style={{ cursor: 'default' }}
-                        />
-                        <div>
-                          <Typography.Text strong>Fecha de inicio</Typography.Text> <br />
-                          <Typography.Text>{dateFormat(Event.datetime_from, 'lll A')}</Typography.Text>
-                        </div>
-                      </Space>
-                      <Space align='center'>
-                        <Button
-                          icon={<CalendarIcon style={{ fontSize: 20, color: 'rgba(0, 0, 0, 0.45)' }} />}
-                          type='text'
-                          style={{ cursor: 'default' }}
-                        />
-                        <div>
-                          <Typography.Text strong>Fecha final</Typography.Text> <br />
-                          <Typography.Text>{dateFormat(Event.datetime_to, 'lll A')}</Typography.Text>
-                        </div>
-                      </Space>
-                    </Space>
-                  </Col>
                 </Row>
               </Space>
             </Card>

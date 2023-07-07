@@ -18,30 +18,35 @@ const TabComponent = ({ listTabPanels, eventUser, enableMeetings, setCurrentRoom
   return (
     <>
       <Tabs>
-        {listTabPanels.map((dailyMeeting, eventDateIndex) => (
-          <Tabs.TabPane
-            tab={<div style={{ textTransform: 'capitalize', fontWeight: 'bold' }}>{dailyMeeting.date}</div>}
-            key={`daily-meeting-${eventDateIndex}-${dailyMeeting.date}`}>
-            <Row justify='center'>
-              {dailyMeeting.meetings.length > 0 ? (
-                dailyMeeting.meetings.map((meeting) => (
-                  <Col xxl={12} key={`col-${meeting.id}`}>
-                    <AcceptedCard
-                      key={`accepted-${meeting.id}`}
-                      eventId={eventId}
-                      eventUser={eventUser}
-                      data={meeting}
-                      enableMeetings={enableMeetings}
-                      setCurrentRoom={setCurrentRoom}
-                    />
-                  </Col>
-                ))
-              ) : (
-                intl.formatMessage({id: 'networking_no_meetings_scheduled_for_day', defaultMessage: 'No tiene reuniones programadas para este día'})              
-              )}
-            </Row>
-          </Tabs.TabPane>
-        ))}
+        {listTabPanels.map((dailyMeeting, eventDateIndex) =>
+          dailyMeeting.meetings.length > 0 ? (
+            <Tabs.TabPane
+              tab={<div style={{ textTransform: 'capitalize', fontWeight: 'bold' }}>{dailyMeeting.date}</div>}
+              key={`daily-meeting-${eventDateIndex}-${dailyMeeting.date}`}>
+              <Row justify='center'>
+                {dailyMeeting.meetings.length > 0
+                  ? dailyMeeting.meetings.map((meeting) => (
+                      <Col xxl={12} key={`col-${meeting.id}`}>
+                        <AcceptedCard
+                          key={`accepted-${meeting.id}`}
+                          eventId={eventId}
+                          eventUser={eventUser}
+                          data={meeting}
+                          enableMeetings={enableMeetings}
+                          setCurrentRoom={setCurrentRoom}
+                        />
+                      </Col>
+                    ))
+                  : intl.formatMessage({
+                      id: 'networking_no_meetings_scheduled_for_day',
+                      defaultMessage: 'No tiene reuniones programadas para este día',
+                    })}
+              </Row>
+            </Tabs.TabPane>
+          ) : (
+            <></>
+          )
+        )}
       </Tabs>
     </>
   );

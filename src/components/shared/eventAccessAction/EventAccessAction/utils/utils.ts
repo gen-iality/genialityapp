@@ -127,8 +127,8 @@ export const assignStatusAccordingToAction = ({
 
 		case 'ACTION_LOG_IN_OR_REGISTER_FOR_THE_EVENT':
 			buttonsAction = [
-				{ label: log_in, action: () => helperDispatch({ type: 'showLogin', visible: true }) },
 				{ label: signup_event, action: () => helperDispatch({ type: 'showRegister', visible: true }) },
+				{ label: log_in, action: () => helperDispatch({ type: 'showLogin', visible: true }) },
 			];
 			// if (bingoExists) buttonsAction.push({ label: 'Imprimir cartón', action: () => helperDispatch({ type: 'showRegister', visible: true }) },)
 
