@@ -243,7 +243,10 @@ const Certificado : FC<CertificatesProps> = (props) => {
           const oneUser = querySnapshot.docs[0].data();
           tags.forEach((item) => {
             let value;
-            if (item.tag.includes('rol.')) {
+            //@ts-ignore
+            if (item.tag.includes('event.')) value = props.event[item.value];
+            else if (item.tag.includes('ticket.')) value = oneUser.ticket ? oneUser.ticket.title : 'Sin Tiquete';
+            else if (item.tag.includes('rol.')) {
               let rols = roles.find((rol1) => rol1._id === oneUser.rol_id);
               let rolName = rols ? rols.name.toUpperCase() : 'Sin Rol';
               value = rolName;
