@@ -6,6 +6,7 @@ import { Button, Card, Col, Alert, Modal, Spin, Row } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import withContext from '../../context/withContext';
+import { ArrayToStringCerti, replaceAllTagValues } from './utils';
 
 // Estructura de boton para descargar certificados
 
@@ -126,18 +127,13 @@ class CertificadoLanding extends Component {
       rolCert = certs.find((cert) => {
         return cert.rol._id === dataUser.rol_id;
       });
+
     let content = rolCert?.content ? rolCert?.content : this.state.content;
-    this.state.tags.map((item) => {
-      let value;
-      if (item.tag.includes('event.')) value = this.props.cEvent.value[item.value];
-      else if (item.tag.includes('ticket.')) value = dataUser.ticket;
-      else if (item.tag.includes('rol.')) {
-        if (dataUser.rol_id && roles.find((ticket) => ticket._id === dataUser.rol_id))
-          value = roles.find((ticket) => ticket._id === dataUser.rol_id).name.toUpperCase();
-        else value = 'ASISTENTE';
-      } else value = dataUser.properties[item.value];
-      return (content = content.replace(`[${item.tag}]`, value));
-    });
+
+    if (Array.isArray(content)) {
+      const rowsWithData = replaceAllTagValues(this.props.cEvent.value,dataUser,rolValidation,content)
+      content = ArrayToStringCerti(rowsWithData)
+  }
     const body = { content, image: rolCert?.background ? rolCert?.background : this.state.background };
     const file = await CertsApi.generateCert(body);
     const blob = new Blob([file.blob], { type: file.type, charset: 'UTF-8' });

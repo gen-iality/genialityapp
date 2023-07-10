@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { CertsApi, RolAttApi } from '../../helpers/request';
 import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
 import moment from 'moment';
+import { CertificatesProps } from './types';
 
-const Certificados = (props) => {
+const Certificados  : FC<CertificatesProps> = (props) => {
   let [columnsData, setColumnsData] = useState({});
 
   const columns = [
@@ -12,16 +13,16 @@ const Certificados = (props) => {
       title: 'Nombre',
       dataIndex: 'name',
       ellipsis: true,
-      sorter: (a, b) => a.name.localeCompare(b.name),
+      sorter: (a : any, b : any) => a.name.localeCompare(b.name),
       ...getColumnSearchProps('name', columnsData)
     },
     {
       title: 'Rol',
       dataIndex: 'rol',
       ellipsis: true,
-      sorter: (a, b) => a.rol.name.localeCompare(b.rol.name),
+      sorter: (a : any, b : any) => a.rol.name.localeCompare(b.rol.name),
       ...getColumnSearchProps('rol', columnsData),
-      render(val, item) {
+      render(_val : any , item : any) {
         return (
           <div>{item.rol && item.rol.name ? item.rol.name : 'Sin Rol'}</div>
         )
@@ -32,9 +33,9 @@ const Certificados = (props) => {
       dataIndex: 'created_at',
       ellipsis: true,
       width: 180,
-      sorter: (a, b) => a.created_at.localeCompare(b.created_at),
+      sorter: (a : any, b : any) => a.created_at.localeCompare(b.created_at),
       ...getColumnSearchProps('created_at', columnsData),
-      render(val, item) {
+      render(_val : any, item: any) {
         return (
           <div>{moment(item.created_at).format('YYYY-DD-MM')}</div>
         )

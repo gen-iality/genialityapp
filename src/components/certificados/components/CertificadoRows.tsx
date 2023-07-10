@@ -13,7 +13,9 @@ export default function CertificadoRow(props: ICertificateRowsProps) {
 
   const change = (index: number) => {
       delete(rows[index])
-      onChange(rows.filter((item)=> item))
+      const newa = rows.filter((item)=> item)
+      console.log(newa);
+      onChange(newa)
   }
 
   const selectChange = (type: RowCert , index: number) => {
@@ -57,7 +59,7 @@ export default function CertificadoRow(props: ICertificateRowsProps) {
       label: 'h4',
     },
     {
-      value: 'text',
+      value: 'p',
       label: 'text',
     },
   ];
@@ -82,7 +84,7 @@ export default function CertificadoRow(props: ICertificateRowsProps) {
         <List.Item>
           <Row style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
             <Col sm={50} md={60} lg={70}>
-              <Select style={{ width: 90 }} defaultValue={item.type} options={possibleType} onChange={(e: RowCert)=> selectChange(e,index)} />
+              <Select style={{ width: 90 }}  value={item.type} options={possibleType} onChange={(e: RowCert)=> selectChange(e,index)} />
             </Col>
             <Col sm={50} md={60} lg={70}>
               <Input

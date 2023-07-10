@@ -12,7 +12,7 @@ import { firestore } from '../../helpers/firebase';
 import { DispatchMessageService } from '../../context/MessageService';
 import { ICertificado, CertificatesProps, CertifiRow } from './types';
 import CertificadoRow from './components/CertificadoRows';
-import { defaultCertRows } from './utils';
+import { ArrayToStringCerti, defaultCertRows, replaceAllTagValues } from './utils';
 
 const { confirm } = Modal;
 const { Option } = Select;
@@ -39,7 +39,7 @@ const Certificado : FC<CertificatesProps> = (props) => {
     image: imageFile,
   });
   const [roles, setRoles] = useState<any[]>([]);
-  const [certificateRows, setCertificateRows] = useState<CertifiRow[]>([...defaultCertRows]);
+  const [certificateRows, setCertificateRows] = useState<CertifiRow[]>([]);
   const [rol, setRol] = useState({} as any);
   const [previewCert, setPreviewCert] = useState({});
   const tags = [
@@ -57,14 +57,14 @@ const Certificado : FC<CertificatesProps> = (props) => {
   useEffect(() => {
     if (locationState.edit) {
       getOne();
+    }else{
+      setCertificateRows(defaultCertRows)
     }
     getRoles();
   }, [locationState.edit]);
 
   const getOne = async () => {
     const data = await CertsApi.getOne(locationState.edit);
-    console.log('data',data);
-    
     setCertificateRows(Array.isArray(data.content) ? data.content : defaultCertRows)
     setCertificado({ ...data, imageFile: data.background });
   };
@@ -242,24 +242,12 @@ const Certificado : FC<CertificatesProps> = (props) => {
       .then((querySnapshot) => {
         if (!querySnapshot.empty) {
           const oneUser = querySnapshot.docs[0].data();
-          tags.forEach((item) => {
-            let value;
-            //@ts-ignore
-            if (item.tag.includes('event.')) value = props.event[item.value];
-            else if (item.tag.includes('ticket.')) value = oneUser.ticket ? oneUser.ticket.title : 'Sin Tiquete';
-            else if (item.tag.includes('rol.')) {
-              let rols = roles.find((rol1) => rol1._id === oneUser.rol_id);
-              let rolName = rols ? rols.name.toUpperCase() : 'Sin Rol';
-              value = rolName;
-            } else value = oneUser.properties[item.value];
-            if (item.tag) {
-              content = content.replace(`[${item?.tag}]`, value);
-            }
-          });
-          setPreviewCert(content);
-    
+          const rowsWithData = replaceAllTagValues(props.event,oneUser,roles,certificateRows)
+          const stringCerti = ArrayToStringCerti(rowsWithData)
+          console.log(stringCerti);
+          
           const body = {
-            content: content,
+            content: stringCerti,
             image: certificado.imageFile?.data ? certificado.imageFile?.data : certificado.imageFile || imageFile,
           };
 
@@ -277,7 +265,7 @@ const Certificado : FC<CertificatesProps> = (props) => {
               // For Firefox it is necessary to delay revoking the ObjectURL
               window.URL.revokeObjectURL(data);
             }, 60);
-          });
+          })
         }
       });
   };
