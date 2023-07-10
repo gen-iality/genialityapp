@@ -203,3 +203,11 @@ export interface ICertificado {
     rol?: any ;
     name?: string;
 }
+
+export  type RowCert = 'break' | 'h1' | 'h2' | 'h3' | 'h4' | 'text'
+
+export interface CertifiRow {
+    type: RowCert,
+    times?:  number,
+    content?: string,
+}

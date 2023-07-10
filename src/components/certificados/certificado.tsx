@@ -10,7 +10,9 @@ import EviusReactQuill from '../shared/eviusReactQuill';
 import moment from 'moment';
 import { firestore } from '../../helpers/firebase';
 import { DispatchMessageService } from '../../context/MessageService';
-import { ICertificado, CertificatesProps } from './types';
+import { ICertificado, CertificatesProps, CertifiRow } from './types';
+import CertificadoRow from './components/CertificadoRows';
+import { defaultCertRows } from './utils';
 
 const { confirm } = Modal;
 const { Option } = Select;
@@ -37,6 +39,7 @@ const Certificado : FC<CertificatesProps> = (props) => {
     image: imageFile,
   });
   const [roles, setRoles] = useState<any[]>([]);
+  const [certificateRows, setCertificateRows] = useState<CertifiRow[]>([...defaultCertRows]);
   const [rol, setRol] = useState({} as any);
   const [previewCert, setPreviewCert] = useState({});
   const tags = [
@@ -60,11 +63,9 @@ const Certificado : FC<CertificatesProps> = (props) => {
 
   const getOne = async () => {
     const data = await CertsApi.getOne(locationState.edit);
-    if (!data.content && data.content === '<p><br></p>') {
-      setCertificado({ ...data, content: initContent });
-    }
-
-    setCertificado({ ...data, imageFile: data.background });
+    console.log('data',data);
+    
+    setCertificateRows(Array.isArray(data.content) ? data.content : defaultCertRows)
     setCertificado({ ...data, imageFile: data.background });
   };
 
@@ -82,7 +83,7 @@ const Certificado : FC<CertificatesProps> = (props) => {
         if (locationState.edit) {
           const data = {
             name: certificado.name,
-            content: certificado.content,
+            content: certificateRows,
             background: certificado.image?.data || certificado.image,
             rol: certificado?.rol,
             rol_id: certificado.rol?._id,
@@ -94,7 +95,7 @@ const Certificado : FC<CertificatesProps> = (props) => {
           const data = {
             name: certificado.name,
             rol_id: certificado.rol?._id,
-            content: certificado.content,
+            content: certificateRows,
             event_id: props.event._id,
             background: certificado.image?.data || certificado.image,
             rol: certificado?.rol,
@@ -397,13 +398,8 @@ const Certificado : FC<CertificatesProps> = (props) => {
             </Col>
           </Row>
 
-          <Form.Item label={'Certificado'}>
-            <EviusReactQuill
-              name='content'
-              data={certificado.content}
-              handleChange={chgTxt}
-              blockedOptions={{ link: false, image: false, code_block: false }}
-            />
+          <Form.Item label={'Certificado'} name={'content'}>
+              <CertificadoRow rows={certificateRows} onChange={setCertificateRows}/>
           </Form.Item>
         </Col>
       </Row>
