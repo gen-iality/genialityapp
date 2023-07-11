@@ -1,13 +1,11 @@
 import React, { useEffect } from 'react';
-import { IdcardOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
+import { IdcardOutlined, LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
 import { Form, FormInstance, Input } from 'antd';
 import { FormUserOrganization } from '../interface/organization.interface';
-import ImgCrop from 'antd-img-crop';
 import { useIntl } from 'react-intl';
 import { UseEventContext } from '@/context/eventContext';
 import { eventWithCedula } from '@/helpers/helperEvent';
 import { UploadImageWithEdition } from '@/components/upload/UploadImage';
-import { RcFile, UploadProps } from 'antd/es/upload';
 import { UploadFile } from 'antd/lib/upload/interface';
 
 interface Props {
@@ -82,7 +80,6 @@ export const UserOrganizationForm = ({ form, setimageFile, filesSelected }: Prop
           form={form}
           autoComplete='on'
           layout='vertical'
-          // onFinish={onFinish}
         >
           <UploadImageWithEdition
             onSetFile={(e) => {
@@ -112,12 +109,12 @@ export const UserOrganizationForm = ({ form, setimageFile, filesSelected }: Prop
             hasFeedback
             style={{ marginBottom: '10px', textAlign: 'left' }}
             rules={eventWithCedula(cEvent.value).isArkmed ? ruleCedula : rulePassword}>
-            <Input
+            <Input.Password
               type='number'
               size='large'
               // placeholder="Cedula del medico ó especialista"
               placeholder={eventWithCedula(cEvent.value).isArkmed ? 'Cedula ó numero de identificación' : 'Contraseña'}
-              prefix={<IdcardOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+              prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
             />
           </Form.Item>
 
