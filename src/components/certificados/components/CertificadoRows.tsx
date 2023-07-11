@@ -1,5 +1,5 @@
-import { DeleteOutlined, PlusCircleFilled } from '@ant-design/icons';
-import { Button, Col, Input, List, Row, Select } from 'antd';
+import { DeleteOutlined, HolderOutlined, PlusCircleFilled } from '@ant-design/icons';
+import { Button, Col, Input, List, Row, Select, Typography } from 'antd';
 import { CertifiRow, RowCert } from '../types';
 import { DefaultOptionType } from 'antd/lib/cascader';
 
@@ -40,27 +40,27 @@ export default function CertificadoRow(props: ICertificateRowsProps) {
   const possibleType: DefaultOptionType[] = [
     {
       value: 'break',
-      label: 'break',
+      label: 'Salto',
     },
     {
       value: 'h1',
-      label: 'h1',
+      label: 'Titulo 1',
     },
     {
       value: 'h2',
-      label: 'h2',
+      label: 'Titulo 2',
     },
     {
       value: 'h3',
-      label: 'h3',
+      label: 'Subtitulo 1',
     },
     {
       value: 'h4',
-      label: 'h4',
+      label: 'Subtitulo 2',
     },
     {
       value: 'p',
-      label: 'text',
+      label: 'texto',
     },
   ];
 
@@ -83,8 +83,11 @@ export default function CertificadoRow(props: ICertificateRowsProps) {
       renderItem={(item, index) => (
         <List.Item>
           <Row style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-            <Col sm={50} md={60} lg={70}>
-              <Select style={{ width: 90 }}  value={item.type} options={possibleType} onChange={(e: RowCert)=> selectChange(e,index)} />
+            <Col sm={60} md={70} lg={70}>
+            <HolderOutlined />
+            </Col>
+            <Col sm={60} md={70} lg={70}>
+              <Select style={{ width: 130 }}  value={item.type} options={possibleType} onChange={(e: RowCert)=> selectChange(e,index)} />
             </Col>
             <Col sm={50} md={60} lg={70}>
               <Input
@@ -101,7 +104,6 @@ export default function CertificadoRow(props: ICertificateRowsProps) {
                 type='dashed'
                 onClick={()=> change(index)}
                 icon={<DeleteOutlined />}>
-                
               </Button>
             </Col>
           </Row>

@@ -75,34 +75,17 @@ function CertificadoLanding(props: any) {
                           onConfirm={() => generateCert(props.cEventUser.value, certificate)}
                           okText='Yes'
                           cancelText='No'>
-                          <Card onClick={()=>currentCert(certificate.content)}hoverable style={{ width: 300, textAlign: 'center', borderRadius: 20 }}>
+                          <Card onClick={()=>currentCert(certificate.content)}hoverable style={{ width: 300, height: 250 , textAlign: 'center', borderRadius: 20 }}>
                             <Row style={{ position: 'absolute', top: '40%', justifyContent: 'center', width: '80%' }}>
                               <Typography.Title level={5}>{certificate.name}</Typography.Title>
                             </Row>
-                            <img src={certificate.background} width={250} title={certificate.name} />
+                            <img src={certificate.background} width={250} style={{ maxHeight: 200}} title={certificate.name} />
                           </Card>
                         </Popconfirm>
                       </Col>
                     ))}
                   </Row>
                   <Row>
-                    <Html2PdfCerts
-                      handler={pdfGeneratorRef}
-                      rows={certificateRows as CertRow[]}
-                      imageUrl={imgBackground}
-                      backgroundColor='#005882'
-                      enableLinks={true}
-                      filename='certificate-test.pdf'
-                      format={[1200, 720]}
-                      sizeStyle={{
-                        height: 650,
-                        width: 790,
-                      }}
-                      transformationScale={0.5}
-                      unit='px'
-                      orientation='landscape'
-                      onEndGenerate={() => {}}
-                    />
                   </Row>
                   <br />
                 </div>
