@@ -1,11 +1,14 @@
 import { FC, useState } from 'react';
-import { CertsApi, RolAttApi } from '../../helpers/request';
+import { CertsApi } from '../../helpers/request';
 import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
 import moment from 'moment';
-import { CertificatesProps } from './types';
+import { Event } from './types';
 
-const Certificados  : FC<CertificatesProps> = (props) => {
+const Certificados: FC<{
+  event: Event;
+  matchUrl: string;
+}> = (props) => {
   let [columnsData, setColumnsData] = useState({});
 
   const columns = [
@@ -13,19 +16,17 @@ const Certificados  : FC<CertificatesProps> = (props) => {
       title: 'Nombre',
       dataIndex: 'name',
       ellipsis: true,
-      sorter: (a : any, b : any) => a.name.localeCompare(b.name),
-      ...getColumnSearchProps('name', columnsData)
+      sorter: (a: any, b: any) => a.name.localeCompare(b.name),
+      ...getColumnSearchProps('name', columnsData),
     },
     {
       title: 'Rol',
       dataIndex: 'rol',
       ellipsis: true,
-      sorter: (a : any, b : any) => a.rol.name.localeCompare(b.rol.name),
+      sorter: (a: any, b: any) => a.rol.name.localeCompare(b.rol.name),
       ...getColumnSearchProps('rol', columnsData),
-      render(_val : any , item : any) {
-        return (
-          <div>{item.rol && item.rol.name ? item.rol.name : 'Sin Rol'}</div>
-        )
+      render(_val: any, item: any) {
+        return <div>{item.rol && item.rol.name ? item.rol.name : 'Sin Rol'}</div>;
       },
     },
     {
@@ -33,18 +34,16 @@ const Certificados  : FC<CertificatesProps> = (props) => {
       dataIndex: 'created_at',
       ellipsis: true,
       width: 180,
-      sorter: (a : any, b : any) => a.created_at.localeCompare(b.created_at),
+      sorter: (a: any, b: any) => a.created_at.localeCompare(b.created_at),
       ...getColumnSearchProps('created_at', columnsData),
-      render(_val : any, item: any) {
-        return (
-          <div>{moment(item.created_at).format('YYYY-DD-MM')}</div>
-        )
+      render(_val: any, item: any) {
+        return <div>{moment(item.created_at).format('YYYY-DD-MM')}</div>;
       },
-    }
+    },
   ];
 
   return (
-    <CMS 
+    <CMS
       API={CertsApi}
       eventId={props.event._id}
       title={'Certificados'}
@@ -62,6 +61,6 @@ const Certificados  : FC<CertificatesProps> = (props) => {
       setColumnsData={setColumnsData}
     />
   );
-}
+};
 
 export default Certificados;

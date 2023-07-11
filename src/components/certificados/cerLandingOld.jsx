@@ -1,6 +1,5 @@
 import { Component, createElement } from 'react';
 import Moment from 'moment';
-import { firestore } from '../../helpers/firebase';
 import { CertsApi, RolAttApi } from '../../helpers/request';
 import { Button, Card, Col, Alert, Modal, Spin, Row } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
@@ -46,22 +45,7 @@ class CertificadoLanding extends Component {
     this.searchCert = this.searchCert.bind(this);
   }
 
-  componentDidMount() {
-    const { user_properties } = this.props.cEvent.value;
 
-    let fields = user_properties.filter((item) => item.name !== 'names' && item.name !== 'email');
-    const list = [...this.state.tags];
-    fields.map((field) =>
-      list.push({
-        tag: `user.${field.name}`,
-        value: field.name,
-        label: field.label,
-      })
-    );
-
-    this.usersRef = firestore.collection(`${this.props.cEvent.value._id}_event_attendees`);
-    this.setState({ tags: list });
-  }
 
   componentDidUpdate(prevProps) {
     if (this.props.currentUser !== prevProps.currentUser) {
@@ -89,6 +73,7 @@ class CertificadoLanding extends Component {
         record = await this.usersRef.where('properties.email', '==', valueToSearch.trim()).get();
       //Si encuentra sigue secuencia
       modal.destroy();
+      console.log('record',record);
       if (record.docs.length > 0) {
         const dataUser = record.docs.map((doc) => {
           const data = doc.data();
@@ -99,7 +84,7 @@ class CertificadoLanding extends Component {
         });
         //Para generar el certificado el usuario tiene que estar checkqueado !!checked_in
         //if(!dataUser.checked_in) this.setState({message:'Usuario no checkeado'});
-
+        console.log('data',dataUser);
         this.setState({ dataUser });
       } else {
         this.setState({ message: 'No se encontraron certificados para este documento' });
@@ -116,6 +101,7 @@ class CertificadoLanding extends Component {
     });
 
     const certs = await CertsApi.byEvent(this.props.cEvent.value._id);
+    console.log('certificados',certs);
     const roles = await RolAttApi.byEvent(this.props.cEvent.value._id);
     this.props.cEvent.value.datetime_from = Moment(this.props.cEvent.value.datetime_from).format('DD/MM/YYYY');
     this.props.cEvent.value.datetime_to = Moment(this.props.cEvent.value.datetime_to).format('DD/MM/YYYY');

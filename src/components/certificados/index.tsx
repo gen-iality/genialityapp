@@ -3,7 +3,7 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import Certificados from './certificados';
 import Certificado from './certificado';
 
-function CertificadosRoutes(props) {
+function CertificadosRoutes(props : any) {
   const { event, match } = props;
   return (
     <Fragment>
