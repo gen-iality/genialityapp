@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Moment from 'moment';
 import { CertsApi, RolAttApi } from '../../helpers/request';
-import {  Card, Col, Alert, Modal, Spin, Row } from 'antd';
+import { Card, Col, Alert, Modal, Spin, Row, Typography, Popconfirm } from 'antd';
 import { withRouter } from 'react-router-dom';
 import withContext from '../../context/withContext';
 import { ArrayToStringCerti, replaceAllTagValues } from './utils';
@@ -9,7 +9,6 @@ import { CertifiRow, Certificates, UserData } from './types';
 import { imgBackground } from './utils/constants';
 
 function CertificadoLanding(props: any) {
-
   const [certificates, setCertificates] = useState<Certificates[]>([]);
 
   const getCerts = async () => {
@@ -67,14 +66,18 @@ function CertificadoLanding(props: any) {
                   <Row justify='start' style={{ display: 'flex', height: 300, overflowY: 'auto' }}>
                     {certificates.map((certificate) => (
                       <Col style={{ margin: 5 }}>
-                        <Card
-                          onClick={() => generateCert(props.cEventUser.value, certificate)}
-                          hoverable
-                          style={{ width: 300, textAlign: 'center' }}
-                        >
-                          
-                          <img src={certificate.background} width={250}  title='xd' />
-                        </Card>
+                        <Popconfirm
+                          title='¿Quieres descargar este certificado?'
+                          onConfirm={() => generateCert(props.cEventUser.value, certificate)}
+                          okText='Yes'
+                          cancelText='No'>
+                          <Card hoverable style={{ width: 300, textAlign: 'center', borderRadius: 20 }}>
+                            <Row style={{ position: 'absolute', top: '40%', justifyContent: 'center', width: '80%' }}>
+                              <Typography.Title level={5}>{certificate.name}</Typography.Title>
+                            </Row>
+                            <img src={certificate.background} width={250} title={certificate.name} />
+                          </Card>
+                        </Popconfirm>
                       </Col>
                     ))}
                   </Row>
