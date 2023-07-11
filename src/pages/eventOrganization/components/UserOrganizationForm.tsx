@@ -1,59 +1,147 @@
-import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
-import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfirmationOutline';
-import { ScheduleOutlined } from '@ant-design/icons';
-import { Button, Grid, Space, Steps } from 'antd';
-import { useState } from 'react';
+import React, { useEffect } from 'react';
+import { IdcardOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
+import { Form, FormInstance, Input } from 'antd';
+import { FormUserOrganization } from '../interface/organization.interface';
+import ImgCrop from 'antd-img-crop';
+import { useIntl } from 'react-intl';
+import { UseEventContext } from '@/context/eventContext';
+import { eventWithCedula } from '@/helpers/helperEvent';
+import { MyUploadComponent } from '@/components/upload/UploadImage';
+import { RcFile, UploadProps } from 'antd/es/upload';
+import { UploadFile } from 'antd/lib/upload/interface';
 
-const stylePaddingMobile = {
-  paddingLeft: '10px',
-  paddingRight: '10px',
-  textAlign: 'center',
-};
+interface Props {
+  form: FormInstance<FormUserOrganization>;
+  setimageFile: React.Dispatch<React.SetStateAction<UploadFile[] | undefined>>;
+  filesSelected?: UploadFile[] | undefined;
+}
 
-const stylePaddingDesktop = {
-  paddingLeft: '30px',
-  paddingRight: '30px',
-  textAlign: 'center',
-};
+export const UserOrganizationForm = ({ form, setimageFile, filesSelected }: Props) => {
+  const intl = useIntl();
 
-const steps = [
-  {
-    title: 'First',
-    icon: <AccountOutlineIcon style={{ fontSize: '32px' }} />,
-  },
-  {
-    title: 'Second',
-    icon: <TicketConfirmationOutlineIcon style={{ fontSize: '32px' }} />,
-  },
-  {
-    title: 'Last',
-    icon: <ScheduleOutlined style={{ fontSize: '32px' }} />,
-  },
-];
+  const cEvent = UseEventContext();
 
-export const UserOrganizationForm = () => {
-  const screens = Grid.useBreakpoint();
-  const [current, setCurrent] = useState(0);
+  const ruleEmail: any[] = [
+    {
+      type: 'email',
+      message: intl.formatMessage({
+        id: 'register.rule.email.message',
+        defaultMessage: 'Ingrese un email valido',
+      }),
+    },
+    {
+      required: true,
+      message: intl.formatMessage({
+        id: 'register.rule.email.message2',
+        defaultMessage: 'Ingrese un email para su cuenta en Evius',
+      }),
+    },
+  ];
 
-  const onLastStep = () => {
-    setCurrent(current > 0 ? current - 1 : current);
-  };
+  const rulePassword: any[] = [
+    {
+      required: true,
+      message: intl.formatMessage({
+        id: 'register.rule.password.message',
+        defaultMessage: 'Ingrese una contraseña para su cuenta en Evius',
+      }),
+    },
+    {
+      type: 'string',
+      min: 6,
+      max: 18,
+      message: intl.formatMessage({
+        id: 'register.rule.password.message2',
+        defaultMessage: 'La contraseña debe tener entre 6 a 18 caracteres',
+      }),
+    },
+  ];
 
-  const onNextStep = () => {
-    setCurrent(current < steps.length - 1 ? current + 1 : current);
-  };
+  const ruleCedula: any[] = [
+    { required: true, message: 'Ingrese una cedula para su cuenta en Evius' },
+    {
+      type: 'string',
+      min: 8,
+      max: 12,
+      message: 'La cedula debe tener entre 6 a 18 caracteres',
+    },
+  ];
+  const ruleName = [
+    {
+      required: true,
+      message: intl.formatMessage({
+        id: 'register.rule.name.message',
+        defaultMessage: 'Ingrese su nombre completo para su cuenta en Evius',
+      }),
+    },
+  ];
   return (
-    <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
-      <Steps current={current} responsive={false}>
-        {steps.map((item) => (
-          <Steps.Step key={item.title} icon={item.icon} />
-        ))}
-      </Steps>
+    <div>
+      <div style={{ marginTop: '30px' }}>
+        <Form
+          form={form}
+          autoComplete='on'
+          layout='vertical'
+          // onFinish={onFinish}
+        >
+          <MyUploadComponent
+            onSetFile={(e) => {
+              setimageFile(e);
+            }}
+            filesSelected={filesSelected}
+          />
+          <Form.Item
+            label={'Correo electrónico'}
+            name='email'
+            hasFeedback
+            style={{ marginBottom: '10px', textAlign: 'left' }}
+            rules={ruleEmail}>
+            <Input
+              type='email'
+              size='large'
+              placeholder='micorreo@ejemplo.com'
+              prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+            />
+          </Form.Item>
+          <Form.Item
+            label={intl.formatMessage({
+              id: eventWithCedula(cEvent.value).isArkmed ? 'modal.label.cedula' : 'modal.label.password',
+              defaultMessage: eventWithCedula(cEvent.value).isArkmed ? 'Cedula' : 'Contraseña',
+            })}
+            name='password'
+            hasFeedback
+            style={{ marginBottom: '10px', textAlign: 'left' }}
+            rules={eventWithCedula(cEvent.value).isArkmed ? ruleCedula : rulePassword}>
+            <Input
+              type='number'
+              size='large'
+              // placeholder="Cedula del medico ó especialista"
+              placeholder={eventWithCedula(cEvent.value).isArkmed ? 'Cedula ó numero de identificación' : 'Contraseña'}
+              prefix={<IdcardOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+            />
+          </Form.Item>
 
-      <Space>
-        <Button onClick={onLastStep}>Atras</Button>
-        <Button onClick={onNextStep}>Siguiente</Button>
-      </Space>
+          <Form.Item
+            label={intl.formatMessage({
+              id: 'modal.label.name',
+              defaultMessage: 'Nombre',
+            })}
+            name='names'
+            hasFeedback
+            style={{ marginBottom: '10px', textAlign: 'left' }}
+            rules={ruleName}>
+            <Input
+              type='text'
+              size='large'
+              placeholder={intl.formatMessage({
+                id: 'modal.label.name',
+                defaultMessage: 'Nombre',
+              })}
+              prefix={<UserOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+            />
+          </Form.Item>
+        </Form>
+      </div>
     </div>
   );
 };
