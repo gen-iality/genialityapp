@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Moment from 'moment';
 import { CertsApi, RolAttApi } from '../../helpers/request';
 import { Card, Col, Alert, Modal, Spin, Row, Typography, Popconfirm } from 'antd';
@@ -7,10 +7,12 @@ import withContext from '../../context/withContext';
 import { ArrayToStringCerti, replaceAllTagValues } from './utils';
 import { CertifiRow, Certificates, UserData } from './types';
 import { imgBackground } from './utils/constants';
+import { CertRow, Html2PdfCerts, Html2PdfCertsRef } from 'html2pdf-certs'
 
 function CertificadoLanding(props: any) {
   const [certificates, setCertificates] = useState<Certificates[]>([]);
-
+  const [certificateRows, setCertificateRows] = useState<CertRow[]>([]);
+  const pdfGeneratorRef = useRef<Html2PdfCertsRef>(null)
   const getCerts = async () => {
     const certs: Certificates[] = await CertsApi.byEvent(props.cEvent.value._id);
     if (certs && certs.length > 0) {
@@ -51,7 +53,9 @@ function CertificadoLanding(props: any) {
       modal.destroy();
     }, 60);
   };
-
+  const currentCert = (data : CertifiRow[]) =>{
+    if(Array.isArray(data))  setCertificateRows(data as CertRow[])
+  }
   return (
     <>
       {props.cEventUser.value && (
@@ -71,7 +75,7 @@ function CertificadoLanding(props: any) {
                           onConfirm={() => generateCert(props.cEventUser.value, certificate)}
                           okText='Yes'
                           cancelText='No'>
-                          <Card hoverable style={{ width: 300, textAlign: 'center', borderRadius: 20 }}>
+                          <Card onClick={()=>currentCert(certificate.content)}hoverable style={{ width: 300, textAlign: 'center', borderRadius: 20 }}>
                             <Row style={{ position: 'absolute', top: '40%', justifyContent: 'center', width: '80%' }}>
                               <Typography.Title level={5}>{certificate.name}</Typography.Title>
                             </Row>
@@ -80,6 +84,25 @@ function CertificadoLanding(props: any) {
                         </Popconfirm>
                       </Col>
                     ))}
+                  </Row>
+                  <Row>
+                    <Html2PdfCerts
+                      handler={pdfGeneratorRef}
+                      rows={certificateRows as CertRow[]}
+                      imageUrl={imgBackground}
+                      backgroundColor='#005882'
+                      enableLinks={true}
+                      filename='certificate-test.pdf'
+                      format={[1200, 720]}
+                      sizeStyle={{
+                        height: 650,
+                        width: 790,
+                      }}
+                      transformationScale={0.5}
+                      unit='px'
+                      orientation='landscape'
+                      onEndGenerate={() => {}}
+                    />
                   </Row>
                   <br />
                 </div>
