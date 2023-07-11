@@ -22,7 +22,7 @@ export const ModalAddAndEditUsers = ({ selectedUser, ...modalProps }: Props) => 
   const [current, setCurrent] = useState(0);
   const screens = Grid.useBreakpoint();
   const [form] = Form.useForm();
-  const [imagesFile, setImagesFile] = useState<UploadFile[]>();
+  const [imagesFile, setImagesFile] = useState<UploadFile>();
 
   const onResetForm = () => {
     form.setFieldsValue(initialForm);
@@ -56,7 +56,9 @@ export const ModalAddAndEditUsers = ({ selectedUser, ...modalProps }: Props) => 
             ))}
           </Steps>
 
-          {current === 0 && <UserOrganizationForm form={form} setimageFile={setImagesFile} filesSelected={imagesFile} />}
+          {current === 0 && (
+            <UserOrganizationForm form={form} setimageFile={setImagesFile} filesSelected={imagesFile} />
+          )}
 
           <Space>
             {current !== 0 && <Button onClick={onLastStep}>Atras</Button>}

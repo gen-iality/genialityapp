@@ -6,14 +6,14 @@ import ImgCrop from 'antd-img-crop';
 import { useIntl } from 'react-intl';
 import { UseEventContext } from '@/context/eventContext';
 import { eventWithCedula } from '@/helpers/helperEvent';
-import { MyUploadComponent } from '@/components/upload/UploadImage';
+import { UploadImageWithEdition } from '@/components/upload/UploadImage';
 import { RcFile, UploadProps } from 'antd/es/upload';
 import { UploadFile } from 'antd/lib/upload/interface';
 
 interface Props {
   form: FormInstance<FormUserOrganization>;
-  setimageFile: React.Dispatch<React.SetStateAction<UploadFile[] | undefined>>;
-  filesSelected?: UploadFile[] | undefined;
+  setimageFile: React.Dispatch<React.SetStateAction<UploadFile | undefined>>;
+  filesSelected?: UploadFile | undefined;
 }
 
 export const UserOrganizationForm = ({ form, setimageFile, filesSelected }: Props) => {
@@ -84,11 +84,11 @@ export const UserOrganizationForm = ({ form, setimageFile, filesSelected }: Prop
           layout='vertical'
           // onFinish={onFinish}
         >
-          <MyUploadComponent
+          <UploadImageWithEdition
             onSetFile={(e) => {
               setimageFile(e);
             }}
-            filesSelected={filesSelected}
+            fileSelected={filesSelected}
           />
           <Form.Item
             label={'Correo electrónico'}

@@ -9,19 +9,19 @@ import ImgCrop from 'antd-img-crop';
 import { UploadFile } from 'antd/lib/upload/interface';
 
 interface IMyUploadComponentProps extends FormItemLabelProps {
-  onSetFile: (item: UploadFile[] | undefined) => void;
+  onSetFile: (item: UploadFile | undefined) => void;
   maxFiles?: number;
-  filesSelected?: UploadFile[];
+  fileSelected?: UploadFile;
   urlImageSelected?: string;
 }
 
-export const MyUploadComponent = ({
+export const UploadImageWithEdition = ({
   onSetFile,
   maxFiles,
   urlImageSelected,
-  filesSelected,
+  fileSelected,
 }: IMyUploadComponentProps) => {
-  const [currentFile, setCurrentFile] = useState<UploadFile[]>([]);
+  const [currentFile, setCurrentFile] = useState<UploadFile>();
   const [imageAvatar, setImageAvatar] = useState<string | ArrayBuffer | null>(null);
   const [urlSelected, setUrlSelected] = useState('');
   const intl = useIntl();
@@ -30,38 +30,40 @@ export const MyUploadComponent = ({
     if (file.status === 'removed') {
       setImageAvatar(null);
       onSetFile(undefined);
+      setCurrentFile(undefined);
     } else {
       getBase64(file.originFileObj, (imageUrl) => {
         setImageAvatar(imageUrl);
       });
-      onSetFile(newFileList);
+      setUrlSelected('');
+      onSetFile(newFileList[0]);
+      setCurrentFile(newFileList[0]);
     }
-    setCurrentFile(newFileList);
   };
 
   useEffect(() => {
-    if (filesSelected && urlImageSelected)
+    if (fileSelected && urlImageSelected)
       console.warn('Solo debe mandar o un urlImageSelected o un fileSelected, dependiendo su caso');
-  }, [urlImageSelected, filesSelected]);
+  }, [urlImageSelected, fileSelected]);
 
   useEffect(() => {
     if (urlImageSelected) setUrlSelected(urlImageSelected);
   }, [urlImageSelected]);
 
   useEffect(() => {
-    if (filesSelected && filesSelected[0]) {
-      setCurrentFile(filesSelected);
-      if (onSetFile) onSetFile(filesSelected);
-      getBase64(filesSelected[0].originFileObj, (imageUrl) => {
+    if (fileSelected) {
+      setCurrentFile(fileSelected);
+      if (onSetFile) onSetFile(fileSelected);
+      getBase64(fileSelected.originFileObj, (imageUrl) => {
         setImageAvatar(imageUrl);
       });
     }
-  }, [filesSelected]);
+  }, [fileSelected]);
 
   return (
     <ImgCrop rotate shape='round'>
       <Upload
-        fileList={currentFile}
+        fileList={currentFile ? [currentFile] : []}
         accept='image/*'
         onChange={handleChange}
         multiple={false}
@@ -75,13 +77,15 @@ export const MyUploadComponent = ({
             type='primary'
             shape='circle'
             style={{
-              height: '120px',
-              width: '120px',
+              height: currentFile ? 'auto' : '120px',
+              width: currentFile ? 'auto' : '120px',
               padding: '0px',
               border: '0px',
             }}>
-            {currentFile.length === 0 && <PictureOutlined style={{ fontSize: '50px' }} />}
-            {currentFile.length > 0 && <Avatar src={urlSelected.length > 0 ? urlSelected : imageAvatar} size={95} />}
+            {!currentFile && !urlSelected && <PictureOutlined style={{ fontSize: '50px' }} />}
+            {(currentFile || urlSelected.length > 0) && (
+              <Avatar src={urlSelected.length > 0 ? urlSelected : imageAvatar} size={95} />
+            )}
           </Button>
           <>
             {intl.formatMessage({
