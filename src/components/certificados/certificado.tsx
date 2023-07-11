@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { CertsApi, RolAttApi } from '../../helpers/request';
 import { useHistory, withRouter } from 'react-router-dom';
 import { handleRequestError } from '../../helpers/utils';
@@ -13,7 +13,7 @@ import { ICertificado, CertificatesProps, CertifiRow } from './types';
 import CertificadoRow from './components/CertificadoRows';
 import { ArrayToStringCerti, defaultCertRows, replaceAllTagValues } from './utils';
 import { imgBackground } from './utils/constants';
-
+import { CertRow, Html2PdfCerts, Html2PdfCertsRef } from 'html2pdf-certs'
 const { confirm } = Modal;
 const { Option } = Select;
 
@@ -26,7 +26,7 @@ const initContent =
   '<p><br></p><p><br></p><p>Certificamos que</p><p>[user.names],</p><p>participo con éxito de evento</p><p>[event.name]</p><p>realizado del [event.start] al [event.end].'; 
 
 const Certificado : FC<CertificatesProps> = (props) => {
-
+  const pdfGeneratorRef = useRef<Html2PdfCertsRef>(null)
   const locationState = props.location.state; //si viene new o edit en el state, si es edit es un id
   const history = useHistory();
   const [certificado, setCertificado] = useState<ICertificado>({
@@ -370,6 +370,26 @@ const Certificado : FC<CertificatesProps> = (props) => {
               <CertificadoRow rows={certificateRows} onChange={setCertificateRows}/>
           </Form.Item>
         </Col>
+        <Html2PdfCerts
+        handler={pdfGeneratorRef}
+        rows={certificateRows as CertRow[]}
+        imageUrl={imgBackground}
+        backgroundColor="#005882"
+        enableLinks={true}
+        filename="certificate-test.pdf"
+        format={[1200, 720]}
+        sizeStyle={{
+          height:  650,
+          width:  790,
+        }}
+        transformationScale={0.5}
+        unit="px"
+        orientation="landscape"
+        onEndGenerate={() => {
+          /* setNoFinalCertRows(backUpNoFinalCertRows)
+          setIsGenerating(false) */
+        }}
+      />
       </Row>
       <BackTop />
     </Form>
