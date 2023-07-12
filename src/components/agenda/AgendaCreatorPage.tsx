@@ -98,7 +98,7 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
 
     console.debug('redirecting to /activity')
     history.push(`${props.parentUrl}/activity`, { edit: currentAgenda._id })
-  }, [shouldRedirect, currentAgenda, cAgenda.activityEdit])
+  }, [shouldRedirect, currentAgenda, cAgenda?.activityEdit])
 
   useEffect(() => {
     setActivityType(selectedActivityType)
