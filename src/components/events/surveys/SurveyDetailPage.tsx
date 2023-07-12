@@ -148,11 +148,19 @@ const SurveyDetailPage: FunctionComponent<
         >
           <Alert
             message={
-              cSurvey.shouldDisplaySurveyClosedMenssage
-                ? 'Examen Cerrado'
-                : 'Examen Abierto'
+              cSurvey.shouldDisplaySurveyNotPublishedMenssage
+                ? 'Examen no disponible'
+                : cSurvey.shouldDisplaySurveyClosedMenssage
+                ? 'Examen cerrado'
+                : 'Examen abierto'
             }
-            type="warning"
+            type={
+              cSurvey.shouldDisplaySurveyNotPublishedMenssage
+                ? 'error'
+                : cSurvey.shouldDisplaySurveyClosedMenssage
+                ? 'warning'
+                : 'info'
+            }
             showIcon
           />
           <Alert message="Ya has contestado este exámen" type="success" showIcon />
