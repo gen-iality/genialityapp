@@ -81,7 +81,7 @@ export const EventProgressProvider: FunctionComponent = (props) => {
     // Request for the attendee data in Firebase for all the activities
     const allAttendees = await FB.Attendees.getEventUserActivities(
       filteredData.map((activity) => activity._id as string),
-      cEventUser.value._id,
+      cEventUser.value?._id,
       true,
     )
 
@@ -121,6 +121,10 @@ export const EventProgressProvider: FunctionComponent = (props) => {
 
   const saveProgressReport = async () => {
     const eventUser = cEventUser.value
+    if (!eventUser) {
+      console.warn('call saveProgressReport when event user is defined ONLY')
+      return
+    }
     eventUser.activity_progresses = {
       // ID list of activities
       activities: activities.map((activity) => activity._id!),
