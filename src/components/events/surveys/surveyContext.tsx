@@ -142,18 +142,18 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({
   }, [state])
 
   const shouldDisplaySurveyClosedMenssage = useMemo(() => {
-    if (!state.survey) {
+    if (state.survey === undefined || state.survey === null) {
       return false
     }
     return !state.survey.isOpened
-  }, [state])
+  }, [state.survey])
 
   const shouldDisplaySurveyNotPublishedMenssage = useMemo(() => {
-    if (!state.survey) {
+    if (state.survey === undefined || state.survey === null) {
       return false
     }
     return !state.survey.isPublished
-  }, [state])
+  }, [state.survey])
 
   const shouldDisplayGraphics = useMemo(() => {
     if (!state.survey) {
