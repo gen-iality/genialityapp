@@ -182,9 +182,9 @@ function OrgRegisteredUsers(props) {
             ).filter((data) => !['email', 'names'].includes(data.name))
             if (orgMember) {
               filteredDynamicField.forEach((field) => {
-                properties[field.name] = orgMember.properties[field.name]
+                properties[field.name] = (orgMember.properties || {})[field.name]
               })
-              properties['Documento de identidad'] = orgMember.properties.password
+              properties['Documento de identidad'] = orgMember.properties?.password
             } else return properties
 
             // Inject the position
