@@ -1,4 +1,4 @@
-import axios from 'axios/index'
+import axios from 'axios'
 
 const gCoreCLient = axios.create({
   //BASE URL WOWZA
