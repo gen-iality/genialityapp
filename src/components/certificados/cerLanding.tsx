@@ -1,18 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Moment from 'moment';
 import { CertsApi, RolAttApi } from '../../helpers/request';
-import { Card, Col, Alert, Modal, Spin, Row, Typography, Popconfirm } from 'antd';
+import { Card, Col, Alert, Modal, Spin, Row, Typography, Popconfirm, Button } from 'antd';
 import { withRouter } from 'react-router-dom';
 import withContext from '../../context/withContext';
 import { ArrayToStringCerti, replaceAllTagValues } from './utils';
 import { CertifiRow, Certificates, UserData } from './types';
 import { imgBackground } from './utils/constants';
-import { CertRow, Html2PdfCerts, Html2PdfCertsRef } from 'html2pdf-certs'
+import { CertRow, Html2PdfCerts, Html2PdfCertsRef } from 'html2pdf-certs';
+import { DownloadOutlined } from '@ant-design/icons';
 
 function CertificadoLanding(props: any) {
   const [certificates, setCertificates] = useState<Certificates[]>([]);
   const [certificateRows, setCertificateRows] = useState<CertRow[]>([]);
-  const pdfGeneratorRef = useRef<Html2PdfCertsRef>(null)
+  const pdfGeneratorRef = useRef<Html2PdfCertsRef>(null);
   const getCerts = async () => {
     const certs: Certificates[] = await CertsApi.byEvent(props.cEvent.value._id);
     if (certs && certs.length > 0) {
@@ -53,9 +54,9 @@ function CertificadoLanding(props: any) {
       modal.destroy();
     }, 60);
   };
-  const currentCert = (data : CertifiRow[]) =>{
-    if(Array.isArray(data))  setCertificateRows(data as CertRow[])
-  }
+  const currentCert = (data: CertifiRow[]) => {
+    if (Array.isArray(data)) setCertificateRows(data as CertRow[]);
+  };
   return (
     <>
       {props.cEventUser.value && (
@@ -67,26 +68,35 @@ function CertificadoLanding(props: any) {
 
                 <div key={'certificados'}>
                   <br />
-                  <Row justify='start' style={{ display: 'flex', height: 300, overflowY: 'auto' }}>
+                  <Row justify='start' style={{ display: 'flex', height: 400, overflowY: 'auto' }}>
                     {certificates.map((certificate) => (
-                      <Col style={{ margin: 5 }}>
-                        <Popconfirm
-                          title='¿Quieres descargar este certificado?'
-                          onConfirm={() => generateCert(props.cEventUser.value, certificate)}
-                          okText='Yes'
-                          cancelText='No'>
-                          <Card onClick={()=>currentCert(certificate.content)}hoverable style={{ width: 300, height: 250 , textAlign: 'center', borderRadius: 20 }}>
-                            <Row style={{ position: 'absolute', top: '40%', justifyContent: 'center', width: '80%' }}>
-                              <Typography.Title level={5}>{certificate.name}</Typography.Title>
-                            </Row>
-                            <img src={certificate.background} width={250} style={{ maxHeight: 200}} title={certificate.name} />
-                          </Card>
-                        </Popconfirm>
+                      <Col key={'certi' + certificate._id} style={{ margin: 5 }}>
+                        <Card
+                          onClick={() => currentCert(certificate.content)}
+                          bodyStyle={{ height: 250 }}
+                          style={{ width: 300, textAlign: 'center', borderRadius: 20 }}
+                          actions={[
+                            <Button
+                              onClick={() => generateCert(props.cEventUser.value, certificate)}
+                              style={{ width: '100%', border: 'none', boxShadow: 'none' }}
+                              key={'download' + certificate._id}
+                              icon={<DownloadOutlined />}
+                            />,
+                          ]}>
+                          <Row style={{ position: 'absolute', top: '40%', justifyContent: 'center', width: '80%' }}>
+                            <Typography.Title level={5}>{certificate.name}</Typography.Title>
+                          </Row>
+                          <img
+                            src={certificate.background}
+                            width={250}
+                            style={{ maxHeight: 200 }}
+                            title={certificate.name}
+                          />
+                        </Card>
                       </Col>
                     ))}
                   </Row>
-                  <Row>
-                  </Row>
+                  <Row></Row>
                   <br />
                 </div>
               </>
