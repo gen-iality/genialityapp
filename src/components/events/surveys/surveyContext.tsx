@@ -30,6 +30,7 @@ export type SurveyContextType = {
   // Flags
   shouldDisplaySurveyIsNotLoaded?: boolean
   shouldDisplaySurveyClosedMenssage?: boolean
+  shouldDisplaySurveyNotPublishedMenssage?: boolean
   checkThereIsAnotherTry?: boolean
   shouldDisplaySurveyAnswered?: boolean
   checkIfSurveyWasAnswered?: boolean
@@ -147,6 +148,13 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({
     return !state.survey.isOpened
   }, [state])
 
+  const shouldDisplaySurveyNotPublishedMenssage = useMemo(() => {
+    if (!state.survey) {
+      return false
+    }
+    return !state.survey.isPublished
+  }, [state])
+
   const shouldDisplayGraphics = useMemo(() => {
     if (!state.survey) {
       console.debug('not show graphics because there is no survey')
@@ -197,6 +205,7 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({
         shouldDisplaySurveyIsNotLoaded,
         shouldDisplaySurveyAnswered,
         shouldDisplaySurveyClosedMenssage,
+        shouldDisplaySurveyNotPublishedMenssage,
         shouldDisplayGraphics,
         shouldDisplayRanking,
         surveyStatsString,
