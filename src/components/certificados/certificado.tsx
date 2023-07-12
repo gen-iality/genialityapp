@@ -14,6 +14,7 @@ import CertificadoRow from './components/CertificadoRows';
 import { ArrayToStringCerti, defaultCertRows, replaceAllTagValues } from './utils';
 import { imgBackground } from './utils/constants';
 
+
 const { confirm } = Modal;
 const { Option } = Select;
 
@@ -35,12 +36,9 @@ const Certificado : FC<CertificatesProps> = (props) => {
     imageData: imgBackground,
     image: imgBackground,
   });
+  
   const [roles, setRoles] = useState<any[]>([]);
   const [certificateRows, setCertificateRows] = useState<CertifiRow[]>([]);
-  useEffect(()=>{
-    console.log(certificateRows);
-    
-  },[certificateRows])
   const [rol, setRol] = useState({} as any);
   const [previewCert] = useState({});
   const tags = [
@@ -69,7 +67,15 @@ const Certificado : FC<CertificatesProps> = (props) => {
     setCertificateRows(Array.isArray(data.content) ? data.content : defaultCertRows)
     setCertificado({ ...data, imageFile: data.background });
   };
-
+  const handleDragEnd = ({ oldIndex, newIndex }: any) => {
+ 
+    if (oldIndex !== newIndex) {
+      const uptadeRows = [...certificateRows]
+      const movedItem = uptadeRows.splice(oldIndex, 1)[0];
+      uptadeRows.splice(newIndex, 0, movedItem)
+      setCertificateRows(uptadeRows);
+    }
+  };
   const onSubmit = async () => {
     if (certificado.name) {
       DispatchMessageService({
@@ -229,7 +235,6 @@ const Certificado : FC<CertificatesProps> = (props) => {
           const oneUser = querySnapshot.docs[0].data();
           const rowsWithData = replaceAllTagValues(props.event,oneUser,roles,certificateRows)
           const stringCerti = ArrayToStringCerti(rowsWithData)
-          
           const body = {
             content: stringCerti,
             image: certificado.imageFile?.data ? certificado.imageFile?.data : certificado.imageFile || imgBackground,
@@ -371,7 +376,7 @@ const Certificado : FC<CertificatesProps> = (props) => {
           </Row>
 
           <Form.Item label={'Certificado'} name={'content'}>
-              <CertificadoRow rows={certificateRows} onChange={setCertificateRows}/>
+              <CertificadoRow handleDragEnd={handleDragEnd} rows={certificateRows} onChange={setCertificateRows}/>
           </Form.Item>
         </Col>
 

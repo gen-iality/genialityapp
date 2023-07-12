@@ -2,24 +2,30 @@ import { CertifiRow } from "../types";
 import { availableTags } from "./constants";
 
 export const defaultCertRows: CertifiRow[] = [
-    { type: 'break', times: 2 },
-    { type: 'h4', content: 'Certificamos que' },
-    { type: 'h2', content: '[user.names]' },
-    { type: 'h4', content: 'participo con éxito el curso' },
-    { type: 'h2', content: '[event.name]' },
-    { type: 'h4', content: 'realizado del [event.start] al [event.end]' },
+    { id: 1, type: 'break', times: 2 },
+    { id: 2, type: 'h4', content: 'Certificamos que' },
+    { id: 3, type: 'h2', content: '[user.names]' },
+    { id: 4,type: 'h4', content: 'participo con éxito el curso' },
+    { id: 5,type: 'h2', content: '[event.name]' },
+    { id: 6,type: 'h4', content: 'realizado del [event.start] al [event.end]' },
   ]
-  
+  export function lastID(data :CertifiRow[] ){
+    let maxid = 0
+    data.forEach((item)=>{
+      if(item.id > maxid) maxid = item.id
+    })
+    return maxid + 1
+  }
   export function replaceAllTagValues(
     event: any,
     userData: any,
     roles: any[] = [],
-    certRows: CertifiRow[],
+    certRows: CertifiRow[] = [],
   ) {
     let newCertRows: CertifiRow[] = JSON.parse(JSON.stringify(certRows))
     availableTags.forEach((item) => {
       let value
-      if (item.tag.includes('event.')) value = event[item.value || '']
+      if (item.tag.includes('event.')) value = event[item.value ?? '']
       else if (item.tag.includes('ticket.'))
         value = userData.ticket ? userData.ticket.title : 'Sin tiquete'
       else if (item.tag.includes('rol.')) {
@@ -27,7 +33,7 @@ export const defaultCertRows: CertifiRow[] = [
         const rolName = rols ? rols.name.toUpperCase() : 'Sin rol'
         value = rolName
       } else {
-        value = userData.properties[item.value || '']
+        value = userData.properties[item.value ?? '']
       }
   
       if (item.tag) {
@@ -36,12 +42,8 @@ export const defaultCertRows: CertifiRow[] = [
   
         // Replace in all rows
         newCertRows = newCertRows.map((row) => {
-          if (row.content) {
-            if (typeof row.content === 'string') {
-              row.content = row.content.replace(`[${wantedTag}]`, wishedValue)
-            }
-          }
-          return row
+        if (typeof row.content === 'string') row.content = row.content.replace(`[${wantedTag}]`, wishedValue) 
+        return row
         })
       }
     })

@@ -1,19 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Moment from 'moment';
 import { CertsApi, RolAttApi } from '../../helpers/request';
-import { Card, Col, Alert, Modal, Spin, Row, Typography, Popconfirm, Button } from 'antd';
+import { Card, Col, Alert, Modal, Spin, Row, Typography, Button } from 'antd';
 import { withRouter } from 'react-router-dom';
 import withContext from '../../context/withContext';
 import { ArrayToStringCerti, replaceAllTagValues } from './utils';
 import { CertifiRow, Certificates, UserData } from './types';
 import { imgBackground } from './utils/constants';
-import { CertRow, Html2PdfCerts, Html2PdfCertsRef } from 'html2pdf-certs';
 import { DownloadOutlined } from '@ant-design/icons';
 
 function CertificadoLanding(props: any) {
   const [certificates, setCertificates] = useState<Certificates[]>([]);
-  const [certificateRows, setCertificateRows] = useState<CertRow[]>([]);
-  const pdfGeneratorRef = useRef<Html2PdfCertsRef>(null);
+
   const getCerts = async () => {
     const certs: Certificates[] = await CertsApi.byEvent(props.cEvent.value._id);
     if (certs && certs.length > 0) {
@@ -22,7 +20,7 @@ function CertificadoLanding(props: any) {
   };
   useEffect(() => {
     getCerts();
-  }, []);
+  });
 
   const generateCert = async (dataUser: UserData, cert: Certificates) => {
     const modal = Modal.success({
@@ -39,6 +37,7 @@ function CertificadoLanding(props: any) {
       const rowsWithData = replaceAllTagValues(props.cEvent.value, dataUser, roles, content);
       content = ArrayToStringCerti(rowsWithData);
     }
+    
     const body = { content, image: cert.background ? cert.background : imgBackground };
     const file = await CertsApi.generateCert(body);
     const blob = new Blob([file.blob], { type: file.type });
@@ -53,9 +52,6 @@ function CertificadoLanding(props: any) {
       window.URL.revokeObjectURL(data);
       modal.destroy();
     }, 60);
-  };
-  const currentCert = (data: CertifiRow[]) => {
-    if (Array.isArray(data)) setCertificateRows(data as CertRow[]);
   };
   return (
     <>
@@ -72,7 +68,6 @@ function CertificadoLanding(props: any) {
                     {certificates.map((certificate) => (
                       <Col key={'certi' + certificate._id} style={{ margin: 5 }}>
                         <Card
-                          onClick={() => currentCert(certificate.content)}
                           bodyStyle={{ height: 250 }}
                           style={{ width: 300, textAlign: 'center', borderRadius: 20 }}
                           actions={[
@@ -87,6 +82,7 @@ function CertificadoLanding(props: any) {
                             <Typography.Title level={5}>{certificate.name}</Typography.Title>
                           </Row>
                           <img
+                            alt={certificate.name}
                             src={certificate.background}
                             width={250}
                             style={{ maxHeight: 200 }}
@@ -108,7 +104,7 @@ function CertificadoLanding(props: any) {
       {!props.cUser.value ||
         (!props.cUser.value._id && <p>Debes ingresar con tu usuario para descargar el certificado</p>)}
 
-      {props.cUser.value && props.cUser.value._id && !props.cEventUser.value && (
+      {props.cUser?.value?._id && !props.cEventUser.value && (
         <h1
           style={{
             justifyContent: 'center',
@@ -121,7 +117,7 @@ function CertificadoLanding(props: any) {
         </h1>
       )}
 
-      {props.cUser.value && props.cUser.value._id && !props.cEventUser.value && (
+      {props.cUser?.value?._id && !props.cEventUser.value && (
         <h1 style={{ justifyContent: 'center', fontSize: '27px', alignItems: 'center', display: 'flex' }}>
           Debes Haber asistido para descargar el certificado
         </h1>

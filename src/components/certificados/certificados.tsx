@@ -26,7 +26,7 @@ const Certificados: FC<{
       sorter: (a: any, b: any) => a.rol.name.localeCompare(b.rol.name),
       ...getColumnSearchProps('rol', columnsData),
       render(_val: any, item: any) {
-        return <div>{item.rol && item.rol.name ? item.rol.name : 'Sin Rol'}</div>;
+        return <div>{item.rol?.name ? item.rol.name : 'Sin Rol'}</div>;
       },
     },
     {
