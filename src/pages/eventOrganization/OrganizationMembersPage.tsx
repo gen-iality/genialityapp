@@ -1,5 +1,5 @@
 /** React's libraries */
-import { useEffect, useState } from 'react'
+import { FunctionComponent, useEffect, useState } from 'react'
 import { FormattedDate, FormattedTime } from 'react-intl'
 import dayjs from 'dayjs'
 
@@ -23,16 +23,22 @@ import withContext from '@context/withContext'
 import { FB } from '@helpers/firestore-request'
 import { StateMessage } from '@context/MessageService'
 
-function OrgMembers(props) {
+interface IOrganizationMembersPageProps {
+  org: any
+}
+
+const OrganizationMembersPage: FunctionComponent<IOrganizationMembersPageProps> = (
+  props,
+) => {
   const { _id: organizationId, access_settings } = props.org
 
   /** Data States */
-  const [membersDataSource, setMembersDataSource] = useState([])
-  const [lastUpdate, setLastUpdate] = useState()
-  const [orgUsersList, setOrgUsersList] = useState([])
-  const [orgEventsList, setOrgEventsList] = useState([])
-  const [selectedUser, setSelectedUser] = useState({})
-  const [userActivities, setUserActivities] = useState({})
+  const [membersDataSource, setMembersDataSource] = useState<any[]>([])
+  const [lastUpdate, setLastUpdate] = useState<any>()
+  const [orgUsersList, setOrgUsersList] = useState<any[]>([])
+  const [orgEventsList, setOrgEventsList] = useState<any[]>([])
+  const [selectedUser, setSelectedUser] = useState<any>({})
+  const [userActivities, setUserActivities] = useState<any>({})
 
   /** Flag States */
   const [isLoading, setIsLoading] = useState(true)
@@ -42,9 +48,9 @@ function OrgMembers(props) {
   /** Columns CMS States */
   const [searchText, setSearchText] = useState('')
   const [searchedColumn, setSearchedColumn] = useState('')
-  const [extraFields, setExtraFields] = useState([])
+  const [extraFields, setExtraFields] = useState<any[]>([])
 
-  const [filtersToDataSource, setFiltersToDataSource] = useState({})
+  const [filtersToDataSource, setFiltersToDataSource] = useState<any>({})
 
   useEffect(() => {
     startingComponent()
@@ -66,15 +72,15 @@ function OrgMembers(props) {
     interna()
   }, [orgUsersList, orgEventsList])
 
-  async function startingComponent() {
+  const startingComponent = async () => {
     setLastUpdate(new Date())
     await setFormFields()
     await getOrgUsersList()
     await getOrgEventsList()
   }
 
-  async function getEventsStatisticsData(orgUsersList, orgEventsList) {
-    const userActivitiesData = {}
+  const getEventsStatisticsData = async (orgUsersList: any[], orgEventsList: any[]) => {
+    const userActivitiesData: any = {}
 
     for (
       let indexOrganization = 0;
@@ -94,7 +100,7 @@ function OrgMembers(props) {
         if (thing.data.length === 0) continue
         const eventUser = thing.data[0]
 
-        const { data: activities } = await AgendaApi.byEvent(eventId)
+        const { data: activities } = (await AgendaApi.byEvent(eventId)) as { data: any[] }
 
         const allAttendees = await FB.Attendees.getEventUserActivities(
           activities.map((activity) => activity._id),
@@ -116,7 +122,7 @@ function OrgMembers(props) {
   }
 
   async function updateDataMembers() {
-    const allMemberFields = []
+    const allMemberFields: any[] = []
 
     console.log('1. orgUsersList', orgUsersList)
 
@@ -161,7 +167,9 @@ function OrgMembers(props) {
   }
 
   async function getPositionList() {
-    const positionListData = await PositionsApi.getAllByOrganization(organizationId)
+    const positionListData: any[] = await PositionsApi.getAllByOrganization(
+      organizationId,
+    )
     console.log('Petición de solicitud - Lista de Cargos : ', positionListData)
 
     const positionsOptions = positionListData.map((position) => {
@@ -175,7 +183,7 @@ function OrgMembers(props) {
   }
 
   const getRolesAsOptions = async () => {
-    const roles = await OrganizationApi.Roles.getAll(organizationId)
+    const roles: any[] = await OrganizationApi.Roles.getAll(organizationId)
     return (roles || []).map((role) => ({
       value: role._id,
       label: role.name,
@@ -210,7 +218,7 @@ function OrgMembers(props) {
     setExtraFields([...props.org.user_properties, positionField, rolField])
   }
 
-  async function exportFile(e) {
+  const exportFile = async (e: Event) => {
     e.preventDefault()
     e.stopPropagation()
 
@@ -247,26 +255,26 @@ function OrgMembers(props) {
     writeFileXLSX(wb, `Miembros_${dayjs().format('l')}.xlsx`)
   }
 
-  function closeOrOpenModalMembers() {
+  const closeOrOpenModalMembers = () => {
     setShouldRenderModel((prevState) => !prevState)
   }
 
-  function addUser() {
+  const addUser = () => {
     setSelectedUser({})
     closeOrOpenModalMembers()
     setIsEditingThetMember(false)
   }
 
-  function editModalUser(item) {
+  const editModalUser = (item: any) => {
     setSelectedUser(item)
     closeOrOpenModalMembers()
     setIsEditingThetMember(true)
   }
 
-  function thisDataIndexWasFiltered(currentDataIndex, filterValue) {
+  const thisDataIndexWasFiltered = (currentDataIndex: any, filterValue: any) => {
     console.info('this dataIndex was filtered', currentDataIndex, filterValue)
 
-    setFiltersToDataSource((previous) => {
+    setFiltersToDataSource((previous: any) => {
       const clone = { ...previous }
       if (typeof filterValue === 'undefined' || filterValue === undefined) {
         // Remove this dataIndex if the value is undefined only
@@ -279,7 +287,7 @@ function OrgMembers(props) {
     })
   }
 
-  const togglePaymentPlan = async (organizationMember) => {
+  const togglePaymentPlan = async (organizationMember: any) => {
     organizationMember = {
       ...organizationMember,
       payment_plan: organizationMember.payment_plan
@@ -371,4 +379,4 @@ function OrgMembers(props) {
     </>
   )
 }
-export default withContext(OrgMembers)
+export default withContext(OrganizationMembersPage)

@@ -33,7 +33,7 @@ import Loading from '@components/profile/loading'
 import OrganizationProfile from './profile'
 import OrgEvents from './events'
 import Styles from '@components/App/styles'
-import OrgMembers from './OrganizationMembersPage'
+import OrganizationMembersPage from './OrganizationMembersPage'
 import OrganizationPositionsPage from './OrganizationPositionsPage'
 import PositionedUsersPage from './PositionedUsersPage'
 import MembersCertificationPage from './MembersCertificationPage'
@@ -183,7 +183,7 @@ function Organization() {
                   <Protected
                     exact
                     path={`${match.url}/members`}
-                    component={OrgMembers}
+                    component={OrganizationMembersPage}
                     org={organization}
                     componentKey="members"
                   />
