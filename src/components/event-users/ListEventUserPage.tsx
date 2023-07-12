@@ -654,6 +654,14 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
   }, [dataSource])
 
   useEffect(() => {
+    if (!activityId) return
+
+    AgendaApi.getOne(activityId, event._id)
+      .then((data) => setActivity(data))
+      .catch((err) => console.error(err))
+  }, [activityId])
+
+  useEffect(() => {
     setIsLoading(true)
     let unsubscribe: any
     getAllAttendees()
