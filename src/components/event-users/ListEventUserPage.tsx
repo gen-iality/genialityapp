@@ -40,6 +40,7 @@ import { fireRealtime, firestore } from '@helpers/firebase'
 import { ColumnType } from 'antd/es/table'
 import AttendeeCheckInCheckbox from '@components/checkIn/AttendeeCheckInCheckbox'
 import dayjs from 'dayjs'
+import Highlighter from 'react-highlight-words'
 
 import { utils, writeFileXLSX } from 'xlsx'
 
