@@ -368,7 +368,7 @@ class EventAdminRoutes extends Component {
                 render={() => <ChatExport eventId={event._id} event={event} />}
               />
               <Protected
-                path={`${match.url}/checkin/:id`}
+                path={`${match.url}/checkin.old/:id`}
                 url={match.url}
                 event={event}
                 render={() => (
@@ -381,13 +381,14 @@ class EventAdminRoutes extends Component {
                 )}
               />
               <Protected
-                path={`${match.url}/checkin.new/:id`}
+                path={`${match.url}/checkin/:id`}
                 url={match.url}
                 event={event}
                 render={(routeProps) => (
                   <ListEventUserPage
                     event={event}
                     activityId={routeProps.match.params.id}
+                    parentUrl={match.url}
                   />
                 )}
               />
