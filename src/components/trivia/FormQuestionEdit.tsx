@@ -193,7 +193,7 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
    * The function validates the image dimensions of the uploaded image
    * @returns The return value is the boolean value of the validation.
    */
-  function validatingImageDimensions(blobImage) {
+  function validatingImageDimensions(blobImage: any) {
     const reader = new FileReader() //Initiate the FileReader object.
     //Read the contents of Image File.
     reader.readAsDataURL(blobImage)
@@ -509,6 +509,7 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
                           validator: fieldValidation,
                         },
                       ]}
+                      initialValue={field.defaultValue}
                     >
                       <Input defaultValue={field.defaultValue} />
                     </Form.Item>
@@ -703,7 +704,11 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
                         <Radio.Group
                           onChange={handleRadio}
                           disabled={!allowGradableSurvey}
-                          value={correctAnswerIndex}
+                          value={
+                            Array.isArray(correctAnswerIndex)
+                              ? correctAnswerIndex[0]
+                              : correctAnswerIndex
+                          }
                           style={{ display: 'block', marginRight: 0 }}
                         >
                           {fields.map((field, index) => (
