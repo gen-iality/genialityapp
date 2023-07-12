@@ -18,14 +18,11 @@ export const columns = (
   columnsData,
   editModalUser,
   extraFields,
-  userActivities,
-  isStaticsLoading,
   togglePaymentPlan,
   organization,
 ) => {
   const history = useHistory()
   const [columns, setColumns] = useState([])
-  const [progressing, setProgressing] = useState({})
 
   if (!extraFields) return []
 
@@ -177,34 +174,15 @@ export const columns = (
   }
 
   useEffect(() => {
-    const progressingColumn = {
-      title: isStaticsLoading ? (
-        <>
-          Progreso <Spin />
-        </>
-      ) : (
-        'Progreso'
-      ),
-      dataIndex: 'progress',
-      ellipsis: true,
-      align: 'center',
-      render: (text, item) => <div>{item.stats}</div>,
-    }
-
-    setProgressing(progressingColumn)
-  }, [userActivities])
-
-  useEffect(() => {
     const newColumns = [picture, ...dynamicColumns]
 
     organization.access_settings?.type === 'payment' && newColumns.push(payment_plan)
-    newColumns.push(progressing)
     newColumns.push(created_at)
     newColumns.push(updated_at)
     newColumns.push(editOption)
 
     setColumns(newColumns)
-  }, [progressing])
+  }, [])
 
   return columns
 }

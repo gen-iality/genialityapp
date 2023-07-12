@@ -36,7 +36,6 @@ function OrgMembers(props) {
 
   /** Flag States */
   const [isLoading, setIsLoading] = useState(true)
-  const [isStaticsLoading, setIsStaticsLoading] = useState(true)
   const [shouldRenderModal, setShouldRenderModel] = useState(false)
   const [isEditingThetMember, setIsEditingThetMember] = useState(false)
 
@@ -66,15 +65,6 @@ function OrgMembers(props) {
 
     interna()
   }, [orgUsersList, orgEventsList])
-
-  useEffect(() => {
-    if (Object.keys(userActivities).length === 0) {
-      console.log('El objeto está vacio')
-    } else {
-      console.log('else - setIsStaticsLoading')
-      setIsStaticsLoading(false)
-    }
-  }, [userActivities])
 
   async function startingComponent() {
     setLastUpdate(new Date())
@@ -340,8 +330,6 @@ function OrgMembers(props) {
           columnsData,
           editModalUser,
           extraFields,
-          userActivities,
-          isStaticsLoading,
           togglePaymentPlan,
           props.org,
         )}
