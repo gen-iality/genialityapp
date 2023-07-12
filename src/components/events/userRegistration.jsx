@@ -4,7 +4,7 @@ import { fieldNameEmailFirst } from '@helpers/utils'
 import FormComponent from './registrationForm/form'
 import { Spin, Skeleton } from 'antd'
 import withContext from '@context/withContext'
-import { GetTokenUserFirebase } from 'helpers/HelperAuth'
+import { GetTokenUserFirebase } from '@helpers/HelperAuth'
 
 class UserRegistration extends Component {
   constructor(props) {

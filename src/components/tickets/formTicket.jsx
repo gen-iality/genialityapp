@@ -3,7 +3,7 @@ import 'dayjs/locale/es'
 import { Actions } from '@helpers/request'
 import UserRegistration from '../events/userRegistration'
 import withContext from '@context/withContext'
-import { GetTokenUserFirebase } from 'helpers/HelperAuth'
+import { GetTokenUserFirebase } from '@helpers/HelperAuth'
 import { StateMessage } from '@context/MessageService'
 
 class TicketsForm extends Component {
