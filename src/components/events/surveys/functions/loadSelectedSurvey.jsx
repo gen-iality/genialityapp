@@ -7,6 +7,7 @@ async function loadSelectedSurvey(eventId, idSurvey, userId) {
   if (!idSurvey) throw new Error('Missing idSurvey')
 
   const dataSurvey = await SurveysApi.getOne(eventId, idSurvey)
+  dataSurvey.questions = Array.isArray(dataSurvey.questions) ? dataSurvey.questions : []
 
   // The random_survey_count or survey.questions.length
   const sampleCount =
