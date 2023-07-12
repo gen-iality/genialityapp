@@ -28,7 +28,8 @@ function useSurveyQuery(eventId, idSurvey, isResetingSurvey) {
         ...prev,
         loading: false,
         /** NOTE: I had to disable realtime because the CMS does not update to Firebase, so... */
-        data: { ...innerQuery /*...innerRealTimeQuery*/ },
+        /** NOTE: (x2): Put the firebase data first to able the overwritting to be happy :) */
+        data: { ...innerRealTimeQuery, ...innerQuery, isPublished: innerRealTimeQuery.isPublished, isOpened: innerRealTimeQuery.isOpened, },
       }
     })
   }, [innerQuery, innerRealTimeQuery])
