@@ -211,7 +211,7 @@ const SurveyDetailPage: FunctionComponent<
         <Result title="Este exámen no se encuentra publicada" status="warning" />
       ) : cSurvey.shouldDisplaySurveyClosedMenssage ? (
         <Result title="Este exámen se encuentra cerrado" status="warning" />
-      ): (
+      ) : (
         <Card className="surveyCard">
           <SurveyComponent eventId={cEvent.value?._id} queryData={query.data} />
         </Card>
