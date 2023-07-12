@@ -622,6 +622,15 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
     setSurveyId(incomingSurveyId)
   }, [incomingSurveyId])
 
+  // When modal is closed, or when the form finishes, currentQuestion should be
+  // empty again. But, it did not work, then with the next lines we force to
+  // clean the currentQuestion value when the modal is closed by the flag isModalOpened.
+  useEffect(() => {
+    if (!isModalOpened) {
+      setCurrentQuestion({})
+    }
+  }, [isModalOpened])
+
   useEffect(() => {
     if (Array.isArray(availableActivities)) {
       setAllActivities(availableActivities)
