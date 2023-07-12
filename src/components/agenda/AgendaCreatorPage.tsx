@@ -117,20 +117,6 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
       />
       <Row justify="center" wrap gutter={12}>
         <Col span={20}>
-          <ActivityTypeModalLayout
-            hideSelectButton
-            somethingWasSelected={somethingWasSelected}
-            title={formWidgetFlow.MainTitle}
-            render={() => (
-              <ActivityTypeSelectableCards
-                selected={selectedActivityType}
-                widget={formWidgetFlow}
-                onWidgetChange={onWidgetChange}
-              />
-            )}
-          />
-        </Col>
-        <Col span={20}>
           <Form.Item
             label="Nombre"
             name="name"
@@ -180,6 +166,20 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
               </Form.Item>
             </Col>
           </Row>
+        </Col>
+        <Col span={20}>
+          <ActivityTypeModalLayout
+            hideSelectButton
+            somethingWasSelected={somethingWasSelected}
+            title={formWidgetFlow.MainTitle}
+            render={() => (
+              <ActivityTypeSelectableCards
+                selected={selectedActivityType}
+                widget={formWidgetFlow}
+                onWidgetChange={onWidgetChange}
+              />
+            )}
+          />
         </Col>
       </Row>
     </Form>
