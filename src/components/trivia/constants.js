@@ -105,6 +105,7 @@ export const fieldsFormQuestionWithPoints = [
     label: 'Puntos de pregunta',
     type: 'number',
     name: 'points',
+    defaultValue: 1,
   },
 ]
 

@@ -510,7 +510,7 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
                         },
                       ]}
                     >
-                      <Input />
+                      <Input defaultValue={field.defaultValue} />
                     </Form.Item>
                   ) : (
                     field.selectOptions && (
