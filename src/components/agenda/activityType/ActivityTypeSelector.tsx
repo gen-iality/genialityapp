@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 
@@ -20,7 +21,7 @@ function ActivityTypeSelector(props: SubActivityTypeSelectorProps) {
   const {
     is,
     saveActivityType,
-    deleteActivityType,
+    // deleteActivityType,
     activityType,
     setActivityType,
     humanizeActivityType,
@@ -63,12 +64,12 @@ function ActivityTypeSelector(props: SubActivityTypeSelectorProps) {
 
     {activityType !== null ? (
       <Alert
-        closable
+        // closable
         type='info'
         showIcon={is.deleting}
         icon={<Spin/>}
         message={`Actividad de tipo: ${humanizeActivityType(activityType)}`}
-        onClose={deleteActivityType}
+        // onClose={deleteActivityType}
       />
     ) : (
     <Row>

@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable array-callback-return */
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   getLiveStreamStatus,
   getVideosLiveStream,
@@ -427,9 +430,9 @@ export const AgendaContextProvider = ({ children }) => {
     /* console.log('TYPE==>', type); */
     //SE VALIDA CON URL QUE CONTENGA YOUTUBE DEBIDO A QUE REACT PLAYER NO MUESTRA VIDEO DE GCORE
     const visibleReactPlayer =
-      ((type == 'Youtube' ||
-        (type == 'Video' && data.includes('youtube')) ||
-        (type == 'Video' && data.includes('vimeo'))) &&
+      ((type === 'Youtube' ||
+        (type === 'Video' && data.includes('youtube')) ||
+        (type === 'Video' && data.includes('vimeo'))) &&
         urlVideo) ||
       (((dataLive?.live && !dataLive?.active) || (!dataLive?.live && !dataLive?.active)) &&
         (type === 'Transmisión' || type === 'EviusMeet'))

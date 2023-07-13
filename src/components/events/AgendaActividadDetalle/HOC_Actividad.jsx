@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import ImageComponentwithContext from './ImageComponent';
 import RenderComponent from './RenderComponent';
