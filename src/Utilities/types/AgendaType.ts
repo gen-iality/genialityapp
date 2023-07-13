@@ -73,4 +73,5 @@ export interface TruncatedAgenda {
     color: string
     name: string
   }[]
+  isPublished?: boolean
 }

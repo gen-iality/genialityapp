@@ -35,7 +35,11 @@ const ListTheseActivities: FunctionComponent<IListTheseActivitiesProps> = (props
       dataSource={dataSource}
       renderItem={(item: TruncatedAgenda) => (
         <item.ItemWrapper>
-          <List.Item className="shadow-box">
+          <List.Item
+            className="shadow-box"
+            // style={{ display: item.isPublished ? 'block' : 'none' }}
+            style={{ textDecoration: item.isPublished ? 'none' : 'line-through' }}
+          >
             {item.host_picture && (
               <img
                 style={{
