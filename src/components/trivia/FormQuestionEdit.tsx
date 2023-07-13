@@ -36,6 +36,7 @@ import { uploadImagedummyRequest } from '@Utilities/imgUtils'
 import LikertScaleEditor from '../quiz/LikertScaleEditor'
 import { SurveyQuestion } from '@components/events/surveys/types'
 import urlProcessorSet from '@components/agenda/activityType/utils/urlProcessorSet'
+import '@/styles/iframeQuestion.css'
 
 const { Option } = Select
 
@@ -375,16 +376,16 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
       values.image = imageUrl
     }
 
-    console.log('1. videoURL', videoURL)
-
     if (videoURL) {
-      console.log('1. Entro al if de videoURL')
       const newVideoValue = [
         {
           uid: 'video-' + questionId,
           type: 'html',
           name: 'videoQuestion',
-          html: `<iframe style={{ height: '100%' }} width='100%' src='${videoURL}' allowFullScreen allowusermedia frameborder='0'>`,
+          html: `<div style='position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;'>
+                  <iframe style='position: absolute; top: 0; left: 0; width: 100%; height: 100%;' src='${videoURL}' allowFullScreen allowusermedia frameborder='0'>
+                  </iframe>
+                </div>`,
           //html: `<video src='${videoURL}' width='100%' height='100%' controls></video>`,
           url: videoURL,
         },
