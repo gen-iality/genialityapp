@@ -9,6 +9,7 @@ import { OrganizationApi } from '@/helpers/request';
 import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
 import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfirmationOutline';
 import { ScheduleOutlined } from '@ant-design/icons';
+import { saveImageStorage } from '@/helpers/helperSaveImage';
 
 const initialForm: FormUserOrganization = {
   email: '',
@@ -50,7 +51,16 @@ export const ModalAddAndEditUsers = ({ selectedUser, organizationId, ...modalPro
   };
 
   const onCreateUser = async (dataDinamic: any) => {
-    return console.log('data=>', { dataBasic, dataDinamic, imageFile });
+    const nuewUserPicture = await saveImageStorage(imageFile?.thumbUrl);
+    const newUser = {
+      names: dataBasic?.names,
+      email: dataBasic?.email,
+      picture: nuewUserPicture,
+      password: dataBasic?.password,
+      ...dataDinamic,
+    };
+    return console.log('newUser', newUser);
+    // return console.log('data=>', { dataBasic, dataDinamic, imageFile: imageFile?.url });
     // const respUser = await OrganizationApi.saveUser(organizationId, propertiesOrgMember);
   };
 
