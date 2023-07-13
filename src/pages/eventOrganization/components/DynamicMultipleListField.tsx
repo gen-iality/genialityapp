@@ -3,9 +3,9 @@ import { Rule } from 'antd/lib/form'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import DynamicFormItem from './DynamicFormItem'
-import useMandatoryRule from './hooks/useMandatoryRule'
 import { FormattedMessage } from 'react-intl'
 import { IDynamicFieldProps } from '../interface/dinamic-fields'
+import useMandatoryRule from '../hooks/useMandatoryRule'
 
 type IDynamicMultipleListFieldProps = IDynamicFieldProps
 

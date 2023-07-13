@@ -6,10 +6,10 @@ import * as React from 'react';
 import { useCallback, useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
 import DynamicFormItem from './DynamicFormItem';
-import useCheckFileSize from './hooks/useCheckFileSize';
-import useMandatoryRule from './hooks/useMandatoryRule';
 import { UploadChangeParam, UploadFile } from 'antd/lib/upload/interface';
 import { IDynamicFieldProps } from '../interface/dinamic-fields';
+import useCheckFileSize from '../hooks/useCheckFileSize';
+import useMandatoryRule from '../hooks/useMandatoryRule';
 
 interface IDynamicFileUploaderFieldProps extends IDynamicFieldProps {
   form?: FormInstance;

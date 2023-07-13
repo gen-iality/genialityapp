@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Form } from 'antd';
 import { Rule } from 'antd/lib/form';
-import DynamicFormDescription from './DynamicFormDescription';
 import { IDynamicFieldProps } from '../interface/dinamic-fields';
+import DynamicFormDescription from './DynamicFormDescription';
 
 export interface IDynamicFormItemProps extends Omit<IDynamicFieldProps, 'allInitialValues'> {
   rules: Rule[];

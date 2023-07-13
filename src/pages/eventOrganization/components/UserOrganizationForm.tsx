@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { IdcardOutlined, LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
-import { Form, FormInstance, Input } from 'antd';
+import { Button, Form, FormInstance, FormProps, Input } from 'antd';
 import { FormUserOrganization } from '../interface/organization.interface';
 import { useIntl } from 'react-intl';
 import { UseEventContext } from '@/context/eventContext';
@@ -8,13 +8,13 @@ import { eventWithCedula } from '@/helpers/helperEvent';
 import { UploadImageWithEdition } from '@/components/upload/UploadImage';
 import { UploadFile } from 'antd/lib/upload/interface';
 
-interface Props {
+interface Props extends FormProps {
   form: FormInstance<FormUserOrganization>;
   setimageFile: React.Dispatch<React.SetStateAction<UploadFile | undefined>>;
   filesSelected?: UploadFile | undefined;
 }
 
-export const UserOrganizationForm = ({ form, setimageFile, filesSelected }: Props) => {
+export const UserOrganizationForm = ({ form, setimageFile, filesSelected, onFinish }: Props) => {
   const intl = useIntl();
 
   const cEvent = UseEventContext();
@@ -76,11 +76,7 @@ export const UserOrganizationForm = ({ form, setimageFile, filesSelected }: Prop
   return (
     <div>
       <div style={{ marginTop: '30px' }}>
-        <Form
-          form={form}
-          autoComplete='on'
-          layout='vertical'
-        >
+        <Form form={form} autoComplete='on' layout='vertical' onFinish={onFinish}>
           <UploadImageWithEdition
             onSetFile={(e) => {
               setimageFile(e);

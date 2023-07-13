@@ -1,8 +1,8 @@
 import { Input } from 'antd'
 import * as React from 'react'
 import DynamicFormItem from './DynamicFormItem'
-import useMandatoryRule from './hooks/useMandatoryRule'
 import { IDynamicFieldProps } from '../interface/dinamic-fields'
+import useMandatoryRule from '../hooks/useMandatoryRule'
 
 type IDynamicLongTextFieldProps = IDynamicFieldProps
 

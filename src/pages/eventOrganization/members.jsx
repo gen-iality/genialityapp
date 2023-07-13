@@ -160,6 +160,7 @@ function OrgMembers(props) {
         <ModalAddAndEditUsers
           visible={addOrEditUser}
           onCancel={()=>setAddOrEditUser(false)}
+          organizationId={organizationId}
         />
       )}
     </>

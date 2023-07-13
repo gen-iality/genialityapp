@@ -2,9 +2,9 @@ import { Select } from 'antd';
 import * as React from 'react';
 import { useMemo } from 'react';
 import DynamicFormItem from './DynamicFormItem';
-import useMandatoryRule from './hooks/useMandatoryRule';
-import useSearchInSelectOptions from './hooks/useSearchInSelectComponent';
 import { IDynamicFieldProps } from '../interface/dinamic-fields';
+import useMandatoryRule from '../hooks/useMandatoryRule';
+import useSearchInSelectOptions from '../hooks/useSearchInSelectComponent';
 
 type OptionLike = {
   label: string;

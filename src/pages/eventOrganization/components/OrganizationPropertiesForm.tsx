@@ -32,6 +32,7 @@ interface Props {
   onSubmit?: (values: any) => void;
   form?: FormInstance;
   noSubmitButton?: boolean;
+  onLastStep: () => void;
 }
 
 const OrganizationPropertiesForm = (props: Props) => {
