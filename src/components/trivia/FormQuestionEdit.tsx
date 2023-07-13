@@ -375,21 +375,23 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
       values.image = imageUrl
     }
 
-    console.log('videoURL', videoURL)
+    console.log('1. videoURL', videoURL)
 
     if (videoURL) {
-      console.log('Entro al if de videoURL')
+      console.log('1. Entro al if de videoURL')
       const newVideoValue = [
         {
           uid: 'video-' + questionId,
           type: 'html',
           name: 'videoQuestion',
-          //html: `<iframe width="420" height="345" src="${videoURL}" >`,
-          html: `<video width='320' height='240' controls><source src="${videoURL}" type='video/mp4'></video>`,
+          html: `<iframe style={{ height: '100%' }} width='100%' src='${videoURL}' allowFullScreen allowusermedia frameborder='0'>`,
+          //html: `<video src='${videoURL}' width='100%' height='100%' controls></video>`,
           url: videoURL,
         },
       ]
       values.video = newVideoValue
+    } else {
+      values.video = null
     }
 
     const fixedCorrectAnswerIndex = Array.isArray(correctAnswerIndex)
