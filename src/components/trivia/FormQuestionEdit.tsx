@@ -35,6 +35,7 @@ import { StateMessage } from '@context/MessageService'
 import { uploadImagedummyRequest } from '@Utilities/imgUtils'
 import LikertScaleEditor from '../quiz/LikertScaleEditor'
 import { SurveyQuestion } from '@components/events/surveys/types'
+import urlProcessorSet from '@components/agenda/activityType/utils/urlProcessorSet'
 
 const { Option } = Select
 
@@ -133,6 +134,8 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
   const [likertScaleData, setLikertScaleData] = useState<any | undefined>()
   // For the text type
   const [rawText, setRawText] = useState('')
+
+  const [videoURL, setVideoURL] = useState('')
 
   const [form] = Form.useForm()
 
@@ -340,6 +343,8 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
   }
 
   const onFinish = async (values: any) => {
+    console.log('values', values)
+
     StateMessage.show(
       'loading',
       'loading',
@@ -350,6 +355,7 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
     const imageUrl = await saveEventImage()
 
     delete values.image
+    delete values.video
 
     if (imageUrl) {
       const newImagenValue = [
@@ -367,6 +373,23 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
       values.image = newImagenValue
     } else {
       values.image = imageUrl
+    }
+
+    console.log('videoURL', videoURL)
+
+    if (videoURL) {
+      console.log('Entro al if de videoURL')
+      const newVideoValue = [
+        {
+          uid: 'video-' + questionId,
+          type: 'html',
+          name: 'videoQuestion',
+          //html: `<iframe width="420" height="345" src="${videoURL}" >`,
+          html: `<video width='320' height='240' controls><source src="${videoURL}" type='video/mp4'></video>`,
+          url: videoURL,
+        },
+      ]
+      values.video = newVideoValue
     }
 
     const fixedCorrectAnswerIndex = Array.isArray(correctAnswerIndex)
@@ -677,6 +700,18 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
                   }
                 />
               )}
+            </>
+            <>
+              <Form.Item name="url" label="URL">
+                <Input
+                  value={videoURL}
+                  size="middle"
+                  onChange={(e) => {
+                    console.log('e.target.value', e.target.value)
+                    setVideoURL(e.target.value)
+                  }}
+                />
+              </Form.Item>
             </>
 
             <Form.List name="choices">
