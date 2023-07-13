@@ -53,3 +53,8 @@ Se debe agragar el alias del path nuevo que va recibir y la ruta que se va rempl
 `alias:[..., {find: "@contextTypeActivity", replacement: path.resolve(__dirname, 'src/context/typeactivity') }]`
 
 Se deben guardar los cambios y validar el funcionamiento.
+
+# Comando para correr modo stagin
+```javascript
+node --max_old_space_size=16384 ./node_modules/vite/bin/vite.js build --mode staging
+```
