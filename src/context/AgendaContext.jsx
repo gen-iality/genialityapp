@@ -341,7 +341,7 @@ export const AgendaContextProvider = ({ children }) => {
       transmition: transmition || null,
       //PERMITE REINICIALIZAR EL TIPO DE ACTIVIDAD O EN SU CASO BORRARLO  Y CONSERVAR EL ESTADO ACTUAL (type=delete)
       typeActivity:
-        datos?.type && datos?.type !== 'delete' ? datos?.type : datos?.type == 'delete' ? null : typeActivity,
+        datos?.type && datos?.type !== 'delete' ? datos?.type : datos?.type === 'delete' ? null : typeActivity,
     };
     const tabs = { chat, surveys, games, attendees };
     return { roomInfo, tabs };

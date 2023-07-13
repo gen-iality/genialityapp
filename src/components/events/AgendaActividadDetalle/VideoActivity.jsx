@@ -30,7 +30,7 @@ export const VideoActivity = () => {
           />
         </div>
       ) : (
-        <Result icon={<SmileOutlined />} title='Este evento ha terminado!' />
+        <Result icon={<SmileOutlined style={{color: '#336EFF'}}/>} title='Este evento ha terminado! Gracias por tu participación.' />
       )}
     </>
   );
