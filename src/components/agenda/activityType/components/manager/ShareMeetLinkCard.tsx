@@ -1,14 +1,18 @@
 import { Button, Card, Input, Space, Tooltip, Typography } from 'antd'
 import { CopyFilled } from '@ant-design/icons'
-import { useContext } from 'react'
-import AgendaContext from '@context/AgendaContext'
+
+import { StateMessage } from '@context/MessageService'
 
 export interface ShareMeetLinkCardProps {
   activityId: string
 }
 
+const copyToClipboard = (data: string) => {
+  navigator.clipboard.writeText(data)
+  StateMessage.show(null, 'success', 'Copiado correctamente.!')
+}
+
 const CardShareLinkEviusMeet = (props: ShareMeetLinkCardProps) => {
-  const { copyToClipboard } = useContext(AgendaContext)
   return (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
       <Card.Meta

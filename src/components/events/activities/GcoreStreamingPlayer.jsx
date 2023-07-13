@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
-import GcorePlayer from '../../livetransmision/GcorePlayer'
+
 import { CurrentUserContext } from '@context/userContext'
 import { Grid } from 'antd'
 import AgendaContext from '@context/AgendaContext'
@@ -11,7 +11,6 @@ const { useBreakpoint } = Grid
 function GcoreStreamingPlayer({ meeting_id, transmition, activity }) {
   const screens = useBreakpoint()
 
-  const userContext = useContext(CurrentUserContext)
   const { request, typeActivity } = useContext(AgendaContext)
   const evetUserContext = useContext(CurrentEventUserContext)
 
@@ -38,26 +37,6 @@ function GcoreStreamingPlayer({ meeting_id, transmition, activity }) {
     }
   }, [transmition, request, evetUserContext.value])
 
-  // Solicitudes a la API de Gcore
-  const executer_startMonitorStatus = async () => {
-    if (
-      meeting_id === null ||
-      meeting_id === '' ||
-      typeActivity === 'url' ||
-      typeActivity === 'video'
-    )
-      return
-    let live_stream_status = null
-    try {
-      live_stream_status = await getLiveStreamStatus(meeting_id)
-      live_stream_status && setLivestreamStatus(live_stream_status)
-      const timerId = setTimeout(executer_startMonitorStatus, 5000)
-      setTimerId(timerId)
-    } catch (e) {
-      timer_id && clearInterval(timer_id)
-    }
-  }
-
   //Escucha cuando la transmisión se detiene
   useEffect(() => {
     if (!livestreamStatus?.active) {
@@ -65,21 +44,6 @@ function GcoreStreamingPlayer({ meeting_id, transmition, activity }) {
       setTimerId(null)
     }
   }, [livestreamStatus])
-
-  // Si existe un meeting id se ejecuta el monitor, pero se queda colgado (timer)
-  useEffect(() => {
-    if (!meeting_id && timer_id) clearTimeout(timer_id)
-    if (
-      !meeting_id &&
-      (typeActivity == 'youTube' || typeActivity == 'vimeo' || !typeActivity)
-    )
-      return
-    executer_startMonitorStatus()
-    return () => {
-      clearTimeout(timer_id)
-      setLivestreamStatus(null)
-    }
-  }, [meeting_id, typeActivity])
 
   return (
     <>

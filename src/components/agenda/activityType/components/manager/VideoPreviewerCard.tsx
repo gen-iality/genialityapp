@@ -50,19 +50,8 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
 
   let { contentSource: data } = useActivityType()
 
-  const {
-    roomStatus,
-    setRoomStatus,
-    dataLive,
-    meeting_id,
-    obtainUrl,
-    recordings,
-    startRecordTransmition,
-    stopRecordTransmition,
-    loadingRecord,
-    record,
-    saveConfig,
-  } = useContext(AgendaContext)
+  const { roomStatus, setRoomStatus, dataLive, meeting_id, obtainUrl, saveConfig } =
+    useContext(AgendaContext)
 
   console.debug('VideoPreviewerCard.dataLive:', dataLive)
 
@@ -107,7 +96,6 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
         ) : (
           <>
             {visibleReactPlayer && (
-              // @ts-expect-error
               <ReactPlayer
                 playing
                 loop
@@ -327,48 +315,6 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
               }
             />
           </Col>
-
-          {dataLive?.live && dataLive?.active ? (
-            dataLive?.live ? (
-              <Col span={8}>
-                <Badge
-                  count={
-                    recordings && Object.keys(recordings).length > 0
-                      ? Object.keys(recordings).length
-                      : 0
-                  }
-                >
-                  {record === 'start' ? (
-                    <Button
-                      loading={loadingRecord}
-                      onClick={() => {
-                        startRecordTransmition()
-                      }}
-                      type="primary"
-                    >
-                      Iniciar grabación
-                    </Button>
-                  ) : (
-                    <Popconfirm
-                      title="¿Está seguro que desea detener la grabación?"
-                      okText="Si"
-                      cancelText="No"
-                      onConfirm={() => {
-                        stopRecordTransmition()
-                      }}
-                      onCancel={() => console.log('cancelado')}
-                    >
-                      <Button loading={loadingRecord} type="primary" danger>
-                        Detener grabación
-                      </Button>
-                    </Popconfirm>
-                  )}
-                </Badge>
-              </Col>
-            ) : (
-              loadingRecord && <Spin />
-            )
-          ) : null}
         </Row>
 
         {(props.type === TypeDisplayment.TRANSMISSION ||

@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState, useCallback } from 'react'
-import { useMutation, useQueryClient } from 'react-query'
-import { createLiveStream, stopLiveStream } from '../../adaptors/gcoreStreamingApi'
+
 import { AgendaApi, TypesAgendaApi } from '@helpers/request'
 import AgendaContext from '../AgendaContext'
 import { CurrentEventContext } from '../eventContext'
@@ -43,12 +42,8 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     setMeetingId,
     setPlatform,
     setTypeActivity,
-    activityName,
-    activityDispatch,
     meeting_id: meetingId,
     activityEdit,
-    setDataLive,
-    setHabilitarIngreso,
   } = useContext(AgendaContext)
   const cEvent = useContext(CurrentEventContext)
   const [isStoppingStreaming, setIsStoppingStreaming] = useState(false)
@@ -63,8 +58,6 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     useState<ActivityType.ContentValue | null>(null)
   const contentSource: string | null = meetingId
   const setContentSource: (data: string | null) => void = setMeetingId
-
-  const queryClient = useQueryClient()
 
   const translateActivityType = useCallback((type: string) => {
     const value = typeToDisplaymentMap[type as keyof typeof typeToDisplaymentMap]
@@ -325,26 +318,6 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
         }
         break
       }
-      case activityContentValues.meet: {
-        !meetingId && executer_createStream.mutate()
-        meetingId &&
-          (await saveConfig({
-            platformNew: 'wowza',
-            type: contentType,
-            data: meetingId,
-          }))
-        setTypeActivity(activityContentValues.meet)
-        setPlatform('wowza')
-        break
-      }
-      case activityContentValues.rtmp: {
-        !meetingId && executer_createStream.mutate()
-        meetingId &&
-          (await saveConfig({ platformNew: 'wowza', type: contentType, data: meetingId }))
-        setTypeActivity(activityContentValues.rtmp)
-        setPlatform('wowza')
-        break
-      }
       case activityContentValues.survey: {
         if (!inputContentSource) {
           console.error(
@@ -427,27 +400,6 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     }
   }
 
-  const executer_createStream = useMutation(() => createLiveStream(activityName), {
-    onSuccess: async (data: any) => {
-      queryClient.setQueryData('livestream', data)
-
-      await saveConfig({ platformNew: 'wowza', type: activityContentType, data: data.id })
-      setDataLive(data)
-      activityDispatch({ type: 'meeting_created', meeting_id: data.id })
-    },
-  })
-
-  const executer_stopStream = async () => {
-    setIsStoppingStreaming(true)
-    if (!!meetingId) {
-      const liveStreamresponse = await stopLiveStream(meetingId)
-      setDataLive(liveStreamresponse)
-    }
-    setIsStoppingStreaming(false)
-    setHabilitarIngreso('ended_meeting_room')
-    await saveConfig({ habilitar_ingreso: 'ended_meeting_room' })
-  }
-
   const visualizeVideo = (
     url: string | null,
     created_at: string | null,
@@ -482,7 +434,6 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     setActivityContentType,
     translateActivityType,
     visualizeVideo,
-    executer_stopStream,
     humanizeActivityType,
   }
 
