@@ -32,6 +32,8 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
     if (!activity?._id) return
     if (!cEventUser.value?._id) return
 
+    let unsubscribe: null | (() => void) = null
+
     if (activity.type.name === 'cargarvideo') {
       setIsItAnFrame(true)
     } else {
@@ -46,6 +48,17 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
           setViewProgress(data.viewProgress)
         }
       })
+
+      // Don't use the previous lines as realtime because you video player will fly throwing laser rays
+      unsubscribe = FB.Attendees.ref(activity._id, cEventUser.value._id).onSnapshot(
+        (snapshot) => {
+          setAttendeeRealTime(snapshot.data())
+        },
+      )
+    }
+
+    return () => {
+      typeof unsubscribe === 'function' && unsubscribe()
     }
   }, [activity, cEventUser.value, ref.current])
 
@@ -108,11 +121,11 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
               if (state.played === 0) return
 
               setViewedVideoProgress(state.played)
-              updateAttendeeInActivityRealTime(cEventUser.value, activity._id, {
-                viewProgress: state.played,
-                checked_in: false,
-                checkedin_at: null,
-              })
+              // updateAttendeeInActivityRealTime(cEventUser.value, activity._id, {
+              //   viewProgress: state.played,
+              //   checked_in: false,
+              //   checkedin_at: null,
+              // })
             }}
             controls
           />

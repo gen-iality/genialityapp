@@ -18,6 +18,7 @@ import { useLocation } from 'react-router'
 import { DeleteActivitiesTakenButton } from './DeleteActivitiesTakenButton'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import ModuledActivityDisplayer from './ModuledActivityDisplayer'
+import { FB } from '@helpers/firestore-request'
 
 interface ActivitiesListProps {
   eventId: string
@@ -40,6 +41,9 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
   const [truncatedAgendaList, setTruncatedAgendaList] = useState<TruncatedAgenda[]>([])
   const [isAnswersDeleted, setAnswersIsDeleted] = useState(false)
   const [deletingTakenActivitiesCounter, setDeletingTakenActivitiesCounter] = useState(0)
+  const [nonPublishedActivities, setNonPublishedActivities] = useState<{
+    [key: string]: boolean
+  }>({})
 
   const currentUser = useCurrentUser()
   const currentEventUser = useContext(CurrentEventUserContext)
@@ -61,6 +65,22 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
       setLoadedActivities(activitiesEvent)
     }
   }, [activitiesEvent])
+
+  useEffect(() => {
+    ;(activitiesEvent as ExtendedAgendaType[]).map((activity) => {
+      if (!activity._id) return
+      FB.Activities.ref(eventId, activity._id).onSnapshot((snapshot) => {
+        const data = snapshot.data()
+        console.debug('snapshot', data)
+        if (!data) return
+        // Update the state of publishing of this activity ID
+        const flag = !!data.isPublished
+
+        setNonPublishedActivities({ ...nonPublishedActivities, [activity._id!]: flag })
+      })
+      activity._id
+    })
+  }, [activitiesEvent, eventId])
 
   useEffect(() => {
     if (!eventId) return
@@ -108,6 +128,7 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
           host_picture: agenda.hosts[0]?.image,
           name_host: agenda.hosts[0]?.name,
           short_description: agenda.short_description,
+          isPublished: !!nonPublishedActivities[agenda._id!],
           //categories: agenda.activity_categories.map((category: any) => category.name),
           categories: (agenda.activity_categories || []).map(({ name, color }) => ({
             name,
@@ -160,7 +181,12 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
         return result
       }),
     ])
-  }, [eventUserId, loadedActivities, deletingTakenActivitiesCounter])
+  }, [
+    eventUserId,
+    loadedActivities,
+    deletingTakenActivitiesCounter,
+    nonPublishedActivities,
+  ])
 
   if (isLoading) return <Spin />
 

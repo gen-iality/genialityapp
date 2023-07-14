@@ -3,7 +3,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Moment from 'moment-timezone'
 import { FormattedMessage } from 'react-intl'
-import { Card, Col, Button, Row, Result } from 'antd'
+import { Card, Col, Button, Row, Result, Alert, Spin } from 'antd'
 import { setTopBanner } from '../../../redux/topBanner/actions'
 import { AgendaApi } from '@helpers/request'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
@@ -23,6 +23,7 @@ import Logger from '@Utilities/logger'
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import { useEventProgress } from '@context/eventProgressContext'
 import { StateMessage } from '@context/MessageService'
+import { FB } from '@helpers/firestore-request'
 
 const { setHasOpenSurveys } = SurveyActions
 
@@ -71,6 +72,20 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
       })
     }
   }
+
+  useEffect(() => {
+    if (!params.activity_id) return
+
+    let unsubscribe: null | (() => void) = null
+
+    FB.Activities.ref(cEvent.value._id, params.activity_id).onSnapshot((snapshot) => {
+      setActivity({ ...activity, isPublished: snapshot.data()?.isPublished })
+    })
+
+    return () => {
+      typeof unsubscribe === 'function' && unsubscribe()
+    }
+  }, [params.activity_id])
 
   useEffect(() => {
     AgendaApi.getOne(params.activity_id, cEvent.value._id).then((result) => {
@@ -152,8 +167,27 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
     else return false
   }, [activity])
 
+  if (!!activity && !activity.isPublished) {
+    if (cEventUser.value?.rol?.type !== 'admin') {
+      return (
+        <Result
+          status="403"
+          title="Actividad no disponible"
+          subTitle="No puedes entrar a esta actividad por ningún medio"
+          children={JSON.stringify(cEventUser.value)}
+        />
+      )
+    }
+  }
+
   return (
     <div>
+      {!!activity && !activity.isPublished && cEventUser.value?.rol?.type === 'admin' && (
+        <Alert
+          type="warning"
+          message="Esta actividad no está publicada para usuarios normales"
+        />
+      )}
       {cUser.value?._id && cEvent.value?._id && activity?._id && (
         <Presence
           data={{ eventId: cEvent.value._id, activityId: activity._id, type: 'activity' }}

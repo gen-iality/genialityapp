@@ -9,15 +9,15 @@ export function useGetWidgetForContentType(
       return formWidgetFlow.cards[0]
 
     // liveBroadcastCards
-    case activityContentValues.streaming:
-      return (
-        formWidgetFlow.cards[0].cards as ActivityType.CardUI[]
-      )[0] as ActivityType.CardUI
+    // case activityContentValues.streaming:
+    //   return (
+    //     formWidgetFlow.cards[0].cards as ActivityType.CardUI[]
+    //   )[0] as ActivityType.CardUI
     case activityContentValues.vimeo:
-      return (formWidgetFlow.cards[0].cards as ActivityType.CardUI[])[1]
+      return (formWidgetFlow.cards[0].cards as ActivityType.CardUI[])[0]
         .form as ActivityType.FormUI
     case activityContentValues.youtube:
-      return (formWidgetFlow.cards[0].cards as ActivityType.CardUI[])[2]
+      return (formWidgetFlow.cards[0].cards as ActivityType.CardUI[])[1]
         .form as ActivityType.FormUI
 
     case activityTypeNames.meeting:
