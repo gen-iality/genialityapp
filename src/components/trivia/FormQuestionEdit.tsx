@@ -35,7 +35,6 @@ import { StateMessage } from '@context/MessageService'
 import { uploadImagedummyRequest } from '@Utilities/imgUtils'
 import LikertScaleEditor from '../quiz/LikertScaleEditor'
 import { SurveyQuestion } from '@components/events/surveys/types'
-import urlProcessorSet from '@components/agenda/activityType/utils/urlProcessorSet'
 
 const { Option } = Select
 

@@ -97,7 +97,6 @@ async function loadSelectedSurvey(eventId, idSurvey, userId) {
 
   dataSurvey['questions'].forEach((page, index) => {
     const newPage = page
-    console.log('1. newPage', newPage)
     newPage['isRequired'] = dataSurvey.allow_gradable_survey === 'true' ? false : true
     /** Se agrega la imagen a la pregunta */
     if (newPage?.image || newPage?.video) {
