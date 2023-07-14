@@ -135,8 +135,6 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
   // For the text type
   const [rawText, setRawText] = useState('')
 
-  const [videoURL, setVideoURL] = useState('')
-
   const [form] = Form.useForm()
 
   useEffect(() => {
@@ -705,11 +703,9 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
             <>
               <Form.Item name="url" label="URL">
                 <Input
-                  value={videoURL}
                   size="middle"
                   onChange={(e) => {
                     console.log('e.target.value', e.target.value)
-                    setVideoURL(e.target.value)
                   }}
                 />
               </Form.Item>
