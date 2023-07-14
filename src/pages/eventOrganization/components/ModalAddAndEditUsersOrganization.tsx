@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Grid, Modal, ModalProps, Space, Steps } from 'antd';
+import { Button, Form, Grid, Modal, ModalProps, Result, Space, Spin, Steps } from 'antd';
 import { stylePaddingDesktop, stylePaddingMobile } from '../styles/user-organization.style';
 import { FormUserOrganization } from '../interface/organization.interface';
 import { UserOrganizationForm } from './UserOrganizationForm';
@@ -10,6 +10,15 @@ import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
 import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfirmationOutline';
 import { ScheduleOutlined } from '@ant-design/icons';
 import { saveImageStorage } from '@/helpers/helperSaveImage';
+import createNewUser from '@/components/authentication/ModalsFunctions/createNewUser';
+
+interface User {
+  email: string;
+  names: string;
+}
+interface UserToOrganization extends User {
+  [key: string]: any;
+}
 
 const initialForm: FormUserOrganization = {
   email: '',
@@ -29,8 +38,46 @@ export const ModalAddAndEditUsers = ({ selectedUser, organizationId, ...modalPro
   const [formBasicData] = Form.useForm();
   const [formDinamicData] = Form.useForm();
   const [imageFile, setImagesFile] = useState<UploadFile>();
-  const [organization, setOrganization] = useState();
+  const [organization, setOrganization] = useState<any>();
   const [dataBasic, setdataBasic] = useState<FormUserOrganization>();
+  const [backToCreate, setbackToCreate] = useState(false);
+  const [loadingRequest, setLoadingRequest] = useState(false);
+  const [dataToAddUser, setdataToAddUser] = useState<any>();
+  const [resultData, setresultData] = useState({
+    title: '',
+    subTitle: '',
+  });
+
+  const resultEmailExist = () => {
+    setresultData({
+      title: 'El correo electronico ya existe',
+      subTitle: 'Puede cambiarlo o agregar el usuario a tu organizacion',
+    });
+  };
+
+  const resultUserExistIntoOrganization = (email: string) => {
+    setresultData({
+      title: 'EL usuario ya es miembro',
+      subTitle: `El usuario con email: ${email} ya es miembro de esta organizacion`,
+    });
+    setbackToCreate(false);
+    setLoadingRequest(false);
+  };
+
+  const resultUnexpectedError = () => {
+    setresultData({ title: 'Error inesperado', subTitle: 'Ocurrio un error inesperado creando el usuario' });
+  };
+
+  const resultUserOrganizationSuccess = (name: string) => {
+    setresultData({ title: 'Se creo correctamente', subTitle: `Se agrego el usuario ${name} a tu organiacion` });
+  };
+
+  const resultUserOrganizationError = (name: string) => {
+    setresultData({
+      title: `Error al agregar el usuario`,
+      subTitle: `No se agrego el usuario ${name} a tu organiacion`,
+    });
+  };
 
   const onLastStep = () => {
     setCurrent(current > 0 ? current - 1 : current);
@@ -45,23 +92,65 @@ export const ModalAddAndEditUsers = ({ selectedUser, organizationId, ...modalPro
     onNextStep();
   };
 
-  const onFinishDinamicStep = (values: any) => {
+  const onContinueCreating = () => {
+    onLastStep();
+    setbackToCreate(false);
+  };
+  const onFinishDinamicStep = (values?: any) => {
     onCreateUser(values);
     onNextStep();
   };
 
   const onCreateUser = async (dataDinamic: any) => {
+    setLoadingRequest(true);
     const nuewUserPicture = await saveImageStorage(imageFile?.thumbUrl);
-    const newUser = {
+    const newUser: UserToOrganization = {
       names: dataBasic?.names,
       email: dataBasic?.email,
-      picture: nuewUserPicture,
+      urlImage: nuewUserPicture,
       password: dataBasic?.password,
       ...dataDinamic,
     };
-    return console.log('newUser', newUser);
-    // return console.log('data=>', { dataBasic, dataDinamic, imageFile: imageFile?.url });
-    // const respUser = await OrganizationApi.saveUser(organizationId, propertiesOrgMember);
+    let resp = await createNewUser(newUser);
+    if (resp === 0) {
+      setdataToAddUser(newUser);
+      setLoadingRequest(false);
+      resultEmailExist();
+      setbackToCreate(true);
+      return;
+    }
+
+    if (resp === 1) {
+      setLoadingRequest(false);
+      return onAddUserToOrganization(newUser);
+    }
+
+    setLoadingRequest(false);
+    setbackToCreate(true);
+    resultUnexpectedError();
+  };
+
+  const alreadyExistUserInOrganization = async (email: string) => {
+    const { data } = await OrganizationApi.getUsers(organizationId);
+    return data.filter((userOrganization: any) => userOrganization.properties.email === email).length > 0;
+  };
+
+  const onAddUserToOrganization = async (newUser: UserToOrganization) => {
+    setLoadingRequest(true);
+    const { picture, password, ...userToOrganization } = newUser;
+    const alreadyExistUser = await alreadyExistUserInOrganization(newUser.email);
+    if (alreadyExistUser) return resultUserExistIntoOrganization(newUser.email);
+
+    const respUser = await OrganizationApi.saveUser(organizationId, { properties: userToOrganization });
+
+    if (respUser._id) {
+      setLoadingRequest(false);
+      resultUserOrganizationSuccess(newUser.names);
+      setbackToCreate(false);
+      return;
+    }
+    setLoadingRequest(false);
+    resultUserOrganizationError(newUser.names);
   };
 
   useEffect(() => {
@@ -77,7 +166,6 @@ export const ModalAddAndEditUsers = ({ selectedUser, organizationId, ...modalPro
       formBasicData.setFieldsValue(initialForm);
     }
   }, [selectedUser]);
-
   const steps = [
     {
       title: 'First',
@@ -99,29 +187,58 @@ export const ModalAddAndEditUsers = ({ selectedUser, organizationId, ...modalPro
       icon: <TicketConfirmationOutlineIcon style={{ fontSize: '32px' }} />,
       content: (
         <div>
-          <OrganizationPropertiesForm
-            form={formDinamicData}
-            organization={organization}
-            onSubmit={onFinishDinamicStep}
-            noSubmitButton
-            onLastStep={onLastStep}
-          />
-          <Space>
-            <Button onClick={onLastStep}>Atras</Button>
-            <Button
-              onClick={() => {
-                formDinamicData.submit();
-              }}
-              type='primary'>
-              Finalizar
-            </Button>
-          </Space>
+          {organization?.user_properties?.filter((userOrg: any) => !['names', 'email'].includes(userOrg.name))
+            .length === 0 ? (
+            <>
+              <Result icon={<></>} title='No hay datos configurados' subTitle='Puede continuar' />
+              <Space>
+                <Button onClick={onLastStep}>Atras</Button>
+                <Button onClick={() => onFinishDinamicStep()} type='primary'>
+                  Finalizar
+                </Button>
+              </Space>
+            </>
+          ) : (
+            <>
+              <OrganizationPropertiesForm
+                form={formDinamicData}
+                organization={organization}
+                onSubmit={onFinishDinamicStep}
+                noSubmitButton
+                onLastStep={onLastStep}
+              />
+              <Space>
+                <Button onClick={onLastStep}>Atras</Button>
+                <Button
+                  onClick={() => {
+                    formDinamicData.submit();
+                  }}
+                  type='primary'>
+                  Finalizar
+                </Button>
+              </Space>
+            </>
+          )}
         </div>
       ),
     },
     {
       title: 'Last',
       icon: <ScheduleOutlined style={{ fontSize: '32px' }} />,
+      content: (
+        <div>
+          {loadingRequest && <Spin />}
+          {!loadingRequest && <Result title={resultData.title} subTitle={resultData.subTitle} icon={<></>} />}
+          {backToCreate && !loadingRequest && (
+            <Space>
+              <Button onClick={onContinueCreating}>Atras</Button>
+              <Button onClick={() => onAddUserToOrganization(dataToAddUser)} type='primary'>
+                Agregar
+              </Button>
+            </Space>
+          )}
+        </div>
+      ),
     },
   ];
 
