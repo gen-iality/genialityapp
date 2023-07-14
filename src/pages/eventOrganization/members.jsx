@@ -22,11 +22,10 @@ function OrgMembers(props) {
   const [addOrEditUser, setAddOrEditUser] = useState(false);
   const [extraFields, setExtraFields] = useState([]);
   const [roleList, setRoleList] = useState([]);
-  const [selectedUser, setSelectedUser] = useState({});
+  const [selectedUser, setSelectedUser] = useState();
   const [editMember, setEditMember] = useState(false);
   let { _id: organizationId } = props.org;
   const history = useHistory();
-
   async function getEventsStatisticsData() {
     const { data } = await OrganizationApi.getUsers(organizationId);
     const fieldsMembersData = [];
@@ -83,7 +82,7 @@ function OrgMembers(props) {
   }
 
   function addUser() {
-    setSelectedUser({});
+    setSelectedUser(undefined);
     closeOrOpenModalMembers();
   }
   function editModalUser(item) {
@@ -159,8 +158,12 @@ function OrgMembers(props) {
       {addOrEditUser && (
         <ModalAddAndEditUsers
           visible={addOrEditUser}
-          onCancel={()=>setAddOrEditUser(false)}
+          onCancel={()=>{
+            setAddOrEditUser(false)
+            setSelectedUser(undefined)
+          }}
           organizationId={organizationId}
+          selectedUser={selectedUser}
         />
       )}
     </>

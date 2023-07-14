@@ -98,7 +98,6 @@ const OrganizationPropertiesForm = (props: Props) => {
               dynamicFields={dynamicFields}
               initialValues={initialValues}
               onFinish={onFinish}
-              //   onFinishFailed={onFinishFailed}
               onValueChange={onValueChange}
             />
           </Card>

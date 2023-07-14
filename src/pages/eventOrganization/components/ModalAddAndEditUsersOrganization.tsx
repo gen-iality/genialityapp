@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Grid, Modal, ModalProps, Result, Space, Spin, Steps } from 'antd';
 import { stylePaddingDesktop, stylePaddingMobile } from '../styles/user-organization.style';
-import { FormUserOrganization } from '../interface/organization.interface';
+import { FormUserOrganization, UserToOrganization } from '../interface/organization.interface';
 import { UserOrganizationForm } from './UserOrganizationForm';
 import { UploadFile } from 'antd/lib/upload/interface';
 import OrganizationPropertiesForm from './OrganizationPropertiesForm';
@@ -11,31 +11,23 @@ import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfi
 import { ScheduleOutlined } from '@ant-design/icons';
 import { saveImageStorage } from '@/helpers/helperSaveImage';
 import createNewUser from '@/components/authentication/ModalsFunctions/createNewUser';
-
-interface User {
-  email: string;
-  names: string;
-}
-interface UserToOrganization extends User {
-  [key: string]: any;
-}
+import { UnchangeableUserData } from './form-edit/UnchangeableUserData';
 
 const initialForm: FormUserOrganization = {
   email: '',
   names: '',
   password: '',
-  imageFile: undefined,
 };
 
 interface Props extends ModalProps {
-  selectedUser?: FormUserOrganization;
+  selectedUser?: Omit<UserToOrganization, 'password'>;
   organizationId: string;
 }
 
 export const ModalAddAndEditUsers = ({ selectedUser, organizationId, ...modalProps }: Props) => {
   const [current, setCurrent] = useState(0);
   const screens = Grid.useBreakpoint();
-  const [formBasicData] = Form.useForm();
+  const [formBasicData] = Form.useForm<FormUserOrganization>();
   const [formDinamicData] = Form.useForm();
   const [imageFile, setImagesFile] = useState<UploadFile>();
   const [organization, setOrganization] = useState<any>();
@@ -43,6 +35,7 @@ export const ModalAddAndEditUsers = ({ selectedUser, organizationId, ...modalPro
   const [backToCreate, setbackToCreate] = useState(false);
   const [loadingRequest, setLoadingRequest] = useState(false);
   const [dataToAddUser, setdataToAddUser] = useState<any>();
+  const [haveDinamicProperties, setHaveDinamicProperties] = useState(false);
   const [resultData, setresultData] = useState({
     title: '',
     subTitle: '',
@@ -154,6 +147,12 @@ export const ModalAddAndEditUsers = ({ selectedUser, organizationId, ...modalPro
   };
 
   useEffect(() => {
+    setHaveDinamicProperties(
+      organization?.user_properties?.filter((userOrg: any) => !['names', 'email'].includes(userOrg.name)).length > 0
+    );
+  }, [organization]);
+
+  useEffect(() => {
     OrganizationApi.getOne(organizationId).then((response) => {
       setOrganization(response);
     });
@@ -161,11 +160,23 @@ export const ModalAddAndEditUsers = ({ selectedUser, organizationId, ...modalPro
 
   useEffect(() => {
     if (selectedUser) {
-      formBasicData.setFieldsValue(selectedUser);
+      formBasicData.setFieldsValue({
+        email: selectedUser.email,
+        names: selectedUser.names,
+        password: selectedUser.password,
+      });
     } else {
       formBasicData.setFieldsValue(initialForm);
     }
   }, [selectedUser]);
+
+  useEffect(() => {
+    if (haveDinamicProperties && selectedUser) {
+      const { password, names, email, ...dinamicProperties } = selectedUser;
+      formDinamicData.setFieldsValue(dinamicProperties);
+    }
+  }, [selectedUser, haveDinamicProperties]);
+
   const steps = [
     {
       title: 'First',
@@ -187,8 +198,7 @@ export const ModalAddAndEditUsers = ({ selectedUser, organizationId, ...modalPro
       icon: <TicketConfirmationOutlineIcon style={{ fontSize: '32px' }} />,
       content: (
         <div>
-          {organization?.user_properties?.filter((userOrg: any) => !['names', 'email'].includes(userOrg.name))
-            .length === 0 ? (
+          {!haveDinamicProperties ? (
             <>
               <Result icon={<></>} title='No hay datos configurados' subTitle='Puede continuar' />
               <Space>
@@ -241,21 +251,24 @@ export const ModalAddAndEditUsers = ({ selectedUser, organizationId, ...modalPro
       ),
     },
   ];
-
   return (
     <Modal closable footer={false} {...modalProps}>
       <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
-        <div
-          style={{
-            marginTop: '30px',
-          }}>
-          <Steps current={current} responsive={false}>
-            {steps.map((item) => (
-              <Steps.Step key={item.title} icon={item.icon} />
-            ))}
-          </Steps>
-          <div>{steps[current].content}</div>
-        </div>
+        {selectedUser ? (
+          <UnchangeableUserData userOrganization={selectedUser} />
+        ) : (
+          <div
+            style={{
+              marginTop: '30px',
+            }}>
+            <Steps current={current} responsive={false}>
+              {steps.map((item) => (
+                <Steps.Step key={item.title} icon={item.icon} />
+              ))}
+            </Steps>
+            <div>{steps[current].content}</div>
+          </div>
+        )}
       </div>
     </Modal>
   );
