@@ -343,8 +343,6 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
   }
 
   const onFinish = async (values: any) => {
-    console.log('values', values)
-
     StateMessage.show(
       'loading',
       'loading',
@@ -375,6 +373,8 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
       values.image = imageUrl
     }
 
+    const videoURL = values.url
+
     if (videoURL) {
       const newVideoValue = [
         {
@@ -385,7 +385,6 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
                   <iframe style='position: absolute; top: 0; left: 0; width: 100%; height: 100%;' src='${videoURL}' allowFullScreen allowusermedia frameborder='0'>
                   </iframe>
                 </div>`,
-          //html: `<video src='${videoURL}' width='100%' height='100%' controls></video>`,
           url: videoURL,
         },
       ]
