@@ -10,7 +10,12 @@ type HookType = (eventId: string, activityId: string, cb: HookCallback) => void
 
 export const getActivityFirestoreData: HookType = (eventId, activityId, cb) => {
   FB.Activities.ref(eventId, activityId).onSnapshot((activitySnapshot) => {
-    if (!activitySnapshot.exists) return
+    if (!activitySnapshot.exists) {
+      console.warn(
+        `firebase cannot find the activity for event ID: ${eventId}, activity ID: ${activityId}`,
+      )
+      return
+    }
     const data = activitySnapshot.data()
 
     if (typeof cb === 'function') {

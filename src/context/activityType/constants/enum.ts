@@ -36,6 +36,7 @@ export enum DeepUI {
 }
 
 export enum TypeDisplayment {
+  /** @deprecated it will be removed to be added again and better */
   TRANSMISSION = 'Transmisión',
   VIDEO = 'Video',
   MEETING = 'reunión',
