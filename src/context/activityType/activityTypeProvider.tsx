@@ -248,7 +248,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
             data: inputContentSource,
           })
           setTypeActivity(activityContentValues.url)
-          setPlatform('wowza')
+          setPlatform('')
           setMeetingId(inputContentSource)
         }
         break
@@ -273,12 +273,12 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
           ? inputContentSource
           : 'https://youtu.be/' + inputContentSource
         await saveConfig({
-          platformNew: 'wowza',
+          platformNew: 'youtube',
           type: activityContentValues.youtube,
           data: newData,
         })
         setTypeActivity('youTube')
-        setPlatform('wowza')
+        setPlatform('youtube')
         setMeetingId(inputContentSource)
         break
       }
@@ -290,7 +290,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
           habilitar_ingreso: 'only',
         })
         setTypeActivity(activityContentValues.meeting)
-        setPlatform('wowza')
+        setPlatform('')
         break
       }
       case activityContentValues.file: {
@@ -313,7 +313,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
             habilitar_ingreso: '',
           })
           setTypeActivity('video')
-          setPlatform('wowza')
+          setPlatform('')
           setMeetingId(urlVideo)
         }
         break

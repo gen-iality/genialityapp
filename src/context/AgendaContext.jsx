@@ -19,7 +19,7 @@ export const AgendaContextProvider = ({ children }) => {
   const [host_id, setHostId] = useState(null)
   const [host_name, setHostName] = useState(null)
   const [habilitar_ingreso, setHabilitarIngreso] = useState('')
-  const [platform, setPlatform] = useState('wowza')
+  const [platform, setPlatform] = useState('vimeo')
   const [vimeo_id, setVimeoId] = useState('')
   const [name_host, setNameHost] = useState('')
   const [avalibleGames, setAvailableGames] = useState([])
@@ -80,7 +80,7 @@ export const AgendaContextProvider = ({ children }) => {
 
       console.log('8. CONFIGURATION==>', configuration)
       setIsPublished(!!configuration.isPublished)
-      setPlatform(configuration.platform ? configuration.platform : 'wowza')
+      setPlatform(configuration.platform ? configuration.platform : 'vimeo')
       setMeetingId(configuration.meeting_id ? configuration.meeting_id : null)
       setRoomStatus(
         configuration?.habilitar_ingreso == null
@@ -137,7 +137,7 @@ export const AgendaContextProvider = ({ children }) => {
   // Funcion que permite reinicializar los estados ya que al agregar o editar otra lección estos toman valores anteriores
   const initializeState = () => {
     setIsPublished(true)
-    setPlatform('wowza')
+    setPlatform('vimeo')
     setMeetingId(null)
     setRoomStatus('')
     setTransmition('EviusMeet')
@@ -215,6 +215,7 @@ export const AgendaContextProvider = ({ children }) => {
     const previewBaseUrlVideo = import.meta.env.VITE_PLACEHOLDER_LIVE_TRANSMITION
     // 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807';
     let urlVideo
+    console.log('obtain url to type:', type)
     switch (type) {
       case 'vimeo':
         urlVideo = data?.includes('https://player.vimeo.com/video/')
