@@ -135,7 +135,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
       if (_agenda?._id) {
         console.log('agenda created (2)')
         setIsEditing(true)
-        cAgenda.setIsPublished(true)
+        // cAgenda.setIsPublished(true)
       } else if (changePathWithoutSaving) {
         console.log('go to', props.parentUrl)
         history.push(`${props.parentUrl}`)

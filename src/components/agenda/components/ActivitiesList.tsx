@@ -41,9 +41,7 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
   const [truncatedAgendaList, setTruncatedAgendaList] = useState<TruncatedAgenda[]>([])
   const [isAnswersDeleted, setAnswersIsDeleted] = useState(false)
   const [deletingTakenActivitiesCounter, setDeletingTakenActivitiesCounter] = useState(0)
-  const [nonPublishedActivities, setNonPublishedActivities] = useState<{
-    [key: string]: boolean
-  }>({})
+  const [nonPublishedActivities, setNonPublishedActivities] = useState<string[]>([])
 
   const currentUser = useCurrentUser()
   const currentEventUser = useContext(CurrentEventUserContext)
@@ -76,7 +74,13 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
         // Update the state of publishing of this activity ID
         const flag = !!data.isPublished
 
-        setNonPublishedActivities({ ...nonPublishedActivities, [activity._id!]: flag })
+        if (flag) {
+          setNonPublishedActivities((previous) => [...previous, activity._id!])
+        } else {
+          setNonPublishedActivities((previous) =>
+            previous.filter((id) => id !== activity._id!),
+          )
+        }
       })
       activity._id
     })
@@ -128,7 +132,7 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
           host_picture: agenda.hosts[0]?.image,
           name_host: agenda.hosts[0]?.name,
           short_description: agenda.short_description,
-          isPublished: !!nonPublishedActivities[agenda._id!],
+          isPublished: !!nonPublishedActivities.includes(agenda._id!),
           //categories: agenda.activity_categories.map((category: any) => category.name),
           categories: (agenda.activity_categories || []).map(({ name, color }) => ({
             name,
