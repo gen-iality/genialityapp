@@ -17,17 +17,17 @@ function GcorePlayer({ meeting_id, thereIsConnection }) {
 
   const [platformurl, setPlatformurl] = useState(defaultVideo)
   const [visibleReactPlayer, setVisibleReactPlayer] = useState(false)
-  const [conected, setConected] = useState('No')
+  const [isConected, setIsConected] = useState(false)
 
   useEffect(() => {
     if (!meeting_id) return
     if (!thereIsConnection) {
-      setConected('Yes')
+      setIsConected(true)
       setPlatformurl(defaultVideo)
       setVisibleReactPlayer(true)
     } else if (thereIsConnection) {
       const asyncfunction = async () => {
-        setConected('Yes')
+        setIsConected(true)
         setPlatformurl('none')
         const live_stream = await getLiveStream(meeting_id)
         const url = live_stream.iframe_url
@@ -41,12 +41,12 @@ function GcorePlayer({ meeting_id, thereIsConnection }) {
       asyncfunction()
     } else if (typeActivity === 'youTube') {
       setVisibleReactPlayer(true)
-      setConected('Yes')
+      setIsConected(true)
       setPlatformurl('https://youtu.be/' + meeting_id)
     } else {
       setPlatformurl(meeting_id)
       setVisibleReactPlayer(false)
-      setConected('Yes')
+      setIsConected(true)
     }
     return () => {
       setPlatformurl(null)
@@ -56,7 +56,7 @@ function GcorePlayer({ meeting_id, thereIsConnection }) {
   return (
     <>
       <div className="mediaplayer">
-        {conected == 'Yes' && visibleReactPlayer ? (
+        {isConected && visibleReactPlayer ? (
           <>
             <ReactPlayer
               style={{ aspectRatio: '16/9' }}
@@ -69,7 +69,7 @@ function GcorePlayer({ meeting_id, thereIsConnection }) {
               controls={false}
             />
           </>
-        ) : conected == 'Yes' ? (
+        ) : isConected ? (
           <>
             <iframe
               style={screens.xs ? { aspectRatio: '10/20' } : { aspectRatio: '16/9' }}
