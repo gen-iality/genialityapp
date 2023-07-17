@@ -5,10 +5,10 @@ import { useIntl } from 'react-intl';
 import { UserToOrganization } from '../../interface/organization.interface';
 
 interface Props {
-  userOrganization: Omit<UserToOrganization, 'password'>;
+  selectedUser: Omit<UserToOrganization, 'password'>;
 }
 
-export const UnchangeableUserData = ({ userOrganization }: Props) => {
+export const UnchangeableUserData = ({ selectedUser: userOrganization }: Props) => {
   const intl = useIntl();
 
   return (
@@ -31,7 +31,7 @@ export const UnchangeableUserData = ({ userOrganization }: Props) => {
               />
             }
             author={<Typography.Text style={{ fontSize: '18px' }}>{userOrganization?.names}</Typography.Text>}
-            content={<Typography.Text style={{ fontSize: '18px' }}>{userOrganization?.email}</Typography.Text>}
+            content={<p>{userOrganization?.email}</p>}
           />
         </Card>
       </Col>
