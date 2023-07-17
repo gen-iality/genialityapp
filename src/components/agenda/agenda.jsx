@@ -44,21 +44,13 @@ const ActivityPublishingStatus = (props) => {
   }, [isPublished])
 
   return (
-    <Tooltip title="Click para cambiar">
-      <Button
-        type="link"
-        onClick={toggleStatus}
-        style={{ color: isPublished ? '#618a89' : '#994b53' }}
-      >
-        {typeof isPublished === 'undefined' ? (
-          <Spin />
-        ) : isPublished ? (
-          'público'
-        ) : (
-          'oculto'
-        )}
-      </Button>
-    </Tooltip>
+    <Button
+      type="link"
+      onClick={toggleStatus}
+      style={{ color: isPublished ? '#618a89' : '#994b53' }}
+    >
+      {typeof isPublished === 'undefined' ? <Spin /> : isPublished ? 'público' : 'oculto'}
+    </Button>
   )
 }
 
