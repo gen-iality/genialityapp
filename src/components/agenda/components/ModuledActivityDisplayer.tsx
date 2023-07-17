@@ -39,6 +39,8 @@ const ModuledActivityDisplayer: FunctionComponent<IModuledActivityDisplayerProps
     return sorttedNames
   }, [activityList])
 
+  if (activityList.length === 0) return null
+
   return (
     <Collapse>
       {moduleNames.map((name: string, index: number) => (
