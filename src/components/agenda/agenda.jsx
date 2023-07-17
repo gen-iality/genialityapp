@@ -63,6 +63,7 @@ const ActivityPublishingStatus = (props) => {
 
 const Agenda = (props) => {
   const [columnsData, setColumnsData] = useState({})
+  const [isPublishedActivityMap, setIsPublishedActivityMap] = useState({})
 
   const columns = [
     {
@@ -95,9 +96,26 @@ const Agenda = (props) => {
     {
       title: 'Está publicado?',
       ellipsis: true,
+      filters: [
+        { text: 'Público', value: true },
+        { text: 'Oculto', value: false },
+      ],
+      onFilter: (status, item) => {
+        console.log(status, item)
+        return isPublishedActivityMap[item._id] === status
+      },
       render: (item) => {
         return (
-          <ActivityPublishingStatus eventId={props.event._id} activityId={item._id} />
+          <ActivityPublishingStatus
+            eventId={props.event._id}
+            activityId={item._id}
+            onChange={(status) => {
+              setIsPublishedActivityMap((previous) => ({
+                ...previous,
+                [item._id]: status,
+              }))
+            }}
+          />
         )
       },
     },
