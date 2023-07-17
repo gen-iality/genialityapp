@@ -5,6 +5,7 @@ import { Grid } from 'antd'
 import AgendaContext from '@context/AgendaContext'
 import { CurrentEventUserContext } from '@context/eventUserContext'
 import { getLiveStreamStatus } from '../../../adaptors/gcoreStreamingApi'
+import GcorePlayer from '@components/livetransmision/GcorePlayer'
 
 const { useBreakpoint } = Grid
 
