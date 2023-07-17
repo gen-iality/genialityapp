@@ -29,11 +29,14 @@ export interface CourseProgressBarProps {
 }
 
 function CourseProgressBar(props: CourseProgressBarProps) {
-  const { activities, eventUser, eventId } = props
+  const { activities: incomingActivities, eventUser, eventId } = props
 
   const [attendees, setAttendees] = useState<(Activity & { checked_in?: boolean })[]>([])
   const [watchedActivityId, setWatchedActivityId] = useState<undefined | string>()
   const [isLoading, setIsLoading] = useState(false)
+
+  const [activities, setActivities] = useState<ExtendedAgendaType[]>([])
+  const [nonPublishedActivities, setNonPublishedActivities] = useState<string[]>([])
 
   const location = useLocation()
 
@@ -77,6 +80,33 @@ function CourseProgressBar(props: CourseProgressBarProps) {
     ) as Activity[]
     setAttendees(filteredActivities)
   }
+
+  useEffect(() => {
+    incomingActivities.forEach((activity) => {
+      FB.Activities.ref(eventId, activity._id!).onSnapshot((snapshot) => {
+        const data = snapshot.data()
+        if (!data) return
+        // Update the state of publishing of this activity ID
+        const flag = !!data.isPublished
+
+        if (!flag) {
+          setNonPublishedActivities((previous) => [...previous, activity._id!])
+        } else {
+          setNonPublishedActivities((previous) =>
+            previous.filter((id) => id !== activity._id!),
+          )
+        }
+      })
+    })
+  }, [incomingActivities])
+
+  useEffect(() => {
+    setActivities(
+      incomingActivities.filter(
+        (activity) => !nonPublishedActivities.includes(activity._id!),
+      ),
+    )
+  }, [nonPublishedActivities, incomingActivities])
 
   useEffect(() => {
     setIsLoading(true)
