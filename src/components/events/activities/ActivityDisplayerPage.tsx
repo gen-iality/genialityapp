@@ -79,7 +79,10 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
     let unsubscribe: null | (() => void) = null
 
     FB.Activities.ref(cEvent.value._id, params.activity_id).onSnapshot((snapshot) => {
-      setActivity({ ...activity, isPublished: snapshot.data()?.isPublished })
+      setActivity((previous: any) => ({
+        ...previous,
+        isPublished: snapshot.data()?.isPublished,
+      }))
     })
 
     return () => {
@@ -90,7 +93,7 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
   useEffect(() => {
     AgendaApi.getOne(params.activity_id, cEvent.value._id).then((result) => {
       helperDispatch({ type: 'currentActivity', currentActivity: result })
-      setActivity(result)
+      setActivity((previous: any) => ({ ...previous, ...result }))
       setOrderedHost((result.hosts as any[]).sort((a, b) => a.order - b.order))
     })
 
