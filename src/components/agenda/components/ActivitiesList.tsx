@@ -77,7 +77,7 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
         // Update the state of publishing of this activity ID
         const flag = !!data.isPublished
 
-        if (flag) {
+        if (!flag) {
           setNonPublishedActivities((previous) => [...previous, activity._id!])
         } else {
           setNonPublishedActivities((previous) =>
@@ -135,7 +135,7 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
           host_picture: agenda.hosts[0]?.image,
           name_host: agenda.hosts[0]?.name,
           short_description: agenda.short_description,
-          isPublished: !!nonPublishedActivities.includes(agenda._id!),
+          isPublished: !nonPublishedActivities.includes(agenda._id!),
           //categories: agenda.activity_categories.map((category: any) => category.name),
           categories: (agenda.activity_categories || []).map(({ name, color }) => ({
             name,
