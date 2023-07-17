@@ -1,13 +1,13 @@
 import { StateMessage } from '@context/MessageService'
-import { deleteLiveStream, deleteAllVideos } from '@adaptors/gcoreStreamingApi'
+
 import { AgendaApi } from '@helpers/request'
-import { firestore, fireRealtime } from '@helpers/firebase'
+import { fireRealtime } from '@helpers/firebase'
 import Service from '../roomManager/service'
 
 import { handleRequestError } from '@helpers/utils'
 
 export default function useDeleteActivity() {
-  const service = new Service(firestore)
+  const service = new Service()
 
   const deleteActivity = async (
     eventId: string,
@@ -19,12 +19,7 @@ export default function useDeleteActivity() {
       const refActivityViewers = `viewers/${eventId}/activities/${activityId}`
       const configuration = await service.getConfiguration(eventId, activityId)
       if (configuration && configuration.typeActivity === 'eviusMeet') {
-        await deleteAllVideos(activityName, configuration.meeting_id)
-        try {
-          await deleteLiveStream(configuration.meeting_id)
-        } catch (err) {
-          StateMessage.show(null, 'error', handleRequestError(err).message)
-        }
+        console.warn('you are using a activity of eviusMeet, but this was removed')
       }
       await fireRealtime.ref(refActivity).remove()
       await fireRealtime.ref(refActivityViewers).remove()

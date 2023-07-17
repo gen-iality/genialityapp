@@ -1,3 +1,7 @@
+/**
+ * @deprecated GCore will be removed
+ */
+
 import axios from 'axios'
 
 const gCoreCLient = axios.create({

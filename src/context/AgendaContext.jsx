@@ -1,10 +1,3 @@
-import {
-  getLiveStreamStatus,
-  startRecordingLiveStream,
-  stopRecordingLiveStream,
-} from '@adaptors/gcoreStreamingApi'
-import { message } from 'antd'
-
 import { createContext, useState, useEffect, useContext, useReducer } from 'react'
 import Service from '@components/agenda/roomManager/service'
 import { fireRealtime, firestore } from '@helpers/firebase'
@@ -26,7 +19,7 @@ export const AgendaContextProvider = ({ children }) => {
   const [host_id, setHostId] = useState(null)
   const [host_name, setHostName] = useState(null)
   const [habilitar_ingreso, setHabilitarIngreso] = useState('')
-  const [platform, setPlatform] = useState('wowza')
+  const [platform, setPlatform] = useState('vimeo')
   const [vimeo_id, setVimeoId] = useState('')
   const [name_host, setNameHost] = useState('')
   const [avalibleGames, setAvailableGames] = useState([])
@@ -37,13 +30,10 @@ export const AgendaContextProvider = ({ children }) => {
   const cEvent = useContext(CurrentEventContext)
   const [transmition, setTransmition] = useState('EviusMeet') //EviusMeet para cuando se tenga terminada
   const [useAlreadyCreated, setUseAlreadyCreated] = useState(true)
-  const [request, setRequest] = useState({})
-  const [requestList, setRequestList] = useState([])
   const [refActivity, setRefActivity] = useState(null)
   const [typeActivity, setTypeActivity] = useState(undefined)
   const [activityName, setActivityName] = useState(null)
   const [dataLive, setDataLive] = useState(null)
-  const [timerId, setTimerId] = useState(null)
   const [recordings, setRecordings] = useState([])
   const [loadingRecord, setLoadingRecord] = useState(false)
   const [record, setRecord] = useState('start')
@@ -89,12 +79,8 @@ export const AgendaContextProvider = ({ children }) => {
       const configuration = await service.getConfiguration(cEvent.value._id, activityEdit)
 
       console.log('8. CONFIGURATION==>', configuration)
-      setIsPublished(
-        typeof configuration.isPublished !== 'undefined'
-          ? configuration.isPublished
-          : true,
-      )
-      setPlatform(configuration.platform ? configuration.platform : 'wowza')
+      setIsPublished(!!configuration.isPublished)
+      setPlatform(configuration.platform ? configuration.platform : 'vimeo')
       setMeetingId(configuration.meeting_id ? configuration.meeting_id : null)
       setRoomStatus(
         configuration?.habilitar_ingreso == null
@@ -151,7 +137,7 @@ export const AgendaContextProvider = ({ children }) => {
   // Funcion que permite reinicializar los estados ya que al agregar o editar otra lección estos toman valores anteriores
   const initializeState = () => {
     setIsPublished(true)
-    setPlatform('wowza')
+    setPlatform('vimeo')
     setMeetingId(null)
     setRoomStatus('')
     setTransmition('EviusMeet')
@@ -168,66 +154,6 @@ export const AgendaContextProvider = ({ children }) => {
     setDataLive(null)
   }
 
-  const getRequestByActivity = (refActivity) => {
-    fireRealtime
-      .ref(refActivity)
-      .orderByChild('date')
-      .on('value', (snapshot) => {
-        const listRequest = {}
-        const listRequestArray = []
-        if (snapshot.exists()) {
-          const data = snapshot.val()
-          if (Object.keys(data).length > 0) {
-            Object.keys(data).map((requestData) => {
-              listRequest[requestData] = {
-                key: requestData,
-                id: data[requestData].id,
-                title: data[requestData].name,
-                date: data[requestData].date,
-                active: data[requestData].active || false,
-              }
-              listRequestArray.push({
-                key: requestData,
-                id: data[requestData].id,
-                title: data[requestData].name,
-                date: data[requestData].date,
-                active: data[requestData].active || false,
-              })
-            })
-            setRequest(listRequest)
-            setRequestList(listRequestArray)
-          }
-        } else {
-          setRequest({})
-          setRequestList([])
-        }
-      })
-  }
-  const addRequest = (refActivity, request) => {
-    if (request) {
-      fireRealtime.ref(refActivity).set(request)
-    }
-  }
-
-  const removeRequest = async (refActivity, key) => {
-    if (key) {
-      await fireRealtime.ref(refActivity).child(key).remove()
-    }
-  }
-
-  const removeAllRequest = async (refActivity) => {
-    if (refActivity) {
-      await fireRealtime.ref(refActivity).remove()
-    }
-  }
-
-  const approvedOrRejectedRequest = async (refActivity, key, status) => {
-    console.log('1. APROVE ACA=>', refActivity)
-    if (refActivity) {
-      await fireRealtime.ref(`${refActivity}`).child(key).update({ active: status })
-    }
-  }
-
   const prepareData = (datos) => {
     const roomInfo = {
       platform: datos?.platformNew || platform,
@@ -237,7 +163,8 @@ export const AgendaContextProvider = ({ children }) => {
         : datos?.type !== 'delete'
         ? meeting_id
         : null,
-      isPublished: isPublished ? isPublished : false,
+      isPublished:
+        typeof isPublished === 'string' ? isPublished === 'true' : !!isPublished,
       host_id,
       host_name,
       avalibleGames,
@@ -283,32 +210,12 @@ export const AgendaContextProvider = ({ children }) => {
       }
     }
   }
-  const stopInterval = () => {
-    if (timerId) {
-      clearInterval(timerId)
-    }
-  }
-  const executer_startMonitorStatus = async () => {
-    let live_stream_status = null
-    // let liveLocal = false
-    try {
-      live_stream_status = await getLiveStreamStatus(meeting_id)
-      setDataLive(live_stream_status)
-
-      // liveLocal = live_stream_status?.live
-    } catch (e) {}
-    if (!!live_stream_status?.active) {
-      const timer_id = setTimeout(executer_startMonitorStatus, 5000)
-      setTimerId(timer_id)
-    } else {
-      setDataLive(null)
-    }
-  }
 
   const obtainUrl = (type, data) => {
     const previewBaseUrlVideo = import.meta.env.VITE_PLACEHOLDER_LIVE_TRANSMITION
     // 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807';
     let urlVideo
+    console.log('obtain url to type:', type)
     switch (type) {
       case 'vimeo':
         urlVideo = data?.includes('https://player.vimeo.com/video/')
@@ -376,29 +283,8 @@ export const AgendaContextProvider = ({ children }) => {
     }
   }
 
-  const copyToClipboard = (data) => {
-    navigator.clipboard.writeText(data)
-    message.success('Copiado correctamente.!')
-  }
-
   const refreshActivity = () => {
     obtenerDetalleActivity()
-  }
-
-  const startRecordTransmition = async () => {
-    setLoadingRecord(true)
-    const response = await startRecordingLiveStream(meeting_id)
-    console.log('response', response)
-    setLoadingRecord(false)
-    setRecord('stop')
-  }
-
-  const stopRecordTransmition = async () => {
-    setLoadingRecord(true)
-    const response = await stopRecordingLiveStream(meeting_id)
-    console.log('response', response)
-    setLoadingRecord(false)
-    setRecord('start')
   }
 
   return (
@@ -442,15 +328,8 @@ export const AgendaContextProvider = ({ children }) => {
         setTransmition,
         useAlreadyCreated,
         setUseAlreadyCreated,
-        getRequestByActivity,
-        request,
-        addRequest,
-        removeRequest,
-        approvedOrRejectedRequest,
         setRefActivity,
         refActivity,
-        requestList,
-        removeAllRequest,
         typeActivity,
         saveConfig,
         deleteTypeActivity,
@@ -459,14 +338,9 @@ export const AgendaContextProvider = ({ children }) => {
         activityName,
         dataLive,
         setDataLive,
-        copyToClipboard,
-        stopInterval,
-        executer_startMonitorStatus,
         recordings,
         obtainUrl,
         refreshActivity,
-        startRecordTransmition,
-        stopRecordTransmition,
         loadingRecord,
         record,
       }}

@@ -55,6 +55,10 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
     if (!redirectUrl || !organizationUser) return
 
     const moreCustomData: any = {}
+    organizationUser.properties =
+      typeof organizationUser.properties === 'undefined'
+        ? {}
+        : organizationUser.properties
     if (organizationUser.properties.phone) {
       moreCustomData.phoneNumber = organizationUser.properties.phone
       moreCustomData.phoneNumberPrefix = '+57'

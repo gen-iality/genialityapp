@@ -1,5 +1,5 @@
 /** React's libraries */
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useIntl } from 'react-intl'
 import Moment from 'moment-timezone'
@@ -8,68 +8,30 @@ import dayjs from 'dayjs'
 /** export Excel */
 
 /** Antd imports */
-import { Button, Col, Modal, Row, Spin } from 'antd'
+import { Button, Col, Row } from 'antd'
 import {
   ArrowLeftOutlined,
   CaretRightOutlined,
   CheckCircleOutlined,
   ClockCircleOutlined,
-  ExclamationCircleOutlined,
   LoadingOutlined,
 } from '@ant-design/icons'
-import HumanGreetingVariantIcon from '@2fd/ant-design-icons/lib/HumanGreetingVariant'
-import CancelIcon from '@2fd/ant-design-icons/lib/Cancel'
 
 /** Helpers and utils */
 import { imageUtils } from '../../../Utilities/ImageUtils'
-import { recordTypeForThisEvent } from '../Landing/helpers/thisRouteCanBeDisplayed'
 
 /** Context */
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { useEventContext } from '@context/eventContext'
 import WithEviusContext from '@context/withContext'
 import AgendaContext from '@context/AgendaContext'
-import { CurrentEventUserContext } from '@context/eventUserContext'
-import { StateMessage } from '@context/MessageService'
 
 const HeaderColumns = (props) => {
   const { currentActivity } = useHelper()
   const cEvent = useEventContext()
-  const cEventUSer = useContext(CurrentEventUserContext)
-  const [isLoading, setIsLoading] = useState(false)
-  const {
-    request,
-    getRequestByActivity,
-    addRequest,
-    setRefActivity,
-    refActivity,
-    removeRequest,
-    setActivityEdit,
-    typeActivity,
-  } = useContext(AgendaContext)
 
-  function showPropsConfirm() {
-    Modal.confirm({
-      centered: true,
-      title: 'Seguro que desea cambiar a la transmisión en vivo',
-      icon: <ExclamationCircleOutlined />,
-      content: '',
-      okText: 'Aceptar',
-      okType: 'danger',
-      cancelText: 'Cancelar',
-      onOk() {
-        setIsLoading(true)
-        removeRequestTransmision()
-        async function removeRequestTransmision() {
-          await removeRequest(refActivity, cEventUSer.value?._id)
-          setIsLoading(false)
-        }
-      },
-      onCancel() {
-        console.log('Cancel')
-      },
-    })
-  }
+  const { getRequestByActivity, setRefActivity, setActivityEdit, typeActivity } =
+    useContext(AgendaContext)
 
   // Se ejecuta cuando tiene una lección para establecer la referencia y obtener los request
   useEffect(() => {
@@ -87,30 +49,6 @@ const HeaderColumns = (props) => {
       setActivityEdit(null)
     }
   }, [currentActivity, typeActivity])
-
-  const haveRequest = () => {
-    if ((request && !request[cEventUSer.value?._id]) || !request) {
-      return false
-    }
-    return true
-  }
-
-  const sendOrCancelRequest = async () => {
-    setIsLoading(true)
-    if (!haveRequest() && cEventUSer.value?._id) {
-      await addRequest(refActivity + '/' + cEventUSer.value?._id, {
-        id: cEventUSer.value?._id,
-        name: cEventUSer.value?.user?.names,
-        date: new Date().getTime(),
-      })
-    } else if (haveRequest() && cEventUSer.value?._id) {
-      // Remover o cancelar request
-      await removeRequest(refActivity, cEventUSer.value?._id)
-    } else {
-      StateMessage.show(null, 'error', 'Error al enviar solicitud')
-    }
-    setIsLoading(false)
-  }
 
   const intl = useIntl()
   return (
@@ -254,53 +192,6 @@ const HeaderColumns = (props) => {
               currentActivity?.space &&
               currentActivity?.space?.name}
           </Row>
-          <Col>
-            {typeActivity == 'eviusMeet' &&
-              !request[cEventUSer.value?._id]?.active &&
-              cEventUSer.value?._id &&
-              props.activityState === 'open_meeting_room' &&
-              recordTypeForThisEvent(cEvent) !== 'UN_REGISTERED_PUBLIC_EVENT' && (
-                <Button
-                  style={{ transition: 'all 1s' }}
-                  onClick={() => (!isLoading ? sendOrCancelRequest() : null)}
-                  icon={
-                    !haveRequest() && !isLoading ? (
-                      <HumanGreetingVariantIcon style={{ fontSize: '16px' }} />
-                    ) : haveRequest() && !isLoading ? (
-                      <CancelIcon style={{ fontSize: '16px' }} />
-                    ) : (
-                      <Spin />
-                    )
-                  }
-                  disabled={request && request[cEventUSer.value?._id]?.active}
-                  type={!haveRequest() ? 'primary' : 'danger'}
-                >
-                  {!haveRequest() && !isLoading
-                    ? 'Solicitar participar en la transmisión'
-                    : !isLoading
-                    ? 'Cancelar solicitud'
-                    : 'Espere...'}
-                </Button>
-              )}
-            {typeActivity == 'eviusMeet' &&
-              request[cEventUSer.value?._id]?.active &&
-              props.activityState === 'open_meeting_room' && (
-                <Button
-                  style={{ transition: 'all 1s' }}
-                  onClick={() => showPropsConfirm()}
-                  icon={
-                    !haveRequest() ? (
-                      <HumanGreetingVariantIcon style={{ fontSize: '16px' }} />
-                    ) : (
-                      <CancelIcon style={{ fontSize: '16px' }} />
-                    )
-                  }
-                  type={!haveRequest() ? 'primary' : 'danger'}
-                >
-                  Cambiar a modo transmisión en vivo
-                </Button>
-              )}
-          </Col>
         </div>
       </Col>
     </Row>

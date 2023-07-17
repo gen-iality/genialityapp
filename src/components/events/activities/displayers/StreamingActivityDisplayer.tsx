@@ -1,8 +1,8 @@
-import { FunctionComponent, useCallback, useContext, useEffect, useState } from 'react'
+import { FunctionComponent, useContext, useEffect, useState } from 'react'
 import { Result } from 'antd'
 import { SmileOutlined } from '@ant-design/icons'
 import HeaderColumnswithContext from '../HeaderColumns'
-import WithEviusContext from '@context/withContext'
+
 import ImageComponentwithContext from '../ImageComponent'
 import GcoreStreamingPlayer from '../GcoreStreamingPlayer'
 import AgendaContext from '@context/AgendaContext'
@@ -10,12 +10,15 @@ import ReactPlayer from 'react-player'
 
 import { IBasicActivityProps } from './basicTypes'
 import { getActivityFirestoreData } from './getActivityFirestoreData'
+import { useEventContext } from '@context/eventContext'
 
 const StreamingActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
   const { activity } = props
   const [activityState, setActivityState] = useState('')
   const [meetingId, setMeetingId] = useState('')
   const [fnCiclo, setFnCiclo] = useState(false)
+
+  const cEvent = useEventContext()
 
   // Estado para controlar origen de transmision
 
@@ -24,8 +27,10 @@ const StreamingActivityDisplayer: FunctionComponent<IBasicActivityProps> = (prop
   useEffect(() => {
     async function GetStateStreamingRoom() {
       if (!fnCiclo) {
-        await getActivityFirestoreData(props.cEvent.value._id, activity._id, (data) => {
+        await getActivityFirestoreData(cEvent.value._id, activity._id, (data) => {
+          console.log(data)
           const { habilitar_ingreso, meeting_id } = data
+          console.log('realtime:', data)
           setActivityState(habilitar_ingreso)
           setMeetingId(meeting_id)
           setTransmition(data.transmition)
@@ -37,10 +42,10 @@ const StreamingActivityDisplayer: FunctionComponent<IBasicActivityProps> = (prop
     if (activity != null) {
       GetStateStreamingRoom()
     }
-  }, [activity, props.cEvent])
+  }, [activity, cEvent.value])
 
-  const ViewTypeStreaming = useCallback((actividad_estado) => {
-    switch (actividad_estado) {
+  const ViewTypeStreaming = (habilitar_ingreso: string | null | undefined) => {
+    switch (habilitar_ingreso) {
       case 'open_meeting_room':
         return (
           <>
@@ -48,6 +53,7 @@ const StreamingActivityDisplayer: FunctionComponent<IBasicActivityProps> = (prop
               activity={activity}
               transmition={transmition}
               meeting_id={meetingId}
+              isOnline={true}
             />
           </>
         )
@@ -90,17 +96,19 @@ const StreamingActivityDisplayer: FunctionComponent<IBasicActivityProps> = (prop
           </>
         )
       case null:
+      case undefined:
         return (
           <>
             <GcoreStreamingPlayer
               activity={activity}
               transmition={transmition}
               meeting_id={meetingId}
+              isOnline={false}
             />
           </>
         )
     }
-  })
+  }
 
   return (
     <>
@@ -110,4 +118,4 @@ const StreamingActivityDisplayer: FunctionComponent<IBasicActivityProps> = (prop
   )
 }
 
-export default WithEviusContext(StreamingActivityDisplayer)
+export default StreamingActivityDisplayer

@@ -36,7 +36,6 @@ export type ActivityTypeContextType = {
     created_at: string | null,
     name: string | null,
   ) => void
-  executer_stopStream: () => void
   humanizeActivityType: (type: string) => string
 }
 
