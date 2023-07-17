@@ -53,6 +53,7 @@ const StreamingActivityDisplayer: FunctionComponent<IBasicActivityProps> = (prop
               activity={activity}
               transmition={transmition}
               meeting_id={meetingId}
+              isOnline={true}
             />
           </>
         )
@@ -102,6 +103,7 @@ const StreamingActivityDisplayer: FunctionComponent<IBasicActivityProps> = (prop
               activity={activity}
               transmition={transmition}
               meeting_id={meetingId}
+              isOnline={false}
             />
           </>
         )
