@@ -39,6 +39,9 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
   const [isLoading, setIsLoading] = useState(true)
   const [loadedActivities, setLoadedActivities] = useState<ExtendedAgendaType[]>([])
   const [truncatedAgendaList, setTruncatedAgendaList] = useState<TruncatedAgenda[]>([])
+  const [publishedTruncatedAgendaList, setPublishedTruncatedAgendaList] = useState<
+    TruncatedAgenda[]
+  >([])
   const [isAnswersDeleted, setAnswersIsDeleted] = useState(false)
   const [deletingTakenActivitiesCounter, setDeletingTakenActivitiesCounter] = useState(0)
   const [nonPublishedActivities, setNonPublishedActivities] = useState<string[]>([])
@@ -192,6 +195,25 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
     nonPublishedActivities,
   ])
 
+  useEffect(() => {
+    let shouldHide = true
+    if (currentEventUser.value?._id) {
+      // If the event user is admin, the activity is displayed. Else, it is hidden
+      shouldHide = currentEventUser.value?.rol?.type !== 'admin'
+    }
+
+    // Now, we use the `shouldHide` value to know if the next activity list MUST be filtered or not
+    setPublishedTruncatedAgendaList(
+      truncatedAgendaList.filter((activity) => {
+        if (activity.isPublished || !shouldHide) {
+          // The activity is published, or the event user is admin
+          return true
+        }
+        return false
+      }),
+    )
+  }, [truncatedAgendaList, currentEventUser])
+
   if (isLoading) return <Spin />
 
   return (
@@ -206,11 +228,11 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
         </>
       ) : undefined}
       <ModuledActivityDisplayer
-        list={truncatedAgendaList}
+        list={publishedTruncatedAgendaList}
         render={(nameToFilter) => (
           <ListTheseActivities
             eventProgressPercent={eventProgressPercent}
-            dataSource={truncatedAgendaList.filter(
+            dataSource={publishedTruncatedAgendaList.filter(
               (item) => item.module_name === nameToFilter,
             )}
           />
@@ -220,7 +242,9 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
       {/* Without modules: */}
       <ListTheseActivities
         eventProgressPercent={eventProgressPercent}
-        dataSource={truncatedAgendaList.filter((item) => item.module_name === undefined)}
+        dataSource={publishedTruncatedAgendaList.filter(
+          (item) => item.module_name === undefined,
+        )}
       />
     </>
   )
