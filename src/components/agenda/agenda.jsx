@@ -15,6 +15,7 @@ const ActivityPublishingStatus = (props) => {
 
   const toggleStatus = () => {
     const newIsPublished = !isPublished
+    setIsPublished(undefined)
     FB.Activities.update(eventId, activityId, { isPublished: newIsPublished })
       .then(() => setIsPublished(newIsPublished))
       .catch((err) => {
