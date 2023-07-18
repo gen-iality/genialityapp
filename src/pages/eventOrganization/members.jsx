@@ -149,6 +149,7 @@ function OrgMembers(props) {
           }}
           organizationId={organizationId}
           selectedUser={selectedUser}
+          getEventsStatisticsData={getEventsStatisticsData}
         />
       )}
     </>

@@ -26,9 +26,16 @@ interface Props extends ModalProps {
   selectedUser?: Omit<UserToOrganization, 'password'>;
   organizationId: string;
   onCancel: () => void;
+  getEventsStatisticsData: () => void;
 }
 
-export const ModalAddAndEditUsers = ({ selectedUser, organizationId, onCancel, ...modalProps }: Props) => {
+export const ModalAddAndEditUsers = ({
+  selectedUser,
+  organizationId,
+  onCancel,
+  getEventsStatisticsData,
+  ...modalProps
+}: Props) => {
   const screens = Grid.useBreakpoint();
   const [formBasicData] = Form.useForm<FormUserOrganization>();
   const [formDinamicData] = Form.useForm();
@@ -56,13 +63,13 @@ export const ModalAddAndEditUsers = ({ selectedUser, organizationId, onCancel, .
     setdataBasic(values);
     onNextStep();
   };
-  console.log('loadingRequest', loadingRequest);
   const onFinishDinamicStep = (values?: any) => {
     if (!selectedUser) {
       onCreateUser(values);
     } else {
       onEditUser(values);
     }
+    getEventsStatisticsData();
     onNextStep();
   };
 
@@ -97,15 +104,15 @@ export const ModalAddAndEditUsers = ({ selectedUser, organizationId, onCancel, .
 
   const onEditUser = async (dataDinamic: any) => {
     setLoadingRequest(true);
-
+    const currentDatas = { ...selectedUser };
+    delete currentDatas.position;
     const updateUser: UserToOrganization = {
-      ...selectedUser,
+      ...currentDatas,
       ...dataDinamic,
     };
     let respUser = await onEditUserToOrganization(updateUser);
     if (respUser._id) {
       setLoadingRequest(false);
-      // resultUserOrganizationSuccess(respUser.names);
       DispatchMessageService({
         type: 'success',
         msj: ' Se actualizo correctamente',
@@ -120,12 +127,12 @@ export const ModalAddAndEditUsers = ({ selectedUser, organizationId, onCancel, .
     resultUnexpectedError();
   };
 
-  const alreadyExistUserInOrganization = async (email: string) => {
+  const alreadyExistUserInOrganization = async (email: string): Promise<boolean> => {
     const { data } = await OrganizationApi.getUsers(organizationId);
     return data.filter((userOrganization: any) => userOrganization.properties.email === email).length > 0;
   };
 
-  const onAddUserToOrganization = async (newUser: UserToOrganization) => {
+  const onAddUserToOrganization = async (newUser: UserToOrganization): Promise<void> => {
     setLoadingRequest(true);
     const { picture, password, ...userToOrganization } = newUser;
     const alreadyExistUser = await alreadyExistUserInOrganization(newUser.email);
