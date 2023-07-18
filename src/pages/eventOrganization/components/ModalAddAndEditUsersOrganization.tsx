@@ -14,6 +14,7 @@ import createNewUser from '@/components/authentication/ModalsFunctions/createNew
 import { UnchangeableUserData } from './form-edit/UnchangeableUserData';
 import { useResultsUserOrganizations } from '../hooks/useResultsUserOrganizations';
 import { useSteps } from '../hooks/useSteps';
+import { DispatchMessageService } from '@/context/MessageService';
 
 const initialForm: FormUserOrganization = {
   email: '',
@@ -24,9 +25,10 @@ const initialForm: FormUserOrganization = {
 interface Props extends ModalProps {
   selectedUser?: Omit<UserToOrganization, 'password'>;
   organizationId: string;
+  onCancel: () => void;
 }
 
-export const ModalAddAndEditUsers = ({ selectedUser, organizationId, ...modalProps }: Props) => {
+export const ModalAddAndEditUsers = ({ selectedUser, organizationId, onCancel, ...modalProps }: Props) => {
   const screens = Grid.useBreakpoint();
   const [formBasicData] = Form.useForm<FormUserOrganization>();
   const [formDinamicData] = Form.useForm();
@@ -54,9 +56,13 @@ export const ModalAddAndEditUsers = ({ selectedUser, organizationId, ...modalPro
     setdataBasic(values);
     onNextStep();
   };
-
+  console.log('loadingRequest', loadingRequest);
   const onFinishDinamicStep = (values?: any) => {
-    onCreateUser(values);
+    if (!selectedUser) {
+      onCreateUser(values);
+    } else {
+      onEditUser(values);
+    }
     onNextStep();
   };
 
@@ -89,6 +95,31 @@ export const ModalAddAndEditUsers = ({ selectedUser, organizationId, ...modalPro
     resultUnexpectedError();
   };
 
+  const onEditUser = async (dataDinamic: any) => {
+    setLoadingRequest(true);
+
+    const updateUser: UserToOrganization = {
+      ...selectedUser,
+      ...dataDinamic,
+    };
+    let respUser = await onEditUserToOrganization(updateUser);
+    if (respUser._id) {
+      setLoadingRequest(false);
+      // resultUserOrganizationSuccess(respUser.names);
+      DispatchMessageService({
+        type: 'success',
+        msj: ' Se actualizo correctamente',
+        action: 'show',
+      });
+      setbackToCreate(false);
+      if (onCancel) onCancel();
+      return;
+    }
+    setLoadingRequest(false);
+    setbackToCreate(true);
+    resultUnexpectedError();
+  };
+
   const alreadyExistUserInOrganization = async (email: string) => {
     const { data } = await OrganizationApi.getUsers(organizationId);
     return data.filter((userOrganization: any) => userOrganization.properties.email === email).length > 0;
@@ -112,6 +143,14 @@ export const ModalAddAndEditUsers = ({ selectedUser, organizationId, ...modalPro
     resultUserOrganizationError(newUser.names);
   };
 
+  const onEditUserToOrganization = async ({ rol_id, ...updateUser }: UserToOrganization) => {
+    const { picture, password, ...userToOrganization } = updateUser;
+    return await OrganizationApi.editUser(organizationId, selectedUser?._id, {
+      properties: userToOrganization,
+      rol_id,
+    });
+  };
+
   const renderFormDinamic = () => {
     return (
       <div>
@@ -129,14 +168,42 @@ export const ModalAddAndEditUsers = ({ selectedUser, organizationId, ...modalPro
           <>
             <OrganizationPropertiesForm
               form={formDinamicData}
-              organization={organization}
+              organization={
+                !selectedUser
+                  ? organization
+                  : {
+                      ...organization,
+                      user_properties: [
+                        ...organization.user_properties,
+                        {
+                          name: 'rol_id',
+                          label: 'Rol',
+                          mandatory: true,
+                          type: 'list',
+                          options: [
+                            {
+                              value: '60e8a7e74f9fb74ccd00dc22',
+                              label: 'Attendee',
+                              type: 'attendee',
+                            },
+                            {
+                              value: '5c1a59b2f33bd40bb67f2322',
+                              label: 'Administrator',
+                              type: 'admin',
+                            },
+                          ],
+                        },
+                      ],
+                    }
+              }
               onSubmit={onFinishDinamicStep}
               noSubmitButton
               onLastStep={onLastStep}
             />
             <Space>
-              <Button onClick={onLastStep}>Atras</Button>
+              {!selectedUser && <Button onClick={onLastStep}>Atras</Button>}
               <Button
+                loading={loadingRequest}
                 onClick={() => {
                   formDinamicData.submit();
                 }}
@@ -229,7 +296,7 @@ export const ModalAddAndEditUsers = ({ selectedUser, organizationId, ...modalPro
   ];
 
   return (
-    <Modal closable footer={false} {...modalProps}>
+    <Modal closable footer={false} {...modalProps} onCancel={onCancel}>
       <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
         {selectedUser ? (
           <>
