@@ -719,10 +719,10 @@ class ListEventUser extends Component {
             icon={<SearchOutlined />}
             size='small'
             style={{ width: 90 }}>
-            Search
+            Buscar
           </Button>
           <Button onClick={() => this.handleReset(clearFilters)} size='small' style={{ width: 90 }}>
-            Reset
+            Resetear
           </Button>
         </Space>
       </div>
@@ -823,7 +823,7 @@ class ListEventUser extends Component {
         {disabledPersistence && (
           <div style={{ margin: '5%', textAlign: 'center' }}>
             <label>
-              El almacenamiento local de lso datos esta deshabilitado. Cierre otras pestañanas de la plataforma para
+              El almacenamiento local de lso datos esta deshabilitado. Cierre otras pestañas de la plataforma para
               pode habilitar el almacenamiento local
             </label>
           </div>
@@ -867,7 +867,7 @@ class ListEventUser extends Component {
                 textAlign: 'end',
                 borderRadius: '3px',
               }}>
-              <strong> Última Sincronización: </strong> <FormattedDate value={lastUpdate} />{' '}
+              <strong> Última sincronización: </strong> <FormattedDate value={lastUpdate} />{' '}
               <FormattedTime value={lastUpdate} />
             </div>
           }
@@ -903,7 +903,7 @@ class ListEventUser extends Component {
                   <>
                     <Tag>
                       <small>
-                        Asistencia por Coeficientes:
+                        Asistencia por coeficientes:
                         {totalCheckedInWithWeight + '/100' + ' (' + asistenciaCoeficientes + '%)'}
                       </small>
                     </Tag>
@@ -964,7 +964,7 @@ class ListEventUser extends Component {
                   size='middle'
                   onClick={this.addUser}
                   disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
-                  {'Agregar Usuario'}
+                  {'Agregar usuario'}
                 </Button>
               </Col>
             </Row>
@@ -1011,7 +1011,7 @@ class ListEventUser extends Component {
             </Button>,
             <div key='fecha' style={{ float: 'left' }}>
               <Title level={5}>
-                Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
+                Última sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
               </Title>
             </div>,
           ]}
@@ -1054,7 +1054,7 @@ class ListEventUser extends Component {
                 valueStyle={{ textAlign: 'center' }}
                 title={
                   <Title level={3} style={{ textAlign: 'center' /* , color: '#b5b5b5' */ }}>
-                    Asistencia por Coeficientes
+                    Asistencia por coeficientes
                   </Title>
                 }
                 value={
