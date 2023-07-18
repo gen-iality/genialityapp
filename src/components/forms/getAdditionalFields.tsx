@@ -356,7 +356,7 @@ const GetAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
         );
       }
 
-      if (type === 'list') {
+      if (type === 'list' || type === 'list_type_user') {
         input = field.options
           ? field.options.map((option: any, key: any) => {
               return (
