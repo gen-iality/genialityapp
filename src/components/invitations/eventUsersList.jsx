@@ -368,7 +368,7 @@ class eventUsersList extends Component {
                 </Link>
               </Col>
               <Col>
-                <Dropdown overlay={menu}>
+                <Dropdown overlay={menu} trigger={['click', 'hover']}>
                   <Button type='primary' size='middle' disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                     <Space>
                       <PlusCircleOutlined />
