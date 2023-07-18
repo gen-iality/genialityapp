@@ -1,8 +1,8 @@
 import { Component, Fragment } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { UsersApi, eventTicketsApi } from '../../helpers/request';
-import { Table, Input, Button, Space, Menu, Row, Col, Tag } from 'antd';
-import { SearchOutlined, UserOutlined, DownloadOutlined, UploadOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { Table, Input, Button, Space, Menu, Row, Col, Tag, Dropdown } from 'antd';
+import { SearchOutlined, UserOutlined, DownloadOutlined, UploadOutlined, PlusCircleOutlined, DownOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { parseData2Excel } from '../../helpers/utils';
 import { utils, writeFileXLSX } from 'xlsx';
@@ -277,7 +277,7 @@ class eventUsersList extends Component {
   render() {
     const { eventIsActive } = this.context;
 
-    const menu = (
+    /* const menu = (
       <Menu>
         <Menu.Item key='1' icon={<UserOutlined />} onClick={this.modalUser}>
           Crear Usuario
@@ -288,7 +288,24 @@ class eventUsersList extends Component {
           </Menu.Item>
         </Link>
       </Menu>
-    );
+    ); */
+
+    const menu = (
+      <Menu>
+        <Menu.Item
+          key='menu-item-1'
+          onClick={this.modalUser}>
+          Nuevo
+        </Menu.Item>
+
+        <Menu.Item
+          key='menu-item-2'
+          onClick={() => {}}>
+          Desde mi organización
+        </Menu.Item>
+      </Menu>
+    )
+
     const { columnsTable, attendeesFormatedForTable, selectedRowKeys } = this.state;
     const rowSelection = {
       selectedRowKeys,
@@ -351,13 +368,22 @@ class eventUsersList extends Component {
                 </Link>
               </Col>
               <Col>
-                <Button
+                <Dropdown overlay={menu}>
+                  <Button type='primary' size='middle' disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
+                    <Space>
+                      <PlusCircleOutlined />
+                      Agregar usuario
+                      <DownOutlined />
+                    </Space>
+                  </Button>
+                </Dropdown>
+                {/* <Button
                   type='primary'
                   onClick={this.modalUser}
                   icon={<PlusCircleOutlined />}
                   disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                   Agregar Usuario
-                </Button>
+                </Button> */}
               </Col>
             </Row>
           )}
