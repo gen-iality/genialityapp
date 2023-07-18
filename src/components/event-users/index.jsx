@@ -7,7 +7,7 @@ import ErrorServe from '../modal/serverError';
 import { utils, writeFileXLSX } from 'xlsx';
 import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from '../../helpers/utils';
 import Moment from 'moment';
-import { Button, Card, Col, Drawer, Image, Row, Statistic, Typography, Tag, Input, Space, Tooltip, Select } from 'antd';
+import { Button, Card, Col, Drawer, Image, Row, Statistic, Typography, Tag, Input, Space, Tooltip, Select, Dropdown, Menu } from 'antd';
 
 import updateAttendees from './eventUserRealTime';
 import { Link } from 'react-router-dom';
@@ -20,6 +20,7 @@ import {
   SearchOutlined,
   UsergroupAddOutlined,
   StarOutlined,
+  DownOutlined,
 } from '@ant-design/icons';
 import QrModal from './qrModal';
 
@@ -810,6 +811,22 @@ class ListEventUser extends Component {
     const participantes = Math.round((totalCheckedIn / inscritos) * 100);
     const asistenciaCoeficientes = Math.round((totalCheckedInWithWeight / 100) * 100);
 
+    const menu = (
+      <Menu>
+        <Menu.Item
+          key='menu-item-1'
+          onClick={this.addUser}>
+          Nuevo
+        </Menu.Item>
+
+        <Menu.Item
+          key='menu-item-2'
+          onClick={() => {}}>
+          Desde mi organización
+        </Menu.Item>
+      </Menu>
+    )
+
     return (
       <Fragment>
         <Header
@@ -958,14 +975,23 @@ class ListEventUser extends Component {
                 </Link>
               </Col>
               <Col>
-                <Button
+                  <Dropdown overlay={menu}>
+                    <Button type='primary' size='middle' disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
+                      <Space>
+                        <PlusCircleOutlined />
+                        Agregar usuario
+                        <DownOutlined />
+                      </Space>
+                    </Button>
+                  </Dropdown>
+                {/* <Button
                   type='primary'
                   icon={<PlusCircleOutlined />}
                   size='middle'
                   onClick={this.addUser}
                   disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                   {'Agregar usuario'}
-                </Button>
+                </Button> */}
               </Col>
             </Row>
           }
