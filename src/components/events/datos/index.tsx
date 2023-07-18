@@ -615,6 +615,21 @@ export default function Datos(props: any) {
 									<Row justify='end' wrap gutter={[8, 8]}>
 										<Col>
 											<Checkbox
+												name='checkInByUserType'
+												/* onChange={value =>
+													createFieldForUserType({
+														value,
+														checkInByUserTypeFields: state.checkInByUserTypeFields,
+														save: saveField,
+														remove: removeField,
+													})
+												}
+												checked={state.checkInByUserType} */>
+												Tipo de usuario
+											</Checkbox>
+										</Col>
+										<Col>
+											<Checkbox
 												name='checkInByAssembly'
 												onChange={value =>
 													createFieldForAssembly({

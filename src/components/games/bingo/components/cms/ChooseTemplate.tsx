@@ -80,6 +80,7 @@ export default function ChooseTemplate(props: Props) {
 	const handleCancel = () => {
 		setIsModalOpen(false);
 	};
+console.log(categories, 'array default');
 
 	return (
 		<>

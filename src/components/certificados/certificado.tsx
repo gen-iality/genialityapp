@@ -320,6 +320,20 @@ const Certificado : FC<CertificatesProps> = (props) => {
             </Col>
             <Col span={12}>
               <Form.Item
+                label={'Tipo de usuario'}
+                name={'userType'}
+              >
+                <Select
+                  mode="multiple"
+                  allowClear
+                  style={{ width: '100%' }}
+                  placeholder="Seleccione el tipo de usuario"
+                  /* defaultValue={['a10', 'c12']}
+                  onChange={handleChange}
+                  options={options} */
+                />
+              </Form.Item>
+              {/* <Form.Item
                 label={'Rol'}
                 name={'Rol'}>
                 <Select
@@ -334,7 +348,7 @@ const Certificado : FC<CertificatesProps> = (props) => {
                     </Option>
                   ))}
                 </Select>
-              </Form.Item>
+              </Form.Item> */}
             </Col>
           </Row>
           <Row gutter={[16, 16]}>

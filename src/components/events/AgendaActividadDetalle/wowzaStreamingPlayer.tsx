@@ -48,7 +48,7 @@ export function RenderEviusMeet(props: RenderEviusMeetProps) {
 
 	if (loading) return <Loading />;
 	if (!meetConfig) return <Result title={'La reunión aún no ha comenzado'} />;
-	if (!!meetConfig && !meetConfig.openMeet) return <Result title={'La reunión aún no ha comenzado'} />;
+	if (!!meetConfig && !meetConfig.openMeet) return <Result title={'La reunión ha finalizado'} />;
 	if (!!meetConfig && !!meetConfig.openMeet)
 		return (
 			<JitsiMeeting

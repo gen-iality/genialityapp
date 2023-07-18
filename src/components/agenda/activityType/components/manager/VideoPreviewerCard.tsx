@@ -1,4 +1,6 @@
-import * as React from 'react';
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable jsx-a11y/iframe-has-title */
+/* eslint-disable no-console */
 import { useMemo } from 'react';
 
 import {
@@ -15,20 +17,19 @@ import {
   Badge,
   Popconfirm,
   Result,
-  Statistic,
 } from 'antd';
 import ReactPlayer from 'react-player';
 import { CheckCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
 import useActivityType from '@context/activityType/hooks/useActivityType';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import AgendaContext from '@context/AgendaContext';
 import VimeoIcon from '@2fd/ant-design-icons/lib/Vimeo';
 import EmoticonSadOutline from '@2fd/ant-design-icons/lib/EmoticonSadOutline';
-import { startRecordingLiveStream, stopRecordingLiveStream } from '@/adaptors/gcoreStreamingApi';
 import { urlErrorCodeValidation } from '@/Utilities/urlErrorCodeValidation';
 import type { ActivityType } from '@context/activityType/types/activityType';
 import convertSecondsToHourFormat from '../../utils/convertSecondsToHourFormat';
 import { TypeDisplayment } from '@context/activityType/constants/enum'
+import { Option } from 'antd/lib/mentions';
 
 interface VideoPreviewerCardProps {
   type: ActivityType.TypeAsDisplayment,
@@ -53,10 +54,6 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
     stopRecordTransmition,
     loadingRecord,
     record,
-    viewers,
-    viewersOnline,
-    totalViews,
-    maxViewers,
     saveConfig,
   } = useContext(AgendaContext);
 
@@ -202,11 +199,11 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
                 </Typography.Text>
               }
               content={
-                props.type == TypeDisplayment.MEETING ? (
+                props.type === TypeDisplayment.MEETING ? (
                   'Sala de reuniones'
                 ) : props.type === TypeDisplayment.VIDEO ? (
                   convertSecondsToHourFormat(duration)
-                ) : props.type === TypeDisplayment.VIMEO || props.type == TypeDisplayment.YOUTUBE ? (
+                ) : props.type === TypeDisplayment.VIMEO || props.type === TypeDisplayment.YOUTUBE ? (
                   'Conexión externa'
                 ) : dataLive?.active ? (
                   <Typography.Text type='success'>Iniciado</Typography.Text>
@@ -254,8 +251,8 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
 
         {(props.type === TypeDisplayment.TRANSMISSION ||
           props.type === TypeDisplayment.VIMEO ||
-          props.type == TypeDisplayment.YOUTUBE ||
-          props.type == TypeDisplayment.EVIUS_MEET) && (
+          props.type === TypeDisplayment.YOUTUBE ||
+          props.type === TypeDisplayment.EVIUS_MEET) && (
           <Space style={{ width: '100%' }}>
             <Typography.Text strong>ID {props.type}:</Typography.Text>
             <Typography.Text
@@ -280,10 +277,10 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
                   .then(() => console.log('config saved - habilitar_ingreso:', value));
               }}
               style={{ width: '100%' }}>
-              <Select.Option value='created_meeting_room'>Actividad creada</Select.Option>
-              <Select.Option value='closed_meeting_room'>Iniciará pronto</Select.Option>
-              <Select.Option value='open_meeting_room'>En vivo</Select.Option>
-              <Select.Option value='ended_meeting_room'>Finalizada</Select.Option>
+              <Option value='created_meeting_room'>Actividad creada</Option>
+              <Option value='closed_meeting_room'>Iniciará pronto</Option>
+              <Option value='open_meeting_room'>En vivo</Option>
+              <Option value='ended_meeting_room'>Finalizada</Option>
             </Select>
           </Space>
         )}
