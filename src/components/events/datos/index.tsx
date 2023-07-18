@@ -12,7 +12,7 @@ import {
 // @ts-ignore
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import { ColumnsType } from 'antd/lib/table';
-import { createFieldForAssembly, createFieldForCheckInPerDocument } from './utils';
+import { createFieldForAssembly, createFieldForCheckInPerDocument, createTypeUserFild } from './utils';
 import { DispatchMessageService } from '../../../context/MessageService';
 import { Field, State } from './types';
 import { firestore } from '../../../helpers/firebase';
@@ -45,6 +45,8 @@ export default function Datos(props: any) {
 		visibleModal: false,
 		isEditTemplate: { status: false, datafields: [], template: null },
 		checkInExists: false,
+		checkInByUserType : false,
+		checkInByUserTypeFields : [],
 		checkInFieldsIds: [],
 		checkInByAssembly: false,
 		checkInByAssemblyFields: [],
@@ -79,6 +81,7 @@ export default function Datos(props: any) {
 			let fields: any[] = [];
 			let fieldsReplace: any[] = [];
 			let checkInFieldsIds: any[] = [];
+			let checkInByUserTypeFields: any[] = [];
 			const checkInByAssemblyFields: any[] = [];
 			if ((organizationId && !eventId && props.edittemplate) || (organizationId && !eventId && !props.edittemplate)) {
 				fields = await props.getFields();
@@ -97,6 +100,8 @@ export default function Datos(props: any) {
 				fields = await EventFieldsApi.getAll(props.eventId);
 				//Realizado con la finalidad de no mostrar la contraseña ni el avatar
 				//Comentado la parte de password y contrasena para dejar habilitado solo en el administrador
+				console.log('fields',fields);
+				
 				fields.map((field: any) => {
 					if (field.name !== 'avatar') {
 						fieldsReplace.push(field);
@@ -118,11 +123,12 @@ export default function Datos(props: any) {
 							checkInByAssemblyFields,
 						}));
 					}
+					if (field.type === 'list_type_user') checkInByUserTypeFields.push(field._id)
 				});
 				fields = orderFieldsByWeight(fieldsReplace);
 				fields = updateIndex(fieldsReplace);
 			}
-			setState(prev => ({ ...prev, fields, loading: false }));
+			setState(prev => ({ ...prev, fields, loading: false ,checkInByUserType : checkInByUserTypeFields.length > 0 ,checkInByUserTypeFields }));
 		} catch (e) {
 			showError(e);
 		}
@@ -432,7 +438,7 @@ export default function Datos(props: any) {
 	};
 
 	const onChange1 = async (e: any, plantId: any) => {
-		/* console.log('e, radio checked', plantId); */
+		
 		setState(prev => ({ ...prev, value: '' }));
 		await OrganizationPlantillaApi.putOne(props.eventId, plantId);
 	};
@@ -441,7 +447,7 @@ export default function Datos(props: any) {
 		setState(prev => ({ ...prev, visibleModal: !state.visibleModal }));
 	};
 
-	// const { fields, modal, edit, info, value, checkInExists, checkInFieldsIds, checkInByAssembly, checkInByAssemblyFields } = this.state;
+
 	const columns: ColumnsType<Field> = [
 		{
 			title: '',
@@ -474,7 +480,7 @@ export default function Datos(props: any) {
 						name='mandatory'
 						onChange={() => changeCheckBox(key, 'mandatory')}
 						checked={record}
-						disabled={key.type === 'checkInField' || key.type === 'voteWeight'}
+						disabled={key.type === 'checkInField' || key.type === 'voteWeight' || key.name === 'list_type_user'}
 					/>
 				) : (
 					<Checkbox checked />
@@ -490,7 +496,7 @@ export default function Datos(props: any) {
 					onChange={() => changeCheckBox(key, 'visibleByContacts', 'visibleByAdmin')}
 					checked={record}
 					disabled={
-						key.type === 'checkInField' || key.name === 'birthdate' || key.name === 'bloodtype' || key.name === 'gender'
+						key.type === 'checkInField' || key.name === 'birthdate' || key.name === 'bloodtype' || key.name === 'gender' 
 					}
 				/>
 			),
@@ -616,15 +622,15 @@ export default function Datos(props: any) {
 										<Col>
 											<Checkbox
 												name='checkInByUserType'
-												/* onChange={value =>
-													createFieldForUserType({
+												onChange={value =>
+													createTypeUserFild({
 														value,
-														checkInByUserTypeFields: state.checkInByUserTypeFields,
+														checkInFieldsIds: state.checkInByUserTypeFields,
 														save: saveField,
 														remove: removeField,
 													})
 												}
-												checked={state.checkInByUserType} */>
+												checked={state.checkInByUserType}>
 												Tipo de usuario
 											</Checkbox>
 										</Col>

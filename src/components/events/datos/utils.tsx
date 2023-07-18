@@ -154,6 +154,62 @@ export const createFieldForCheckInPerDocument = async ({
 	}
 };
 
+export const createTypeUserFild = async ({
+	value,
+	checkInFieldsIds,
+	save,
+	remove,
+}: {
+	value: CheckboxChangeEvent;
+	checkInFieldsIds: string[];
+	save: Function;
+	remove: Function;
+}) => {
+	const saveTypeUserField = async () => {
+		ListTypeUserFields.map(async checkInField => {
+			await save(checkInField);
+		});
+	};
+
+	if (value.target.checked) {
+		confirm({
+			title: `COSITAS`,
+			content: (
+				<List
+					size='small'
+					dataSource={checkInInstructions}
+					renderItem={(item, index) => (
+						<List.Item>
+							<Text>
+								{index + 1}. {item}
+							</Text>
+						</List.Item>
+					)}
+				/>
+			),
+			okText: 'Habilitar',
+			okType: 'primary',
+			cancelText: 'Cancelar',
+			onOk() {
+				saveTypeUserField();
+			},
+		});
+	} else {
+		confirm({
+			title: `¿Se deshabilitará el checkIn por documento estás seguro?`,
+			// content: 'Una vez eliminado, no lo podrá recuperar',
+			okText: 'Si',
+			okType: 'danger',
+			cancelText: 'Cancelar',
+			onOk() {
+				checkInFieldsIds.map(async (checkInFieldId: string) => {
+					await remove(checkInFieldId, true);
+				});
+			},
+		});
+	}
+};
+
 // Logic to create the voting coefficient
 // TODO: pending copy for this instructions
 const voteWeightInstructions = [
@@ -174,6 +230,32 @@ const voteWeightFields = [
 		options: undefined,
 		order_weight: undefined,
 		type: 'voteWeight',
+		visibleByAdmin: true,
+		visibleByContacts: undefined,
+	},
+];
+const ListTypeUserFields = [
+	{
+		id: undefined,
+		name: 'list_type_user',
+		description: undefined,
+		label: 'type user',
+		unique: false,
+		mandatory: true,
+		options: [{
+			label : 'tipo A',
+			value : 'A'
+		},
+		{
+			label : 'tipo B',
+			value : 'B'
+		},
+		{
+			label : 'tipo C',
+			value : 'C'
+		}],
+		order_weight: undefined,
+		type: 'list_type_user',
 		visibleByAdmin: true,
 		visibleByContacts: undefined,
 	},
