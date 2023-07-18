@@ -37,9 +37,7 @@ const ImageComponent = (props) => {
   };
   return (
     <div className='mediaplayer'>
-      {props.cEvent.value.styles.toolbarDefaultBg !== undefined || props.cEvent.value.styles.toolbarDefaultBg !== '' ? (
         <Result icon={getIcon(activityState)} title={RenderTextActivity(activityState)} />
-      ) : null}
     </div>
   );
 };

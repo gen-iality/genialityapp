@@ -13,6 +13,9 @@ import { firestore } from '../../../helpers/firebase';
 import HeaderColumnswithContext from './HeaderColumns';
 import WowzaStreamingPlayer from './wowzaStreamingPlayer';
 import AgendaContext from '../../../context/AgendaContext';
+import { CurrentEventContext } from '@/context/eventContext';
+import moment from 'moment';
+import CountdownBlock from '@/components/prelanding/block/countdownBlock';
 
 const RenderComponent = (props: any) => {
   let tabsdefault = {
@@ -95,163 +98,120 @@ const RenderComponent = (props: any) => {
   }, [chatAttendeChats]);
 
   const RenderizarComponente = useCallback(
-    (plataforma: string, actividad_estado: string, reder_Game) => {
-      switch (plataforma) {
-        //@ts-ignore
-        case 'vimeo':
-          switch (actividad_estado) {
-            case 'open_meeting_room':
-              switch (reder_Game) {
-                case 'game':
-                  return (
-                    <>
-                      <ZoomIframe platform={platform} meeting_id={meetingId} generalTabs={tabsGeneral} />
-                      <GameDrawer />
-                    </>
-                  );
-              }
-              return <ZoomIframe platform={platform} meeting_id={meetingId} generalTabs={tabsGeneral} />;
-
-            case 'closed_meeting_room':
-              return <ImageComponentwithContext willStartSoon={true} />;
-
-            case 'ended_meeting_room':
-              return <VideoActivity />;
-            case '':
-            case 'created_meeting_room':
-              return currentActivity?.video ? <VideoActivity /> : <ImageComponentwithContext />;
-          }
-        //@ts-ignore
-        case 'zoom':
-          switch (actividad_estado) {
-            case 'open_meeting_room':
-              switch (reder_Game) {
-                case 'game':
-                  return (
-                    <>
-                      <ZoomIframe platform={platform} meeting_id={meetingId} generalTabs={tabsGeneral} />
-                      <GameDrawer />
-                    </>
-                  );
-              }
-              return <ZoomIframe platform={platform} meeting_id={meetingId} generalTabs={tabsGeneral} />;
-
-            case 'closed_meeting_room':
-              return <ImageComponentwithContext willStartSoon={true} />;
-
-            case 'ended_meeting_room':
-              return <VideoActivity />;
-            case '':
-            case 'created_meeting_room':
-              return currentActivity?.video ? <VideoActivity /> : <ImageComponentwithContext />;
-          }
-        //@ts-ignore
-        case 'dolby':
-          switch (actividad_estado) {
-            case 'open_meeting_room':
-              switch (reder_Game) {
-                case 'game':
-                  return (
-                    <>
-                      <DolbyCard />
-                      <GameDrawer />
-                    </>
-                  );
-              }
-              return <DolbyCard />;
-
-            case 'closed_meeting_room':
-              return <ImageComponentwithContext willStartSoon={true} />;
-
-            case 'ended_meeting_room':
-              return <VideoActivity />;
-            case '':
-            case 'created_meeting_room':
-              return currentActivity?.video ? <VideoActivity /> : <ImageComponentwithContext />;
-          }
-        //@ts-ignore
-        case 'wowza':
-          switch (actividad_estado) {
-            case 'open_meeting_room':
-              switch (reder_Game) {
-                case 'game':
-                  return (
-                    <>
-                      <WowzaStreamingPlayer
-                        activity={currentActivity}
-                        transmition={transmition}
-                        meeting_id={meetingId}
-                      />
-                      <GameDrawer />
-                    </>
-                  );
-              }
+    (plataforma: string, actividad_estado: string, render_Game: string) => {
+      // Información para componente CountdownBlock
+      const cEventContext = useContext(CurrentEventContext);
+      const textColor = cEventContext.value?.styles?.textMenu;
+      const countdownMessage = 'El contenido para esta actividad estará disponible en:';
+      const startDate = currentActivity ? moment(currentActivity.datetime_start).format('YYYY-MM-DD HH:mm:ss') : '';
+  
+      if (plataforma === 'vimeo' || plataforma === 'zoom' || plataforma === 'dolby') {
+        switch (actividad_estado) {
+          case 'open_meeting_room':
+            if (render_Game === 'game') {
               return (
                 <>
-                  {/* {webHookStreamStatus && (
-                  <>
-                    <b>Evius Meets Status: </b>
-                    {webHookStreamStatus}
-                    <br />
-                  </>
-                )} */}
-
-                  <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
+                  <ZoomIframe platform={plataforma} meeting_id={meetingId} generalTabs={tabsGeneral} />
+                  <GameDrawer />
                 </>
               );
-
-            case 'closed_meeting_room':
-              /* {
-              console.log('100. TYPE ACTIVITY==>', typeActivity);
-            } */
-              return typeActivity === 'url' || typeActivity === 'video' ? (
-                <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
-              ) : (
-                <ImageComponentwithContext willStartSoon={true} />
-              );
-
-            case 'ended_meeting_room':
-              return typeActivity === 'url' || typeActivity === 'video' ? (
-                <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
-              ) : (
-                <VideoActivity />
-              );
-            case '':
-            case 'created_meeting_room':
-              return typeActivity === 'url' || typeActivity === 'video' ? (
-                <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
-              ) : currentActivity?.video ? (
-                <VideoActivity />
-              ) : (
-                <ImageComponentwithContext />
-              );
-            case 'no_visibe':
-              return <ImageComponentwithContext />;
-            case null:
+            }
+            return <ZoomIframe platform={plataforma} meeting_id={meetingId} generalTabs={tabsGeneral} />;
+          case 'closed_meeting_room':
+            return <ImageComponentwithContext willStartSoon={true} />;
+          case 'ended_meeting_room':
+            return <VideoActivity />;
+          case '':
+          case 'created_meeting_room':
+            return currentActivity?.video ? <VideoActivity /> : <ImageComponentwithContext />;
+          default:
+            return <CountdownBlock
+              textColor={textColor}
+              date={startDate}
+              countdownMessage={countdownMessage}
+              countdownFinalMessage={''}
+            />;
+        }
+      }
+  
+      if (plataforma === 'wowza') {
+        switch (actividad_estado) {
+          case 'open_meeting_room':
+            if (render_Game === 'game') {
               return (
                 <>
                   <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
                   <GameDrawer />
                 </>
               );
-          }
-        case 'only':
-          return (
-            <>
-              {/* {console.log({ meetingId, currentActivity })} */}
+            }
+            return (
+              <>
+                <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
+              </>
+            );
+          case 'closed_meeting_room':
+            return typeActivity === 'url' || typeActivity === 'video' ? (
               <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
-              <GameDrawer />
-            </>
-          );
+            ) : (
+              <ImageComponentwithContext willStartSoon={true} />
+            );
+          case 'ended_meeting_room':
+            return typeActivity === 'url' || typeActivity === 'video' ? (
+              <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
+            ) : (
+              <VideoActivity />
+            );
+          case '':
+          case 'created_meeting_room':
+            return typeActivity === 'url' || typeActivity === 'video' ? (
+              <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
+            ) : currentActivity?.video ? (
+              <VideoActivity />
+            ) : (
+              <ImageComponentwithContext />
+            );
+          case 'no_visibe':
+            return <ImageComponentwithContext />;
+          case null:
+            return (
+              <>
+                <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
+                <GameDrawer />
+              </>
+            );
+          default:
+            return <CountdownBlock
+              textColor={textColor}
+              date={startDate}
+              countdownMessage={countdownMessage}
+              countdownFinalMessage={''}
+            />;
+        }
       }
+  
+      if (plataforma === 'only') {
+        return (
+          <>
+            <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
+            <GameDrawer />
+          </>
+        );
+      }
+  
+      return <CountdownBlock
+        textColor={textColor}
+        date={startDate}
+        countdownMessage={countdownMessage}
+        countdownFinalMessage={'Estamos a punto de iniciar...'}
+      />;
     },
-    [platform, activityState, renderGame, fnCiclo]
+  
+    [platform, currentActivity, meetingId, tabsGeneral, transmition, fnCiclo]
   );
-
   return (
     <>
       {!props.isBingo && <HeaderColumnswithContext isVisible={true} activityState={activityState} />}
-      {agendaContext.activityEdit === undefined ? <ImageComponentwithContext /> : null}
       {RenderizarComponente(platform, activityState, renderGame)}
     </>
   );
