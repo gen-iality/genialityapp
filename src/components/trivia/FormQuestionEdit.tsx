@@ -35,6 +35,7 @@ import { StateMessage } from '@context/MessageService'
 import { uploadImagedummyRequest } from '@Utilities/imgUtils'
 import LikertScaleEditor from '../quiz/LikertScaleEditor'
 import { SurveyQuestion } from '@components/events/surveys/types'
+import TextArea from 'antd/lib/input/TextArea'
 
 const { Option } = Select
 
@@ -562,7 +563,8 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
                         },
                       ]}
                     >
-                      <Input />
+                      {/* <Input /> */}
+                      <TextArea />
                     </Form.Item>
                   ) : (
                     field.selectOptions && (
