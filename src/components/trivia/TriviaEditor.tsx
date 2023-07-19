@@ -305,43 +305,6 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
     if (!isJustCreated) getQuestions(update)
   }
 
-  const sendToFirebase = async (surveyId: string, data: ITrivia) => {
-    console.log('will save in firebase for surveyId:', surveyId)
-    const setDataInFire = await createOrUpdateSurvey(
-      surveyId,
-      {
-        name: data.survey,
-        //Survey config
-        allow_anonymous_answers: data.allow_anonymous_answers ?? false,
-        allow_gradable_survey:
-          typeof forceGradable !== 'undefined'
-            ? forceGradable
-            : data.allow_gradable_survey ?? false,
-        hasMinimumScore: data.hasMinimumScore ?? false,
-        isGlobal: data.isGlobal ?? false,
-        showNoVotos: data.showNoVotos ?? false,
-        time_limit: data.time_limit ?? 0,
-
-        // Survey State
-        freezeGame: data.freezeGame ?? false,
-        isOpened: data.isOpened ?? false,
-        isPublished: data.isPublished ?? false,
-        rankingVisible: data.rankingVisible ?? false,
-        displayGraphsInSurveys: data.displayGraphsInSurveys ?? false,
-
-        minimumScore: data.minimumScore ?? '',
-        activity_id: data.activity_id ?? '',
-
-        // Rossie history inspired this feature
-        tries: data.tries ?? 1,
-        random_survey: data.random_survey ?? false,
-        random_survey_count: data.random_survey_count ?? 1,
-      },
-      { eventId, name: data.survey, category: 'none' },
-    )
-    return setDataInFire
-  }
-
   const updateSurvey = async (values: ITrivia) => {
     if (!surveyId) {
       StateMessage.show(null, 'error', 'No se ha cargado el ID de encuesta correctamente')
@@ -455,12 +418,7 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
 
     try {
       await SurveysApi.editOne(data, surveyId, eventId)
-
       StateMessage.destroy('updating')
-      // Save too in Firebase
-      const setDataInFire = await sendToFirebase(surveyId, data)
-      StateMessage.destroy('updating')
-      StateMessage.show('updating', 'success', setDataInFire.message)
       console.log('updated the survey')
       onSave(surveyId)
     } catch (err) {
@@ -516,8 +474,6 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
       const saved = await SurveysApi.createOne(eventId, data)
       console.log('saved at database', saved)
 
-      // Important use saved._id as surveyId and save the new surveyId
-      await sendToFirebase(saved._id, data)
       onCreated(saved._id)
       setSurveyId(saved._id)
       loadSurveyDataById(saved._id, eventId)
