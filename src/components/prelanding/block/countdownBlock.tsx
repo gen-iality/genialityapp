@@ -33,7 +33,6 @@ const CountdownBlock: React.FC<CountdownBlockProps> = ({
     }
     return false;
   };
- console.log(date);
  
   const renderer = ({ days, hours, minutes, seconds, completed } : CountdownRenderProps ) => {
     if (completed) {
