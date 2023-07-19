@@ -173,20 +173,8 @@ export const createTypeUserFild = async ({
 
 	if (value.target.checked) {
 		confirm({
-			title: `COSITAS`,
-			content: (
-				<List
-					size='small'
-					dataSource={checkInInstructions}
-					renderItem={(item, index) => (
-						<List.Item>
-							<Text>
-								{index + 1}. {item}
-							</Text>
-						</List.Item>
-					)}
-				/>
-			),
+			title: `HABILITANDO TIPOS DE USUARIO`,
+			content: '',
 			okText: 'Habilitar',
 			okType: 'primary',
 			cancelText: 'Cancelar',
@@ -196,7 +184,7 @@ export const createTypeUserFild = async ({
 		});
 	} else {
 		confirm({
-			title: `¿Se deshabilitará el checkIn por documento estás seguro?`,
+			title: `¿Se borrara el campo "tipos de usuario" estás seguro?`,
 			// content: 'Una vez eliminado, no lo podrá recuperar',
 			okText: 'Si',
 			okType: 'danger',
@@ -244,15 +232,15 @@ const ListTypeUserFields = [
 		mandatory: true,
 		options: [{
 			label : 'tipo A',
-			value : 'A'
+			value : 'tipo A'
 		},
 		{
 			label : 'tipo B',
-			value : 'B'
+			value : 'tipo B'
 		},
 		{
 			label : 'tipo C',
-			value : 'C'
+			value : 'tipo C'
 		}],
 		order_weight: undefined,
 		type: 'list_type_user',

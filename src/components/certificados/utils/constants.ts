@@ -1,3 +1,5 @@
+
+export const PropertyTypeUser  = 'list_type_user'
 export const availableTags = [
     { tag: 'event.name', label: 'Nombre del curso', value: 'name' },
     { tag: 'event.start', label: 'Fecha inicio del curso', value: 'datetime_from' },
