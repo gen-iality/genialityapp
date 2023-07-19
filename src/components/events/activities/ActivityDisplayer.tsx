@@ -22,9 +22,9 @@ function switchActivity(
   activity: IActivityDisplayerProps['activity'],
   onActivityProgress?: IActivityDisplayerProps['onActivityProgress'],
 ) {
-  console.debug(activity)
+  // console.debug(activity)
   const activityType: string | undefined = activity.type?.name
-  console.debug('HOC: activityType', activityType)
+  // console.debug('HOC: activityType', activityType)
 
   switch (activityType) {
     case 'eviusMeet':
