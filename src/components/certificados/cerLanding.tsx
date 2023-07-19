@@ -13,14 +13,16 @@ function CertificadoLanding(props: any) {
   const [certificates, setCertificates] = useState<Certificates[]>([]);
 
   const getCerts = async () => {
-    const certs: Certificates[] = await CertsApi.byEvent(props.cEvent.value._id);
+    let certs: Certificates[] = await CertsApi.byEvent(props.cEvent.value._id);
+    const userType = props.cEventUser?.value?.properties?.list_type_user
     if (certs && certs.length > 0) {
+      if(userType) certs = certs.filter((item)=> item.userTypes?.includes(userType))
       setCertificates(certs);
     }
   };
   useEffect(() => {
     getCerts();
-  });
+  },[]);
 
   const generateCert = async (dataUser: UserData, cert: Certificates) => {
     const modal = Modal.success({

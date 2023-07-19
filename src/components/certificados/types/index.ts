@@ -170,12 +170,12 @@ export interface State {
 }
 
 export interface ICertificado {
-    content: string;
     imageFile: any;
     imageData: any;
     image: any
     rol?: any ;
     name?: string;
+    userTypes?: string[]
 }
 
 export  type RowCert = 'break' | 'h1' | 'h2' | 'h3' | 'h4' | 'p'
@@ -195,4 +195,5 @@ export interface Certificates {
     background: string;
     updated_at: string;
     created_at: string;
+    userTypes?: string[]
 }

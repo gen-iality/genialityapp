@@ -1,9 +1,9 @@
 import { FC, useEffect, useState } from 'react';
-import { CertsApi, RolAttApi } from '../../helpers/request';
+import { CertsApi, EventsApi, RolAttApi } from '../../helpers/request';
 import { useHistory, withRouter } from 'react-router-dom';
 import { handleRequestError } from '../../helpers/utils';
 import { Row, Col, Form, Input, Modal, Select, Button, Upload, Image } from 'antd';
-import { ExclamationCircleOutlined, UploadOutlined, ExclamationOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, UploadOutlined, ExclamationOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import moment from 'moment';
@@ -12,7 +12,7 @@ import { DispatchMessageService } from '../../context/MessageService';
 import { ICertificado, CertificatesProps, CertifiRow } from './types';
 import CertificadoRow from './components/CertificadoRows';
 import { ArrayToStringCerti, defaultCertRows, replaceAllTagValues } from './utils';
-import { imgBackground } from './utils/constants';
+import { PropertyTypeUser, imgBackground } from './utils/constants';
 
 
 const { confirm } = Modal;
@@ -23,20 +23,16 @@ const formLayout = {
   wrapperCol: { span: 24 },
 };
 
-const initContent =
-  '<p><br></p><p><br></p><p>Certificamos que</p><p>[user.names],</p><p>participo con éxito de evento</p><p>[event.name]</p><p>realizado del [event.start] al [event.end].'; 
-
 const Certificado : FC<CertificatesProps> = (props) => {
 
   const locationState = props.location.state; //si viene new o edit en el state, si es edit es un id
   const history = useHistory();
   const [certificado, setCertificado] = useState<ICertificado>({
-    content: initContent,
     imageFile: imgBackground,
     imageData: imgBackground,
     image: imgBackground,
   });
-  
+  const [types, setTypes] = useState<any[]>([]);
   const [roles, setRoles] = useState<any[]>([]);
   const [certificateRows, setCertificateRows] = useState<CertifiRow[]>([]);
   const [rol, setRol] = useState({} as any);
@@ -59,7 +55,7 @@ const Certificado : FC<CertificatesProps> = (props) => {
     }else{
       setCertificateRows(defaultCertRows)
     }
-    getRoles();
+    getTypes();
   }, [locationState.edit]);
 
   const getOne = async () => {
@@ -94,6 +90,7 @@ const Certificado : FC<CertificatesProps> = (props) => {
             rol: certificado?.rol,
             rol_id: certificado.rol?._id,
             event_id: props.event._id,
+            userTypes: certificado.userTypes
           };
           await CertsApi.editOne(data, locationState.edit);
         } else {
@@ -104,6 +101,7 @@ const Certificado : FC<CertificatesProps> = (props) => {
             event_id: props.event._id,
             background: certificado.image?.data || certificado.image,
             rol: certificado?.rol,
+            userTypes: certificado.userTypes
           };
           await CertsApi.create(data);
         }
@@ -189,10 +187,22 @@ const Certificado : FC<CertificatesProps> = (props) => {
     const { name, value } = e.target;
     setCertificado({ ...certificado, [name]: value });
   };
+  const selectChange = (data : string[]) => {
+    setCertificado((prev) => ({...prev, userTypes : data}));
+  };
 
   const getRoles = async () => {
     const data = await RolAttApi.byEvent(props.event._id);
     setRoles(data);
+  };
+
+  
+  const getTypes = async () => {
+    const data = await EventsApi.getOne(props.event._id);
+    if(data){
+     const dataTypes = data.user_properties.find((item : any) => item.name === PropertyTypeUser )
+     if(dataTypes) setTypes(dataTypes.options)
+    } 
   };
 
   const onChangeRol = async (e : any) => {
@@ -318,21 +328,23 @@ const Certificado : FC<CertificatesProps> = (props) => {
                 />
               </Form.Item>
             </Col>
-            <Col span={12}>
-              <Form.Item
+            <Col span={12} >
+            <Form.Item
+                style={{margin: 0}}
                 label={'Tipo de usuario'}
                 name={'userType'}
-              >
-                <Select
+                initialValue={certificado.rol}
+              />
+              <Select
                   mode="multiple"
-                  allowClear
+                  showArrow
+                  maxTagCount={'responsive'}
                   style={{ width: '100%' }}
                   placeholder="Seleccione el tipo de usuario"
-                  /* defaultValue={['a10', 'c12']}
-                  onChange={handleChange}
-                  options={options} */
+                  onChange={selectChange}
+                  value={certificado.userTypes}
+                  options={types}
                 />
-              </Form.Item>
               {/* <Form.Item
                 label={'Rol'}
                 name={'Rol'}>
