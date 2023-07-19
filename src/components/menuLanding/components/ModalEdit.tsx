@@ -67,7 +67,7 @@ export default function ModalEdit({ item, handleCancel, handleOk, visibility, se
               </Form.Item>
               <Form.Item label={'Iconos'}>
                 <Space direction='vertical'>
-                  <Tag color='default' style={{padding: 5, borderColor: '#2593FC50'}}>
+                  <Tag color='default' style={{padding: 5/* , borderColor: '#2593FC50' */}}>
                     <Space wrap align='center'>{renderIcon(item.icon, 25, 'animate__animated animate__heartBeat')} Icono seleccionado</Space>
                   </Tag>
                   
@@ -78,8 +78,8 @@ export default function ModalEdit({ item, handleCancel, handleOk, visibility, se
                           <Card 
                             hoverable 
                             style={{
-                              border: `2px solid ${IconsKeys[index] === item.icon ? '#C4C4C480' : 'transparent'}`, 
-                              borderRadius: 10
+                              border: `2px solid ${IconsKeys[index] === item.icon ? '#2593FC50' : 'transparent'}`, 
+                              borderRadius: 10,
                             }} 
                             bodyStyle={{padding: 15}} 
                               onClick={() => changeIcon(index)}
