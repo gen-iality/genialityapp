@@ -1,4 +1,4 @@
-import { useState, useContext, useMemo, useEffect } from 'react'
+import { useContext, useMemo, useEffect } from 'react'
 
 import {
   Row,
@@ -12,19 +12,14 @@ import {
 import useActivityType from '@context/activityType/hooks/useActivityType'
 import AgendaContext from '@context/AgendaContext'
 import { CurrentEventContext } from '@context/eventContext'
-import { obtenerVideos } from '@adaptors/gcoreStreamingApi'
+
 import VideoPreviewerCard from './components/manager/VideoPreviewerCard'
-import TransmitionStatusCard from './components/manager/TransmitionStatusCard'
-import VideoListCard from './components/manager/VideoListCard'
-import LoadingActivityType from './components/LoadingActivityType'
-import TransmitionOptionsCard from './components/manager/TransmitionOptionsCard'
-import ParticipantRequestsCard from './components/manager/ParticipantRequestsCard'
-import RTMPCard from './components/manager/RTMPCard'
+
 import ShareMeetLinkCard from './components/manager/ShareMeetLinkCard'
 import GoToMeet from './components/manager/GoToMeet'
 import { activityContentValues } from '@context/activityType/constants/ui'
 import type { ActivityType } from '@context/activityType/types/activityType'
-import ModalListRequestsParticipate from '../roomManager/components/ModalListRequestsParticipate'
+
 import { TypeDisplayment } from '@context/activityType/constants/enum'
 import Document from '@components/documents/Document'
 
@@ -39,28 +34,8 @@ export interface ActivityContentManagerProps {
 
 function ActivityContentManager(props: ActivityContentManagerProps) {
   const eventContext = useContext(CurrentEventContext)
-  const {
-    activityEdit,
-    roomStatus,
-    dataLive,
-    meeting_id,
-    getRequestByActivity,
-    request,
-    platform,
-    obtenerDetalleActivity,
-  } = useContext(AgendaContext)
-
-  const [viewModal, setViewModal] = useState(false)
-  const [videos, setVideos] = useState<any[] | null>(null)
-
-  const refActivity: string = useMemo(
-    () => `request/${eventContext.value?._id}/activities/${activityEdit}`,
-    [eventContext, activityEdit],
-  )
-  const refActivityViewers = useMemo(
-    () => `viewers/${eventContext.value?._id}/activities/${activityEdit}`,
-    [eventContext, activityEdit],
-  )
+  const { activityEdit, dataLive, meeting_id, obtenerDetalleActivity } =
+    useContext(AgendaContext)
 
   const {
     contentSource,
@@ -84,20 +59,6 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
     return contentSource?.split('*')[0]
   }, [type, contentSource])
 
-  const getVideoList = async () => {
-    setVideos(null)
-    try {
-      const videoList = await obtenerVideos(props.activityName, meeting_id)
-      if (videoList) {
-        setVideos(videoList)
-      }
-    } catch (err) {
-      // Convert url and cargarvideo to VIDEO was an error I did think
-      // pd: cargarvideo is a awful name
-      console.error('Not watch if VIDEO is url or cargarvideo, then error', err)
-    }
-  }
-
   useEffect(() => {
     // Force to get data from Firebase (because it is not realtime by evius design),
     // this next line checks if the activity type is survey-like and the `contentSource`
@@ -112,20 +73,11 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
         obtenerDetalleActivity()
       }
     }
-    meeting_id &&
-      !['quiz', 'quizing', 'survey'].includes(activityContentType!) &&
-      getVideoList()
-
-    if (type !== TypeDisplayment.EVIUS_MEET) return
-    getRequestByActivity(refActivity)
   }, [type, meeting_id])
 
   useEffect(() => {
     console.debug('ActivityContentManager - take:', activityContentType)
     console.debug('ActivityContentManager - with source =', contentSource)
-    console.debug('ActivityContentManager - dataLive:', JSON.stringify(dataLive))
-    console.debug('ActivityContentManager - roomStatus:', JSON.stringify(roomStatus))
-    console.debug('ActivityContentManager - platform:', JSON.stringify(platform))
   }, [])
 
   if (!type) {
@@ -263,53 +215,10 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
 
         <Col span={14}>
           <Row gutter={[16, 16]}>
-            {(type == TypeDisplayment.TRANSMISSION ||
-              type == TypeDisplayment.EVIUS_MEET) &&
-              !dataLive?.active && (
-                <Col span={24}>
-                  <TransmitionStatusCard type={type} />
-                </Col>
-              )}
-
-            {(type === TypeDisplayment.TRANSMISSION ||
-              type === TypeDisplayment.EVIUS_MEET) &&
-              !dataLive?.active &&
-              (videos ? (
-                <Col span={24}>
-                  <VideoListCard
-                    refreshData={getVideoList}
-                    videos={videos}
-                    toggleActivitySteps={() => console.log('¿esto cuándo se usa?')}
-                  />
-                </Col>
-              ) : (
-                <Col span={24}>
-                  <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
-                    <LoadingActivityType />
-                  </Card>
-                </Col>
-              ))}
-
             {(type == TypeDisplayment.MEETING ||
               (type == TypeDisplayment.EVIUS_MEET && dataLive?.active)) && (
               <Col span={10}>
                 <GoToMeet type={type} activityId={activityEdit} />
-              </Col>
-            )}
-
-            {(((type === TypeDisplayment.EVIUS_MEET ||
-              type === TypeDisplayment.TRANSMISSION) &&
-              dataLive?.active) ||
-              (type !== TypeDisplayment.EVIUS_MEET &&
-                type !== TypeDisplayment.TRANSMISSION)) && (
-              <Col
-                span={
-                  type !== TypeDisplayment.EVIUS_MEET && type !== TypeDisplayment.MEETING
-                    ? 24
-                    : 14
-                }
-              >
-                <TransmitionOptionsCard type={type} />
               </Col>
             )}
 
@@ -342,28 +251,9 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
                 </Col>
               )
             )}
-
-            {type == TypeDisplayment.EVIUS_MEET && dataLive?.active && (
-              <Col span={24}>
-                <ParticipantRequestsCard request={request} setViewModal={setViewModal} />
-              </Col>
-            )}
-
-            {(type == TypeDisplayment.TRANSMISSION ||
-              type == TypeDisplayment.EVIUS_MEET) &&
-              dataLive?.active && (
-                <Col span={24}>
-                  <RTMPCard />
-                </Col>
-              )}
           </Row>
         </Col>
       </Row>
-      <ModalListRequestsParticipate
-        handleModal={setViewModal}
-        visible={viewModal}
-        refActivity={refActivity}
-      />
     </>
   )
 }

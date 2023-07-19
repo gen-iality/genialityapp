@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { message, Result, Spin, Upload, Form, Input } from 'antd'
 import FileVideoOutlineIcon from '@2fd/ant-design-icons/lib/FileVideoOutline'
 import { RcFile } from 'antd/lib/upload'
-// import { deleteVideo } from '@adaptors/gcoreStreamingApi'
+
 import useActivityType from '@context/activityType/hooks/useActivityType'
 
 const urlUploadVideoVimeo = 'https://devapi.geniality.com.co/api/vimeo/upload'

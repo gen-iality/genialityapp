@@ -1,14 +1,62 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AgendaApi } from '@helpers/request'
 import CMS from '../newComponent/CMS'
 import { getColumnSearchProps } from '../speakers/getColumnSearch'
-import { Tag } from 'antd'
+import { Button, Spin, Tag, Tooltip } from 'antd'
 import dayjs from 'dayjs'
 
 import lessonTypeToString from '../events/lessonTypeToString'
+import { FB } from '@helpers/firestore-request'
+import { StateMessage } from '@context/MessageService'
+
+const ActivityPublishingStatus = (props) => {
+  const { eventId, activityId } = props
+  const [isPublished, setIsPublished] = useState(undefined)
+
+  const toggleStatus = () => {
+    const newIsPublished = !isPublished
+    setIsPublished(undefined)
+    FB.Activities.update(eventId, activityId, { isPublished: newIsPublished })
+      .then(() => setIsPublished(newIsPublished))
+      .catch((err) => {
+        console.error(err)
+        StateMessage.show(
+          null,
+          'error',
+          'No se ha podido actualizar la configuración de la actividad',
+        )
+        setIsPublished(undefined)
+      })
+  }
+
+  useEffect(() => {
+    if (!eventId || !activityId) return
+
+    FB.Activities.get(eventId, activityId).then((document) => {
+      setIsPublished(document?.isPublished)
+    })
+  }, [eventId, activityId])
+
+  useEffect(() => {
+    if (typeof props.onChange === 'function') {
+      props.onChange(isPublished)
+    }
+  }, [isPublished])
+
+  return (
+    <Button
+      type="link"
+      onClick={toggleStatus}
+      style={{ color: isPublished ? '#618a89' : '#994b53' }}
+    >
+      {typeof isPublished === 'undefined' ? <Spin /> : isPublished ? 'público' : 'oculto'}
+    </Button>
+  )
+}
 
 const Agenda = (props) => {
   const [columnsData, setColumnsData] = useState({})
+  const [isPublishedActivityMap, setIsPublishedActivityMap] = useState({})
 
   const columns = [
     {
@@ -37,6 +85,32 @@ const Agenda = (props) => {
       //ellipsis: true,
       sorter: (a, b) => a.name.localeCompare(b.name),
       ...getColumnSearchProps('name', columnsData),
+    },
+    {
+      title: 'Está publicado?',
+      ellipsis: true,
+      filters: [
+        { text: 'Público', value: true },
+        { text: 'Oculto', value: false },
+      ],
+      onFilter: (status, item) => {
+        console.log(status, item)
+        return isPublishedActivityMap[item._id] === status
+      },
+      render: (item) => {
+        return (
+          <ActivityPublishingStatus
+            eventId={props.event._id}
+            activityId={item._id}
+            onChange={(status) => {
+              setIsPublishedActivityMap((previous) => ({
+                ...previous,
+                [item._id]: status,
+              }))
+            }}
+          />
+        )
+      },
     },
     {
       title: 'Tipo',

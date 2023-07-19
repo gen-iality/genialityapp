@@ -68,7 +68,7 @@ class Service {
     }
   }
 
-  /** @deprecated ue helpers/firestore-request.ts FB.Activities.get instead */
+  /** @deprecated use helpers/firestore-request.ts FB.Activities.get instead */
   getConfiguration = (event_id, activity_id) => {
     return new Promise((resolve, reject) => {
       FB.Activities.get(event_id, activity_id)

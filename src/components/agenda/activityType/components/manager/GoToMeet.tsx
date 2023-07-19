@@ -2,8 +2,6 @@ import { useMemo } from 'react'
 
 import { Button, Card, Typography } from 'antd'
 import { useCurrentUser } from '@context/userContext'
-import { useContext } from 'react'
-import AgendaContext from '@context/AgendaContext'
 import type { ActivityType } from '@context/activityType/types/activityType'
 
 export interface GoToMeetProps {
@@ -19,18 +17,16 @@ const baseUrl = 'https://meet.evius.co'
  * @returns Un componente de React.
  */
 const GoToMeet = (props: GoToMeetProps) => {
-  const { dataLive } = useContext(AgendaContext)
-
   const user = useCurrentUser()
 
   const urlReunion = useMemo(
     () => `${baseUrl}/${props.activityId}`,
-    [props.activityId, user, dataLive],
+    [props.activityId, user],
   )
 
   const urlEviusTransmision = useMemo(
     () => `${baseUrl}/${props.activityId}`,
-    [props.activityId, user, dataLive],
+    [props.activityId, user],
   )
 
   console.debug('GoToMeet:props:', props)

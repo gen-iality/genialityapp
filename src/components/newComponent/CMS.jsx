@@ -8,7 +8,7 @@ import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { StateMessage } from '@context/MessageService'
 import Service from '../agenda/roomManager/service'
 import { firestore, fireRealtime } from '@helpers/firebase'
-import { deleteLiveStream, deleteAllVideos } from '@adaptors/gcoreStreamingApi'
+
 const { confirm } = Modal
 
 const CMS = (props) => {
@@ -106,12 +106,7 @@ const CMS = (props) => {
         const onHandlerRemove = async () => {
           try {
             const refActivity = `request/${eventId}/activities/${id}`
-            const service = new Service(firestore)
-            const configuration = await service.getConfiguration(eventId, id)
-            if (configuration && configuration.typeActivity === 'eviusMeet') {
-              await deleteAllVideos(name, configuration.meeting_id),
-                await deleteLiveStream(configuration.meeting_id)
-            }
+            const service = new Service()
             if (deleteCallback) await deleteCallback(id)
             await fireRealtime.ref(refActivity).remove()
             await service.deleteActivity(eventId, id)
