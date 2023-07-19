@@ -13,6 +13,17 @@ export const validateSurveyCreated = (surveyId) => {
   })
 }
 
+/**
+ * Create or update survey data in firebase
+ *
+ * Take in mind: if you use SurveysApi, you have to know that Back-End update
+ * the survey for Firebase too.
+ *
+ * @param {string} surveyId The survey ID
+ * @param {any} status any data
+ * @param {any} surveyInfo any data again
+ * @returns An object with the value message of the result
+ */
 export const createOrUpdateSurvey = (surveyId, status, surveyInfo) => {
   return new Promise((resolve) => {
     //Abril 2021 @todo migracion de estados de firestore a firebaserealtime
