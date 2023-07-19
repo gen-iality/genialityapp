@@ -73,7 +73,11 @@ function StudentGeneralCourseProgress(props: StudentGeneralCourseProgressProps) 
       )
 
       // Filter existent activities and set the state
-      setActivitiesAttendee(allAttendees.filter((attendee) => attendee !== undefined))
+      setActivitiesAttendee(
+        allAttendees
+          .filter((attendee) => attendee !== undefined)
+          .filter((attendee) => attendee?.checked_in),
+      )
     }
     loadData().then(() => setIsLoading(false))
   }, [eventId, eventUserId])

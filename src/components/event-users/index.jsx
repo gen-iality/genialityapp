@@ -528,7 +528,10 @@ and displays an error message using the `message` component from the antd librar
                     ...this.state,
                     progressMap: {
                       ...this.state.progressMap,
-                      [item._id]: `${checkedInActivities.length}/${activities.length}`,
+                      [item._id]: `${
+                        checkedInActivities.filter((attendee) => attendee.checked_in)
+                          .length
+                      }/${activities.length}`,
                     },
                   })}
                   {isLoading && <Spin />}

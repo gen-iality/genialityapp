@@ -378,10 +378,9 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
             render={({ isLoading, activities, checkedInActivities }) => {
               setProgressMap((previous) => ({
                 ...previous,
-                [item._id]: `${checkedInActivities.length}/${Math.max(
-                  activities.length,
-                  preAllActivities.length,
-                )}`,
+                [item._id]: `${
+                  checkedInActivities.filter((attendee) => attendee.checked_in).length
+                }/${Math.max(activities.length, preAllActivities.length)}`,
               }))
               return (
                 <>
@@ -586,10 +585,9 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         const { activities, checked_in_activities }: ActivityProgressesType =
           data.activity_progresses ?? {}
         // Use % or n/N? ... use n/N for now
-        data.postprocess_progress = `${(checked_in_activities ?? []).length}/${Math.max(
-          (activities ?? []).length,
-          (preAllActivities ?? []).length,
-        )}`
+        data.postprocess_progress = `${
+          (checked_in_activities ?? []).filter((attendee) => attendee.checked_in).length
+        }/${Math.max((activities ?? []).length, (preAllActivities ?? []).length)}`
 
         allEventUserData.push({
           // the organization user properties here... (for now, nothing)
