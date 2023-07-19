@@ -24,11 +24,23 @@ function useSurveyQuery(eventId, idSurvey, isResetingSurvey) {
     if (innerQuery === undefined || innerRealTimeQuery === undefined) return
     console.log('prueba que no carga tanto')
     setQuery((prev) => {
+      /**
+       * NOTE: Normally in Firebase the next data were saved, but now all the
+       *       survey data is saved. Then, IDK if you have to remove some data
+       *       like questions to avoid crash the answering flow idk. Anyway,
+       *       the normally saved data:
+       * - name, allow_anonymous_answers, allow_gradable_survey, hasMinimumScore,
+       *   isGlobal, showNoVotos, time_limit, freezeGame, isOpened, isPublished,
+       *   rankingVisible, displayGraphsInSurveys, minimumScore, activity_id,
+       *   tries, random_survey, random_survey_count
+       *
+       *       Maybe, we have to remove .questions of `innerRealTimeQuery` before
+       *       of insertion.
+       */
+
       return {
         ...prev,
         loading: false,
-        /** NOTE: I had to disable realtime because the CMS does not update to Firebase, so... */
-        /** NOTE: (x2): Put the firebase data first to able the overwritting to be happy :) */
         data: {
           ...innerQuery,
           ...innerRealTimeQuery,
