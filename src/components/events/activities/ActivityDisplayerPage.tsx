@@ -176,7 +176,6 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
           status="403"
           title="Actividad no disponible"
           subTitle="No puedes entrar a esta actividad por ningún medio"
-          children={JSON.stringify(cEventUser.value)}
         />
       )
     }
