@@ -11,8 +11,8 @@ import { Rule } from 'antd/lib/form';
 
 /** Components */
 import DynamicFormItem from './DynamicFormItem';
-import { IDynamicFieldProps } from '../interface/dinamic-fields';
-import useMandatoryRule from '../hooks/useMandatoryRule';
+import { IDynamicFieldProps } from '../../interface/dinamic-fields';
+import useMandatoryRule from '../../hooks/useMandatoryRule';
 
 type IDynamicTermsAndCondictionsFieldProps = IDynamicFieldProps;
 

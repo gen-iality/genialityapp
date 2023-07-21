@@ -40,6 +40,7 @@ export type newData = {
 };
 
 export type FormEnrollAttendeeToEventPropsTypes = {
+  isAddFromOrganization?:boolean
   fields: any;
   conditionalFields: any;
   //Only send to edit attendee

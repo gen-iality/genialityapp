@@ -7,7 +7,24 @@ import ErrorServe from '../modal/serverError';
 import { utils, writeFileXLSX } from 'xlsx';
 import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from '../../helpers/utils';
 import Moment from 'moment';
-import { Button, Card, Col, Drawer, Image, Row, Statistic, Typography, Tag, Input, Space, Tooltip, Select, Dropdown, Menu } from 'antd';
+import {
+  Button,
+  Card,
+  Col,
+  Drawer,
+  Image,
+  Row,
+  Statistic,
+  Typography,
+  Tag,
+  Input,
+  Space,
+  Tooltip,
+  Select,
+  Dropdown,
+  Menu,
+  Modal,
+} from 'antd';
 
 import updateAttendees from './eventUserRealTime';
 import { Link } from 'react-router-dom';
@@ -35,6 +52,7 @@ import { HelperContext } from '@/context/helperContext/helperContext';
 import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton';
 import { UsersPerEventOrActivity } from './utils/utils';
 import printBagdeUser from '../badge/utils/printBagdeUser';
+import ModalUsersOrganization from '../user-organization-to-event/components/ModalUsersOrganization';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -92,9 +110,18 @@ class ListEventUser extends Component {
       qrModalOpen: false,
       unSusCribeConFigFast: () => {},
       unSuscribeAttendees: () => {},
+      modalUserOrganization: false,
     };
   }
   static contextType = HelperContext;
+
+  openModalUserOrganization = () => {
+    this.setState({ modalUserOrganization: true });
+  };
+
+  closeModalUserOrganization = () => {
+    this.setState({ modalUserOrganization: false });
+  };
 
   // eslint-disable-next-line no-unused-vars
   editcomponent = (text, item, index) => {
@@ -796,8 +823,8 @@ class ListEventUser extends Component {
       nameActivity,
       columns,
       fieldsForm,
+      modalUserOrganization,
     } = this.state;
-
     const activityId = this.props.match.params.id;
 
     const { loading, componentKey } = this.props;
@@ -813,19 +840,15 @@ class ListEventUser extends Component {
 
     const menu = (
       <Menu>
-        <Menu.Item
-          key='menu-item-1'
-          onClick={this.addUser}>
+        <Menu.Item key='menu-item-1' onClick={this.addUser}>
           Nuevo
         </Menu.Item>
 
-        <Menu.Item
-          key='menu-item-2'
-          onClick={() => {}}>
+        <Menu.Item key='menu-item-2' onClick={() => this.openModalUserOrganization()}>
           Desde mi organización
         </Menu.Item>
       </Menu>
-    )
+    );
 
     return (
       <Fragment>
@@ -837,11 +860,21 @@ class ListEventUser extends Component {
           }
         />
 
+        {modalUserOrganization && (
+          <ModalUsersOrganization
+            destroyOnClose
+            visible={modalUserOrganization}
+            onCancel={() => this.closeModalUserOrganization()}
+            organizationId={this.props?.event?.organizer_id}
+            eventId={this.props?.event?._id}
+            usersEvent={users}
+          />
+        )}
         {disabledPersistence && (
           <div style={{ margin: '5%', textAlign: 'center' }}>
             <label>
-              El almacenamiento local de lso datos esta deshabilitado. Cierre otras pestañas de la plataforma para
-              pode habilitar el almacenamiento local
+              El almacenamiento local de lso datos esta deshabilitado. Cierre otras pestañas de la plataforma para pode
+              habilitar el almacenamiento local
             </label>
           </div>
         )}
@@ -975,15 +1008,18 @@ class ListEventUser extends Component {
                 </Link>
               </Col>
               <Col>
-                  <Dropdown overlay={menu} trigger={['click', 'hover']}>
-                    <Button type='primary' size='middle' disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
-                      <Space>
-                        <PlusCircleOutlined />
-                        Agregar usuario
-                        <DownOutlined />
-                      </Space>
-                    </Button>
-                  </Dropdown>
+                <Dropdown overlay={menu} trigger={['click', 'hover']}>
+                  <Button
+                    type='primary'
+                    size='middle'
+                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
+                    <Space>
+                      <PlusCircleOutlined />
+                      Agregar usuario
+                      <DownOutlined />
+                    </Space>
+                  </Button>
+                </Dropdown>
                 {/* <Button
                   type='primary'
                   icon={<PlusCircleOutlined />}

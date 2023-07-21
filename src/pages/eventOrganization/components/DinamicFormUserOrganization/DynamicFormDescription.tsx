@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Typography, Collapse, Col } from 'antd'
-import { IDynamicFieldProps } from './types'
 import { useIntl } from 'react-intl'
+import { IDynamicFieldProps } from '../../interface/dinamic-fields'
 
 const DynamicFormDescription: React.FunctionComponent<
   Pick<IDynamicFieldProps['fieldData'], 'description'>

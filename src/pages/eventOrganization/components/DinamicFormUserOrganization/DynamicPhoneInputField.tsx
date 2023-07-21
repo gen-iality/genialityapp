@@ -8,8 +8,8 @@ import { FormInstance, Rule } from 'antd/lib/form';
 
 
 import DynamicFormItem from './DynamicFormItem';
-import { IDynamicFieldProps } from '../interface/dinamic-fields';
-import useMandatoryRule from '../hooks/useMandatoryRule';
+import { IDynamicFieldProps } from '../../interface/dinamic-fields';
+import useMandatoryRule from '../../hooks/useMandatoryRule';
 
 interface IDynamicPhoneInputFieldProps extends IDynamicFieldProps {
   form?: FormInstance;

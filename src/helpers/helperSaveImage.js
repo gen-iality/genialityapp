@@ -2,6 +2,7 @@ import { fireStorage } from './firebase';
 
 export const saveImageStorage = async (image) => {
   if (image) {
+    console.log('image=============>',image)
     var imageName = Date.now();
     var storageRef = fireStorage.ref();
     var imageRef = storageRef.child('images/' + imageName + '.png');
