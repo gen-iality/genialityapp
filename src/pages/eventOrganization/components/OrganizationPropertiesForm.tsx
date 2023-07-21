@@ -9,7 +9,7 @@ import { ValidateErrorEntity } from 'rc-field-form/lib/interface';
 import { IDynamicFieldData } from '../../dynamic-fields/types';
 
 import { FormInstance } from 'antd/es/form/Form';
-import DynamicForm from './DinamicFormUserOrganization';
+import DynamicForm from './DinamicFormUserOrganization/DinamicFormUserOrganization';
 
 const centerStyle: any = {
   margin: '0 auto',
@@ -98,7 +98,6 @@ const OrganizationPropertiesForm = (props: Props) => {
               dynamicFields={dynamicFields}
               initialValues={initialValues}
               onFinish={onFinish}
-              //   onFinishFailed={onFinishFailed}
               onValueChange={onValueChange}
             />
           </Card>

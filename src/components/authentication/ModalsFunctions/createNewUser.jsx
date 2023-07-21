@@ -4,14 +4,14 @@ import { message } from 'antd';
 import { DispatchMessageService } from '../../../context/MessageService';
 
 const createNewUser = async (props) => {
-  const { picture, email, names, password, resetFields, setModalInfo, setOpenOrCloseTheModalFeedback, cEvent } = props;
+  const { picture, email, names, password, resetFields, setModalInfo, setOpenOrCloseTheModalFeedback, cEvent,urlImage } = props;
   const pictureDefault = 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
   function sendDataFinished() {
     DispatchMessageService({
       key: 'loading',
       action: 'destroy',
     });
-    resetFields();
+    if(resetFields)resetFields();
   }
   const uploadLogo = async () => {
     const selectedLogo = picture && picture !== '' ? picture[0].thumbUrl : null;
@@ -28,7 +28,7 @@ const createNewUser = async (props) => {
     const imageUrl = await uploadLogo();
 
     const body = {
-      picture: imageUrl,
+      picture: urlImage? urlImage:imageUrl,
       email: email,
       names: names,
       password: password !== '' ? password : undefined,

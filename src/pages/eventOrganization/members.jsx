@@ -22,26 +22,24 @@ function OrgMembers(props) {
   const [addOrEditUser, setAddOrEditUser] = useState(false);
   const [extraFields, setExtraFields] = useState([]);
   const [roleList, setRoleList] = useState([]);
-  const [selectedUser, setSelectedUser] = useState({});
+  const [selectedUser, setSelectedUser] = useState();
   const [editMember, setEditMember] = useState(false);
   let { _id: organizationId } = props.org;
   const history = useHistory();
-
   async function getEventsStatisticsData() {
     const { data } = await OrganizationApi.getUsers(organizationId);
     const fieldsMembersData = [];
-    data.map((membersData) => {
+    data.map((membersData,index) => {
       const properties = {
+        ...membersData.properties,
         _id: membersData._id,
         created_at: membersData.created_at,
         updated_at: membersData.updated_at,
-        position: membersData?.rol?.name ?? 'NaN', //Si no viene Rol validar que deba traerlo
-        ...membersData.properties,
+        position: membersData.rol?.name ?? 'NaN', //Si no viene Rol validar que deba traerlo
+        rol_id:membersData.rol_id,
       };
-      
       fieldsMembersData.push(properties);
     });
-    
     setMembersData(fieldsMembersData);
     setIsLoading(false);
   }
@@ -83,7 +81,7 @@ function OrgMembers(props) {
   }
 
   function addUser() {
-    setSelectedUser({});
+    setSelectedUser(undefined);
     closeOrOpenModalMembers();
   }
   function editModalUser(item) {
@@ -112,7 +110,6 @@ function OrgMembers(props) {
       <p>
         <Tag>Inscritos: {membersData.length || 0}</Tag>
       </p>
-
       <Table
         columns={columns(columnsData, editModalUser)}
         dataSource={membersData}
@@ -143,24 +140,16 @@ function OrgMembers(props) {
           </Row>
         )}
       />
-      {/* {addOrEditUser && (
-        <ModalMembers
-          handleModal={closeOrOpenModalMembers}
-          modal={addOrEditUser}
-          rolesList={roleList}
-          extraFields={extraFields}
-          value={selectedUser}
-          editMember={editMember}
-          closeOrOpenModalMembers={closeOrOpenModalMembers}
-          organizationId={organizationId}
-          startingComponent={startingComponent}
-        />
-      )} */}
       {addOrEditUser && (
         <ModalAddAndEditUsers
           visible={addOrEditUser}
-          onCancel={()=>setAddOrEditUser(false)}
+          onCancel={()=>{
+            setAddOrEditUser(false)
+            setSelectedUser(undefined)
+          }}
           organizationId={organizationId}
+          selectedUser={selectedUser}
+          getEventsStatisticsData={getEventsStatisticsData}
         />
       )}
     </>

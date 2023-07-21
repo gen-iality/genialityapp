@@ -38,6 +38,7 @@ const FormEnrollAttendeeToEvent = ({
   printUser,
   badgeEvent,
   activityId,
+  isAddFromOrganization
 }: FormEnrollAttendeeToEventPropsTypes) => {
   const [form] = Form.useForm();
   const intl = useIntl();
@@ -98,7 +99,7 @@ const FormEnrollAttendeeToEvent = ({
               <Col span={24}>
                 <Card bodyStyle={textLeft} style={cardStyles}>
                   <Spin tip='Guardando cambios' spinning={loaderWhenSavingUpdatingOrDelete}>
-                    <BasicFieldsToFormEnrollAttendeeToEvent basicFields={basicFields} attendee={attendee} />
+                    <BasicFieldsToFormEnrollAttendeeToEvent basicFields={basicFields} attendee={attendee} isAddFromOrganization={isAddFromOrganization}/>
                     <Divider />
                     {thereAreExtraFields > 0 && (
                       <Title level={4} style={{ marginBottom: '30px', textAlign: 'center' }}>

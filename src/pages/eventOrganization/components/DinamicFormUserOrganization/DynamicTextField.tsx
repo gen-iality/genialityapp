@@ -3,8 +3,8 @@ import { Rule } from 'antd/lib/form';
 import DynamicFormItem from './DynamicFormItem';
 import { useEffect, useMemo, useState } from 'react';
 import { Input } from 'antd';
-import { IDynamicFieldProps } from '../interface/dinamic-fields';
-import useMandatoryRule from '../hooks/useMandatoryRule';
+import { IDynamicFieldProps } from '../../interface/dinamic-fields';
+import useMandatoryRule from '../../hooks/useMandatoryRule';
 
 export type IDynamicTextFieldProps = IDynamicFieldProps;
 
