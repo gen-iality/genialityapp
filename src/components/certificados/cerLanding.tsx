@@ -8,6 +8,7 @@ import { ArrayToStringCerti, replaceAllTagValues } from './utils';
 import { CertifiRow, Certificates, UserData } from './types';
 import { imgBackground } from './utils/constants';
 import { DownloadOutlined } from '@ant-design/icons';
+import { isMobile } from 'react-device-detect';
 
 function CertificadoLanding(props: any) {
   const [certificates, setCertificates] = useState<Certificates[]>([]);
@@ -18,7 +19,7 @@ function CertificadoLanding(props: any) {
     if (certs && certs.length > 0) {
       if(userType) certs = certs.filter((item)=> item.userTypes?.includes(userType))
       setCertificates(certs); 
-    }console.log(props.cEvent.value.styles, 'hola')
+    }
   };
   useEffect(() => {
     getCerts();
@@ -62,31 +63,37 @@ function CertificadoLanding(props: any) {
           <Col span={23}>
             <Card style={{borderRadius: 20}}>
               <Space direction='vertical' style={{width: '100%'}}>
-                <Typography.Title level={3} style={{color: props.cEvent.value.styles.textMenu}}>Certificado(s)</Typography.Title>
+                <Typography.Title level={3} /* style={{color: props.cEvent.value.styles.textMenu}} */>Certificado(s)</Typography.Title>
                 {certificates.length > 0 ?
                   <Row justify='start' gutter={[16, 16]} style={{width: '100%'}}>
                     {certificates.map((certificate) => (
                       <Col key={'certi' + certificate._id} xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>
-                        <Image 
-                          style={{borderRadius: 15}}
-                          src={certificate.background}
-                          alt={certificate.name}
-                          preview={false}
-                        />
-                        <Result 
-                          icon={<></>}
-                          title={<Typography.Text style={{color: props.cEvent.value.styles.textMenu}}>{certificate.name}</Typography.Text>}
-                          extra={
-                            <Button
-                              /* type='primary' */
-                              onClick={() => generateCert(props.cEventUser.value, certificate)}
-                              style={{ border: 'none', boxShadow: 'none' }}
-                              key={'download' + certificate._id}
-                              icon={<DownloadOutlined style={{fontSize: 30, color: props.cEvent.value.styles.textMenu}} />}
-                            />
-                          }
-                          style={{position: 'absolute', top: 20, left: 70}}
-                        />
+                        <Card bordered={false} bodyStyle={{padding: 0}}>
+                          <Image 
+                            style={{borderRadius: 15}}
+                            src={certificate.background}
+                            alt={certificate.name}
+                            preview={false}
+                          />
+                          <div style={{position: 'absolute', top: '0', left: '0', width: '100%', height: '100%'}}>
+                            <div style={{display: 'flex', alignContent: 'center', alignItems: 'center', width: '100%', height: '100%'}}>
+                              <Result 
+                                icon={<></>}
+                                title={<Typography.Text /* style={{color: props.cEvent.value.styles.textMenu}} */>{certificate.name}</Typography.Text>}
+                                extra={
+                                  <Button
+                                    size={isMobile ? 'small' : 'large'}
+                                    onClick={() => generateCert(props.cEventUser.value, certificate)}
+                                    style={{ border: 'none', boxShadow: 'none', backgroundColor: props.cEvent.value.styles.toolbarDefaultBg }}
+                                    key={'download' + certificate._id}
+                                    icon={<DownloadOutlined style={{fontSize: isMobile ? '14' : '22px', color: props.cEvent.value.styles.textMenu}} />}
+                                  ><Typography.Text style={{fontSize: isMobile ? '14' : '22px', color: props.cEvent.value.styles.textMenu}}>Descargar</Typography.Text></Button>
+                                }
+                                style={{width: '100%', height: '100%'}}
+                              />
+                            </div>
+                          </div>
+                        </Card>
                       </Col>
                     ))}
                   </Row>
