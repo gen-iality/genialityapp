@@ -15,15 +15,14 @@ export const UserOrgToEventUserItem = ({ userOrg }: Props) => {
         <Space align='center'>
           {userOrg.isAlreadyEventUser ? (
             <>
-              <CheckCircleOutlined style={{ color: 'green', fontSize: '21px' }} />
-              <Tag
-                color={userOrg.isAlreadyEventUser ? 'success' : 'error'}
-                style={{ padding: '4px 8px', fontSize: '14px' }}>
+              <Tag color={'success'} style={{ padding: '4px 8px', fontSize: '14px' }}>
                 Inscrito
               </Tag>
             </>
           ) : (
-            <Button onClick={() => createEventUserFromUserOrganization(userOrg)}>Agregar</Button>
+            <Button onClick={() => createEventUserFromUserOrganization(userOrg)} type='primary'>
+              Inscribir
+            </Button>
           )}
         </Space>,
       ]}>

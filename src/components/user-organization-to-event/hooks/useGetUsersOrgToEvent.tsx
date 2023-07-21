@@ -9,7 +9,17 @@ export const useGetUsersOrgToEvent = (organizationId: string) => {
     messageError: '',
   });
   const [isLoading, setIsLoading] = useState(false);
+  const isNumberPar = (numero: number) => {
+    if (typeof numero !== 'number') return console.log('Debes ingresar un numero');
 
+    if (numero % 2 === 0) {
+      return true;
+    }
+
+    if (numero % 2 !== 0) {
+      return false;
+    }
+  };
   useEffect(() => {
     if (organizationId) {
       setIsLoading(true);
@@ -23,7 +33,7 @@ export const useGetUsersOrgToEvent = (organizationId: string) => {
               id: membersData._id,
               rol: membersData.rol.name,
               email: membersData.user.email,
-              isAlreadyEventUser: false,
+              isAlreadyEventUser: isNumberPar(index) ? true : false,
             };
             fieldsMembersData.push(newField);
           });

@@ -1,4 +1,4 @@
-import { Modal, ModalProps, Result } from 'antd';
+import { Button, Card, Modal, ModalProps, Result, Row, Space, Typography } from 'antd';
 import UserOrganizationToEventList from './UserOrganizationToEvent';
 import { useGetUsersOrgToEvent } from '../hooks/useGetUsersOrgToEvent';
 
@@ -18,8 +18,17 @@ const ModalUsersOrganization = ({ onCancel, organizationId = '', usersEvent, eve
         {error.haveError ? (
           <Result icon={<></>} title={'Ocurrio un error obteniendo los datos'} subTitle={error.messageError} />
         ) : (
-          //   <UserOrganizationToEventTable loading={isLoading} dataSource={membersData} columns={columns} />
-          <UserOrganizationToEventList loading={isLoading} dataSource={membersData} />
+          <>
+            <Row justify='space-between'>
+              <Typography.Title level={5}>Lista de usuarios de la organización</Typography.Title>
+            </Row>
+            <UserOrganizationToEventList
+              className='desplazar'
+              loading={isLoading}
+              dataSource={membersData}
+              style={{ marginTop: '10px', minHeight: '100%', maxHeight: '60vh', overflowY: 'scroll' }}
+            />
+          </>
         )}
       </div>
     </Modal>
