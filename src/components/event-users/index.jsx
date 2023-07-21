@@ -862,6 +862,7 @@ class ListEventUser extends Component {
 
         {modalUserOrganization && (
           <ModalUsersOrganization
+            destroyOnClose
             visible={modalUserOrganization}
             onCancel={() => this.closeModalUserOrganization()}
             organizationId={this.props?.event?.organizer_id}

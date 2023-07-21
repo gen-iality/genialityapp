@@ -1,6 +1,7 @@
-import { Button, Card, Modal, ModalProps, Result, Row, Space, Typography } from 'antd';
+import { Modal, ModalProps, Result, Row, Typography } from 'antd';
 import UserOrganizationToEventList from './UserOrganizationToEvent';
 import { useGetUsersOrgToEvent } from '../hooks/useGetUsersOrgToEvent';
+import { useState } from 'react';
 
 interface Props extends ModalProps {
   onCancel: () => void;
@@ -10,8 +11,13 @@ interface Props extends ModalProps {
 }
 
 const ModalUsersOrganization = ({ onCancel, organizationId = '', usersEvent, eventId, ...modalProps }: Props) => {
-  const { error, membersData, isLoading } = useGetUsersOrgToEvent(organizationId);
+  const [flagState, setFlagState] = useState(false);
+  const { error, membersData, isLoading } = useGetUsersOrgToEvent(organizationId, eventId, flagState);
 
+  //no hagan esto en casa
+  const getNewUsersOrgList = () => {
+    setFlagState((current) => !current);
+  };
   return (
     <Modal footer={false} onCancel={onCancel} {...modalProps}>
       <div style={{ padding: '10px' }}>
@@ -26,6 +32,7 @@ const ModalUsersOrganization = ({ onCancel, organizationId = '', usersEvent, eve
               className='desplazar'
               loading={isLoading}
               dataSource={membersData}
+              getNewUsersOrgList={getNewUsersOrgList}
               style={{ marginTop: '10px', minHeight: '100%', maxHeight: '60vh', overflowY: 'scroll' }}
             />
           </>
