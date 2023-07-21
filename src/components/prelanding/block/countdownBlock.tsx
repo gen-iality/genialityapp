@@ -1,38 +1,39 @@
-import { CurrentEventContext } from '@/context/eventContext';
 import { CalendarFilled, ClockCircleFilled } from '@ant-design/icons';
 import { Card, Col, Row, Space, Typography } from 'antd';
 import moment from 'moment';
-import { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Countdown, { CountdownRenderProps, zeroPad } from 'react-countdown';
 import {style } from '../constants';
 import { useIntl } from 'react-intl';
 
-const CountdownBlock = () => {
-  const cEvent = useContext(CurrentEventContext);
-  const [dateLimitContador, setDateLimitContador] = useState<string | null>(null);
-  const textColor = cEvent.value?.styles?.textMenu;
-  const date = cEvent.value?.datetime_from;
-  const intl = useIntl();
+interface CountdownBlockProps {
+  textColor: string;
+  date: string;
+  countdownMessage: string;
+  countdownFinalMessage: string;
+}
 
+const CountdownBlock: React.FC<CountdownBlockProps> = ({
+  textColor,
+  date,
+  countdownMessage,
+  countdownFinalMessage,
+}) => {
+  const [dateLimitContador, setDateLimitContador] = useState<string | null>(null);
+  const intl = useIntl();
   useEffect(() => {
-    if (!cEvent.value) return;
-    //PERMITE FORMATEAR LA FECHA PARA PODER INICIALIZAR EL CONTADOR
-    const dateSplit = cEvent.value?.dateLimit? cEvent.value?.dateLimit.split(' ') : cEvent.value?.datetime_from.split(' ');
+    const dateSplit = date.split(' ');
     const dateFormat = dateSplit.join('T');
     setDateLimitContador(dateFormat);
-  }, [cEvent.value]);
-
-
+  }, [date]);
 
   const numberBlink = (days: number, hours: number, minutes: number, seconds: number, completed: boolean): boolean => {
-    let state = false;
-   if ( !completed && days === 0 && hours === 0 && minutes === 0 && seconds <= 10) {
-      state = true;
+    if (!completed && days === 0 && hours === 0 && minutes === 0 && seconds <= 10) {
+      return true;
     }
-
-    return state;
+    return false;
   };
-
+ 
   const renderer = ({ days, hours, minutes, seconds, completed } : CountdownRenderProps ) => {
     if (completed) {
       // Render a completed state
@@ -41,7 +42,7 @@ const CountdownBlock = () => {
           <Col span={24}>
             <Row justify='center' align='middle'>
               <Typography.Text strong style={{ textAlign: 'center', fontSize: '24px', color: textColor }}>
-                {cEvent?.value?.countdownFinalMessage}
+                {countdownFinalMessage}
               </Typography.Text>
             </Row>
           </Col>
@@ -54,7 +55,7 @@ const CountdownBlock = () => {
           <Col span={24}>
             <Row justify='center' align='middle'>
               <Typography.Text style={{ textAlign: 'center', fontSize: '18px', color: textColor }}>
-                {cEvent?.value?.countdownMessage}
+                {countdownMessage}
               </Typography.Text>
             </Row>
           </Col>

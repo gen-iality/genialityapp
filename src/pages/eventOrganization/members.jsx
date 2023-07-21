@@ -11,6 +11,7 @@ import moment from 'moment';
 import withContext from '../../context/withContext';
 import { utils, writeFileXLSX } from 'xlsx';
 import Header from '../../antdComponents/Header';
+import { ModalAddAndEditUsers } from './components/ModalAddAndEditUsersOrganization';
 
 function OrgMembers(props) {
   const [membersData, setMembersData] = useState([]);
@@ -34,15 +35,13 @@ function OrgMembers(props) {
         _id: membersData._id,
         created_at: membersData.created_at,
         updated_at: membersData.updated_at,
-        position: membersData.rol_id,
-        // names: membersData?.user?.name || membersData?.user?.names,
-        // email: membersData?.user?.email,
+        position: membersData?.rol?.name ?? 'NaN', //Si no viene Rol validar que deba traerlo
         ...membersData.properties,
       };
-
+      
       fieldsMembersData.push(properties);
     });
-
+    
     setMembersData(fieldsMembersData);
     setIsLoading(false);
   }
@@ -144,7 +143,7 @@ function OrgMembers(props) {
           </Row>
         )}
       />
-      {addOrEditUser && (
+      {/* {addOrEditUser && (
         <ModalMembers
           handleModal={closeOrOpenModalMembers}
           modal={addOrEditUser}
@@ -155,6 +154,13 @@ function OrgMembers(props) {
           closeOrOpenModalMembers={closeOrOpenModalMembers}
           organizationId={organizationId}
           startingComponent={startingComponent}
+        />
+      )} */}
+      {addOrEditUser && (
+        <ModalAddAndEditUsers
+          visible={addOrEditUser}
+          onCancel={()=>setAddOrEditUser(false)}
+          organizationId={organizationId}
         />
       )}
     </>

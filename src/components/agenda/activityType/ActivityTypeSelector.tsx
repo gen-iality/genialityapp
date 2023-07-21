@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 
@@ -20,7 +21,7 @@ function ActivityTypeSelector(props: SubActivityTypeSelectorProps) {
   const {
     is,
     saveActivityType,
-    deleteActivityType,
+    // deleteActivityType,
     activityType,
     setActivityType,
     humanizeActivityType,

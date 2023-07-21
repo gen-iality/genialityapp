@@ -1,26 +1,19 @@
-import * as React from 'react';
-
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useContext, useEffect } from 'react';
 import { Redirect, useLocation, useHistory } from 'react-router-dom';
-
 import { Tabs, Row, Col, Form, Switch, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-
 import AgendaContext from '@context/AgendaContext';
 import Header from '@/antdComponents/Header';
 import BackTop from '@/antdComponents/BackTop';
 import { RouterPrompt } from '@/antdComponents/RoutePrompt';
 import { DispatchMessageService } from '@context/MessageService';
-
 import { handleRequestError } from '@/helpers/utils';
 import { AgendaApi, DocumentsApi } from '@/helpers/request';
 import { firestore } from '@/helpers/firebase';
-
 import Loading from '../profile/loading';
 import RoomController from './roomManager/controller';
 import Service from './roomManager/service';
-
-import TipeOfActivity from './typeActivity';
 import SurveyManager from './surveyManager';
 import MainAgendaForm, { FormDataType } from './components/MainAgendaForm';
 import prepareRoomInfoData from './hooks/usePrepareRoomInfoData';
@@ -111,11 +104,9 @@ function AgendaEdit(props: AgendaEditProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [avalibleGames, setAvalibleGames] = useState<any[]>([]); // Used in Games
   const [service] = useState(new Service(firestore));
-
   const [loadedAgenda, setLoadedAgenda] = useState<AgendaType | null>(null);
   const [formdata, setFormData] = useState<FormDataType>(initialFormDataState);
-  const [savedFormData, setSavedFormData] = useState<FormDataType>({} as FormDataType);
-
+  const [savedFormData] = useState<FormDataType>({} as FormDataType);
   /**
    * This states are used as config, I think...
    */
@@ -123,15 +114,13 @@ function AgendaEdit(props: AgendaEditProps) {
   const [surveys, setSurveys] = useState<boolean>(false);
   const [games, setGames] = useState<boolean>(false);
   const [attendees, setAttendees] = useState<boolean>(false);
-
   const agendaContext = useContext(AgendaContext);
-
   const location = useLocation<LocationStateType>();
   const history = useHistory();
-
   const buildInfo = useBuildInfo(formdata, loadedAgenda, initialInfoState);
   const deleteActivity = useDeleteActivity();
   const validForm = useValidForm(formdata);
+// console.log({currentActivityID, shouldRedirect, currentTab, isLoading, showPendingChangesModal, isEditing, avalibleGames, service, loadedAgenda, formdata, savedFormData});
 
   useEffect(() => {
     /**

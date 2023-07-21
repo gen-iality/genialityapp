@@ -1,3 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-console */
 import { message } from 'antd';
 import { useContext, useEffect, useState, useCallback } from 'react';
 import { useMutation, useQueryClient } from 'react-query';

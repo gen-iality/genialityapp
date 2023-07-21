@@ -143,6 +143,9 @@ const Informacion = (props) => {
           <ModalOrgListCreate orgId={props.orgId} />
         </div>
         <div>
+          <Checkbox >Utilizar plantilla de la organización</Checkbox>
+        </div>
+        <div>
           <TypeEvent handleFormDataOfEventType={(values) => handleFormDataOfEventType(values)} />
         </div>
         {state.selectOrganization?.template_properties && (
