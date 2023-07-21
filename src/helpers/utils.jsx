@@ -88,8 +88,8 @@ export async function parseData2Excel(data, fields, roles = null) {
 
   data.map((item, key) => {
     const checkedInAt = item.checkedin_at
-    const updatedAt = item.updated_at
-    const createdAt = item.created_at
+    const updatedAt = item.updated_at ? item.updated_at.toString() : 'No asignado'
+    const createdAt = item.created_at ? item.created_at.toString() : 'No asignado'
     info[key] = {}
     info[key]['_id'] = item._id ? item._id : 'UNDEFINED'
     info[key]['checked'] =
@@ -181,7 +181,7 @@ export async function parseData2Excel(data, fields, roles = null) {
 
       return null
     })
-    if (item.rol) info[key]['rol'] = item.rol.label ? item.rol.label.toUpperCase() : ''
+    if (item.rol) info[key]['rol'] = item.rol.name ? item.rol.name.toUpperCase() : ''
     info[key]['Tipo asistente'] = roles?.filter(
       (role) => role._id == item.rol_id,
     )[0]?.name

@@ -66,10 +66,9 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
           StateMessage.show(null, 'success', 'Actividad marcada como vista', 3)
         }
         setWasNotifiedForProgress(true)
-
-        // Request to update the attendees
-        cEventProgress.updateAttendees()
       })
+      // Request to update the attendees
+      cEventProgress.updateAttendees().then(() => cEventProgress.saveProgressReport())
     }
   }
 
@@ -177,7 +176,6 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
           status="403"
           title="Actividad no disponible"
           subTitle="No puedes entrar a esta actividad por ningún medio"
-          children={JSON.stringify(cEventUser.value)}
         />
       )
     }

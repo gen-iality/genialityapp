@@ -76,7 +76,7 @@ function CourseProgressBar(props: CourseProgressBarProps) {
     // Filter existent activities and set the state
     const calcedActivities = await Promise.all(existentActivities)
     const filteredActivities: Activity[] = calcedActivities.filter(
-      (item) => !!item,
+      (item) => !!item && item.checked_in,
     ) as Activity[]
     setAttendees(filteredActivities)
   }

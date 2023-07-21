@@ -20,7 +20,7 @@ interface IEventProgressWrapperProps {
 
 export const calcProgress = (current: number, total: number) => {
   if (current === 0 || total === 0) return 0
-  const percent = Math.round((current / total) * 100)
+  const percent = Math.round((Math.min(current, total) / Math.max(total, current)) * 100)
   if (current > total) {
     console.error(`The parts cannot be greater than the whole (total), got: ${percent}%`)
   }
