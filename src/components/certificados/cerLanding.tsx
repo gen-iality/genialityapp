@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Moment from 'moment';
 import { CertsApi, RolAttApi } from '../../helpers/request';
-import { Card, Col, Alert, Modal, Spin, Row, Typography, Button } from 'antd';
+import { Card, Col, Alert, Modal, Spin, Row, Typography, Button, Space, Result, Image } from 'antd';
 import { withRouter } from 'react-router-dom';
 import withContext from '../../context/withContext';
 import { ArrayToStringCerti, replaceAllTagValues } from './utils';
@@ -17,8 +17,8 @@ function CertificadoLanding(props: any) {
     const userType = props.cEventUser?.value?.properties?.list_type_user
     if (certs && certs.length > 0) {
       if(userType) certs = certs.filter((item)=> item.userTypes?.includes(userType))
-      setCertificates(certs);
-    }
+      setCertificates(certs); 
+    }console.log(props.cEvent.value.styles, 'hola')
   };
   useEffect(() => {
     getCerts();
@@ -57,7 +57,78 @@ function CertificadoLanding(props: any) {
   };
   return (
     <>
-      {props.cEventUser.value && (
+     {props.cEventUser.value && 
+        <Row justify='center'>
+          <Col span={23}>
+            <Card style={{borderRadius: 20}}>
+              <Space direction='vertical' style={{width: '100%'}}>
+                <Typography.Title level={3} style={{color: props.cEvent.value.styles.textMenu}}>Certificado(s)</Typography.Title>
+                {certificates.length > 0 ?
+                  <Row justify='start' gutter={[16, 16]} style={{width: '100%'}}>
+                    {certificates.map((certificate) => (
+                      <Col key={'certi' + certificate._id} xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>
+                        <Image 
+                          style={{borderRadius: 15}}
+                          src={certificate.background}
+                          alt={certificate.name}
+                          preview={false}
+                        />
+                        <Result 
+                          icon={<></>}
+                          title={<Typography.Text style={{color: props.cEvent.value.styles.textMenu}}>{certificate.name}</Typography.Text>}
+                          extra={
+                            <Button
+                              /* type='primary' */
+                              onClick={() => generateCert(props.cEventUser.value, certificate)}
+                              style={{ border: 'none', boxShadow: 'none' }}
+                              key={'download' + certificate._id}
+                              icon={<DownloadOutlined style={{fontSize: 30, color: props.cEvent.value.styles.textMenu}} />}
+                            />
+                          }
+                          style={{position: 'absolute', top: 20, left: 70}}
+                        />
+                      </Col>
+                    ))}
+                  </Row>
+                  : certificates.length === 0 &&
+                  <Row justify='center' align='middle'>
+                    <Col span={24}>
+                      <Result 
+                        status={'info'}
+                        title={<Typography.Text strong style={{color: props.cEvent.value.styles.textMenu}}>¡No tiene(s) certificado(s) generados!</Typography.Text>}
+                      />
+                    </Col>
+                  </Row>
+                }
+              </Space>
+            </Card>
+          </Col>
+        </Row>
+      }
+
+      {!props.cUser.value ||
+        (!props.cUser.value._id && <p>Debes ingresar con tu usuario para descargar el certificado</p>)}
+
+      {props.cUser?.value?._id && !props.cEventUser.value && (
+        <h1
+          style={{
+            justifyContent: 'center',
+            fontSize: '27px',
+            alignItems: 'center',
+            display: 'flex',
+            fontWeight: 'bold',
+          }}>
+          Debes estar registrado en el evento para poder descargar tu certificado{' '}
+        </h1>
+      )}
+
+      {props.cUser?.value?._id && !props.cEventUser.value && (
+        <h1 style={{ justifyContent: 'center', fontSize: '27px', alignItems: 'center', display: 'flex' }}>
+          Debes Haber asistido para descargar el certificado
+        </h1>
+      )}
+
+      {/* {props.cEventUser.value && (
         <Row gutter={[8, 8]} wrap justify='center'>
           <Col span={24}>
             <Card>
@@ -123,7 +194,7 @@ function CertificadoLanding(props: any) {
         <h1 style={{ justifyContent: 'center', fontSize: '27px', alignItems: 'center', display: 'flex' }}>
           Debes Haber asistido para descargar el certificado
         </h1>
-      )}
+      )} */}
     </>
   );
 }
