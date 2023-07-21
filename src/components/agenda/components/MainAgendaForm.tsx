@@ -53,6 +53,7 @@ export interface FormDataType {
   selectedRol: SelectOptionType[];
   selectedTickets: SelectOptionType[];
   selectedDocuments: SelectOptionType[];
+  userTypes: string[];
 }
 
 // NOTE: mmm... what's happen with selectedRol and allRoles? where are they used and how?
@@ -132,6 +133,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       selectedCategories: fieldsSelect(agenda.activity_categories_ids, allCategories) || [],
       selectedHosts: fieldsSelect(agenda.host_ids, allHosts) || [],
       selectedRol: fieldsSelect(agenda.access_restriction_rol_ids, allRoles) || [],
+      userTypes: []
     });
   }, [agenda, allCategories, allHosts, allRoles]);
 
