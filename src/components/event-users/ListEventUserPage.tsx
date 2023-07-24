@@ -585,9 +585,10 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         const { activities, checked_in_activities }: ActivityProgressesType =
           data.activity_progresses ?? {}
         // Use % or n/N? ... use n/N for now
-        data.postprocess_progress = `${
-          (checked_in_activities ?? []).filter((attendee) => attendee.checked_in).length
-        }/${Math.max((activities ?? []).length, (preAllActivities ?? []).length)}`
+        data.postprocess_progress = `${(checked_in_activities ?? []).length}/${Math.max(
+          (activities ?? []).length,
+          (preAllActivities ?? []).length,
+        )}`
         // await FB.Attendees.get(event._id, data._id)
         allEventUserData.push({
           // the organization user properties here... (for now, nothing)
