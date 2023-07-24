@@ -376,12 +376,12 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
             event={event}
             eventUser={item}
             render={({ isLoading, activities, checkedInActivities }) => {
-              setProgressMap((previous) => ({
-                ...previous,
-                [item._id]: `${
-                  checkedInActivities.filter((attendee) => attendee.checked_in).length
-                }/${Math.max(activities.length, preAllActivities.length)}`,
-              }))
+              // setProgressMap((previous) => ({
+              //   ...previous,
+              //   [item._id]: `${
+              //     checkedInActivities.filter((attendee) => attendee.checked_in).length
+              //   }/${Math.max(activities.length, preAllActivities.length)}`,
+              // }))
               return (
                 <>
                   {isLoading && <Spin />}
@@ -567,6 +567,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
 
     const unsubscribe = eventUsersRef.onSnapshot((observer) => {
       const allEventUserData: any[] = []
+      const newProgressMap: { [key: string]: string }[] = []
       observer.forEach((result) => {
         const data = result.data()
         // console.log('result:', data)
@@ -585,16 +586,24 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         const { activities, checked_in_activities }: ActivityProgressesType =
           data.activity_progresses ?? {}
         // Use % or n/N? ... use n/N for now
-        data.postprocess_progress = `${
-          (checked_in_activities ?? []).filter((attendee) => attendee.checked_in).length
-        }/${Math.max((activities ?? []).length, (preAllActivities ?? []).length)}`
-
+        data.postprocess_progress = `${(checked_in_activities ?? []).length}/${Math.max(
+          (activities ?? []).length,
+          (preAllActivities ?? []).length,
+        )}`
+        // await FB.Attendees.get(event._id, data._id)
         allEventUserData.push({
           // the organization user properties here... (for now, nothing)
           ...data.properties,
           ...data,
         })
+        newProgressMap[data._id] = data.postprocess_progress
       })
+
+      // Now, update all updates
+      setProgressMap((previous: any) => ({
+        ...previous,
+        ...newProgressMap,
+      }))
 
       setDataSource(allEventUserData)
     })
