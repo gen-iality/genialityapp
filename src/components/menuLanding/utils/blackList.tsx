@@ -49,6 +49,6 @@ export const logos = [
     'RedditOutlined',
     'SketchOutlined',
     'WhatsAppOutlined',
-    'DingtalkOutlined'
-
+    'DingtalkOutlined',
+    'HomeOutlined'
 ];

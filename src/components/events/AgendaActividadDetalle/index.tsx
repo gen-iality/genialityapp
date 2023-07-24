@@ -11,7 +11,7 @@ import { AgendaApi } from '../../../helpers/request';
 import { checkinAttendeeInActivity } from '../../../helpers/HelperAuth';
 import { connect } from 'react-redux';
 import { disconnectUserPresenceInActivity, listenUserPresenceInActivity } from './utils';
-import { Row, Card, Alert, Space, Result } from 'antd';
+import { Row, Card, Alert, Space, Result, Button } from 'antd';
 import { setTopBanner } from '../../../redux/topBanner/actions';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import { UseCurrentUserContext } from '@/context/userContext';
@@ -172,12 +172,30 @@ const AgendaActividadDetalle = (props: any) => {
     }
   }, [cEvent.value, cEventUser.value, cUser.value]);
 
+  const agenda = () => {
+    props.history.push({
+      pathname: `/landing/${eventId}/agenda`,
+    });
+  };
+
   const userType = cEventUser.value.properties.list_type_user;
-  const MIN_vALUE = 0
+  const MIN_vALUE = 0;
   if (!dataTypes.includes(userType) && dataTypes.length > MIN_vALUE) {
     return (
-      <div className='mediaplayer' style={{background: 'white', border: '1px solid #808080'}}>
-        <Result status="403" title='No estás autorizado para ver este recurso' />
+      <div className='mediaplayer' style={{ background: 'white' }}>
+        <Result
+          status='403'
+          title='No estás autorizado para ver este recurso'
+          extra={
+            <Button
+              type='primary'
+              onClick={() => {
+                agenda();
+              }}>
+              Volver
+            </Button>
+          }
+        />
       </div>
     );
   }

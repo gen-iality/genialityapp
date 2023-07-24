@@ -15,32 +15,32 @@ export const useResultsUserOrganizations = () => {
 
     const resultEmailExist = () => {
         setresultData({
-            title: 'El correo electronico ya existe',
-            subTitle: 'Puede cambiarlo o agregar el usuario a tu organizacion',
+            title: 'El correo electrónico ya existe',
+            subTitle: 'Puede cambiar o agregar el usuario a tu organización',
         });
     };
 
     const resultUserExistIntoOrganization = (email: string) => {
         setresultData({
             title: 'EL usuario ya es miembro',
-            subTitle: `El usuario con email: ${email} ya es miembro de esta organizacion`,
+            subTitle: `El usuario con email: ${email} ya es miembro de esta organización`,
         });
         setbackToCreate(false);
         setLoadingRequest(false);
     };
 
     const resultUnexpectedError = () => {
-        setresultData({ title: 'Error inesperado', subTitle: 'Ocurrio un error inesperado creando el usuario' });
+        setresultData({ title: 'Error inesperado', subTitle: 'Ocurrió un error inesperado creando el usuario' });
     };
 
     const resultUserOrganizationSuccess = (name: string) => {
-        setresultData({ title: 'Se creo correctamente', subTitle: `Se agrego el usuario ${name} a tu organiacion` });
+        setresultData({ title: 'Se creó correctamente', subTitle: `Se agregó el usuario ${name} a tu organiación` });
     };
 
     const resultUserOrganizationError = (name: string) => {
         setresultData({
             title: `Error al agregar el usuario`,
-            subTitle: `No se agrego el usuario ${name} a tu organiacion`,
+            subTitle: `No se agregó el usuario ${name} a tu organiación`,
         });
     };
 
