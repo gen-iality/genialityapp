@@ -102,7 +102,7 @@ function CertificadoLanding(props: any) {
                     <Col span={24}>
                       <Result 
                         status={'info'}
-                        title={<Typography.Text strong style={{color: props.cEvent.value.styles.textMenu}}>¡No tiene(s) certificado(s) generados!</Typography.Text>}
+                        title={<Typography.Text strong /* style={{color: props.cEvent.value.styles.textMenu}} */>¡No tiene(s) certificado(s) generados!</Typography.Text>}
                       />
                     </Col>
                   </Row>
