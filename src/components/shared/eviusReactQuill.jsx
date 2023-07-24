@@ -8,7 +8,7 @@ const { Quill } = ReactQuill;
 Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste);
 
 /**
- * Se creo un componente para extender la funcionalidad de Quill para que las imagenes que se suban no queden cómo base64 sino se suben
+ * Se creó un componente para extender la funcionalidad de Quill para que las imagenes que se suban no queden cómo base64 sino se suben
  * a un servidor y se guarda es el src a esa imagen, para no guardar la imagen en la base de datos.
  * También centralizamos la configuración de QUILL para que sea la misma en todo lado donde lo usamos
  * @param {*} props

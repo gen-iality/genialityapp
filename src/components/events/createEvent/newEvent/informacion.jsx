@@ -142,7 +142,8 @@ const Informacion = (props) => {
           )}
           <ModalOrgListCreate orgId={props.orgId} />
         </div>
-        <div>
+        {/* esta en display none para que no se muestre por una prueba con CETA, estara asi hasta que se autorice volver a modificar */}
+        <div style={{display:'none'}}>
           <Checkbox >Utilizar plantilla de la organización</Checkbox>
         </div>
         <div>
