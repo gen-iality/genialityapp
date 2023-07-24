@@ -87,10 +87,11 @@ function Organization(props) {
                 <small>{'Configuración de Miembros'}</small>
                 <NavLink to={`${props.match.url}/membersettings`} />
               </Menu.Item>
-              <Menu.Item key={'6'} icon={<ProjectOutlined />}>
+              {/*Plantillas temporalmente deshabilitadas (no borrar)*/}
+             {/*  <Menu.Item key={'6'} icon={<ProjectOutlined />}>
                 <small>{'Configuración de Plantillas'}</small>
                 <NavLink to={`${props.match.url}/templatesettings`} />
-              </Menu.Item>
+              </Menu.Item> */}
               <Menu.Item key={'7'} icon={<MenuOutlined />}>
                 {'Menú Items'}
                 <NavLink to={`${props.match.url}/menuItems`} />
