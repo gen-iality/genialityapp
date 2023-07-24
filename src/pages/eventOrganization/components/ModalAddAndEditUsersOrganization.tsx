@@ -69,7 +69,6 @@ export const ModalAddAndEditUsers = ({
     } else {
       onEditUser(values);
     }
-    getEventsStatisticsData();
     onNextStep();
   };
 
@@ -83,23 +82,29 @@ export const ModalAddAndEditUsers = ({
       password: dataBasic?.password,
       ...dataDinamic,
     };
-    let resp = await createNewUser(newUser);
-    if (resp === 0) {
-      setdataToAddUser(newUser);
+    try {
+      let resp = await createNewUser(newUser);
+      if (resp === 0) {
+        setdataToAddUser(newUser);
+        setLoadingRequest(false);
+        resultEmailExist();
+        setbackToCreate(true);
+        return;
+      }
+      if (resp === 1) {
+        setLoadingRequest(false);
+        await onAddUserToOrganization(newUser);
+        getEventsStatisticsData();
+      } else {
+        setLoadingRequest(false);
+        setbackToCreate(true);
+        resultUnexpectedError();
+      }
+    } catch (error) {
       setLoadingRequest(false);
-      resultEmailExist();
       setbackToCreate(true);
-      return;
+      resultUnexpectedError();
     }
-
-    if (resp === 1) {
-      setLoadingRequest(false);
-      return onAddUserToOrganization(newUser);
-    }
-
-    setLoadingRequest(false);
-    setbackToCreate(true);
-    resultUnexpectedError();
   };
 
   const onEditUser = async (dataDinamic: any) => {
@@ -110,21 +115,28 @@ export const ModalAddAndEditUsers = ({
       ...currentDatas,
       ...dataDinamic,
     };
-    let respUser = await onEditUserToOrganization(updateUser);
-    if (respUser._id) {
+    try {
+      let respUser = await onEditUserToOrganization(updateUser);
+      if (respUser._id) {
+        setLoadingRequest(false);
+        DispatchMessageService({
+          type: 'success',
+          msj: ' Se actualizo correctamente',
+          action: 'show',
+        });
+        setbackToCreate(false);
+        if (onCancel) onCancel();
+        getEventsStatisticsData();
+      } else {
+        setLoadingRequest(false);
+        setbackToCreate(true);
+        resultUnexpectedError();
+      }
+    } catch (error) {
       setLoadingRequest(false);
-      DispatchMessageService({
-        type: 'success',
-        msj: ' Se actualizo correctamente',
-        action: 'show',
-      });
-      setbackToCreate(false);
-      if (onCancel) onCancel();
-      return;
+      setbackToCreate(true);
+      resultUnexpectedError();
     }
-    setLoadingRequest(false);
-    setbackToCreate(true);
-    resultUnexpectedError();
   };
 
   const alreadyExistUserInOrganization = async (email: string): Promise<boolean> => {
@@ -138,16 +150,21 @@ export const ModalAddAndEditUsers = ({
     const alreadyExistUser = await alreadyExistUserInOrganization(newUser.email);
     if (alreadyExistUser) return resultUserExistIntoOrganization(newUser.email);
 
-    const respUser = await OrganizationApi.saveUser(organizationId, { properties: userToOrganization });
+    try {
+      const respUser = await OrganizationApi.saveUser(organizationId, { properties: userToOrganization });
 
-    if (respUser._id) {
+      if (respUser._id) {
+        setLoadingRequest(false);
+        resultUserOrganizationSuccess(newUser.names);
+        setbackToCreate(false);
+      } else {
+        setLoadingRequest(false);
+        resultUserOrganizationError(newUser.names);
+      }
+    } catch (error) {
       setLoadingRequest(false);
-      resultUserOrganizationSuccess(newUser.names);
-      setbackToCreate(false);
-      return;
+      resultUserOrganizationError(newUser.names);
     }
-    setLoadingRequest(false);
-    resultUserOrganizationError(newUser.names);
   };
 
   const onEditUserToOrganization = async ({ rol_id, ...updateUser }: UserToOrganization) => {
@@ -173,7 +190,7 @@ export const ModalAddAndEditUsers = ({
           </>
         ) : (
           <>
-            <OrganizationPropertiesForm
+            {organization && <OrganizationPropertiesForm
               form={formDinamicData}
               organization={
                 !selectedUser
@@ -181,7 +198,7 @@ export const ModalAddAndEditUsers = ({
                   : {
                       ...organization,
                       user_properties: [
-                        ...organization.user_properties,
+                        ...organization?.user_properties,
                         {
                           name: 'rol_id',
                           label: 'Rol',
@@ -206,7 +223,7 @@ export const ModalAddAndEditUsers = ({
               onSubmit={onFinishDinamicStep}
               noSubmitButton
               onLastStep={onLastStep}
-            />
+            />}
             <Space>
               {!selectedUser && <Button onClick={onLastStep}>Atras</Button>}
               <Button
@@ -231,9 +248,11 @@ export const ModalAddAndEditUsers = ({
   }, [organizationId]);
 
   useEffect(() => {
-    setHaveDinamicProperties(
-      organization?.user_properties?.filter((userOrg: any) => !['names', 'email'].includes(userOrg.name)).length > 0
-    );
+    const dinamicPropsOrEdit: boolean =
+      organization?.user_properties?.filter((userOrg: any) => !['names', 'email'].includes(userOrg.name)).length > 0 ||
+      !!selectedUser;
+    setHaveDinamicProperties(dinamicPropsOrEdit);
+
   }, [organization]);
 
   useEffect(() => {
