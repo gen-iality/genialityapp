@@ -49,7 +49,7 @@ const MenuEvent = ({ isMobile }) => {
                 }}
                 onClick={redirectToPreLanding}>
                 <Space direction='vertical'>
-                  <iconComponents.ArrowLeftOutlined
+                  <iconComponents.HomeOutlined
                     style={{
                       fontSize: '22px',
                     }}
