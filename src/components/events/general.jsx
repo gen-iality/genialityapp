@@ -96,6 +96,7 @@ class General extends Component {
         privateChat: true,
         attendees: true,
       },
+      registrationMessage: props.event && props.event.registration_message ? props.event.registration_message : '',
       redirect_activity: null,
       redirect_landing: null,
       itemsMenu: [],
@@ -476,6 +477,9 @@ class General extends Component {
 
     // creacion o actualizacion de estado en firebase de los tabs de la zona social
     await this.upsertTabs();
+    handleChange = (e) => {
+      this.setState({ registrationMessage: e });
+    };
 
     const { event, path, image } = this.state;
     const self = this;
@@ -1073,7 +1077,7 @@ class General extends Component {
             <Tabs.TabPane tab='Tipos de acceso' key='2' style={{ paddingLeft: '32px', paddingRight: '32px' }}>
               <Row justify='center' wrap gutter={[32, 8]}>
                 {AccessTypeCardData.map((item) => (
-                  <Col xs={24} sm={24} md={24} lg={12} xl={8} xxl={8}>
+                  <Col key={item.id} xs={24} sm={24} md={24} lg={12} xl={8} xxl={8}>
                     <AccessTypeCard
                       {...item}
                       callBackSelectedItem={this.changeAccessTypeForEvent}
@@ -1089,15 +1093,13 @@ class General extends Component {
                       <Form.Item
                         tooltip={'Esta funcionalidad se encuentra en construcción. - Tecnología 🛠️'}
                         label={'Mensaje al finalizar el registro'}>
-                        <Input.TextArea
-                          disabled={true}
-                          value={event?.success_message}
-                          autoFocus={true}
-                          name={'success_message'}
-                          placeholder={'Mensaje que se mostrara al asistente al finalizar su registro o inscripcion'}
-                          autoSize={{ minRows: 6, maxRows: 6 }}
-                          onChange={(e) => this.handleChange(e, 'success_message')}
-                        />
+                        <Row justify='center' wrap gutter={[8, 8]}>
+                          <Col span={18}>
+                            <Form.Item >
+                              <EviusReactQuill data={this.state.registrationMessage} handleChange={this.handleChange} />
+                            </Form.Item>
+                          </Col>
+                        </Row>
                       </Form.Item>
                     </Card>
                   </Col>

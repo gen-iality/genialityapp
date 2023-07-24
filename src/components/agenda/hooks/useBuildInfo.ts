@@ -18,6 +18,7 @@ export default function useBuildInfo(formdata: FormDataType, agenda: AgendaType 
       image,
       length,
       latitude,
+      userTypes,
     } = formdata;
 
     const {
@@ -84,6 +85,7 @@ export default function useBuildInfo(formdata: FormDataType, agenda: AgendaType 
       length,
       latitude,
       selected_document: selectedDocuments,
+      userTypes
     };
   };
 
