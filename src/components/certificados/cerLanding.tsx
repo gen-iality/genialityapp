@@ -79,17 +79,17 @@ function CertificadoLanding(props: any) {
                             <div style={{display: 'flex', alignContent: 'center', alignItems: 'center', width: '100%', height: '100%'}}>
                               <Result 
                                 icon={<></>}
-                                title={<Typography.Text /* style={{color: props.cEvent.value.styles.textMenu}} */>{certificate.name}</Typography.Text>}
-                                extra={
+                                title={<Space direction='vertical'>
+                                  <Typography.Text>{certificate.name}</Typography.Text>
                                   <Button
                                     size={isMobile ? 'small' : 'large'}
                                     onClick={() => generateCert(props.cEventUser.value, certificate)}
                                     style={{ border: 'none', boxShadow: 'none', backgroundColor: props.cEvent.value.styles.toolbarDefaultBg }}
                                     key={'download' + certificate._id}
-                                    icon={<DownloadOutlined style={{fontSize: isMobile ? '14' : '22px', color: props.cEvent.value.styles.textMenu}} />}
-                                  ><Typography.Text style={{fontSize: isMobile ? '14' : '22px', color: props.cEvent.value.styles.textMenu}}>Descargar</Typography.Text></Button>
-                                }
-                                style={{width: '100%', height: '100%'}}
+                                    icon={<DownloadOutlined style={{color: props.cEvent.value.styles.textMenu}} />}
+                                  ><Typography.Text style={{color: props.cEvent.value.styles.textMenu}}>Descargar</Typography.Text></Button>
+                                </Space>}
+                                style={{width: '100%', height: '100%', padding: isMobile ? '20px' : '48px 32px'}}
                               />
                             </div>
                           </div>
