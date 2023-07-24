@@ -80,9 +80,9 @@ function ConfirmacionRegistro(props) {
             <Form.Item label={'Mensaje de Inscripción'}>
               <EviusReactQuill data={registrationMessage} handleChange={(e) => setRegistrationMessage(e)} />
             </Form.Item>
-            <Form.Item label={'Requerir la validación del correo antes de completar la inscripción'}>
+            {/* <Form.Item label={'Requerir la validación del correo antes de completar la inscripción'}>
               <Checkbox defaultChecked={validateEmail} onChange={(e) => setValidateEmail(e.target.checked)} />
-            </Form.Item>
+            </Form.Item> */}
           </Col>
         </Row>
       </Form>

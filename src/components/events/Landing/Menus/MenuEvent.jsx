@@ -45,6 +45,7 @@ const MenuEvent = ({ isMobile }) => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  boxShadow: 'none'
                 }}
                 onClick={redirectToPreLanding}>
                 <Space direction='vertical'>

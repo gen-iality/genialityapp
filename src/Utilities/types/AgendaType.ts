@@ -32,6 +32,7 @@ export default interface AgendaType {
   host_ids: any[] | null,
   length: string,
   latitude: string,
+  userTypes: string[]
 };
 
 export interface ExtendedAgendaType extends AgendaType {
