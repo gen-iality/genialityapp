@@ -115,7 +115,7 @@ export const ModalAddAndEditUsers = ({
       setLoadingRequest(false);
       DispatchMessageService({
         type: 'success',
-        msj: ' Se actualizo correctamente',
+        msj: '¡Se actualizó correctamente!',
         action: 'show',
       });
       setbackToCreate(false);
@@ -165,7 +165,7 @@ export const ModalAddAndEditUsers = ({
           <>
             <Result icon={<></>} title='No hay datos configurados' subTitle='Puede continuar' />
             <Space>
-              <Button onClick={onLastStep}>Atras</Button>
+              <Button onClick={onLastStep}>Atrás</Button>
               <Button onClick={() => onFinishDinamicStep()} type='primary'>
                 Finalizar
               </Button>
@@ -208,7 +208,7 @@ export const ModalAddAndEditUsers = ({
               onLastStep={onLastStep}
             />
             <Space>
-              {!selectedUser && <Button onClick={onLastStep}>Atras</Button>}
+              {!selectedUser && <Button onClick={onLastStep}>Atrás</Button>}
               <Button
                 loading={loadingRequest}
                 onClick={() => {
@@ -290,7 +290,7 @@ export const ModalAddAndEditUsers = ({
                   onContinueCreating();
                   onLastStep();
                 }}>
-                Atras
+                Atrás
               </Button>
               <Button onClick={() => onAddUserToOrganization(dataToAddUser)} type='primary'>
                 Agregar
