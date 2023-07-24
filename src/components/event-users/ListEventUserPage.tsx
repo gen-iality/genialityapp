@@ -567,6 +567,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
 
     const unsubscribe = eventUsersRef.onSnapshot((observer) => {
       const allEventUserData: any[] = []
+      const newProgressMap: { [key: string]: string }[] = []
       observer.forEach((result) => {
         const data = result.data()
         // console.log('result:', data)
@@ -595,11 +596,14 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
           ...data.properties,
           ...data,
         })
-        setProgressMap((previous: any) => ({
-          ...previous,
-          [data._id]: data.postprocess_progress,
-        }))
+        newProgressMap[data._id] = data.postprocess_progress
       })
+
+      // Now, update all updates
+      setProgressMap((previous: any) => ({
+        ...previous,
+        ...newProgressMap,
+      }))
 
       setDataSource(allEventUserData)
     })
