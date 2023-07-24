@@ -48,15 +48,15 @@ const ActivityBlock = ({ preview, title }: PropsPreLanding) => {
     <>
       <Row justify='center' align='middle'>
         <Col span={isMobile ? 24 : 22}>
-          <Typography.Title level={4}>{title}</Typography.Title>
+          <Typography.Title level={4} style={{color: textColor}}>{title}</Typography.Title>
           <List 
             itemLayout={isMobile ? 'vertical' : 'horizontal'}
             grid={{gutter: 8, column: 1}}
             dataSource={activities}
             style={{paddingTop: 10}}
             renderItem={activity => (
-              <List.Item style={{border: 'none'}}>
-                <Card hoverable style={{borderRadius: 10, border: 'none'}} 
+              <List.Item style={{border: 'none', backgroundColor: bgColor}}>
+                <Card hoverable style={{borderRadius: 10, border: 'none', backgroundColor: bgColor}} 
                 bodyStyle={isMobile || mobilePreview === 'tablet' || screens.sm ? {padding: 20} : {}}
                 >
                   <Row justify={isMobile ? 'start' : 'space-between'} >
@@ -68,27 +68,27 @@ const ActivityBlock = ({ preview, title }: PropsPreLanding) => {
                           align='center' 
                           style={{padding: '0px 20px'}}
                         >
-                          <Typography.Text strong style={{textTransform: 'uppercase'}}>
+                          <Typography.Text strong style={{textTransform: 'uppercase', color: textColor}}>
                             {dateFormat(activity?.datetime_start, 'MMM')}
                           </Typography.Text>
-                          <Typography.Text strong style={{fontSize: 30}}>
+                          <Typography.Text strong style={{fontSize: 30, color: textColor}}>
                             {dateFormat(activity?.datetime_start, 'DD')}
                           </Typography.Text>
                         </Space>
                       }
                       title={
                         <Space size={4} wrap>
-                          <ClockTimeFourOutlineIcon />
-                          <Typography.Text>{dateFormat(activity?.datetime_start, 'hh:mm A')}</Typography.Text>
-                          <Typography.Text>-</Typography.Text>
-                          <Typography.Text>{dateFormat(activity?.datetime_end, 'hh:mm A')}</Typography.Text>
+                          <ClockTimeFourOutlineIcon style={{color: textColor}}/>
+                          <Typography.Text style={{color: textColor}}>{dateFormat(activity?.datetime_start, 'hh:mm A')}</Typography.Text>
+                          <Typography.Text style={{color: textColor}}>-</Typography.Text>
+                          <Typography.Text style={{color: textColor}}>{dateFormat(activity?.datetime_end, 'hh:mm A')}</Typography.Text>
                         </Space>
                       }
                       description={
                         <Space direction='vertical' size={0}>
-                          <Typography.Text strong>{activity?.name}</Typography.Text>
+                          <Typography.Text strong style={{color: textColor}}>{activity?.name}</Typography.Text>
                           {activity?.type?.name &&
-                            <Typography.Text type='secondary' style={{fontSize: '12px'}}>{determineType(activity.type.name)}</Typography.Text>
+                            <Typography.Text type='secondary' style={{fontSize: '12px', color: textColor}}>{determineType(activity.type.name)}</Typography.Text>
                           }
                         </Space>
                       }
