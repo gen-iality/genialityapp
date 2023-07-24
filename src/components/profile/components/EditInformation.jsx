@@ -27,7 +27,7 @@ const EditInformation = ({ cUser }) => {
 
   const uploadNewUserPicture = async () => {
     const selectedLogo = imageAvatar ? imageAvatar[0] : imageAvatar;
-
+console.log('imageAvatar',selectedLogo)
     if (selectedLogo) {
       if (selectedLogo.thumbUrl) return await saveImageStorage(selectedLogo.thumbUrl);
       return selectedLogo.url;
@@ -48,7 +48,6 @@ const EditInformation = ({ cUser }) => {
     );
 
     const nuewUserPicture = await uploadNewUserPicture();
-
     const body = {
       names: value.names,
       picture: nuewUserPicture,

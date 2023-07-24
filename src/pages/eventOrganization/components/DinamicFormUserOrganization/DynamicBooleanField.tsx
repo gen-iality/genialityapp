@@ -4,8 +4,8 @@ import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import DynamicFormItem from './DynamicFormItem';
-import { IDynamicFieldProps } from '../interface/dinamic-fields';
-import useMandatoryRule from '../hooks/useMandatoryRule';
+import { IDynamicFieldProps } from '../../interface/dinamic-fields';
+import useMandatoryRule from '../../hooks/useMandatoryRule';
 
 type IDynamicBooleanFieldProps = IDynamicFieldProps;
 

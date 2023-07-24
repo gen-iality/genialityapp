@@ -4,5 +4,8 @@ export interface FormUserOrganization {
     names: string;
     email: string;
     password: string;
-    imageFile?: RcFile
+}
+
+export interface UserToOrganization extends FormUserOrganization {
+    [key: string]: any;
 }
