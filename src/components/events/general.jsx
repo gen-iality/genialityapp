@@ -113,6 +113,7 @@ class General extends Component {
       },
       typeEventPermit: 0,
       image: this.props.event.picture,
+      permanentVideoBanner: this.props.event.permanent_video_banner ?? '',
       iMustBlockAFunctionality: false,
       iMustValidate: true,
     }
@@ -437,6 +438,10 @@ class General extends Component {
     this.setState({ image: imageUrl })
   }
 
+  handlePermanentVideoBanner(imageUrl) {
+    this.setState({ permanentVideoBanner: imageUrl })
+  }
+
   //*********** FIN FUNCIONES DEL FORMULARIO
 
   //Envío de datos
@@ -453,7 +458,7 @@ class General extends Component {
     // creacion o actualizacion de estado en firebase de los tabs de la zona social
     await this.upsertTabs()
 
-    const { event, path, image } = this.state
+    const { event, path, image, permanentVideoBanner } = this.state
     const self = this
     const hour_start = dayjs(event.hour_start).format('HH:mm')
     const date_start = dayjs(event.date_start).format('YYYY-MM-DD')
@@ -470,6 +475,7 @@ class General extends Component {
       datetime_from: datetime_from.format('YYYY-MM-DD HH:mm:ss'),
       datetime_to: datetime_to.format('YYYY-MM-DD HH:mm:ss'),
       picture: image,
+      permanent_video_banner: permanentVideoBanner,
       video: event.video || null,
       video_position:
         event.video_position === 'true' || event.video_position ? 'true' : 'false',
@@ -691,6 +697,7 @@ class General extends Component {
       serverError,
       specificDates,
       image,
+      permanentVideoBanner,
       iMustBlockAFunctionality,
     } = this.state
     const userContext = this.context
@@ -1326,6 +1333,17 @@ class General extends Component {
                           'progress_settings',
                         )
                       }}
+                    />
+                  </Form.Item>
+
+                  <Form.Item label="Imagen de banner en vídeos (opcional)">
+                    <ImageUploaderDragAndDrop
+                      imageDataCallBack={(imageUrl) =>
+                        this.handlePermanentVideoBanner(imageUrl)
+                      }
+                      imageUrl={permanentVideoBanner}
+                      width="1024"
+                      height="82"
                     />
                   </Form.Item>
                 </Col>
