@@ -565,12 +565,13 @@ function AgendaActivityItem(props) {
                     </Space>
                   </Col>
                   <Col md={6} lg={5} xl={5} style={{ textAlign: 'right', maxHeight: '220px' }}>
-                    {/* {console.log(meetingState, 'meetingState', item.video)} */}
+                    {console.log(meetingState, 'meetingState', item.video)}
                     {/* Aplicada la condición ya que no mostraba el video */}
-                    {(meetingState === 'ended_meeting_room' ||
+                    {/* Se comento las condiciones y funciono de nuevo pero es porque no sale ninguna de las condiciones, solo created_meeting_room */ }
+                    {/* (meetingState === 'ended_meeting_room' ||
                       meetingState === '' ||
                       meetingState === null ||
-                      meetingState === 'null') && (
+                      meetingState === 'null') && */ (
                       <>
                         {item.video && (
                           <div
