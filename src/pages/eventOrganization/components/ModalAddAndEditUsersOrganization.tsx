@@ -89,12 +89,9 @@ export const ModalAddAndEditUsers = ({
         setLoadingRequest(false);
         resultEmailExist();
         setbackToCreate(true);
-        return;
-      }
-      if (resp === 1) {
+      } else if (resp === 1) {
         setLoadingRequest(false);
         await onAddUserToOrganization(newUser);
-        getEventsStatisticsData();
       } else {
         setLoadingRequest(false);
         setbackToCreate(true);
@@ -157,6 +154,7 @@ export const ModalAddAndEditUsers = ({
         setLoadingRequest(false);
         resultUserOrganizationSuccess(newUser.names);
         setbackToCreate(false);
+        getEventsStatisticsData();
       } else {
         setLoadingRequest(false);
         resultUserOrganizationError(newUser.names);
@@ -190,40 +188,42 @@ export const ModalAddAndEditUsers = ({
           </>
         ) : (
           <>
-            {organization && <OrganizationPropertiesForm
-              form={formDinamicData}
-              organization={
-                !selectedUser
-                  ? organization
-                  : {
-                      ...organization,
-                      user_properties: [
-                        ...organization?.user_properties,
-                        {
-                          name: 'rol_id',
-                          label: 'Rol',
-                          mandatory: true,
-                          type: 'list',
-                          options: [
-                            {
-                              value: '60e8a7e74f9fb74ccd00dc22',
-                              label: 'Attendee',
-                              type: 'attendee',
-                            },
-                            {
-                              value: '5c1a59b2f33bd40bb67f2322',
-                              label: 'Administrator',
-                              type: 'admin',
-                            },
-                          ],
-                        },
-                      ],
-                    }
-              }
-              onSubmit={onFinishDinamicStep}
-              noSubmitButton
-              onLastStep={onLastStep}
-            />}
+            {organization && (
+              <OrganizationPropertiesForm
+                form={formDinamicData}
+                organization={
+                  !selectedUser
+                    ? organization
+                    : {
+                        ...organization,
+                        user_properties: [
+                          ...organization?.user_properties,
+                          {
+                            name: 'rol_id',
+                            label: 'Rol',
+                            mandatory: true,
+                            type: 'list',
+                            options: [
+                              {
+                                value: '60e8a7e74f9fb74ccd00dc22',
+                                label: 'Attendee',
+                                type: 'attendee',
+                              },
+                              {
+                                value: '5c1a59b2f33bd40bb67f2322',
+                                label: 'Administrator',
+                                type: 'admin',
+                              },
+                            ],
+                          },
+                        ],
+                      }
+                }
+                onSubmit={onFinishDinamicStep}
+                noSubmitButton
+                onLastStep={onLastStep}
+              />
+            )}
             <Space>
               {!selectedUser && <Button onClick={onLastStep}>Atrás</Button>}
               <Button
@@ -252,7 +252,6 @@ export const ModalAddAndEditUsers = ({
       organization?.user_properties?.filter((userOrg: any) => !['names', 'email'].includes(userOrg.name)).length > 0 ||
       !!selectedUser;
     setHaveDinamicProperties(dinamicPropsOrEdit);
-
   }, [organization]);
 
   useEffect(() => {
