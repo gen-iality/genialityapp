@@ -23,6 +23,7 @@ export interface EventProgressContextState {
   filteredActivities: ExtendedAgendaType[]
   checkedInRawActivities: AttendeeType[]
   checkedInFilteredActivities: AttendeeType[]
+  nonPublishedActivityIDs: string[]
   isLoading: boolean
   progressRawActivities: number
   progressFilteredActivities: number
@@ -39,6 +40,7 @@ const initialContextState: EventProgressContextState = {
   filteredActivities: [],
   checkedInRawActivities: [],
   checkedInFilteredActivities: [],
+  nonPublishedActivityIDs: [],
   isLoading: false,
   progressRawActivities: 0,
   progressFilteredActivities: 0,
@@ -64,6 +66,8 @@ export const EventProgressProvider: FunctionComponent = (props) => {
   const [rawActivities, setRawActivities] = useState<ExtendedAgendaType[]>([])
   const [checkedInRawActivities, setCheckedInRawActivities] = useState<AttendeeType[]>([])
 
+  const [nonPublishedActivityIDs, setNonPublishedActivityIDs] = useState<string[]>([])
+
   const [filteredActivities, setFilteredActivities] = useState<ExtendedAgendaType[]>([])
   const [checkedInFilteredActivities, setCheckedInFilteredActivities] = useState<
     AttendeeType[]
@@ -82,7 +86,9 @@ export const EventProgressProvider: FunctionComponent = (props) => {
   }
 
   const updateRawAttendees = async (theseActivities?: ExtendedAgendaType[]) => {
-    const filteredData = theseActivities || rawActivities
+    const filteredData =
+      theseActivities ||
+      rawActivities.filter((activity) => !nonPublishedActivityIDs.includes(activity._id!))
     console.log(`Update attendees for ${filteredData.length} raw activities`)
 
     // Request for the attendee data in Firebase for all the raw activities
@@ -102,7 +108,11 @@ export const EventProgressProvider: FunctionComponent = (props) => {
   }
 
   const updateFilteredAttendees = async (theseActivities?: ExtendedAgendaType[]) => {
-    const filteredData = theseActivities || filteredActivities
+    const filteredData =
+      theseActivities ||
+      filteredActivities.filter(
+        (activity) => !nonPublishedActivityIDs.includes(activity._id!),
+      )
     console.log(`Update attendees for ${filteredData.length} activities`)
 
     // Request for the attendee data in Firebase for all the activities
@@ -126,9 +136,9 @@ export const EventProgressProvider: FunctionComponent = (props) => {
 
   const getAttendeesForActivities = useCallback(
     (activityIds: string[]): AttendeeType[] => {
-      return checkedInRawActivities.filter((attendee) =>
-        activityIds.includes(attendee.activityId),
-      )
+      return checkedInRawActivities
+        .filter((activity) => !nonPublishedActivityIDs.includes(activity._id!))
+        .filter((attendee) => activityIds.includes(attendee.activityId))
     },
     [checkedInRawActivities],
   )
@@ -137,6 +147,7 @@ export const EventProgressProvider: FunctionComponent = (props) => {
     filter: (a: ExtendedAgendaType) => boolean,
   ): number => {
     const wantedActivityIds = rawActivities
+      .filter((activity) => !nonPublishedActivityIDs.includes(activity._id!))
       .filter(filter)
       .map((activity) => activity._id as string)
 
@@ -174,12 +185,24 @@ export const EventProgressProvider: FunctionComponent = (props) => {
   }
 
   const progressRawActivities = useMemo(
-    () => calcProgress(checkedInRawActivities.length, rawActivities.length),
+    () =>
+      calcProgress(
+        checkedInRawActivities.length,
+        rawActivities.filter(
+          (activity) => !nonPublishedActivityIDs.includes(activity._id!),
+        ).length,
+      ),
     [rawActivities, checkedInRawActivities],
   )
 
   const progressFilteredActivities = useMemo(
-    () => calcProgress(checkedInFilteredActivities.length, filteredActivities.length),
+    () =>
+      calcProgress(
+        checkedInFilteredActivities.length,
+        filteredActivities.filter(
+          (activity) => !nonPublishedActivityIDs.includes(activity._id!),
+        ).length,
+      ),
     [filteredActivities, checkedInFilteredActivities],
   )
 
@@ -219,6 +242,24 @@ export const EventProgressProvider: FunctionComponent = (props) => {
     setFilteredActivities(
       filterActivitiesByProgressSettings(rawActivities, progress_settings),
     )
+
+    rawActivities.forEach((activity) => {
+      FB.Activities.ref(cEventContext.value._id!, activity._id!).onSnapshot(
+        (snapshot) => {
+          const data = snapshot.data()
+          if (!data) return
+          const flag = !!data.isPublished
+
+          if (!flag) {
+            setNonPublishedActivityIDs((previous) => [...previous, activity._id!])
+          } else {
+            setNonPublishedActivityIDs((previous) =>
+              previous.filter((id) => id !== activity._id!),
+            )
+          }
+        },
+      )
+    })
   }, [rawActivities, cEventContext.value])
 
   useEffect(() => {
@@ -232,6 +273,7 @@ export const EventProgressProvider: FunctionComponent = (props) => {
         filteredActivities,
         checkedInRawActivities,
         checkedInFilteredActivities,
+        nonPublishedActivityIDs,
         isLoading,
         updateRawActivities,
         updateRawAttendees,
