@@ -14,6 +14,7 @@ import { useEventContext } from './eventContext'
 import { useUserEvent } from './eventUserContext'
 import { activityContentValues } from './activityType/constants/ui'
 import { calcProgress } from '@/wrappers/EventProgressWrapper'
+import filterActivitiesByProgressSettings from '@Utilities/filterActivitiesByProgressSettings'
 
 type AttendeeType = any
 
@@ -214,45 +215,10 @@ export const EventProgressProvider: FunctionComponent = (props) => {
   useEffect(() => {
     if (!cEventContext.value) return
     const { progress_settings = {} } = cEventContext.value
-    const { enable_mode }: { enable_mode?: string[] } = progress_settings
 
-    if (enable_mode) {
-      const ignoreInfoSection = enable_mode.includes('info')
-      const ignoreRest = enable_mode.includes('rest')
-
-      // Prepare the filter by type
-      const byTypeFilter: string[] = []
-      if (enable_mode.includes('survey')) {
-        byTypeFilter.push(activityContentValues.survey)
-      }
-      if (enable_mode.includes('quiz')) {
-        byTypeFilter.push(activityContentValues.quizing)
-      }
-
-      const newFilteredActivities = rawActivities
-        // Ignore info section
-        .filter((activity) => !(activity.is_info_only && ignoreInfoSection))
-        // Filter by event type
-        .filter((activity) => !byTypeFilter.includes(activity.type?.name as any))
-        // Filter the rest
-        .filter(() => !ignoreRest)
-
-      setFilteredActivities(newFilteredActivities)
-      console.info(
-        'event progress filters:',
-        'info section =',
-        ignoreInfoSection,
-        'by type=',
-        !!byTypeFilter,
-        'rest=',
-        ignoreRest,
-      )
-    } else {
-      // Filter all
-      const newFilteredActivities = rawActivities.filter(() => true)
-      setFilteredActivities(newFilteredActivities)
-      console.info('event progress filters all activity')
-    }
+    setFilteredActivities(
+      filterActivitiesByProgressSettings(rawActivities, progress_settings),
+    )
   }, [rawActivities, cEventContext.value])
 
   useEffect(() => {
