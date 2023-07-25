@@ -21,6 +21,7 @@ export interface EventProgressContextState {
   activities: ExtendedAgendaType[]
   filteredActivities: ExtendedAgendaType[]
   checkedInActivities: AttendeeType[]
+  checkedInFilteredActivities: AttendeeType[]
   isLoading: boolean
   progressAllActivities: number
   progressFilteredActivities: number
@@ -36,6 +37,7 @@ const initialContextState: EventProgressContextState = {
   activities: [],
   filteredActivities: [],
   checkedInActivities: [],
+  checkedInFilteredActivities: [],
   isLoading: false,
   progressAllActivities: 0,
   progressFilteredActivities: 0,
@@ -59,8 +61,12 @@ export const EventProgressProvider: FunctionComponent = (props) => {
 
   const [isLoading, setIsLoading] = useState(false)
   const [activities, setActivities] = useState<ExtendedAgendaType[]>([])
-  const [filteredActivities, setFilteredActivities] = useState<ExtendedAgendaType[]>([])
   const [checkedInActivities, setCheckedInActivities] = useState<AttendeeType[]>([])
+
+  const [filteredActivities, setFilteredActivities] = useState<ExtendedAgendaType[]>([])
+  const [checkedInFilteredActivities, setCheckedInFilteredActivities] = useState<
+    AttendeeType[]
+  >([])
 
   const updateActivities = async () => {
     // Request for all the event activities
@@ -91,6 +97,26 @@ export const EventProgressProvider: FunctionComponent = (props) => {
     })
 
     setCheckedInActivities(checkedInOnes)
+    console.log(`Got ${checkedInOnes.length} attendees`)
+  }
+
+  const updateFilteredAttendees = async (theseActivities?: ExtendedAgendaType[]) => {
+    const filteredData = theseActivities || filteredActivities
+    console.log(`Update attendees for ${filteredData.length} activities`)
+
+    // Request for the attendee data in Firebase for all the activities
+    const allAttendees = await FB.Attendees.getEventUserActivities(
+      filteredData.map((activity) => activity._id as string),
+      cEventUser.value?._id,
+      true,
+    )
+
+    const checkedInOnes = allAttendees.filter((attendee) => {
+      if (attendee === undefined) return false
+      return attendee.checked_in
+    })
+
+    setCheckedInFilteredActivities(checkedInOnes)
     console.log(`Got ${checkedInOnes.length} attendees`)
   }
 
@@ -152,8 +178,8 @@ export const EventProgressProvider: FunctionComponent = (props) => {
   )
 
   const progressFilteredActivities = useMemo(
-    () => calcProgress(checkedInActivities.length, filteredActivities.length),
-    [filteredActivities, checkedInActivities],
+    () => calcProgress(checkedInFilteredActivities.length, filteredActivities.length),
+    [filteredActivities, checkedInFilteredActivities],
   )
 
   const progressOfQuices = useMemo(
@@ -161,6 +187,15 @@ export const EventProgressProvider: FunctionComponent = (props) => {
     [activities, checkedInActivities],
   )
 
+  /**
+   * For each changes in Event & EventUser we request for:
+   * - all non-filtered activities
+   * - all non-filtered attendees
+   *
+   * Next we will use the non-filtered ones to calc the filtered values as:
+   * - filtered activities (according of admin settings)
+   * - filtered attendees (which depends of filtered activities)
+   */
   useEffect(() => {
     if (!cEventContext || !cEventContext.value) return
     if (!cEventUser || !cEventUser.value) return
@@ -220,12 +255,17 @@ export const EventProgressProvider: FunctionComponent = (props) => {
     }
   }, [activities, cEventContext.value])
 
+  useEffect(() => {
+    updateFilteredAttendees()
+  }, [filteredActivities])
+
   return (
     <EventProgressContext.Provider
       value={{
         activities,
         filteredActivities,
         checkedInActivities,
+        checkedInFilteredActivities,
         isLoading,
         updateActivities,
         updateAttendees,

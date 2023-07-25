@@ -6,7 +6,8 @@ import { FB } from '@helpers/firestore-request'
 
 import { useUserEvent } from '@context/eventUserContext'
 import { updateAttendeeInActivityRealTime } from '@helpers/HelperAuth'
-import { Badge } from 'antd'
+import { Badge, Image } from 'antd'
+import { useEventContext } from '@context/eventContext'
 
 const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
   const { activity, onActivityProgress } = props
@@ -21,6 +22,7 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
   const ref = useRef<ReactPlayer>()
 
   const cEventUser = useUserEvent()
+  const cEvent = useEventContext()
 
   useEffect(() => {
     if (onActivityProgress !== undefined) onActivityProgress(0)
@@ -92,6 +94,15 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
             style={{ backgroundColor: '#BA1D36', color: 'while' }}
           />
         </div>
+
+        {cEvent.value?.permanent_video_banner && (
+          <Image
+            width="100%"
+            src={cEvent.value.permanent_video_banner}
+            alt={cEvent.value.permanent_video_banner}
+            preview={false}
+          />
+        )}
 
         {isItAnFrame ? (
           <iframe
