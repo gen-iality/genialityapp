@@ -87,7 +87,6 @@ export const aditionalFields = ({ validatedFields, attendee, visibleInCms }: adi
     attendee,
     visibleInCms,
   });
-console.log('validatedFields',validatedFields)
   return aditionalsFields;
 };
 

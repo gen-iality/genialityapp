@@ -10,6 +10,7 @@ import { EditOutlined } from '@ant-design/icons';
 import Loading from '../profile/loading';
 import { DataOrganizations, Organization, OrganizationProps } from './types';
 import { UseCurrentUser } from '@/context/userContext';
+import { useGetEventsWithUser } from './hooks/useGetEventsWithUser';
 
 
 function EventOrganization({match}: OrganizationProps) {
@@ -24,7 +25,7 @@ function EventOrganization({match}: OrganizationProps) {
   const [eventsOld, setEventsOld] = useState<any[]>([]);
   const [myOrganizations, setMyorganizations] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  
+  const {eventsWithEventUser, isLoading: isLoadingOtherEvents} = useGetEventsWithUser(match.params.id,cUser.value?._id)
   useEffect(() => {
 
     let orgId = match.params.id;
@@ -110,6 +111,10 @@ function EventOrganization({match}: OrganizationProps) {
               paddingRight: '5vw',
               paddingBottom: '5vw',
               paddingTop: '0.5vw',
+              display:'flex',
+              justifyContent:'center',
+              flexWrap:'wrap',
+              rowGap:'40px'
             }}>
             {organization && (
               <Row
@@ -120,6 +125,7 @@ function EventOrganization({match}: OrganizationProps) {
                   backgroundColor: '#FFFFFF',
                   padding: '10px',
                   borderRadius: '20px',
+                  width:'100%',
                 }}>
                 <Col xs={24} sm={24} md={24} lg={8} xl={4} xxl={4}>
                   <Row justify={'start'}>
@@ -175,12 +181,54 @@ function EventOrganization({match}: OrganizationProps) {
                 </Col>
               </Row>
             )}
+            {/* Lista otros eventos en los que esta inscrito el usuario*/}
+            <div
+              style={{
+                backgroundColor: '#FFFFFF',
+                padding: '20px',
+                borderRadius: '20px',
+                width:'100%'
+              }}>
+              <Badge offset={[60, 22]} count={`${events.length} Eventos`}>
+                <Title level={2}>Mis eventos</Title>
+              </Badge>
+              <Row gutter={[16, 16]}>
+                {isLoadingOtherEvents && 
+                <div style={{ width: '100vw', height: '100vh', textAlign: 'center' }}>
+                    <Loading />
+                </div>}
+                {!isLoadingOtherEvents && eventsWithEventUser && eventsWithEventUser.length > 0 ? (
+                 eventsWithEventUser.map((event, index) => (
+                  <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
+                    <EventCard
+                      bordered={false}
+                      key={event._id}
+                      event={event}
+                      action={{ name: 'Ver', url: `landing/${event._id}` }}
+                    />
+                  </Col>
+                ))
+                ) : (
+                  <div
+                    style={{
+                      height: '250px',
+                      width: '100%',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Empty description='No estas inscritos en otros eventos' />
+                  </div>
+                )}
+              </Row>
+            </div>
             {/* Lista de eventos próximos */}
             <div
               style={{
                 backgroundColor: '#FFFFFF',
                 padding: '20px',
                 borderRadius: '20px',
+                width:'100%'
               }}>
               <Badge offset={[60, 22]} count={`${events.length} Eventos`}>
                 <Title level={2}>Próximos</Title>

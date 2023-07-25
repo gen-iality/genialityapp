@@ -861,6 +861,10 @@ export const OrganizationApi = {
     });
     return data;
   },
+  getEventsWithUserOrg: async (organizationId, organizarionUserId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`/api/organizations/${organizationId}/user/${organizarionUserId}/events?token=${token}`, true);
+  },
   getOne: async (id) => {
     return await Actions.getOne('/api/organizations/', id);
   },
