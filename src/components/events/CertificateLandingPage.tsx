@@ -159,7 +159,7 @@ function CertificateLandingPage(props: WithEviusContextProps) {
        * - Filter here again
        */
       const activityTypeToIgnore = cert.requirement_config.ignore_activity_type ?? []
-      const reFilteredActivities = cEventProgress.activities.filter(
+      const reFilteredActivities = cEventProgress.rawActivities.filter(
         (activity) => !activityTypeToIgnore.includes(activity.type?.name as any),
       )
       const reCalcedProgress = cEventProgress.calcProgress(

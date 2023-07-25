@@ -23,7 +23,7 @@ const EventProgress: FunctionComponent<IEventProgressProps> = (props) => {
   useEffect(() => {
     let report = ''
 
-    const nonQuizingActivities = cEventProgress.activities.filter(
+    const nonQuizingActivities = cEventProgress.rawActivities.filter(
       (activity) => ![activityContentValues.quizing].includes(activity.type?.name as any),
     )
 
@@ -35,7 +35,7 @@ const EventProgress: FunctionComponent<IEventProgressProps> = (props) => {
       `Vistas ${nonQuizingAttendees.length} de ${nonQuizingActivities.length}`,
     )
 
-    const quizingActivities = cEventProgress.activities.filter((activity) =>
+    const quizingActivities = cEventProgress.rawActivities.filter((activity) =>
       [activityContentValues.quizing].includes(activity.type?.name as any),
     )
 

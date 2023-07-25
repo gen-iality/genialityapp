@@ -110,7 +110,7 @@ function CourseProgressBar(props: CourseProgressBarProps) {
 
   useEffect(() => {
     setIsLoading(true)
-    cEventProgress.updateAttendees()
+    cEventProgress.updateRawAttendees()
     requestAttendees()
       .then()
       .finally(() => setIsLoading(false))
