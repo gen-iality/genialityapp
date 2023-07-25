@@ -238,7 +238,7 @@ const Headers = (props: Props) => {
 					<Row justify='space-between' align='middle'>
 						
 						{window.location.href.includes('landing') && 
-							<Button /* type='link' */ onClick={landingOrganization} icon={<ApartmentOutlined />} style={{borderColor: '#C4C4C450'}} size='large' >
+							<Button type='link' onClick={landingOrganization} icon={<ApartmentOutlined />} /* style={{borderColor: '#C4C4C450'}} */ size='large' >
 								<Typography.Text>Ver más contenido de <Typography.Text strong>{cEvent.value?.organizer?.name}</Typography.Text></Typography.Text>
 							</Button>
 						}
