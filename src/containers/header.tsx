@@ -1,5 +1,5 @@
 import { createElement, Fragment, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import ErrorServe from '../components/modal/serverError';
 import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
 import { connect } from 'react-redux';
@@ -215,6 +215,10 @@ const Headers = (props: Props) => {
 		document.addEventListener('scroll', onScroll);
 	}, [fixed]);
 
+	const landingOrganization = () => {
+	window.location.href = `${window.location.origin}/organization/${cEvent.value.organizer_id}/events`;
+	};
+
 	return (
 		<Fragment>
 			<Header
@@ -232,6 +236,9 @@ const Headers = (props: Props) => {
 				}}>
 				<Menu theme='light' mode='horizontal' style={{ backgroundColor: bgcolorContainer, border: 'none' }}>
 					<Row justify='space-between' align='middle'>
+						
+						{window.location.href.includes('landing') && <Button onClick={landingOrganization}>Ir a la organización</Button>}
+						
 						<Row className='logo-header' justify='space-between' align='middle'>
 							{/* Menú de administrar un evento (esto debería aparecer en un evento no en todo lado) */}
 							{dataGeneral?.showAdmin && (
