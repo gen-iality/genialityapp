@@ -11,6 +11,7 @@ import { EventsApi } from '@helpers/request'
 import type AgendaType from '@Utilities/types/AgendaType'
 import { Spin } from 'antd'
 import { FB } from '@helpers/firestore-request'
+import filterActivitiesByProgressSettings from '@Utilities/filterActivitiesByProgressSettings'
 
 type CurrentEventAttendees = any // TODO: define this type and move to @Utilities/types/
 
@@ -24,9 +25,10 @@ function StudentGeneralCourseProgress(props: StudentGeneralCourseProgressProps) 
   const { progressType, hasProgressLabel = false, eventId } = props
 
   const cUser = useCurrentUser()
-  if (cUser.value == null || cUser.value == undefined) {
-    return <></>
-  }
+
+  if (!cUser.value) return null
+
+  const [eventData, setEventData] = useState<any | null>(null)
 
   const [eventUserId, setEventUserId] = useState<string | null>(null)
   const [activitiesAttendee, setActivitiesAttendee] = useState<CurrentEventAttendees[]>(
@@ -42,12 +44,21 @@ function StudentGeneralCourseProgress(props: StudentGeneralCourseProgressProps) 
 
     async function asyncdata() {
       try {
-        EventsApi.getStatusRegister(eventId, cUser.value.email).then((responseStatus) => {
-          if (responseStatus.data.length > 0) {
-            console.debug('responseStatus.data', responseStatus.data)
-            setEventUserId(responseStatus.data[0]._id as string)
-          }
-        })
+        const data = await EventsApi.getOne(eventId)
+        setEventData(data)
+      } catch (err) {
+        console.error('Cannot get the event data for', eventId, err)
+      }
+
+      try {
+        const responseStatus = await EventsApi.getStatusRegister(
+          eventId,
+          cUser.value.email,
+        )
+        if (responseStatus.data.length > 0) {
+          console.debug('responseStatus.data', responseStatus.data)
+          setEventUserId(responseStatus.data[0]._id as string)
+        }
       } catch (err) {
         console.error('Tried to load from EventsApi.getStatusRegister', err)
       }
@@ -58,14 +69,18 @@ function StudentGeneralCourseProgress(props: StudentGeneralCourseProgressProps) 
 
   // Take data
   useEffect(() => {
-    if (!eventId || !eventUserId) return
+    if (!eventId || !eventUserId || !eventData) return
 
     setActivitiesAttendee([])
     const loadData = async () => {
-      const { data } = await AgendaApi.byEvent(eventId)
-      const withoutInfoActivities = data.filter(
-        (activity: AgendaType) => !activity.is_info_only,
+      const { data: rawActivities }: { data: AgendaType[] } = await AgendaApi.byEvent(
+        eventId,
       )
+      const withoutInfoActivities = (
+        eventData.progress_settings
+          ? filterActivitiesByProgressSettings(rawActivities, eventData.progress_settings)
+          : rawActivities
+      ).filter((activity) => !activity.is_info_only)
       setActivities(withoutInfoActivities)
       const allAttendees = await FB.Attendees.getEventUserActivities(
         withoutInfoActivities.map((activity) => activity._id as string),
@@ -79,7 +94,9 @@ function StudentGeneralCourseProgress(props: StudentGeneralCourseProgressProps) 
           .filter((attendee) => attendee?.checked_in),
       )
     }
-    loadData().then(() => setIsLoading(false))
+    loadData()
+      .then(() => setIsLoading(false))
+      .catch((err) => console.error(err))
   }, [eventId, eventUserId])
 
   const progressPercentValue = useMemo(
