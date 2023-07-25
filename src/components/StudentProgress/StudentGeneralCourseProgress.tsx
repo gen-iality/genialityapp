@@ -34,8 +34,10 @@ function StudentGeneralCourseProgress(props: StudentGeneralCourseProgressProps) 
   const [activitiesAttendee, setActivitiesAttendee] = useState<CurrentEventAttendees[]>(
     [],
   )
-  const [activities, setActivities] = useState<AgendaType[]>([])
+  const [publishedActivities, setPublishedActivities] = useState<AgendaType[]>([])
+  const [rawActivities, setRawActivities] = useState<AgendaType[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [nonPublishedActivityIDs, setNonPublishedActivityIDs] = useState<string[]>([])
 
   // Set cEventUser
   useEffect(() => {
@@ -76,16 +78,49 @@ function StudentGeneralCourseProgress(props: StudentGeneralCourseProgressProps) 
       const { data: rawActivities }: { data: AgendaType[] } = await AgendaApi.byEvent(
         eventId,
       )
+
       const withoutInfoActivities = (
         eventData.progress_settings
           ? filterActivitiesByProgressSettings(rawActivities, eventData.progress_settings)
           : rawActivities
       ).filter((activity) => !activity.is_info_only)
-      setActivities(withoutInfoActivities)
+
+      setRawActivities(withoutInfoActivities)
+
+      withoutInfoActivities.forEach((activity) => {
+        FB.Activities.ref(eventId, activity._id!).onSnapshot((snapshot) => {
+          const data = snapshot.data()
+          if (!data) return
+          const flag = !!data.isPublished
+
+          if (!flag) {
+            setNonPublishedActivityIDs((previous) => [...previous, activity._id!])
+          } else {
+            setNonPublishedActivityIDs((previous) =>
+              previous.filter((id) => id !== activity._id!),
+            )
+          }
+        })
+      })
+    }
+    loadData()
+      .then(() => setIsLoading(false))
+      .catch((err) => console.error(err))
+  }, [eventId, eventUserId])
+
+  useEffect(() => {
+    if (!eventUserId) return
+    ;(async () => {
+      // filter by non-published activities
+      const newPublishedActivities = rawActivities.filter(
+        (activity) => !nonPublishedActivityIDs.includes(activity._id!),
+      )
       const allAttendees = await FB.Attendees.getEventUserActivities(
-        withoutInfoActivities.map((activity) => activity._id as string),
+        newPublishedActivities.map((activity) => activity._id as string),
         eventUserId,
       )
+
+      setPublishedActivities(newPublishedActivities)
 
       // Filter existent activities and set the state
       setActivitiesAttendee(
@@ -93,15 +128,15 @@ function StudentGeneralCourseProgress(props: StudentGeneralCourseProgressProps) 
           .filter((attendee) => attendee !== undefined)
           .filter((attendee) => attendee?.checked_in),
       )
-    }
-    loadData()
-      .then(() => setIsLoading(false))
-      .catch((err) => console.error(err))
-  }, [eventId, eventUserId])
+    })()
+  }, [eventUserId, rawActivities, nonPublishedActivityIDs])
 
   const progressPercentValue = useMemo(
-    () => Math.round(((activitiesAttendee.length || 0) / (activities.length || 0)) * 100),
-    [activitiesAttendee, activities],
+    () =>
+      Math.round(
+        ((activitiesAttendee.length || 0) / (publishedActivities.length || 0)) * 100,
+      ),
+    [activitiesAttendee, publishedActivities],
   )
 
   const progressStats = useMemo(
@@ -109,9 +144,9 @@ function StudentGeneralCourseProgress(props: StudentGeneralCourseProgressProps) 
       isLoading ? (
         <Spin />
       ) : (
-        `${activitiesAttendee.length || 0}/${activities.length || 0}`
+        `${activitiesAttendee.length || 0}/${publishedActivities.length || 0}`
       ),
-    [isLoading, activitiesAttendee, activities],
+    [isLoading, activitiesAttendee, publishedActivities],
   )
 
   return (
