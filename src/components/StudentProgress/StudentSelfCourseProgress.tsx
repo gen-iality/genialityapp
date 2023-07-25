@@ -29,6 +29,9 @@ export interface StudentSelfCourseProgressProps {
   onProgressChange?: (percent: number) => void
 }
 
+/**
+ * @deprecated use EventProgress instead
+ */
 function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
   const {
     progressType = 'block',
