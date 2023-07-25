@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { AgendaApi, EventsApi } from '@/helpers/request';
 import { Form, Select } from 'antd';
 import { useEffect, useState } from 'react';

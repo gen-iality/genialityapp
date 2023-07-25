@@ -6,7 +6,7 @@ import { ClockCircleOutlined, LoadingOutlined, SettingOutlined } from '@ant-desi
 
 const ImageComponent = (props) => {
   let { currentActivity } = useHelper();
-  const [activityState, setactivityState] = useState('');
+  const [, setactivityState] = useState('');
 
   useEffect(() => {
     setactivityState(currentActivity?.habilitar_ingreso);
@@ -37,7 +37,11 @@ const ImageComponent = (props) => {
   };
   return (
     <div className='mediaplayer'>
-        <Result icon={getIcon(activityState)} title={RenderTextActivity(activityState)} />
+      {currentActivity ? (
+        <Result icon={getIcon(currentActivity.habilitar_ingreso)} title={RenderTextActivity(currentActivity.habilitar_ingreso)} />
+      ) : (
+        <Result icon={getIcon('')} title={RenderTextActivity('')} />
+      )}
     </div>
   );
 };

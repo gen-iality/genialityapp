@@ -59,7 +59,6 @@ const { Title, Text } = Typography;
 const { Option } = Select;
 const { confirm } = Modal;
 const { useBreakpoint } = Grid;
-
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
@@ -477,9 +476,9 @@ class General extends Component {
 
     // creacion o actualizacion de estado en firebase de los tabs de la zona social
     await this.upsertTabs();
-    handleChange = (e) => {
-      this.setState({ registrationMessage: e });
-    };
+    // handleChange = (e) => {
+    //   this.setState({ registrationMessage: e });
+    // };
 
     const { event, path, image } = this.state;
     const self = this;

@@ -45,9 +45,7 @@ export const useGetMultiDate = (eventId: string) => {
         if (!eventId) return
         const getData = async () => {
             const data = await EventsApi.getOne(eventId);
-            console.log(1)
             setmultiDates(data.dates ?? [] as DateRangeEvius[])
-            console.log(2)
             setisLoading(false)
         }
         getData()
