@@ -87,16 +87,23 @@ export const columns = (columnsData, editModalUser) => [
     width: 80,
     render(val, item, index) {
       return (
-        <Tooltip title='Editar'>
-          <Button
-            id={`editAction${index}`}
-            type='primary'
-            size='small'
-            onClick={(e) => {
-              editModalUser(item);
-            }}
-            icon={<EditOutlined />}></Button>
-        </Tooltip>
+        <>
+        {item.isAuthor
+          ?
+          <></>
+          :
+          <Tooltip title='Editar'>
+            <Button
+              id={`editAction${index}`}
+              type='primary'
+              size='small'
+              onClick={(e) => {
+                editModalUser(item);
+              }}
+              icon={<EditOutlined />}>
+            </Button>
+        </Tooltip>}
+        </>
       );
     },
   },

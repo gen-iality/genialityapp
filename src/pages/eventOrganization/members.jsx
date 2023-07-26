@@ -12,6 +12,7 @@ import withContext from '../../context/withContext';
 import { utils, writeFileXLSX } from 'xlsx';
 import Header from '../../antdComponents/Header';
 import { ModalAddAndEditUsers } from './components/ModalAddAndEditUsersOrganization';
+import { convertUTC } from '@/hooks/useConvertUTC';
 
 function OrgMembers(props) {
   const [membersData, setMembersData] = useState([]);
@@ -33,10 +34,11 @@ function OrgMembers(props) {
       const properties = {
         ...membersData.properties,
         _id: membersData._id,
-        created_at: membersData.created_at,
-        updated_at: membersData.updated_at,
+        created_at: convertUTC(new Date(membersData.created_at)).newDateWithMoment,
+        updated_at: convertUTC(new Date(membersData.updated_at)).newDateWithMoment,
         position: membersData.rol?.name ?? 'NaN', //Si no viene Rol validar que deba traerlo
         rol_id:membersData.rol_id,
+        isAuthor:membersData.account_id === membersData.organization.author
       };
       fieldsMembersData.push(properties);
     });

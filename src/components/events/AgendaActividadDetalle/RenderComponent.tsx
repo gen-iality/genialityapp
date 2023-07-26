@@ -4,7 +4,6 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import WithEviusContext from '../../../context/withContext';
 import ImageComponentwithContext from './ImageComponent';
 import { useHelper } from '../../../context/helperContext/hooks/useHelper';
-import { DolbyCard } from './DolbyCard';
 import ZoomIframe from '../ZoomIframe';
 import { VideoActivity } from './VideoActivity';
 import GameDrawer from '../game/gameDrawer';
@@ -16,6 +15,7 @@ import AgendaContext from '../../../context/AgendaContext';
 import { CurrentEventContext } from '@/context/eventContext';
 import moment from 'moment';
 import CountdownBlock from '@/components/prelanding/block/countdownBlock';
+import CustomCountdownMessage from './CustomCountdownMessage';
 
 const RenderComponent = (props: any) => {
   let tabsdefault = {
@@ -203,7 +203,8 @@ const RenderComponent = (props: any) => {
         textColor={textColor}
         date={startDate}
         countdownMessage={countdownMessage}
-        countdownFinalMessage={'Estamos a punto de iniciar...'}
+        //@ts-ignore
+        countdownFinalMessage={<CustomCountdownMessage/>}
       />;
     },
   
