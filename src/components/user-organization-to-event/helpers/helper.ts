@@ -13,3 +13,7 @@ export const existsEventUser = async (eventId: string, userId: string): Promise<
         return false
     }
 }
+
+export const isOrganizationCETA = () => {
+    return window.location.pathname.includes('64b7f26a920809c56a0e6e52')
+}
