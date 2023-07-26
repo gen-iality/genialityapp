@@ -159,6 +159,7 @@ export const EventProgressProvider: FunctionComponent = (props) => {
 
   const saveProgressReport = async () => {
     const eventUser = cEventUser.value
+    const lastEventUser = { ...eventUser }
     if (!eventUser) {
       console.warn('call saveProgressReport when event user is defined ONLY')
       return
@@ -180,6 +181,12 @@ export const EventProgressProvider: FunctionComponent = (props) => {
         eventUser.activity_progresses.checked_in_activities.includes(activityId),
       ]),
     )
+    // Check if the new data is really new data
+    if (
+      JSON.stringify(lastEventUser.activity_progresses) ===
+      JSON.stringify(eventUser.activity_progresses)
+    )
+      return
     console.debug('save new eventUser with progresses:', eventUser)
     await UsersApi.editEventUser(eventUser, cEventContext.value._id, eventUser._id)
   }
