@@ -1,13 +1,13 @@
 import { createElement, Fragment, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import ErrorServe from '../components/modal/serverError';
 import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
 import { connect } from 'react-redux';
 import * as userActions from '../redux/user/actions';
 import * as eventActions from '../redux/event/actions';
 import MenuOld from '../components/events/shared/menu';
-import { Menu, Drawer, Button, Col, Row, Layout, Space, Grid, Dropdown } from 'antd';
-import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined, LoadingOutlined } from '@ant-design/icons';
+import { Menu, Drawer, Button, Col, Row, Layout, Space, Grid, Dropdown, Typography } from 'antd';
+import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined, LoadingOutlined, ApartmentOutlined } from '@ant-design/icons';
 import withContext from '../context/withContext';
 import ModalLoginHelpers from '../components/authentication/ModalLoginHelpers';
 import { recordTypeForThisEvent } from '../components/events/Landing/helpers/thisRouteCanBeDisplayed';
@@ -215,6 +215,10 @@ const Headers = (props: Props) => {
 		document.addEventListener('scroll', onScroll);
 	}, [fixed]);
 
+	const landingOrganization = () => {
+	window.location.href = `${window.location.origin}/organization/${cEvent.value.organizer_id}/events`;
+	};
+
 	return (
 		<Fragment>
 			<Header
@@ -232,6 +236,13 @@ const Headers = (props: Props) => {
 				}}>
 				<Menu theme='light' mode='horizontal' style={{ backgroundColor: bgcolorContainer, border: 'none' }}>
 					<Row justify='space-between' align='middle'>
+						
+						{window.location.href.includes('landing') && 
+							<Button type='link' onClick={landingOrganization} icon={<ApartmentOutlined />} /* style={{borderColor: '#C4C4C450'}} */ size='large' >
+								<Typography.Text>Ver más contenido de <Typography.Text strong>{cEvent.value?.organizer?.name}</Typography.Text></Typography.Text>
+							</Button>
+						}
+						
 						<Row className='logo-header' justify='space-between' align='middle'>
 							{/* Menú de administrar un evento (esto debería aparecer en un evento no en todo lado) */}
 							{dataGeneral?.showAdmin && (

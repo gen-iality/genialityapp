@@ -61,14 +61,14 @@ function CertificadoLanding(props: any) {
      {props.cEventUser.value && 
         <Row justify='center'>
           <Col span={23}>
-            <Card style={{borderRadius: 20}}>
+            <Card style={{borderRadius: 20, color: props.cEvent.value.styles.textMenu, backgroundColor: props.cEvent.value.styles.toolbarDefaultBg}}>
               <Space direction='vertical' style={{width: '100%'}}>
-                <Typography.Title level={3} /* style={{color: props.cEvent.value.styles.textMenu}} */>Certificado(s)</Typography.Title>
+                <Typography.Title level={3} style={{color: props.cEvent.value.styles.textMenu}}>Certificado(s)</Typography.Title>
                 {certificates.length > 0 ?
                   <Row justify='start' gutter={[16, 16]} style={{width: '100%'}}>
                     {certificates.map((certificate) => (
                       <Col key={'certi' + certificate._id} xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>
-                        <Card bordered={false} bodyStyle={{padding: 0}}>
+                        <Card bordered={false} bodyStyle={{padding: 0, backgroundColor: props.cEvent.value.styles.toolbarDefaultBg}}>
                           <Image 
                             style={{borderRadius: 15}}
                             src={certificate.background}
@@ -101,6 +101,7 @@ function CertificadoLanding(props: any) {
                   <Row justify='center' align='middle'>
                     <Col span={24}>
                       <Result 
+                        style={{color: props.cEvent.value.styles.textMenu, backgroundColor: props.cEvent.value.styles.toolbarDefaultBg}}
                         status={'info'}
                         title={<Typography.Text strong style={{color: props.cEvent.value.styles.textMenu}}>¡No tiene(s) certificado(s) generados!</Typography.Text>}
                       />
