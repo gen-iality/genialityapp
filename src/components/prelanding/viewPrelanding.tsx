@@ -44,7 +44,6 @@ const ViewPrelanding = ({ preview }: PropsPreLanding) => {
   const cEventUser = useContext(CurrentEventUserContext);
   const { setIsPrelanding } = useHelper();
   const [companies] = getEventsponsors(cEventContext?.value?._id);
-  console.log(cEventContext?.value?.redirect_landing, 'cEventContext?.value?.redirect_landing');
 
   //History
   const history = useHistory();
@@ -89,12 +88,13 @@ const ViewPrelanding = ({ preview }: PropsPreLanding) => {
       }
     }
   }, [cEventContext, cUser, cEventUser]);
-
+  const [shouldRedirect, setShouldRedirect] = useState(false);
   //! TEMPORAL VALIDATION TO GET INTO EVENT FOR LG EVENT
   useEffect(() => {
+    
     if (cEventContext?.value?.redirect_landing) {
-      window.sessionStorage.setItem('session', cEventContext.value?._id);
-      if (cEventUser?.value?._id && history.location.pathname === `/${idEvent}`) {
+      if (cEventUser?.value?._id && history.location.pathname.includes(idEvent) && !history.location.pathname.includes('landing') && !preview ) {
+        window.sessionStorage.setItem('session', cEventContext.value?._id);
         return history.push(`/landing/${cEventContext?.value?._id}`);
       } else {
         console.log('Is LG EVENT but Event User not exists... Stay here');
