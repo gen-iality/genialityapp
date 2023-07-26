@@ -168,7 +168,7 @@ function EventOrganization({match}: OrganizationProps) {
                     </Card>
                   </Col>
                 )}
-                <Col /* xs={24} sm={24} md={24} lg={16} xl={20} xxl={20} */ style={{width: '100%'}}>
+                <Col style={{width: '100%'}}>
                   {/* Lista otros eventos en los que esta inscrito el usuario*/}
                   <Card style={{width: '100%', borderRadius: 20}}>
                     <Badge offset={[60, 22]} count={`${events.length} Eventos`}>
@@ -205,7 +205,7 @@ function EventOrganization({match}: OrganizationProps) {
                     </Row>
                   </Card>
                 </Col>
-                <Col /* xs={24} sm={24} md={24} lg={16} xl={20} xxl={20} */ style={{width: '100%'}}>
+                <Col style={{width: '100%'}}>
                   {/* Lista de eventos próximos */}
                   <Card style={{width: '100%', borderRadius: 20}}>
                     <Badge offset={[60, 22]} count={`${events.length} Eventos`}>
@@ -238,7 +238,7 @@ function EventOrganization({match}: OrganizationProps) {
                     </Row>
                   </Card>
                 </Col>
-                <Col /* xs={24} sm={24} md={24} lg={16} xl={20} xxl={20} */ style={{width: '100%'}}>
+                <Col style={{width: '100%'}}>
                   <Card style={{width: '100%', borderRadius: 20}}>
                     {/* Lista de eventos pasados */}
                     <Badge offset={[60, 22]} count={`${eventsOld.length} Eventos`}>
