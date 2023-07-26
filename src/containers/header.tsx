@@ -15,6 +15,7 @@ import { FormattedMessage } from 'react-intl';
 import AccountCircleIcon from '@2fd/ant-design-icons/lib/AccountCircle';
 import { useIntl } from 'react-intl';
 import { getCorrectColor } from '@/helpers/utils';
+import { isOrganizationCETA } from '@/components/user-organization-to-event/helpers/helper';
 
 const { useBreakpoint } = Grid;
 
@@ -60,7 +61,6 @@ interface Props {
 const Headers = (props: Props) => {
 	const { showMenu, loginInfo, cHelper, cEvent, cEventUser, cUser } = props;
 	const { helperDispatch } = cHelper;
-
 	const [headerIsLoading, setHeaderIsLoading] = useState(true);
 	const [dataGeneral, setdataGeneral] = useState(initialDataGeneral);
 	const [showButtons, setshowButtons] = useState({
@@ -121,12 +121,12 @@ const Headers = (props: Props) => {
 		setHeaderIsLoading(false);
 		// }
 	}
-
 	const WhereHerePath = () => {
 		let containtorganization = window.location.pathname.includes('/organization');
 		return containtorganization ? 'organization' : 'landing';
 	};
 
+	
 	const userLogOut = (callBack: any) => {
 		const params = {
 			user: cUser.value,
@@ -153,7 +153,9 @@ const Headers = (props: Props) => {
 				}}>
 				<FormattedMessage id='header.expired_signin' defaultMessage='Sign In' />
 			</Menu.Item>
-
+		{
+			!isOrganizationCETA()
+			&& 
 			<Menu.Item
 				key='menu-item-menu-mobile-2'
 				onClick={() => {
@@ -161,6 +163,8 @@ const Headers = (props: Props) => {
 				}}>
 				<FormattedMessage id='registration.button.create' defaultMessage='Sign Up' />
 			</Menu.Item>
+		}
+			
 		</Menu>
 	);
 
@@ -287,9 +291,9 @@ const Headers = (props: Props) => {
 								</div>
 							) : (
 								<Space>
-									{showButtons.buttonlogin ? (
+									{showButtons.buttonlogin  ? (
 										<>
-											{recordTypeForThisEvent(cEvent) !== 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS' && (
+											{recordTypeForThisEvent(cEvent) !== 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS' &&  (
 												<Button
 													icon={<LockOutlined />}
 													style={{
@@ -325,7 +329,7 @@ const Headers = (props: Props) => {
 										</Space>
 									)}
 
-									{showButtons.buttonregister && (
+									{showButtons.buttonregister && !isOrganizationCETA()&& (
 										<Button
 											style={{
 												backdropFilter: 'blur(8px)',
