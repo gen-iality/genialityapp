@@ -78,7 +78,7 @@ export const EventProgressProvider: FunctionComponent = (props) => {
     const { data }: { data: ExtendedAgendaType[] } = await AgendaApi.byEvent(
       cEventContext.value._id,
     )
-    console.log(`Update raw activities. Got ${data.length} raw activities`)
+    console.debug(`Update raw activities. Got ${data.length} raw activities`)
 
     setRawActivities(data)
 
@@ -89,7 +89,7 @@ export const EventProgressProvider: FunctionComponent = (props) => {
     const filteredData =
       theseActivities ||
       rawActivities.filter((activity) => !nonPublishedActivityIDs.includes(activity._id!))
-    console.log(`Update attendees for ${filteredData.length} raw activities`)
+    console.debug(`Update attendees for ${filteredData.length} raw activities`)
 
     // Request for the attendee data in Firebase for all the raw activities
     const allAttendees = await FB.Attendees.getEventUserActivities(
@@ -104,7 +104,7 @@ export const EventProgressProvider: FunctionComponent = (props) => {
     })
 
     setCheckedInRawActivities(checkedInOnes)
-    console.log(`Got ${checkedInOnes.length} attendees`)
+    console.debug(`Got ${checkedInOnes.length} attendees`)
   }
 
   const updateFilteredAttendees = async (theseActivities?: ExtendedAgendaType[]) => {
@@ -113,7 +113,7 @@ export const EventProgressProvider: FunctionComponent = (props) => {
       filteredActivities.filter(
         (activity) => !nonPublishedActivityIDs.includes(activity._id!),
       )
-    console.log(`Update attendees for ${filteredData.length} activities`)
+    console.debug(`Update attendees for ${filteredData.length} activities`)
 
     // Request for the attendee data in Firebase for all the activities
     const allAttendees = await FB.Attendees.getEventUserActivities(
@@ -128,7 +128,7 @@ export const EventProgressProvider: FunctionComponent = (props) => {
     })
 
     setCheckedInFilteredActivities(checkedInOnes)
-    console.log(`Got ${checkedInOnes.length} attendees`)
+    console.debug(`Got ${checkedInOnes.length} attendees`)
   }
 
   const quizingFilter = (a: ExtendedAgendaType) =>
