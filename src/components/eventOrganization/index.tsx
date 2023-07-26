@@ -105,71 +105,72 @@ function EventOrganization({match}: OrganizationProps) {
             </div>
           )}
 
-          <Row justify='center' style={{width: '100%'}}>
-            <Col span={23} style={{width: '100%'}}>
-              {organization && (
-                <Card>
-                  <Row gutter={[10, 10]} style={{width: '100%'}}>
-                    <Col xs={24} sm={24} md={24} lg={8} xl={4} xxl={4}>
-                      <Row justify={'start'}>
-                        <Image
-                          style={{
-                            borderRadius: '20px',
-                            objectFit: 'cover',
-                            border: '4px solid #FFFFFF',
-                            //boxShadow: '2px 2px 10px 1px rgba(0,0,0,0.25)',
-                            backgroundColor: '#FFFFFF;',
-                          }}
-                          preview={{ maskClassName: 'roundedMask' }}
-                          src={organization?.styles?.event_image || 'error'}
-                          fallback='http://via.placeholder.com/500/F5F5F7/CCCCCC?text=No%20Image'
-                          width={'100%'}
-                          height={'100%'}
-                        />
+          <Row justify='center' style={{paddingTop: '32px', paddingBottom: '32px'}}>
+            <Col span={23}>
+              <Row gutter={[0, 32]}>
+                {organization && (
+                  <Col style={{width: '100%'}}>
+                    <Card style={{width: '100%', borderRadius: 20}}>
+                      <Row gutter={[10, 10]} style={{width: '100%'}}>
+                        <Col xs={24} sm={24} md={24} lg={8} xl={4} xxl={4}>
+                          <Row justify={'start'}>
+                            <Image
+                              style={{
+                                borderRadius: '20px',
+                                objectFit: 'cover',
+                                border: '4px solid #FFFFFF',
+                                //boxShadow: '2px 2px 10px 1px rgba(0,0,0,0.25)',
+                                backgroundColor: '#FFFFFF;',
+                              }}
+                              preview={{ maskClassName: 'roundedMask' }}
+                              src={organization?.styles?.event_image || 'error'}
+                              fallback='http://via.placeholder.com/500/F5F5F7/CCCCCC?text=No%20Image'
+                              width={'100%'}
+                              height={'100%'}
+                            />
+                          </Row>
+                        </Col>
+                        <Col xs={24} sm={24} md={24} lg={16} xl={20} xxl={20}>
+                          <Space direction='vertical' size={8} style={{ width: '100%' }}>
+                            <Link
+                              to={`/admin/organization/${match.params.id}`}
+                              style={{
+                                marginBottom: '-15px',
+                                fontSize: '20px',
+                                cursor: 'pointer',
+                              }}>
+                              {cUser?.value && myOrganizations.includes(state.orgId) && (
+                                <Button type='text' icon={<EditOutlined />}>
+                                  Administrar
+                                </Button>
+                              )}
+                            </Link>
+                            <Text
+                              style={{
+                                fontSize: '40px',
+                                fontWeight: '600',
+                                lineHeight: '2.25rem',
+                              }}
+                              type='secondary'>
+                              {organization.name}
+                            </Text>
+                            <Paragraph
+                              ellipsis={{
+                                rows: 3,
+                                expandable: true,
+                                symbol: <span style={{ color: '#2D7FD6', fontSize: '12px' }}>Ver más</span>,
+                              }}>
+                              {organization.description ? organization.description : ''}
+                            </Paragraph>
+                          </Space>
+                        </Col>
                       </Row>
-                    </Col>
-                    <Col xs={24} sm={24} md={24} lg={16} xl={20} xxl={20}>
-                      <Space direction='vertical' size={8} style={{ width: '100%' }}>
-                        <Link
-                          to={`/admin/organization/${match.params.id}`}
-                          style={{
-                            marginBottom: '-15px',
-                            fontSize: '20px',
-                            cursor: 'pointer',
-                          }}>
-                          {cUser?.value && myOrganizations.includes(state.orgId) && (
-                            <Button type='text' icon={<EditOutlined />}>
-                              Administrar
-                            </Button>
-                          )}
-                        </Link>
-                        <Text
-                          style={{
-                            fontSize: '40px',
-                            fontWeight: '600',
-                            lineHeight: '2.25rem',
-                          }}
-                          type='secondary'>
-                          {organization.name}
-                        </Text>
-                        <Paragraph
-                          ellipsis={{
-                            rows: 3,
-                            expandable: true,
-                            symbol: <span style={{ color: '#2D7FD6', fontSize: '12px' }}>Ver más</span>,
-                          }}>
-                          {organization.description ? organization.description : ''}
-                        </Paragraph>
-                      </Space>
-                    </Col>
-                  </Row>
-                </Card>
-              )}
-
-              <Row gutter={[16, 16]} style={{width: '100%'}}>
+                    </Card>
+                  </Col>
+                )}
                 <Col /* xs={24} sm={24} md={24} lg={16} xl={20} xxl={20} */ style={{width: '100%'}}>
                   {/* Lista otros eventos en los que esta inscrito el usuario*/}
-                  <Card style={{width: '100%'}}>
+                  <Card style={{width: '100%', borderRadius: 20}}>
                     <Badge offset={[60, 22]} count={`${events.length} Eventos`}>
                       <Title level={2}>Mis eventos</Title>
                     </Badge>
@@ -206,7 +207,7 @@ function EventOrganization({match}: OrganizationProps) {
                 </Col>
                 <Col /* xs={24} sm={24} md={24} lg={16} xl={20} xxl={20} */ style={{width: '100%'}}>
                   {/* Lista de eventos próximos */}
-                  <Card style={{width: '100%'}}>
+                  <Card style={{width: '100%', borderRadius: 20}}>
                     <Badge offset={[60, 22]} count={`${events.length} Eventos`}>
                       <Title level={2}>Próximos</Title>
                     </Badge>
@@ -238,7 +239,7 @@ function EventOrganization({match}: OrganizationProps) {
                   </Card>
                 </Col>
                 <Col /* xs={24} sm={24} md={24} lg={16} xl={20} xxl={20} */ style={{width: '100%'}}>
-                  <Card style={{width: '100%'}}>
+                  <Card style={{width: '100%', borderRadius: 20}}>
                     {/* Lista de eventos pasados */}
                     <Badge offset={[60, 22]} count={`${eventsOld.length} Eventos`}>
                       <Title level={2}>Pasados</Title>
