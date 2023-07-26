@@ -11,6 +11,7 @@ import { EventsApi } from '@helpers/request'
 import type AgendaType from '@Utilities/types/AgendaType'
 import { Spin } from 'antd'
 import { FB } from '@helpers/firestore-request'
+import filterActivitiesByProgressSettings from '@Utilities/filterActivitiesByProgressSettings'
 
 type CurrentEventAttendees = any // TODO: define this type and move to @Utilities/types/
 
@@ -24,16 +25,19 @@ function StudentGeneralCourseProgress(props: StudentGeneralCourseProgressProps) 
   const { progressType, hasProgressLabel = false, eventId } = props
 
   const cUser = useCurrentUser()
-  if (cUser.value == null || cUser.value == undefined) {
-    return <></>
-  }
+
+  if (!cUser.value) return null
+
+  const [eventData, setEventData] = useState<any | null>(null)
 
   const [eventUserId, setEventUserId] = useState<string | null>(null)
   const [activitiesAttendee, setActivitiesAttendee] = useState<CurrentEventAttendees[]>(
     [],
   )
-  const [activities, setActivities] = useState<AgendaType[]>([])
+  const [publishedActivities, setPublishedActivities] = useState<AgendaType[]>([])
+  const [rawActivities, setRawActivities] = useState<AgendaType[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [nonPublishedActivityIDs, setNonPublishedActivityIDs] = useState<string[]>([])
 
   // Set cEventUser
   useEffect(() => {
@@ -42,12 +46,21 @@ function StudentGeneralCourseProgress(props: StudentGeneralCourseProgressProps) 
 
     async function asyncdata() {
       try {
-        EventsApi.getStatusRegister(eventId, cUser.value.email).then((responseStatus) => {
-          if (responseStatus.data.length > 0) {
-            console.debug('responseStatus.data', responseStatus.data)
-            setEventUserId(responseStatus.data[0]._id as string)
-          }
-        })
+        const data = await EventsApi.getOne(eventId)
+        setEventData(data)
+      } catch (err) {
+        console.error('Cannot get the event data for', eventId, err)
+      }
+
+      try {
+        const responseStatus = await EventsApi.getStatusRegister(
+          eventId,
+          cUser.value.email,
+        )
+        if (responseStatus.data.length > 0) {
+          console.debug('responseStatus.data', responseStatus.data)
+          setEventUserId(responseStatus.data[0]._id as string)
+        }
       } catch (err) {
         console.error('Tried to load from EventsApi.getStatusRegister', err)
       }
@@ -58,19 +71,56 @@ function StudentGeneralCourseProgress(props: StudentGeneralCourseProgressProps) 
 
   // Take data
   useEffect(() => {
-    if (!eventId || !eventUserId) return
+    if (!eventId || !eventUserId || !eventData) return
 
     setActivitiesAttendee([])
     const loadData = async () => {
-      const { data } = await AgendaApi.byEvent(eventId)
-      const withoutInfoActivities = data.filter(
-        (activity: AgendaType) => !activity.is_info_only,
+      const { data: rawActivities }: { data: AgendaType[] } = await AgendaApi.byEvent(
+        eventId,
       )
-      setActivities(withoutInfoActivities)
+
+      const withoutInfoActivities = (
+        eventData.progress_settings
+          ? filterActivitiesByProgressSettings(rawActivities, eventData.progress_settings)
+          : rawActivities
+      ).filter((activity) => !activity.is_info_only)
+
+      setRawActivities(withoutInfoActivities)
+
+      withoutInfoActivities.forEach((activity) => {
+        FB.Activities.ref(eventId, activity._id!).onSnapshot((snapshot) => {
+          const data = snapshot.data()
+          if (!data) return
+          const flag = !!data.isPublished
+
+          if (!flag) {
+            setNonPublishedActivityIDs((previous) => [...previous, activity._id!])
+          } else {
+            setNonPublishedActivityIDs((previous) =>
+              previous.filter((id) => id !== activity._id!),
+            )
+          }
+        })
+      })
+    }
+    loadData()
+      .then(() => setIsLoading(false))
+      .catch((err) => console.error(err))
+  }, [eventId, eventUserId])
+
+  useEffect(() => {
+    if (!eventUserId) return
+    ;(async () => {
+      // filter by non-published activities
+      const newPublishedActivities = rawActivities.filter(
+        (activity) => !nonPublishedActivityIDs.includes(activity._id!),
+      )
       const allAttendees = await FB.Attendees.getEventUserActivities(
-        withoutInfoActivities.map((activity) => activity._id as string),
+        newPublishedActivities.map((activity) => activity._id as string),
         eventUserId,
       )
+
+      setPublishedActivities(newPublishedActivities)
 
       // Filter existent activities and set the state
       setActivitiesAttendee(
@@ -78,13 +128,15 @@ function StudentGeneralCourseProgress(props: StudentGeneralCourseProgressProps) 
           .filter((attendee) => attendee !== undefined)
           .filter((attendee) => attendee?.checked_in),
       )
-    }
-    loadData().then(() => setIsLoading(false))
-  }, [eventId, eventUserId])
+    })()
+  }, [eventUserId, rawActivities, nonPublishedActivityIDs])
 
   const progressPercentValue = useMemo(
-    () => Math.round(((activitiesAttendee.length || 0) / (activities.length || 0)) * 100),
-    [activitiesAttendee, activities],
+    () =>
+      Math.round(
+        ((activitiesAttendee.length || 0) / (publishedActivities.length || 0)) * 100,
+      ),
+    [activitiesAttendee, publishedActivities],
   )
 
   const progressStats = useMemo(
@@ -92,9 +144,9 @@ function StudentGeneralCourseProgress(props: StudentGeneralCourseProgressProps) 
       isLoading ? (
         <Spin />
       ) : (
-        `${activitiesAttendee.length || 0}/${activities.length || 0}`
+        `${activitiesAttendee.length || 0}/${publishedActivities.length || 0}`
       ),
-    [isLoading, activitiesAttendee, activities],
+    [isLoading, activitiesAttendee, publishedActivities],
   )
 
   return (

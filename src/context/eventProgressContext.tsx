@@ -14,36 +14,39 @@ import { useEventContext } from './eventContext'
 import { useUserEvent } from './eventUserContext'
 import { activityContentValues } from './activityType/constants/ui'
 import { calcProgress } from '@/wrappers/EventProgressWrapper'
+import filterActivitiesByProgressSettings from '@Utilities/filterActivitiesByProgressSettings'
 
 type AttendeeType = any
 
 export interface EventProgressContextState {
-  activities: ExtendedAgendaType[]
+  rawActivities: ExtendedAgendaType[]
   filteredActivities: ExtendedAgendaType[]
-  checkedInActivities: AttendeeType[]
+  checkedInRawActivities: AttendeeType[]
   checkedInFilteredActivities: AttendeeType[]
+  nonPublishedActivityIDs: string[]
   isLoading: boolean
-  progressAllActivities: number
+  progressRawActivities: number
   progressFilteredActivities: number
   progressOfQuices: number
-  updateActivities: () => Promise<ExtendedAgendaType[]>
-  updateAttendees: () => Promise<void>
+  updateRawActivities: () => Promise<ExtendedAgendaType[]>
+  updateRawAttendees: () => Promise<void>
   getAttendeesForActivities: (activityIds: string[]) => AttendeeType[]
   calcProgress: (current: number, total: number) => number
   saveProgressReport: () => Promise<void>
 }
 
 const initialContextState: EventProgressContextState = {
-  activities: [],
+  rawActivities: [],
   filteredActivities: [],
-  checkedInActivities: [],
+  checkedInRawActivities: [],
   checkedInFilteredActivities: [],
+  nonPublishedActivityIDs: [],
   isLoading: false,
-  progressAllActivities: 0,
+  progressRawActivities: 0,
   progressFilteredActivities: 0,
   progressOfQuices: 0,
-  updateActivities: () => Promise.resolve([]),
-  updateAttendees: () => Promise.resolve(),
+  updateRawActivities: () => Promise.resolve([]),
+  updateRawAttendees: () => Promise.resolve(),
   getAttendeesForActivities: () => [],
   calcProgress: () => 0,
   saveProgressReport: () => Promise.resolve(),
@@ -60,33 +63,37 @@ export const EventProgressProvider: FunctionComponent = (props) => {
   const cEventUser = useUserEvent()
 
   const [isLoading, setIsLoading] = useState(false)
-  const [activities, setActivities] = useState<ExtendedAgendaType[]>([])
-  const [checkedInActivities, setCheckedInActivities] = useState<AttendeeType[]>([])
+  const [rawActivities, setRawActivities] = useState<ExtendedAgendaType[]>([])
+  const [checkedInRawActivities, setCheckedInRawActivities] = useState<AttendeeType[]>([])
+
+  const [nonPublishedActivityIDs, setNonPublishedActivityIDs] = useState<string[]>([])
 
   const [filteredActivities, setFilteredActivities] = useState<ExtendedAgendaType[]>([])
   const [checkedInFilteredActivities, setCheckedInFilteredActivities] = useState<
     AttendeeType[]
   >([])
 
-  const updateActivities = async () => {
-    // Request for all the event activities
+  const updateRawActivities = async () => {
+    // Request for all the raw event activities
     const { data }: { data: ExtendedAgendaType[] } = await AgendaApi.byEvent(
       cEventContext.value._id,
     )
-    console.log(`Update activities. Got ${data.length} activities`)
+    console.debug(`Update raw activities. Got ${data.length} raw activities`)
 
-    setActivities(data)
+    setRawActivities(data)
 
     return data
   }
 
-  const updateAttendees = async (theseActivities?: ExtendedAgendaType[]) => {
-    const filteredData = theseActivities || activities
-    console.log(`Update attendees for ${filteredData.length} activities`)
+  const updateRawAttendees = async (theseActivities?: ExtendedAgendaType[]) => {
+    const filteredData =
+      theseActivities ||
+      rawActivities.filter((activity) => !nonPublishedActivityIDs.includes(activity._id!))
+    console.debug(`Update attendees for ${filteredData.length} raw activities`)
 
-    // Request for the attendee data in Firebase for all the activities
+    // Request for the attendee data in Firebase for all the raw activities
     const allAttendees = await FB.Attendees.getEventUserActivities(
-      filteredData.map((activity) => activity._id as string),
+      filteredData.map((nonFilteredActivity) => nonFilteredActivity._id as string),
       cEventUser.value?._id,
       true,
     )
@@ -96,13 +103,17 @@ export const EventProgressProvider: FunctionComponent = (props) => {
       return attendee.checked_in
     })
 
-    setCheckedInActivities(checkedInOnes)
-    console.log(`Got ${checkedInOnes.length} attendees`)
+    setCheckedInRawActivities(checkedInOnes)
+    console.debug(`Got ${checkedInOnes.length} attendees`)
   }
 
   const updateFilteredAttendees = async (theseActivities?: ExtendedAgendaType[]) => {
-    const filteredData = theseActivities || filteredActivities
-    console.log(`Update attendees for ${filteredData.length} activities`)
+    const filteredData =
+      theseActivities ||
+      filteredActivities.filter(
+        (activity) => !nonPublishedActivityIDs.includes(activity._id!),
+      )
+    console.debug(`Update attendees for ${filteredData.length} activities`)
 
     // Request for the attendee data in Firebase for all the activities
     const allAttendees = await FB.Attendees.getEventUserActivities(
@@ -117,7 +128,7 @@ export const EventProgressProvider: FunctionComponent = (props) => {
     })
 
     setCheckedInFilteredActivities(checkedInOnes)
-    console.log(`Got ${checkedInOnes.length} attendees`)
+    console.debug(`Got ${checkedInOnes.length} attendees`)
   }
 
   const quizingFilter = (a: ExtendedAgendaType) =>
@@ -125,17 +136,18 @@ export const EventProgressProvider: FunctionComponent = (props) => {
 
   const getAttendeesForActivities = useCallback(
     (activityIds: string[]): AttendeeType[] => {
-      return checkedInActivities.filter((attendee) =>
-        activityIds.includes(attendee.activityId),
-      )
+      return checkedInRawActivities
+        .filter((activity) => !nonPublishedActivityIDs.includes(activity._id!))
+        .filter((attendee) => activityIds.includes(attendee.activityId))
     },
-    [checkedInActivities],
+    [checkedInRawActivities],
   )
 
   const calcProgressApplyingFilter = (
     filter: (a: ExtendedAgendaType) => boolean,
   ): number => {
-    const wantedActivityIds = activities
+    const wantedActivityIds = rawActivities
+      .filter((activity) => !nonPublishedActivityIDs.includes(activity._id!))
       .filter(filter)
       .map((activity) => activity._id as string)
 
@@ -147,17 +159,18 @@ export const EventProgressProvider: FunctionComponent = (props) => {
 
   const saveProgressReport = async () => {
     const eventUser = cEventUser.value
+    const lastEventUser = { ...eventUser }
     if (!eventUser) {
       console.warn('call saveProgressReport when event user is defined ONLY')
       return
     }
     eventUser.activity_progresses = {
       // ID list of activities
-      activities: activities.map((activity) => activity._id!),
+      activities: rawActivities.map((activity) => activity._id!),
       filtered_activities: filteredActivities.map((activity) => activity._id!),
-      checked_in_activities: checkedInActivities.map((attendee) => attendee._id!),
+      checked_in_activities: checkedInRawActivities.map((attendee) => attendee._id!),
       // Calced progresses
-      progress_all_activities: progressAllActivities,
+      progress_all_activities: progressRawActivities,
       progress_filtered_activities: progressFilteredActivities,
       progress_of_quices: progressOfQuices,
     }
@@ -168,23 +181,41 @@ export const EventProgressProvider: FunctionComponent = (props) => {
         eventUser.activity_progresses.checked_in_activities.includes(activityId),
       ]),
     )
+    // Check if the new data is really new data
+    if (
+      JSON.stringify(lastEventUser.activity_progresses) ===
+      JSON.stringify(eventUser.activity_progresses)
+    )
+      return
     console.debug('save new eventUser with progresses:', eventUser)
     await UsersApi.editEventUser(eventUser, cEventContext.value._id, eventUser._id)
   }
 
-  const progressAllActivities = useMemo(
-    () => calcProgress(checkedInActivities.length, activities.length),
-    [activities, checkedInActivities],
+  const progressRawActivities = useMemo(
+    () =>
+      calcProgress(
+        checkedInRawActivities.length,
+        rawActivities.filter(
+          (activity) => !nonPublishedActivityIDs.includes(activity._id!),
+        ).length,
+      ),
+    [rawActivities, checkedInRawActivities],
   )
 
   const progressFilteredActivities = useMemo(
-    () => calcProgress(checkedInFilteredActivities.length, filteredActivities.length),
+    () =>
+      calcProgress(
+        checkedInFilteredActivities.length,
+        filteredActivities.filter(
+          (activity) => !nonPublishedActivityIDs.includes(activity._id!),
+        ).length,
+      ),
     [filteredActivities, checkedInFilteredActivities],
   )
 
   const progressOfQuices = useMemo(
     () => calcProgressApplyingFilter(quizingFilter),
-    [activities, checkedInActivities],
+    [rawActivities, checkedInRawActivities],
   )
 
   /**
@@ -201,8 +232,8 @@ export const EventProgressProvider: FunctionComponent = (props) => {
     if (!cEventUser || !cEventUser.value) return
 
     setIsLoading(true)
-    updateActivities()
-      .then((activities) => updateAttendees(activities))
+    updateRawActivities()
+      .then((activities) => updateRawAttendees(activities))
       .finally(() => setIsLoading(false))
   }, [cEventContext.value, cEventUser.value])
 
@@ -214,46 +245,29 @@ export const EventProgressProvider: FunctionComponent = (props) => {
   useEffect(() => {
     if (!cEventContext.value) return
     const { progress_settings = {} } = cEventContext.value
-    const { enable_mode }: { enable_mode?: string[] } = progress_settings
 
-    if (enable_mode) {
-      const ignoreInfoSection = enable_mode.includes('info')
-      const ignoreRest = enable_mode.includes('rest')
+    setFilteredActivities(
+      filterActivitiesByProgressSettings(rawActivities, progress_settings),
+    )
 
-      // Prepare the filter by type
-      const byTypeFilter: string[] = []
-      if (enable_mode.includes('survey')) {
-        byTypeFilter.push(activityContentValues.survey)
-      }
-      if (enable_mode.includes('quiz')) {
-        byTypeFilter.push(activityContentValues.quizing)
-      }
+    rawActivities.forEach((activity) => {
+      FB.Activities.ref(cEventContext.value._id!, activity._id!).onSnapshot(
+        (snapshot) => {
+          const data = snapshot.data()
+          if (!data) return
+          const flag = !!data.isPublished
 
-      const newFilteredActivities = activities
-        // Ignore info section
-        .filter((activity) => !(activity.is_info_only && ignoreInfoSection))
-        // Filter by event type
-        .filter((activity) => !byTypeFilter.includes(activity.type?.name as any))
-        // Filter the rest
-        .filter(() => !ignoreRest)
-
-      setFilteredActivities(newFilteredActivities)
-      console.info(
-        'event progress filters:',
-        'info section =',
-        ignoreInfoSection,
-        'by type=',
-        !!byTypeFilter,
-        'rest=',
-        ignoreRest,
+          if (!flag) {
+            setNonPublishedActivityIDs((previous) => [...previous, activity._id!])
+          } else {
+            setNonPublishedActivityIDs((previous) =>
+              previous.filter((id) => id !== activity._id!),
+            )
+          }
+        },
       )
-    } else {
-      // Filter all
-      const newFilteredActivities = activities.filter(() => true)
-      setFilteredActivities(newFilteredActivities)
-      console.info('event progress filters all activity')
-    }
-  }, [activities, cEventContext.value])
+    })
+  }, [rawActivities, cEventContext.value])
 
   useEffect(() => {
     updateFilteredAttendees()
@@ -262,15 +276,16 @@ export const EventProgressProvider: FunctionComponent = (props) => {
   return (
     <EventProgressContext.Provider
       value={{
-        activities,
+        rawActivities,
         filteredActivities,
-        checkedInActivities,
+        checkedInRawActivities,
         checkedInFilteredActivities,
+        nonPublishedActivityIDs,
         isLoading,
-        updateActivities,
-        updateAttendees,
+        updateRawActivities,
+        updateRawAttendees,
         getAttendeesForActivities,
-        progressAllActivities,
+        progressRawActivities,
         progressFilteredActivities,
         progressOfQuices,
         calcProgress,

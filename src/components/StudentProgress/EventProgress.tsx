@@ -23,9 +23,14 @@ const EventProgress: FunctionComponent<IEventProgressProps> = (props) => {
   useEffect(() => {
     let report = ''
 
-    const nonQuizingActivities = cEventProgress.activities.filter(
-      (activity) => ![activityContentValues.quizing].includes(activity.type?.name as any),
-    )
+    const nonQuizingActivities = cEventProgress.rawActivities
+      .filter(
+        (activity) => !cEventProgress.nonPublishedActivityIDs.includes(activity._id!),
+      )
+      .filter(
+        (activity) =>
+          ![activityContentValues.quizing].includes(activity.type?.name as any),
+      )
 
     const nonQuizingAttendees = cEventProgress.getAttendeesForActivities(
       nonQuizingActivities.map((activity) => activity._id! as string),
@@ -35,9 +40,13 @@ const EventProgress: FunctionComponent<IEventProgressProps> = (props) => {
       `Vistas ${nonQuizingAttendees.length} de ${nonQuizingActivities.length}`,
     )
 
-    const quizingActivities = cEventProgress.activities.filter((activity) =>
-      [activityContentValues.quizing].includes(activity.type?.name as any),
-    )
+    const quizingActivities = cEventProgress.rawActivities
+      .filter(
+        (activity) => !cEventProgress.nonPublishedActivityIDs.includes(activity._id!),
+      )
+      .filter((activity) =>
+        [activityContentValues.quizing].includes(activity.type?.name as any),
+      )
 
     const quizingAttendees = cEventProgress.getAttendeesForActivities(
       quizingActivities.map((activity) => activity._id! as string),

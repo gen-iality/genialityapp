@@ -90,15 +90,15 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({
   const [state, dispatch] = useReducer(reducer, initialContextState)
 
   useEffect(() => {
-    if (!cEventContext || !cEventContext.value) return
+    // if (!cEventContext || !cEventContext.value) return
     if (!cUser || !cUser.value) return
     if (!state.survey?._id) return
-    console.log('getStatus effect', cEventContext, cUser, state.survey)
+    console.log('getStatus effect', cUser, state.survey)
     getSurveyStatus(state.survey._id, cUser.value._id).then((data) => {
       console.log('getStatus despachando', cEventContext, cUser, state.survey)
       dispatch({ type: SurveyContextAction.SURVEY_STATUS_LOADED, surveyStatus: data })
     })
-  }, [cEventContext, cUser, state.survey])
+  }, [cUser, state.survey])
 
   const loadSurvey = (survey: any) => {
     dispatch({ type: SurveyContextAction.SURVEY_LOADED, survey })
