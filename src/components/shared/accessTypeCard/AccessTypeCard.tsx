@@ -12,6 +12,10 @@ const AccessTypeCard = ({
   itemSelected = '',
   extraState = false,
   isCms = false,
+  redirect = '',
+  payment = false,
+  changeValue = () => {},
+  valueInput = 0
 }: AccessTypeCardInterface) => {
   return (
     <Card
@@ -46,8 +50,8 @@ const AccessTypeCard = ({
         </Typography.Text>
         <Typography.Paragraph>{description}</Typography.Paragraph>
 
-        <div>{extra({ callBackSelectedItem, extraState })}</div>
-        <Row justify='end' align='bottom' style={{ position: 'absolute', bottom: '15px', right: '24px' }}>
+        <div>{extra({ callBackSelectedItem, extraState, payment, changeValue,valueInput })}</div>
+        <Row /* justify='end' */ align='bottom' gutter={[16, 16]}/* style={{ position: 'absolute', bottom: '15px', right: '24px' }} */>
           <div onClick={() => callBackSelectedItem(index)}>
             <Button
               style={{
