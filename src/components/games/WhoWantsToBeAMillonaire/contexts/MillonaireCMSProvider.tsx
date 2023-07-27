@@ -169,7 +169,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
       setLoading(false);
       return DispatchMessageService({
         type: 'success',
-        msj: 'parametros de la dinamica obtenidos correctamente',
+        msj: 'Parámetros de la dinámica obtenidos correctamente',
         action: 'show',
       });
     }
@@ -187,7 +187,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
       setLoading(false);
       return DispatchMessageService({
         type: 'error',
-        msj: 'Se debe completar los parametros',
+        msj: 'Se debe completar los parámetros',
         action: 'show',
       });
     }
@@ -198,7 +198,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
       setMillonaire(millonaireAdapter);
       DispatchMessageService({
         type: 'success',
-        msj: 'Se creo la dinamica correctamente',
+        msj: 'Se creó la dinámica correctamente',
         action: 'show',
       });
       setIsNewGame(false);
@@ -215,14 +215,14 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
       setLoading(false);
       return DispatchMessageService({
         type: 'error',
-        msj: 'Se debe completar los parametros',
+        msj: 'Se debe completar los parámetros',
         action: 'show',
       });
     }
     if (id && id === '') {
       return DispatchMessageService({
         type: 'error',
-        msj: 'No se encontro la dinamica a editar',
+        msj: 'No se encontro la dinámica a editar',
         action: 'show',
       });
     }
@@ -233,7 +233,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
       setMillonaire(millonaireAdapter);
       DispatchMessageService({
         type: 'success',
-        msj: 'Se actaulizaron los parametros correctamente',
+        msj: 'Se actaulizaron los parámetros correctamente',
         action: 'show',
       });
     }
@@ -249,7 +249,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     if (id && id === '') {
       return DispatchMessageService({
         type: 'error',
-        msj: 'No se encontro la dinamica a eliminar',
+        msj: 'No se encontro la dinámica a eliminar',
         action: 'show',
       });
     }
@@ -258,7 +258,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
       setMillonaire(INITIAL_STATE_MILLONAIRE);
       DispatchMessageService({
         type: 'success',
-        msj: 'Se elimino la dinamica correctamente',
+        msj: 'Se elimino la dinámica correctamente',
         action: 'show',
       });
       setIsNewGame(true);
@@ -286,7 +286,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     if (id && id === '') {
       return DispatchMessageService({
         type: 'error',
-        msj: 'No se encontro la dinamica',
+        msj: 'No se encontro la dinámica',
         action: 'show',
       });
     }
@@ -308,7 +308,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
       setMillonaire(millonaireAdapter);
       DispatchMessageService({
         type: 'success',
-        msj: 'Se creo la dinamica correctamente',
+        msj: 'Se creó la dinámica correctamente',
         action: 'show',
       });
       setIsVisibleModalQuestion(!isVisibleModalQuestion);
@@ -326,7 +326,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     if (id && id === '') {
       return DispatchMessageService({
         type: 'error',
-        msj: 'No se encontro la dinamica',
+        msj: 'No se encontro la dinámica',
         action: 'show',
       });
     }
@@ -348,7 +348,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
       setMillonaire(millonaireAdapter);
       DispatchMessageService({
         type: 'success',
-        msj: 'Se actualizo la dinamica correctamente',
+        msj: 'Se actualizó la dinámica correctamente',
         action: 'show',
       });
       setIsVisibleModalQuestion(!isVisibleModalQuestion);
@@ -366,7 +366,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     if (id && id === '') {
       return DispatchMessageService({
         type: 'error',
-        msj: 'No se encontro la dinamica',
+        msj: 'No se encontro la dinámica',
         action: 'show',
       });
     }
@@ -494,7 +494,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     if (id && id === '') {
       return DispatchMessageService({
         type: 'error',
-        msj: 'No se encontro la dinamica',
+        msj: 'No se encontro la dinámica',
         action: 'show',
       });
     }
@@ -516,7 +516,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
       setMillonaire(millonaireAdapter);
       DispatchMessageService({
         type: 'success',
-        msj: 'Se creo la dinamica correctamente',
+        msj: 'Se creó la dinámica correctamente',
         action: 'show',
       });
       setIsVisibleModalStage(!isVisibleModalStage);
@@ -533,7 +533,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     if (id && id === '') {
       return DispatchMessageService({
         type: 'error',
-        msj: 'No se encontro la dinamica',
+        msj: 'No se encontro la dinámica',
         action: 'show',
       });
     }
@@ -550,7 +550,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
       setMillonaire(millonaireAdapter);
       DispatchMessageService({
         type: 'success',
-        msj: 'Se actualizo la etapa correctamente',
+        msj: 'Se actualizó la etapa correctamente',
         action: 'show',
       });
     }
@@ -565,7 +565,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     if (id && id === '') {
       return DispatchMessageService({
         type: 'error',
-        msj: 'No se encontro la dinamica',
+        msj: 'No se encontro la dinámica',
         action: 'show',
       });
     }
@@ -577,7 +577,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
       }));
       DispatchMessageService({
         type: 'success',
-        msj: 'Se elimino la dinamica correctamente',
+        msj: 'Se elimino la dinámica correctamente',
         action: 'show',
       });
     }
@@ -687,7 +687,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     if (id && id === '') {
       return DispatchMessageService({
         type: 'error',
-        msj: 'No se encontro la dinamica',
+        msj: 'No se encontro la dinámica',
         action: 'show',
       });
     }

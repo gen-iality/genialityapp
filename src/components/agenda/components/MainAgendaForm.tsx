@@ -1,5 +1,6 @@
+/* eslint-disable no-console */
+/* eslint-disable react-hooks/exhaustive-deps */
 import moment, { Moment } from 'moment';
-import { SetStateAction, Dispatch } from 'react';
 import { useEffect, useRef, useMemo, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
@@ -53,6 +54,7 @@ export interface FormDataType {
   selectedRol: SelectOptionType[];
   selectedTickets: SelectOptionType[];
   selectedDocuments: SelectOptionType[];
+  userTypes: string[];
 }
 
 // NOTE: mmm... what's happen with selectedRol and allRoles? where are they used and how?
@@ -80,7 +82,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   const [allSpaces, setAllSpaces] = useState<SelectOptionType[]>([]); // info.space_id loads this with data
   const [allCategories, setAllCategories] = useState<SelectOptionType[]>([]); // info.selectedCategories modifies that
   const [allRoles, setAllRoles] = useState<SelectOptionType[]>([]);
-  const [allTickets, setAllTickets] = useState<SelectOptionType[]>([]);
+  const [, setAllTickets] = useState<SelectOptionType[]>([]);
   const { multiDates } = useGetMultiDate(props.event?._id);
   const [haveDateNotIncluded, sethaveDateNotIncluded] = useState(false);
   const history = useHistory();
@@ -132,6 +134,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       selectedCategories: fieldsSelect(agenda.activity_categories_ids, allCategories) || [],
       selectedHosts: fieldsSelect(agenda.host_ids, allHosts) || [],
       selectedRol: fieldsSelect(agenda.access_restriction_rol_ids, allRoles) || [],
+      userTypes:  agenda.userTypes || []
     });
   }, [agenda, allCategories, allHosts, allRoles]);
 

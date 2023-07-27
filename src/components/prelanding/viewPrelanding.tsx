@@ -1,14 +1,17 @@
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-console */
 import { CurrentEventContext } from '@/context/eventContext';
 import { CurrentEventUserContext } from '@/context/eventUserContext';
 import { useHelper } from '@/context/helperContext/hooks/useHelper';
 import { CurrentUserContext } from '@/context/userContext';
 import { SectionsPrelanding } from '@/helpers/constants';
 import { AgendaApi, EventsApi, SpeakersApi } from '@/helpers/request';
-import { ArrowUpOutlined, LoadingOutlined  } from '@ant-design/icons';
+import { ArrowUpOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Col, Row, Layout, Card, Grid, BackTop, Avatar, Spin } from 'antd';
 /** ant design */
 
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import ModalPermission from '../authentication/ModalPermission';
 import { RenderSectios } from '../events/Description/componets/renderSectios';
@@ -32,148 +35,154 @@ import ModalPayment from '../authentication/ModalPayment';
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
 
-const ViewPrelanding = ({ preview } : PropsPreLanding) => {
-	const mobilePreview = preview ? preview : 'desktop';
-	const screens = useBreakpoint();
+const ViewPrelanding = ({ preview }: PropsPreLanding) => {
+  const mobilePreview = preview ? preview : 'desktop';
+  const screens = useBreakpoint();
 
-	//CONTEXTOS
-	const cEventContext = useContext(CurrentEventContext);
-	const cUser = useContext(CurrentUserContext);
-	const cEventUser = useContext(CurrentEventUserContext);
-	const { setIsPrelanding } = useHelper();
-	const [companies] = getEventsponsors(cEventContext?.value?._id);
+  //CONTEXTOS
+  const cEventContext = useContext(CurrentEventContext);
+  const cUser = useContext(CurrentUserContext);
+  const cEventUser = useContext(CurrentEventUserContext);
+  const { setIsPrelanding } = useHelper();
+  const [companies] = getEventsponsors(cEventContext?.value?._id);
 
-	//History
-	const history = useHistory();
+  //History
+  const history = useHistory();
 
-	//ESTADOS
-	const [sections, setSections] = useState<DataSource>();
+  //ESTADOS
+  const [sections, setSections] = useState<DataSource>();
 
-	// PERMITE VALIDAR SI EXISTE DESCRIPCION
-	const [description, setDescription] = useState<Description[]>([]);
-	//PERMITE VALIDAR SI EXISTE CONFERENCISTAS
-	const [speakers, setSpeakers] = useState<Speaker[]>([]);
-	//PERMITE VALIDAR SI EXISTEN ACTIVIDADES
-	const [agenda, setAgenda] = useState<Agenda[]>([]);
-	//PERMITE VALIDAR SI EXISTEN SPONSORS
-	const [sponsors, setSponsors] = useState<Sponsor[]>([]);
+  // PERMITE VALIDAR SI EXISTE DESCRIPCION
+  const [description, setDescription] = useState<Description[]>([]);
+  //PERMITE VALIDAR SI EXISTE CONFERENCISTAS
+  const [speakers, setSpeakers] = useState<Speaker[]>([]);
+  //PERMITE VALIDAR SI EXISTEN ACTIVIDADES
+  const [agenda, setAgenda] = useState<Agenda[]>([]);
+  //PERMITE VALIDAR SI EXISTEN SPONSORS
+  const [sponsors, setSponsors] = useState<Sponsor[]>([]);
 
+  const cBanner = cEventContext.value?.styles?.banner_image;
+  const cFooter = cEventContext.value?.styles?.banner_footer;
+  const cContainerBgColor = cEventContext.value?.styles?.containerBgColor;
+  const cBackgroundImage = cEventContext.value?.styles?.BackgroundImage;
+  const bgColor = cEventContext.value?.styles?.toolbarDefaultBg;
+  const textColor = cEventContext.value?.styles?.textMenu;
 
-	const cBanner = cEventContext.value?.styles?.banner_image;
-	const cFooter = cEventContext.value?.styles?.banner_footer;
-	const cContainerBgColor = cEventContext.value?.styles?.containerBgColor;
-	const cBackgroundImage = cEventContext.value?.styles?.BackgroundImage;
-	const bgColor = cEventContext.value?.styles?.toolbarDefaultBg;
-	const textColor = cEventContext.value?.styles?.textMenu;
+  //Validacion temporal para el evento audi
+  const idEvent = cEventContext.value?._id;
+  const shadow = idEvent !== '6334782dc19fe2710a0b8753' ? '0px 4px 4px rgba(0, 0, 0, 0.25)' : '';
 
-	//Validacion temporal para el evento audi
-	const idEvent = cEventContext.value?._id;
-	const shadow = idEvent !== '6334782dc19fe2710a0b8753' ? '0px 4px 4px rgba(0, 0, 0, 0.25)' : '';
+  //PERMITE INGRESAR A LA LANDING DEL EVENTO
+  useEffect(() => {
+    setIsPrelanding(true);
+    if (!cEventContext.value) return;
+    //SE REMUEVE LA SESION EN EL EVENTO OBLIGANDO A UNIR AL USUARIO
+    if (window.sessionStorage.getItem('session') !== cEventContext.value?._id) {
+      window.sessionStorage.removeItem('session');
+    }
+    if (preview) return;
+    if (window.sessionStorage.getItem('session') === cEventContext.value?._id) {
+      if (!!cEventContext?.value?.redirect_activity && typeof cEventContext?.value?.redirect_activity === 'string') {
+        history.replace(`/landing/${cEventContext.value?._id}/activity/${cEventContext?.value?.redirect_activity}`);
+      } else {
+        history.replace(`/landing/${cEventContext?.value?._id}`);
+      }
+    }
+  }, [cEventContext, cUser, cEventUser]);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
+  //! TEMPORAL VALIDATION TO GET INTO EVENT FOR LG EVENT
+  useEffect(() => {
+    
+    if (cEventContext?.value?.redirect_landing) {
+      if (cEventUser?.value?._id && history.location.pathname.includes(idEvent) && !history.location.pathname.includes('landing') && !preview ) {
+        window.sessionStorage.setItem('session', cEventContext.value?._id);
+        return history.push(`/landing/${cEventContext?.value?._id}`);
+      } else {
+        console.log('Is LG EVENT but Event User not exists... Stay here');
+      }
+    }
+  }, [cEventUser]);
+  //! TEMPORAL VALIDATION TO GET INTO EVENT FOR LG EVENT
 
-	//PERMITE INGRESAR A LA LANDING DEL EVENTO
-	useEffect(() => {
-		setIsPrelanding(true);
-		if (!cEventContext.value) return;
-		//SE REMUEVE LA SESION EN EL EVENTO OBLIGANDO A UNIR AL USUARIO
-		if (window.sessionStorage.getItem('session') !== cEventContext.value?._id) {
-			window.sessionStorage.removeItem('session');
-		}
-		if (preview) return;
-		if (window.sessionStorage.getItem('session') === cEventContext.value?._id) {
-			if (!!cEventContext?.value?.redirect_activity && typeof cEventContext?.value?.redirect_activity === 'string') {
-				history.replace(`/landing/${cEventContext.value?._id}/activity/${cEventContext?.value?.redirect_activity}`);
-			} else {
-				history.replace(`/landing/${cEventContext?.value?._id}`);
-			}
-		}
-		
-	}, [cEventContext, cUser, cEventUser]);
+  /**DYNAMIC STYLES */
+  // Estilos para el contenido del bloque en desktop y mobile
+  const desktopBlockContentStyle: React.CSSProperties = {
+    padding: idEvent !== '6334782dc19fe2710a0b8753' ? '40px' : '0px',
+  };
 
-	//! TEMPORAL VALIDATION TO GET INTO EVENT FOR LG EVENT
-	useEffect(() => {
-		if (cEventContext?.value?.redirect_landing) {
-			if (cEventUser?.value?._id && history.location.pathname === `/${idEvent}`) {
-				window.sessionStorage.setItem('session', cEventContext.value?._id);
-				return history.push(`/landing/${cEventContext?.value?._id}`);
-			} else {
-				console.log('Is LG EVENT but Event User not exists... Stay here');
-			}
-		}
-	}, [cEventUser]);
-	//! TEMPORAL VALIDATION TO GET INTO EVENT FOR LG EVENT
+  /// Script
 
-	/**DYNAMIC STYLES */
-	// Estilos para el contenido del bloque en desktop y mobile
-	const desktopBlockContentStyle : React.CSSProperties = {
-		padding: idEvent !== '6334782dc19fe2710a0b8753' ? '40px' : '0px',
-	};
+  useInjectScript(scriptGoogleTagManagerAudi, idEvent, false);
+  useInjectScript(scriptTeadesAudi, idEvent, false);
+  useInjectScript(scriptTeadeBodyAudi, idEvent, true);
+  useScript('https://p.teads.tv/teads-fellow.js', idEvent);
+  // Funciones para el render
+  const obtenerOrder = (name: string) => {
+    if (sections) {
+      return sections.main_landing_blocks?.filter((section) => section.name === name)[0]?.index + 2;
+    } else {
+      return 2;
+    }
+  };
 
+  const visibleSection = (name: string) => {
+    return (
+      sections && sections.main_landing_blocks?.filter((section) => section.name === name && section.status).length > 0
+    );
+  };
 
-	/// Script
+  const isVisibleCardSections = () => {
+    return sections && sections.main_landing_blocks?.filter((section) => section.status).length > 1;
+  };
 
-	useInjectScript(scriptGoogleTagManagerAudi, idEvent, false);
-	useInjectScript(scriptTeadesAudi, idEvent, false);
-	useInjectScript(scriptTeadeBodyAudi, idEvent, true);
-	useScript('https://p.teads.tv/teads-fellow.js', idEvent);
-	// Funciones para el render
-	const obtenerOrder = ( name: string ) => {
-		if (sections) {
-			return sections.main_landing_blocks?.filter(section => section.name == name)[0]?.index + 2;
-		} else {
-			return 2;
-		}
-	};
+  const getNameOrAlias = (name: string) => {
+    const nameOrAlias = sections && sections.main_landing_blocks?.filter((section) => section.name === name);
+    //@ts-ignore
+    if (nameOrAlias[0].label) return nameOrAlias[0].label;
+    //@ts-ignore
+    else return nameOrAlias[0].name;
+  };
 
-	const visibleSection = ( name: string ) => {
-		return sections && sections.main_landing_blocks?.filter(section => section.name === name && section.status).length > 0
-	};
+  useEffect(() => {
+    if (!cEventContext.value) return;
 
-	const isVisibleCardSections = () => {
-		return sections && sections.main_landing_blocks?.filter(section => section.status).length > 1 
-	};
+    obtainPreview();
+    async function obtainPreview() {
+      //OBTENENOS LAS SECCIONES DE PRELANDING
+      const previews = await EventsApi.getPreviews(cEventContext.value._id);
+      //SE ORDENAN LAS SECCIONES POR INDEX
+      const sections = previews?._id ? previews : SectionsPrelanding;
 
-	const getNameOrAlias = (name: string) => {
-		const nameOrAlias = sections && sections.main_landing_blocks?.filter(section => section.name === name)
-		if(nameOrAlias[0].label) return nameOrAlias[0].label;
-		else return nameOrAlias[0].name;
-	}
+      setSections(sections);
+    }
+  }, [cEventContext]);
+  //OBTENER  DATA DEL EVENTO PARA VALIDACIONES
+  useEffect(() => {
+    if (!cEventContext.value) return;
+    obtenerData();
+    async function obtenerData() {
+      const sectionsDescription: ApiGeneric<Description> | undefined = await EventsApi.getSectionsDescriptions(
+        cEventContext?.value._id
+      );
+      let speakers: Speaker[] | undefined = await SpeakersApi.byEvent(cEventContext?.value._id);
+      const agenda: ApiGeneric<Agenda> = await AgendaApi.byEvent(cEventContext?.value._id);
+      const speakersFiltered = speakers?.filter(
+        (speaker: any) => speaker.published || speaker.published === 'undefined'
+      );
+      const agendaConfig: Agenda[] | undefined = await obtenerConfigActivity(cEventContext.value?._id, agenda.data);
+      const agendaFiltered = agendaConfig?.filter(
+        (agendaCfg) => agendaCfg.isPublished || agendaCfg.isPublished === undefined
+      );
 
-	useEffect(() => {
-		if (!cEventContext.value) return;
+      setDescription(sectionsDescription?.data || []);
+      setSpeakers(speakersFiltered || []);
+      setAgenda(agendaFiltered || []);
+    }
+  }, [cEventContext.value]);
 
-		obtainPreview();
-		async function obtainPreview() {
-			//OBTENENOS LAS SECCIONES DE PRELANDING
-			const previews = await EventsApi.getPreviews(cEventContext.value._id);
-			//SE ORDENAN LAS SECCIONES POR INDEX
-			const sections = previews?._id ? previews : SectionsPrelanding;
-            
-			setSections(sections);
-		}
-	}, [cEventContext]);
-	//OBTENER  DATA DEL EVENTO PARA VALIDACIONES
-	useEffect(() => {
-		if (!cEventContext.value) return;
-		obtenerData();
-		async function obtenerData() {
-			const sectionsDescription : ApiGeneric<Description> | undefined = await EventsApi.getSectionsDescriptions(cEventContext?.value._id);
-			let speakers : Speaker[] | undefined = await SpeakersApi.byEvent(cEventContext?.value._id);
-			const agenda : ApiGeneric<Agenda> = await AgendaApi.byEvent(cEventContext?.value._id);
-			const speakersFiltered = speakers?.filter((speaker: any) => speaker.published || speaker.published == 'undefined');
-			const agendaConfig : Agenda[] | undefined = await obtenerConfigActivity(cEventContext.value?._id, agenda.data);
-			const agendaFiltered = agendaConfig?.filter(
-				agendaCfg => agendaCfg.isPublished || agendaCfg.isPublished == undefined
-			);
-            
-			setDescription(sectionsDescription?.data || []);
-			setSpeakers(speakersFiltered || []);
-			setAgenda(agendaFiltered || []);
-		}
-	}, [cEventContext.value]);
-
-	useEffect(() => {
-		setSponsors(companies as Sponsor[] || []);
-	}, [companies]);
+  useEffect(() => {
+    setSponsors((companies as Sponsor[]) || []);
+  }, [companies]);
 
 	if (!cEventContext.value?.styles) {
 		return (

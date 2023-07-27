@@ -204,7 +204,7 @@ class NewEvent extends Component {
             )}
             {this.context.state.loading && (
               <Row justify='center'>
-                Espere.. <Spin />
+                Espere... <Spin />
               </Row>
             )}
           </Card>

@@ -1,13 +1,13 @@
 import { createElement, Fragment, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import ErrorServe from '../components/modal/serverError';
 import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
 import { connect } from 'react-redux';
 import * as userActions from '../redux/user/actions';
 import * as eventActions from '../redux/event/actions';
 import MenuOld from '../components/events/shared/menu';
-import { Menu, Drawer, Button, Col, Row, Layout, Space, Grid, Dropdown } from 'antd';
-import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined, LoadingOutlined } from '@ant-design/icons';
+import { Menu, Drawer, Button, Col, Row, Layout, Space, Grid, Dropdown, Typography } from 'antd';
+import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined, LoadingOutlined, ApartmentOutlined } from '@ant-design/icons';
 import withContext from '../context/withContext';
 import ModalLoginHelpers from '../components/authentication/ModalLoginHelpers';
 import { recordTypeForThisEvent } from '../components/events/Landing/helpers/thisRouteCanBeDisplayed';
@@ -15,6 +15,7 @@ import { FormattedMessage } from 'react-intl';
 import AccountCircleIcon from '@2fd/ant-design-icons/lib/AccountCircle';
 import { useIntl } from 'react-intl';
 import { getCorrectColor } from '@/helpers/utils';
+import { isOrganizationCETA } from '@/components/user-organization-to-event/helpers/helper';
 
 const { useBreakpoint } = Grid;
 
@@ -60,7 +61,6 @@ interface Props {
 const Headers = (props: Props) => {
 	const { showMenu, loginInfo, cHelper, cEvent, cEventUser, cUser } = props;
 	const { helperDispatch } = cHelper;
-
 	const [headerIsLoading, setHeaderIsLoading] = useState(true);
 	const [dataGeneral, setdataGeneral] = useState(initialDataGeneral);
 	const [showButtons, setshowButtons] = useState({
@@ -121,12 +121,12 @@ const Headers = (props: Props) => {
 		setHeaderIsLoading(false);
 		// }
 	}
-
 	const WhereHerePath = () => {
 		let containtorganization = window.location.pathname.includes('/organization');
 		return containtorganization ? 'organization' : 'landing';
 	};
 
+	
 	const userLogOut = (callBack: any) => {
 		const params = {
 			user: cUser.value,
@@ -153,7 +153,9 @@ const Headers = (props: Props) => {
 				}}>
 				<FormattedMessage id='header.expired_signin' defaultMessage='Sign In' />
 			</Menu.Item>
-
+		{
+			!isOrganizationCETA()
+			&& 
 			<Menu.Item
 				key='menu-item-menu-mobile-2'
 				onClick={() => {
@@ -161,6 +163,8 @@ const Headers = (props: Props) => {
 				}}>
 				<FormattedMessage id='registration.button.create' defaultMessage='Sign Up' />
 			</Menu.Item>
+		}
+			
 		</Menu>
 	);
 
@@ -215,6 +219,10 @@ const Headers = (props: Props) => {
 		document.addEventListener('scroll', onScroll);
 	}, [fixed]);
 
+	const landingOrganization = () => {
+	window.location.href = `${window.location.origin}/organization/${cEvent.value.organizer_id}/events`;
+	};
+
 	return (
 		<Fragment>
 			<Header
@@ -232,6 +240,12 @@ const Headers = (props: Props) => {
 				}}>
 				<Menu theme='light' mode='horizontal' style={{ backgroundColor: bgcolorContainer, border: 'none' }}>
 					<Row justify='space-between' align='middle'>
+						{window.location.href.includes('landing') && 
+							<Button type='link' onClick={landingOrganization} icon={<ApartmentOutlined style={{color: getCorrectColor(bgcolorContainer)}}/>} size='large' >
+								<Typography.Text style={{color: getCorrectColor(bgcolorContainer)}}>Ver más contenido de <Typography.Text strong style={{color: getCorrectColor(bgcolorContainer)}}>{cEvent.value?.organizer?.name}</Typography.Text></Typography.Text>
+							</Button>
+						}
+						
 						<Row className='logo-header' justify='space-between' align='middle'>
 							{/* Menú de administrar un evento (esto debería aparecer en un evento no en todo lado) */}
 							{dataGeneral?.showAdmin && (
@@ -276,9 +290,9 @@ const Headers = (props: Props) => {
 								</div>
 							) : (
 								<Space>
-									{showButtons.buttonlogin ? (
+									{showButtons.buttonlogin  ? (
 										<>
-											{recordTypeForThisEvent(cEvent) !== 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS' && (
+											{recordTypeForThisEvent(cEvent) !== 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS' &&  (
 												<Button
 													icon={<LockOutlined />}
 													style={{
@@ -314,7 +328,7 @@ const Headers = (props: Props) => {
 										</Space>
 									)}
 
-									{showButtons.buttonregister && (
+									{showButtons.buttonregister && !isOrganizationCETA()&& (
 										<Button
 											style={{
 												backdropFilter: 'blur(8px)',

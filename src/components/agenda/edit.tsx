@@ -1,26 +1,19 @@
-import * as React from 'react';
-
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useContext, useEffect } from 'react';
 import { Redirect, useLocation, useHistory } from 'react-router-dom';
-
-import { Tabs, Row, Col, Form, Switch, Modal } from 'antd';
+import { Tabs, Row, Col, Form, Switch, Modal, Select } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-
 import AgendaContext from '@context/AgendaContext';
 import Header from '@/antdComponents/Header';
 import BackTop from '@/antdComponents/BackTop';
 import { RouterPrompt } from '@/antdComponents/RoutePrompt';
 import { DispatchMessageService } from '@context/MessageService';
-
 import { handleRequestError } from '@/helpers/utils';
-import { AgendaApi, DocumentsApi } from '@/helpers/request';
+import { AgendaApi, DocumentsApi, EventsApi } from '@/helpers/request';
 import { firestore } from '@/helpers/firebase';
-
 import Loading from '../profile/loading';
 import RoomController from './roomManager/controller';
 import Service from './roomManager/service';
-
-import TipeOfActivity from './typeActivity';
 import SurveyManager from './surveyManager';
 import MainAgendaForm, { FormDataType } from './components/MainAgendaForm';
 import prepareRoomInfoData from './hooks/usePrepareRoomInfoData';
@@ -34,6 +27,7 @@ import AgendaDocumentForm from './components/AgendaDocumentForm';
 import ActivityContentSelector from './activityType/ActivityContentSelector';
 
 import { hourWithAdditionalMinutes } from './hooks/useHourWithAdditionalMinutes';
+import { PropertyTypeUser } from './utils/constants';
 
 const { TabPane } = Tabs;
 const { confirm } = Modal;
@@ -81,6 +75,7 @@ const initialInfoState: AgendaType = {
   host_ids: [],
   length: '',
   latitude: '',
+  userTypes: []
 };
 
 const initialFormDataState = {
@@ -100,7 +95,8 @@ const initialFormDataState = {
   selectedTickets: [],
   selectedDocuments: [],
   selectedCategories: [],
-} as FormDataType;
+  userTypes: []
+} as unknown as FormDataType;
 
 function AgendaEdit(props: AgendaEditProps) {
   const [currentActivityID, setCurrentActivityID] = useState<string | null>(null);
@@ -111,11 +107,9 @@ function AgendaEdit(props: AgendaEditProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [avalibleGames, setAvalibleGames] = useState<any[]>([]); // Used in Games
   const [service] = useState(new Service(firestore));
-
   const [loadedAgenda, setLoadedAgenda] = useState<AgendaType | null>(null);
   const [formdata, setFormData] = useState<FormDataType>(initialFormDataState);
-  const [savedFormData, setSavedFormData] = useState<FormDataType>({} as FormDataType);
-
+  const [savedFormData] = useState<FormDataType>({} as FormDataType);
   /**
    * This states are used as config, I think...
    */
@@ -123,17 +117,17 @@ function AgendaEdit(props: AgendaEditProps) {
   const [surveys, setSurveys] = useState<boolean>(false);
   const [games, setGames] = useState<boolean>(false);
   const [attendees, setAttendees] = useState<boolean>(false);
-
   const agendaContext = useContext(AgendaContext);
-
   const location = useLocation<LocationStateType>();
   const history = useHistory();
-
   const buildInfo = useBuildInfo(formdata, loadedAgenda, initialInfoState);
   const deleteActivity = useDeleteActivity();
   const validForm = useValidForm(formdata);
+  // console.log({currentActivityID, shouldRedirect, currentTab, isLoading, showPendingChangesModal, isEditing, avalibleGames, service, loadedAgenda, formdata, savedFormData});
+  const [types, setTypes] = useState<any[]>([]);
 
   useEffect(() => {
+    getTypes()
     /**
      * This method will load data from API and will save in formdata, and info.
      *
@@ -148,7 +142,6 @@ function AgendaEdit(props: AgendaEditProps) {
 
         // Get the agenda document from current activity_id
         const agendaInfo: AgendaType = await AgendaApi.getOne(location.state.edit, props.event._id);
-
         // Take the vimeo_id and save in info.
         const vimeo_id = props.event.vimeo_id ? props.event.vimeo_id : '';
         setLoadedAgenda({
@@ -160,7 +153,6 @@ function AgendaEdit(props: AgendaEditProps) {
 
         // Save the activity name
         agendaContext.setActivityName(agendaInfo.name);
-
         // Object.keys(this.state).map((key) => (agendaInfo[key] ? this.setState({ [key]: agendaInfo[key] }) : ''));
         // Edit the current activity ID from passed activity ID via route
         setCurrentActivityID(location.state.edit);
@@ -177,7 +169,22 @@ function AgendaEdit(props: AgendaEditProps) {
       agendaContext.setActivityEdit(null);
     };
   }, [props.event]);
-
+  
+  const selectChange = (data: string[]) => {
+    setFormData((prev) => ({
+      ...prev,
+      userTypes: data,
+    }));    
+  };
+  
+  const getTypes = async () => {
+    const data = await EventsApi.getOne(props.event._id);
+    if(data){
+     const dataTypes = data.user_properties.find((item : any) => item.name === PropertyTypeUser )
+     if(dataTypes) setTypes(dataTypes.options)
+    } 
+  };
+  
   // This exists to enable to call saveConfig (who reads from AgendaContext),
   // when the AgendaContext data are written.
   // NOTE: AgendaContext has a method called saveConfig, but the old edit.jsx
@@ -487,6 +494,27 @@ function AgendaEdit(props: AgendaEditProps) {
                           />
                         </Form.Item>
                         <BackTop />
+                      </Col>
+                    </Row>
+                  </TabPane>
+                  <TabPane tab='Visibilidad para asistentes' key=''>
+                    <Row justify='center' wrap gutter={12}>
+                      <Col span={12}>
+                        <Form.Item
+                          style={{ margin: 0 }}
+                          label={'Tipo de usuario'}
+                          name={'userType'}
+                        />
+                        <Select
+                          mode='multiple'
+                          showArrow
+                          maxTagCount={'responsive'}
+                          style={{ width: '100%' }}
+                          placeholder='Seleccione el tipo de usuario'
+                          onChange={selectChange}
+                          value={formdata.userTypes}
+                          options={types}
+                        />
                       </Col>
                     </Row>
                   </TabPane>

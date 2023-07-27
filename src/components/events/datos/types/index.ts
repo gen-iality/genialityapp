@@ -12,6 +12,8 @@ export interface State {
   visibleModal:            boolean;
   isEditTemplate:          IsEditTemplate;
   checkInExists:           boolean;
+  checkInByUserType:       boolean;
+  checkInByUserTypeFields: any[]
   checkInFieldsIds:        any[];
   checkInByAssembly:       boolean;
   checkInByAssemblyFields: string[];

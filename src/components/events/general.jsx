@@ -1,49 +1,23 @@
+/* eslint-disable no-console */
 import { Component, Fragment } from 'react';
 import Moment from 'moment';
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { Actions, CategoriesApi, EventsApi, OrganizationApi, PlansApi, TypesApi } from '../../helpers/request';
 import ErrorServe from '../modal/serverError';
 import { injectIntl } from 'react-intl';
-import axios from 'axios/index';
+// import axios from 'axios/index';
 import SelectInput from '../shared/selectInput';
 import Loading from '../loaders/loading';
-import DateEvent from './dateEvent';
-import {
-  Switch,
-  Card,
-  Row,
-  Col,
-  Tabs,
-  Checkbox,
-  Typography,
-  Input,
-  Select,
-  Modal,
-  Form,
-  InputNumber,
-  Badge,
-  Space,
-  Grid,
-  Divider,
-  Button,
-  TimePicker,
-  DatePicker,
-} from 'antd';
+// import DateEvent from './dateEvent';
+import { Switch, Card, Row, Col, Tabs, Input, Select, Modal, Form } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
-import { ExclamationCircleOutlined, CheckCircleFilled } from '@ant-design/icons';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { handleRequestError } from '../../helpers/utils';
 import { DispatchMessageService } from '../../context/MessageService';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import PreLandingSections from '../prelanding';
-import { ValidateEventStart } from '@/hooks/validateEventStartAndEnd';
-import {
-  disabledEndDateTime,
-  disabledEndDate,
-  disabledStartDateTime,
-  disabledStartDate,
-} from '@/Utilities/disableTimeAndDatePickerInEventDate';
 import { CurrentUserContext } from '@/context/userContext';
 import DescriptionDynamic from './Description';
 import TypeEvent from '../shared/typeEvent/TypeEvent';
@@ -55,11 +29,10 @@ import LandingRedirectForm from '../shared/LandingRedirectForm';
 import CustomDateEvent from './multiples-fechas/CustomDateEvent';
 
 Moment.locale('es');
-const { Title, Text } = Typography;
+// const { Title, Text } = Typography;
 const { Option } = Select;
 const { confirm } = Modal;
-const { useBreakpoint } = Grid;
-
+// const { useBreakpoint } = Grid;
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
@@ -68,7 +41,7 @@ class General extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      event: this.props.event,
+      event: {...this.props.event},
       optionForm: [],
       selectedOption: [],
       selectedOrganizer: {},
@@ -96,8 +69,9 @@ class General extends Component {
         privateChat: true,
         attendees: true,
       },
+      registrationMessage: props.event && props.event.registration_message ? props.event.registration_message : '',
       redirect_activity: null,
-      redirect_landing: null,
+      // redirect_landing: null,
       itemsMenu: [],
       // Estado inicial de la seccion de formulario de registro
       registerForm: {
@@ -227,13 +201,16 @@ class General extends Component {
       (this.state.event.visibility === 'PUBLIC' || this.state.event.visibility === 'ANONYMOUS') &&
       this.state.event.allow_register
     ) {
-      //Evento Público con Registro
-      this.setState({ accessSelected: 'PUBLIC_EVENT_WITH_REGISTRATION' });
-      //estado del check del evento público con registro sin contraseña
-      if (this.state.event.visibility === 'ANONYMOUS' && this.state.event.allow_register) {
-        this.setState({ extraState: true });
-      }
-    } else if (this.state.event.visibility === 'PUBLIC' && !this.state.event.allow_register) {
+			//Evento Público con Registro
+			this.setState({ accessSelected: 'PUBLIC_EVENT_WITH_REGISTRATION' });
+			if ( this.state.event.visibility === 'PUBLIC' && this.state.event.allow_register && this.state.event.payment?.active ) {
+				this.setState({ accessSelected: 'PAYMENT_EVENT' });
+			}
+			//estado del check del evento público con registro sin contraseña
+			if (this.state.event.visibility === 'ANONYMOUS' && this.state.event.allow_register) {
+				this.setState({ extraState: true });
+			}
+		} else if (this.state.event.visibility === 'PUBLIC' && !this.state.event.allow_register) {
       //Evento Público sin Registro
       this.setState({ accessSelected: 'UN_REGISTERED_PUBLIC_EVENT' });
     } else {
@@ -294,7 +271,7 @@ class General extends Component {
   //Validación
   valid = () => {
     const error = {};
-    const { event, selectedOrganizer, selectedType, selectedCategories } = this.state;
+    const { event, selectedOrganizer } = this.state;
     const valid = event.name !== null && event.name !== '' && event.name.length > 0 && !!selectedOrganizer;
     /* 
       &&
@@ -460,13 +437,12 @@ class General extends Component {
     this.setState({ event: { ...this.state.event, ...values } });
   }
 
+  
   //*********** FIN FUNCIONES DEL FORMULARIO
 
   //Envío de datos
   async submit() {
     const { intl } = this.props;
-    /* e.preventDefault();
-    e.stopPropagation(); */
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
@@ -476,8 +452,11 @@ class General extends Component {
 
     // creacion o actualizacion de estado en firebase de los tabs de la zona social
     await this.upsertTabs();
+    // handleChange = (e) => {
+    //   this.setState({ registrationMessage: e });
+    // };
 
-    const { event, path, image } = this.state;
+    const { event, image } = this.state;
     const self = this;
     //this.setState({loading:true});
     const hour_start = Moment(event.hour_start).format('HH:mm');
@@ -489,11 +468,15 @@ class General extends Component {
     const categories = this.state.selectedCategories.map((item) => {
       return item.value;
     });
-
+    const minValueEvent = 2000;
     const data = {
       name: event.name,
       datetime_from: datetime_from.format('YYYY-MM-DD HH:mm:ss'),
       datetime_to: datetime_to.format('YYYY-MM-DD HH:mm:ss'),
+      payment : {
+				active : event.payment?.active || false,
+				price :  event.payment?.price || minValueEvent
+			},
       picture: image,
       video: event.video || null,
       video_position: event.video_position === 'true' || event.video_position === true ? 'true' : 'false',
@@ -674,8 +657,10 @@ class General extends Component {
 
   //Esto es para la configuración de autenticación. Nuevo flujo de Login, cambiar los campos internamente
   changeAccessTypeForEvent = (value) => {
+    const minValueEvent = 2000;
     this.setState({ accessSelected: value });
     switch (value) {
+      case 'PAYMENT_EVENT':
       case 'PUBLIC_EVENT_WITH_REGISTRATION':
         this.setState({
           extraState: false,
@@ -683,6 +668,10 @@ class General extends Component {
             ...this.state.event,
             visibility: 'PUBLIC',
             allow_register: true,
+            payment : {
+							active : value === 'PAYMENT_EVENT',
+							price : minValueEvent
+						}
           },
         });
         break;
@@ -730,6 +719,10 @@ class General extends Component {
     });
   };
 
+  handleChangeRedirectForm=(value)=>{
+    this.setState({event:{...this.state.event,redirect_landing:value}});
+  }
+
   render() {
     const {
       event,
@@ -739,27 +732,22 @@ class General extends Component {
       selectedCategories,
       selectedOrganizer,
       selectedType,
-      valid,
       errorData,
       serverError,
-      specificDates,
-      registerForm,
       image,
-      iMustBlockAFunctionality,
-      iMustValidate,
-      consumption,
       loading,
       accessSelected,
       extraState,
     } = this.state;
 
     if (loading) return <Loading />;
-    const userContext = this.context;
+    // const userContext = this.context;
     /** RESTRICIONES */
-    const cUser = userContext?.value;
-    const userPlan = userContext.value?.plan;
-    const streamingHours = userPlan?.availables?.streaming_hours;
-
+    // const cUser = userContext?.value;
+    // const userPlan = userContext.value?.plan;
+    // const streamingHours = userPlan?.availables?.streaming_hours;
+    const isOnlineEventExternal =
+      this.state.event.type_event === 'onlineEvent' && this.state.event.where_it_run !== 'InternalEvent';
     return (
       <Fragment>
         {/* RESTRICIONES */}
@@ -882,17 +870,16 @@ class General extends Component {
                     handleFormDataOfEventType={(values) => this.handleFormDataOfEventType(values)}
                     isCms
                   />
-                  {/* {console.log('event', this.props.event)} */}
-                  {this.props.event.type_event === 'onlineEvent' && this.props.event.where_it_run === 'InternalEvent' && (
-                    // Here goes the validation of event type
-                    <ActivityRedirectForm
-                      eventId={this.props.event._id}
-                      initialState={this.props.event?.redirect_activity}
-                    />
-                  )}
+                  <ActivityRedirectForm
+                    eventId={this.props.event._id}
+                    initialState={this.props.event?.redirect_activity}
+                    disabled={isOnlineEventExternal}
+                  />
                   <LandingRedirectForm
                     eventId={this.props.event._id}
-                    initialState={this.props.event?.redirect_landing}
+                    initialState={this.state.event?.redirect_landing}
+                    disabled={isOnlineEventExternal}
+                    handleChangeRedirectForm={this.handleChangeRedirectForm}
                   />
                   <CustomPasswordLabel
                     isCustomPasswordLabel={this.state.isCustomPasswordLabel}
@@ -1071,15 +1058,29 @@ class General extends Component {
               <BackTop />
             </Tabs.TabPane>
             <Tabs.TabPane tab='Tipos de acceso' key='2' style={{ paddingLeft: '32px', paddingRight: '32px' }}>
-              <Row justify='center' wrap gutter={[32, 8]}>
+              <Row justify='start' wrap gutter={[32, 8]}>
                 {AccessTypeCardData.map((item) => (
-                  <Col xs={24} sm={24} md={24} lg={12} xl={8} xxl={8}>
+                  <Col key={item.id} xs={24} sm={24} md={24} lg={12} xl={6} xxl={6}>
                     <AccessTypeCard
                       {...item}
                       callBackSelectedItem={this.changeAccessTypeForEvent}
                       itemSelected={accessSelected}
                       extraState={extraState}
+                      changeValue={(value) =>
+                        this.setState({
+                          event: {
+                            ...this.state.event,
+                            payment: {
+                              active: this.state.event.payment?.active,
+                              price: value,
+                            },
+                          },
+                        })
+                      }
+                      valueInput={this.state.event.payment?.price}
+                      payment={this.state.event.payment?.active}
                       isCms
+                      redirect={this.props.matchUrl}
                     />
                   </Col>
                 ))}
@@ -1089,15 +1090,13 @@ class General extends Component {
                       <Form.Item
                         tooltip={'Esta funcionalidad se encuentra en construcción. - Tecnología 🛠️'}
                         label={'Mensaje al finalizar el registro'}>
-                        <Input.TextArea
-                          disabled={true}
-                          value={event?.success_message}
-                          autoFocus={true}
-                          name={'success_message'}
-                          placeholder={'Mensaje que se mostrara al asistente al finalizar su registro o inscripcion'}
-                          autoSize={{ minRows: 6, maxRows: 6 }}
-                          onChange={(e) => this.handleChange(e, 'success_message')}
-                        />
+                        <Row justify='center' wrap gutter={[8, 8]}>
+                          <Col span={18}>
+                            <Form.Item>
+                              <EviusReactQuill data={this.state.registrationMessage} handleChange={this.handleChange} />
+                            </Form.Item>
+                          </Col>
+                        </Row>
                       </Form.Item>
                     </Card>
                   </Col>

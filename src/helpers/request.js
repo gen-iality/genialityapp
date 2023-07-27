@@ -861,6 +861,10 @@ export const OrganizationApi = {
     });
     return data;
   },
+  getEventsWithUserOrg: async (organizationId, organizarionUserId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`/api/organizations/${organizationId}/user/${organizarionUserId}/events?token=${token}`, true);
+  },
   getOne: async (id) => {
     return await Actions.getOne('/api/organizations/', id);
   },
@@ -878,6 +882,10 @@ export const OrganizationApi = {
   getUsers: async (id) => {
     let token = await GetTokenUserFirebase();
     return await Actions.get(`/api/organizations/${id}/organizationusers?token=${token}`);
+  },
+  getUsersWithStatusInEvent: async (id,eventId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`/api/organizations/${id}/event/${eventId}/validate-existence-members-by-events?token=${token}`);
   },
   getEpecificUser: async (orgId, memberId) => {
     let token = await GetTokenUserFirebase();

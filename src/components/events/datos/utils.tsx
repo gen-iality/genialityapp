@@ -154,6 +154,50 @@ export const createFieldForCheckInPerDocument = async ({
 	}
 };
 
+export const createTypeUserFild = async ({
+	value,
+	checkInFieldsIds,
+	save,
+	remove,
+}: {
+	value: CheckboxChangeEvent;
+	checkInFieldsIds: string[];
+	save: Function;
+	remove: Function;
+}) => {
+	const saveTypeUserField = async () => {
+		ListTypeUserFields.map(async checkInField => {
+			await save(checkInField);
+		});
+	};
+
+	if (value.target.checked) {
+		confirm({
+			title: `HABILITANDO TIPOS DE USUARIO`,
+			content: '',
+			okText: 'Habilitar',
+			okType: 'primary',
+			cancelText: 'Cancelar',
+			onOk() {
+				saveTypeUserField();
+			},
+		});
+	} else {
+		confirm({
+			title: `¿Se borrara el campo "tipos de usuario" estás seguro?`,
+			// content: 'Una vez eliminado, no lo podrá recuperar',
+			okText: 'Si',
+			okType: 'danger',
+			cancelText: 'Cancelar',
+			onOk() {
+				checkInFieldsIds.map(async (checkInFieldId: string) => {
+					await remove(checkInFieldId, true);
+				});
+			},
+		});
+	}
+};
+
 // Logic to create the voting coefficient
 // TODO: pending copy for this instructions
 const voteWeightInstructions = [
@@ -174,6 +218,32 @@ const voteWeightFields = [
 		options: undefined,
 		order_weight: undefined,
 		type: 'voteWeight',
+		visibleByAdmin: true,
+		visibleByContacts: undefined,
+	},
+];
+const ListTypeUserFields = [
+	{
+		id: undefined,
+		name: 'list_type_user',
+		description: undefined,
+		label: 'type user',
+		unique: false,
+		mandatory: true,
+		options: [{
+			label : 'tipo A',
+			value : 'tipo A'
+		},
+		{
+			label : 'tipo B',
+			value : 'tipo B'
+		},
+		{
+			label : 'tipo C',
+			value : 'tipo C'
+		}],
+		order_weight: undefined,
+		type: 'list_type_user',
 		visibleByAdmin: true,
 		visibleByContacts: undefined,
 	},

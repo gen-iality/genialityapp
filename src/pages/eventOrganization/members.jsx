@@ -11,6 +11,8 @@ import moment from 'moment';
 import withContext from '../../context/withContext';
 import { utils, writeFileXLSX } from 'xlsx';
 import Header from '../../antdComponents/Header';
+import { ModalAddAndEditUsers } from './components/ModalAddAndEditUsersOrganization';
+import { convertUTC } from '@/hooks/useConvertUTC';
 
 function OrgMembers(props) {
   const [membersData, setMembersData] = useState([]);
@@ -21,28 +23,25 @@ function OrgMembers(props) {
   const [addOrEditUser, setAddOrEditUser] = useState(false);
   const [extraFields, setExtraFields] = useState([]);
   const [roleList, setRoleList] = useState([]);
-  const [selectedUser, setSelectedUser] = useState({});
+  const [selectedUser, setSelectedUser] = useState();
   const [editMember, setEditMember] = useState(false);
   let { _id: organizationId } = props.org;
   const history = useHistory();
-
   async function getEventsStatisticsData() {
     const { data } = await OrganizationApi.getUsers(organizationId);
     const fieldsMembersData = [];
-    data.map((membersData) => {
+    data.map((membersData,index) => {
       const properties = {
-        _id: membersData._id,
-        created_at: membersData.created_at,
-        updated_at: membersData.updated_at,
-        position: membersData.rol_id,
-        // names: membersData?.user?.name || membersData?.user?.names,
-        // email: membersData?.user?.email,
         ...membersData.properties,
+        _id: membersData._id,
+        created_at: convertUTC(new Date(membersData.created_at)).newDateWithMoment,
+        updated_at: convertUTC(new Date(membersData.updated_at)).newDateWithMoment,
+        position: membersData.rol?.name ?? 'NaN', //Si no viene Rol validar que deba traerlo
+        rol_id:membersData.rol_id,
+        isAuthor:membersData.account_id === membersData.organization.author
       };
-
       fieldsMembersData.push(properties);
     });
-
     setMembersData(fieldsMembersData);
     setIsLoading(false);
   }
@@ -84,7 +83,7 @@ function OrgMembers(props) {
   }
 
   function addUser() {
-    setSelectedUser({});
+    setSelectedUser(undefined);
     closeOrOpenModalMembers();
   }
   function editModalUser(item) {
@@ -113,7 +112,6 @@ function OrgMembers(props) {
       <p>
         <Tag>Inscritos: {membersData.length || 0}</Tag>
       </p>
-
       <Table
         columns={columns(columnsData, editModalUser)}
         dataSource={membersData}
@@ -145,16 +143,15 @@ function OrgMembers(props) {
         )}
       />
       {addOrEditUser && (
-        <ModalMembers
-          handleModal={closeOrOpenModalMembers}
-          modal={addOrEditUser}
-          rolesList={roleList}
-          extraFields={extraFields}
-          value={selectedUser}
-          editMember={editMember}
-          closeOrOpenModalMembers={closeOrOpenModalMembers}
+        <ModalAddAndEditUsers
+          visible={addOrEditUser}
+          onCancel={()=>{
+            setAddOrEditUser(false)
+            setSelectedUser(undefined)
+          }}
           organizationId={organizationId}
-          startingComponent={startingComponent}
+          selectedUser={selectedUser}
+          getEventsStatisticsData={getEventsStatisticsData}
         />
       )}
     </>

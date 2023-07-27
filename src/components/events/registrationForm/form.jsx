@@ -974,7 +974,7 @@ const FormRegister = ({
           );
         }
 
-        if (type === 'list') {
+        if (type === 'list' || type === 'list_type_user') {
           //Filtramos las opciones ya tomadas si la opción justonebyattendee esta activada
 
           let fieldId = m._id && m._id['$oid'] ? m._id['$oid'] : m._id;

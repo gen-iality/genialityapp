@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import WithEviusContext from '../../../context/withContext';
 import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { Result } from 'antd';
+import { ClockCircleOutlined, LoadingOutlined, SettingOutlined } from '@ant-design/icons';
 
 const ImageComponent = (props) => {
-  let { willStartSoon } = props;
   let { currentActivity } = useHelper();
-  const [activityState, setactivityState] = useState('');
+  const [, setactivityState] = useState('');
 
   useEffect(() => {
     setactivityState(currentActivity?.habilitar_ingreso);
@@ -15,56 +15,32 @@ const ImageComponent = (props) => {
     };
   }, [currentActivity]);
 
-  function RenderTextActivity(state) {
-    //console.log('que llega', state);
+  const RenderTextActivity = (state) => {
     switch (state) {
+      case 'created_meeting_room':
+        return 'El contenido está siendo configurado para que puedas disfrutar de esta actividad.';
       case 'closed_meeting_room':
-        return 'Esta actividad esta por iniciar';
-
-      case '':
-        return 'Esta actividad esta siendo configurada';
-
+        return 'La actividad está por iniciar. ¡Prepárate para comenzar en breve!';
       default:
-        break;
+        return 'El contenido de esta actividad no esta cargada, disponible próximamente.';
     }
-  }
-
-  let imagePlaceHolder = '';
-  if (props.cEvent.value.styles.toolbarDefaultBg) {
-    imagePlaceHolder =
-      'https://via.placeholder.com/1500x540/' +
-      props.cEvent.value.styles.toolbarDefaultBg.replace('#', '') +
-      '/' +
-      props.cEvent.value.styles.textMenu.replace('#', '') +
-      '?text=' +
-      props.cEvent.value.name;
-  }
-  let imageToShow = willStartSoon
-    ? currentActivity?.image
-      ? currentActivity?.image
-      : props.cEvent.value.styles?.banner_image
-      ? props.cEvent.value.styles?.banner_image
-      : props.cEvent.value.styles.event_image
-      ? props.cEvent.value.styles.event_image
-      : imagePlaceHolder
-    : props.cEvent.value.styles?.banner_image;
-
+  };
+  const getIcon = (state) => {
+    switch (state) {
+      case 'created_meeting_room':
+        return <ClockCircleOutlined style={{ color: '#33FF93' }} />;
+      case 'closed_meeting_room':
+        return <LoadingOutlined style={{ color: '#33FF93' }} />;
+      default:
+        return <SettingOutlined />;
+    }
+  };
   return (
     <div className='mediaplayer'>
-      {props.cEvent.value.styles.toolbarDefaultBg != undefined || props.cEvent.value.styles.toolbarDefaultBg != '' ? (
-        imageToShow && (
-          <img
-            className='activity_image'
-            style={{
-              width: '100%',
-              objectFit: 'cover',
-            }}
-            src={imageToShow}
-            alt='Activity'
-          />
-        )
+      {currentActivity ? (
+        <Result icon={getIcon(currentActivity.habilitar_ingreso)} title={RenderTextActivity(currentActivity.habilitar_ingreso)} />
       ) : (
-        <Result title={RenderTextActivity(activityState)} />
+        <Result icon={getIcon('')} title={RenderTextActivity('')} />
       )}
     </div>
   );

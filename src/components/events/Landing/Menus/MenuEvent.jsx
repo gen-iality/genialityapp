@@ -1,4 +1,4 @@
-import { Badge, Col, Menu, Row, Space } from 'antd';
+import { Badge, Button, Menu, Space } from 'antd';
 import { useRouteMatch, Link, useHistory } from 'react-router-dom';
 import * as iconComponents from '@ant-design/icons';
 import { stylesMenuItems } from '../helpers/csshelpers';
@@ -16,8 +16,8 @@ const MenuEvent = ({ isMobile }) => {
 
   const redirectToPreLanding = () => {
     sessionStorage.removeItem('session');
-    history.push(`/${cEvent.value._id}`)
-  }
+    history.push(`/${cEvent.value._id}`);
+  };
 
   return (
     <>
@@ -32,19 +32,33 @@ const MenuEvent = ({ isMobile }) => {
         //   }}
         // >
         <Menu style={stylesMenuItems} mode='inline' defaultSelectedKeys={['1']}>
-          <Menu.Item className='MenuItem_event' key={'pre-landing'}>
-            <Link className='menuEvent_section-text' style={{ color: 'black' }} onClick={redirectToPreLanding}>
-              <iconComponents.ArrowLeftOutlined
+          {event.redirect_landing === true ? null : (
+            <Menu.Item className='MenuItem_event' key={'pre-landing'}>
+              <Button
+                type='primary'
+                className='menuEvent_section-text'
                 style={{
                   fontSize: '22px',
+                  color: event.styles.textMenu,
+                  backgroundColor: 'transparent',
+                  border: 'none',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  boxShadow: 'none'
                 }}
-              />
-              Inicio
-            </Link>
-          </Menu.Item>
+                onClick={redirectToPreLanding}>
+                <Space direction='vertical'>
+                  <iconComponents.HomeOutlined
+                    style={{
+                      fontSize: '22px',
+                    }}
+                  />
+                  Inicio
+                </Space>
+              </Button>
+            </Menu.Item>
+          )}
           {event.itemsMenu &&
             !eventPrivate.private &&
             Object.keys(event.itemsMenu).map((key) => {
@@ -123,15 +137,13 @@ const MenuEvent = ({ isMobile }) => {
               key={'pre-landing-drawer'}
               className='MenuItem_event'>
               <iconComponents.ArrowLeftOutlined
-                  style={{
-                    margin: '0 auto',
-                    fontSize: '22px',
-                  }}
-                />
+                style={{
+                  margin: '0 auto',
+                  fontSize: '22px',
+                }}
+              />
 
-              <Link
-                className='menuEvent_section-text'
-                onClick={redirectToPreLanding}>
+              <Link className='menuEvent_section-text' onClick={redirectToPreLanding}>
                 {` Inicio`}
               </Link>
             </Menu.Item>
@@ -140,7 +152,7 @@ const MenuEvent = ({ isMobile }) => {
                 //icono personalizado
                 //CAMBIO DE ICONO TRIPULACIÓN KELLOGS
                 let icon =
-                  event._id === '62c5e89176dfb307163c05a9' && event.itemsMenu[key].icon == 'AudioOutlined'
+                  event._id === '62c5e89176dfb307163c05a9' && event.itemsMenu[key].icon === 'AudioOutlined'
                     ? 'RocketOutlined'
                     : event.itemsMenu[key].icon;
 

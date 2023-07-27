@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Spin, Form, Switch, Table, Button, Typography, Tag } from 'antd';
+import { Spin, Form, Switch, Table, Button, Typography, Tag, Avatar } from 'antd';
 import Header from '@/antdComponents/Header';
 import BackTop from '@/antdComponents/BackTop';
 import useMenuLanding from './hooks/useMenuLanding';
@@ -44,10 +44,10 @@ export default function MenuLanding(props: MenuLandingProps) {
 
   const SortableItem: any = SortableElement((props: any) => <tr {...props} />);
   const SortableBody: any = SortableContainer((props: any) => <tbody {...props} />);
-  const renderIcon = (iconName: string) => {
+  const renderIcon = (iconName: string, size?: number) => {
     //@ts-ignore
     const IconComponent = iconComponents[iconName];
-    return IconComponent ? <IconComponent /> : iconName;
+    return IconComponent ? <IconComponent style={size ? {fontSize: size} : {}} /> : iconName;
   };
   const showDrawe = (item: Menu) => {
     setItemEdit(item);
@@ -74,7 +74,7 @@ export default function MenuLanding(props: MenuLandingProps) {
       title: 'Orden',
       dataIndex: 'position',
       width: 20,
-      render: (position: number, record: Menu, index: number) => <Tag>{`#${index + 1}`}</Tag>,
+      render: (position: number, record: Menu, index: number) => <Avatar shape='square'>{index + 1}</Avatar>,
     },
     {
       title: 'Nombre',
@@ -92,7 +92,7 @@ export default function MenuLanding(props: MenuLandingProps) {
       title: 'Icono',
       dataIndex: 'icon',
       width: 10,
-      render: (text: string, record: Menu) => renderIcon(record.icon),
+      render: (text: string, record: Menu) => renderIcon(record.icon, 25),
     },
     {
       title: 'Habilitado',

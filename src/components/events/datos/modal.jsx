@@ -202,16 +202,21 @@ class DatosModal extends Component {
   //funciona pra crear datos predeterminados
 
   handleKeyDown = (event) => {
-    const { inputValue } = this.state;
+    const { inputValue , info } = this.state;
     const value = inputValue;
+    const exist = info.options.find((item)=> item.label === value)
+    if(exist) {
+      DispatchMessageService({
+        type: 'error',
+        msj: `La opcion ya se encuentra registrada`,
+        action: 'show',
+      });
+    }
     if (!value) return;
     switch (event.keyCode) {
       case 9:
       case 13:
-        this.setState({
-          inputValue: '',
-          info: { ...this.state.info, options: [...(this.state.info?.options || []), createOption(value)] },
-        });
+        if(!exist) this.setState({ inputValue: '', info: { ...this.state.info, options: [...(this.state.info?.options || []), createOption(value)] },});
         event.preventDefault();
         break;
       // eslint-disable-next-line no-empty
@@ -340,7 +345,7 @@ class DatosModal extends Component {
               onChange={(value) => this.handleChange({ target: { name: 'type', value: value } })}></Select>
           </Form.Item>
 
-          {(info.type === 'list' || info.type === 'multiplelist' || info.type === 'multiplelisttable') && (
+          {(info.type === 'list'  || info.type === 'list_type_user' || info.type === 'multiplelist' || info.type === 'multiplelisttable') && (
             <CreatableSelect
               components={{ DropdownIndicator: null }}
               inputValue={inputValue}

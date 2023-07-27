@@ -18,6 +18,7 @@ import RegisterUserAndEventUser from './RegisterUserAndEventUser';
 import { isHome, eventWithCedula } from '../../helpers/helperEvent';
 import { UseCurrentUser } from '../../context/userContext';
 import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
+import { isOrganizationCETA } from '../user-organization-to-event/helpers/helper';
 
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
@@ -414,7 +415,8 @@ const ModalAuth = (props) => {
               </div>
             )}
           </TabPane>
-          {isVisibleRegister() && (
+          {/* Todo: Esto debe cambir a no estar quemado [isOrganizationCETA] */}
+          {isVisibleRegister() && !isOrganizationCETA() && (
             <TabPane
               tab={intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })}
               key='register'>
