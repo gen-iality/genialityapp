@@ -3,6 +3,7 @@ export interface controllerLoginVisible {
   idOrganization: string
   organization: string
   logo: string
+  controllerLoginVisible?: string
 }
 
 export interface HelperState {

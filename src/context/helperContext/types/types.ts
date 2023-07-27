@@ -12,6 +12,7 @@ export type HelperAction = {
   params?: object | any
   eventIsActive?: boolean
   eventId?: string
+  customPasswordLabel?: string
 }
 
 export type HelperContextProps = any
