@@ -7,6 +7,10 @@ export const useGetEventsWithUser = (organizationId: string, eventUserId: string
 
     const getUser = async () => {
         try {
+            if (!eventUserId) {
+                setIsLoading(false)
+                return
+            }
             const { events } = await OrganizationApi.getEventsWithUserOrg(organizationId, eventUserId)
             setEventsWithEventUser(events)
         } catch (error) {
