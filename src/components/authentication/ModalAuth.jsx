@@ -5,6 +5,7 @@ import {
   LoadingOutlined,
   LockOutlined,
   MailOutlined,
+  WarningOutlined,
 } from '@ant-design/icons';
 import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Image } from 'antd';
 import withContext from '../../context/withContext';
@@ -193,7 +194,7 @@ const ModalAuth = (props) => {
         zIndex={1000}
         visible={controllerLoginVisible?.visible && props.cEvent?.value?.visibility !== 'ANONYMOUS'}
         closable={controllerLoginVisible?.organization !== 'organization' ? true : false}>
-         {isPayment && <Alert message="Para comprar el ticket primero debes Iniciar sesión o Registrarte" type="warning" style={{marginTop: 15}} closable={false} banner icon={<WarningOutlined />} />}
+         {isPayment && <Alert message="Para comprar el ticket primero debes Iniciar sesión o Registrarte" type="warning" style={{marginTop: 15}} closable={false} banner icon={<WarningOutlined/>} />}
           <Tabs onChange={callback} centered size='large' activeKey={currentAuthScreen}>
           <TabPane
             tab={intl.formatMessage({
