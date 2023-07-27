@@ -17,6 +17,8 @@ import { uploadImagedummyRequest } from '@Utilities/imgUtils'
 import Camera from 'react-html5-camera-photo'
 import 'react-html5-camera-photo/build/css/index.css'
 import './RegisterFast.css'
+import { useParams } from 'react-router-dom'
+import { OrganizationFuction } from '@helpers/request'
 
 function getBase64(img: any, callback: (data: any) => void) {
   const reader = new FileReader()
@@ -44,10 +46,25 @@ const RegisterFast: FunctionComponent<IRegisterFastProps> = (props) => {
 
   const [takingPhoto, setTakingPhoto] = useState(false)
   const [imageAvatar, setImageAvatar] = useState<any>(null)
+  const [organization, setOrganization] = useState(null)
+
+  const params = useParams()
+  const orgId = params.id
 
   const [form] = Form.useForm()
   const intl = useIntl()
   const cEvent = useEventContext()
+
+  /*Cargando la información de la organización esto debería estar en un contexto*/
+  useEffect(() => {
+    if (!orgId) return null
+    let _organization = null
+    let asyncfunc = async () => {
+      _organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId)
+      setOrganization(_organization)
+    }
+    asyncfunc()
+  }, [orgId])
 
   /* Toca hacerlo, porque por alguna razón cuando se actualiza basicDataUser.picture  no se renderiza el componente 
    y no se ve la imagen en el preview
@@ -247,6 +264,7 @@ const RegisterFast: FunctionComponent<IRegisterFastProps> = (props) => {
             prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
           />
         </Form.Item>
+
         {useEventWithCedula(cEvent.value).isArkmed ? (
           <Form.Item
             label={intl.formatMessage({
@@ -262,17 +280,20 @@ const RegisterFast: FunctionComponent<IRegisterFastProps> = (props) => {
               onChange={(e) => formDataHandler(e, 'password')}
               type="number"
               size="large"
-              // placeholder="Cedula del medico ó especialista"
               placeholder="Cedula ó numero de identificación"
               prefix={<IdcardOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
             />
           </Form.Item>
         ) : (
           <Form.Item
-            label={intl.formatMessage({
-              id: 'modal.label.password',
-              defaultMessage: 'Contraseña', // TODO: Antes contraseña
-            })}
+            label={
+              organization && organization._id == '63f552d916065937427b3b02'
+                ? 'Documento (ID)'
+                : intl.formatMessage({
+                    id: 'modal.label.password',
+                    defaultMessage: 'Contraseña',
+                  })
+            }
             name="password"
             hasFeedback
             style={{ marginBottom: '10px', textAlign: 'left' }}
@@ -284,7 +305,7 @@ const RegisterFast: FunctionComponent<IRegisterFastProps> = (props) => {
               size="large"
               placeholder={intl.formatMessage({
                 id: 'modal.label.password',
-                defaultMessage: 'Contraseña', // TODO: Antes contraseña
+                defaultMessage: 'Contraseña',
               })}
               prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
             />
