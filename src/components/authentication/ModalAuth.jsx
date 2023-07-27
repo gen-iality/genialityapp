@@ -328,11 +328,13 @@ const ModalAuth = (props) => {
                   />
                 </Form.Item>
               ) : (
-                // Comentario
+                /*ENDOCAMPUS organization_ID: 63f552d916065937427b3b02
+                 change password label customization by client request
+                */
                 <Form.Item
                   label={
                     organization && organization._id == '63f552d916065937427b3b02'
-                      ? 'Documeto'
+                      ? 'Documento (ID)'
                       : intl.formatMessage({
                           id: 'modal.label.password',
                           defaultMessage: 'Contraseña',
@@ -355,7 +357,13 @@ const ModalAuth = (props) => {
                     size="large"
                     placeholder={intl.formatMessage({
                       id: 'modal.label.password',
-                      defaultMessage: 'Contraseña',
+                      defaultMessage:
+                        organization && organization._id == '63f552d916065937427b3b02'
+                          ? 'Documento (ID)'
+                          : intl.formatMessage({
+                              id: 'modal.label.password',
+                              defaultMessage: 'Contraseña',
+                            }),
                     })}
                     prefix={
                       <LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />
