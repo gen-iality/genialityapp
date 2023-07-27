@@ -380,7 +380,7 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
           type: 'html',
           name: 'videoQuestion',
           html: `<div style='position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;'>
-                  <iframe style='position: absolute; top: 0; left: 0; width: 100%; height: 100%;' src='${videoURL}&title=0&byline=0' allowFullScreen allowusermedia frameborder='0'>
+                  <iframe style='position: absolute; top: 0; left: 0; width: 100%; height: 100%;' src='${videoURL}&title=0&byline=0&portrait=0' allowFullScreen allowusermedia frameborder='0'>
                   </iframe>
                 </div>`,
           url: videoURL,
