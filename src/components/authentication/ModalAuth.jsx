@@ -311,19 +311,26 @@ const ModalAuth = (props) => {
                 </Form.Item>
               ) : (
                 <Form.Item
-                  label={intl.formatMessage({
-                    id: 'modal.label.password',
-                    defaultMessage: 'Contraseña',
-                  })}
+                  label={
+                    typeof controllerLoginVisible.customPasswordLabel === 'string'
+                      ? controllerLoginVisible.customPasswordLabel
+                      : intl.formatMessage({
+                          id: 'modal.label.password',
+                          defaultMessage: 'Contraseña',
+                        })
+                  }
                   name="password"
                   style={{ marginBottom: '15px', textAlign: 'left' }}
                   rules={[
                     {
                       required: true,
-                      message: intl.formatMessage({
-                        id: 'modal.rule.required.password',
-                        defaultMessage: 'Ingrese una contraseña',
-                      }),
+                      message:
+                        typeof controllerLoginVisible.customPasswordLabel === 'string'
+                          ? `Se requiere ${controllerLoginVisible.customPasswordLabel}`
+                          : intl.formatMessage({
+                              id: 'modal.rule.required.password',
+                              defaultMessage: 'Ingrese una contraseña',
+                            }),
                     },
                   ]}
                 >
