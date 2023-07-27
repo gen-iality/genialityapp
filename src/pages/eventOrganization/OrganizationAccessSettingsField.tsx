@@ -1,5 +1,5 @@
 import { FunctionComponent, useEffect, useState } from 'react'
-import { Form, InputNumber, Switch } from 'antd'
+import { Form, Input, InputNumber, Switch } from 'antd'
 
 interface IOrganizationAccessSettingsFieldProps {
   value?: any
@@ -19,6 +19,9 @@ const OrganizationAccessSettingsField: FunctionComponent<
   const [isFieldEnabled, setIsFieldEnabled] = useState<boolean>(value?.type === 'payment')
   const [priceValue, setPriceValue] = useState<number>(value?.price ?? 0)
   const [availableDays, setAvailableDays] = useState<number>(value?.days)
+  const [customPasswordLabel, setCustomPasswordLabel] = useState<undefined | string>(
+    value?.custom_password_label,
+  )
 
   useEffect(() => {
     if (typeof priceValue !== 'number') {
@@ -33,12 +36,20 @@ const OrganizationAccessSettingsField: FunctionComponent<
       days: availableDays,
       price,
       type,
+      custom_password_label: customPasswordLabel,
     })
-  }, [isFieldEnabled, priceValue, availableDays])
+  }, [isFieldEnabled, priceValue, availableDays, customPasswordLabel])
 
   return (
     <>
       <Form.Item {...formLayout} label="Habilitar modo pago">
+        <Form.Item label="Etiqueta en campo contraseña">
+          <Input
+            placeholder="(Opcional) Contraseña"
+            value={customPasswordLabel}
+            onChange={(e) => setCustomPasswordLabel(e.target.value)}
+          />
+        </Form.Item>
         <Switch
           checked={isFieldEnabled}
           checkedChildren="Modalidad paga"
