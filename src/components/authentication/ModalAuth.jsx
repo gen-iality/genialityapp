@@ -19,6 +19,7 @@ import {
   Alert,
   Image,
 } from 'antd'
+import { Link, useParams } from 'react-router-dom'
 import withContext from '@context/withContext'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { app } from '@helpers/firebase'
@@ -26,13 +27,14 @@ import { useIntl } from 'react-intl'
 import { useEffect, useState } from 'react'
 import RegisterUser from './RegisterUser'
 import { useEventContext } from '@context/eventContext'
+
 import RegisterUserAndEventUser from './RegisterUserAndEventUser'
 import { isEvent, isHome, useEventWithCedula } from '@helpers/helperEvent'
 import { useCurrentUser } from '@context/userContext'
 import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed'
 import RegisterUserAndOrgMember from './RegisterUserAndOrgMember'
 import { isOrganization } from '@helpers/helperOrg'
-
+import { OrganizationFuction } from '@helpers/request'
 const { TabPane } = Tabs
 const { useBreakpoint } = Grid
 
@@ -52,6 +54,8 @@ const ModalAuth = (props) => {
   const [isLoading, setIsLoading] = useState(false)
   const [errorLogin, setErrorLogin] = useState(false)
   const [errorRegisterUSer, setErrorRegisterUSer] = useState(false)
+  const [organization, setOrganization] = useState(null)
+
   const [form1] = Form.useForm()
   const {
     handleChangeTypeModal,
@@ -67,6 +71,9 @@ const ModalAuth = (props) => {
   const [msjError, setMsjError] = useState('')
   const intl = useIntl()
 
+  const params = useParams()
+  const orgId = params.id
+
   const isVisibleRegister = () => {
     const typeEvent = recordTypeForThisEvent(cEvent)
     switch (typeEvent) {
@@ -80,6 +87,17 @@ const ModalAuth = (props) => {
         return true
     }
   }
+
+  /*Cargando la información de la organización esto debería estar en un contexto*/
+  useEffect(() => {
+    if (!orgId) return null
+    let _organization = null
+    let asyncfunc = async () => {
+      _organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId)
+      setOrganization(_organization)
+    }
+    asyncfunc()
+  }, [orgId])
 
   useEffect(() => {
     let unsubscribe
@@ -310,11 +328,18 @@ const ModalAuth = (props) => {
                   />
                 </Form.Item>
               ) : (
+                /*ENDOCAMPUS organization_ID: 63f552d916065937427b3b02
+                 change password label customization by client request
+                */
                 <Form.Item
-                  label={intl.formatMessage({
-                    id: 'modal.label.password',
-                    defaultMessage: 'Contraseña',
-                  })}
+                  label={
+                    organization && organization._id == '63f552d916065937427b3b02'
+                      ? 'Documento (ID)'
+                      : intl.formatMessage({
+                          id: 'modal.label.password',
+                          defaultMessage: 'Contraseña',
+                        })
+                  }
                   name="password"
                   style={{ marginBottom: '15px', textAlign: 'left' }}
                   rules={[
@@ -332,7 +357,13 @@ const ModalAuth = (props) => {
                     size="large"
                     placeholder={intl.formatMessage({
                       id: 'modal.label.password',
-                      defaultMessage: 'Contraseña',
+                      defaultMessage:
+                        organization && organization._id == '63f552d916065937427b3b02'
+                          ? 'Documento (ID)'
+                          : intl.formatMessage({
+                              id: 'modal.label.password',
+                              defaultMessage: 'Contraseña',
+                            }),
                     })}
                     prefix={
                       <LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />
