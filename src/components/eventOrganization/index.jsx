@@ -56,6 +56,7 @@ const EventOrganization = () => {
         visible: true,
         idOrganization: orgId,
         defaultPositionId: positionId,
+        customPasswordLabel: organization.access_settings?.custom_password_label,
       })
     }
   }, [cUser.value, organization, orgId])
