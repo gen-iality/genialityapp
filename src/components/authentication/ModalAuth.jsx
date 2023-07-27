@@ -51,6 +51,7 @@ const ModalAuth = (props) => {
   const isCustomPassword = cEvent?.value?.is_custom_password_label;
   const customPasswordLabel = cEvent?.value?.custom_password_label;
   const [modalVisible, setmodalVisible] = useState(false);
+  const [isPayment, setIsPayment] = useState(false);
   const [msjError, setmsjError] = useState('');
   const intl = useIntl();
 
@@ -82,6 +83,11 @@ const ModalAuth = (props) => {
           setmodalVisible(true);
           helperDispatch({ type: 'showRegister', visible: false });
           break;
+          case 'PAYMENT_EVENT':
+            setmodalVisible(true);
+            setIsPayment(true)
+            helperDispatch({ type: 'showRegister', visible: false });
+            break;
         default:
           setmodalVisible(true);
           break;
@@ -186,7 +192,8 @@ const ModalAuth = (props) => {
         zIndex={1000}
         visible={controllerLoginVisible?.visible && props.cEvent?.value?.visibility !== 'ANONYMOUS'}
         closable={controllerLoginVisible?.organization !== 'organization' ? true : false}>
-        <Tabs onChange={callback} centered size='large' activeKey={currentAuthScreen}>
+         {isPayment && <Alert message="Para comprar el ticket primero debes Iniciar sesión o Registrarte" type="warning" style={{marginTop: 15}} closable={false} banner icon={<WarningOutlined />} />}
+          <Tabs onChange={callback} centered size='large' activeKey={currentAuthScreen}>
           <TabPane
             tab={intl.formatMessage({
               id: 'modal.title.login',
@@ -420,8 +427,9 @@ const ModalAuth = (props) => {
                   paddingTop: '0px',
                   paddingBottom: '0px',
                 }}>
-                {isHome() && !isPrelanding ? (
+                {isHome() && (!isPrelanding || isPayment) ? (
                   <RegisterUser
+                    isPayment={isPayment}
                     screens={screens}
                     stylePaddingMobile={stylePaddingMobile}
                     stylePaddingDesktop={stylePaddingDesktop}

@@ -27,6 +27,7 @@ import { PropsPreLanding } from './types/Prelanding';
 import { Agenda, ApiGeneric, DataSource, Description, Speaker, Sponsor } from './types';
 import { style } from './constants';
 import {Helmet} from "react-helmet";
+import ModalPayment from '../authentication/ModalPayment';
 
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -215,6 +216,7 @@ const ViewPrelanding = ({ preview } : PropsPreLanding) => {
 				}}>
 				{/**MODAL INSCRIPCION EN EL EVENTO*/}
 				<ModalPermission />
+				<ModalPayment  event={cEventContext.value} user={cUser.value}  updateUser={cEventUser.setUpdateUser} eventUser={cEventUser} />
 				<Row
 					gutter={[0, 16]}
 					style={screens.xs || mobilePreview === 'smartphone' ? style.mobileBlockContainerStyle : style.desktopBlockContainerStyle}>

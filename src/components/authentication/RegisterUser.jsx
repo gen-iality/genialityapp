@@ -9,7 +9,7 @@ import { useIntl } from 'react-intl';
 import { DispatchMessageService } from '@/context/MessageService';
 import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
 
-const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
+const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop , isPayment}) => {
   const intl = useIntl();
   const { handleChangeTypeModal } = useHelper();
   const [errorEmail, setErrorEmail] = useState(false);
@@ -94,8 +94,8 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           .then((login) => {
             if (login) {
               //PERMITE VALIDAR EN QUE SECCIÓN DE EVIUS SE ENCUENTRA Y ASÍ RENDERIZAR EL MODAL CORRESPONDIENTE
-              if (window.location.toString().includes('landing') || window.location.toString().includes('event')) {
-                handleChangeTypeModal('loginSuccess');
+              if (isPayment) {
+                handleChangeTypeModal('registerForTheEventPayment')
               } else {
                 handleChangeTypeModal('loginSuccess');
               }
