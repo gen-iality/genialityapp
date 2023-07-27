@@ -168,10 +168,11 @@ function EventOrganization({match}: OrganizationProps) {
                     </Card>
                   </Col>
                 )}
-                <Col style={{width: '100%'}}>
+                {
+                  cUser.value && (<Col style={{width: '100%'}}>
                   {/* Lista otros eventos en los que esta inscrito el usuario*/}
                   <Card style={{width: '100%', borderRadius: 20}}>
-                    <Badge offset={[60, 22]} count={`${events.length} Eventos`}>
+                    <Badge offset={[60, 22]} count={`${eventsWithEventUser.length} Eventos`}>
                       <Title level={2}>Mis eventos</Title>
                     </Badge>
                     <Row gutter={[16, 16]} >
@@ -204,7 +205,9 @@ function EventOrganization({match}: OrganizationProps) {
                       )}
                     </Row>
                   </Card>
-                </Col>
+                </Col>)
+                }
+                
                 <Col style={{width: '100%'}}>
                   {/* Lista de eventos próximos */}
                   <Card style={{width: '100%', borderRadius: 20}}>
