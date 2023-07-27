@@ -138,7 +138,7 @@ function OrganizationInformation(props: { org: any }) {
                   />
                 </Form.Item>
                 <Form.Item
-                  label="¿Inscripción paga?"
+                  label="Configuración de acceso"
                   name={['organization', 'access_settings']}
                   initialValue={access_settings}
                 >
