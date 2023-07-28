@@ -10,7 +10,7 @@ const { Meta } = Card;
 class EventCard extends Component {
   static contextType = HelperContext;
   render() {
-    const { event, bordered, right, loading, isAdmin, blockedEvent, buttonToBuy } = this.props;
+    const { event, bordered, right, loading, isAdmin, blockedEvent, buttonBuyOrRegistered, textButtonBuyOrRegistered } = this.props;
     const { eventIsActive } = this.context;
 
     const styleNormal = {
@@ -109,9 +109,9 @@ class EventCard extends Component {
                       ? event.author?.displayName
                       : event.author?.names}
                   </span>
-                  {buttonToBuy && 
+                  {buttonBuyOrRegistered && 
                   <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
-                    <Button type='primary'>Comprar</Button>
+                    <Button type='primary'>{textButtonBuyOrRegistered ?? 'Comprar'}</Button>
                   </Link>
                   }
                   {/* RESTRICIONES */}

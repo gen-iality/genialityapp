@@ -86,12 +86,30 @@ function EventOrganization({match}: OrganizationProps) {
   };
 
   //toDo: Se debe realizar esta validacion desde el backedn para mejor optimizacion
-  const isEventPassInEventWithUser=(eventId:string):boolean => {
+  const isUserRegisterInEvent=(eventId:string):boolean => {
     if( eventsWithEventUser.filter(event => event._id === eventId).length > 0 ){
       return true;
     }
     return false
   }
+
+
+  const getTextButtonBuyOrRegistered=(event:any):string=>{
+    if(isUserRegisterInEvent(event._id)){
+      return 'Ir a'
+    }
+
+    if(havePaymentEvent(event)){
+      return `Comprar por $ ${event.payment.price}`
+    }
+
+    return 'Inscribirse'
+  }
+
+  const havePaymentEvent=(event:any):boolean=>{
+    return (event.payment ? event.payment.active as boolean : false)
+  }
+
 
   return (
     <div
@@ -266,7 +284,8 @@ function EventOrganization({match}: OrganizationProps) {
                               key={event._id}
                               event={event}
                               action={{ name: 'Ver', url: `landing/${event._id}` }}
-                              buttonToBuy={!isEventPassInEventWithUser(event._id) && (event.payment ? event.payment.active : false)}
+                              buttonBuyOrRegistered
+                              textButtonBuyOrRegistered={getTextButtonBuyOrRegistered(event)}
                             />
                           </Col>
                         ))
