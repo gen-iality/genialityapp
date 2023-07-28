@@ -111,6 +111,7 @@ class General extends Component {
   };
 
   async componentDidMount() {
+    console.log(this.props.event)
     this.getCurrentConsumptionPlanByUsers();
     //inicializacion del estado de menu
     if (this.state.event.itemsMenu) {
@@ -475,7 +476,8 @@ class General extends Component {
       datetime_to: datetime_to.format('YYYY-MM-DD HH:mm:ss'),
       payment : {
 				active : event.payment?.active || false,
-				price :  event.payment?.price || minValueEvent
+				price :  event.payment?.price || minValueEvent,
+				currency :  event.payment?.currency || 'COP',
 			},
       picture: image,
       video: event.video || null,
@@ -670,7 +672,8 @@ class General extends Component {
             allow_register: true,
             payment : {
 							active : value === 'PAYMENT_EVENT',
-							price : minValueEvent
+							price : minValueEvent,
+              currency : 'COP',
 						}
           },
         });
@@ -683,6 +686,11 @@ class General extends Component {
             ...this.state.event,
             visibility: 'ANONYMOUS',
             allow_register: true,
+            payment : {
+							active : false,
+							price : minValueEvent,
+              currency : 'COP',
+						}
           },
         });
         break;
@@ -693,6 +701,11 @@ class General extends Component {
             ...this.state.event,
             visibility: 'PUBLIC',
             allow_register: false,
+            payment : {
+							active : false,
+							price : minValueEvent,
+              currency : 'COP',
+						}
           },
         });
         break;
@@ -703,6 +716,11 @@ class General extends Component {
             ...this.state.event,
             visibility: 'PRIVATE',
             allow_register: false,
+            payment : {
+							active : false,
+							price : minValueEvent,
+              currency : 'COP',
+						}
           },
         });
         break;
@@ -1066,19 +1084,33 @@ class General extends Component {
                       callBackSelectedItem={this.changeAccessTypeForEvent}
                       itemSelected={accessSelected}
                       extraState={extraState}
-                      changeValue={(value) =>
+                      changeValue={(price) =>
                         this.setState({
                           event: {
                             ...this.state.event,
                             payment: {
+                              currency: this.state.event.payment?.currency,
                               active: this.state.event.payment?.active,
-                              price: value,
+                              price,
                             },
                           },
                         })
                       }
                       valueInput={this.state.event.payment?.price}
                       payment={this.state.event.payment?.active}
+                      currency={this.state.event.payment?.currency}
+                      changeCurrency={(currency) =>{
+                        this.setState({
+                          event: {
+                            ...this.state.event,
+                            payment: {
+                              currency,
+                              active: this.state.event.payment?.active,
+                              price: this.state.event.payment?.price,
+                            },
+                          },
+                        }) 
+                      }}
                       isCms
                       redirect={this.props.matchUrl}
                     />

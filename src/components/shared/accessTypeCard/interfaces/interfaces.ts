@@ -5,6 +5,8 @@ export interface extraProperties {
   valueInput?: number
   changeValue?: (data : any) => void;
   payment?: boolean
+  currency?: 'USD' | 'COP'
+  changeCurrency?: (data : string) => void;
 }
 export interface AccessTypeCardInterface {
   index: string;
@@ -21,6 +23,8 @@ export interface AccessTypeCardInterface {
   payment?: boolean;
   valueInput?: number
   changeValue?: (data : any) => void;
+  currency?: 'USD' | 'COP'
+  changeCurrency?: (data : string) => void;
 }
 
 export type textTooltipType = string | ReactNode;

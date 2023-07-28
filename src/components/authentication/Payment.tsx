@@ -5,9 +5,10 @@ import { Button, Card, Col, Form, Grid, Input, Modal, Result, Row, Space, Steps,
 import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
 import ResultPurchase from './ResultPurchase';
-import { Status, Transaction } from './types';
+import { ICurrency, Status, Transaction } from './types';
 import useLanguage from './hooks/useLanguage';
 import Loading from '../profile/loading';
+import { Currency } from '../agenda/types/index';
 const { Step } = Steps;
 const { useBreakpoint } = Grid;
 
@@ -46,12 +47,16 @@ export default function Payment({ event, userInfo, updateUser, money }: PropsPay
   const [payment, setPayment] = useState<Transaction | null>(null);
   const [loading, setLoading] = useState(false);
   const publicKey = process.env.VITE_WOMPI_DEV_PUB_API_KEY;
-    console.log('ssss',event);
-    
+  const currency: ICurrency = event?.payment?.currency || 'COP' 
+  ;
+  
   const handlePay = async () => {
+    
     // @ts-ignore
     if (window?.WidgetCheckout && money) {
-      const price = Math.round(money) * 100;
+      let moneyChange = money;
+      if(currency === 'USD')  moneyChange = moneyChange * 3500;
+      const price =  Math.round(moneyChange) * 100;
       const payload: any = {
         eventId : event?._id,
         price,
@@ -78,9 +83,6 @@ export default function Payment({ event, userInfo, updateUser, money }: PropsPay
       checkout.open((result) => {
         console.log({ result });
         const transaction = result.transaction as Transaction;
-        console.log('Transaction ID: ', transaction.id);
-        console.log('Transaction object: ', transaction);
-
         setPayment(transaction);
         setcurrent(1);
       });

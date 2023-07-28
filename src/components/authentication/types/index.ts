@@ -1,5 +1,6 @@
 
 export type Lang = 'es' | 'en'
+export type ICurrency = 'COP' | 'USD'
 
 export interface Extra {
     name:                  string;

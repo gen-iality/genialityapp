@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { InputNumber, Space, Switch, Tooltip, Typography } from 'antd';
+import { InputNumber, Select, Space, Switch, Tooltip, Typography } from 'antd';
 import { AccessTypeCardInterface, textTooltipType, iconTooltipType, extraProperties } from '../interfaces/interfaces';
 import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import ShieldAccountIcon from '@2fd/ant-design-icons/lib/ShieldAccount';
@@ -93,22 +93,33 @@ export const AccessTypeCardData: AccessTypeCardInterface[] = [
       iconWithTooltip('Tiene chat privado', <MessageLockIcon />),
     ],
     payment: true,
-    extra: ({ changeValue = () => {}, valueInput = 0, payment = false }: extraProperties) => {
+    extra: ({ changeValue = () => {}, valueInput = 0, payment = false , currency = 'COP', changeCurrency = () => {}}: extraProperties) => {
       return (
         <Space direction='vertical'>
           <Typography.Text strong style={{ fontWeight: '500' }}>
             Valor de la inscripción.
           </Typography.Text>
+          <Space>
           <InputNumber
-            min={2000}
+            min={ currency === 'COP' ? 2000 : 1}
             disabled={!payment}
             value={valueInput}
             onChange={(state) => {
               changeValue(state);
             }}
           />
+          <Select
+            value={currency}
+            disabled={!payment}
+            options={[
+              { value: 'COP', label: 'COP' },
+              { value: 'USD', label: 'USD' },
+            ]}
+            onChange={changeCurrency}
+          />
+          </Space>
           <Typography.Text style={{ marginTop: '8px' }}>
-            El valor mínimo es de $2000 pesos.
+            El valor mínimo es de $2000 pesos o $1 dolar.
           </Typography.Text>
         </Space>
       );
