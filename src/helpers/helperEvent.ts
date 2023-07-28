@@ -5,12 +5,7 @@ import { EventFieldsApi } from './request';
 
 //METODO PARA SABER SI ESTA EN EL HOME DE EVIUS O EN UN EVENTO
 export function isHome() {
-  let isHome = window.location.pathname.includes('/landing');
-  if (isHome) {
-    return false;
-  } else {
-    return true;
-  }
+  return !window.location.pathname.includes('/landing');
 }
 
 // //METODO PARA OBTENER ENCUESTAS New

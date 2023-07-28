@@ -20,6 +20,7 @@ export function recordTypeForThisEvent(cEvent) {
 
   let event = cEvent?.value;
   if (!event) return 'LOADING';
+  if (event?.visibility === 'PUBLIC' && event?.allow_register &&  event?.payment?.active) return 'PAYMENT_EVENT';
   if (event?.visibility === 'PUBLIC' && event?.allow_register === true) return 'PUBLIC_EVENT_WITH_REGISTRATION';
   if (event?.visibility === 'PUBLIC' && event?.allow_register === false) return 'UN_REGISTERED_PUBLIC_EVENT';
   if (event?.visibility === 'PRIVATE' && event?.allow_register === false) return 'PRIVATE_EVENT';
