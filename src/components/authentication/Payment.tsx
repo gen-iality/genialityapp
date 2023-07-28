@@ -57,7 +57,7 @@ export default function Payment({ event, userInfo, updateUser, money }: PropsPay
     // @ts-ignore
     if (window?.WidgetCheckout && money) {
       let moneyChange = money;
-      if(currency === 'USD')  moneyChange = moneyChange * 3500;
+      if(currency === 'USD')  moneyChange = moneyChange * trm;
       const price =  Math.round(moneyChange) * 100;
       const payload: any = {
         eventId : event?._id,
