@@ -26,6 +26,7 @@ function EventOrganization({match}: OrganizationProps) {
   const [myOrganizations, setMyorganizations] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const {eventsWithEventUser, isLoading: isLoadingOtherEvents} = useGetEventsWithUser(match.params.id,cUser.value?._id)
+
   useEffect(() => {
 
     let orgId = match.params.id;
@@ -61,7 +62,6 @@ function EventOrganization({match}: OrganizationProps) {
     }
   };
 
-
   const fetchItem = async (orgId: string) => {
     const events = await OrganizationFuction.getEventsNextByOrg(orgId);
     let proximos: any = [];
@@ -83,6 +83,15 @@ function EventOrganization({match}: OrganizationProps) {
     }
     setLoading(false);
   };
+
+  //toDo: Se debe realizar esta validacion desde el backedn para mejor optimizacion
+  const isEventPassInEventWithUser=(eventId:string):boolean => {
+    if( eventsWithEventUser.filter(event => event._id === eventId).length > 0 ){
+      return true;
+    }
+    return false
+  }
+
   return (
     <div
       style={{
@@ -168,10 +177,11 @@ function EventOrganization({match}: OrganizationProps) {
                     </Card>
                   </Col>
                 )}
-                <Col style={{width: '100%'}}>
+                {
+                  cUser.value && (<Col style={{width: '100%'}}>
                   {/* Lista otros eventos en los que esta inscrito el usuario*/}
                   <Card style={{width: '100%', borderRadius: 20}}>
-                    <Badge offset={[60, 22]} count={`${events.length} Eventos`}>
+                    <Badge offset={[60, 22]} count={`${eventsWithEventUser.length} Eventos`}>
                       <Title level={2}>Mis eventos</Title>
                     </Badge>
                     <Row gutter={[16, 16]} >
@@ -204,7 +214,9 @@ function EventOrganization({match}: OrganizationProps) {
                       )}
                     </Row>
                   </Card>
-                </Col>
+                </Col>)
+                }
+                
                 <Col style={{width: '100%'}}>
                   {/* Lista de eventos próximos */}
                   <Card style={{width: '100%', borderRadius: 20}}>
@@ -253,6 +265,7 @@ function EventOrganization({match}: OrganizationProps) {
                               key={event._id}
                               event={event}
                               action={{ name: 'Ver', url: `landing/${event._id}` }}
+                              buttonToBuy={!isEventPassInEventWithUser(event._id)}
                             />
                           </Col>
                         ))

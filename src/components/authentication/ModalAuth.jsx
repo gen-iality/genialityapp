@@ -5,6 +5,7 @@ import {
   LoadingOutlined,
   LockOutlined,
   MailOutlined,
+  WarningOutlined,
 } from '@ant-design/icons';
 import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Image } from 'antd';
 import withContext from '../../context/withContext';
@@ -18,6 +19,7 @@ import RegisterUserAndEventUser from './RegisterUserAndEventUser';
 import { isHome, eventWithCedula } from '../../helpers/helperEvent';
 import { UseCurrentUser } from '../../context/userContext';
 import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
+import { isOrganizationCETA } from '../user-organization-to-event/helpers/helper';
 
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
@@ -51,6 +53,7 @@ const ModalAuth = (props) => {
   const isCustomPassword = cEvent?.value?.is_custom_password_label;
   const customPasswordLabel = cEvent?.value?.custom_password_label;
   const [modalVisible, setmodalVisible] = useState(false);
+  const [isPayment, setIsPayment] = useState(false);
   const [msjError, setmsjError] = useState('');
   const intl = useIntl();
 
@@ -82,6 +85,11 @@ const ModalAuth = (props) => {
           setmodalVisible(true);
           helperDispatch({ type: 'showRegister', visible: false });
           break;
+          case 'PAYMENT_EVENT':
+            setmodalVisible(true);
+            setIsPayment(true)
+            helperDispatch({ type: 'showRegister', visible: false });
+            break;
         default:
           setmodalVisible(true);
           break;
@@ -186,7 +194,8 @@ const ModalAuth = (props) => {
         zIndex={1000}
         visible={controllerLoginVisible?.visible && props.cEvent?.value?.visibility !== 'ANONYMOUS'}
         closable={controllerLoginVisible?.organization !== 'organization' ? true : false}>
-        <Tabs onChange={callback} centered size='large' activeKey={currentAuthScreen}>
+         {isPayment && <Alert message="Para comprar el ticket primero debes Iniciar sesión o Registrarte" type="warning" style={{marginTop: 15}} closable={false} banner icon={<WarningOutlined/>} />}
+          <Tabs onChange={callback} centered size='large' activeKey={currentAuthScreen}>
           <TabPane
             tab={intl.formatMessage({
               id: 'modal.title.login',
@@ -407,7 +416,8 @@ const ModalAuth = (props) => {
               </div>
             )}
           </TabPane>
-          {isVisibleRegister() && (
+          {/* Todo: Esto debe cambir a no estar quemado [isOrganizationCETA] */}
+          {isVisibleRegister() && !isOrganizationCETA() && (
             <TabPane
               tab={intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })}
               key='register'>
@@ -420,8 +430,9 @@ const ModalAuth = (props) => {
                   paddingTop: '0px',
                   paddingBottom: '0px',
                 }}>
-                {isHome() && !isPrelanding ? (
+                {isHome() && (!isPrelanding || isPayment) ? (
                   <RegisterUser
+                    isPayment={isPayment}
                     screens={screens}
                     stylePaddingMobile={stylePaddingMobile}
                     stylePaddingDesktop={stylePaddingDesktop}

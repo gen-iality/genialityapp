@@ -51,6 +51,7 @@ function reducer(state, action) {
     case 'VISIBLE_MODAL':
       return { ...state, visible: action.payload.visible, tab: 'list' };
     case 'TYPE_EVENT':
+      const minValueEvent = 2000;
       switch (action.payload.type) {
         case 0:
           return { ...state, type: action.payload.type, allow_register: true, visibility: 'PUBLIC' };
@@ -58,7 +59,9 @@ function reducer(state, action) {
           return { ...state, type: action.payload.type, allow_register: false, visibility: 'PUBLIC' };
         case 2:
           return { ...state, type: action.payload.type, allow_register: false, visibility: 'PRIVATE' };
-      }
+        case 3:
+          return { ...state, type: action.payload.type, allow_register: true, visibility: 'PUBLIC', payment : { active : true, price : minValueEvent} };
+        }
       break;
     case 'TYPE_AUTHENTICATION':
       return { ...state, type: 0, allow_register: true, visibility: 'ANONYMOUS' };
@@ -276,6 +279,7 @@ export const NewEventProvider = ({ children }) => {
     });
   }, [selectedDay, selectedHours]);
   const saveEvent = async () => {
+    const minValueEvent = 2000;
     dispatch({ type: 'LOADING' });
 
     if (state.selectOrganization) {
@@ -293,6 +297,7 @@ export const NewEventProvider = ({ children }) => {
         organizer_id: state.selectOrganization.id || state.selectOrganization._id,
         event_type_id: '5bf47203754e2317e4300b68',
         user_properties: [],
+        payment : state.payment || {active : false, price : minValueEvent},
         allow_register: state.allow_register,
         type_event: typeEvent,
         where_it_run: whereItRun,
