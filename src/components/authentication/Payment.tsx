@@ -9,6 +9,7 @@ import { ICurrency, Status, Transaction } from './types';
 import useLanguage from './hooks/useLanguage';
 import Loading from '../profile/loading';
 import { Currency } from '../agenda/types/index';
+import useTrm from './hooks/useTrm';
 const { Step } = Steps;
 const { useBreakpoint } = Grid;
 
@@ -43,6 +44,7 @@ export default function Payment({ event, userInfo, updateUser, money }: PropsPay
   const screens = useBreakpoint();
   const intl = useIntl();
   const { lang } = useLanguage();
+  const { trm } = useTrm();
   const [current, setcurrent] = useState(0);
   const [payment, setPayment] = useState<Transaction | null>(null);
   const [loading, setLoading] = useState(false);

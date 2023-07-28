@@ -131,6 +131,7 @@
     "source-map-explorer": "^2.5.2",
     "survey-react": "^1.8.56",
     "swiper": "^9.3.2",
+    "trm-api": "^1.4.14",
     "url-loader": "^4.1.1",
     "vite-tsconfig-paths": "^3.4.1",
     "xlsx": "^0.18.4",
