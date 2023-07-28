@@ -64,6 +64,7 @@ function EventOrganization({match}: OrganizationProps) {
 
   const fetchItem = async (orgId: string) => {
     const events = await OrganizationFuction.getEventsNextByOrg(orgId);
+    console.log('events',events)
     let proximos: any = [];
     let pasados: any = [];
     let fechaActual = moment();
@@ -265,7 +266,7 @@ function EventOrganization({match}: OrganizationProps) {
                               key={event._id}
                               event={event}
                               action={{ name: 'Ver', url: `landing/${event._id}` }}
-                              buttonToBuy={!isEventPassInEventWithUser(event._id)}
+                              buttonToBuy={!isEventPassInEventWithUser(event._id) && (event.payment ? event.payment.active : false)}
                             />
                           </Col>
                         ))
