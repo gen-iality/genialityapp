@@ -128,7 +128,7 @@ export default function Payment({ event, userInfo, updateUser, money }: PropsPay
             </Card>
           </Col>
           <Col span={6}>
-            <Card>
+            <Card style={{ height: '100%'}}>
               <Row style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center',  }}>
               <DollarCircleOutlined style={{ fontSize: 50, marginBottom: 10}}/>
                 <Typography.Text >{`$ ${money}`}</Typography.Text>
