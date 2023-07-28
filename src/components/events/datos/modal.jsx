@@ -338,6 +338,7 @@ class DatosModal extends Component {
                   : false ||
                     info.type === 'voteWeight' ||
                     info.type === 'checkInField' ||
+                    info.type === 'list_type_user' ||
                     info.name === 'birthdate' ||
                     info.name === 'bloodtype' ||
                     info.name === 'gender'
