@@ -11,6 +11,7 @@ export const helperInitialState: HelperState = {
     idOrganization: '',
     organization: '',
     logo: '',
+    controllerLoginVisible: undefined,
   },
   currentActivity: null,
   showNotification: false,
@@ -42,6 +43,7 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
           organization: action.organization,
           logo: action.logo,
           defaultPositionId: action.defaultPositionId,
+          customPasswordLabel: action.customPasswordLabel,
         },
       }
 

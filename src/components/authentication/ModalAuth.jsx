@@ -296,84 +296,45 @@ const ModalAuth = (props) => {
                   prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
                 />
               </Form.Item>
-              {useEventWithCedula(cEvent.value).isArkmed ? (
-                <Form.Item
-                  label={intl.formatMessage({
-                    id: 'modal.label.cedula',
-                    defaultMessage: 'Cedula',
+
+              <Form.Item
+                label={
+                  typeof controllerLoginVisible.customPasswordLabel === 'string'
+                    ? controllerLoginVisible.customPasswordLabel
+                    : intl.formatMessage({
+                        id: 'modal.label.password',
+                        defaultMessage: 'Contraseña',
+                      })
+                }
+                name="password"
+                style={{ marginBottom: '15px', textAlign: 'left' }}
+                rules={[
+                  {
+                    required: true,
+                    message:
+                      typeof controllerLoginVisible.customPasswordLabel === 'string'
+                        ? `Se requiere ${controllerLoginVisible.customPasswordLabel}`
+                        : intl.formatMessage({
+                            id: 'modal.rule.required.password',
+                            defaultMessage: 'Ingrese una contraseña',
+                          }),
+                  },
+                ]}
+              >
+                <Input.Password
+                  disabled={isLoading}
+                  size="large"
+                  placeholder={intl.formatMessage({
+                    id: 'modal.label.password',
+                    defaultMessage: 'Contraseña',
                   })}
-                  name="password"
-                  style={{ marginBottom: '15px', textAlign: 'left' }}
-                  rules={[
-                    {
-                      required: true,
-                      message: intl.formatMessage({
-                        id: 'modal.rule.required.cedula',
-                        defaultMessage: 'Ingrese su numero de cedula',
-                      }),
-                    },
-                  ]}
-                >
-                  <Input
-                    disabled={isLoading}
-                    size="large"
-                    placeholder={intl.formatMessage({
-                      id: 'modal.label.cedula',
-                      defaultMessage: 'Cedula',
-                    })}
-                    prefix={
-                      <IdcardOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />
-                    }
-                    iconRender={<IdcardOutlined />}
-                  />
-                </Form.Item>
-              ) : (
-                /*ENDOCAMPUS organization_ID: 63f552d916065937427b3b02
-                 change password label customization by client request
-                */
-                <Form.Item
-                  label={
-                    organization && organization._id == '63f552d916065937427b3b02'
-                      ? 'Documento (ID)'
-                      : intl.formatMessage({
-                          id: 'modal.label.password',
-                          defaultMessage: 'Contraseña',
-                        })
+                  prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+                  iconRender={(visible) =>
+                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
                   }
-                  name="password"
-                  style={{ marginBottom: '15px', textAlign: 'left' }}
-                  rules={[
-                    {
-                      required: true,
-                      message: intl.formatMessage({
-                        id: 'modal.rule.required.password',
-                        defaultMessage: 'Ingrese una contraseña',
-                      }),
-                    },
-                  ]}
-                >
-                  <Input.Password
-                    disabled={isLoading}
-                    size="large"
-                    placeholder={intl.formatMessage({
-                      id: 'modal.label.password',
-                      defaultMessage:
-                        organization && organization._id == '63f552d916065937427b3b02'
-                          ? 'Documento (ID)'
-                          : intl.formatMessage({
-                              id: 'modal.label.password',
-                              defaultMessage: 'Contraseña',
-                            }),
-                    })}
-                    prefix={
-                      <LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />
-                    }
-                    iconRender={(visible) =>
-                      visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                    }
-                  />
-                </Form.Item>
-              )}
+                />
+              </Form.Item>
+
               {!isLoading && (
                 <Form.Item style={{ marginBottom: '15px' }}>
                   <Typography.Text
