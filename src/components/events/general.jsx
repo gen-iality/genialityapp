@@ -9,7 +9,7 @@ import { injectIntl } from 'react-intl';
 import SelectInput from '../shared/selectInput';
 import Loading from '../loaders/loading';
 // import DateEvent from './dateEvent';
-import { Switch, Card, Row, Col, Tabs, Input, Select, Modal, Form } from 'antd';
+import { Switch, Card, Row, Col, Tabs, Input, Select, Modal, Form, Checkbox } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
@@ -41,7 +41,7 @@ class General extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      event: {...this.props.event},
+      event: { ...this.props.event },
       optionForm: [],
       selectedOption: [],
       selectedOrganizer: {},
@@ -71,6 +71,7 @@ class General extends Component {
       },
       registrationMessage: props.event && props.event.registration_message ? props.event.registration_message : '',
       redirect_activity: null,
+      show_event_date: false,
       // redirect_landing: null,
       itemsMenu: [],
       // Estado inicial de la seccion de formulario de registro
@@ -111,7 +112,7 @@ class General extends Component {
   };
 
   async componentDidMount() {
-    console.log(this.props.event)
+    console.log(this.props.event);
     this.getCurrentConsumptionPlanByUsers();
     //inicializacion del estado de menu
     if (this.state.event.itemsMenu) {
@@ -202,16 +203,20 @@ class General extends Component {
       (this.state.event.visibility === 'PUBLIC' || this.state.event.visibility === 'ANONYMOUS') &&
       this.state.event.allow_register
     ) {
-			//Evento Público con Registro
-			this.setState({ accessSelected: 'PUBLIC_EVENT_WITH_REGISTRATION' });
-			if ( this.state.event.visibility === 'PUBLIC' && this.state.event.allow_register && this.state.event.payment?.active ) {
-				this.setState({ accessSelected: 'PAYMENT_EVENT' });
-			}
-			//estado del check del evento público con registro sin contraseña
-			if (this.state.event.visibility === 'ANONYMOUS' && this.state.event.allow_register) {
-				this.setState({ extraState: true });
-			}
-		} else if (this.state.event.visibility === 'PUBLIC' && !this.state.event.allow_register) {
+      //Evento Público con Registro
+      this.setState({ accessSelected: 'PUBLIC_EVENT_WITH_REGISTRATION' });
+      if (
+        this.state.event.visibility === 'PUBLIC' &&
+        this.state.event.allow_register &&
+        this.state.event.payment?.active
+      ) {
+        this.setState({ accessSelected: 'PAYMENT_EVENT' });
+      }
+      //estado del check del evento público con registro sin contraseña
+      if (this.state.event.visibility === 'ANONYMOUS' && this.state.event.allow_register) {
+        this.setState({ extraState: true });
+      }
+    } else if (this.state.event.visibility === 'PUBLIC' && !this.state.event.allow_register) {
       //Evento Público sin Registro
       this.setState({ accessSelected: 'UN_REGISTERED_PUBLIC_EVENT' });
     } else {
@@ -438,7 +443,6 @@ class General extends Component {
     this.setState({ event: { ...this.state.event, ...values } });
   }
 
-  
   //*********** FIN FUNCIONES DEL FORMULARIO
 
   //Envío de datos
@@ -474,11 +478,11 @@ class General extends Component {
       name: event.name,
       datetime_from: datetime_from.format('YYYY-MM-DD HH:mm:ss'),
       datetime_to: datetime_to.format('YYYY-MM-DD HH:mm:ss'),
-      payment : {
-				active : event.payment?.active || false,
-				price :  event.payment?.price || minValueEvent,
-				currency :  event.payment?.currency || 'COP',
-			},
+      payment: {
+        active: event.payment?.active || false,
+        price: event.payment?.price || minValueEvent,
+        currency: event.payment?.currency || 'COP',
+      },
       picture: image,
       video: event.video || null,
       video_position: event.video_position === 'true' || event.video_position === true ? 'true' : 'false',
@@ -517,6 +521,7 @@ class General extends Component {
       success_message: event.success_message || '',
       is_custom_password_label: this.state.isCustomPasswordLabel || false,
       custom_password_label: this.state.customPasswordLabel || 'Contraseña',
+      show_event_date: this.state.event.show_event_date,
     };
 
     try {
@@ -670,11 +675,11 @@ class General extends Component {
             ...this.state.event,
             visibility: 'PUBLIC',
             allow_register: true,
-            payment : {
-							active : value === 'PAYMENT_EVENT',
-							price : minValueEvent,
-              currency : 'COP',
-						}
+            payment: {
+              active: value === 'PAYMENT_EVENT',
+              price: minValueEvent,
+              currency: 'COP',
+            },
           },
         });
         break;
@@ -686,11 +691,11 @@ class General extends Component {
             ...this.state.event,
             visibility: 'ANONYMOUS',
             allow_register: true,
-            payment : {
-							active : false,
-							price : minValueEvent,
-              currency : 'COP',
-						}
+            payment: {
+              active: false,
+              price: minValueEvent,
+              currency: 'COP',
+            },
           },
         });
         break;
@@ -701,11 +706,11 @@ class General extends Component {
             ...this.state.event,
             visibility: 'PUBLIC',
             allow_register: false,
-            payment : {
-							active : false,
-							price : minValueEvent,
-              currency : 'COP',
-						}
+            payment: {
+              active: false,
+              price: minValueEvent,
+              currency: 'COP',
+            },
           },
         });
         break;
@@ -716,11 +721,11 @@ class General extends Component {
             ...this.state.event,
             visibility: 'PRIVATE',
             allow_register: false,
-            payment : {
-							active : false,
-							price : minValueEvent,
-              currency : 'COP',
-						}
+            payment: {
+              active: false,
+              price: minValueEvent,
+              currency: 'COP',
+            },
           },
         });
         break;
@@ -737,9 +742,17 @@ class General extends Component {
     });
   };
 
-  handleChangeRedirectForm=(value)=>{
-    this.setState({event:{...this.state.event,redirect_landing:value}});
-  }
+  handleChangeRedirectForm = (value) => {
+    this.setState({ event: { ...this.state.event, redirect_landing: value } });
+  };
+  onChangeCheckDate = (checked) => {
+    this.setState({
+      event: {
+        ...this.state.event,
+        show_event_date: checked,
+      },
+    });
+  };
 
   render() {
     const {
@@ -908,7 +921,11 @@ class General extends Component {
                   <Form.Item label={'Especificar fechas'}>
                     <CustomDateEvent eventId={this.props.event._id} updateEvent={this.props.updateEvent} />
                   </Form.Item>
-
+                  <Form.Item>
+                    <Checkbox onChange={(e) => this.onChangeCheckDate(e.target.checked)} checked={event.show_event_date}>
+                      Ocultar fecha del evento (check habilitado para ocultar la funcionalidad)
+                    </Checkbox>
+                  </Form.Item>
                   <Form.Item label={'Descripción'}>
                     <EviusReactQuill name={'description'} data={event.description} handleChange={this.chgTxt} />
                   </Form.Item>
@@ -1099,7 +1116,7 @@ class General extends Component {
                       valueInput={this.state.event.payment?.price}
                       payment={this.state.event.payment?.active}
                       currency={this.state.event.payment?.currency}
-                      changeCurrency={(currency) =>{
+                      changeCurrency={(currency) => {
                         this.setState({
                           event: {
                             ...this.state.event,
@@ -1109,7 +1126,7 @@ class General extends Component {
                               price: this.state.event.payment?.price,
                             },
                           },
-                        }) 
+                        });
                       }}
                       isCms
                       redirect={this.props.matchUrl}
