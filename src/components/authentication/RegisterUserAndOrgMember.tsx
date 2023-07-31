@@ -369,11 +369,14 @@ const RegisterUserAndOrgMember = ({
 
   return (
     <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
-      <Steps current={current} responsive={false}>
-        {steps.map((item) => (
-          <Step key={item.title} icon={item.icon} />
-        ))}
-      </Steps>
+      <Steps
+        current={current}
+        responsive={false}
+        items={steps.map((item) => ({
+          title: item.title,
+          icon: item.icon,
+        }))}
+      />
       <div style={{ marginTop: '30px' }}>{steps[current].content}</div>
       <div style={{ marginTop: '30px' }}>
         {current > 0 && current < 2 && (
