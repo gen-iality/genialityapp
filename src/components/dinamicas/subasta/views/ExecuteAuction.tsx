@@ -10,7 +10,7 @@ import { Products } from '../interfaces/auction.interface';
 import SelectProducts from '../components/cms/SelectProducts';
 import { DispatchMessageService } from '@/context/MessageService';
 import { saveAuctioFirebase } from '../services/Execute.service';
-import { useAuction } from '../hooks/useAuction';
+import { useBids } from '../hooks/useBids';
 
 interface DataType {
   key: React.Key;
@@ -44,7 +44,7 @@ export default function ExecuteAuction() {
   const [visibility, setVisibility] = useState(false);
   const { eventId, auction } = useContext(AuctionContext);
   const { products, loading, refresh } = useProducts(eventId);
-  const { Bids, setBids, loading: Loadbids } = useAuction(eventId, auction?.currentProduct?._id, auction?.playing);
+  const { Bids, setBids, loading: Loadbids } = useBids(eventId, auction?.currentProduct?._id, auction?.playing);
   const [selectedProduct, setselectedProduct] = useState<Products | null>(null);
 
   const startAuction = async () => {

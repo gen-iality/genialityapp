@@ -1,10 +1,16 @@
 import { UploadFile } from 'antd/lib/upload/interface';
+import DrawerAuction from '../components/landing/DrawerAuction';
 export interface AuctionConfig {
     name:     string,
 	currency: string,
 
 }
 
+export interface DrawerAuctionProps {
+    auction: Auction
+    openOrClose : boolean
+    setOpenOrClose: ()=> void
+}
 export interface ApiInterface  {
     getOne:    <T>(event: string) => Promise<T | null>, 
     createOne: <T>(event: string, data: any) => Promise<T> 

@@ -1,28 +1,28 @@
 import { useEffect, useState } from 'react';
-import { listenBids } from '../services/Execute.service';
+import { listenAuction } from '../services/Execute.service';
+import { Auction } from '../interfaces/auction.interface';
 
-export const useAuction = (eventId: string, productId?: string, playing?: boolean) => {
-  const [Bids, setBids] = useState([]);
-  const [loading, setloading] = useState(false);
+export const useAuction = (eventId: string) => {
+  const [auction, setAuction] = useState<Auction | null>(null);
+
 
   useEffect(() => {
-    console.log('productId', productId, playing);
-    if (eventId && productId) {
-      setloading(true);
-      const unsuscribe = listenBids(eventId, productId, setBids,setloading);
+    console.log(eventId);
+    
+    if (eventId) {
+      const unsuscribe = listenAuction(eventId,setAuction);
       return () => {
         unsuscribe();
       };
     }
-  }, [productId]);
+  },[]);
 
   useEffect(() => {
-    console.log('Bids', Bids);
-  }, [Bids]);
+    console.log(auction);
+    
+  },[auction]);
 
   return {
-    Bids,
-    setBids,
-    loading
+    auction
   };
 };

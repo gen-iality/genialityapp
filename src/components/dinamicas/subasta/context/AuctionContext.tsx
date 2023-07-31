@@ -38,7 +38,6 @@ export default function AuctionProvider(props: Props) {
   }, []);
   useEffect(() => {
 console.log(auction);
-
   }, [auction]);
 
   const getAuction = async () => {
