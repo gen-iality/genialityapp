@@ -18,13 +18,14 @@ import {
   Grid,
   Alert,
   Image,
+  Spin,
 } from 'antd'
 import { Link, useParams } from 'react-router-dom'
 import withContext from '@context/withContext'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { app } from '@helpers/firebase'
 import { useIntl } from 'react-intl'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import RegisterUser from './RegisterUser'
 import { useEventContext } from '@context/eventContext'
 
@@ -229,6 +230,238 @@ const ModalAuth = (props) => {
     console.error('Failed:', errorInfo)
   }
 
+  const tabItems = [
+    {
+      key: 'login',
+      label: intl.formatMessage({
+        id: 'modal.title.login',
+        defaultMessage: 'Iniciar sesión',
+      }),
+      children: (
+        <>
+          <Form
+            form={form1}
+            onFinish={handleLoginEmailPassword}
+            onFinishFailed={onFinishFailed}
+            layout="vertical"
+            style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
+          >
+            {props.organization == 'organization' && (
+              <Form.Item>
+                <Image
+                  style={{ borderRadius: '100px', objectFit: 'cover' }}
+                  preview={{ maskClassName: 'circularMask' }}
+                  src={props.logo ? props.logo : 'error'}
+                  fallback="http://via.placeholder.com/500/F5F5F7/CCCCCC?text=No%20Image"
+                  width={200}
+                  height={200}
+                />
+              </Form.Item>
+            )}
+            <Form.Item
+              label={intl.formatMessage({
+                id: 'modal.label.email',
+                defaultMessage: 'Correo electrónico',
+              })}
+              name="email"
+              style={{ marginBottom: '15px', textAlign: 'left' }}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({
+                    id: 'modal.rule.required.email',
+                    defaultMessage: 'Ingrese un correo',
+                  }),
+                },
+              ]}
+            >
+              <Input
+                disabled={isLoading}
+                type="email"
+                size="large"
+                placeholder={intl.formatMessage({
+                  id: 'modal.label.email',
+                  defaultMessage: 'Correo electrónico',
+                })}
+                prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+              />
+            </Form.Item>
+
+            <Form.Item
+              label={
+                typeof controllerLoginVisible.customPasswordLabel === 'string'
+                  ? controllerLoginVisible.customPasswordLabel
+                  : intl.formatMessage({
+                      id: 'modal.label.password',
+                      defaultMessage: 'Contraseña',
+                    })
+              }
+              name="password"
+              style={{ marginBottom: '15px', textAlign: 'left' }}
+              rules={[
+                {
+                  required: true,
+                  message:
+                    typeof controllerLoginVisible.customPasswordLabel === 'string'
+                      ? `Se requiere ${controllerLoginVisible.customPasswordLabel}`
+                      : intl.formatMessage({
+                          id: 'modal.rule.required.password',
+                          defaultMessage: 'Ingrese una contraseña',
+                        }),
+                },
+              ]}
+            >
+              <Input.Password
+                disabled={isLoading}
+                size="large"
+                placeholder={intl.formatMessage({
+                  id: 'modal.label.password',
+                  defaultMessage: 'Contraseña',
+                })}
+                prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
+              />
+            </Form.Item>
+
+            {!isLoading && (
+              <Form.Item style={{ marginBottom: '15px' }}>
+                <Typography.Text
+                  onClick={() => handleChangeTypeModal('recover')}
+                  underline
+                  id="forgotpassword"
+                  type="secondary"
+                  style={{ float: 'right', cursor: 'pointer' }}
+                >
+                  {intl.formatMessage({
+                    id: 'modal.option.restore',
+                    defaultMessage: 'Olvidé mi contraseña',
+                  })}
+                </Typography.Text>
+              </Form.Item>
+            )}
+            {errorLogin && (
+              <Alert
+                showIcon
+                onClose={() => setErrorLogin(false)}
+                closable
+                className="animate__animated animate__bounceIn"
+                style={{
+                  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                  backgroundColor: '#FFFFFF',
+                  color: '#000000',
+                  borderLeft: '5px solid #FF4E50',
+                  fontSize: '14px',
+                  textAlign: 'start',
+                  borderRadius: '5px',
+                  marginBottom: '15px',
+                }}
+                type="error"
+                message={msjError}
+              />
+            )}
+            {!isLoading && (
+              <Form.Item style={{ marginBottom: '15px' }}>
+                <Button
+                  id="loginButton"
+                  htmlType="submit"
+                  block
+                  style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
+                  size="large"
+                >
+                  {intl.formatMessage({
+                    id: 'modal.title.login',
+                    defaultMessage: 'Iniciar sesión',
+                  })}
+                </Button>
+              </Form.Item>
+            )}
+            {isLoading && <LoadingOutlined style={{ fontSize: '50px' }} />}
+          </Form>
+          {props.organization !== 'landing' && (
+            <Divider style={{ color: '#c4c4c4c' }}>O</Divider>
+          )}
+          {props.organization !== 'landing' && (
+            <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
+              <Space direction="vertical" style={{ width: '100%' }}>
+                <Button
+                  icon={<MailOutlined />}
+                  disabled={isLoading}
+                  onClick={() => handleChangeTypeModal('mail')}
+                  type="primary"
+                  block
+                  size="large"
+                >
+                  {intl.formatMessage({
+                    id: 'modal.option.send',
+                    defaultMessage: 'Enviar acceso a mi correo',
+                  })}
+                </Button>
+              </Space>
+            </div>
+          )}
+        </>
+      ),
+    },
+  ]
+
+  if (isVisibleRegister) {
+    tabItems.push({
+      key: 'register',
+      label: intl.formatMessage({
+        id: 'modal.title.register',
+        defaultMessage: 'Registrarme',
+      }),
+      children: (
+        <div
+          style={{
+            height: 'auto',
+            overflowY: 'hidden',
+            paddingLeft: '5px',
+            paddingRight: '5px',
+            paddingTop: '0px',
+            paddingBottom: '0px',
+          }}
+        >
+          {isHome() ? (
+            <>
+              <RegisterUser
+                screens={screens}
+                stylePaddingMobile={stylePaddingMobile}
+                stylePaddingDesktop={stylePaddingDesktop}
+                idOrganization={controllerLoginVisible.idOrganization} // New!
+                defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
+              />
+            </>
+          ) : isEvent() ? (
+            <>
+              <RegisterUserAndEventUser
+                screens={screens}
+                stylePaddingMobile={stylePaddingMobile}
+                stylePaddingDesktop={stylePaddingDesktop}
+                requireAutomaticLoguin={true}
+              />
+            </>
+          ) : isOrganization() ? (
+            <>
+              <RegisterUserAndOrgMember
+                screens={screens}
+                stylePaddingMobile={stylePaddingMobile}
+                stylePaddingDesktop={stylePaddingDesktop}
+                idOrganization={controllerLoginVisible.idOrganization} // New!
+                defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
+                requireAutomaticLoguin={true}
+              />
+            </>
+          ) : (
+            <Spin />
+          )}
+        </div>
+      ),
+    })
+  }
+
   return (
     modalVisible && (
       <Modal
@@ -241,232 +474,13 @@ const ModalAuth = (props) => {
         open={controllerLoginVisible?.visible}
         closable={controllerLoginVisible?.organization !== 'organization' ? true : false}
       >
-        <Tabs onChange={callback} centered size="large" activeKey={currentAuthScreen}>
-          <TabPane
-            tab={intl.formatMessage({
-              id: 'modal.title.login',
-              defaultMessage: 'Iniciar sesión',
-            })}
-            key="login"
-          >
-            <Form
-              form={form1}
-              onFinish={handleLoginEmailPassword}
-              onFinishFailed={onFinishFailed}
-              layout="vertical"
-              style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
-            >
-              {props.organization == 'organization' && (
-                <Form.Item>
-                  <Image
-                    style={{ borderRadius: '100px', objectFit: 'cover' }}
-                    preview={{ maskClassName: 'circularMask' }}
-                    src={props.logo ? props.logo : 'error'}
-                    fallback="http://via.placeholder.com/500/F5F5F7/CCCCCC?text=No%20Image"
-                    width={200}
-                    height={200}
-                  />
-                </Form.Item>
-              )}
-              <Form.Item
-                label={intl.formatMessage({
-                  id: 'modal.label.email',
-                  defaultMessage: 'Correo electrónico',
-                })}
-                name="email"
-                style={{ marginBottom: '15px', textAlign: 'left' }}
-                rules={[
-                  {
-                    required: true,
-                    message: intl.formatMessage({
-                      id: 'modal.rule.required.email',
-                      defaultMessage: 'Ingrese un correo',
-                    }),
-                  },
-                ]}
-              >
-                <Input
-                  disabled={isLoading}
-                  type="email"
-                  size="large"
-                  placeholder={intl.formatMessage({
-                    id: 'modal.label.email',
-                    defaultMessage: 'Correo electrónico',
-                  })}
-                  prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
-                />
-              </Form.Item>
-
-              <Form.Item
-                label={
-                  typeof controllerLoginVisible.customPasswordLabel === 'string'
-                    ? controllerLoginVisible.customPasswordLabel
-                    : intl.formatMessage({
-                        id: 'modal.label.password',
-                        defaultMessage: 'Contraseña',
-                      })
-                }
-                name="password"
-                style={{ marginBottom: '15px', textAlign: 'left' }}
-                rules={[
-                  {
-                    required: true,
-                    message:
-                      typeof controllerLoginVisible.customPasswordLabel === 'string'
-                        ? `Se requiere ${controllerLoginVisible.customPasswordLabel}`
-                        : intl.formatMessage({
-                            id: 'modal.rule.required.password',
-                            defaultMessage: 'Ingrese una contraseña',
-                          }),
-                  },
-                ]}
-              >
-                <Input.Password
-                  disabled={isLoading}
-                  size="large"
-                  placeholder={intl.formatMessage({
-                    id: 'modal.label.password',
-                    defaultMessage: 'Contraseña',
-                  })}
-                  prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
-                  iconRender={(visible) =>
-                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                  }
-                />
-              </Form.Item>
-
-              {!isLoading && (
-                <Form.Item style={{ marginBottom: '15px' }}>
-                  <Typography.Text
-                    onClick={() => handleChangeTypeModal('recover')}
-                    underline
-                    id="forgotpassword"
-                    type="secondary"
-                    style={{ float: 'right', cursor: 'pointer' }}
-                  >
-                    {intl.formatMessage({
-                      id: 'modal.option.restore',
-                      defaultMessage: 'Olvidé mi contraseña',
-                    })}
-                  </Typography.Text>
-                </Form.Item>
-              )}
-              {errorLogin && (
-                <Alert
-                  showIcon
-                  onClose={() => setErrorLogin(false)}
-                  closable
-                  className="animate__animated animate__bounceIn"
-                  style={{
-                    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                    backgroundColor: '#FFFFFF',
-                    color: '#000000',
-                    borderLeft: '5px solid #FF4E50',
-                    fontSize: '14px',
-                    textAlign: 'start',
-                    borderRadius: '5px',
-                    marginBottom: '15px',
-                  }}
-                  type="error"
-                  message={msjError}
-                />
-              )}
-              {!isLoading && (
-                <Form.Item style={{ marginBottom: '15px' }}>
-                  <Button
-                    id="loginButton"
-                    htmlType="submit"
-                    block
-                    style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-                    size="large"
-                  >
-                    {intl.formatMessage({
-                      id: 'modal.title.login',
-                      defaultMessage: 'Iniciar sesión',
-                    })}
-                  </Button>
-                </Form.Item>
-              )}
-              {isLoading && <LoadingOutlined style={{ fontSize: '50px' }} />}
-            </Form>
-            {props.organization !== 'landing' && (
-              <Divider style={{ color: '#c4c4c4c' }}>O</Divider>
-            )}
-            {props.organization !== 'landing' && (
-              <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
-                <Space direction="vertical" style={{ width: '100%' }}>
-                  <Button
-                    icon={<MailOutlined />}
-                    disabled={isLoading}
-                    onClick={() => handleChangeTypeModal('mail')}
-                    type="primary"
-                    block
-                    size="large"
-                  >
-                    {intl.formatMessage({
-                      id: 'modal.option.send',
-                      defaultMessage: 'Enviar acceso a mi correo',
-                    })}
-                  </Button>
-                </Space>
-              </div>
-            )}
-          </TabPane>
-          {isVisibleRegister() && (
-            <TabPane
-              tab={intl.formatMessage({
-                id: 'modal.title.register',
-                defaultMessage: 'Registrarme',
-              })}
-              key="register"
-            >
-              <div
-                style={{
-                  height: 'auto',
-                  overflowY: 'hidden',
-                  paddingLeft: '5px',
-                  paddingRight: '5px',
-                  paddingTop: '0px',
-                  paddingBottom: '0px',
-                }}
-              >
-                {isHome() && (
-                  <>
-                    <RegisterUser
-                      screens={screens}
-                      stylePaddingMobile={stylePaddingMobile}
-                      stylePaddingDesktop={stylePaddingDesktop}
-                      idOrganization={controllerLoginVisible.idOrganization} // New!
-                      defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
-                    />
-                  </>
-                )}
-                {isEvent() && (
-                  <>
-                    <RegisterUserAndEventUser
-                      screens={screens}
-                      stylePaddingMobile={stylePaddingMobile}
-                      stylePaddingDesktop={stylePaddingDesktop}
-                      requireAutomaticLoguin={true}
-                    />
-                  </>
-                )}
-                {isOrganization() && (
-                  <>
-                    <RegisterUserAndOrgMember
-                      screens={screens}
-                      stylePaddingMobile={stylePaddingMobile}
-                      stylePaddingDesktop={stylePaddingDesktop}
-                      idOrganization={controllerLoginVisible.idOrganization} // New!
-                      defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
-                      requireAutomaticLoguin={true}
-                    />
-                  </>
-                )}
-              </div>
-            </TabPane>
-          )}
-        </Tabs>
+        <Tabs
+          onChange={callback}
+          centered
+          size="large"
+          activeKey={currentAuthScreen}
+          items={tabItems}
+        />
       </Modal>
     )
   )
