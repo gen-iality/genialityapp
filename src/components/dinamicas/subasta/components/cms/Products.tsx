@@ -11,6 +11,7 @@ export default function Products({ products, onclick, onDelete }: ProductsProps)
           products?.map((product) => (
             <Col style={{ margin: 10 }} key={product._id}>
               <Card
+                className='products'
                 title={
                   <Row justify={'space-between'}>
                     <Typography.Title level={5}>{product.name}</Typography.Title>
@@ -26,8 +27,6 @@ export default function Products({ products, onclick, onDelete }: ProductsProps)
                 }
                 key={product._id + 'card'}
                 bordered={true}
-                hoverable
-                onMouseEnter={() => {}}
                 style={{  margin: 10, width: 300, aspectRatio: 'relative', height: 251}}
                 cover={
                   <div

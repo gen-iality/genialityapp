@@ -9,7 +9,7 @@ import CreateProducts from './CreateProducts';
 
 export default function AuctionView({auction} : {auction : Auction}) {
 
-  const { loadingConfig } = useContext(AuctionContext);
+  const { loadingConfig,  } = useContext(AuctionContext);
   const [currenTab, setcurrenTab] = useState('1')
   return (
     <Tabs defaultActiveKey={currenTab} onTabClick={(key)=> setcurrenTab(key)}>
@@ -21,7 +21,7 @@ export default function AuctionView({auction} : {auction : Auction}) {
         <CreateProducts/>
       </Tabs.TabPane>
 
-      <Tabs.TabPane tab='Configuración' key={3} >
+      <Tabs.TabPane tab='Configuración' key={3}  disabled={auction.playing}>
       {loadingConfig ? <Loading/> :<CreateAuction key={'subasta-Configuración'} active={true} auction={auction}/>}
       </Tabs.TabPane>
 

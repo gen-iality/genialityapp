@@ -77,19 +77,11 @@ export default function ExecuteAuction() {
   };
   return (
     <div style={{ padding: 10 }}>
-      <Alert
-        message='¡En Vivo!'
-        description='Estamos transmitiendo en vivo.'
-        type='info'
-        showIcon
-        banner
-        closable
-      />
       <Row justify='end' gutter={[8, 8]} style={{ paddingBottom: 20 }}>
         <Col>
           {!auction?.playing && auction?.currentProduct && (
             <Button
-              className='animate__animated animate__zoomInDown'
+              className='animate__animated animate__fadeInDown'
               type='primary'
               danger
               icon={<StopOutlined />}
@@ -101,7 +93,7 @@ export default function ExecuteAuction() {
         <Col>
           {!auction?.playing && (
             <Button
-              className='animate__animated animate__flip'
+              className='animate__animated animate__fadeInDown'
               type='primary'
               icon={<PlusOutlined />}
               onClick={() => {
