@@ -15,12 +15,14 @@ export function iAmRegisteredInThisEvent(cEventUser) {
   if (value?._id && status === 'LOADED') return 'REGISTERED';
 }
 
+//Si se requiere agregar otro tipo de acceso se debe colocar en la ZONA 1 y ZONA 2 de este archivo
 export function recordTypeForThisEvent(cEvent) {
   if (!cEvent) return;
 
   let event = cEvent?.value;
+  //ZONA 1
   if (!event) return 'LOADING';
-  if (event?.visibility === 'PUBLIC' && event?.allow_register &&  event?.payment?.active) return 'PAYMENT_EVENT';
+  if (event?.visibility === 'PUBLIC' && event?.allow_register === true && event?.payment?.active) return 'PAYMENT_EVENT';
   if (event?.visibility === 'PUBLIC' && event?.allow_register === true) return 'PUBLIC_EVENT_WITH_REGISTRATION';
   if (event?.visibility === 'PUBLIC' && event?.allow_register === false) return 'UN_REGISTERED_PUBLIC_EVENT';
   if (event?.visibility === 'PRIVATE' && event?.allow_register === false) return 'PRIVATE_EVENT';
@@ -156,8 +158,9 @@ function ThisRouteCanBeDisplayed({ children }) {
   }
 
   return (
+    //ZONA 1
     <>
-      {recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' &&
+      {(recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' || recordTypeForThisEvent(cEvent) === 'PAYMENT_EVENT') &&
         (iAmRegisteredInThisEvent(cEventUser) === 'LOADING'
           ? showComponentForPublicEventWithRegistration(children, 'LOADING')
           : iAmRegisteredInThisEvent(cEventUser) === 'NOT_REGISTERED'
