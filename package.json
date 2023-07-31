@@ -5,9 +5,10 @@
   "scripts": {
     "dev": "vite --mode staging",
     "prod": "vite --mode prod_evius",
-    "devgeniality": "vite --mode geniality_staging",
-    "localgeniality": "vite --mode geniality_development",
+    "devgeniality": "vite --mode geniality_development",
+    "localgeniality": "vite --mode geniality_local",
     "prodgeniality": "vite --mode geniality_production",
+    "stagegeniality": "vite --mode geniality_stage",
     "build": "vite build",
     "build:prodgen": "node --max-old-space-size=8192 node_modules/.bin/vite --mode geniality_production build",
     "preview": "vite preview",
