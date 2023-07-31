@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import Moment from 'moment';
 import { Link, withRouter } from 'react-router-dom';
-import { Badge, Card, Space, Typography } from 'antd';
+import { Badge, Button, Card, Space, Typography } from 'antd';
 import { imageUtils } from '../../Utilities/ImageUtils';
 import { HelperContext } from '@/context/helperContext/helperContext';
 
@@ -10,7 +10,7 @@ const { Meta } = Card;
 class EventCard extends Component {
   static contextType = HelperContext;
   render() {
-    const { event, bordered, right, loading, isAdmin, blockedEvent } = this.props;
+    const { event, bordered, right, loading, isAdmin, blockedEvent, buttonBuyOrRegistered, textButtonBuyOrRegistered } = this.props;
     const { eventIsActive } = this.context;
 
     const styleNormal = {
@@ -109,6 +109,11 @@ class EventCard extends Component {
                       ? event.author?.displayName
                       : event.author?.names}
                   </span>
+                  {buttonBuyOrRegistered && 
+                  <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
+                    <Button type='primary'>{textButtonBuyOrRegistered ?? 'Comprar'}</Button>
+                  </Link>
+                  }
                   {/* RESTRICIONES */}
                   {/* {!eventIsActive[event._id] && window.location.toString().includes('myprofile') && (
                     <Typography.Paragraph style={{ color: 'red' }}>

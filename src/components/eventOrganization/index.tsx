@@ -26,6 +26,7 @@ function EventOrganization({match}: OrganizationProps) {
   const [myOrganizations, setMyorganizations] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const {eventsWithEventUser, isLoading: isLoadingOtherEvents} = useGetEventsWithUser(match.params.id,cUser.value?._id)
+
   useEffect(() => {
 
     let orgId = match.params.id;
@@ -61,9 +62,9 @@ function EventOrganization({match}: OrganizationProps) {
     }
   };
 
-
   const fetchItem = async (orgId: string) => {
     const events = await OrganizationFuction.getEventsNextByOrg(orgId);
+    console.log('events',events)
     let proximos: any = [];
     let pasados: any = [];
     let fechaActual = moment();
@@ -83,6 +84,33 @@ function EventOrganization({match}: OrganizationProps) {
     }
     setLoading(false);
   };
+
+  //toDo: Se debe realizar esta validacion desde el backedn para mejor optimizacion
+  const isUserRegisterInEvent=(eventId:string):boolean => {
+    if( eventsWithEventUser.filter(event => event._id === eventId).length > 0 ){
+      return true;
+    }
+    return false
+  }
+
+
+  const getTextButtonBuyOrRegistered=(event:any):string=>{
+    if(isUserRegisterInEvent(event._id)){
+      return 'Ir a'
+    }
+
+    if(havePaymentEvent(event)){
+      return `Comprar por $ ${event.payment.price}`
+    }
+
+    return 'Inscribirse'
+  }
+
+  const havePaymentEvent=(event:any):boolean=>{
+    return (event.payment ? event.payment.active as boolean : false)
+  }
+
+
   return (
     <div
       style={{
@@ -256,6 +284,8 @@ function EventOrganization({match}: OrganizationProps) {
                               key={event._id}
                               event={event}
                               action={{ name: 'Ver', url: `landing/${event._id}` }}
+                              buttonBuyOrRegistered
+                              textButtonBuyOrRegistered={getTextButtonBuyOrRegistered(event)}
                             />
                           </Col>
                         ))

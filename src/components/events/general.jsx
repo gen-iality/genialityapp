@@ -111,6 +111,7 @@ class General extends Component {
   };
 
   async componentDidMount() {
+    console.log(this.props.event)
     this.getCurrentConsumptionPlanByUsers();
     //inicializacion del estado de menu
     if (this.state.event.itemsMenu) {
@@ -201,13 +202,16 @@ class General extends Component {
       (this.state.event.visibility === 'PUBLIC' || this.state.event.visibility === 'ANONYMOUS') &&
       this.state.event.allow_register
     ) {
-      //Evento Público con Registro
-      this.setState({ accessSelected: 'PUBLIC_EVENT_WITH_REGISTRATION' });
-      //estado del check del evento público con registro sin contraseña
-      if (this.state.event.visibility === 'ANONYMOUS' && this.state.event.allow_register) {
-        this.setState({ extraState: true });
-      }
-    } else if (this.state.event.visibility === 'PUBLIC' && !this.state.event.allow_register) {
+			//Evento Público con Registro
+			this.setState({ accessSelected: 'PUBLIC_EVENT_WITH_REGISTRATION' });
+			if ( this.state.event.visibility === 'PUBLIC' && this.state.event.allow_register && this.state.event.payment?.active ) {
+				this.setState({ accessSelected: 'PAYMENT_EVENT' });
+			}
+			//estado del check del evento público con registro sin contraseña
+			if (this.state.event.visibility === 'ANONYMOUS' && this.state.event.allow_register) {
+				this.setState({ extraState: true });
+			}
+		} else if (this.state.event.visibility === 'PUBLIC' && !this.state.event.allow_register) {
       //Evento Público sin Registro
       this.setState({ accessSelected: 'UN_REGISTERED_PUBLIC_EVENT' });
     } else {
@@ -465,11 +469,16 @@ class General extends Component {
     const categories = this.state.selectedCategories.map((item) => {
       return item.value;
     });
-
+    const minValueEvent = 2000;
     const data = {
       name: event.name,
       datetime_from: datetime_from.format('YYYY-MM-DD HH:mm:ss'),
       datetime_to: datetime_to.format('YYYY-MM-DD HH:mm:ss'),
+      payment : {
+				active : event.payment?.active || false,
+				price :  event.payment?.price || minValueEvent,
+				currency :  event.payment?.currency || 'COP',
+			},
       picture: image,
       video: event.video || null,
       video_position: event.video_position === 'true' || event.video_position === true ? 'true' : 'false',
@@ -650,8 +659,10 @@ class General extends Component {
 
   //Esto es para la configuración de autenticación. Nuevo flujo de Login, cambiar los campos internamente
   changeAccessTypeForEvent = (value) => {
+    const minValueEvent = 2000;
     this.setState({ accessSelected: value });
     switch (value) {
+      case 'PAYMENT_EVENT':
       case 'PUBLIC_EVENT_WITH_REGISTRATION':
         this.setState({
           extraState: false,
@@ -659,6 +670,11 @@ class General extends Component {
             ...this.state.event,
             visibility: 'PUBLIC',
             allow_register: true,
+            payment : {
+							active : value === 'PAYMENT_EVENT',
+							price : minValueEvent,
+              currency : 'COP',
+						}
           },
         });
         break;
@@ -670,6 +686,11 @@ class General extends Component {
             ...this.state.event,
             visibility: 'ANONYMOUS',
             allow_register: true,
+            payment : {
+							active : false,
+							price : minValueEvent,
+              currency : 'COP',
+						}
           },
         });
         break;
@@ -680,6 +701,11 @@ class General extends Component {
             ...this.state.event,
             visibility: 'PUBLIC',
             allow_register: false,
+            payment : {
+							active : false,
+							price : minValueEvent,
+              currency : 'COP',
+						}
           },
         });
         break;
@@ -690,6 +716,11 @@ class General extends Component {
             ...this.state.event,
             visibility: 'PRIVATE',
             allow_register: false,
+            payment : {
+							active : false,
+							price : minValueEvent,
+              currency : 'COP',
+						}
           },
         });
         break;
@@ -1045,15 +1076,43 @@ class General extends Component {
               <BackTop />
             </Tabs.TabPane>
             <Tabs.TabPane tab='Tipos de acceso' key='2' style={{ paddingLeft: '32px', paddingRight: '32px' }}>
-              <Row justify='center' wrap gutter={[32, 8]}>
+              <Row justify='start' wrap gutter={[32, 8]}>
                 {AccessTypeCardData.map((item) => (
-                  <Col key={item.id} xs={24} sm={24} md={24} lg={12} xl={8} xxl={8}>
+                  <Col key={item.id} xs={24} sm={24} md={24} lg={12} xl={6} xxl={6}>
                     <AccessTypeCard
                       {...item}
                       callBackSelectedItem={this.changeAccessTypeForEvent}
                       itemSelected={accessSelected}
                       extraState={extraState}
+                      changeValue={(price) =>
+                        this.setState({
+                          event: {
+                            ...this.state.event,
+                            payment: {
+                              currency: this.state.event.payment?.currency,
+                              active: this.state.event.payment?.active,
+                              price,
+                            },
+                          },
+                        })
+                      }
+                      valueInput={this.state.event.payment?.price}
+                      payment={this.state.event.payment?.active}
+                      currency={this.state.event.payment?.currency}
+                      changeCurrency={(currency) =>{
+                        this.setState({
+                          event: {
+                            ...this.state.event,
+                            payment: {
+                              currency,
+                              active: this.state.event.payment?.active,
+                              price: this.state.event.payment?.price,
+                            },
+                          },
+                        }) 
+                      }}
                       isCms
+                      redirect={this.props.matchUrl}
                     />
                   </Col>
                 ))}

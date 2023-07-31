@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Form, Input, Button, Alert, Card, PageHeader, Typography } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, LoadingOutlined } from '@ant-design/icons';
 import { useIntl } from 'react-intl';
 import { EventsApi } from '../../../helpers/request';
 import ShieldLockIcon from '@2fd/ant-design-icons/lib/ShieldLock';
@@ -24,15 +24,17 @@ export const ChangePassword = ({ email }) => {
     );
     setTimeout(async () => {
       try {
-        await EventsApi.changePasswordUser(values.email);
-        setIsLoading(false);
-        setSendRecovery(
-          `${intl.formatMessage({
-            id: 'modal.restore.alert.passwordSuccess',
-            defaultMessage: 'Se ha enviado una link de cambio de contraseña al correo:',
-          })} ${email} `
-        );
-        setPsswordSentSuccessfullyOrWrongly(true);
+        let resp;
+        resp = await EventsApi.changePasswordUser(email, window.location.href);
+        if (resp) {
+          setSendRecovery(
+            `${intl.formatMessage({
+              id: 'modal.restore.alert.success',
+              defaultMessage: 'Se ha enviado una nueva contraseña a:',
+            })} ${email} `
+          );
+          setPsswordSentSuccessfullyOrWrongly('success');
+        }
       } catch (error) {
         setIsLoading(false);
         setPsswordSentSuccessfullyOrWrongly(false);
@@ -100,7 +102,7 @@ export const ChangePassword = ({ email }) => {
                 textAlign: 'start',
                 borderRadius: '5px',
               }}
-              icon={isLoading && <LoadingOutlined />}
+              icon={isLoading && <CheckCircleOutlined />}
             />
           )}
           <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>

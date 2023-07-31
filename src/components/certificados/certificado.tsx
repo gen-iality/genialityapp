@@ -13,7 +13,7 @@ import { ICertificado, CertificatesProps, CertifiRow } from './types';
 import CertificadoRow from './components/CertificadoRows';
 import { ArrayToStringCerti, defaultCertRows, replaceAllTagValues } from './utils';
 import { PropertyTypeUser, imgBackground } from './utils/constants';
-
+import { UseUserEvent } from '@/context/eventUserContext';
 
 const { confirm } = Modal;
 const { Option } = Select;
@@ -23,8 +23,7 @@ const formLayout = {
   wrapperCol: { span: 24 },
 };
 
-const Certificado : FC<CertificatesProps> = (props) => {
-
+const Certificado: FC<CertificatesProps> = (props) => {
   const locationState = props.location.state; //si viene new o edit en el state, si es edit es un id
   const history = useHistory();
   const [certificado, setCertificado] = useState<ICertificado>({
@@ -46,29 +45,44 @@ const Certificado : FC<CertificatesProps> = (props) => {
     { tag: 'user.names', label: 'Nombre(s) de asistente', value: 'names' },
     { tag: 'user.email', label: 'Correo de asistente', value: 'email' },
     { tag: 'ticket.name', label: 'Nombre del tiquete', value: 'ticket.title' },
-    { tag: 'rol.name', label: 'Nombre del Rol' , value : ''},
+    { tag: 'rol.name', label: 'Nombre del Rol', value: '' },
   ];
+  let cEventUser = UseUserEvent();
+
+  const properties = cEventUser.value.properties || {};
+  const filteredPropertiesTags = Object.keys(properties)
+    .filter((key) => {
+      return key !== 'names' && key !== 'email' && key !== 'list_type_user' && key !== 'rol_id' && key !== 'code';
+    })
+    .map((key) => {
+      return {
+        tag: `properties.${key}`,
+        label: `Propiedad ${key}`,
+        value: key,
+      };
+    });
+
+  const allTags = [...tags, ...filteredPropertiesTags];
 
   useEffect(() => {
     if (locationState.edit) {
       getOne();
-    }else{
-      setCertificateRows(defaultCertRows)
+    } else {
+      setCertificateRows(defaultCertRows);
     }
     getTypes();
   }, [locationState.edit]);
 
   const getOne = async () => {
     const data = await CertsApi.getOne(locationState.edit);
-    setCertificateRows(Array.isArray(data.content) ? data.content : defaultCertRows)
+    setCertificateRows(Array.isArray(data.content) ? data.content : defaultCertRows);
     setCertificado({ ...data, imageFile: data.background });
   };
   const handleDragEnd = ({ oldIndex, newIndex }: any) => {
- 
     if (oldIndex !== newIndex) {
-      const uptadeRows = [...certificateRows]
+      const uptadeRows = [...certificateRows];
       const movedItem = uptadeRows.splice(oldIndex, 1)[0];
-      uptadeRows.splice(newIndex, 0, movedItem)
+      uptadeRows.splice(newIndex, 0, movedItem);
       setCertificateRows(uptadeRows);
     }
   };
@@ -90,7 +104,7 @@ const Certificado : FC<CertificatesProps> = (props) => {
             rol: certificado?.rol,
             rol_id: certificado.rol?._id,
             event_id: props.event._id,
-            userTypes: certificado.userTypes
+            userTypes: certificado.userTypes,
           };
           await CertsApi.editOne(data, locationState.edit);
         } else {
@@ -101,7 +115,7 @@ const Certificado : FC<CertificatesProps> = (props) => {
             event_id: props.event._id,
             background: certificado.image?.data || certificado.image,
             rol: certificado?.rol,
-            userTypes: certificado.userTypes
+            userTypes: certificado.userTypes,
           };
           await CertsApi.create(data);
         }
@@ -183,12 +197,12 @@ const Certificado : FC<CertificatesProps> = (props) => {
     }
   };
 
-  const handleChange = (e : any) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
     setCertificado({ ...certificado, [name]: value });
   };
-  const selectChange = (data : string[]) => {
-    setCertificado((prev) => ({...prev, userTypes : data}));
+  const selectChange = (data: string[]) => {
+    setCertificado((prev) => ({ ...prev, userTypes: data }));
   };
 
   const getRoles = async () => {
@@ -196,21 +210,20 @@ const Certificado : FC<CertificatesProps> = (props) => {
     setRoles(data);
   };
 
-  
   const getTypes = async () => {
     const data = await EventsApi.getOne(props.event._id);
-    if(data){
-     const dataTypes = data.user_properties.find((item : any) => item.name === PropertyTypeUser )
-     if(dataTypes) setTypes(dataTypes.options)
-    } 
+    if (data) {
+      const dataTypes = data.user_properties.find((item: any) => item.name === PropertyTypeUser);
+      if (dataTypes) setTypes(dataTypes.options);
+    }
   };
 
-  const onChangeRol = async (e : any) => {
+  const onChangeRol = async (e: any) => {
     setRol(roles.find((rol) => rol?._id === e) ?? {});
     setCertificado({ ...certificado, rol: roles.find((rol) => rol?._id === e) });
   };
 
-  const handleImage = (e : any) => {
+  const handleImage = (e: any) => {
     const file = e.file;
     if (file) {
       //Si la imagen cumple con el formato se crea el URL para mostrarlo
@@ -243,8 +256,8 @@ const Certificado : FC<CertificatesProps> = (props) => {
       .then((querySnapshot) => {
         if (!querySnapshot.empty) {
           const oneUser = querySnapshot.docs[0].data();
-          const rowsWithData = replaceAllTagValues(props.event,oneUser,roles,certificateRows)
-          const stringCerti = ArrayToStringCerti(rowsWithData)
+          const rowsWithData = replaceAllTagValues(props.event, oneUser, roles, certificateRows);
+          const stringCerti = ArrayToStringCerti(rowsWithData);
           const body = {
             content: stringCerti,
             image: certificado.imageFile?.data ? certificado.imageFile?.data : certificado.imageFile || imgBackground,
@@ -264,7 +277,7 @@ const Certificado : FC<CertificatesProps> = (props) => {
               // For Firefox it is necessary to delay revoking the ObjectURL
               window.URL.revokeObjectURL(data);
             }, 60);
-          })
+          });
         }
       });
   };
@@ -328,23 +341,23 @@ const Certificado : FC<CertificatesProps> = (props) => {
                 />
               </Form.Item>
             </Col>
-            <Col span={12} >
-            <Form.Item
-                style={{margin: 0}}
+            <Col span={12}>
+              <Form.Item
+                style={{ margin: 0 }}
                 label={'Tipo de usuario'}
                 name={'userType'}
                 initialValue={certificado.rol}
               />
               <Select
-                  mode="multiple"
-                  showArrow
-                  maxTagCount={'responsive'}
-                  style={{ width: '100%' }}
-                  placeholder="Seleccione el tipo de usuario"
-                  onChange={selectChange}
-                  value={certificado.userTypes}
-                  options={types}
-                />
+                mode='multiple'
+                showArrow
+                maxTagCount={'responsive'}
+                style={{ width: '100%' }}
+                placeholder='Seleccione el tipo de usuario'
+                onChange={selectChange}
+                value={certificado.userTypes}
+                options={types}
+              />
               {/* <Form.Item
                 label={'Rol'}
                 name={'Rol'}>
@@ -368,7 +381,7 @@ const Certificado : FC<CertificatesProps> = (props) => {
               <Form.Item label={'Etiquetas Disponibles'}>
                 <p>Use etiquetas para ingresar información referente al evento o los asistentes</p>
                 <Row wrap gutter={[18, 8]}>
-                  {tags.map((item, key) => (
+                  {allTags.map((item, key) => (
                     <Col key={key}>
                       <code>{item.tag}</code>
                       <p>{item.label}</p>
@@ -386,7 +399,12 @@ const Certificado : FC<CertificatesProps> = (props) => {
                     <Button
                       type='primary'
                       onClick={() =>
-                        setCertificado({ ...certificado, imageFile: imgBackground, imageData: imgBackground, image: imgBackground })
+                        setCertificado({
+                          ...certificado,
+                          imageFile: imgBackground,
+                          imageData: imgBackground,
+                          image: imgBackground,
+                        })
                       }>
                       {'Cambiar a Imagen Original'}
                     </Button>
@@ -402,10 +420,9 @@ const Certificado : FC<CertificatesProps> = (props) => {
           </Row>
 
           <Form.Item label={'Certificado'} name={'content'}>
-              <CertificadoRow handleDragEnd={handleDragEnd} rows={certificateRows} onChange={setCertificateRows}/>
+            <CertificadoRow handleDragEnd={handleDragEnd} rows={certificateRows} onChange={setCertificateRows} />
           </Form.Item>
         </Col>
-
       </Row>
       <BackTop />
     </Form>
