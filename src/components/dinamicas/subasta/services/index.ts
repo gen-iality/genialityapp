@@ -1,0 +1,93 @@
+import { DispatchMessageService } from "@/context/MessageService";
+import { ApiInterface, Auction, AuctionConfig, Products } from "../interfaces/auction.interface";
+import { AuctionApi, AuctionProductApi } from '@/helpers/request';
+const api : ApiInterface = AuctionApi
+const apiProduct : ApiInterface = AuctionProductApi
+export const createAuction =  async  (eventId : string, params : AuctionConfig) => {
+    try {
+        const response = await api.createOne<Auction>(eventId,params);
+        return response;
+      } catch (error) {
+        DispatchMessageService({ type: 'error', msj: 'Error al crear la subasta', action: 'show' });
+        return null;
+      }
+}
+
+
+export const updateAuction =  async  (eventId : string, auctionId: string ,params : AuctionConfig) => {
+  try {
+      const response = await api.editOne<Auction>(eventId,auctionId,params);
+      return response;
+    } catch (error) {
+      DispatchMessageService({ type: 'error', msj: 'Error al actualizar la subasta', action: 'show' });
+      return null;
+    }
+}
+
+export const getAuction =  async  (eventId : string) => {
+    try {
+        console.log(eventId)
+        const response = await api.getOne<Auction>(eventId);
+        return response;
+      } catch (error) {
+        return null;
+      }
+}
+export const deleteAuction =  async  (eventId : string, auctionId: string) => {
+    try {
+        console.log(eventId)
+        const response = await api.deleteOne(eventId,auctionId);
+        return true;
+      } catch (error) {
+        DispatchMessageService({ type: 'error', msj: 'Error al eliminar la subasta', action: 'show' });
+        return false;
+      }
+}
+
+
+export const CreateProduct =  async  (eventId : string, params : Omit<Products, 'state' | '_id'> ) => {
+  try {
+      const response = await apiProduct.createOne<Products>(eventId,params);
+      return response;
+    } catch (error) {
+      console.log(error);
+      
+      DispatchMessageService({ type: 'error', msj: 'Error al crear el producto', action: 'show' });
+      return null;
+    }
+}
+export const deleteProduct =  async  (eventId : string, id :string ) => {
+  try {
+      const response = await apiProduct.deleteOne(eventId,id);
+      return true;
+    } catch (error) {
+      console.log(error);
+      
+      DispatchMessageService({ type: 'error', msj: 'Error al elminiar el producto', action: 'show' });
+      return false;
+    }
+}
+
+export const updateProduct =  async  (eventId : string, params : Omit<Products, 'state'> ) => {
+  try {
+      const response = await apiProduct.editOne<Products>(eventId,params._id,params);
+      return response;
+    } catch (error) {
+      console.log(error);
+      
+      DispatchMessageService({ type: 'error', msj: 'Error al crear el producto', action: 'show' });
+      return null;
+    }
+}
+
+export const getProducts =  async  (eventId : string) => {
+  try {
+      const response = await apiProduct.getOne<{data :Products[]}>(eventId)
+      return response;
+    } catch (error) {
+      console.log(error);
+      
+      DispatchMessageService({ type: 'error', msj: 'Error al crear el producto', action: 'show' });
+      return null;
+    }
+}
