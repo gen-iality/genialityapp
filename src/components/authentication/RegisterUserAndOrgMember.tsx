@@ -54,12 +54,14 @@ const RegisterUserAndOrgMember = ({
     status: boolean
     type: string
     textError: string
+    successText: string
     isLoading: boolean
     component?: ReactNode
   }>({
     status: false,
     type: 'success',
     textError: '',
+    successText: '',
     isLoading: false,
     component: undefined,
   })
@@ -93,7 +95,7 @@ const RegisterUserAndOrgMember = ({
     {
       title: 'First',
       content: (
-        <RegisterFast basicDataUser={basicDataUser} formDataHandler={formDataHandler} />
+        <RegisterFast userData={basicDataUser} formDataHandler={formDataHandler} />
       ),
       icon: <AccountOutlineIcon style={{ fontSize: '32px' }} />,
     },
@@ -226,8 +228,7 @@ const RegisterUserAndOrgMember = ({
             status: true,
             type: 'success',
             isLoading: false,
-            textError: intl.formatMessage({
-              // TODO: No se debería llamar TextError, si el texto es una respuesta afirmativa.
+            successText: intl.formatMessage({
               id: 'text_error.organization_successfully_registered',
               defaultMessage: 'Te has inscrito correctamente a esta organización',
             }),
@@ -315,6 +316,7 @@ const RegisterUserAndOrgMember = ({
           isLoading: false,
           status: false,
           textError: '',
+          successText: '',
         })
       } else {
         setValidationGeneral({
@@ -434,7 +436,13 @@ const RegisterUserAndOrgMember = ({
             boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
             backgroundColor: '#FFFFFF',
             color: '#000000',
-            borderLeft: '5px solid #FF4E50',
+            borderLeft: `5px solid ${
+              validationGeneral.textError
+                ? '#FF4E50'
+                : validationGeneral.successText
+                ? '#4fff4e'
+                : '#504eff'
+            }`,
             fontSize: '14px',
             textAlign: 'start',
             borderRadius: '5px',
@@ -443,7 +451,7 @@ const RegisterUserAndOrgMember = ({
           /* closable */
           message={
             <>
-              {validationGeneral.textError}
+              {validationGeneral.textError || validationGeneral.successText}
               {validationGeneral.component && (
                 <Button
                   style={{ padding: 4, color: '#333F44', fontWeight: 'bold' }}
@@ -457,7 +465,13 @@ const RegisterUserAndOrgMember = ({
               )}
             </>
           }
-          type="error"
+          type={
+            validationGeneral.textError
+              ? 'error'
+              : validationGeneral.successText
+              ? 'success'
+              : 'info'
+          }
         />
       )}
     </div>
