@@ -921,9 +921,9 @@ class General extends Component {
                   <Form.Item label={'Especificar fechas'}>
                     <CustomDateEvent eventId={this.props.event._id} updateEvent={this.props.updateEvent} />
                   </Form.Item>
-                  <Form.Item>
+                  <Form.Item label={'Ocultar fecha del evento'}>
                     <Checkbox onChange={(e) => this.onChangeCheckDate(e.target.checked)} checked={event.show_event_date}>
-                      Ocultar fecha del evento (check habilitado para ocultar la funcionalidad)
+                      Seleccione esta opción si deseas que tu fecha no sea visible para tu evento
                     </Checkbox>
                   </Form.Item>
                   <Form.Item label={'Descripción'}>
