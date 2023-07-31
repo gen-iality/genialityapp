@@ -310,8 +310,6 @@ const EventOrganization = () => {
                 <Title level={2}>Disponibles</Title>
               </Badge>
               <Row gutter={[16, 16]}>
-                {console.log('events', lastEvents)}
-
                 {lastEvents?.length > 0 ? (
                   lastEvents.map((event, index) => (
                     <>
