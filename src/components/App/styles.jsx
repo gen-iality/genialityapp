@@ -451,7 +451,7 @@ class Styles extends Component {
                           </Button>,
                         ]}
                         title={<Title level={5}>{item.title}</Title>}
-                        visible={item.editIsVisible}
+                        open={item.editIsVisible}
                       >
                         <Space wrap size="large" align="start">
                           <SketchPicker

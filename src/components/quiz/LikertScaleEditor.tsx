@@ -329,7 +329,7 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
     <>
       <Table dataSource={rows} columns={columns} />
       <Modal
-        visible={isOpenedModal} // Enable open/close the modal before clicking the plus-buttons
+        open={isOpenedModal} // Enable open/close the modal before clicking the plus-buttons
         title={title}
         okText="Add" // Change for more understandable
         onCancel={closeModal} // Close and edit some states

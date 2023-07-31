@@ -474,7 +474,7 @@ const OrganizationTimeTrackingPage: FunctionComponent<
         </Space>
       </Card>
       <Modal
-        visible={isModalShown}
+        open={isModalShown}
         title={(selectedEvent?.name && `Evento: ${selectedEvent.name}`) || 'Cargando...'}
         footer={null}
         onCancel={closeModalAndResetSelectedEvent}

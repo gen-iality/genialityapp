@@ -14,7 +14,7 @@ const ErrorServe = (props) => {
       title={`ERROR: ${errorData.status}`}
       onCancel={() => closeModal()}
       closable
-      visible={modal}
+      open={modal}
     >
       <p>
         {typeof errorData.message === 'object'

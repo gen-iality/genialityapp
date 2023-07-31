@@ -28,7 +28,7 @@ const ModalRegister = ({ register, setRegister, event }) => {
       bodyStyle={{ textAlign: 'center', borderTop: '10px solid #52C41A' }}
       footer={null}
       zIndex={999999999}
-      visible={register !== null}
+      open={register !== null}
       closable={false}
     >
       <Result

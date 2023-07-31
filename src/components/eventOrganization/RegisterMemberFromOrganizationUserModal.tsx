@@ -76,7 +76,7 @@ const RegisterMemberFromOrganizationUserModal: FunctionComponent<Props> = (props
   if (orgMember) {
     return (
       <Modal
-        visible={visible}
+        open={visible}
         title="Usuario ya inscrito"
         onOk={() => setVisible(false)}
         onCancel={() => setVisible(false)}
@@ -89,7 +89,7 @@ const RegisterMemberFromOrganizationUserModal: FunctionComponent<Props> = (props
   return (
     <>
       <Modal
-        visible={visible}
+        open={visible}
         title="Registrarse como miembro de esta organización"
         okText="Inscribirse"
         onOk={() => form.submit()}

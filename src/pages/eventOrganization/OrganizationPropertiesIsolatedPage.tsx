@@ -54,7 +54,7 @@ function OrganizationPropertiesIsolatedPage(props: any) {
 
       {member && (
         <Modal
-          visible={opened}
+          open={opened}
           onCancel={() => setOpened(false)}
           onOk={() => setOpened(false)}
         >

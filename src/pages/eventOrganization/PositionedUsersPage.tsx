@@ -212,7 +212,7 @@ function PositionedUsersPage(props: PositionedUsersPageProps) {
         )}
       />
       <Modal
-        visible={isModalOpened}
+        open={isModalOpened}
         title="Agrega miembro"
         onCancel={closeModal}
         onOk={() => form.submit()}

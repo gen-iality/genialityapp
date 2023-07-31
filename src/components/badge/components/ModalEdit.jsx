@@ -14,7 +14,7 @@ export default function ModalEdit({
     <Modal
       destroyOnClose
       title="Actualizar parametro"
-      visible={isVisible}
+      open={isVisible}
       footer={null}
       onCancel={() => setIsVisible(false)}
     >

@@ -141,7 +141,7 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
       }}
       okText="Seleccionar"
       cancelText="Cerrar"
-      visible={state?.visible}
+      open={state?.visible}
       onCancel={() =>
         dispatch({ type: NewEventActionEnum.VISIBLE_MODAL, payload: { visible: false } })
       }

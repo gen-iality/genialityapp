@@ -413,7 +413,7 @@ class SendRsvp extends Component {
             )}
           </Row>
           <Modal
-            visible={this.state.modal}
+            open={this.state.modal}
             onCancel={this.closeModal}
             title="Confirmación"
             onOk={this.submit}

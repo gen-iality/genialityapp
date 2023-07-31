@@ -187,7 +187,7 @@ function AppointmentModal({
 
   return (
     <Modal
-      visible={!!targetEventUserId}
+      open={!!targetEventUserId}
       title="Agendar cita"
       footer={null}
       onCancel={resetModal}

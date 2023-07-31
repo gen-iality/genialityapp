@@ -62,7 +62,7 @@ const ModalFeedback = ({ cHelper, cEvent }) => {
       footer={null}
       zIndex={1000}
       closable
-      visible={cHelper?.typeModal == 'loginSuccess' || cHelper?.typeModal == 'loginError'}
+      open={cHelper?.typeModal == 'loginSuccess' || cHelper?.typeModal == 'loginError'}
       onCancel={() => cHelper.handleChangeTypeModal(null)}
     >
       <Result

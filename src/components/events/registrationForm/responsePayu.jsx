@@ -69,7 +69,7 @@ const ResponsePayu = (props) => {
         }`,
       }}
       closable={false}
-      visible={visible}
+      open={visible}
       footer={null}
     >
       <Result

@@ -115,7 +115,7 @@ export function RouterPrompt({
 
   return showPrompt ? (
     <Modal
-      visible={showPrompt}
+      open={showPrompt}
       onCancel={handleCancel}
       closable
       centered

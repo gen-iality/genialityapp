@@ -1423,7 +1423,7 @@ and displays an error message using the `message` component from the antd librar
               )}
             </>
           }
-          visible={this.state.isModalVisible}
+          open={this.state.isModalVisible}
           closable={false}
           footer={[
             <Button

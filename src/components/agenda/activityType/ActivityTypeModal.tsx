@@ -8,7 +8,7 @@ import type { ActivityType } from '@context/activityType/types/activityType'
 import useActivityType from '@context/activityType/hooks/useActivityType'
 
 export interface ActivityTypeModalProps {
-  visible: boolean
+  open: boolean
   onClose: (success?: boolean) => void
   onSelectionChange: (selected: ActivityType.Name) => void
 }
@@ -38,19 +38,13 @@ function ActivityTypeModal(props: ActivityTypeModalProps) {
   }
 
   useEffect(() => {
-    if (!props.visible) {
+    if (!props.open) {
       setSelected(null)
     }
-  }, [props.visible])
+  }, [props.open])
 
   return (
-    <Modal
-      centered
-      width={1200}
-      footer={null}
-      visible={props.visible}
-      onCancel={handleCancel}
-    >
+    <Modal centered width={1200} footer={null} open={props.open} onCancel={handleCancel}>
       <ActivityTypeModalLayout
         somethingWasSelected={somethingWasSelected}
         title={formWidgetFlow.MainTitle}

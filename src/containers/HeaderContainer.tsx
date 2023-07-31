@@ -408,7 +408,7 @@ const HeaderContainer: FunctionComponent<IHeaderContainerProps> = (props) => {
             placement="left"
             closable
             onClose={() => onClose()}
-            visible={dataGeneral.showEventMenu}
+            open={dataGeneral.showEventMenu}
           >
             <MenuOld match={window.location.pathname} />
           </Drawer>

@@ -385,7 +385,7 @@ function MembersCertificationPage(props: MembersCertificationPageProps) {
       />
 
       <Modal
-        visible={isModalOpened}
+        open={isModalOpened}
         title={`Agrega una certificación a usuario: ${currentUser?.names}`}
         onOk={() => {
           form.submit()

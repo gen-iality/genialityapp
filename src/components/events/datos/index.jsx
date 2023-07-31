@@ -694,7 +694,7 @@ class Datos extends Component {
                 />
                 {modal && (
                   <Modal
-                    visible={modal}
+                    open={modal}
                     title={edit ? 'Editar dato' : 'Agregar dato'}
                     footer={false}
                     onCancel={this.closeModal2}
@@ -797,7 +797,7 @@ class Datos extends Component {
                   />
                   {modal && (
                     <Modal
-                      visible={modal}
+                      open={modal}
                       title={edit ? 'Editar dato' : 'Agregar dato'}
                       footer={false}
                       onCancel={this.closeModal2}

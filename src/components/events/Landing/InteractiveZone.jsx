@@ -26,7 +26,7 @@ const InteractiveZone = (props) => {
         placement={this.state.placementBottom}
         closable
         onClose={this.onClose}
-        visible={this.state.visibleChat}
+        open={this.state.visibleChat}
         maskClosable
         className="drawerMobile"
       >

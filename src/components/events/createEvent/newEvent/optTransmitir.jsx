@@ -68,7 +68,7 @@ function OptionTransmitir() {
       <Modal
         width={600}
         className="modal-opt"
-        visible={isModalLink}
+        open={isModalLink}
         onOk={handleOklink}
         onCancel={handleCancellink}
       >
@@ -90,7 +90,7 @@ function OptionTransmitir() {
       <Modal
         width={600}
         className="modal-opt"
-        visible={isModalRtmp}
+        open={isModalRtmp}
         onOk={handleOkRtmp}
         onCancel={handleCancelRmtmp}
       >

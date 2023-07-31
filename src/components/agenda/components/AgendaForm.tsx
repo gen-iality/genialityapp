@@ -317,7 +317,7 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
             </Col>
             {/* The speaker modal */}
             <Modal
-              visible={isSpeakerModalOpened}
+              open={isSpeakerModalOpened}
               onCancel={() => setIsSpeakerModalOpened(false)}
               okButtonProps={{ disabled: true }}
             >

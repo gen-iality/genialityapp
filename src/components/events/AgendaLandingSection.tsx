@@ -602,7 +602,7 @@ class AgendaLandingSection extends Component {
     return (
       <div>
         <Modal
-          visible={this.state.visibleModal}
+          open={this.state.visibleModal}
           title="Información"
           // onOk={this.handleOk}
           onCancel={this.handleCancelModal}
@@ -630,7 +630,7 @@ class AgendaLandingSection extends Component {
         </Modal>
 
         <Modal
-          visible={this.state.visibleModalRestricted}
+          open={this.state.visibleModalRestricted}
           title="Información"
           // onOk={this.handleOk}
           onCancel={this.handleCancelModalRestricted}
@@ -655,7 +655,7 @@ class AgendaLandingSection extends Component {
         </Modal>
 
         <Modal
-          visible={this.state.visibleModalRegisteredDevices}
+          open={this.state.visibleModalRegisteredDevices}
           title="Información"
           // onOk={this.handleOk}
           onCancel={this.handleCloseModalRestrictedDevices}
@@ -670,7 +670,7 @@ class AgendaLandingSection extends Component {
         </Modal>
 
         <Modal
-          visible={this.state.visibleModalExchangeCode}
+          open={this.state.visibleModalExchangeCode}
           title="Información"
           // onOk={this.handleOk}
           onCancel={this.handleCancelModalExchangeCode}

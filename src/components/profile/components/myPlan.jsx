@@ -301,7 +301,7 @@ const myPlan = ({ cUser }) => {
               />
             </Tooltip>
             <Modal
-              visible={showModal && toShowModal === item._id}
+              open={showModal && toShowModal === item._id}
               footer={null}
               onCancel={() => {
                 setShowModal(!showModal)

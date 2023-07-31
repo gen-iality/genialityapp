@@ -50,7 +50,7 @@ function ActivityTypeSelector(props: SubActivityTypeSelectorProps) {
   return (
     <>
       <ActivityTypeModal
-        visible={isModalShown}
+        open={isModalShown}
         onClose={handleCloseModal}
         onSelectionChange={handleSelectionChange}
       />

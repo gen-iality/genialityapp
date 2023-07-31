@@ -28,7 +28,7 @@ const ModalSpeakers = (props) => {
         title="Conferencista"
         centered
         width={1000}
-        visible={modalVisible}
+        open={modalVisible}
         onCancel={() => clearStates()}
         onOk={() => clearStates()}
         footer={[

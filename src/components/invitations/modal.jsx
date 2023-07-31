@@ -31,7 +31,7 @@ class ModalInvitationError extends Component {
       <Fragment>
         <div>
           <Modal
-            visible={visible}
+            open={visible}
             title="No seleccionaste ningún Usuario"
             onOk={this.handleOk}
             onCancel={this.handleCancel}

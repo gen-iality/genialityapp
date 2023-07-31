@@ -93,7 +93,7 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
   if (!watchedUser) return null
 
   return (
-    <Modal centered footer={null} visible={show} closable onCancel={onHidden}>
+    <Modal centered footer={null} open={show} closable onCancel={onHidden}>
       <Space direction="vertical" style={{ width: '100%' }}>
         {dataLoaded ? (
           <List

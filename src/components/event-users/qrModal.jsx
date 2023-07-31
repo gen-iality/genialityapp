@@ -115,7 +115,7 @@ const QrModal = ({
   const qrSize = badgeEvent?.BadgeFields?.find((bagde) => bagde.qr)
   return (
     <Row style={{ textAlign: 'center' }}>
-      <Modal visible={openModal} onCancel={closeQr} footer={null}>
+      <Modal open={openModal} onCancel={closeQr} footer={null}>
         <Title level={4} type="secondary">
           {typeScanner === 'scanner-qr' ? 'Lector QR' : 'Lector de Documento'}
         </Title>

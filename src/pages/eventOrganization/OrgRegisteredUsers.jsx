@@ -311,7 +311,7 @@ function OrgRegisteredUsers(props) {
       />
 
       <Modal
-        visible={isModalOpened}
+        open={isModalOpened}
         title={`Agrega una certificación a usuario: ${selectedOrgMember?.eventUser_name}`}
         onOk={() => {
           form.submit()

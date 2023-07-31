@@ -46,7 +46,7 @@ const ModalPermission = () => {
       zIndex={1000}
       closable
       onCancel={() => handleChangeTypeModal(null)}
-      visible={
+      open={
         typeModal == 'register' ||
         typeModal == 'update' ||
         typeModal === 'registerForTheEvent'

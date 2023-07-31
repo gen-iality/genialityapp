@@ -23,7 +23,7 @@ const ModalListOrg = (props) => {
       footer={null}
       zIndex={1000}
       closable
-      visible={props.modalListOrgIsVisible}
+      open={props.modalListOrgIsVisible}
       onCancel={() => {
         props.setModalListOrgIsVisible(false)
       }}

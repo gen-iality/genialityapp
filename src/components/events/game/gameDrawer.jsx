@@ -69,7 +69,7 @@ function GameDrawer(props) {
         bodyStyle={{ padding: '10px' }}
         closeIcon={<CloseOutlined style={{ fontSize: '24px' }} />}
         placement="right"
-        visible={gameVisible}
+        open={gameVisible}
         onClose={closeDrawer}
         width={window.screen.width >= 768 ? (!rankingVisible ? '100%' : '70%') : '100%'}
       >

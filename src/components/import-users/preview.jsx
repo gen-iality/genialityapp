@@ -376,7 +376,7 @@ class Preview extends Component {
           footer={null}
           destroyOnClose
           closable={false}
-          visible={this.state.showModal}
+          open={this.state.showModal}
         >
           {this.content()}
         </Modal>

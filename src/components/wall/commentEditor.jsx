@@ -66,7 +66,7 @@ const RenderEditor = ({ onSubmit, visibleNoUser, item }) => {
       }
       <Modal
         title="Necesitas estar autenticad@"
-        visible={visibleNoUser}
+        open={visibleNoUser}
         cancelButtonProps={{ hidden: true }}
         onOk={() => {
           // setVisibleNoUser(false); -> it is not defined in this subcomponent

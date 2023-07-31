@@ -312,7 +312,7 @@ function MemberCertificationLogsPage(props: MemberCertificationLogsPageProps) {
       />
 
       <Modal
-        visible={isModalOpened}
+        open={isModalOpened}
         title={`Edita el registro de certificación a usuario: ${currentUser?.names}`}
         onOk={() => {
           form.submit()

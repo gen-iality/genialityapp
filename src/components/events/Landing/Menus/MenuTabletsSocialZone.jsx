@@ -67,7 +67,7 @@ const MenuTabletsSocialZone = (props) => {
         placement="bottom"
         closable
         onClose={() => setIsDrawerVisible(!isDrawerVisible)}
-        visible={isDrawerVisible}
+        open={isDrawerVisible}
         maskClosable
         className="drawerMobile"
       >

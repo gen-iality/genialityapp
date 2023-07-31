@@ -234,7 +234,7 @@ const Informacion = (props) => {
                 okText="Seleccionar"
                 cancelText="Cerrar"
                 title="Organizaciónes"
-                visible={organization && !isbyOrganization}
+                open={organization && !isbyOrganization}
                 onCancel={() => changeOrganization(false)}
               >
                 {!createOrganizationF && (
@@ -341,7 +341,7 @@ const Informacion = (props) => {
       <Modal
         className="modal-calendar"
         centered
-        visible={isModalVisible}
+        open={isModalVisible}
         okText="Aceptar"
         onOk={handleOk}
         cancelText="Cancelar"

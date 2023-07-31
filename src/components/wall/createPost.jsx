@@ -244,7 +244,7 @@ class CreatePost extends Component {
           )}
 
           <Modal
-            visible={visible}
+            open={visible}
             title="Publicaciones"
             onOk={this.handleOk}
             onCancel={this.handleCancel}
@@ -290,7 +290,7 @@ class CreatePost extends Component {
                     <Modal
                       title="Camara"
                       centered
-                      visible={this.state.modal2Visible}
+                      open={this.state.modal2Visible}
                       onOk={(e) => {
                         this.setState({ hidden: false }, this.setModal2Visible(false))
                       }}

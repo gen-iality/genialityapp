@@ -237,7 +237,7 @@ class ListEventUser extends Component {
 
     return (
       <Card style={{ padding: '5px' }}>
-        <Modal visible={this.state.modalView} footer={null} closable={false}>
+        <Modal open={this.state.modalView} footer={null} closable={false}>
           <Result
             extra={
               <Button type="primary" onClick={this.closeModal}>

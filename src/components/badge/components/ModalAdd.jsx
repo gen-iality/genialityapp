@@ -11,7 +11,7 @@ export default function ModalAdd({
   return (
     <Modal
       title="Agregar parametro"
-      visible={isVisible}
+      open={isVisible}
       destroyOnClose
       footer={null}
       onCancel={() => setIsVisible(false)}

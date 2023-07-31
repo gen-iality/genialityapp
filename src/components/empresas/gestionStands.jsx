@@ -344,7 +344,7 @@ const Stands = (props) => {
 
             <Modal
               title={selectedStand ? 'Editar stand' : 'Agregar stand'}
-              visible={editStands}
+              open={editStands}
               onOk={editStand}
               onCancel={handleCancel}
             >

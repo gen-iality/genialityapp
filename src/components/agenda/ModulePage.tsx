@@ -232,7 +232,7 @@ function ModulePage(props: any) {
         />
       </DndProvider>
       <Modal
-        visible={isOpened}
+        open={isOpened}
         title={currentEditingItem === null ? 'Agregar nuevo modulo' : 'Editar módulo'}
         onCancel={cancelModel}
         onOk={() => form.submit()}

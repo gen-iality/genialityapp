@@ -98,7 +98,7 @@ function Transmitir(props) {
               okText="Seleccionar"
               cancelText="Cerrar"
               title="Organización"
-              visible={organization && !isbyOrganization}
+              open={organization && !isbyOrganization}
               onCancel={() => changeOrganization(false)}
             >
               <List

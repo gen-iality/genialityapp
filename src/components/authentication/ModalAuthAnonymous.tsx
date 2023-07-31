@@ -109,7 +109,7 @@ const ModalAuthAnonymous = (props: any) => {
         centered
         footer={null}
         zIndex={1000}
-        visible={
+        open={
           controllerLoginVisible?.visible &&
           props.cEvent?.value?.visibility === 'ANONYMOUS'
         }

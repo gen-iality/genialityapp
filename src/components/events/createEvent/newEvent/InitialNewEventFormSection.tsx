@@ -175,7 +175,7 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
       <Modal
         centered
         className="modal-calendar"
-        visible={isModalVisible}
+        open={isModalVisible}
         okText="Aceptar"
         onOk={handleOk}
         cancelText="Cancelar"

@@ -449,7 +449,7 @@ class Speakers extends Component {
           }}
           centered
           width={1000}
-          visible={this.state.modalVisible}
+          open={this.state.modalVisible}
           onCancel={() => this.setModalVisible(false)}
           footer={null}
         >

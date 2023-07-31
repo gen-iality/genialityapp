@@ -43,7 +43,7 @@ class DetailTickets extends Component {
       <div>
         <Modal
           title={item.event}
-          visible={visible}
+          open={visible}
           onOk={this.handleOk}
           onCancel={this.handleOk}
           style={{ height: '100%' }}

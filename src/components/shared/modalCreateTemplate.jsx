@@ -37,7 +37,7 @@ const ModalCreateTemplate = (props) => {
       zIndex={1000}
       closable
       onCancel={() => props.handlevisibleModal()}
-      visible={props.visible}
+      open={props.visible}
     >
       <Form onFinish={onFinish} layout="vertical">
         <Typography.Title level={4} type="secondary">

@@ -40,7 +40,7 @@ const ModalUpdate = () => {
     <Modal
       okText="Actualizar"
       title="Informacion Importante"
-      visible={isVisible}
+      open={isVisible}
       onOk={handleOpen}
       cancelText="Cancelar"
       onCancel={() => setIsVisible(false)}

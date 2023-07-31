@@ -24,7 +24,7 @@ const MenuTablets = () => {
         placement="left"
         closable={false}
         onClose={() => setIsOpen(!isOpen)}
-        visible={isOpen}
+        open={isOpen}
         maskClosable
         bodyStyle={{
           padding: '0px',

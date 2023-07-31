@@ -46,7 +46,7 @@ const ModalCreateOrg = (props) => {
       footer={null}
       zIndex={1000}
       closable
-      visible={props.modalCreateOrgIsVisible}
+      open={props.modalCreateOrgIsVisible}
       onCancel={() => {
         props.setModalCreateOrgIsVisible(false)
         resetFields()

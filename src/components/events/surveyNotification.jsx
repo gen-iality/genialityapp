@@ -48,7 +48,7 @@ const surveyNotification = () => {
         placement="right"
         closable
         onClose={() => clearStates()}
-        visible={drawerVisible}
+        open={drawerVisible}
       ></Drawer>
     </>
   )

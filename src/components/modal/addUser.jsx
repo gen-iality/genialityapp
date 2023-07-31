@@ -192,7 +192,7 @@ class AddUser extends Component {
         <Modal
           title="Agregar invitado"
           onCancel={this.props.handleModal}
-          visible={this.props.modal}
+          open={this.props.modal}
           footer={[
             <Button
               type="primary"
