@@ -192,7 +192,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                 <Form.Item
                   name={'offerValue'}
                   rules={[
-                    { required: true, message: `Se requiere un valor minimo de  ${auction.currentProduct?.price}` },
+                    { required: true, message: `Se requiere un valor mínimo de  ${auction.currentProduct?.price}` },
                   ]}>
                   <Input size='large' type='number' prefix='$' suffix={auction.currency} />
                 </Form.Item>
