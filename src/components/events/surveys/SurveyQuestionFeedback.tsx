@@ -1,7 +1,7 @@
 import { Button, Result, Typography } from 'antd'
 import { useMemo } from 'react'
 import stateMessages from './functions/stateMessagesV2'
-import useIsDev from '@/hooks/useIsDev'
+import useIsDevOrStage from '@/hooks/useIsDevOrStage'
 import calcRightAnswers from './calcRightAnswers'
 
 export interface SurveyQuestionFeedbackProps {
@@ -12,7 +12,7 @@ export interface SurveyQuestionFeedbackProps {
 }
 
 function SurveyQuestionFeedback(props: SurveyQuestionFeedbackProps) {
-  const isDev = useIsDev()
+  const { isDev } = useIsDevOrStage()
   // const points = useMemo(
   //   () =>
   //     props.questions
@@ -24,11 +24,10 @@ function SurveyQuestionFeedback(props: SurveyQuestionFeedbackProps) {
   // )
   const points = useMemo(() => {
     const { rightCount } = calcRightAnswers(
-      props.questions
+      props.questions,
       /**
        * This question types need calc the answers with the restrict mode on
-       */,
-      ['ranking'],
+       */ ['ranking'],
     )
     return rightCount
   }, [props.questions])
