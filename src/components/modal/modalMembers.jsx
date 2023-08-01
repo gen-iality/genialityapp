@@ -145,7 +145,7 @@ function ModalMembers(props) {
               stylePaddingDesktop={stylePaddingDesktop}
               idOrganization={organizationId} // New!
               defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
-              requireAutomaticLoguin={false}
+              requireAutomaticLogin={false}
               startingComponent={props.startingComponent}
             />
           ) : (

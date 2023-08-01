@@ -308,7 +308,7 @@ const EnrollEventUserFromOrganizationMember: FunctionComponent<
             screens={[]}
             stylePaddingMobile={stylePaddingMobile}
             stylePaddingDesktop={stylePaddingDesktop}
-            requireAutomaticLoguin={false}
+            requireAutomaticLogin={false}
           />
         </Tabs.TabPane>
         <Tabs.TabPane tab="Desde miembros" key="from-org-member">

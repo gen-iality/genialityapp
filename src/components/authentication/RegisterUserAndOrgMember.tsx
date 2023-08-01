@@ -24,8 +24,7 @@ import { OrganizationApi, PositionsApi, UsersApi } from '@helpers/request'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { StateMessage } from '@context/MessageService'
 import OrganizationPropertiesForm from '@components/organization/forms/OrganizationPropertiesForm'
-
-const { Step } = Steps
+import { ValidationStatusType } from './types'
 
 const RegisterUserAndOrgMember = ({
   screens,
@@ -33,7 +32,7 @@ const RegisterUserAndOrgMember = ({
   stylePaddingDesktop,
   idOrganization,
   defaultPositionId,
-  requireAutomaticLoguin,
+  requireAutomaticLogin,
   startingComponent,
 }: any) => {
   const intl = useIntl()
@@ -42,7 +41,7 @@ const RegisterUserAndOrgMember = ({
   const location = useLocation()
 
   const [current, setCurrent] = useState(0)
-  const [basicDataUser, setBasicDataUser] = useState<any>({
+  const [basicDataUser, setBasicDataUser] = useState({
     names: '',
     email: '',
     password: '',
@@ -50,32 +49,21 @@ const RegisterUserAndOrgMember = ({
   })
   const [dataOrgMember, setDataOrgMember] = useState<any | undefined>(undefined)
   const [buttonStatus, setButtonStatus] = useState(true)
-  const [validationGeneral, setValidationGeneral] = useState<{
-    status: boolean
-    type: string
-    textError: string
-    successText: string
-    isLoading: boolean
-    component?: ReactNode
-  }>({
-    status: false,
-    type: 'success',
-    textError: '',
-    successText: '',
+  const [validationStatus, setValidationStatus] = useState<ValidationStatusType>({
+    error: false,
     isLoading: false,
-    component: undefined,
   })
 
   const [organization, setOrganization] = useState({})
   const [existGenialialityUser, setExistGenialialityUser] = useState(false)
 
-  const hookValidations = (status: boolean, textError: string) => {
-    setValidationGeneral({
-      status: status,
-      textError: textError,
+  const hookValidations = (error: boolean, textError: string) => {
+    setValidationStatus({
+      error,
+      message: textError,
       isLoading: false,
     })
-    setButtonStatus(status)
+    setButtonStatus(error)
   }
 
   const formDataHandler = (e: any, fieldName: string, picture: any) => {
@@ -93,14 +81,14 @@ const RegisterUserAndOrgMember = ({
 
   const steps = [
     {
-      title: 'First',
+      title: 'Básico',
       content: (
         <RegisterFast userData={basicDataUser} formDataHandler={formDataHandler} />
       ),
       icon: <AccountOutlineIcon style={{ fontSize: '32px' }} />,
     },
     {
-      title: 'Second',
+      title: 'Adicionales',
       content: (
         <OrganizationPropertiesForm
           form={form}
@@ -113,14 +101,12 @@ const RegisterUserAndOrgMember = ({
       icon: <TicketConfirmationOutlineIcon style={{ fontSize: '32px' }} />,
     },
     {
-      title: 'Last',
+      title: 'Confirmación',
       content: (
         <RegistrationResult
-          validationGeneral={validationGeneral}
+          validationGeneral={validationStatus}
           basicDataUser={basicDataUser}
-          requireAutomaticLoguin={requireAutomaticLoguin}
-          cEvent={undefined} // NOTE: in the last this prop was undefined as th next
-          dataEventUser={undefined}
+          requireAutomaticLogin={requireAutomaticLogin}
         />
       ),
       icon: <ScheduleOutlined style={{ fontSize: '32px' }} />,
@@ -131,31 +117,29 @@ const RegisterUserAndOrgMember = ({
     try {
       const validateEmail = await UsersApi.validateEmail({ email: basicDataUser.email })
       if (validateEmail?.message === 'Email valid') {
-        setValidationGeneral({
+        setValidationStatus({
           isLoading: false,
-          status: false,
-          textError: '',
-          type: 'success',
+          error: false,
         })
         setCurrent(current + 1)
       }
-    } catch (err) {
+    } catch (err: any) {
       if (err?.response?.data?.errors?.email[0] === 'email ya ha sido registrado.') {
         if (isAdminPage()) {
           setCurrent(current + 1)
           setExistGenialialityUser(true)
 
-          setValidationGeneral({
+          setValidationStatus({
             isLoading: false,
-            status: false,
-            textError: 'El usuario ya existe. Debes registrar miembro a la organización',
+            error: true,
+            message: 'El usuario ya existe. Debes registrar miembro a la organización',
             component: 'Registrar miembro de la organización',
           })
         } else {
-          setValidationGeneral({
+          setValidationStatus({
             isLoading: false,
-            status: true,
-            textError: intl.formatMessage({
+            error: true,
+            message: intl.formatMessage({
               id: 'modal.feedback.title.error',
               defaultMessage:
                 'Correo electrónico ya en uso, inicie sesión si desea continuar con este correo.',
@@ -169,19 +153,19 @@ const RegisterUserAndOrgMember = ({
       } else if (
         err?.response?.data?.errors?.email[0] === 'email no es un correo válido'
       ) {
-        setValidationGeneral({
+        setValidationStatus({
           isLoading: false,
-          status: true,
-          textError: intl.formatMessage({
+          error: true,
+          message: intl.formatMessage({
             id: 'modal.feedback.errorDNSNotFound',
             defaultMessage: 'El correo ingresado no es válido.',
           }),
         })
       } else {
-        setValidationGeneral({
+        setValidationStatus({
           isLoading: false,
-          status: true,
-          textError: intl.formatMessage({
+          error: true,
+          message: intl.formatMessage({
             id: 'modal.feedback.errorGeneralInternal',
             defaultMessage:
               'Se ha presentado un error interno. Por favor intenta de nuevo',
@@ -224,16 +208,15 @@ const RegisterUserAndOrgMember = ({
           )
         }
         if (respUser && respUser.account_id) {
-          setValidationGeneral({
-            status: true,
-            type: 'success',
+          setValidationStatus({
+            error: false,
             isLoading: false,
-            successText: intl.formatMessage({
+            message: intl.formatMessage({
               id: 'text_error.organization_successfully_registered',
               defaultMessage: 'Te has inscrito correctamente a esta organización',
             }),
           })
-          setBasicDataUser({})
+          // setBasicDataUser({ email: '', names: '', password: '', picture: '' })
           setDataOrgMember(undefined)
           startingComponent && startingComponent()
         }
@@ -254,10 +237,10 @@ const RegisterUserAndOrgMember = ({
           if (status === CREATE_NEW_USER_SUCCESS) {
             createOrgMember()
           } else {
-            setValidationGeneral({
-              status: false, // REVISAR: ¿Debe ser true, para que pueda salir la alerta?
+            setValidationStatus({
+              error: true,
               isLoading: false,
-              textError: intl.formatMessage({
+              message: intl.formatMessage({
                 id: 'text_error.error_creating_user',
                 defaultMessage: 'Hubo un error al crear el usuario, intente nuevamente',
               }),
@@ -270,10 +253,11 @@ const RegisterUserAndOrgMember = ({
 
   const goToNextStep = () => {
     if (current == 0) {
-      setValidationGeneral({
-        ...validationGeneral,
+      setValidationStatus({
+        ...validationStatus,
         isLoading: true,
-        status: false,
+        error: false,
+        message: undefined,
       })
 
       handleValidateAccountGeniality()
@@ -283,10 +267,11 @@ const RegisterUserAndOrgMember = ({
         .then(() => {
           console.log('3. Validate Fields')
           form.submit()
-          setValidationGeneral((previous) => ({
+          setValidationStatus((previous) => ({
             ...previous,
             isLoading: true,
-            status: false,
+            error: false,
+            message: undefined,
           }))
         })
         .catch((error) => console.log(error))
@@ -311,22 +296,21 @@ const RegisterUserAndOrgMember = ({
         basicDataUser.password.length <= 18
       ) {
         setButtonStatus(false)
-        setValidationGeneral({
-          ...validationGeneral,
+        setValidationStatus({
+          ...validationStatus,
           isLoading: false,
-          status: false,
-          textError: '',
-          successText: '',
+          error: false,
+          message: undefined,
         })
       } else {
-        setValidationGeneral({
-          ...validationGeneral,
+        setValidationStatus({
+          ...validationStatus,
           isLoading: false,
-          textError: intl.formatMessage({
+          message: intl.formatMessage({
             id: 'feedback.title.error',
             defaultMessage: 'Complete los campos solicitados correctamente.',
           }),
-          status: true,
+          error: true,
         })
       }
     } else {
@@ -397,11 +381,11 @@ const RegisterUserAndOrgMember = ({
           </Button>
         )}
 
-        {validationGeneral.isLoading ? (
+        {validationStatus.isLoading ? (
           <LoadingOutlined style={{ fontSize: '28px' }} />
         ) : (
           <>
-            {!validationGeneral.status && (
+            {!validationStatus.message && (
               <>
                 {current < steps.length - 1 && (
                   <Button
@@ -428,50 +412,36 @@ const RegisterUserAndOrgMember = ({
         )}
       </div>
 
-      {validationGeneral.status && (
+      {typeof validationStatus.message === 'string' && (
         <Alert
           showIcon
-          /* style={{ marginTop: '5px' }} */
           style={{
             boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
             backgroundColor: '#FFFFFF',
             color: '#000000',
-            borderLeft: `5px solid ${
-              validationGeneral.textError
-                ? '#FF4E50'
-                : validationGeneral.successText
-                ? '#4fff4e'
-                : '#504eff'
-            }`,
+            borderLeft: `5px solid ${validationStatus.error ? '#FF4E50' : '#4fff4e'}`,
             fontSize: '14px',
             textAlign: 'start',
             borderRadius: '5px',
             marginBottom: '15px',
           }}
-          /* closable */
           message={
             <>
-              {validationGeneral.textError || validationGeneral.successText}
-              {validationGeneral.component && (
+              {validationStatus.message}
+              {validationStatus.component && (
                 <Button
                   style={{ padding: 4, color: '#333F44', fontWeight: 'bold' }}
                   onClick={() =>
                     helperDispatch({ type: 'showLogin', idOrganization: idOrganization })
-                  } // REVISAR: Al parecer no está funcionando el dispatch
+                  }
                   type="link"
                 >
-                  {validationGeneral.component}
+                  {validationStatus.component}
                 </Button>
               )}
             </>
           }
-          type={
-            validationGeneral.textError
-              ? 'error'
-              : validationGeneral.successText
-              ? 'success'
-              : 'info'
-          }
+          type={validationStatus.error ? 'error' : 'success'}
         />
       )}
     </div>

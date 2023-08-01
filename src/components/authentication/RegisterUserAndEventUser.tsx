@@ -109,7 +109,7 @@ const RegisterUserAndEventUser = ({
           basicDataUser={basicDataUser}
           cEvent={undefined}
           dataEventUser={undefined}
-          requireAutomaticLoguin={undefined}
+          requireAutomaticLogin={undefined}
         />
       ),
       icon: <ScheduleOutlined style={{ fontSize: '32px' }} />,

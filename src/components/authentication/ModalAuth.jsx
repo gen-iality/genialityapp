@@ -69,7 +69,7 @@ const ModalAuth = (props) => {
   const cEvent = useEventContext()
   const cUser = useCurrentUser()
   const [modalVisible, setModalVisible] = useState(false)
-  const [msjError, setMsjError] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
   const intl = useIntl()
 
   const params = useParams()
@@ -159,18 +159,18 @@ const ModalAuth = (props) => {
   const DetecError = (code) => {
     switch (code) {
       case 'auth/wrong-password':
-        setMsjError(intl.formatMessage({ id: 'auth.error.wrongPassword' }))
+        setErrorMessage(intl.formatMessage({ id: 'auth.error.wrongPassword' }))
         break
       case 'auth/user-not-found':
-        setMsjError(intl.formatMessage({ id: 'auth.error.userNotFound' }))
+        setErrorMessage(intl.formatMessage({ id: 'auth.error.userNotFound' }))
 
         break
       case 'auth/invalid-email':
-        setMsjError(intl.formatMessage({ id: 'auth.error.invalidEmail' }))
+        setErrorMessage(intl.formatMessage({ id: 'auth.error.invalidEmail' }))
         break
 
       case 'auth/too-many-requests':
-        setMsjError(intl.formatMessage({ id: 'auth.error.tooManyRequests' }))
+        setErrorMessage(intl.formatMessage({ id: 'auth.error.tooManyRequests' }))
         break
     }
   }
@@ -358,7 +358,7 @@ const ModalAuth = (props) => {
                   marginBottom: '15px',
                 }}
                 type="error"
-                message={msjError}
+                message={errorMessage}
               />
             )}
             {!isLoading && (
@@ -440,7 +440,7 @@ const ModalAuth = (props) => {
                 screens={screens}
                 stylePaddingMobile={stylePaddingMobile}
                 stylePaddingDesktop={stylePaddingDesktop}
-                requireAutomaticLoguin={true}
+                requireAutomaticLogin={true}
               />
             </>
           ) : isOrganization() ? (
@@ -451,7 +451,7 @@ const ModalAuth = (props) => {
                 stylePaddingDesktop={stylePaddingDesktop}
                 idOrganization={controllerLoginVisible.idOrganization} // New!
                 defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
-                requireAutomaticLoguin={true}
+                requireAutomaticLogin={true}
               />
             </>
           ) : (

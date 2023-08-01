@@ -342,7 +342,7 @@ class UserModal extends Component {
               screens={[]}
               stylePaddingMobile={stylePaddingMobile}
               stylePaddingDesktop={stylePaddingDesktop}
-              requireAutomaticLoguin={false}
+              requireAutomaticLogin={false}
             />
           ) : (
             <FormComponent
