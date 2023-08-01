@@ -26,7 +26,7 @@ export default function Products({ products, onclick, onDelete }: ProductsProps)
                   <Card.Meta 
                     title={
                       <Row justify={'space-between'}>
-                        <Typography.Title level={5}>{product.name}</Typography.Title>
+                        <Typography.Text strong>{product.name}</Typography.Text>
                           <Popconfirm
                             placement='top'
                             title={'¿Está seguro de eliminar la información?'}

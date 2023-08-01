@@ -87,7 +87,7 @@ export default function ExecuteAuction() {
               danger
               icon={<StopOutlined />}
               onClick={auctionFinish}>
-              Finalizar Subasta
+              Finalizar subasta
             </Button>
           )}
         </Col>
@@ -101,7 +101,7 @@ export default function ExecuteAuction() {
                 refresh();
                 setVisibility(true);
               }}>
-              {auction?.currentProduct ? 'Seleccionar producto' : 'Iniciar Subasta'}
+              {auction?.currentProduct ? 'Seleccionar producto' : 'Iniciar subasta'}
             </Button>
           )}
         </Col>
@@ -113,7 +113,7 @@ export default function ExecuteAuction() {
               icon={<DeleteOutlined />}
               danger
               type='primary'>
-              Cerrar Pujas
+              Cerrar pujas
             </Button>
           </Col>
         )}

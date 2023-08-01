@@ -7,10 +7,10 @@ export default function SelectProducts({ products, onclick }: Omit<ProductsProps
   const [selected, setselected] = useState('')
   return (
     <Card style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-      <Row justify='start' style={{ display: 'flex', height: 330, overflowY: 'auto' }}>
+      <Row justify='start' /* style={{ display: 'flex', height: 330, overflowY: 'auto' }} */>
         {products?.length > 0 ? (
           products?.map((product) => (
-            <Col style={{ height: 230 ,border:  selected === product._id ? '3px solid #4A5052' : '3px solid transparent', }} key={product._id}>
+            <Col /* style={{ height: 340 ,border:  selected === product._id ? '3px solid #4A5052' : '3px solid transparent', }} */ key={product._id}>
               <Card
                onClick={() =>{
                  if(product.state !== 'auctioned'){
@@ -18,26 +18,23 @@ export default function SelectProducts({ products, onclick }: Omit<ProductsProps
                   onclick(product)
                  }
                 }}
-                title={
-                  <Row justify={'center'}>
-                    <Typography.Title level={5}>{product.name}</Typography.Title>
-                  </Row>
-                }
                 key={product._id + 'card'}
                 bordered={true}
                 hoverable
                 onMouseEnter={() => {}}
-                style={{ margin: 10, width: 200, aspectRatio: 'relative', height: 196 }}
+                style={{ margin: 10, width: 200, aspectRatio: 'relative', height: 310, borderRadius: 20 }}
                 cover={
-                  <div
-                    style={{
-                      filter: product.state === 'auctioned' ? 'grayscale(100%)' : '',
-                      width: 200,
-                      height: 130,
-                      backgroundImage: `url(${product.images[0].url})`,
-                      backgroundSize: 'cover',
-                    }}></div>
-                }></Card>
+                  <img
+                    alt='imagen del producto'
+                    src={product.images[0].url}
+                    style={{ height: '250px', objectFit: 'fill', backgroundColor: '#C4C4C440', borderRadius: '20px 20px 0 0px', filter: product.state === 'auctioned' ? 'grayscale(100%)' : '' }}
+                    onClick={() => onclick(product)}
+                  />
+                }>
+                  <Card.Meta 
+                    title={<Typography.Text strong>{product.name}</Typography.Text>}
+                  />
+                </Card>
             </Col>
           ))
         ) : (
