@@ -1,4 +1,4 @@
-import { Card, Empty, Skeleton, Space, Statistic } from 'antd'
+import { Card, Empty, Skeleton, Space, Statistic, Typography } from 'antd'
 import React from 'react'
 import { DrawerAuctionProps } from '../../interfaces/auction.interface'
 import Meta from 'antd/lib/card/Meta'
@@ -27,12 +27,14 @@ export default function CardProduct({auction} : Partial<DrawerAuctionProps>) {
       )
     }>
       <Meta 
-        title={auction?.currentProduct ? `Artículo: ${auction?.currentProduct.name}` : 'Sin producto asignado'}
+        title={<Typography.Text strong>{auction?.currentProduct ? auction?.currentProduct.name : 'Sin producto asignado'}</Typography.Text>}
         description={
           <Statistic 
             title="Valor del artículo"
             className='animate__animated animate__flipInX' 
-            prefix='$' value={auction?.currentProduct?.price|| 0} />
+            prefix='$' value={auction?.currentProduct?.price|| 0} 
+            suffix={auction?.currency}
+          />
         } 
       />
     {/* <Space style={{ flexDirection: 'column' ,width: '100%', height: 300, justifyContent: 'center'}}> */}

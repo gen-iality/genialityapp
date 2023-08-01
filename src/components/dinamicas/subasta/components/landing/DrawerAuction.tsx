@@ -16,6 +16,7 @@ import {
   Form,
   Statistic,
   notification,
+  Empty,
 } from 'antd';
 import { UseEventContext } from '@/context/eventContext';
 import HCOActividad from '@/components/events/AgendaActividadDetalle/HOC_Actividad';
@@ -132,48 +133,60 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                   <Tabs.TabPane key={TabsDrawerAuction.Bids} tab='Pujas'>
                     <Row justify='center'>
                       <Col span={24}>
-                        <List
-                          loading={loading}
-                          dataSource={Bids}
-                          renderItem={(item) => (
-                            <List.Item>
-                              <Skeleton avatar title={false} loading={loading}>
-                                <List.Item.Meta
-                                  avatar={<Avatar>{item.name[0] || 'A'}</Avatar>}
-                                  title={<a>{item.name}</a>}
-                                  description={item.date}
-                                />
-                                <Statistic value={item.offered} prefix='$' suffix={auction.currency} />
-                              </Skeleton>
-                            </List.Item>
-                          )}
-                        />
+                        {Bids.length > 0 ?
+                          <List
+                            loading={loading}
+                            dataSource={Bids}
+                            renderItem={(item) => (
+                              <List.Item>
+                                <Skeleton avatar title={false} loading={loading}>
+                                  <List.Item.Meta
+                                    avatar={<Avatar>{item.name[0] || 'A'}</Avatar>}
+                                    title={<a>{item.name}</a>}
+                                    description={item.date}
+                                  />
+                                  <Statistic value={item.offered} prefix='$' suffix={auction.currency} />
+                                </Skeleton>
+                              </List.Item>
+                            )}
+                          /> :
+                          <Empty
+                            style={{ height: '250px', display: 'grid', justifyContent: 'center', alignItems: 'center' }}
+                            description={'Sin puja'}
+                          />
+                        }
                       </Col>
                     </Row>
                   </Tabs.TabPane>
                   <Tabs.TabPane key={TabsDrawerAuction.History} tab='Historial de artículos' closable>
                     <Row>
                       <Col span={24}>
-                        <List
-                          loading={ProductsLoading}
-                          dataSource={products.filter((product) => product.state === 'auctioned')}
-                          renderItem={(item) => (
-                            <List.Item>
-                              <Skeleton avatar title={false} loading={ProductsLoading}>
-                                <List.Item.Meta
-                                  avatar={<Avatar src={item.images[0].url}></Avatar>}
-                                  title={<a>{item.name}</a>}
-                                />
-                                <Statistic
-                                  valueStyle={{ color: '#3f8600' }}
-                                  value={item.end_price || item.price}
-                                  prefix='OLD $'
-                                  suffix={auction.currency}
-                                />
-                              </Skeleton>
-                            </List.Item>
-                          )}
-                        />
+                        {products.filter((product) => product.state === 'auctioned').length > 0 ?
+                          <List
+                            loading={ProductsLoading}
+                            dataSource={products.filter((product) => product.state === 'auctioned')}
+                            renderItem={(item) => (
+                              <List.Item>
+                                <Skeleton avatar title={false} loading={ProductsLoading}>
+                                  <List.Item.Meta
+                                    avatar={<Avatar src={item.images[0].url}></Avatar>}
+                                    title={<a>{item.name}</a>}
+                                  />
+                                  <Statistic
+                                    valueStyle={{ color: '#3f8600' }}
+                                    value={item.end_price || item.price}
+                                    prefix='OLD $'
+                                    suffix={auction.currency}
+                                  />
+                                </Skeleton>
+                              </List.Item>
+                            )}
+                          /> :
+                          <Empty
+                            style={{ height: '250px', display: 'grid', justifyContent: 'center', alignItems: 'center' }}
+                            description={'Sin artículos'}
+                          />
+                        }
                       </Col>
                     </Row>
                   </Tabs.TabPane>
