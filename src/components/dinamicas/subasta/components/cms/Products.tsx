@@ -5,8 +5,8 @@ import { AntCloudOutlined, DeleteOutlined } from '@ant-design/icons';
 
 export default function Products({ products, onclick, onDelete }: ProductsProps) {
   return (
-    <Card style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-      <Row justify='start' style={{ display: 'flex', height: 600, overflowY: 'auto' }}>
+  
+      <Row justify='start' style={{ display: 'flex' }}>
         {products?.length > 0 ? (
           products?.map((product) => (
             <Col style={{ margin: 10 }} key={product._id}>
@@ -44,6 +44,6 @@ export default function Products({ products, onclick, onDelete }: ProductsProps)
           <Result status='info' icon={<AntCloudOutlined />} title='No hay productos creados.' />
         )}
       </Row>
-    </Card>
+
   );
 }
