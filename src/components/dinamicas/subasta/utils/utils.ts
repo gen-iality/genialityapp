@@ -5,9 +5,7 @@ import { deleteFireStorageData } from '@/Utilities/deleteFireStorageData';
 import { DispatchMessageService } from '@/context/MessageService';
 
 export const uploadImagedummyRequest = async ({ file, onSuccess, onError }: any) => {
-  console.log(file);
   const imagenUrl = await uploadImageData(file);
-  console.log('imagen', imagenUrl);
   if (imagenUrl) {
     onSuccess({ url: imagenUrl });
   } else {
@@ -29,10 +27,13 @@ export const deleteImage = async (
   }
 };
 
-
+export enum TabsDrawerAuction {
+  Bids = 'Bids',
+  History = 'History',
+}
 export const InitialModalState: ModalProduct = {
   description: '',
   images: [],
-  priceStart: 0,
+  start_price: 0,
   name: '',
 };

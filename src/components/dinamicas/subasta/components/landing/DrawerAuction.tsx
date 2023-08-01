@@ -24,20 +24,27 @@ import { DrawerAuctionProps } from '../../interfaces/auction.interface';
 import CardProduct from './CardProduct';
 import { useBids } from '../../hooks/useBids';
 import { saveOffer } from '../../services';
-import { DispatchMessageService } from '@/context/MessageService';
+import useProducts from '../../hooks/useProducts';
+import { TabsDrawerAuction } from '../../utils/utils';
+
 const { useBreakpoint } = Grid;
 
 export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, eventId }: DrawerAuctionProps) {
   const cEvent = UseEventContext();
   const screens = useBreakpoint();
+  const { products, getProducts, loading: ProductsLoading } = useProducts(eventId);
   const { Bids, loading } = useBids(eventId, auction?.currentProduct?._id, auction?.playing);
   const [canOffer, setcanOffer] = useState(true);
 
-
-  const validOffer = (value: string) : boolean=> {
+  const validOffer = (value: string): boolean => {
     const offer = Number(value);
-    return  auction?.currentProduct?.price !== undefined && offer > auction?.currentProduct?.price
-  }
+    return auction?.currentProduct?.price !== undefined && offer > auction?.currentProduct?.price;
+  };
+  const reloadProducts = (tab: string) => {
+    if (tab === TabsDrawerAuction.History) {
+      getProducts();
+    }
+  };
 
   const onBid = async (data: { offerValue: string }) => {
     setcanOffer(false);
@@ -46,19 +53,24 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
       clearTimeout(timeAwait);
     }, 3000);
 
-    const isValid = validOffer(data.offerValue)
-    
+    const isValid = validOffer(data.offerValue);
+
     if (isValid && auction?.currentProduct?._id && data.offerValue) {
-      saveOffer(eventId, auction?.currentProduct?._id, {
-        date: new Date().toLocaleString(),
-        name: 'carlos',
-        offered: Number(data.offerValue),
-      },auction);
+      saveOffer(
+        eventId,
+        auction?.currentProduct?._id,
+        {
+          date: new Date().toLocaleString(),
+          name: 'carlos',
+          offered: Number(data.offerValue),
+        },
+        auction
+      );
     }
-    if(!isValid){
+    if (!isValid) {
       notification.warning({
         message: 'El valor debe ser mayor al precio actual del articulo',
-      })
+      });
     }
   };
 
@@ -111,8 +123,13 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
             </Col>
             <Col span={24}>
               <Card style={{ borderRadius: '20px' }} bordered={false} bodyStyle={{ padding: '0px 20px' }}>
-                <Tabs defaultActiveKey='1' draggable style={{ width: '100%' }} tabBarStyle={{ margin: '0px' }}>
-                  <Tabs.TabPane key='1' tab='Pujas'>
+                <Tabs
+                  defaultActiveKey={TabsDrawerAuction.Bids}
+                  draggable
+                  style={{ width: '100%' }}
+                  onChange={reloadProducts}
+                  tabBarStyle={{ margin: '0px' }}>
+                  <Tabs.TabPane key={TabsDrawerAuction.Bids} tab='Pujas'>
                     <Row justify='center'>
                       <Col span={24}>
                         <List
@@ -129,10 +146,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                                   title={<a>{item.name}</a>}
                                   description={item.date}
                                 />
-                                <Statistic
-                                  value={item.offered}
-                                  prefix='$'
-                                  suffix={auction.currency}/>
+                                <Statistic value={item.offered} prefix='$' suffix={auction.currency} />
                               </Skeleton>
                             </List.Item>
                           )}
@@ -140,21 +154,27 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                       </Col>
                     </Row>
                   </Tabs.TabPane>
-                  <Tabs.TabPane key='2' tab='Historial de articulos'>
+                  <Tabs.TabPane key={TabsDrawerAuction.History} tab='Historial de articulos' closable>
                     <Row>
                       <Col span={24}>
                         <List
-                        pagination={{
-                          pageSize: 5,
-                        }}
-                          dataSource={Bids}
+                          loading={ProductsLoading}
+                          pagination={{
+                            pageSize: 5,
+                          }}
+                          dataSource={products.filter((product) => product.state === 'auctioned')}
                           renderItem={(item) => (
                             <List.Item>
-                              <Skeleton avatar title={false} loading={loading}>
+                              <Skeleton avatar title={false} loading={ProductsLoading}>
                                 <List.Item.Meta
-                                  avatar={<Avatar>{item.name[0] || 'A'}</Avatar>}
+                                  avatar={<Avatar src={item.images[0].url}></Avatar>}
                                   title={<a>{item.name}</a>}
-                                  description={item.date}
+                                />
+                                <Statistic
+                                  valueStyle={{ color: '#3f8600' }}
+                                  value={item.end_price || item.price}
+                                  prefix='OLD $'
+                                  suffix={auction.currency}
                                 />
                               </Skeleton>
                             </List.Item>

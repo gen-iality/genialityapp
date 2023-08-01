@@ -25,9 +25,9 @@ export default function AuctionView({auction} : {auction : Auction}) {
       {loadingConfig ? <Loading/> :<CreateAuction key={'subasta-Configuración'} active={true} auction={auction}/>}
       </Tabs.TabPane>
 
-      <Tabs.TabPane tab='Apariencia' key={4}>
+   {/*    <Tabs.TabPane tab='Apariencia' key={4}>
 
-      </Tabs.TabPane>
+      </Tabs.TabPane> */}
 
       <Tabs.TabPane tab='Reporte de subasta' key={5}>
 

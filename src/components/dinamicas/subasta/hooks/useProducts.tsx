@@ -71,7 +71,7 @@ const useProducts = (eventId: string) => {
   const getProducts = async () => {
     setLoading(true);
     const data = await service.getProducts(eventId);
-    setproducts(data?.data || []);
+   if(data) setproducts(data.data || []);
     setLoading(false);
   };
 
