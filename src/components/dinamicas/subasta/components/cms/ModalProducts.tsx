@@ -72,7 +72,7 @@ export default function ModalProducts({ product, onChange, onCancel, onSave }: M
           />
         </Form.Item>
 
-        <Form.Item  rules={[{ required: true, message: 'Es necesaria la descripcion del producto' }]} label={'Descripcion'} name={'description'} initialValue={product.description || ''}>
+        <Form.Item  rules={[{ required: true, message: 'Es necesaria la descripción del producto' }]} label={'Descripción'} name={'description'} initialValue={product.description || ''}>
           <TextArea rows={5} placeholder={'Ej: Hecha por el artista..'} />
         </Form.Item>
 
@@ -97,7 +97,7 @@ export default function ModalProducts({ product, onChange, onCancel, onSave }: M
         </Form.Item>
 
         <Row justify='end'>
-          <Button loading={loading} onClick={()=> onCancel(product.images)} type='primary' style={{ marginRight: 10 }} danger icon={<CloseCircleOutlined />}>
+          <Button loading={loading} onClick={()=> onCancel(product.images)} /* type='primary' */ style={{ marginRight: 10 }} danger icon={<CloseCircleOutlined />}>
             Cancelar
           </Button>
           <Button loading={loading} type='primary' style={{ marginRight: 10 }} htmlType='submit' icon={<SaveOutlined />}>

@@ -22,7 +22,7 @@ export default function AuctionView({auction} : {auction : Auction}) {
         <CreateProducts reload={currenTab === '2'}/>
       </Tabs.TabPane>
 
-      <Tabs.TabPane tab='Ejecucion' key={3}>
+      <Tabs.TabPane tab='Ejecución' key={3}>
         <ExecuteAuction/>
       </Tabs.TabPane>
    {/*    <Tabs.TabPane tab='Apariencia' key={4}>

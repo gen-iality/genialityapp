@@ -26,7 +26,7 @@ export default function CreateProducts({reload}: {reload: boolean}) {
         if (!modal.edit || newFileList.length !== 0) {
           await deleteImage(file, setProductSelect, newFileList);
         } else {
-          DispatchMessageService({ type: 'warning', msj: 'el producto debe tener minimo una imagen', action: 'show' });
+          DispatchMessageService({ type: 'warning', msj: 'el producto debe tener mínimo una imagen', action: 'show' });
         }
         break;
       case 'error':
@@ -75,7 +75,7 @@ export default function CreateProducts({reload}: {reload: boolean}) {
     <>
       <Modal
         visible={modal.visibility}
-        title={modal.edit ? 'Editar Producto' : 'Agregar Producto'}
+        title={modal.edit ? 'Editar producto' : 'Agregar producto'}
         footer={false}
         closable={false}
         okText={'Guardar'}>
@@ -98,7 +98,7 @@ export default function CreateProducts({reload}: {reload: boolean}) {
           Agregar
         </Button>
       </Row>
-      <Row justify='center' style={{ margin: 10 }}>
+      <Row justify='start'>
         {!loading ? (
           <Products
             products={products}
