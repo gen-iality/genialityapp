@@ -25,6 +25,7 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
     setActivityContentType,
     executer_stopStream,
     resetActivityType,
+    setVideoId
   } = useActivityType();
 
   const {
@@ -68,6 +69,7 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
   }, [type])
 
   const handleConfirmDeleting = async () => {
+    //toDo: consumir el endpoint para eliminar los videos de vimeo
     setIsDeleting(true);
     if (isVisible && meeting_id) {
       try {
@@ -84,7 +86,8 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
     } catch (err) {
       console.error('Error to try to call removeViewers', err)
     }
-    await AgendaApi.editOne({ video: null }, activityEdit, cEvent?.value?._id);
+    setVideoId(null)
+    await AgendaApi.editOne({ video: null, vimeo_id: null }, activityEdit, cEvent?.value?._id);
     // await deleteTypeActivity();
 
     setDataLive(null);
