@@ -102,7 +102,7 @@ function EventOrganization({ match }: OrganizationProps) {
     }
 
     if (havePaymentEvent(event)) {
-      return `Comprar por $ ${event.payment.price}`;
+      return `Comprar por $ ${event.payment.price} ${event?.payment?.currency}`;
     }
 
     return 'Inscribirse';
