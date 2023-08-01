@@ -132,11 +132,11 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
               if (state.played === 0) return
 
               setViewedVideoProgress(state.played)
-              // updateAttendeeInActivityRealTime(cEventUser.value, activity._id, {
-              //   viewProgress: state.played,
-              //   checked_in: false,
-              //   checkedin_at: null,
-              // })
+              updateAttendeeInActivityRealTime(cEventUser.value, activity._id, {
+                viewProgress: state.played,
+                // checked_in: false,
+                // checkedin_at: null,
+              })
             }}
             controls
           />
