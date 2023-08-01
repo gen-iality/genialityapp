@@ -133,9 +133,6 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                     <Row justify='center'>
                       <Col span={24}>
                         <List
-                          pagination={{
-                            pageSize: 5,
-                          }}
                           loading={loading}
                           dataSource={Bids}
                           renderItem={(item) => (
@@ -159,9 +156,6 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                       <Col span={24}>
                         <List
                           loading={ProductsLoading}
-                          pagination={{
-                            pageSize: 5,
-                          }}
                           dataSource={products.filter((product) => product.state === 'auctioned')}
                           renderItem={(item) => (
                             <List.Item>
@@ -210,7 +204,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                   type='primary'
                   size='large'
                   disabled={!auction.playing || !canOffer}>
-                  Pujar
+                  EmPujar
                 </Button>
               </Form>
             </Col>

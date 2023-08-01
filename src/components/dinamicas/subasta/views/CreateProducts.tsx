@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Products from '../components/cms/Products';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Modal, Row } from 'antd';
@@ -11,12 +11,14 @@ import Loading from '@/components/profile/loading';
 import { DispatchMessageService } from '@/context/MessageService';
 import { UploadFile } from 'antd/lib/upload/interface';
 
-export default function CreateProducts() {
+export default function CreateProducts({reload}: {reload: boolean}) {
   const [modal, setmodal] = useState({ visibility: false, edit: false });
   const [productSelect, setProductSelect] = useState<ModalProduct>(InitialModalState);
   const { eventId } = useContext(AuctionContext);
-  const { products, createProduct, deleteProduct, updateProduct, loading, deleteImages } = useProducts(eventId);
-
+  const { products, createProduct, deleteProduct, updateProduct, loading, deleteImages, refresh } = useProducts(eventId);
+  useEffect(() => {
+    refresh()
+  }, [reload]);
   const onChange = async ({ file, fileList: newFileList }: ImagesData) => {
     const { status } = file;
     switch (status) {
@@ -102,12 +104,10 @@ export default function CreateProducts() {
             products={products}
             onDelete={deleteProduct}
             onclick={(product) => {
-              if(product.state !== 'auctioned'){
+              
                 setProductSelect(product);
                 setmodal({ visibility: true, edit: true });
-            }else{
-              DispatchMessageService({ type: 'warning', msj: 'El producto ya fue subastado', action: 'show' });
-            }
+            
             }}
           />
         ) : (

@@ -68,6 +68,7 @@ export interface ModalProduct {
     name:        string;
     description: string;
     start_price:  number;
+    state:       ProductState
     images:       UploadFile[];
 }
 

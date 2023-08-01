@@ -13,18 +13,18 @@ export default function AuctionView({auction} : {auction : Auction}) {
   const [currenTab, setcurrenTab] = useState('1')
   return (
     <Tabs defaultActiveKey={currenTab} onTabClick={(key)=> setcurrenTab(key)}>
-      <Tabs.TabPane tab='Ejecucion' key={1}>
-        <ExecuteAuction/>
-      </Tabs.TabPane>
-
-      <Tabs.TabPane tab='Productos' key={2}>
-        <CreateProducts/>
-      </Tabs.TabPane>
-
-      <Tabs.TabPane tab='Configuración' key={3}  disabled={auction.playing}>
+     
+     <Tabs.TabPane tab='Configuración' key={1}  disabled={auction.playing}>
       {loadingConfig ? <Loading/> :<CreateAuction key={'subasta-Configuración'} active={true} auction={auction}/>}
       </Tabs.TabPane>
 
+      <Tabs.TabPane tab='Productos' key={2}>
+        <CreateProducts reload={currenTab === '2'}/>
+      </Tabs.TabPane>
+
+      <Tabs.TabPane tab='Ejecucion' key={3}>
+        <ExecuteAuction/>
+      </Tabs.TabPane>
    {/*    <Tabs.TabPane tab='Apariencia' key={4}>
 
       </Tabs.TabPane> */}

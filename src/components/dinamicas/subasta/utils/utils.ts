@@ -31,9 +31,11 @@ export enum TabsDrawerAuction {
   Bids = 'Bids',
   History = 'History',
 }
+
 export const InitialModalState: ModalProduct = {
   description: '',
   images: [],
   start_price: 0,
   name: '',
+  state: 'waiting',
 };

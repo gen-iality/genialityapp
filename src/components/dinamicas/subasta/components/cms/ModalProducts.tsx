@@ -1,5 +1,5 @@
 import { CloseCircleOutlined, SaveOutlined } from '@ant-design/icons';
-import { Button, Form, Input, InputNumber, Row, Upload } from 'antd';
+import { Button, Form, Input, InputNumber, Row, Select, Upload } from 'antd';
 import React, { Fragment, useState } from 'react';
 import { uploadImagedummyRequest } from '../../utils/utils';
 import { ModalProps } from '../../interfaces/auction.interface';
@@ -50,6 +50,25 @@ export default function ModalProducts({ product, onChange, onCancel, onSave }: M
           <InputNumber
             style={{ width: '100%' }}
             formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+          />
+        </Form.Item>
+        <Form.Item
+          rules={[{ required: true, message: 'Es necesario el estado del producto' }]}
+          label={'Estado'}
+          name={'state'}
+          initialValue={product.state}>
+          <Select
+            style={{ width: '100%' }}
+            options={[{
+              label: 'En espera',
+              value: 'waiting'
+            },{
+              label: 'Subastado',
+              value: 'auctioned'
+            },{
+              label: 'En progreso',
+              value: 'progress'
+            }]}
           />
         </Form.Item>
 
