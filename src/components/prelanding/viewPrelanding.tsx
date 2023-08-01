@@ -31,6 +31,7 @@ import { Agenda, ApiGeneric, DataSource, Description, Speaker, Sponsor } from '.
 import { style } from './constants';
 import { Helmet } from 'react-helmet';
 import ModalPayment from '../authentication/ModalPayment';
+import moment from 'moment';
 
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -198,6 +199,8 @@ const ViewPrelanding = ({ preview }: PropsPreLanding) => {
       </div>
     );
   }
+  moment.locale('en');
+  const targetDate = moment(cEventContext?.value?.dates[0].start, 'DD MMM YYYY HH:mm').format('YYYY-MM-DD HH:mm:ss');
 
   return (
     <>
@@ -278,7 +281,7 @@ const ViewPrelanding = ({ preview }: PropsPreLanding) => {
                       }}>
                       <CountdownBlock
                         textColor={textColor}
-                        date={cEventContext?.value?.dateLimit}
+                        date={targetDate ? targetDate : cEventContext?.value?.dateLimit }
                         countdownMessage={cEventContext?.value?.countdownMessage}
                         countdownFinalMessage={cEventContext?.value?.countdownFinalMessage}
                       />
