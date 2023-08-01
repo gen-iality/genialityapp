@@ -19,6 +19,7 @@ import { DeleteActivitiesTakenButton } from './DeleteActivitiesTakenButton'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import ModuledActivityDisplayer from './ModuledActivityDisplayer'
 import { FB } from '@helpers/firestore-request'
+import useIsDev from '@/hooks/useIsDev'
 
 interface ActivitiesListProps {
   eventId: string
@@ -50,6 +51,7 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
   const currentEventUser = useContext(CurrentEventUserContext)
 
   const { activitiesEvent } = useHelper()
+  const { isDev, isStage } = useIsDev()
 
   const location = useLocation<any>()
 
@@ -162,7 +164,7 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
               ![activityContentValues.quizing, activityContentValues.survey].includes(
                 agenda.type?.name as any,
               ) ? (
-                !(import.meta.env.MODE || '').toLowerCase().includes('production') ? (
+                isDev || isStage ? (
                   <ButtonToDeleteSurveyAnswers
                     userId={currentUser.value._id}
                     eventId={eventId}
