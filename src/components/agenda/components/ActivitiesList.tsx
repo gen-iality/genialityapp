@@ -162,7 +162,7 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
               ![activityContentValues.quizing, activityContentValues.survey].includes(
                 agenda.type?.name as any,
               ) ? (
-                (import.meta.env.MODE || '').includes('staging') ? (
+                !(import.meta.env.MODE || '').toLowerCase().includes('production') ? (
                   <ButtonToDeleteSurveyAnswers
                     userId={currentUser.value._id}
                     eventId={eventId}
@@ -170,7 +170,7 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
                     onDelete={() => setAnswersIsDeleted(true)}
                   />
                 ) : (
-                  <></>
+                  (null as any)
                 )
               ) : (
                 <></>
