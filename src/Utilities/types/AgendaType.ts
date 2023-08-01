@@ -40,3 +40,21 @@ export interface ExtendedAgendaType extends AgendaType {
   video?: string | null,
   videoId?: string 
 };
+
+export interface DownloadQuality {
+  quality:      string;
+  rendition:    string;
+  type:         string;
+  width:        number;
+  height:       number;
+  expires:      string;
+  link:         string;
+  created_time: string;
+  fps:          number;
+  size:         number;
+  md5:          null;
+  public_name:  string;
+  size_short:   string;
+}
+
+
