@@ -11,8 +11,6 @@ import {
 import { Form, Input, Button, Space, Upload, Avatar } from 'antd'
 import ImgCrop from 'antd-img-crop'
 import { useIntl } from 'react-intl'
-import { useEventWithCedula } from '@helpers/helperEvent'
-import { useEventContext } from '@context/eventContext'
 import { uploadImagedummyRequest } from '@Utilities/imgUtils'
 import Camera from 'react-html5-camera-photo'
 import 'react-html5-camera-photo/build/css/index.css'
@@ -48,22 +46,21 @@ const RegisterFast: FunctionComponent<IRegisterFastProps> = (props) => {
   const [imageAvatar, setImageAvatar] = useState<any>(null)
   const [organization, setOrganization] = useState<any>(null)
 
-  const params = useParams()
+  const params = useParams<{ id?: string }>()
   const orgId = params.id
 
   const [form] = Form.useForm()
   const intl = useIntl()
-  const cEvent = useEventContext()
+
+  const loadOrganizationData = async () => {
+    const _organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId)
+    setOrganization(_organization)
+  }
 
   /*Cargando la información de la organización esto debería estar en un contexto*/
   useEffect(() => {
-    if (!orgId) return null
-    let _organization = null
-    let asyncfunc = async () => {
-      _organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId)
-      setOrganization(_organization)
-    }
-    asyncfunc()
+    if (!orgId) return
+    loadOrganizationData()
   }, [orgId])
 
   /* Toca hacerlo, porque por alguna razón cuando se actualiza basicDataUser.picture  no se renderiza el componente 
