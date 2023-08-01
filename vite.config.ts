@@ -1,14 +1,14 @@
 /* globals __dirname, require */
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import EnvironmentPlugin from 'vite-plugin-environment';
-import { createHtmlPlugin } from 'vite-plugin-html';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import EnvironmentPlugin from 'vite-plugin-environment'
+import { createHtmlPlugin } from 'vite-plugin-html'
 
-const path = require('path');
+const path = require('path')
 Object.assign(require('less').options, {
   javascriptEnabled: true,
   modifyVars: {},
-});
+})
 
 export default defineConfig(({ mode }) => {
   // define: {
@@ -18,9 +18,12 @@ export default defineConfig(({ mode }) => {
   // },
 
   const isDevMode = mode.includes('staging')
-  let titleGlobalPortal = !mode.includes('geniality') ? 'Eventos - Evius' : 'Cursos - GEN.iality'
-  if (isDevMode) {
+  let titleGlobalPortal = 'Cursos - GEN.iality'
+
+  if (mode.includes('development')) {
     titleGlobalPortal += ' - DEBUG'
+  } else if (mode.includes('stage')) {
+    titleGlobalPortal += ' - STAGE'
   }
 
   return {
@@ -59,13 +62,19 @@ export default defineConfig(({ mode }) => {
         { find: '@', replacement: path.resolve(__dirname, 'src') },
         { find: '@adaptors', replacement: path.resolve(__dirname, 'src/adaptors') },
         { find: '@components', replacement: path.resolve(__dirname, 'src/components') },
-        { find: '@antdComponents', replacement: path.resolve(__dirname, 'src/antdComponents') },
+        {
+          find: '@antdComponents',
+          replacement: path.resolve(__dirname, 'src/antdComponents'),
+        },
         { find: '@App', replacement: path.resolve(__dirname, 'src/App') },
         { find: '@containers', replacement: path.resolve(__dirname, 'src/containers') },
         { find: '@context', replacement: path.resolve(__dirname, 'src/context') },
         { find: '@exhibitors', replacement: path.resolve(__dirname, 'src/exhibitors') },
         { find: '@helpers', replacement: path.resolve(__dirname, 'src/helpers') },
-        { find: '@PreloaderApp', replacement: path.resolve(__dirname, 'src/PreloaderApp') },
+        {
+          find: '@PreloaderApp',
+          replacement: path.resolve(__dirname, 'src/PreloaderApp'),
+        },
         { find: '@redux', replacement: path.resolve(__dirname, 'src/redux') },
         { find: '@styles', replacement: path.resolve(__dirname, 'src/styles') },
         { find: '@Utilities', replacement: path.resolve(__dirname, 'src/Utilities') },
@@ -85,5 +94,5 @@ export default defineConfig(({ mode }) => {
       jsxFactory: 'h',
       jsxFragment: 'Fragment',
     },
-  };
-});
+  }
+})
