@@ -7,7 +7,7 @@ export default function CardProduct({auction} : Partial<DrawerAuctionProps>) {
   return (
     <Card
     hoverable={true}
-    style={{ height: 450, borderRadius: 20 }}
+    style={{ height: 550, borderRadius: 20 }}
     headStyle={{ textAlign: 'center' }}
     /* title={auction?.currentProduct ? `Artículo: ${auction?.currentProduct.name}` : 'Sin producto asignado'} */
     cover={
@@ -16,12 +16,12 @@ export default function CardProduct({auction} : Partial<DrawerAuctionProps>) {
           className='animate__animated animate__flipInX'
           alt='imagen del producto'
           src={auction?.currentProduct.images[0].url}
-          style={{ height: '300px', objectFit: 'fill', backgroundColor: '#C4C4C440' }}
+          style={{ height: '410px', objectFit: 'fill', backgroundColor: '#C4C4C440' }}
         />
       ) : (
         <Empty
           image={<Skeleton.Image className='animate__animated animate__flipInX' />}
-          style={{ height: '300px', display: 'grid', justifyContent: 'center', alignItems: 'center' }}
+          style={{ height: '410px', display: 'grid', justifyContent: 'center', alignItems: 'center' }}
           description={'Sin imagen'}
         />
       )
