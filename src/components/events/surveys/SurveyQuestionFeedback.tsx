@@ -12,7 +12,7 @@ export interface SurveyQuestionFeedbackProps {
 }
 
 function SurveyQuestionFeedback(props: SurveyQuestionFeedbackProps) {
-  const isDev = useIsDev()
+  const { isDev } = useIsDev()
   // const points = useMemo(
   //   () =>
   //     props.questions
@@ -24,11 +24,10 @@ function SurveyQuestionFeedback(props: SurveyQuestionFeedbackProps) {
   // )
   const points = useMemo(() => {
     const { rightCount } = calcRightAnswers(
-      props.questions
+      props.questions,
       /**
        * This question types need calc the answers with the restrict mode on
-       */,
-      ['ranking'],
+       */ ['ranking'],
     )
     return rightCount
   }, [props.questions])

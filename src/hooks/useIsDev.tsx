@@ -1,8 +1,16 @@
 const useIsDev = () => {
-  if ((import.meta.env.MODE || '').includes('staging')) {
-    return true
+  const mode = (import.meta.env.MODE || '').toLowerCase()
+  const isDev =
+    mode.includes('development') ||
+    (!mode.includes('production') && !mode.includes('stage'))
+  const isStage =
+    mode.includes('stage') ||
+    (!mode.includes('production') && !mode.includes('development'))
+
+  return {
+    isDev,
+    isStage,
   }
-  return (import.meta.env.MODE || '').includes('production')
 }
 
 export default useIsDev
