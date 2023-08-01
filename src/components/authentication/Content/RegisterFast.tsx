@@ -46,7 +46,7 @@ const RegisterFast: FunctionComponent<IRegisterFastProps> = (props) => {
 
   const [takingPhoto, setTakingPhoto] = useState(false)
   const [imageAvatar, setImageAvatar] = useState<any>(null)
-  const [organization, setOrganization] = useState(null)
+  const [organization, setOrganization] = useState<any>(null)
 
   const params = useParams()
   const orgId = params.id
@@ -127,13 +127,12 @@ const RegisterFast: FunctionComponent<IRegisterFastProps> = (props) => {
       required: true,
       message: intl.formatMessage({
         id: 'register.rule.password.message',
-        defaultMessage: 'Ingrese una contraseña para su cuenta en Evius',
+        defaultMessage: 'Ingrese una contraseña para su cuenta en GEN.iality',
       }),
     },
     {
       type: 'string',
       min: 6,
-      max: 18,
       message: intl.formatMessage({
         id: 'register.rule.password.message2',
         defaultMessage: 'La contraseña debe tener entre 6 a 18 caracteres',
@@ -141,13 +140,12 @@ const RegisterFast: FunctionComponent<IRegisterFastProps> = (props) => {
     },
   ]
 
-  const ruleCedula: any[] = [
+  const generalPassphraseRule: any[] = [
     { required: true, message: 'Ingrese una cedula para su cuenta en Evius' },
     {
       type: 'string',
       min: 8,
-      max: 12,
-      message: 'La cedula debe tener entre 6 a 18 caracteres',
+      message: 'Este valor requiere un mínimo de caracteres',
     },
   ]
   const ruleName = [
@@ -166,174 +164,157 @@ const RegisterFast: FunctionComponent<IRegisterFastProps> = (props) => {
   }
 
   return (
-    <>
-      <Form
-        initialValues={{
-          names: basicDataUser.names,
-          email: basicDataUser.email,
-          password: basicDataUser.password,
-        }}
-        form={form}
-        autoComplete="on"
-        layout="vertical"
-        onFinish={onFinish}
-      >
-        <Form.Item>
-          <ImgCrop rotate shape="round">
-            <Upload
-              fileList={basicDataUser.picture || []}
-              accept="image/png,image/jpeg"
-              onChange={(info) => {
-                if (info.fileList.length > 0) {
-                  getBase64(info.file.originFileObj, (imageUrl) =>
-                    setImageAvatar(imageUrl),
-                  )
-                  formDataHandler(null, 'picture', info.fileList)
-                } else {
-                  formDataHandler(null, 'picture', null)
-                  setImageAvatar(null)
-                }
-              }}
-              onRemove={() => {
+    <Form
+      initialValues={{
+        names: basicDataUser.names,
+        email: basicDataUser.email,
+        password: basicDataUser.password,
+      }}
+      form={form}
+      autoComplete="on"
+      layout="vertical"
+      onFinish={onFinish}
+    >
+      <Form.Item>
+        <ImgCrop rotate shape="round">
+          <Upload
+            fileList={basicDataUser.picture || []}
+            accept="image/png,image/jpeg"
+            onChange={(info) => {
+              if (info.fileList.length > 0) {
+                getBase64(info.file.originFileObj, (imageUrl) => setImageAvatar(imageUrl))
+                formDataHandler(null, 'picture', info.fileList)
+              } else {
                 formDataHandler(null, 'picture', null)
-              }}
-              customRequest={uploadImagedummyRequest}
-              multiple={false}
-              listType="picture"
-              maxCount={1}
-            >
-              {!takingPhoto && (
-                <Space direction="vertical">
-                  <Button
-                    type="primary"
-                    shape="circle"
-                    style={{
-                      height: !imageAvatar ? '120px' : '95px',
-                      width: !imageAvatar ? '120px' : '95px',
-                      padding: '0px',
-                      border: '0px',
-                    }}
-                  >
-                    {!imageAvatar && <PictureOutlined style={{ fontSize: '50px' }} />}
-                    {imageAvatar && <Avatar src={imageAvatar} size={95} />}
-                  </Button>
-                  <>
-                    {intl.formatMessage({
-                      id: 'modal.label.photo',
-                      defaultMessage: 'Subir foto',
-                    })}
-                  </>
-                </Space>
-              )}
-            </Upload>
-          </ImgCrop>
-        </Form.Item>
-
-        {/* En desktop el upload no toma fotos toca hacerlo por separado */}
-        <Form.Item>
-          {takingPhoto && (
-            <div className="avatarCamera">
-              <Camera
-                onTakePhotoAnimationDone={handleTakePhotoAnimationDone}
-                isFullscreen={false}
-              />
-            </div>
-          )}
-          <Button
-            type="primary"
-            icon={takingPhoto ? <DeleteOutlined /> : <CameraOutlined />}
-            onClick={() => setTakingPhoto(!takingPhoto)}
-          />
-        </Form.Item>
-
-        <Form.Item
-          label={intl.formatMessage({
-            id: 'modal.label.email',
-            defaultMessage: 'Correo electrónico',
-          })}
-          name="email"
-          hasFeedback
-          style={{ marginBottom: '10px', textAlign: 'left' }}
-          rules={ruleEmail}
-        >
-          <Input
-            onChange={(e) => formDataHandler(e, 'email')}
-            type="email"
-            size="large"
-            placeholder="micorreo@ejemplo.com"
-            prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
-          />
-        </Form.Item>
-
-        {useEventWithCedula(cEvent.value).isArkmed ? (
-          <Form.Item
-            label={intl.formatMessage({
-              id: 'modal.label.cedula',
-              defaultMessage: 'Cedula',
-            })}
-            name="password"
-            hasFeedback
-            style={{ marginBottom: '10px', textAlign: 'left' }}
-            rules={ruleCedula}
+                setImageAvatar(null)
+              }
+            }}
+            onRemove={() => {
+              formDataHandler(null, 'picture', null)
+            }}
+            customRequest={uploadImagedummyRequest}
+            multiple={false}
+            listType="picture"
+            maxCount={1}
           >
-            <Input
-              onChange={(e) => formDataHandler(e, 'password')}
-              type="number"
-              size="large"
-              placeholder="Cedula ó numero de identificación"
-              prefix={<IdcardOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+            {!takingPhoto && (
+              <Space direction="vertical">
+                <Button
+                  type="primary"
+                  shape="circle"
+                  style={{
+                    height: !imageAvatar ? '120px' : '95px',
+                    width: !imageAvatar ? '120px' : '95px',
+                    padding: '0px',
+                    border: '0px',
+                  }}
+                >
+                  {!imageAvatar && <PictureOutlined style={{ fontSize: '50px' }} />}
+                  {imageAvatar && <Avatar src={imageAvatar} size={95} />}
+                </Button>
+                <>
+                  {intl.formatMessage({
+                    id: 'modal.label.photo',
+                    defaultMessage: 'Subir foto',
+                  })}
+                </>
+              </Space>
+            )}
+          </Upload>
+        </ImgCrop>
+      </Form.Item>
+
+      {/* En desktop el upload no toma fotos toca hacerlo por separado */}
+      <Form.Item>
+        {takingPhoto && (
+          <div className="avatarCamera">
+            <Camera
+              onTakePhotoAnimationDone={handleTakePhotoAnimationDone}
+              isFullscreen={false}
             />
-          </Form.Item>
-        ) : (
-          <Form.Item
-            label={
-              organization && organization._id == '63f552d916065937427b3b02'
-                ? 'Documento (ID)'
-                : intl.formatMessage({
-                    id: 'modal.label.password',
-                    defaultMessage: 'Contraseña',
-                  })
-            }
-            name="password"
-            hasFeedback
-            style={{ marginBottom: '10px', textAlign: 'left' }}
-            rules={rulePassword}
-          >
-            <Input.Password
-              onChange={(e) => formDataHandler(e, 'password')}
-              type="password"
-              size="large"
-              placeholder={intl.formatMessage({
-                id: 'modal.label.password',
-                defaultMessage: 'Contraseña',
-              })}
-              prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
-            />
-          </Form.Item>
+          </div>
         )}
-        <Form.Item
-          label={intl.formatMessage({
+        <Button
+          type="primary"
+          icon={takingPhoto ? <DeleteOutlined /> : <CameraOutlined />}
+          onClick={() => setTakingPhoto(!takingPhoto)}
+        />
+      </Form.Item>
+
+      <Form.Item
+        label={intl.formatMessage({
+          id: 'modal.label.email',
+          defaultMessage: 'Correo electrónico',
+        })}
+        name="email"
+        hasFeedback
+        style={{ marginBottom: '10px', textAlign: 'left' }}
+        rules={ruleEmail}
+      >
+        <Input
+          onChange={(e) => formDataHandler(e, 'email')}
+          type="email"
+          size="large"
+          placeholder="micorreo@ejemplo.com"
+          prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+        />
+      </Form.Item>
+
+      <Form.Item
+        label={organization?.access_settings?.custom_password_label || 'Contraseña'}
+        name="password"
+        hasFeedback
+        style={{ marginBottom: '10px', textAlign: 'left' }}
+        rules={
+          organization?.access_settings?.custom_password_label
+            ? generalPassphraseRule
+            : rulePassword
+        }
+      >
+        {organization?.access_settings?.custom_password_label ? (
+          <Input
+            onChange={(e) => formDataHandler(e, 'password')}
+            type="number"
+            size="large"
+            placeholder="Cedula ó numero de identificación"
+            prefix={<IdcardOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+          />
+        ) : (
+          <Input.Password
+            onChange={(e) => formDataHandler(e, 'password')}
+            type="password"
+            size="large"
+            placeholder={intl.formatMessage({
+              id: 'modal.label.password',
+              defaultMessage: 'Contraseña',
+            })}
+            prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+          />
+        )}
+      </Form.Item>
+
+      <Form.Item
+        label={intl.formatMessage({
+          id: 'modal.label.name',
+          defaultMessage: 'Nombre',
+        })}
+        name="names"
+        hasFeedback
+        style={{ marginBottom: '10px', textAlign: 'left' }}
+        rules={ruleName}
+      >
+        <Input
+          onChange={(e) => formDataHandler(e, 'names')}
+          type="text"
+          size="large"
+          placeholder={intl.formatMessage({
             id: 'modal.label.name',
             defaultMessage: 'Nombre',
           })}
-          name="names"
-          hasFeedback
-          style={{ marginBottom: '10px', textAlign: 'left' }}
-          rules={ruleName}
-        >
-          <Input
-            onChange={(e) => formDataHandler(e, 'names')}
-            type="text"
-            size="large"
-            placeholder={intl.formatMessage({
-              id: 'modal.label.name',
-              defaultMessage: 'Nombre',
-            })}
-            prefix={<UserOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
-          />
-        </Form.Item>
-      </Form>
-    </>
+          prefix={<UserOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+        />
+      </Form.Item>
+    </Form>
   )
 }
 
