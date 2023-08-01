@@ -19,7 +19,7 @@ import { DeleteActivitiesTakenButton } from './DeleteActivitiesTakenButton'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import ModuledActivityDisplayer from './ModuledActivityDisplayer'
 import { FB } from '@helpers/firestore-request'
-import useIsDev from '@/hooks/useIsDev'
+import useIsDevOrStage from '@/hooks/useIsDevOrStage'
 
 interface ActivitiesListProps {
   eventId: string
@@ -51,7 +51,7 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
   const currentEventUser = useContext(CurrentEventUserContext)
 
   const { activitiesEvent } = useHelper()
-  const { isDev, isStage } = useIsDev()
+  const { isDev, isStage } = useIsDevOrStage()
 
   const location = useLocation<any>()
 

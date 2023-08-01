@@ -1,4 +1,4 @@
-const useIsDev = () => {
+const useIsDevOrStage = () => {
   const mode = (import.meta.env.MODE || '').toLowerCase()
   const isDev =
     mode.includes('development') ||
@@ -13,4 +13,4 @@ const useIsDev = () => {
   }
 }
 
-export default useIsDev
+export default useIsDevOrStage
