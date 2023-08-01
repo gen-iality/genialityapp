@@ -311,18 +311,32 @@ const ModalAuth = (props) => {
                 },
               ]}
             >
-              <Input.Password
-                disabled={isLoading}
-                size="large"
-                placeholder={intl.formatMessage({
-                  id: 'modal.label.password',
-                  defaultMessage: 'Contraseña',
-                })}
-                prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
-                iconRender={(visible) =>
-                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                }
-              />
+              {typeof controllerLoginVisible.customPasswordLabel === 'string' ? (
+                <Input
+                  disabled={isLoading}
+                  size="large"
+                  placeholder={intl.formatMessage({
+                    id: 'modal.label.password',
+                    defaultMessage: controllerLoginVisible.customPasswordLabel,
+                  })}
+                  prefix={
+                    <IdcardOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />
+                  }
+                />
+              ) : (
+                <Input.Password
+                  disabled={isLoading}
+                  size="large"
+                  placeholder={intl.formatMessage({
+                    id: 'modal.label.password',
+                    defaultMessage: 'Contraseña',
+                  })}
+                  prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+                  iconRender={(visible) =>
+                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                  }
+                />
+              )}
             </Form.Item>
 
             {!isLoading && (
