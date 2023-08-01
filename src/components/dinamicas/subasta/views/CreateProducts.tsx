@@ -63,9 +63,7 @@ export default function CreateProducts() {
       await deleteImages(images);
     } else {
       const newImages = images.filter((img) => !img.url);
-      console.log('comparacion',images);
-      console.log('comparacion2 ',productSelect.images);
-      
+
       await deleteImages(newImages);
     }
     resetModal();
@@ -104,8 +102,12 @@ export default function CreateProducts() {
             products={products}
             onDelete={deleteProduct}
             onclick={(product) => {
-              setProductSelect(product);
-              setmodal({ visibility: true, edit: true });
+              if(product.state !== 'auctioned'){
+                setProductSelect(product);
+                setmodal({ visibility: true, edit: true });
+            }else{
+              DispatchMessageService({ type: 'warning', msj: 'El producto ya fue subastado', action: 'show' });
+            }
             }}
           />
         ) : (

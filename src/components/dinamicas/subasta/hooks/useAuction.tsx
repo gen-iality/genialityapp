@@ -7,8 +7,6 @@ export const useAuction = (eventId: string) => {
 
 
   useEffect(() => {
-    console.log(eventId);
-    
     if (eventId) {
       const unsuscribe = listenAuction(eventId,setAuction);
       return () => {
@@ -16,11 +14,6 @@ export const useAuction = (eventId: string) => {
       };
     }
   },[]);
-
-  useEffect(() => {
-    console.log(auction);
-    
-  },[auction]);
 
   return {
     auction

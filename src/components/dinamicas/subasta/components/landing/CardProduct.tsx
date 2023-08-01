@@ -1,9 +1,9 @@
 import { Card, Skeleton, Space, Statistic } from 'antd'
 import React from 'react'
-import { Auction, DrawerAuctionProps } from '../../interfaces/auction.interface'
+import { DrawerAuctionProps } from '../../interfaces/auction.interface'
 import Meta from 'antd/lib/card/Meta'
 
-export default function ImageProduct({auction} : Omit<DrawerAuctionProps,"setOpenOrClose" | "openOrClose" >) {
+export default function CardProduct({auction} : Partial<DrawerAuctionProps>) {
   return (
     <Card
     hoverable={true}
@@ -26,7 +26,7 @@ export default function ImageProduct({auction} : Omit<DrawerAuctionProps,"setOpe
       ) : (
         <Skeleton.Image className='animate__animated animate__flipInX' />
       )}
-    <Meta title="Valor del  articulo" description={<Statistic prefix='$' value={auction.currentProduct?.priceStart} />} />
+    <Meta title="Valor del  articulo" description={<Statistic className='animate__animated animate__flipInX' prefix='$' value={auction?.currentProduct?.price|| 0} />} />
     </Space>
   </Card>
   )

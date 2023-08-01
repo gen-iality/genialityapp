@@ -509,7 +509,7 @@ export const AuctionProductApi = {
   },
   editOne: async (event,id,data) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.put(`/api/events/${data}/products/${id}?token=${token}`, data, true);
+    return await Actions.put(`/api/events/${event}/products/${id}?token=${token}`, data, true);
   },
 
   deleteOne: async (event, id) => {

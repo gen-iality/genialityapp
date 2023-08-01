@@ -24,14 +24,16 @@ const useProducts = (eventId: string) => {
   };
 
   const createProduct = async (data: ModalProduct, images: UploadFile[]) => {
-    const { name, description, priceStart } = data;
+    const { name, description, start_price } = data;
 
     const response = await service.CreateProduct(eventId, {
       type: 'just-auction',
       name,
       description,
       images: FilterImage(images),
-      priceStart,
+      start_price,
+      price: start_price,
+      state: 'waiting'
     });
     if (response) refresh();
   };
@@ -51,15 +53,18 @@ const useProducts = (eventId: string) => {
       await Promise.all(promises);
     }
   };
+
   const updateProduct = async (data: ModalProduct, images: UploadFile[]) => {
-    const { name, description, priceStart } = data;
+    const { name, description, start_price } = data;
     const response = await service.updateProduct(eventId, {
       type: 'just-auction',
       name,
       description,
       images: FilterImage(images),
       _id: data._id || '',
-      priceStart,
+      price: start_price,
+      start_price,
+      state: 'waiting'
     });
     if (response) refresh();
   };

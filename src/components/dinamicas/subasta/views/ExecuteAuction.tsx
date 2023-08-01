@@ -6,20 +6,16 @@ import React, { useContext, useState } from 'react';
 import useProducts from '../hooks/useProducts';
 import { AuctionContext } from '../context/AuctionContext';
 import Loading from '@/components/profile/loading';
-import { Products } from '../interfaces/auction.interface';
+import { IBids, Products } from '../interfaces/auction.interface';
 import SelectProducts from '../components/cms/SelectProducts';
 import { DispatchMessageService } from '@/context/MessageService';
 import { saveAuctioFirebase } from '../services/Execute.service';
 import { useBids } from '../hooks/useBids';
+import { updateProduct } from '../services';
 
-interface DataType {
-  key: React.Key;
-  name: string;
-  date: string;
-  offered_value: string;
-}
 
-const columns: ColumnsType<DataType> = [
+
+const columns: ColumnsType<IBids> = [
   {
     key: 'date',
     title: 'Fecha',
@@ -33,9 +29,9 @@ const columns: ColumnsType<DataType> = [
     width: '30%',
   },
   {
-    key: 'offered_value',
+    key: 'offered',
     title: 'Puja',
-    dataIndex: 'offered_value',
+    dataIndex: 'offered',
   },
 ];
 
@@ -67,7 +63,12 @@ export default function ExecuteAuction() {
   };
 
   const closeBids = async () => {
-    if (auction) await saveAuctioFirebase(eventId, { ...auction, playing: false });
+    if (auction){ 
+     const save = await saveAuctioFirebase(eventId, { ...auction, playing: false });
+        if(save && auction.currentProduct){
+          updateProduct(eventId, {...auction.currentProduct, state: 'auctioned'})
+        }
+    }
   };
   const auctionFinish = async () => {
     if (auction) {

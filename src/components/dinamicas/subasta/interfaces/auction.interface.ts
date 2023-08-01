@@ -9,6 +9,7 @@ export interface AuctionConfig {
 export interface DrawerAuctionProps {
     auction: Auction
     openOrClose : boolean
+    eventId: string
     setOpenOrClose: ()=> void
 }
 export interface ApiInterface  {
@@ -45,13 +46,19 @@ export interface Auction {
     playing? : boolean
 }
 
-
+export interface IBids {
+    date: string
+    name: string
+    offered: number
+}
 export interface Products {
     _id:         string;
     name:        string;
     description: string;
     images:      UploadFile[];
-    priceStart:  number;
+    start_price:  number;
+    price:        number;
+    end_price?:    number;
     type:        ProductType;
     state:       ProductState
 }
@@ -60,7 +67,7 @@ export interface ModalProduct {
     _id? :        string
     name:        string;
     description: string;
-    priceStart:  number;
+    start_price:  number;
     images:       UploadFile[];
 }
 

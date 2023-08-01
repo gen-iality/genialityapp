@@ -10,11 +10,13 @@ export default function SelectProducts({ products, onclick }: Omit<ProductsProps
       <Row justify='start' style={{ display: 'flex', height: 330, overflowY: 'auto' }}>
         {products?.length > 0 ? (
           products?.map((product) => (
-            <Col style={{ border:  selected === product._id ? '3px solid #4A5052' : '3px solid transparent', }} key={product._id}>
+            <Col style={{ height: 230 ,border:  selected === product._id ? '3px solid #4A5052' : '3px solid transparent', }} key={product._id}>
               <Card
                onClick={() =>{
-                 setselected(product._id)
-                 onclick(product)
+                 if(product.state !== 'auctioned'){
+                  setselected(product._id)
+                  onclick(product)
+                 }
                 }}
                 title={
                   <Row justify={'center'}>

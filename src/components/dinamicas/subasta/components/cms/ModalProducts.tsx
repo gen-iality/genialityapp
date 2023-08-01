@@ -45,8 +45,8 @@ export default function ModalProducts({ product, onChange, onCancel, onSave }: M
         <Form.Item
           rules={[{ required: true, message: 'Es necesario el precio del producto' }]}
           label={'Precio inicial'}
-          name={'priceStart'}
-          initialValue={product.priceStart || 0}>
+          name={'start_price'}
+          initialValue={product.start_price|| 0}>
           <InputNumber
             style={{ width: '100%' }}
             formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}

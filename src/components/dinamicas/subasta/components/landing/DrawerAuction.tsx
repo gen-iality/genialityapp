@@ -1,15 +1,67 @@
-import React from 'react';
-import { Card, Col, Drawer, Row, Tabs, Grid, Button, Space, Image, Typography, Skeleton } from 'antd';
+import React, { useState } from 'react';
+import {
+  Card,
+  Col,
+  Drawer,
+  Row,
+  Tabs,
+  Grid,
+  Button,
+  Space,
+  Typography,
+  Skeleton,
+  List,
+  Avatar,
+  Input,
+  Form,
+  Statistic,
+  notification,
+} from 'antd';
 import { UseEventContext } from '@/context/eventContext';
 import HCOActividad from '@/components/events/AgendaActividadDetalle/HOC_Actividad';
 import { CloseOutlined } from '@ant-design/icons';
 import { DrawerAuctionProps } from '../../interfaces/auction.interface';
-import ImageProduct from './ImageProduct';
+import CardProduct from './CardProduct';
+import { useBids } from '../../hooks/useBids';
+import { saveOffer } from '../../services';
+import { DispatchMessageService } from '@/context/MessageService';
 const { useBreakpoint } = Grid;
 
-export default function DrawerAuction({ openOrClose, setOpenOrClose, auction }: DrawerAuctionProps) {
+export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, eventId }: DrawerAuctionProps) {
   const cEvent = UseEventContext();
   const screens = useBreakpoint();
+  const { Bids, loading } = useBids(eventId, auction?.currentProduct?._id, auction?.playing);
+  const [canOffer, setcanOffer] = useState(true);
+
+
+  const validOffer = (value: string) : boolean=> {
+    const offer = Number(value);
+    return  auction?.currentProduct?.price !== undefined && offer > auction?.currentProduct?.price
+  }
+
+  const onBid = async (data: { offerValue: string }) => {
+    setcanOffer(false);
+    const timeAwait = setTimeout(() => {
+      setcanOffer(true);
+      clearTimeout(timeAwait);
+    }, 3000);
+
+    const isValid = validOffer(data.offerValue)
+    
+    if (isValid && auction?.currentProduct?._id && data.offerValue) {
+      saveOffer(eventId, auction?.currentProduct?._id, {
+        date: new Date().toLocaleString(),
+        name: 'carlos',
+        offered: Number(data.offerValue),
+      },auction);
+    }
+    if(!isValid){
+      notification.warning({
+        message: 'El valor debe ser mayor al precio actual del articulo',
+      })
+    }
+  };
+
   return (
     <Drawer
       headerStyle={{
@@ -62,12 +114,53 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction }: 
                 <Tabs defaultActiveKey='1' draggable style={{ width: '100%' }} tabBarStyle={{ margin: '0px' }}>
                   <Tabs.TabPane key='1' tab='Pujas'>
                     <Row justify='center'>
-                      <Col span={24}></Col>
+                      <Col span={24}>
+                        <List
+                          pagination={{
+                            pageSize: 5,
+                          }}
+                          loading={loading}
+                          dataSource={Bids}
+                          renderItem={(item) => (
+                            <List.Item>
+                              <Skeleton avatar title={false} loading={loading}>
+                                <List.Item.Meta
+                                  avatar={<Avatar>{item.name[0] || 'A'}</Avatar>}
+                                  title={<a>{item.name}</a>}
+                                  description={item.date}
+                                />
+                                <Statistic
+                                  value={item.offered}
+                                  prefix='$'
+                                  suffix={auction.currency}/>
+                              </Skeleton>
+                            </List.Item>
+                          )}
+                        />
+                      </Col>
                     </Row>
                   </Tabs.TabPane>
                   <Tabs.TabPane key='2' tab='Historial de articulos'>
                     <Row>
-                      <Col span={24}></Col>
+                      <Col span={24}>
+                        <List
+                        pagination={{
+                          pageSize: 5,
+                        }}
+                          dataSource={Bids}
+                          renderItem={(item) => (
+                            <List.Item>
+                              <Skeleton avatar title={false} loading={loading}>
+                                <List.Item.Meta
+                                  avatar={<Avatar>{item.name[0] || 'A'}</Avatar>}
+                                  title={<a>{item.name}</a>}
+                                  description={item.date}
+                                />
+                              </Skeleton>
+                            </List.Item>
+                          )}
+                        />
+                      </Col>
                     </Row>
                   </Tabs.TabPane>
                 </Tabs>
@@ -78,7 +171,28 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction }: 
         <Col xs={24} sm={24} md={24} lg={14} xl={14} xxl={14} style={{}}>
           <Row gutter={[16, 16]} justify='center'>
             <Col xs={24} sm={24} md={24} lg={14} xl={14} xxl={14} style={{}}>
-              <ImageProduct auction={auction} />
+              <CardProduct auction={auction} />
+            </Col>
+          </Row>
+          <Row gutter={[16, 16]} justify='center'>
+            <Col xs={24} sm={24} md={24} lg={14} xl={14} xxl={14} style={{ margin: 10 }}>
+              <Form onFinish={onBid} layout='vertical'>
+                <Form.Item
+                  name={'offerValue'}
+                  rules={[
+                    { required: true, message: `Se requiere un valor minimo de  ${auction.currentProduct?.price}` },
+                  ]}>
+                  <Input size='large' type='number' prefix='$' suffix={auction.currency} />
+                </Form.Item>
+                <Button
+                  style={{ width: '100%' }}
+                  htmlType='submit'
+                  type='primary'
+                  size='large'
+                  disabled={!auction.playing || !canOffer}>
+                  Pujar
+                </Button>
+              </Form>
             </Col>
           </Row>
         </Col>

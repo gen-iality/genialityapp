@@ -1,6 +1,8 @@
 import { DispatchMessageService } from "@/context/MessageService";
-import { ApiInterface, Auction, AuctionConfig, Products } from "../interfaces/auction.interface";
+import { ApiInterface, Auction, AuctionConfig, IBids, Products } from "../interfaces/auction.interface";
 import { AuctionApi, AuctionProductApi } from '@/helpers/request';
+import { firestore } from "@/helpers/firebase";
+import { saveAuctioFirebase } from "./Execute.service";
 const api : ApiInterface = AuctionApi
 const apiProduct : ApiInterface = AuctionProductApi
 export const createAuction =  async  (eventId : string, params : AuctionConfig) => {
@@ -45,7 +47,7 @@ export const deleteAuction =  async  (eventId : string, auctionId: string) => {
 }
 
 
-export const CreateProduct =  async  (eventId : string, params : Omit<Products, 'state' | '_id'> ) => {
+export const CreateProduct =  async  (eventId : string, params : Omit<Products, '_id' | 'end_price'> ) => {
   try {
       const response = await apiProduct.createOne<Products>(eventId,params);
       return response;
@@ -68,14 +70,14 @@ export const deleteProduct =  async  (eventId : string, id :string ) => {
     }
 }
 
-export const updateProduct =  async  (eventId : string, params : Omit<Products, 'state'> ) => {
+export const updateProduct =  async  (eventId : string, params : Products ) => {
   try {
       const response = await apiProduct.editOne<Products>(eventId,params._id,params);
       return response;
     } catch (error) {
       console.log(error);
       
-      DispatchMessageService({ type: 'error', msj: 'Error al crear el producto', action: 'show' });
+      DispatchMessageService({ type: 'error', msj: 'Error al actualizar el producto', action: 'show' });
       return null;
     }
 }
@@ -87,7 +89,28 @@ export const getProducts =  async  (eventId : string) => {
     } catch (error) {
       console.log(error);
       
-      DispatchMessageService({ type: 'error', msj: 'Error al crear el producto', action: 'show' });
+      DispatchMessageService({ type: 'error', msj: 'Error al solicitar los producto', action: 'show' });
       return null;
+    }
+}
+
+export const saveOffer =  async  (eventId: string, productID : string, offer: IBids, auction: Auction ) => {
+  try {
+    const response = await firestore
+    .collection(`auctionByEventId`)
+    .doc(eventId)
+    .collection('Products')
+    .doc(productID)
+    .collection('Bids')
+    .add(offer)
+      
+      if(response && auction.currentProduct) {
+        await saveAuctioFirebase(eventId, { ...auction, currentProduct:{ ...auction.currentProduct, price: offer.offered }});
+      }
+    } catch (error) {
+      console.log(error);
+
+      DispatchMessageService({ type: 'error', msj: 'Error al enviar oferta', action: 'show' });
+      return false;
     }
 }

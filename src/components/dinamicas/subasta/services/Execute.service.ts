@@ -42,8 +42,7 @@ export const listenAuction = (eventId: string, setConfig: any) => {
     });
 };
 export const listenBids = (eventId: string, productID : string , setBids: any, setLoading? : any) => {
-console.log(`auctionByEventId/${eventId}/Products/${productID}/Bids`);
- 
+
   return firestore
     .collection(`auctionByEventId`)
     .doc(eventId)
