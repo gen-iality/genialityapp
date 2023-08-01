@@ -30,6 +30,8 @@ import type { ActivityType } from '@context/activityType/types/activityType';
 import convertSecondsToHourFormat from '../../utils/convertSecondsToHourFormat';
 import { TypeDisplayment } from '@context/activityType/constants/enum'
 import { Option } from 'antd/lib/mentions';
+import { useGetStatusVideoVimeo } from '../../hooks/useGetStatusVideoVimeo';
+import { downloadVideoById } from '../../helpers/vimeo-helpers';
 
 interface VideoPreviewerCardProps {
   type: ActivityType.TypeAsDisplayment,
@@ -42,6 +44,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
   const [errorMessage, setErrorMessage] = useState('');
   let {
     contentSource: data,
+    videoId,
   } = useActivityType();
   const {
     roomStatus,
@@ -67,11 +70,12 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
     if (!data) return (
       <><Spin/><p>Esperando recurso...</p></>
     );
-    const { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data);
 
+    const { urlVideo, visibleReactPlayer } : {urlVideo: string, visibleReactPlayer: any} = obtainUrl(props.type, data);
+    const {isLoading, statusVide} = useGetStatusVideoVimeo(videoId)
     return (
       <>
-        {errorOcurred ? (
+        {errorOcurred || statusVide==='error' ? (
           <Result
             status='info'
             title='Lo sentimos'
@@ -84,8 +88,17 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
           />
         ) : (
           <>
-            {visibleReactPlayer && (
-              // @ts-expect-error
+          {
+            statusVide ==='in_progress' && <Result
+            status='info'
+            title='Espérenos'
+            subTitle={'El video se encuentra siendo procesado, estara disponible en breve'}
+            icon={<EmoticonSadOutline />}
+          />
+          }
+            {visibleReactPlayer && statusVide === 'complete' && !isLoading && (
+              <>
+              {/* @ts-expect-error */}
               <ReactPlayer
                 playing={true}
                 loop={true}
@@ -93,7 +106,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
                 style={{ objectFit: 'cover', aspectRatio: '16/9' }}
                 width='100%'
                 height='100%'
-                url={urlVideo}
+                url={urlVideo /* videoId ? urlVideo.split(DIVIDER_URL_OF_QUERYPARAMS)[0]:urlVideo */}
                 controls={true}
                 onError={(e) => {
                   if (props.type !== TypeDisplayment.EVIUS_MEET && props.type !== TypeDisplayment.TRANSMISSION) {
@@ -102,6 +115,17 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
                   }
                 }}
               />
+               {
+                  videoId && videoId.length > 0 && 
+                    <Button
+                      type='primary'
+                      onClick={() => downloadVideoById(videoId)}
+                    >
+                    Descargar
+                   </Button>
+            }
+              </>
+              
             )}
           </>
         )}

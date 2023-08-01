@@ -1239,6 +1239,9 @@ export const AgendaApi = {
   zoomConference: async (event, id, data) => {
     return await Actions.create(`api/events/${event}/createmeeting/${id}`, data);
   },
+  getStatusVideoVimeo: async (videoId) => {
+    return await Actions.get(`api/vimeo/videos/${videoId}`);
+  },
 };
 export const SpeakersApi = {
   byEvent: async (event) => {

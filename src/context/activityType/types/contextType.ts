@@ -19,10 +19,12 @@ export type ActivityTypeContextType = {
   formWidgetFlow: ActivityType.MainUI,
   activityType: ActivityType.Name | null,
   activityContentType: ActivityType.ContentValue | null,
+  videoId?: string | null,
 
   setActivityType: (type: ActivityType.Name | null) => void,
   setActivityContentType: (type: ActivityType.ContentValue | null) => void,
   setContentSource: (input: string) => void,
+  setVideoId: (input: string | null) => void,
   saveActivityType: () => void,
   deleteActivityType: () => void,
   resetActivityType: (type: ActivityType.Name) => void,
