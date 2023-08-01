@@ -7,16 +7,16 @@ export type Status = 'complete' | 'in_progress' | 'error'
 export const useGetStatusVideoVimeo = (videoId?: string | null) => {
     const [statusVide, setStatusVide] = useState<Status>('in_progress')
     const [isLoading, setIsLoading] = useState(true)
-
+    const [downloads, setDownloads] = useState([])
     const getStatusVideo = async () => {
         if (!videoId) {
             setStatusVide('complete')
             setIsLoading(false)
-            return 
+            return
         }
         try {
             const data = await AgendaApi.getStatusVideoVimeo(videoId)
-            console.log('data', data.video.transcode.status)
+            setDownloads(data.video.download)
             setStatusVide(data.video.transcode.status as Status)
         } catch (error) {
             return 'error'
@@ -31,5 +31,5 @@ export const useGetStatusVideoVimeo = (videoId?: string | null) => {
 
 
 
-    return { statusVide, isLoading }
+    return { statusVide, isLoading, downloads }
 }

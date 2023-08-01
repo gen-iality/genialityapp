@@ -72,7 +72,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
     );
 
     const { urlVideo, visibleReactPlayer } : {urlVideo: string, visibleReactPlayer: any} = obtainUrl(props.type, data);
-    const {isLoading, statusVide} = useGetStatusVideoVimeo(videoId)
+    const {isLoading, statusVide, downloads } = useGetStatusVideoVimeo(videoId)
     return (
       <>
         {errorOcurred || statusVide==='error' ? (
@@ -116,7 +116,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
                 }}
               />
                {
-                  videoId && videoId.length > 0 && 
+                  downloads?.length > 0 && 
                     <Button
                       type='primary'
                       onClick={() => downloadVideoById(videoId)}
