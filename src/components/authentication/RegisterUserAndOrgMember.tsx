@@ -24,6 +24,7 @@ import { OrganizationApi, PositionsApi, UsersApi } from '@helpers/request'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { StateMessage } from '@context/MessageService'
 import OrganizationPropertiesForm from '@components/organization/forms/OrganizationPropertiesForm'
+import { ValidationStatusType } from './types'
 
 const RegisterUserAndOrgMember = ({
   screens,
@@ -31,7 +32,7 @@ const RegisterUserAndOrgMember = ({
   stylePaddingDesktop,
   idOrganization,
   defaultPositionId,
-  requireAutomaticLoguin,
+  requireAutomaticLogin,
   startingComponent,
 }: any) => {
   const intl = useIntl()
@@ -48,12 +49,7 @@ const RegisterUserAndOrgMember = ({
   })
   const [dataOrgMember, setDataOrgMember] = useState<any | undefined>(undefined)
   const [buttonStatus, setButtonStatus] = useState(true)
-  const [validationGeneral, setValidationGeneral] = useState<{
-    error: boolean
-    message?: string
-    isLoading: boolean
-    component?: ReactNode
-  }>({
+  const [validationStatus, setValidationStatus] = useState<ValidationStatusType>({
     error: false,
     isLoading: false,
   })
@@ -62,7 +58,7 @@ const RegisterUserAndOrgMember = ({
   const [existGenialialityUser, setExistGenialialityUser] = useState(false)
 
   const hookValidations = (error: boolean, textError: string) => {
-    setValidationGeneral({
+    setValidationStatus({
       error,
       message: textError,
       isLoading: false,
@@ -108,11 +104,9 @@ const RegisterUserAndOrgMember = ({
       title: 'Confirmación',
       content: (
         <RegistrationResult
-          validationGeneral={validationGeneral}
+          validationGeneral={validationStatus}
           basicDataUser={basicDataUser}
-          requireAutomaticLoguin={requireAutomaticLoguin}
-          cEvent={undefined} // NOTE: in the last this prop was undefined as th next
-          dataEventUser={undefined}
+          requireAutomaticLogin={requireAutomaticLogin}
         />
       ),
       icon: <ScheduleOutlined style={{ fontSize: '32px' }} />,
@@ -123,7 +117,7 @@ const RegisterUserAndOrgMember = ({
     try {
       const validateEmail = await UsersApi.validateEmail({ email: basicDataUser.email })
       if (validateEmail?.message === 'Email valid') {
-        setValidationGeneral({
+        setValidationStatus({
           isLoading: false,
           error: false,
         })
@@ -135,14 +129,14 @@ const RegisterUserAndOrgMember = ({
           setCurrent(current + 1)
           setExistGenialialityUser(true)
 
-          setValidationGeneral({
+          setValidationStatus({
             isLoading: false,
             error: true,
             message: 'El usuario ya existe. Debes registrar miembro a la organización',
             component: 'Registrar miembro de la organización',
           })
         } else {
-          setValidationGeneral({
+          setValidationStatus({
             isLoading: false,
             error: true,
             message: intl.formatMessage({
@@ -159,7 +153,7 @@ const RegisterUserAndOrgMember = ({
       } else if (
         err?.response?.data?.errors?.email[0] === 'email no es un correo válido'
       ) {
-        setValidationGeneral({
+        setValidationStatus({
           isLoading: false,
           error: true,
           message: intl.formatMessage({
@@ -168,7 +162,7 @@ const RegisterUserAndOrgMember = ({
           }),
         })
       } else {
-        setValidationGeneral({
+        setValidationStatus({
           isLoading: false,
           error: true,
           message: intl.formatMessage({
@@ -214,7 +208,7 @@ const RegisterUserAndOrgMember = ({
           )
         }
         if (respUser && respUser.account_id) {
-          setValidationGeneral({
+          setValidationStatus({
             error: false,
             isLoading: false,
             message: intl.formatMessage({
@@ -222,7 +216,7 @@ const RegisterUserAndOrgMember = ({
               defaultMessage: 'Te has inscrito correctamente a esta organización',
             }),
           })
-          setBasicDataUser({ email: '', names: '', password: '', picture: '' })
+          // setBasicDataUser({ email: '', names: '', password: '', picture: '' })
           setDataOrgMember(undefined)
           startingComponent && startingComponent()
         }
@@ -243,7 +237,7 @@ const RegisterUserAndOrgMember = ({
           if (status === CREATE_NEW_USER_SUCCESS) {
             createOrgMember()
           } else {
-            setValidationGeneral({
+            setValidationStatus({
               error: true,
               isLoading: false,
               message: intl.formatMessage({
@@ -259,8 +253,8 @@ const RegisterUserAndOrgMember = ({
 
   const goToNextStep = () => {
     if (current == 0) {
-      setValidationGeneral({
-        ...validationGeneral,
+      setValidationStatus({
+        ...validationStatus,
         isLoading: true,
         error: false,
         message: undefined,
@@ -273,7 +267,7 @@ const RegisterUserAndOrgMember = ({
         .then(() => {
           console.log('3. Validate Fields')
           form.submit()
-          setValidationGeneral((previous) => ({
+          setValidationStatus((previous) => ({
             ...previous,
             isLoading: true,
             error: false,
@@ -302,15 +296,15 @@ const RegisterUserAndOrgMember = ({
         basicDataUser.password.length <= 18
       ) {
         setButtonStatus(false)
-        setValidationGeneral({
-          ...validationGeneral,
+        setValidationStatus({
+          ...validationStatus,
           isLoading: false,
           error: false,
           message: undefined,
         })
       } else {
-        setValidationGeneral({
-          ...validationGeneral,
+        setValidationStatus({
+          ...validationStatus,
           isLoading: false,
           message: intl.formatMessage({
             id: 'feedback.title.error',
@@ -387,11 +381,11 @@ const RegisterUserAndOrgMember = ({
           </Button>
         )}
 
-        {validationGeneral.isLoading ? (
+        {validationStatus.isLoading ? (
           <LoadingOutlined style={{ fontSize: '28px' }} />
         ) : (
           <>
-            {!validationGeneral.message && (
+            {!validationStatus.message && (
               <>
                 {current < steps.length - 1 && (
                   <Button
@@ -418,14 +412,14 @@ const RegisterUserAndOrgMember = ({
         )}
       </div>
 
-      {typeof validationGeneral.message === 'string' && (
+      {typeof validationStatus.message === 'string' && (
         <Alert
           showIcon
           style={{
             boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
             backgroundColor: '#FFFFFF',
             color: '#000000',
-            borderLeft: `5px solid ${validationGeneral.error ? '#FF4E50' : '#4fff4e'}`,
+            borderLeft: `5px solid ${validationStatus.error ? '#FF4E50' : '#4fff4e'}`,
             fontSize: '14px',
             textAlign: 'start',
             borderRadius: '5px',
@@ -433,8 +427,8 @@ const RegisterUserAndOrgMember = ({
           }}
           message={
             <>
-              {validationGeneral.message}
-              {validationGeneral.component && (
+              {validationStatus.message}
+              {validationStatus.component && (
                 <Button
                   style={{ padding: 4, color: '#333F44', fontWeight: 'bold' }}
                   onClick={() =>
@@ -442,12 +436,12 @@ const RegisterUserAndOrgMember = ({
                   }
                   type="link"
                 >
-                  {validationGeneral.component}
+                  {validationStatus.component}
                 </Button>
               )}
             </>
           }
-          type={validationGeneral.error ? 'error' : 'success'}
+          type={validationStatus.error ? 'error' : 'success'}
         />
       )}
     </div>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { FunctionComponent, useEffect, useState } from 'react'
 import { Result, Row, Space, Typography, Alert, Button } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 import { FrasesInspiradoras } from '../ModalsFunctions/utils'
@@ -9,14 +9,18 @@ import { useIntl } from 'react-intl'
 import { StateMessage } from '@context/MessageService'
 
 import { AttendeeApi } from '@helpers/request'
+import { ValidationStatusType } from '../types'
+import { useEventContext } from '@context/eventContext'
 
-const RegistrationResult = ({
-  validationGeneral,
-  basicDataUser,
-  cEvent,
-  dataEventUser,
-  requireAutomaticLoguin,
-}) => {
+interface RegistrationResultProps {
+  validationGeneral: ValidationStatusType
+  basicDataUser: any
+  requireAutomaticLogin: any
+}
+
+const RegistrationResult: FunctionComponent<RegistrationResultProps> = (props) => {
+  const { validationGeneral, basicDataUser, requireAutomaticLogin } = props
+
   const [fraseLoading, setFraseLoading] = useState('')
 
   useEffect(() => {
@@ -48,118 +52,113 @@ const RegistrationResult = ({
     }
   })
 
+  if (validationGeneral.isLoading) {
+    return (
+      <Row>
+        <Typography.Text type="secondary" style={{ fontSize: '18px' }}>
+          {fraseLoading}
+        </Typography.Text>
+      </Row>
+    )
+  }
+
+  if (validationGeneral.message) {
+    return (
+      <>
+        <Result
+          status={validationGeneral.error ? 'error' : 'success'}
+          title={
+            (basicDataUser ? basicDataUser?.email : '') + ' ' + validationGeneral.message
+          }
+        />
+        {requireAutomaticLogin && <RedirectUser basicDataUser={basicDataUser} />}
+      </>
+    )
+  }
+
   return (
     <>
-      {validationGeneral.isLoading ? (
-        <>
-          <Row>
-            <Typography.Text type="secondary" style={{ fontSize: '18px' }}>
-              {fraseLoading}
-            </Typography.Text>
-          </Row>
-        </>
-      ) : (
-        <>
-          {!validationGeneral.status ? (
-            <Result
-              status={validationGeneral.type ? validationGeneral.type : 'warning'}
-              title={
-                (basicDataUser ? basicDataUser?.email : '') +
-                ' ' +
-                validationGeneral.textError
-              }
-            />
-          ) : (
-            <>
-              <Result status="success" title="Inscripción exitosa!" />
-              {requireAutomaticLoguin && (
-                <RedirectUser
-                  basicDataUser={basicDataUser}
-                  cEvent={cEvent}
-                  dataEventUser={dataEventUser}
-                />
-              )}
-            </>
-          )}
-        </>
-      )}
+      <Result status="success" title="Inscripción exitosa!" />
+      {requireAutomaticLogin && <RedirectUser basicDataUser={basicDataUser} />}
     </>
   )
 }
 
-const RedirectUser = ({ basicDataUser, cEvent, dataEventUser }) => {
+const RedirectUser = ({ basicDataUser }: { basicDataUser: any }) => {
   const cEventUser = useUserEvent()
+  const cEvent = useEventContext()
   const { helperDispatch } = useHelper()
   const intl = useIntl()
-  const [signInWithEmailAndPasswordError, setSignInWithEmailAndPasswordError] =
-    useState(false)
+  const [startedAutoLogin, setStartedAutoLogin] = useState(false)
+  const [isSignInError, setIsSignInError] = useState(false)
+
+  const loginFirebase = async () => {
+    app
+      .auth()
+      .signInWithEmailAndPassword(basicDataUser.email, basicDataUser.password)
+      .then((response) => {
+        if (response.user) {
+          cEventUser.requestUpdate()
+          helperDispatch({ type: 'showLogin', visible: false })
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+        setIsSignInError(true)
+      })
+  }
+  const loginFirebaseAnonymous = async () => {
+    app
+      .auth()
+      .signInAnonymously()
+      .then((response) => {
+        app
+          .auth()
+          .currentUser.updateProfile({
+            displayName: basicDataUser.names,
+            photoURL: basicDataUser.picture || basicDataUser.email,
+            email: basicDataUser.email,
+          })
+          .then(async () => {
+            if (response.user) {
+              const body = {
+                event_id: cEvent.value._id,
+                uid: response.user?.uid,
+                anonymous: true,
+                properties: {
+                  email: basicDataUser.email,
+                  names: basicDataUser.names,
+                  ...basicDataUser,
+                },
+              }
+              await app.auth().currentUser?.reload()
+              await AttendeeApi.create(cEvent.value._id, body)
+              cEventUser.requestUpdate()
+              helperDispatch({ type: 'showLogin', visible: false })
+            }
+          })
+      })
+      .catch((err) => {
+        console.log(err)
+        setIsSignInError(true)
+      })
+  }
 
   useEffect(() => {
-    setSignInWithEmailAndPasswordError(false)
-    const loginFirebase = async () => {
-      app
-        .auth()
-        .signInWithEmailAndPassword(basicDataUser.email, basicDataUser.password)
-        .then((response) => {
-          if (response.user) {
-            cEventUser.requestUpdate()
-            helperDispatch({ type: 'showLogin', visible: false })
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-          setSignInWithEmailAndPasswordError(true)
-        })
-    }
-    const loginFirebaseAnonymous = async () => {
-      app
-        .auth()
-        .signInAnonymously()
-        .then((response) => {
-          app
-            .auth()
-            .currentUser.updateProfile({
-              displayName: basicDataUser.names,
-              photoURL: basicDataUser.picture
-                ? basicDataUser.picture
-                : basicDataUser.email,
-              email: basicDataUser.email,
-            })
-            .then(async () => {
-              if (response.user) {
-                const body = {
-                  event_id: cEvent.value._id,
-                  uid: response.user?.uid,
-                  anonymous: true,
-                  properties: {
-                    email: basicDataUser.email,
-                    names: basicDataUser.names,
-                    ...dataEventUser,
-                  },
-                }
-                await app.auth().currentUser?.reload()
-                await AttendeeApi.create(cEvent.value._id, body)
-                cEventUser.requestUpdate()
-                helperDispatch({ type: 'showLogin', visible: false })
-              }
-            })
-        })
-        .catch((err) => {
-          console.log(err)
-          setSignInWithEmailAndPasswordError(true)
-        })
-    }
+    setIsSignInError(false)
+    if (startedAutoLogin) return
 
-    const loginInterval = setTimeout(() => {
-      if (basicDataUser.password) {
-        loginFirebase()
-      } else {
-        loginFirebaseAnonymous()
-      }
-    }, 5000)
+    if (basicDataUser.password) {
+      loginFirebase()
+    } else if (cEvent.value) {
+      loginFirebaseAnonymous()
+    }
+  }, [startedAutoLogin, cEvent.value])
 
+  useEffect(() => {
+    const loginTrigger = setTimeout(() => setStartedAutoLogin(true), 5000)
     return () => {
-      clearInterval(loginInterval)
+      clearInterval(loginTrigger)
     }
   }, [])
 
@@ -167,7 +166,7 @@ const RedirectUser = ({ basicDataUser, cEvent, dataEventUser }) => {
     <>
       <Space>
         <Typography.Text type="secondary" style={{ fontSize: '18px' }}>
-          {signInWithEmailAndPasswordError ? (
+          {isSignInError ? (
             <Alert
               style={{ marginTop: '5px' }}
               message={
