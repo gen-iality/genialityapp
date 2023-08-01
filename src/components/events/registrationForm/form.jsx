@@ -1122,7 +1122,10 @@ const FormRegister = ({
                           size="middle"
                           type="primary"
                           onClick={() => {
-                            helperDispatch({ type: 'showLogin' })
+                            helperDispatch({
+                              type: 'showLogin',
+                              defaultPositionId: organization?.default_position_id,
+                            })
                             setNotLoggedAndRegister(false)
                           }}
                         >

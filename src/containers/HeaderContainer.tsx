@@ -1,6 +1,6 @@
 /** React's libraries */
 import { useEffect, useState, createElement, FunctionComponent } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
 import { useIntl } from 'react-intl'
 
@@ -28,6 +28,7 @@ import MenuOld from '@components/events/shared/menu'
 import { recordTypeForThisEvent } from '@components/events/Landing/helpers/thisRouteCanBeDisplayed'
 import ErrorServe from '@components/modal/serverError'
 import UserStatusAndMenu from '@components/shared/userStatusAndMenu'
+import { OrganizationFuction } from '@helpers/request'
 
 const { useBreakpoint } = Grid
 
@@ -94,6 +95,11 @@ const HeaderContainer: FunctionComponent<IHeaderContainerProps> = (props) => {
   const history = useHistory()
   const intl = useIntl()
 
+  // We use this to know the default position
+  const [currentOrganization, setCurrentOrganization] = useState<any>(null)
+  const params = useParams<{ id?: string }>()
+  const orgId = params.id
+
   const openMenu = () => {
     setDataGeneral({
       ...dataGeneral,
@@ -141,6 +147,11 @@ const HeaderContainer: FunctionComponent<IHeaderContainerProps> = (props) => {
 
   const WhereHerePath = () => {
     const containtorganization = window.location.pathname.includes('/organization')
+    if (containtorganization) {
+      OrganizationFuction.obtenerDatosOrganizacion(orgId).then((_organization) => {
+        setCurrentOrganization(_organization)
+      })
+    }
     return containtorganization ? 'organization' : 'landing'
   }
 
@@ -347,6 +358,7 @@ const HeaderContainer: FunctionComponent<IHeaderContainerProps> = (props) => {
                           type: 'showRegister',
                           visible: true,
                           organization: WhereHerePath(),
+                          defaultPositionId: currentOrganization?.default_position_id,
                         })
                       }}
                     >
