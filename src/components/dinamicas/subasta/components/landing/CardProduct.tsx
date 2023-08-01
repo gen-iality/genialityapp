@@ -16,7 +16,7 @@ export default function CardProduct({auction} : Partial<DrawerAuctionProps>) {
           className='animate__animated animate__flipInX'
           alt='imagen del producto'
           src={auction?.currentProduct.images[0].url}
-          style={{ height: '410px', objectFit: 'fill', backgroundColor: '#C4C4C440' }}
+          style={{ height: '410px', objectFit: 'fill', backgroundColor: '#C4C4C440', borderRadius: '20px 20px 0 0px' }}
         />
       ) : (
         <Empty

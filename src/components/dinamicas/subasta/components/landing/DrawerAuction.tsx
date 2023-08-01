@@ -105,7 +105,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
       onClose={setOpenOrClose}
       width={'100vw'}
       destroyOnClose={true}>
-      <Row gutter={[16, 8]} style={{}}>
+      <Row gutter={[16, 8]}>
         <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={10} style={{ height: '100%' }}>
           <Row gutter={[0, 8]}>
             <Col span={24}>
@@ -182,9 +182,9 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
             </Col>
           </Row>
         </Col>
-        <Col xs={24} sm={24} md={24} lg={14} xl={14} xxl={14} style={{}}>
+        <Col xs={24} sm={24} md={24} lg={14} xl={14} xxl={14}>
           <Row gutter={[16, 16]} justify='center'>
-            <Col xs={24} sm={24} md={24} lg={14} xl={14} xxl={14} style={{}}>
+            <Col xs={24} sm={24} md={24} lg={14} xl={14} xxl={14}>
               <CardProduct auction={auction} />
             </Col>
           </Row>
