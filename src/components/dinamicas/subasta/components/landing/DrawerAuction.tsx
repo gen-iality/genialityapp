@@ -69,7 +69,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
     }
     if (!isValid) {
       notification.warning({
-        message: 'El valor debe ser mayor al precio actual del articulo',
+        message: 'El valor debe ser mayor al precio actual del artículo',
       });
     }
   };
@@ -90,8 +90,8 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
         paddingRight: screens.xs ? '5px' : '24px',
       }}
       title={
-        <Row style={{ display: 'flex' }} justify='end'>
-          <Typography.Title style={{ display: 'fex', margin: '1px' }} level={2}>
+        <Row justify='end' align='middle'>
+          <Typography.Title style={{ display: 'fex', margin: '1px' }} level={3}>
             Evento: {auction?.name || 'Subasta'}
           </Typography.Title>
         </Row>
@@ -151,7 +151,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                       </Col>
                     </Row>
                   </Tabs.TabPane>
-                  <Tabs.TabPane key={TabsDrawerAuction.History} tab='Historial de articulos' closable>
+                  <Tabs.TabPane key={TabsDrawerAuction.History} tab='Historial de artículos' closable>
                     <Row>
                       <Col span={24}>
                         <List
@@ -204,7 +204,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                   type='primary'
                   size='large'
                   disabled={!auction.playing || !canOffer}>
-                  EmPujar
+                  Pujar
                 </Button>
               </Form>
             </Col>
