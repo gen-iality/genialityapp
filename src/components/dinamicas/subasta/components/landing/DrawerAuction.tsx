@@ -182,14 +182,12 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
             </Col>
           </Row>
         </Col>
-        <Col xs={24} sm={24} md={24} lg={14} xl={14} xxl={14}>
-          <Row gutter={[16, 16]} justify='center'>
-            <Col xs={24} sm={24} md={24} lg={14} xl={14} xxl={14}>
+        <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={10}>
+          <Row gutter={[0, 8]} /* justify='center' */>
+            <Col span={24}>
               <CardProduct auction={auction} />
             </Col>
-          </Row>
-          <Row gutter={[16, 16]} justify='center'>
-            <Col xs={24} sm={24} md={24} lg={14} xl={14} xxl={14} style={{ margin: 10 }}>
+            <Col span={24} /* style={{ margin: 10 }} */>
               <Form onFinish={onBid} layout='vertical'>
                 <Form.Item
                   name={'offerValue'}
@@ -209,6 +207,9 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
               </Form>
             </Col>
           </Row>
+        </Col>
+        <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4}>
+
         </Col>
       </Row>
     </Drawer>
