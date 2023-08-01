@@ -129,7 +129,7 @@ const RenderComponent = (props: any) => {
               textColor={textColor}
               date={startDate}
               countdownMessage={countdownMessage}
-              countdownFinalMessage={''}
+              countdownFinalMessage={'Ha terminado el evento'}
             />;
         }
       }

@@ -200,7 +200,14 @@ const ViewPrelanding = ({ preview }: PropsPreLanding) => {
     );
   }
   moment.locale('en');
-  const targetDate = moment(cEventContext?.value?.dates[0].start, 'DD MMM YYYY HH:mm').format('YYYY-MM-DD HH:mm:ss');
+  const date =
+  cEventContext?.value?.dates !== undefined
+    ? moment(cEventContext?.value?.dates[0].start, 'DD MMM YYYY HH:mm').format('YYYY-MM-DD HH:mm:ss')
+    : cEventContext?.value?.datetime_from
+    ? cEventContext?.value?.datetime_from
+    : cEventContext?.value?.dateLimit;
+
+
 
   return (
     <>
@@ -281,9 +288,9 @@ const ViewPrelanding = ({ preview }: PropsPreLanding) => {
                       }}>
                       <CountdownBlock
                         textColor={textColor}
-                        date={targetDate ? targetDate : cEventContext?.value?.dateLimit }
+                        date={date}
                         countdownMessage={cEventContext?.value?.countdownMessage}
-                        countdownFinalMessage={cEventContext?.value?.countdownFinalMessage}
+                        countdownFinalMessage={cEventContext?.value?.countdownFinalMessage ? cEventContext?.value?.countdownFinalMessage : 'Ha terminado el evento'}
                       />
                     </Card>
                   </Col>
