@@ -1,4 +1,4 @@
-import { FunctionComponent, createContext, useContext } from 'react'
+import { FunctionComponent, PropsWithChildren, createContext, useContext } from 'react'
 import { app, firestore } from '@helpers/firebase'
 import { useState } from 'react'
 import { useEffect } from 'react'
@@ -22,7 +22,7 @@ export default UserContext
 
 export const CurrentUserContext = UserContext
 
-export const UserContextProvider: FunctionComponent = (props) => {
+export const UserContextProvider: FunctionComponent<PropsWithChildren> = (props) => {
   const { children } = props
 
   const [userContext, setUserContext] = useState(initialContextState)
