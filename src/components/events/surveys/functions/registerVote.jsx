@@ -1,5 +1,5 @@
 import getResponsesIndex from './getResponsesIndex'
-import SavingResponseByUserId from './savingResponseByUserId'
+import saveResponseByUserId from './saveResponseByUserId'
 
 // Componente que ejecuta el servicio para registar votos
 function RegisterVote(surveyData, question, infoUser, eventUsers, voteWeight) {
@@ -33,7 +33,7 @@ function RegisterVote(surveyData, question, infoUser, eventUsers, voteWeight) {
     // Se envia al servicio el id de la encuesta, de la pregunta y los datos
     // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
     if (!(Object.keys(infoUser).length === 0)) {
-      SavingResponseByUserId(
+      saveResponseByUserId(
         surveyData,
         question,
         infoUser,

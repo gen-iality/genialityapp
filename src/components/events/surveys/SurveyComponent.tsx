@@ -12,7 +12,7 @@ import { Spin, Button, Drawer } from 'antd'
 /** Funciones externas */
 import messageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey'
 import getResponsesIndex from './functions/getResponsesIndex'
-import savingResponseByUserId from './functions/savingResponseByUserId'
+import saveResponseByUserId from './functions/saveResponseByUserId'
 
 /** Contexts */
 import { useEventContext } from '@context/eventContext'
@@ -218,6 +218,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
 
     /** funcion para validar tipo de respuesta multiple o unica */
     const responseIndex = getResponsesIndex(question)
+    console.debug(`question: ${question} got response index to: ${responseIndex}`)
     const optionIndex = responseIndex
 
     optionQuantity = (question.choices ?? []).length
@@ -233,7 +234,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
     // Se envia al servicio el id de la encuesta, de la pregunta y los datos
     // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
     if (!(Object.keys(currentUser).length === 0)) {
-      savingResponseByUserId(
+      saveResponseByUserId(
         queryData,
         question,
         currentUser,
