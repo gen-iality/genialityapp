@@ -1,4 +1,10 @@
-import { useReducer, useEffect, useContext, type Dispatch } from 'react'
+import {
+  useReducer,
+  useEffect,
+  useContext,
+  type Dispatch,
+  PropsWithChildren,
+} from 'react'
 import { FunctionComponent, createContext } from 'react'
 
 import { useCurrentUser } from '@context/userContext'
@@ -88,7 +94,9 @@ const reducerOP = (state: OPState, action: OPAction): OPState => {
   }
 }
 
-export const OrganizationPaymentProvider: FunctionComponent = (props) => {
+export const OrganizationPaymentProvider: FunctionComponent<PropsWithChildren> = (
+  props,
+) => {
   const { children } = props
 
   //const { helperDispatch } = cHelper
