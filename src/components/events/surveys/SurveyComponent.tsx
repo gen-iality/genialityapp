@@ -290,7 +290,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
           {/* NOTE: Left here if you wanna restaure the last feature.
           Remember edit the next DIV tag too
           to add it the style of display:block|none */}
-          {/* {showingFeedback && (
+          {showingFeedback && (
             <SurveyQuestionFeedback
               questions={currentQuestionsForFeedback}
               onNextClick={() => {
@@ -302,8 +302,8 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
                 }
               }}
             />
-          )} */}
-          <Drawer
+          )}
+          {/* <Drawer
             title="Retroalimentación"
             placement="right"
             closable={false}
@@ -318,8 +318,8 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
               finishText="Finalizar y enviar"
               showAsFinished={surveyModel.pageCount === surveyModel.currentPageNo + 1}
             />
-          </Drawer>
-          <div>
+          </Drawer> */}
+          <div style={{ display: showingFeedback ? 'none' : 'block' }}>
             <Survey.Survey
               model={surveyModel}
               onCurrentPageChanging={displayFeedbackAfterEachQuestion}
