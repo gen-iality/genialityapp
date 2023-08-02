@@ -47,7 +47,7 @@ import NoMatchPage from '@components/notFoundPage/NoMatchPage'
 import ValidateAccessRouteCms from '@components/roles/hooks/validateAccessRouteCms'
 import OrganizationTimeTrackingPage from './timetracking/OrganizationTimeTrackingPage'
 
-function Organization() {
+function OrganizationLandingRoutes() {
   const params = useParams()
   const location = useLocation()
   const match = useRouteMatch()
@@ -292,4 +292,4 @@ const Protected = ({ component: Component, org, ...rest }) => (
   />
 )
 
-export default Organization
+export default OrganizationLandingRoutes
