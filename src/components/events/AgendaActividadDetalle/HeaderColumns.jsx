@@ -23,13 +23,17 @@ import { imageUtils } from '../../../Utilities/ImageUtils';
 import { DispatchMessageService } from '../../../context/MessageService';
 import { recordTypeForThisEvent } from '../Landing/helpers/thisRouteCanBeDisplayed';
 import DrawerBingo from '@/components/games/bingo/components/DrawerBingo';
+import { useAuction } from '@/components/dinamicas/subasta/hooks/useAuction';
+import DrawerAuction from '@/components/dinamicas/subasta/components/landing/DrawerAuction';
 
 const HeaderColumns = (props) => {
   let { currentActivity } = useHelper();
   let cEvent = UseEventContext();
   let cEventUSer = useContext(CurrentEventUserContext);
   let [loading, setLoading] = useState(false);
+  const { auction } = useAuction(cEvent.value?._id)
   const [openOrCloseModalDrawer, setOpenOrCloseModalDrawer] = useState(false);
+  const [openModalAuction, setOpenModalAuction] = useState(false);
   let {
     request,
     transmition,
@@ -318,6 +322,24 @@ const HeaderColumns = (props) => {
               ¡Jugar BINGO!
             </Button>
             <DrawerBingo openOrClose={openOrCloseModalDrawer} setOpenOrClose={setOpenOrCloseModalDrawer} />
+          </Row>
+        )}
+        {auction?.published && (
+          <Row justify='end' align='top'>
+            <Button
+              style={{ float: 'right' }}
+              size='large'
+              type='primary'
+              onClick={() => {
+                setOpenModalAuction(true);
+              }}
+              disabled={!auction?.opened}
+              >
+              Abrir Subasta
+            </Button>
+            <DrawerAuction auction={auction} eventId={cEvent.value?._id} openOrClose={openModalAuction && auction?.opened} setOpenOrClose={() => {
+                setOpenModalAuction(false);
+              }} />
           </Row>
         )}
       </Col>

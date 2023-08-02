@@ -479,7 +479,44 @@ export const BingoApi = {
     return await Actions.get(`api/bingotemplates/format/${format}?token=${token}`, true)
   }
 };
+export const AuctionApi = {
+  getOne: async (event) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`/api/events/${event}/subastas?token=${token}`, true);
+  },
+  createOne: async (event, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`/api/events/${event}/subastas?token=${token}`, data, true);
+  },
+  editOne: async (event,id,data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`/api/events/${event}/subastas/${id}?token=${token}`, data, true);
+  },
 
+  deleteOne: async (event, subasta_id) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/events/${event}/subastas/${subasta_id}?token=${token}`,'', true);
+  }
+};
+export const AuctionProductApi = {
+  getOne: async (event) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`/api/events/${event}/products?type=just-auction`, true);
+  },
+  createOne: async (event, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`/api/events/${event}/products?token=${token}`, data, true);
+  },
+  editOne: async (event,id,data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`/api/events/${event}/products/${id}?token=${token}`, data, true);
+  },
+
+  deleteOne: async (event, id) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/events/${event}/products/${id}?token=${token}`, '',true);
+  }
+};
 export const WhoWantsToBeAMillonaireApi = {
   getOne: async (eventId) => {
     let token = await GetTokenUserFirebase();

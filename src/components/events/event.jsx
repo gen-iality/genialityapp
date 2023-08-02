@@ -42,6 +42,7 @@ import WhereIs from '../games/whereIs';
 import SharePhoto from '../games/sharePhoto';
 import WhoWantsToBeAMillonaire from '../games/WhoWantsToBeAMillonaire';
 import Assembly from '../assembly';
+import auctionModule from '../dinamicas/subasta';
 
 const { Sider, Content } = Layout;
 //import Styles from '../App/styles';
@@ -364,6 +365,13 @@ class Event extends Component {
                 eventId={event._id}
                 event={event}
                 componentKey='reportNetworking'
+              />
+              <Protected
+                path={`${match.url}/subasta`}
+                component={auctionModule}
+                eventId={event._id}
+                event={event}
+                componentKey='subasta'
               />
               <Protected
                 path={`${match.url}/assistants`}
