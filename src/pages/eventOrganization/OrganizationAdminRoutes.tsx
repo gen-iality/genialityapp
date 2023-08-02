@@ -8,6 +8,7 @@ import {
   useParams,
   useLocation,
   useRouteMatch,
+  RouteProps,
 } from 'react-router-dom'
 
 /** Antd imports */
@@ -47,6 +48,26 @@ import NoMatchPage from '@components/notFoundPage/NoMatchPage'
 import ValidateAccessRouteCms from '@components/roles/hooks/validateAccessRouteCms'
 import OrganizationTimeTrackingPage from './timetracking/OrganizationTimeTrackingPage'
 
+interface IProtected extends RouteProps {
+  org: any
+}
+
+const Protected: FunctionComponent<IProtected> = ({ render, org, ...rest }) => (
+  <Route
+    {...rest}
+    render={(routeProps) =>
+      org?._id ? (
+        <ValidateAccessRouteCms isForOrganization isForEvent={false}>
+          {render && render(routeProps)}
+        </ValidateAccessRouteCms>
+      ) : (
+        // <Redirect push to={`${url}/agenda`} />
+        <>{console.log('debug no hay orgId')}</>
+      )
+    }
+  />
+)
+
 const OrganizationAdminRoutes: FunctionComponent = () => {
   const params = useParams<{ id?: string }>()
   const location = useLocation()
@@ -61,6 +82,7 @@ const OrganizationAdminRoutes: FunctionComponent = () => {
     const org = await OrganizationApi.getOne(organizationId)
     setOrganization(org)
     setIsLoading(false)
+    console.debug('loaded organization:', org)
   }
 
   useEffect(() => {
@@ -162,109 +184,128 @@ const OrganizationAdminRoutes: FunctionComponent = () => {
               <Protected
                 exact
                 path={`${match.url}/events`}
-                component={OrgEvents}
                 org={organization}
-                componentKey="events"
+                render={() => <OrgEvents org={organization} />}
               />
               <Protected
                 exact
                 path={`${match.url}/information`}
-                component={OrganizationProfile}
                 org={organization}
-                componentKey="information"
+                render={() => <OrganizationProfile org={organization} />}
               />
               <Protected
                 exact
                 path={`${match.url}/appearance`}
-                component={Styles}
                 org={organization}
-                componentKey="appearance"
+                render={() => <Styles org={organization} />}
               />
               <Protected
                 exact
                 path={`${match.url}/members`}
-                component={OrganizationMembersPage}
                 org={organization}
-                componentKey="members"
+                render={() => <OrganizationMembersPage org={organization} />}
               />
               <Protected
                 exact
                 path={`${match.url}/organization-properties`}
-                component={OrganizationPropertiesIsolatedPage}
                 org={organization}
-                componentKey="organization-properties"
+                render={() => <OrganizationPropertiesIsolatedPage org={organization} />}
               />
               <Protected
                 exact
                 path={`${match.url}/positions`}
-                component={OrganizationPositionsPage}
                 org={organization}
-                componentKey="positions"
+                render={(routeProps) => (
+                  <OrganizationPositionsPage
+                    path={routeProps.match.path}
+                    org={organization}
+                  />
+                )}
               />
               <Protected
                 exact
                 path={`${match.url}/positions/:positionId`}
-                component={PositionedUsersPage}
                 org={organization}
-                componentKey="current-positions"
+                render={(routeProps) => (
+                  <PositionedUsersPage
+                    match={routeProps.match as any}
+                    org={organization}
+                  />
+                )}
               />
               <Protected
                 exact
                 path={`${match.url}/positions/:positionId/user/:userId`}
                 component={MembersCertificationPage}
                 org={organization}
-                componentKey="current-positions-certification-user"
+                render={(routeProps) => (
+                  <MembersCertificationPage
+                    match={routeProps.match as any}
+                    org={organization}
+                  />
+                )}
               />
               <Protected
                 exact
                 path={`${match.url}/positions/:positionId/user/:userId/logs/:certificationId`}
-                component={MemberCertificationLogsPage}
                 org={organization}
-                componentKey="current-positions-certification-logs-user"
+                render={(routeProps) => (
+                  <MemberCertificationLogsPage
+                    match={routeProps.match as any}
+                    org={organization}
+                  />
+                )}
               />
               <Protected
                 exact
                 path={`${match.url}/registered/`}
-                component={OrgRegisteredUsers}
                 org={organization}
-                componentKey="members"
+                render={() => <OrgRegisteredUsers org={organization} />}
               />
               <Protected
                 exact
                 path={`${match.url}/members/timetracking/:memberIdParam`}
-                component={OrganizationTimeTrackingPage}
                 org={organization}
-                componentKey="members"
+                render={(routeProps) => (
+                  <OrganizationTimeTrackingPage
+                    match={routeProps.match}
+                    org={organization}
+                  />
+                )}
               />
               <Protected
                 exact
                 path={`${match.url}/membersettings`}
-                component={MemberSettings}
                 org={organization}
-                componentKey="membersettings"
+                render={() => <MemberSettings org={organization} />}
               />
               <Protected
                 exact
                 path={`${match.url}/templatesettings`}
-                component={TemplateMemberSettings}
                 org={organization}
-                componentKey="templatesettings"
+                render={(routeProps) => (
+                  <TemplateMemberSettings match={routeProps.match} org={organization} />
+                )}
               />
               <Protected
                 exact
                 path={`${match.url}/menuItems`}
-                component={MenuLanding}
                 org={organization}
-                organizationObj={organization}
-                organization={1}
-                componentKey="menuItems"
+                render={() => (
+                  <MenuLanding
+                    event={undefined}
+                    organization={1}
+                    organizationObj={organization}
+                  />
+                )}
               />
 
               <Protected
                 path={`${match.url}`}
-                component={NoMatchPage}
                 org={organization}
-                componentKey="NoMatch"
+                render={(routeProps) => (
+                  <NoMatchPage parentUrl={routeProps.match.path} org={organization} />
+                )}
               />
             </Switch>
           </div>
@@ -273,21 +314,5 @@ const OrganizationAdminRoutes: FunctionComponent = () => {
     </Layout>
   )
 }
-
-const Protected = ({ component: Component, org, ...rest }) => (
-  <Route
-    {...rest}
-    render={(props) =>
-      org?._id ? (
-        <ValidateAccessRouteCms>
-          <Component key="cmsOrg" {...props} {...rest} org={org} />
-        </ValidateAccessRouteCms>
-      ) : (
-        // <Redirect push to={`${url}/agenda`} />
-        console.log('debug no hay orgId')
-      )
-    }
-  />
-)
 
 export default OrganizationAdminRoutes
