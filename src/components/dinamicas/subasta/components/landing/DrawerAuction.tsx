@@ -6,17 +6,18 @@ import {
   Row,
   Tabs,
   Grid,
-  Button,
   Space,
   Typography,
   Skeleton,
   List,
   Avatar,
   Input,
-  Form,
   Statistic,
   notification,
   Empty,
+  Modal,
+  Form,
+  Button,
 } from 'antd';
 import { UseEventContext } from '@/context/eventContext';
 import HCOActividad from '@/components/events/AgendaActividadDetalle/HOC_Actividad';
@@ -27,16 +28,26 @@ import { useBids } from '../../hooks/useBids';
 import { saveOffer } from '../../services';
 import useProducts from '../../hooks/useProducts';
 import { TabsDrawerAuction } from '../../utils/utils';
+import DrawerRules from '@/components/games/whereIs/auxiliarDrawers/DrawerRules';
+import DrawerChat from '@/components/games/whereIs/auxiliarDrawers/DrawerChat';
+import ButtonsContainer from './ButtonsContainer';
+import { UseUserEvent } from '@/context/eventUserContext';
 
 const { useBreakpoint } = Grid;
 
 export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, eventId }: DrawerAuctionProps) {
   const cEvent = UseEventContext();
   const screens = useBreakpoint();
+  let cEventUser = UseUserEvent();
+
   const { products, getProducts, loading: ProductsLoading } = useProducts(eventId);
   const { Bids, loading } = useBids(eventId, auction?.currentProduct?._id, auction?.playing);
   const [canOffer, setcanOffer] = useState(true);
-
+  const [showDrawerChat, setshowDrawerChat] = useState<boolean>(false);
+  const [showDrawerRules, setshowDrawerRules] = useState<boolean>(false);
+  const [modalOffer, setmodalOffer] = useState<boolean>(false);
+  const userName = cEventUser.value?.properties?.names || cEventUser.value?.user?.names
+  
   const validOffer = (value: string): boolean => {
     const offer = Number(value);
     return auction?.currentProduct?.price !== undefined && offer > auction?.currentProduct?.price;
@@ -62,11 +73,12 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
         auction?.currentProduct?._id,
         {
           date: new Date().toLocaleString(),
-          name: 'carlos',
+          name: userName || 'Anónimo',
           offered: Number(data.offerValue),
         },
         auction
       );
+      setmodalOffer(false)
     }
     if (!isValid) {
       notification.warning({
@@ -133,7 +145,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                   <Tabs.TabPane key={TabsDrawerAuction.Bids} tab='Pujas'>
                     <Row justify='center'>
                       <Col span={24}>
-                        {Bids.length > 0 ?
+                        {Bids.length > 0 ? (
                           <List
                             loading={loading}
                             dataSource={Bids}
@@ -149,19 +161,20 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                                 </Skeleton>
                               </List.Item>
                             )}
-                          /> :
+                          />
+                        ) : (
                           <Empty
                             style={{ height: '250px', display: 'grid', justifyContent: 'center', alignItems: 'center' }}
                             description={'Sin puja'}
                           />
-                        }
+                        )}
                       </Col>
                     </Row>
                   </Tabs.TabPane>
                   <Tabs.TabPane key={TabsDrawerAuction.History} tab='Historial de artículos' closable>
                     <Row>
                       <Col span={24}>
-                        {products.filter((product) => product.state === 'auctioned').length > 0 ?
+                        {products.filter((product) => product.state === 'auctioned').length > 0 ? (
                           <List
                             loading={ProductsLoading}
                             dataSource={products.filter((product) => product.state === 'auctioned')}
@@ -174,19 +187,20 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                                   />
                                   <Statistic
                                     valueStyle={{ color: '#3f8600' }}
-                                    value={item.end_price || item.price}
+                                    value={item.end_price ?? item.price}
                                     prefix='OLD $'
                                     suffix={auction.currency}
                                   />
                                 </Skeleton>
                               </List.Item>
                             )}
-                          /> :
+                          />
+                        ) : (
                           <Empty
                             style={{ height: '250px', display: 'grid', justifyContent: 'center', alignItems: 'center' }}
                             description={'Sin artículos'}
                           />
-                        }
+                        )}
                       </Col>
                     </Row>
                   </Tabs.TabPane>
@@ -200,8 +214,13 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
             <Col span={24}>
               <CardProduct auction={auction} />
             </Col>
-            <Col span={24} /* style={{ margin: 10 }} */>
-              <Form onFinish={onBid} layout='vertical'>
+            <Modal
+            visible={modalOffer}
+            footer={null}
+            closable
+            onCancel={()=>setmodalOffer(false)}
+>
+              <Form onFinish={onBid} layout='vertical' style={{ margin: 15}}>
                 <Form.Item
                   name={'offerValue'}
                   rules={[
@@ -218,11 +237,20 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                   Pujar
                 </Button>
               </Form>
-            </Col>
+            </Modal>
           </Row>
         </Col>
         <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4}>
+          <ButtonsContainer
+            validate={!auction.playing || !canOffer}
+            onClick={()=>setmodalOffer(true)}
+            setshowDrawerChat={setshowDrawerChat}
+            setshowDrawerRules={setshowDrawerRules}
+            closedrawer={setOpenOrClose}
+          />
 
+          <DrawerRules showDrawerRules={showDrawerRules} setshowDrawerRules={setshowDrawerRules} />
+          <DrawerChat showDrawerChat={showDrawerChat} setshowDrawerChat={setshowDrawerChat} />
         </Col>
       </Row>
     </Drawer>

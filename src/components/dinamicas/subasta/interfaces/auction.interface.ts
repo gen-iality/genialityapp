@@ -1,5 +1,6 @@
 import { UploadFile } from 'antd/lib/upload/interface';
 import DrawerAuction from '../components/landing/DrawerAuction';
+import ButtonsContainer from '../components/landing/ButtonsContainer';
 export interface AuctionConfig {
     name:     string,
 	currency: string,
@@ -71,13 +72,30 @@ export interface ModalProduct {
     state:       ProductState
     images:       UploadFile[];
 }
+export interface DrawerRules {
+    showDrawerRules: boolean
+    setshowDrawerRules: (value : boolean) => void
+    auctionRules: {
+        rules : any
+    }
+}
 
+export interface ButtonsContainerProps {
+    validate: boolean
+    onClick: () => void
+	setshowDrawerChat: React.Dispatch<React.SetStateAction<boolean>>
+	setshowDrawerRules: React.Dispatch<React.SetStateAction<boolean>>
+	closedrawer: () => void
+}
 export interface ImagesData { 
     file :  UploadFile;
     fileList:  UploadFile[];
 }
 
-
+export interface DrawerChat {
+    showDrawerChat: boolean
+    setshowDrawerChat : (value : boolean) => void
+}
 export type ProductState = 'waiting' | 'progress' | 'auctioned'
 export type ProductType = 'just-auction' | 'just-store' | 'auction-store'
 export type ICurrency = 'COP' | 'USD'
