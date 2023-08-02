@@ -1,5 +1,5 @@
 import { uploadImageData } from '@/Utilities/uploadImageData';
-import { ModalProduct } from '../interfaces/auction.interface';
+import { Auction, ModalProduct } from '../interfaces/auction.interface';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { deleteFireStorageData } from '@/Utilities/deleteFireStorageData';
 import { DispatchMessageService } from '@/context/MessageService';
@@ -39,3 +39,29 @@ export const InitialModalState: ModalProduct = {
   name: '',
   state: 'waiting',
 };
+
+export const AuctionExample : Required<Auction> = {
+  _id: '1',
+  created_at: '2021-08-10T17:00:00.000Z',
+  currency: 'COP',
+  event_id: '1',
+  name: 'Subasta de prueba',
+  updated_at: '2021-08-10T17:00:00.000Z',
+  currentProduct: {
+    _id: '1',
+    description: 'Producto de prueba',
+    name  : 'Producto de prueba',
+    price : 0,
+    start_price : 0,
+    type : 'just-auction',
+    state: 'waiting',
+    images : [{
+      name: 'imagen',
+      url: 'https://firebasestorage.googleapis.com/v0/b/eviusauthdev.appspot.com/o/ilustracion-moderna-concepto-computadora-escritorio_114360-11616.avif?alt=media&token=9b89201d-9ad9-486a-95b4-a976277ef97b',
+      uid: '1'
+    }]
+  },
+  opened  : false,
+  playing : false,
+  published : false
+}

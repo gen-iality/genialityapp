@@ -6,6 +6,7 @@ import Loading from '@/components/profile/loading';
 import { AuctionContext } from '../context/AuctionContext';
 import ExecuteAuction from './ExecuteAuction';
 import CreateProducts from './CreateProducts';
+import ConfigAppearance from '../components/cms/ConfigAppearance';
 
 export default function AuctionView({auction} : {auction : Auction}) {
 
@@ -19,7 +20,7 @@ export default function AuctionView({auction} : {auction : Auction}) {
       </Tabs.TabPane>
 
       <Tabs.TabPane tab='Apariencia' key={4}>
-
+      <ConfigAppearance/>
       </Tabs.TabPane>
       
       <Tabs.TabPane tab='Productos' key={2}>

@@ -37,24 +37,6 @@ export default function CardProduct({auction} : Partial<DrawerAuctionProps>) {
           />
         } 
       />
-    {/* <Space style={{ flexDirection: 'column' ,width: '100%', height: 300, justifyContent: 'center'}}> */}
-      {/* {auction?.currentProduct ? (
-        <div
-          className='animate__animated animate__flipInX'
-          onClick={() => {}}
-          style={{
-            width: 310,
-            height: 320,
-            backgroundImage: `url(${auction?.currentProduct.images[0].url})`,
-            backgroundSize: 'contain',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-          }}></div>
-      ) : (
-        <Skeleton.Image className='animate__animated animate__flipInX' />
-      )} */}
-    
-    {/* </Space> */}
   </Card>
   )
 }

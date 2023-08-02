@@ -218,15 +218,19 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
             visible={modalOffer}
             footer={null}
             closable
+            destroyOnClose
             onCancel={()=>setmodalOffer(false)}
 >
               <Form onFinish={onBid} layout='vertical' style={{ margin: 15}}>
                 <Form.Item
                   name={'offerValue'}
+                  label='Valor de la puja'
+                  initialValue={auction.currentProduct?.price || 0}
                   rules={[
                     { required: true, message: `Se requiere un valor mínimo de  ${auction.currentProduct?.price}` },
-                  ]}>
-                  <Input size='large' type='number' prefix='$' suffix={auction.currency} />
+                  ]}
+                  >
+                  <Input defaultValue={auction.currentProduct?.price} size='large' type='number' prefix='$' suffix={auction.currency} />
                 </Form.Item>
                 <Button
                   style={{ width: '100%' }}
