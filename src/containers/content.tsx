@@ -21,7 +21,7 @@ import { HelperContextProvider } from '@context/helperContext/helperProvider'
 import { AgendaContextProvider } from '@context/AgendaContext'
 
 import EventOrganization from '@components/eventOrganization'
-import OrganizationLandingRoutes from '@/pages/eventOrganization/OrganizationLandingRoutes'
+import OrganizationAdminRoutes from '@/pages/eventOrganization/OrganizationAdminRoutes'
 import MainProfile from '@components/profile/main'
 
 import { useCurrentUser } from '@context/userContext'
@@ -122,7 +122,7 @@ const ContentContainer = () => {
           />
           <PrivateRoute
             path="/admin/organization/:id"
-            render={() => <OrganizationLandingRoutes />}
+            render={() => <OrganizationAdminRoutes />}
           />
           <PrivateRoute
             path="/noaccesstocms/:id/:withoutPermissions"
