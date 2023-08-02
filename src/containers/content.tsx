@@ -1,6 +1,12 @@
-import { FunctionComponent, memo } from 'react'
+import { FunctionComponent, PropsWithChildren, memo } from 'react'
 import { Grid, Spin, Layout } from 'antd'
-import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
+import {
+  BrowserRouter as Router,
+  Route,
+  Redirect,
+  Switch,
+  RouteProps,
+} from 'react-router-dom'
 import EventAdminRoutes from '@components/events/EventAdminRoutes'
 import { ApiUrl } from '@helpers/constants'
 import WithFooter from '@components/withFooter'
@@ -52,6 +58,20 @@ const EventFinished = loadable(() => import('../components/eventFinished/eventFi
 const LoginWithCode = loadable(() => import('../components/AdminUsers/WithCode'))
 const NoMatchPage = loadable(() => import('../components/notFoundPage/NoMatchPage'))
 
+const GeneralContextProviders: FunctionComponent<PropsWithChildren> = ({ children }) => (
+  <CurrentEventProvider>
+    <CurrentUserEventProvider>
+      <CurrentUserProvider>
+        <HelperContextProvider>
+          <AgendaContextProvider>
+            <SurveysProvider>{children}</SurveysProvider>
+          </AgendaContextProvider>
+        </HelperContextProvider>
+      </CurrentUserProvider>
+    </CurrentUserEventProvider>
+  </CurrentEventProvider>
+)
+
 const { useBreakpoint } = Grid
 const ContentContainer = () => {
   const screens = useBreakpoint()
@@ -71,10 +91,14 @@ const ContentContainer = () => {
           />
           <RouteContext
             path={['/landing/:event_id', '/event/:event_name']}
-            component={LandingRoutes}
+            render={(routeProps) => <LandingRoutes {...routeProps} />}
           />
           {/*Ruta para ver resumen */}
-          <PrivateRoute exact path="/myprofile/:tab" component={MainProfile} />
+          <PrivateRoute
+            exact
+            path="/myprofile/:tab"
+            render={(routeProps) => <MainProfile {...routeProps} />}
+          />
           {screens.xs ? (
             <Route
               exact
@@ -82,47 +106,70 @@ const ContentContainer = () => {
               render={() => <Redirect to="/myprofile/organization" />}
             />
           ) : (
-            <PrivateRoute exact path="/myprofile" component={MainProfile} />
+            <PrivateRoute
+              exact
+              path="/myprofile"
+              render={(routeProps) => <MainProfile {...routeProps} />}
+            />
           )}
-          <PrivateRoute exact path="/myprofile" component={MainProfile} />
+          <PrivateRoute
+            exact
+            path="/myprofile"
+            render={(routeProps) => <MainProfile {...routeProps} />}
+          />
 
           <Route path="/social/:event_id" component={socialZone} />
           <Route path="/notfound" component={NotFoundPage} />
-          <RouteContext path="/blockedEvent/:event_id" component={BlockedEvent} />
-          <PrivateRoute path="/create-event/:user?">
-            <NewEventProvider>
-              <NewEventPage />
-            </NewEventProvider>
-          </PrivateRoute>
-          <PrivateRoute path="/eventadmin/:event" component={EventAdminRoutes} />
-          <PrivateRoute path="/orgadmin/:event" component={EventAdminRoutes} />
-          <PrivateRoute path="/create-event">
-            <NewEventProvider>
-              <NewEventPage />
-            </NewEventProvider>
-          </PrivateRoute>
+          <RouteContext
+            path="/blockedEvent/:event_id"
+            render={(routeProps) => <BlockedEvent {...routeProps} />}
+          />
+          <PrivateRoute
+            path="/create-event/:user?"
+            render={() => (
+              <NewEventProvider>
+                <NewEventPage />
+              </NewEventProvider>
+            )}
+          />
+          <PrivateRoute
+            path="/eventadmin/:event"
+            render={(routeProps) => <EventAdminRoutes {...routeProps} />}
+          />
+          <PrivateRoute
+            path="/orgadmin/:event"
+            render={(routeProps) => <EventAdminRoutes {...routeProps} />}
+          />
+          <PrivateRoute
+            path="/create-event"
+            render={(routeProps) => (
+              <NewEventProvider>
+                <NewEventPage />
+              </NewEventProvider>
+            )}
+          />
           <RouteContext
             exact
             path="/organization/:id/events"
-            component={(props) => (
+            render={() => (
               <OrganizationPaymentProvider>
-                <EventOrganization {...props} />
+                <EventOrganization />
               </OrganizationPaymentProvider>
             )}
           />
           <RouteContext
             exact
             path="/organization/:id"
-            component={(props) => (
+            render={() => (
               <OrganizationPaymentProvider>
-                <EventOrganization {...props} />
+                <EventOrganization />
               </OrganizationPaymentProvider>
             )}
           />
-          <PrivateRoute path="/admin/organization/:id" component={Organization} />
+          <PrivateRoute path="/admin/organization/:id" render={() => <Organization />} />
           <PrivateRoute
             path="/noaccesstocms/:id/:withoutPermissions"
-            component={NoMatchPage}
+            render={() => <NoMatchPage />}
           />
           <Route path="/terms" component={Terms} />
           <Route path="/privacy" component={Privacy} />
@@ -142,7 +189,7 @@ const ContentContainer = () => {
             path="/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver"
             component={AppointmentAccept}
           />
-          <RouteContext exact path="/" component={PageWithFooter} />
+          <RouteContext exact path="/" render={() => <PageWithFooter />} />
           <Route component={NotFoundPage} />
         </Switch>
       </main>
@@ -155,70 +202,46 @@ function QRedirect({ match }) {
   return <p>Redirecting...</p>
 }
 
-const RouteContext = ({ component: Component, ...rest }) => (
+const RouteContext: FunctionComponent<RouteProps> = ({ render, ...rest }) => (
   <Route
     {...rest}
     render={(props) => (
-      <CurrentEventProvider>
-        <CurrentUserEventProvider>
-          <CurrentUserProvider>
-            <AgendaContextProvider>
-              <HelperContextProvider>
-                <SurveysProvider>
-                  <Layout
-                    style={{
-                      minHeight: '100vh',
-                    }}
-                  >
-                    <HeaderContainer />
-                    <Component {...props} />
-                    <ModalAuth />
-                    <ModalAuthAnonymous />
-                    <ModalNoRegister />
-                    <ModalUpdate />
-                  </Layout>
-                </SurveysProvider>
-              </HelperContextProvider>
-            </AgendaContextProvider>
-          </CurrentUserProvider>
-        </CurrentUserEventProvider>
-      </CurrentEventProvider>
+      <GeneralContextProviders>
+        <Layout style={{ minHeight: '100vh' }}>
+          <HeaderContainer />
+          {render && render(props)}
+          <ModalAuth />
+          <ModalAuthAnonymous />
+          <ModalNoRegister />
+          <ModalUpdate />
+        </Layout>
+      </GeneralContextProviders>
     )}
   />
 )
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
+const PrivateRoute: FunctionComponent<RouteProps> = ({ render, ...rest }) => {
   const cUser = useCurrentUser()
+
   return (
     <Route
       {...rest}
       render={(props) => (
-        <CurrentEventProvider>
-          <CurrentUserEventProvider>
-            <CurrentUserProvider>
-              <HelperContextProvider>
-                <AgendaContextProvider>
-                  <SurveysProvider>
-                    <Layout style={{ minHeight: '100vh' }}>
-                      <HeaderContainer />
-                      {cUser.value ? (
-                        <Component {...props} />
-                      ) : cUser.value == null && cUser.status == 'LOADED' ? (
-                        <>
-                          <ModalAuth isPrivateRoute />
-
-                          <ForbiddenPage />
-                        </>
-                      ) : (
-                        <Spin />
-                      )}
-                    </Layout>
-                  </SurveysProvider>
-                </AgendaContextProvider>
-              </HelperContextProvider>
-            </CurrentUserProvider>
-          </CurrentUserEventProvider>
-        </CurrentEventProvider>
+        <GeneralContextProviders>
+          <Layout style={{ minHeight: '100vh' }}>
+            <HeaderContainer />
+            {cUser.value ? (
+              <>{render && render(props)}</>
+            ) : cUser.value == null && cUser.status == 'LOADED' ? (
+              <>
+                <ModalAuth isPrivateRoute />
+                <ForbiddenPage />
+              </>
+            ) : (
+              <Spin />
+            )}
+          </Layout>
+        </GeneralContextProviders>
       )}
     />
   )
