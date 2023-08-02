@@ -205,7 +205,7 @@ const SurveyDetailPage: FunctionComponent<
             <ResultsPanel
               eventId={cEvent.value?._id}
               currentUser={currentUser}
-              idSurvey={surveyId}
+              surveyId={surveyId}
             />
           )}
 

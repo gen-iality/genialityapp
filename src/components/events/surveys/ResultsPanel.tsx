@@ -1,21 +1,29 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, FunctionComponent } from 'react'
 import { Alert, Card, Space, Typography } from 'antd'
 import SurveyAnswers from './services/surveyAnswersService'
 import { LoadingOutlined } from '@ant-design/icons'
 import useSurveyQuery from './hooks/useSurveyQuery'
 
-function ResultsPanel(props) {
-  const { eventId, idSurvey, currentUser } = props
+interface IResultsPanelProps {
+  eventId: string
+  surveyId: string
+  currentUser: any
+}
 
-  const query = useSurveyQuery(eventId, idSurvey)
+const ResultsPanel: FunctionComponent<IResultsPanelProps> = (props) => {
+  const { eventId, surveyId, currentUser } = props
+
+  const query = useSurveyQuery(eventId, surveyId)
   // The first question is not a real question!!
-  const realQuestions = (query?.data?.questions || []).filter((question) => !!question.id)
+  const realQuestions: any[] = ((query?.data as undefined | any).questions || []).filter(
+    (question: any) => !!question.id,
+  )
 
-  const [userAnswers, setUserAnswers] = useState(undefined)
+  const [userAnswers, setUserAnswers] = useState<undefined | any[]>(undefined)
 
-  async function getUserAnswers(questionId) {
+  async function getUserAnswers(questionId: string) {
     const userAnswer = await SurveyAnswers.getAnswersQuestionV2(
-      idSurvey, // survey ID
+      surveyId, // survey ID
       questionId, // current question
       currentUser.value._id, // who
     )
@@ -27,17 +35,17 @@ function ResultsPanel(props) {
   useEffect(() => {
     //console.log('respusuario', currentUser, query)
     if (!query.data) return
-    if (!idSurvey || !currentUser.value._id) return
+    if (!surveyId || !currentUser.value._id) return
 
     console.debug(
       'got questions to see its answers:',
-      query.data.questions,
+      (query.data as undefined | any).questions,
       'but real ones:',
       realQuestions,
     )
 
     Promise.all(
-      realQuestions.map(async (question) => {
+      realQuestions.map(async (question: any) => {
         if (!question.id) return null
         // Search the answer
         const userAnswer = await getUserAnswers(question.id)
@@ -71,7 +79,7 @@ function ResultsPanel(props) {
       const newUserAnswers = userAnswersLocalList.filter((report) => report !== null)
       setUserAnswers(newUserAnswers)
     })
-  }, [currentUser.value._id, idSurvey, query.data])
+  }, [currentUser.value._id, surveyId, query.data])
 
   return (
     <div>
