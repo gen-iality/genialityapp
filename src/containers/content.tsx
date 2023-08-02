@@ -21,7 +21,7 @@ import { HelperContextProvider } from '@context/helperContext/helperProvider'
 import { AgendaContextProvider } from '@context/AgendaContext'
 
 import EventOrganization from '@components/eventOrganization'
-import Organization from '@/pages/eventOrganization/index'
+import Organization from '@/pages/eventOrganization/OrganizationLandingRoutes'
 import MainProfile from '@components/profile/main'
 
 import { useCurrentUser } from '@context/userContext'
