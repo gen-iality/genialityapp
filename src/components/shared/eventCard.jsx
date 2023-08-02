@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import Moment from 'moment';
 import { Link, withRouter } from 'react-router-dom';
-import { Badge, Button, Card, Space, Typography } from 'antd';
+import { Badge, Button, Card, Space, Tooltip, Typography } from 'antd';
 import { imageUtils } from '../../Utilities/ImageUtils';
 import { HelperContext } from '@/context/helperContext/helperContext';
 
@@ -10,9 +10,8 @@ const { Meta } = Card;
 class EventCard extends Component {
   static contextType = HelperContext;
   render() {
-    const { event, bordered, right, loading, isAdmin, blockedEvent, buttonBuyOrRegistered, textButtonBuyOrRegistered } = this.props;
-    const { eventIsActive } = this.context;
-
+    const { event, bordered, right, loading, isAdmin, buttonBuyOrRegistered, textButtonBuyOrRegistered } = this.props;
+    // const { eventIsActive } = this.context;
     const styleNormal = {
       fontWeight: 'bold',
     };
@@ -24,7 +23,7 @@ class EventCard extends Component {
 
     //Esto sólo va a aplicar para cuando el usuario tiene un plan
     //Se esta validando la fecha en la que se va a bloquear el evento, osea hasta la fecha que tiene acceso
-    let actualDate = new Date(event.datetime_to);
+    // let actualDate = new Date(event.datetime_to);
     //aqui  tiene que venir ahora unos minutos en caso de tener plan
     /* let blockedDate = new Date(actualDate.setDate(actualDate.getDate() + blockedEvent));
     let formatDate = Moment(blockedDate).format('DD MMM YYYY'); */
@@ -45,7 +44,17 @@ class EventCard extends Component {
                   <span>
                     <i className='fas fa-map-marker-alt' />
                   </span>
-                  <span>{event.venue ? event.venue : 'Virtual'}</span>
+                  <Tooltip title={event.type_event === 'onlineEvent' ? '' : event.address ? (event.venue ? event.address + ', ' + event.venue : event.address) : event.venue}>
+                    <span>
+                      {event.type_event === 'physicalEvent'
+                        ? 'Físico'
+                        : event.type_event === 'onlineEvent'
+                        ? 'Virtual'
+                        : event.type_event === 'hybridEvent'
+                        ? 'Híbrido'
+                        : 'Tipo de evento desconocido'}
+                    </span>
+                  </Tooltip>
                 </Space>
               </div>
             </span>
@@ -109,11 +118,11 @@ class EventCard extends Component {
                       ? event.author?.displayName
                       : event.author?.names}
                   </span>
-                  {buttonBuyOrRegistered && 
-                  <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
-                    <Button type='primary'>{textButtonBuyOrRegistered ?? 'Comprar'}</Button>
-                  </Link>
-                  }
+                  {buttonBuyOrRegistered && (
+                    <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
+                      <Button type='primary'>{textButtonBuyOrRegistered ?? 'Comprar'}</Button>
+                    </Link>
+                  )}
                   {/* RESTRICIONES */}
                   {/* {!eventIsActive[event._id] && window.location.toString().includes('myprofile') && (
                     <Typography.Paragraph style={{ color: 'red' }}>
