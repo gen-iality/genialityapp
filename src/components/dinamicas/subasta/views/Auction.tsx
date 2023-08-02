@@ -18,6 +18,10 @@ export default function AuctionView({auction} : {auction : Auction}) {
       {loadingConfig ? <Loading/> :<CreateAuction key={'subasta-Configuración'} active={true} auction={auction}/>}
       </Tabs.TabPane>
 
+      <Tabs.TabPane tab='Apariencia' key={4}>
+
+      </Tabs.TabPane>
+      
       <Tabs.TabPane tab='Productos' key={2}>
         <CreateProducts reload={currenTab === '2'}/>
       </Tabs.TabPane>
@@ -25,9 +29,7 @@ export default function AuctionView({auction} : {auction : Auction}) {
       <Tabs.TabPane tab='Ejecución' key={3}>
         <ExecuteAuction/>
       </Tabs.TabPane>
-   {/*    <Tabs.TabPane tab='Apariencia' key={4}>
-
-      </Tabs.TabPane> */}
+      
 
       <Tabs.TabPane tab='Reporte de subasta' key={5}>
 
