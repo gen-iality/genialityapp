@@ -240,7 +240,7 @@ const Headers = (props: Props) => {
 				}}>
 				<Menu theme='light' mode='horizontal' style={{ backgroundColor: bgcolorContainer, border: 'none' }}>
 					<Row justify='space-between' align='middle'>
-						{window.location.href.includes('landing') && 
+						{window.location.href.includes('landing') && !screens.xs &&
 							<Button type='link' onClick={landingOrganization} icon={<ApartmentOutlined style={{color: getCorrectColor(bgcolorContainer)}}/>} size='large' >
 								<Typography.Text style={{color: getCorrectColor(bgcolorContainer)}}>Ver más contenido de <Typography.Text strong style={{color: getCorrectColor(bgcolorContainer)}}>{cEvent.value?.organizer?.name}</Typography.Text></Typography.Text>
 							</Button>

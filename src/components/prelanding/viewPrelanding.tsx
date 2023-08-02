@@ -31,6 +31,7 @@ import { Agenda, ApiGeneric, DataSource, Description, Speaker, Sponsor } from '.
 import { style } from './constants';
 import { Helmet } from 'react-helmet';
 import ModalPayment from '../authentication/ModalPayment';
+import moment from 'moment';
 
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -92,9 +93,13 @@ const ViewPrelanding = ({ preview }: PropsPreLanding) => {
   const [shouldRedirect, setShouldRedirect] = useState(false);
   //! TEMPORAL VALIDATION TO GET INTO EVENT FOR LG EVENT
   useEffect(() => {
-    
     if (cEventContext?.value?.redirect_landing) {
-      if (cEventUser?.value?._id && history.location.pathname.includes(idEvent) && !history.location.pathname.includes('landing') && !preview ) {
+      if (
+        cEventUser?.value?._id &&
+        history.location.pathname.includes(idEvent) &&
+        !history.location.pathname.includes('landing') &&
+        !preview
+      ) {
         window.sessionStorage.setItem('session', cEventContext.value?._id);
         return history.push(`/landing/${cEventContext?.value?._id}`);
       } else {
@@ -198,6 +203,22 @@ const ViewPrelanding = ({ preview }: PropsPreLanding) => {
       </div>
     );
   }
+  moment.locale('en');
+  let date;
+  const DATES_ARRAY = 0
+  if (cEventContext?.value?.dates !== undefined && cEventContext?.value?.dates.length > DATES_ARRAY) {
+    date = moment(cEventContext?.value?.dates[0]?.start, 'DD MMM YYYY HH:mm').format('YYYY-MM-DD HH:mm:ss');
+  } else if (cEventContext?.value?.dateLimit !== undefined && cEventContext?.value?.dateLimit !== null) {
+    date = cEventContext?.value?.dateLimit;
+  } else if (cEventContext?.value?.datetime_from !== undefined && cEventContext?.value?.datetime_from !== null) {
+    date = cEventContext?.value?.datetime_from;
+  } else {
+    date = null; // En caso de que ninguna de las condiciones anteriores se cumpla.
+  }
+  
+
+  console.log(date);
+  console.log(cEventContext.value);
 
   return (
     <>
@@ -222,7 +243,12 @@ const ViewPrelanding = ({ preview }: PropsPreLanding) => {
           }}>
           {/**MODAL INSCRIPCION EN EL EVENTO*/}
           <ModalPermission />
-		  <ModalPayment  event={cEventContext.value} user={cUser.value}  updateUser={cEventUser.setUpdateUser} eventUser={cEventUser} />
+          <ModalPayment
+            event={cEventContext.value}
+            user={cUser.value}
+            updateUser={cEventUser.setUpdateUser}
+            eventUser={cEventUser}
+          />
           <Row
             gutter={[0, 16]}
             style={
@@ -278,9 +304,13 @@ const ViewPrelanding = ({ preview }: PropsPreLanding) => {
                       }}>
                       <CountdownBlock
                         textColor={textColor}
-                        date={cEventContext?.value?.dateLimit}
+                        date={date}
                         countdownMessage={cEventContext?.value?.countdownMessage}
-                        countdownFinalMessage={cEventContext?.value?.countdownFinalMessage}
+                        countdownFinalMessage={
+                          cEventContext?.value?.countdownFinalMessage
+                            ? cEventContext?.value?.countdownFinalMessage
+                            : 'Ha terminado el evento'
+                        }
                       />
                     </Card>
                   </Col>

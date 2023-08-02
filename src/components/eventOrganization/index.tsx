@@ -12,8 +12,7 @@ import { DataOrganizations, Organization, OrganizationProps } from './types';
 import { UseCurrentUser } from '@/context/userContext';
 import { useGetEventsWithUser } from './hooks/useGetEventsWithUser';
 
-
-function EventOrganization({match}: OrganizationProps) {
+function EventOrganization({ match }: OrganizationProps) {
   const { Title, Text, Paragraph } = Typography;
   const cUser = UseCurrentUser();
   const [state, setstate] = useState<DataOrganizations>({
@@ -25,7 +24,10 @@ function EventOrganization({match}: OrganizationProps) {
   const [eventsOld, setEventsOld] = useState<any[]>([]);
   const [myOrganizations, setMyorganizations] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const {eventsWithEventUser, isLoading: isLoadingOtherEvents} = useGetEventsWithUser(match.params.id,cUser.value?._id)
+  const { eventsWithEventUser, isLoading: isLoadingOtherEvents } = useGetEventsWithUser(
+    match.params.id,
+    cUser.value?._id
+  );
 
   useEffect(() => {
 
@@ -43,17 +45,18 @@ function EventOrganization({match}: OrganizationProps) {
     }
   }, []);
 
-  useEffect(()=>{
-    if(cUser.value){
-      getMyOrganizations()
-    }else{
-      setMyorganizations([])
+  useEffect(() => {
+    if (cUser.value) {
+      getMyOrganizations();
+    } else {
+      setMyorganizations([]);
     }
-  },[cUser.value])
+  }, [cUser.value]);
 
   const getMyOrganizations = async () => {
     try {
       const organizations: Organization[] = await OrganizationApi.mine();
+      console.log(organizations, 'organizations');
       if (organizations?.length > 0) {
         setMyorganizations(organizations.map((item) => item.id));
       }
@@ -78,38 +81,36 @@ function EventOrganization({match}: OrganizationProps) {
 
     const orga = await OrganizationFuction.obtenerDatosOrganizacion(orgId);
     if (events) {
-      setEvents(proximos)
-      setEventsOld(pasados)
-      setOrganization(orga)
+      setEvents(proximos);
+      setEventsOld(pasados);
+      setOrganization(orga);
     }
     setLoading(false);
   };
 
   //toDo: Se debe realizar esta validacion desde el backedn para mejor optimizacion
-  const isUserRegisterInEvent=(eventId:string):boolean => {
-    if( eventsWithEventUser.filter(event => event._id === eventId).length > 0 ){
+  const isUserRegisterInEvent = (eventId: string): boolean => {
+    if (eventsWithEventUser.filter((event) => event._id === eventId).length > 0) {
       return true;
     }
-    return false
-  }
+    return false;
+  };
 
-
-  const getTextButtonBuyOrRegistered=(event:any):string=>{
-    if(isUserRegisterInEvent(event._id)){
-      return 'Ir a'
+  const getTextButtonBuyOrRegistered = (event: any): string => {
+    if (isUserRegisterInEvent(event._id)) {
+      return 'Ingresar';
     }
 
-    if(havePaymentEvent(event)){
-      return `Comprar por $ ${event.payment.price}`
+    if (havePaymentEvent(event)) {
+      return `Comprar por $ ${event.payment.price} ${event?.payment?.currency}`;
     }
 
-    return 'Inscribirse'
-  }
+    return 'Inscribirse';
+  };
 
-  const havePaymentEvent=(event:any):boolean=>{
-    return (event.payment ? event.payment.active as boolean : false)
-  }
-
+  const havePaymentEvent = (event: any): boolean => {
+    return event.payment ? (event.payment.active as boolean) : false;
+  };
 
   return (
     <div
@@ -133,13 +134,13 @@ function EventOrganization({match}: OrganizationProps) {
             </div>
           )}
 
-          <Row justify='center' style={{paddingTop: '32px', paddingBottom: '32px'}}>
+          <Row justify='center' style={{ paddingTop: '32px', paddingBottom: '32px' }}>
             <Col span={23}>
               <Row gutter={[0, 32]}>
                 {organization && (
-                  <Col style={{width: '100%'}}>
-                    <Card style={{width: '100%', borderRadius: 20}}>
-                      <Row gutter={[10, 10]} style={{width: '100%'}}>
+                  <Col style={{ width: '100%' }}>
+                    <Card style={{ width: '100%', borderRadius: 20 }}>
+                      <Row gutter={[10, 10]} style={{ width: '100%' }}>
                         <Col xs={24} sm={24} md={24} lg={8} xl={4} xxl={4}>
                           <Row justify={'start'}>
                             <Image
@@ -175,6 +176,14 @@ function EventOrganization({match}: OrganizationProps) {
                             </Link>
                             <Text
                               style={{
+                                fontSize: '30px',
+                                fontWeight: '600',
+                                lineHeight: '2.25rem',
+                              }}>
+                              Bienvenido a
+                            </Text>
+                            <Text
+                              style={{
                                 fontSize: '40px',
                                 fontWeight: '600',
                                 lineHeight: '2.25rem',
@@ -196,51 +205,52 @@ function EventOrganization({match}: OrganizationProps) {
                     </Card>
                   </Col>
                 )}
-                {
-                  cUser.value && (<Col style={{width: '100%'}}>
-                  {/* Lista otros eventos en los que esta inscrito el usuario*/}
-                  <Card style={{width: '100%', borderRadius: 20}}>
-                    <Badge offset={[60, 22]} count={`${eventsWithEventUser.length} Eventos`}>
-                      <Title level={2}>Mis eventos</Title>
-                    </Badge>
-                    <Row gutter={[16, 16]} >
-                      {isLoadingOtherEvents && 
-                      <div style={{ width: '100vw', height: '100vh', textAlign: 'center' }}>
-                          <Loading />
-                      </div>}
-                      {!isLoadingOtherEvents && eventsWithEventUser && eventsWithEventUser.length > 0 ? (
-                      eventsWithEventUser.map((event, index) => (
-                        <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
-                          <EventCard
-                            bordered={false}
-                            key={event._id}
-                            event={event}
-                            action={{ name: 'Ver', url: `landing/${event._id}` }}
-                          />
-                        </Col>
-                      ))
-                      ) : (
-                        <div
-                          style={{
-                            height: '250px',
-                            width: '100%',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}>
-                          <Empty description='No estas inscritos en otros eventos' />
-                        </div>
-                      )}
-                    </Row>
-                  </Card>
-                </Col>)
-                }
-                
-                <Col style={{width: '100%'}}>
+                {cUser.value && (
+                  <Col style={{ width: '100%' }}>
+                    {/* Lista otros eventos en los que esta inscrito el usuario*/}
+                    <Card style={{ width: '100%', borderRadius: 20 }}>
+                      <Badge offset={[60, 22]} count={`${eventsWithEventUser.length} Eventos`}>
+                        <Title level={2}>Mis eventos</Title>
+                      </Badge>
+                      <Row gutter={[16, 16]}>
+                        {isLoadingOtherEvents && (
+                          <div style={{ width: '100vw', height: '100vh', textAlign: 'center' }}>
+                            <Loading />
+                          </div>
+                        )}
+                        {!isLoadingOtherEvents && eventsWithEventUser && eventsWithEventUser.length > 0 ? (
+                          eventsWithEventUser.map((event, index) => (
+                            <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
+                              <EventCard
+                                bordered={false}
+                                key={event._id}
+                                event={event}
+                                action={{ name: 'Ver', url: `landing/${event._id}` }}
+                              />
+                            </Col>
+                          ))
+                        ) : (
+                          <div
+                            style={{
+                              height: '250px',
+                              width: '100%',
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}>
+                            <Empty description='No estas inscritos en otros eventos' />
+                          </div>
+                        )}
+                      </Row>
+                    </Card>
+                  </Col>
+                )}
+
+                <Col style={{ width: '100%' }}>
                   {/* Lista de eventos próximos */}
-                  <Card style={{width: '100%', borderRadius: 20}}>
+                  <Card style={{ width: '100%', borderRadius: 20 }}>
                     <Badge offset={[60, 22]} count={`${events.length} Eventos`}>
-                      <Title level={2}>Próximos</Title>
+                      <Title level={2}>Eventos próximos</Title>
                     </Badge>
                     <Row gutter={[16, 16]}>
                       {events && events.length > 0 ? (
@@ -269,11 +279,11 @@ function EventOrganization({match}: OrganizationProps) {
                     </Row>
                   </Card>
                 </Col>
-                <Col style={{width: '100%'}}>
-                  <Card style={{width: '100%', borderRadius: 20}}>
+                <Col style={{ width: '100%' }}>
+                  <Card style={{ width: '100%', borderRadius: 20 }}>
                     {/* Lista de eventos pasados */}
                     <Badge offset={[60, 22]} count={`${eventsOld.length} Eventos`}>
-                      <Title level={2}>Pasados</Title>
+                      <Title level={2}>Eventos pasados</Title>
                     </Badge>
                     <Row gutter={[16, 16]}>
                       {eventsOld && eventsOld.length > 0 ? (
