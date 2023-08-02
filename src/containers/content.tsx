@@ -84,45 +84,17 @@ const ContentContainer = () => {
     >
       <main className="main" style={{ minHeight: '100vh' }}>
         <Switch>
-          <Route
+          {/** Private routes */}
+          <PrivateRoute
             exact
-            path="/certificate-generator/:userId/:eventId/:activityId"
-            render={() => <CertificateGeneraterPage />}
-          />
-          <RouteContext
-            path={['/landing/:event_id', '/event/:event_name']}
-            render={(routeProps) => <LandingRoutes {...routeProps} />}
+            path="/myprofile"
+            render={(routeProps) => <MainProfile {...routeProps} />}
           />
           {/*Ruta para ver resumen */}
           <PrivateRoute
             exact
             path="/myprofile/:tab"
             render={(routeProps) => <MainProfile {...routeProps} />}
-          />
-          {screens.xs ? (
-            <Route
-              exact
-              path="/myprofile"
-              render={() => <Redirect to="/myprofile/organization" />}
-            />
-          ) : (
-            <PrivateRoute
-              exact
-              path="/myprofile"
-              render={(routeProps) => <MainProfile {...routeProps} />}
-            />
-          )}
-          <PrivateRoute
-            exact
-            path="/myprofile"
-            render={(routeProps) => <MainProfile {...routeProps} />}
-          />
-
-          <Route path="/social/:event_id" component={socialZone} />
-          <Route path="/notfound" component={NotFoundPage} />
-          <RouteContext
-            path="/blockedEvent/:event_id"
-            render={(routeProps) => <BlockedEvent {...routeProps} />}
           />
           <PrivateRoute
             path="/create-event/:user?"
@@ -148,6 +120,23 @@ const ContentContainer = () => {
               </NewEventProvider>
             )}
           />
+          <PrivateRoute path="/admin/organization/:id" render={() => <Organization />} />
+          <PrivateRoute
+            path="/noaccesstocms/:id/:withoutPermissions"
+            render={() => <NoMatchPage />}
+          />
+
+          {/** Another routes with context */}
+          <RouteContext exact path="/" render={() => <PageWithFooter />} />
+          <RouteContext
+            exact
+            path="/organization/:id"
+            render={() => (
+              <OrganizationPaymentProvider>
+                <EventOrganization />
+              </OrganizationPaymentProvider>
+            )}
+          />
           <RouteContext
             exact
             path="/organization/:id/events"
@@ -158,19 +147,26 @@ const ContentContainer = () => {
             )}
           />
           <RouteContext
+            path="/blockedEvent/:event_id"
+            render={(routeProps) => <BlockedEvent {...routeProps} />}
+          />
+          <RouteContext
+            path={['/landing/:event_id', '/event/:event_name']}
+            render={(routeProps) => <LandingRoutes {...routeProps} />}
+          />
+
+          {/** The rest of the routes */}
+          <Route component={NotFoundPage} />
+          <Route
             exact
-            path="/organization/:id"
-            render={() => (
-              <OrganizationPaymentProvider>
-                <EventOrganization />
-              </OrganizationPaymentProvider>
-            )}
+            path="/certificate-generator/:userId/:eventId/:activityId"
+            render={() => <CertificateGeneraterPage />}
           />
-          <PrivateRoute path="/admin/organization/:id" render={() => <Organization />} />
-          <PrivateRoute
-            path="/noaccesstocms/:id/:withoutPermissions"
-            render={() => <NoMatchPage />}
+          <Route
+            path="/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver"
+            component={AppointmentAccept}
           />
+
           <Route path="/terms" component={Terms} />
           <Route path="/privacy" component={Privacy} />
           <Route path="/policies" component={Policies} />
@@ -185,12 +181,21 @@ const ContentContainer = () => {
 
           <Route path="/direct-login" component={DirectLoginPage} />
 
-          <Route
-            path="/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver"
-            component={AppointmentAccept}
-          />
-          <RouteContext exact path="/" render={() => <PageWithFooter />} />
-          <Route component={NotFoundPage} />
+          <Route path="/social/:event_id" component={socialZone} />
+          <Route path="/notfound" component={NotFoundPage} />
+          {screens.xs ? (
+            <Route
+              exact
+              path="/myprofile"
+              render={() => <Redirect to="/myprofile/organization" />}
+            />
+          ) : (
+            <PrivateRoute
+              exact
+              path="/myprofile"
+              render={(routeProps) => <MainProfile {...routeProps} />}
+            />
+          )}
         </Switch>
       </main>
     </Router>
