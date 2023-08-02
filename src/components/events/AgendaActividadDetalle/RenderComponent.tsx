@@ -104,6 +104,7 @@ const RenderComponent = (props: any) => {
       const textColor = cEventContext.value?.styles?.textMenu;
       const countdownMessage = 'El contenido para esta actividad estará disponible en:';
       const startDate = currentActivity ? moment(currentActivity.datetime_start).format('YYYY-MM-DD HH:mm:ss') : '';
+      const finalMessage = 'Estará disponible en pocos minutos.'
   
       if (plataforma === 'vimeo' || plataforma === 'zoom' || plataforma === 'dolby') {
         switch (actividad_estado) {
@@ -129,7 +130,7 @@ const RenderComponent = (props: any) => {
               textColor={textColor}
               date={startDate}
               countdownMessage={countdownMessage}
-              countdownFinalMessage={'Ha terminado el evento'}
+              countdownFinalMessage={finalMessage}
             />;
         }
       }
