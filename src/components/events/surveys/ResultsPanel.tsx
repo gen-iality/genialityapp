@@ -15,7 +15,7 @@ const ResultsPanel: FunctionComponent<IResultsPanelProps> = (props) => {
 
   const query = useSurveyQuery(eventId, surveyId)
   // The first question is not a real question!!
-  const realQuestions: any[] = ((query?.data as undefined | any).questions || []).filter(
+  const realQuestions: any[] = ((query?.data as undefined | any)?.questions || []).filter(
     (question: any) => !!question.id,
   )
 
