@@ -208,14 +208,17 @@ const ViewPrelanding = ({ preview }: PropsPreLanding) => {
   const DATES_ARRAY = 0
   if (cEventContext?.value?.dates !== undefined && cEventContext?.value?.dates.length > DATES_ARRAY) {
     date = moment(cEventContext?.value?.dates[0]?.start, 'DD MMM YYYY HH:mm').format('YYYY-MM-DD HH:mm:ss');
-  } else if (!!cEventContext?.value?.dateLimit) {
+  } else if (cEventContext?.value?.dateLimit !== undefined && cEventContext?.value?.dateLimit !== null) {
     date = cEventContext?.value?.dateLimit;
-  } else if (!!cEventContext?.value?.datetime_from) {
+  } else if (cEventContext?.value?.datetime_from !== undefined && cEventContext?.value?.datetime_from !== null) {
     date = cEventContext?.value?.datetime_from;
   } else {
     date = null; // En caso de que ninguna de las condiciones anteriores se cumpla.
   }
   
+
+  console.log(date);
+  console.log(cEventContext.value);
 
   return (
     <>
