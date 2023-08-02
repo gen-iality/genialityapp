@@ -291,13 +291,7 @@ const OrganizationAdminRoutes: FunctionComponent = () => {
                 exact
                 path={`${match.url}/menuItems`}
                 org={organization}
-                render={() => (
-                  <MenuLanding
-                    event={undefined}
-                    organization={1}
-                    organizationObj={organization}
-                  />
-                )}
+                render={() => <MenuLanding org={organization} />}
               />
 
               <Protected
