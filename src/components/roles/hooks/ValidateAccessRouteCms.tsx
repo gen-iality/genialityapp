@@ -1,20 +1,38 @@
-import { useEffect, useState } from 'react'
+import {
+  FunctionComponent,
+  PropsWithChildren,
+  ReactElement,
+  ReactNode,
+  useEffect,
+  useState,
+} from 'react'
 import { Redirect } from 'react-router-dom'
 import useHasRole from './userhasRole'
-import { Spin } from 'antd'
+import { Alert, Spin } from 'antd'
 import { useUserEvent } from '@context/eventUserContext'
 import { theRoleExists } from '@Utilities/roleValidations'
 import { getOrganizationUser } from '@Utilities/organizationValidations'
 import { OrganizationApi } from '@helpers/request'
 
-function ValidateAccessRouteCms({ children, isForEvent, isForOrganization }) {
+interface IValidateAccessRouteCmsProps {
+  isForEvent?: boolean
+  isForOrganization?: boolean
+}
+
+const ValidateAccessRouteCms: FunctionComponent<
+  PropsWithChildren<IValidateAccessRouteCmsProps>
+> = (props) => {
+  const { children: realChildren, isForEvent, isForOrganization } = props
+
+  const children = realChildren as ReactElement
+
   const { eventId } = children.props
-  const [component, setComponent] = useState(null)
+  const [component, setComponent] = useState<ReactNode | null>(null)
   const [thisComponentIsLoading, setThisComponentIsLoading] = useState(true)
 
   const cEventUser = useUserEvent()
 
-  const showEventCmsComponent = async (rol) => {
+  const showEventCmsComponent = async (rol: string) => {
     let canClaimWithOrganizationRolAdmin = false
     // Take the organization rol if exists
     const [organizationUser] = await OrganizationApi.mine()
@@ -33,16 +51,11 @@ function ValidateAccessRouteCms({ children, isForEvent, isForOrganization }) {
     /** Se valida si el rol es administrador, si es asi devuelve true */
     const canClaimWithRolAdmin = useHasRole(ifTheRoleExists, rol)
     console.log('RolAdmin:', { canClaimWithRolAdmin, canClaimWithOrganizationRolAdmin })
-    if (children?.key === 'cms') {
-      if (canClaimWithRolAdmin || canClaimWithOrganizationRolAdmin) {
-        setComponent(children)
-        setThisComponentIsLoading(false)
-      } else {
-        setComponent(<Redirect to={`/noaccesstocms/${eventId}/true`} />)
-        setThisComponentIsLoading(false)
-      }
-    } else {
+    if (canClaimWithRolAdmin || canClaimWithOrganizationRolAdmin) {
       setComponent(children)
+      setThisComponentIsLoading(false)
+    } else {
+      setComponent(<Redirect to={`/noaccesstocms/${eventId}/true`} />)
       setThisComponentIsLoading(false)
     }
   }

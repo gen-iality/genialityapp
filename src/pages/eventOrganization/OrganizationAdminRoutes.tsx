@@ -57,7 +57,7 @@ const Protected: FunctionComponent<IProtected> = ({ render, org, ...rest }) => (
     {...rest}
     render={(routeProps) =>
       org?._id ? (
-        <ValidateAccessRouteCms isForOrganization isForEvent={false}>
+        <ValidateAccessRouteCms isForOrganization>
           {render && render(routeProps)}
         </ValidateAccessRouteCms>
       ) : (
