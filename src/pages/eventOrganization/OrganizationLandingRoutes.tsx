@@ -1,5 +1,5 @@
 /** React's libraries */
-import { useState, useEffect } from 'react'
+import { useState, useEffect, FunctionComponent } from 'react'
 import {
   Route,
   NavLink,
@@ -47,13 +47,13 @@ import NoMatchPage from '@components/notFoundPage/NoMatchPage'
 import ValidateAccessRouteCms from '@components/roles/hooks/validateAccessRouteCms'
 import OrganizationTimeTrackingPage from './timetracking/OrganizationTimeTrackingPage'
 
-function OrganizationLandingRoutes() {
-  const params = useParams()
+const OrganizationLandingRoutes: FunctionComponent = () => {
+  const params = useParams<{ id?: string }>()
   const location = useLocation()
   const match = useRouteMatch()
   const organizationId = params.id
 
-  const [organization, setOrganization] = useState({})
+  const [organization, setOrganization] = useState<any>({})
   const [isLoading, setIsLoading] = useState(true)
   const [collapseMenu, setCollapseMenu] = useState(false)
 
@@ -67,212 +67,210 @@ function OrganizationLandingRoutes() {
     getOrganizationData()
   }, [location.pathname])
 
+  if (isLoading) {
+    return <Loading />
+  }
+
   return (
-    <>
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <Layout style={{ minHeight: '100vh' }} className="columns">
-          <Layout.Sider
-            trigger={null}
-            collapsible
-            collapsed={collapseMenu}
-            theme="dark"
-            /* style={{ backgroundColor: '#fff' }} */
-            width={220}
-          >
-            <Button
-              type="primary"
-              onClick={() => setCollapseMenu(!collapseMenu)}
-              style={{ marginBottom: 16 }}
-              icon={collapseMenu ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            />
-            <Menu
-              defaultSelectedKeys={['1']}
-              defaultOpenKeys={['1']}
-              mode="inline"
-              theme="dark"
-            >
-              <Menu.Item key="1" icon={<BarsOutlined />}>
-                Información
-                <NavLink to={`${match.url}/information`} />
-              </Menu.Item>
-              <Menu.Item key="2" icon={<ScheduleOutlined />}>
-                Cursos
-                <NavLink to={`${match.url}/events`} />
-              </Menu.Item>
-              <Menu.Item key="3" icon={<SketchOutlined />}>
-                Apariencia
-                <NavLink to={`${match.url}/appearance`} />
-              </Menu.Item>
-              <Menu.Item key="4" icon={<TeamOutlined />}>
-                Miembros
-                <NavLink to={`${match.url}/members`} />
-              </Menu.Item>
-              {/* <Menu.Item key="4.1" icon={<DeleteOutlined />}>
+    <Layout style={{ minHeight: '100vh' }} className="columns">
+      <Layout.Sider
+        trigger={null}
+        collapsible
+        collapsed={collapseMenu}
+        theme="dark"
+        /* style={{ backgroundColor: '#fff' }} */
+        width={220}
+      >
+        <Button
+          type="primary"
+          onClick={() => setCollapseMenu(!collapseMenu)}
+          style={{ marginBottom: 16 }}
+          icon={collapseMenu ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+        />
+        <Menu
+          defaultSelectedKeys={['1']}
+          defaultOpenKeys={['1']}
+          mode="inline"
+          theme="dark"
+        >
+          <Menu.Item key="1" icon={<BarsOutlined />}>
+            Información
+            <NavLink to={`${match.url}/information`} />
+          </Menu.Item>
+          <Menu.Item key="2" icon={<ScheduleOutlined />}>
+            Cursos
+            <NavLink to={`${match.url}/events`} />
+          </Menu.Item>
+          <Menu.Item key="3" icon={<SketchOutlined />}>
+            Apariencia
+            <NavLink to={`${match.url}/appearance`} />
+          </Menu.Item>
+          <Menu.Item key="4" icon={<TeamOutlined />}>
+            Miembros
+            <NavLink to={`${match.url}/members`} />
+          </Menu.Item>
+          {/* <Menu.Item key="4.1" icon={<DeleteOutlined />}>
                 Organization Properties
                 <NavLink to={`${match.url}/organization-properties`} />
               </Menu.Item> */}
-              <Menu.Item key="5" icon={<TeamOutlined />}>
-                Cargos
-                <NavLink to={`${match.url}/positions`} />
-              </Menu.Item>
-              <Menu.Item key="6" icon={<TeamOutlined />}>
-                Inscritos
-                <NavLink to={`${match.url}/registered`} />
-              </Menu.Item>
-              <Menu.Item key="7" icon={<UserSwitchOutlined />}>
-                <small>Configuración de Miembros</small>
-                <NavLink to={`${match.url}/membersettings`} />
-              </Menu.Item>
-              <Menu.Item key="8" icon={<ProjectOutlined />}>
-                <small>Configuración de Plantillas</small>
-                <NavLink to={`${match.url}/templatesettings`} />
-              </Menu.Item>
-              <Menu.Item key="9" icon={<MenuOutlined />}>
-                {'Menú Items'}
-                <NavLink to={`${match.url}/menuItems`} />
-              </Menu.Item>
-            </Menu>
-          </Layout.Sider>
-          <Layout.Content className="column event-main" style={{ width: 500 }}>
-            {isLoading ? (
-              <Loading />
-            ) : (
-              <div style={{ padding: '5px' }}>
-                <Tag
-                  color="#003853"
-                  icon={<DoubleRightOutlined />}
-                  style={{ marginBottom: 10, marginLeft: 20 }}
-                >
-                  <a
-                    target="_blank"
-                    href={`${window.location.origin}/organization/${organization._id}/events`}
-                  >
-                    {`Ir al landing de la organización: ${organization.name}`}
-                  </a>
-                </Tag>
+          <Menu.Item key="5" icon={<TeamOutlined />}>
+            Cargos
+            <NavLink to={`${match.url}/positions`} />
+          </Menu.Item>
+          <Menu.Item key="6" icon={<TeamOutlined />}>
+            Inscritos
+            <NavLink to={`${match.url}/registered`} />
+          </Menu.Item>
+          <Menu.Item key="7" icon={<UserSwitchOutlined />}>
+            <small>Configuración de Miembros</small>
+            <NavLink to={`${match.url}/membersettings`} />
+          </Menu.Item>
+          <Menu.Item key="8" icon={<ProjectOutlined />}>
+            <small>Configuración de Plantillas</small>
+            <NavLink to={`${match.url}/templatesettings`} />
+          </Menu.Item>
+          <Menu.Item key="9" icon={<MenuOutlined />}>
+            {'Menú Items'}
+            <NavLink to={`${match.url}/menuItems`} />
+          </Menu.Item>
+        </Menu>
+      </Layout.Sider>
+      <Layout.Content className="column event-main" style={{ width: 500 }}>
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <div style={{ padding: '5px' }}>
+            <Tag
+              color="#003853"
+              icon={<DoubleRightOutlined />}
+              style={{ marginBottom: 10, marginLeft: 20 }}
+            >
+              <a
+                target="_blank"
+                href={`${window.location.origin}/organization/${organization._id}/events`}
+              >
+                {`Ir al landing de la organización: ${organization.name}`}
+              </a>
+            </Tag>
 
-                <Switch>
-                  <Route
-                    exact
-                    path={`${match.url}/`}
-                    render={() => <Redirect to={`${match.url}/events`} />}
-                  />
-                  <Protected
-                    exact
-                    path={`${match.url}/events`}
-                    component={OrgEvents}
-                    org={organization}
-                    componentKey="events"
-                  />
-                  <Protected
-                    exact
-                    path={`${match.url}/information`}
-                    component={OrganizationProfile}
-                    org={organization}
-                    componentKey="information"
-                  />
-                  <Protected
-                    exact
-                    path={`${match.url}/appearance`}
-                    component={Styles}
-                    org={organization}
-                    componentKey="appearance"
-                  />
-                  <Protected
-                    exact
-                    path={`${match.url}/members`}
-                    component={OrganizationMembersPage}
-                    org={organization}
-                    componentKey="members"
-                  />
-                  <Protected
-                    exact
-                    path={`${match.url}/organization-properties`}
-                    component={OrganizationPropertiesIsolatedPage}
-                    org={organization}
-                    componentKey="organization-properties"
-                  />
-                  <Protected
-                    exact
-                    path={`${match.url}/positions`}
-                    component={OrganizationPositionsPage}
-                    org={organization}
-                    componentKey="positions"
-                  />
-                  <Protected
-                    exact
-                    path={`${match.url}/positions/:positionId`}
-                    component={PositionedUsersPage}
-                    org={organization}
-                    componentKey="current-positions"
-                  />
-                  <Protected
-                    exact
-                    path={`${match.url}/positions/:positionId/user/:userId`}
-                    component={MembersCertificationPage}
-                    org={organization}
-                    componentKey="current-positions-certification-user"
-                  />
-                  <Protected
-                    exact
-                    path={`${match.url}/positions/:positionId/user/:userId/logs/:certificationId`}
-                    component={MemberCertificationLogsPage}
-                    org={organization}
-                    componentKey="current-positions-certification-logs-user"
-                  />
-                  <Protected
-                    exact
-                    path={`${match.url}/registered/`}
-                    component={OrgRegisteredUsers}
-                    org={organization}
-                    componentKey="members"
-                  />
-                  <Protected
-                    exact
-                    path={`${match.url}/members/timetracking/:memberIdParam`}
-                    component={OrganizationTimeTrackingPage}
-                    org={organization}
-                    componentKey="members"
-                  />
-                  <Protected
-                    exact
-                    path={`${match.url}/membersettings`}
-                    component={MemberSettings}
-                    org={organization}
-                    componentKey="membersettings"
-                  />
-                  <Protected
-                    exact
-                    path={`${match.url}/templatesettings`}
-                    component={TemplateMemberSettings}
-                    org={organization}
-                    componentKey="templatesettings"
-                  />
-                  <Protected
-                    exact
-                    path={`${match.url}/menuItems`}
-                    component={MenuLanding}
-                    org={organization}
-                    organizationObj={organization}
-                    organization={1}
-                    componentKey="menuItems"
-                  />
+            <Switch>
+              <Route
+                exact
+                path={`${match.url}/`}
+                render={() => <Redirect to={`${match.url}/events`} />}
+              />
+              <Protected
+                exact
+                path={`${match.url}/events`}
+                component={OrgEvents}
+                org={organization}
+                componentKey="events"
+              />
+              <Protected
+                exact
+                path={`${match.url}/information`}
+                component={OrganizationProfile}
+                org={organization}
+                componentKey="information"
+              />
+              <Protected
+                exact
+                path={`${match.url}/appearance`}
+                component={Styles}
+                org={organization}
+                componentKey="appearance"
+              />
+              <Protected
+                exact
+                path={`${match.url}/members`}
+                component={OrganizationMembersPage}
+                org={organization}
+                componentKey="members"
+              />
+              <Protected
+                exact
+                path={`${match.url}/organization-properties`}
+                component={OrganizationPropertiesIsolatedPage}
+                org={organization}
+                componentKey="organization-properties"
+              />
+              <Protected
+                exact
+                path={`${match.url}/positions`}
+                component={OrganizationPositionsPage}
+                org={organization}
+                componentKey="positions"
+              />
+              <Protected
+                exact
+                path={`${match.url}/positions/:positionId`}
+                component={PositionedUsersPage}
+                org={organization}
+                componentKey="current-positions"
+              />
+              <Protected
+                exact
+                path={`${match.url}/positions/:positionId/user/:userId`}
+                component={MembersCertificationPage}
+                org={organization}
+                componentKey="current-positions-certification-user"
+              />
+              <Protected
+                exact
+                path={`${match.url}/positions/:positionId/user/:userId/logs/:certificationId`}
+                component={MemberCertificationLogsPage}
+                org={organization}
+                componentKey="current-positions-certification-logs-user"
+              />
+              <Protected
+                exact
+                path={`${match.url}/registered/`}
+                component={OrgRegisteredUsers}
+                org={organization}
+                componentKey="members"
+              />
+              <Protected
+                exact
+                path={`${match.url}/members/timetracking/:memberIdParam`}
+                component={OrganizationTimeTrackingPage}
+                org={organization}
+                componentKey="members"
+              />
+              <Protected
+                exact
+                path={`${match.url}/membersettings`}
+                component={MemberSettings}
+                org={organization}
+                componentKey="membersettings"
+              />
+              <Protected
+                exact
+                path={`${match.url}/templatesettings`}
+                component={TemplateMemberSettings}
+                org={organization}
+                componentKey="templatesettings"
+              />
+              <Protected
+                exact
+                path={`${match.url}/menuItems`}
+                component={MenuLanding}
+                org={organization}
+                organizationObj={organization}
+                organization={1}
+                componentKey="menuItems"
+              />
 
-                  <Protected
-                    path={`${match.url}`}
-                    component={NoMatchPage}
-                    org={organization}
-                    componentKey="NoMatch"
-                  />
-                </Switch>
-              </div>
-            )}
-          </Layout.Content>
-        </Layout>
-      )}
-    </>
+              <Protected
+                path={`${match.url}`}
+                component={NoMatchPage}
+                org={organization}
+                componentKey="NoMatch"
+              />
+            </Switch>
+          </div>
+        )}
+      </Layout.Content>
+    </Layout>
   )
 }
 
