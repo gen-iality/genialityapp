@@ -10,7 +10,7 @@ export default function SelectProducts({ products, onclick }: Omit<ProductsProps
       <Row justify='start' gutter={[16, 16]} wrap>
         {products?.length > 0 ? (
           products?.map((product) => (
-            <Col xs={24} sm={24} md={6} lg={8} xl={8} xxl={8}  /* style={{ height: 340 ,border:  selected === product._id ? '3px solid #4A5052' : '3px solid transparent', }} */ key={product._id}>
+            <Col xs={24} sm={24} md={6} lg={8} xl={8} xxl={8} style={selected === product._id ? {border: '2px solid #4A5052', padding: 0, borderRadius: 20 } : {}} key={product._id}>
               <Card
                onClick={() =>{
                  if(product.state !== 'auctioned'){
@@ -27,7 +27,8 @@ export default function SelectProducts({ products, onclick }: Omit<ProductsProps
                   <img
                     alt='imagen del producto'
                     src={product.images[0].url}
-                    style={{ height: '250px', objectFit: 'fill', backgroundColor: '#C4C4C440', borderRadius: '20px 20px 0 0px', filter: product.state === 'auctioned' ? 'grayscale(100%)' : '' }}
+                    style={{ height: '250px', objectFit: 'fill', backgroundColor: '#C4C4C440', 
+                    borderRadius: '20px 20px 0 0px', filter: product.state === 'auctioned' ? 'grayscale(100%)' : '' }}
                     onClick={() => onclick(product)}
                   />
                 }>
