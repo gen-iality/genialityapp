@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { FunctionComponent, memo } from 'react'
 import { Grid, Spin, Layout } from 'antd'
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
 import EventAdminRoutes from '@components/events/EventAdminRoutes'
@@ -33,8 +33,8 @@ const HeaderContainer = loadable(() => import('./HeaderContainer'))
 const Home = loadable(() => import('../pages/home'))
 const LandingRoutes = loadable(() => import('../components/events/Landing/LandingRoutes'))
 const Transition = loadable(() => import('../components/shared/Animate_Img/index'))
-const NewEventPage = loadable(() =>
-  import('../components/events/createEvent/NewEventPage'),
+const NewEventPage = loadable(
+  () => import('../components/events/createEvent/NewEventPage'),
 )
 const Terms = loadable(() => import('../components/policies/termsService'))
 const Privacy = loadable(() => import('../components/policies/privacyPolicy'))
@@ -42,8 +42,8 @@ const Policies = loadable(() => import('../components/policies/policies'))
 const About = loadable(() => import('../components/policies/about'))
 const Faqs = loadable(() => import('../components/faqs/index'))
 const socialZone = loadable(() => import('../components/socialZone/socialZone'))
-const AppointmentAccept = loadable(() =>
-  import('../components/networking/appointmentAccept'),
+const AppointmentAccept = loadable(
+  () => import('../components/networking/appointmentAccept'),
 )
 const NotFoundPage = loadable(() => import('../components/notFoundPage/NotFoundPage'))
 const ForbiddenPage = loadable(() => import('../components/forbiddenPage'))
@@ -224,12 +224,10 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   )
 }
 
-const PageWithFooter = () => {
-  return (
-    <WithFooter>
-      <Home />
-    </WithFooter>
-  )
-}
+const PageWithFooter: FunctionComponent = () => (
+  <WithFooter>
+    <Home />
+  </WithFooter>
+)
 
 export default memo(ContentContainer)
