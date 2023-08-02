@@ -7,48 +7,12 @@ import { theRoleExists } from '@Utilities/roleValidations'
 import { getOrganizationUser } from '@Utilities/organizationValidations'
 import { OrganizationApi } from '@helpers/request'
 
-function ValidateAccessRouteCms({ children }) {
+function ValidateAccessRouteCms({ children, isForEvent, isForOrganization }) {
   const { eventId } = children.props
   const [component, setComponent] = useState(null)
   const [thisComponentIsLoading, setThisComponentIsLoading] = useState(true)
 
   const cEventUser = useUserEvent()
-
-  /** Validating role for the cms of an organization */
-  useEffect(() => {
-    showOrgCmsComponent()
-  }, [children])
-
-  const showOrgCmsComponent = async () => {
-    if (children?.key === 'cmsOrg') {
-      const organizationId = children.props.org._id
-      const organizationUser = await getOrganizationUser(organizationId)
-      const userRol = organizationUser[0]?.rol_id
-
-      const ifTheRoleExists = await theRoleExists(userRol)
-
-      /** Se valida si el rol es administrador, si es asi devuelve true */
-      const canClaimWithRolAdmin = useHasRole(ifTheRoleExists, userRol)
-
-      if (canClaimWithRolAdmin) {
-        setComponent(children)
-        setThisComponentIsLoading(false)
-      } else {
-        setComponent(<Redirect to={`/noaccesstocms/withoutPermissions/true`} />)
-        setThisComponentIsLoading(false)
-      }
-    }
-  }
-
-  /** validating role for the cms of an event */
-  useEffect(() => {
-    if (!cEventUser.value) return
-    showEventCmsComponent(cEventUser.value.rol_id)
-  }, [cEventUser.value, children])
-
-  /** No se permite acceso al cms si el usuario no tiene eventUser */
-  if (!cEventUser.value && cEventUser.status === 'LOADED')
-    return <Redirect to={`/noaccesstocms/${eventId}/true`} />
 
   const showEventCmsComponent = async (rol) => {
     let canClaimWithOrganizationRolAdmin = false
@@ -82,6 +46,43 @@ function ValidateAccessRouteCms({ children }) {
       setThisComponentIsLoading(false)
     }
   }
+
+  const showOrgCmsComponent = async () => {
+    const organizationId = children.props.org._id
+    const organizationUser = await getOrganizationUser(organizationId)
+    const userRol = organizationUser[0]?.rol_id
+
+    const ifTheRoleExists = await theRoleExists(userRol)
+
+    /** Se valida si el rol es administrador, si es asi devuelve true */
+    const canClaimWithRolAdmin = useHasRole(ifTheRoleExists, userRol)
+
+    if (canClaimWithRolAdmin) {
+      setComponent(children)
+      setThisComponentIsLoading(false)
+    } else {
+      setComponent(<Redirect to={`/noaccesstocms/withoutPermissions/true`} />)
+      setThisComponentIsLoading(false)
+    }
+  }
+
+  /** validating role for the cms of an event */
+  useEffect(() => {
+    if (isForOrganization) {
+      showOrgCmsComponent()
+      return
+    }
+
+    if (isForEvent) {
+      if (!cEventUser.value) return
+      showEventCmsComponent(cEventUser.value.rol_id)
+      return
+    }
+  }, [cEventUser.value, children])
+
+  /** No se permite acceso al cms si el usuario no tiene eventUser */
+  if (!cEventUser.value && cEventUser.status === 'LOADED')
+    return <Redirect to={`/noaccesstocms/${eventId}/true`} />
 
   return (
     <Spin tip="Cargando..." size="large" spinning={thisComponentIsLoading}>

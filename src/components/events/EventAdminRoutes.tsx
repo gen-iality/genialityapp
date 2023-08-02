@@ -88,7 +88,9 @@ const Protected: FunctionComponent<IProtected> = (props) => {
       {...rest}
       render={(routeProps) =>
         event?.user_properties && event?.user_properties?.length > 0 ? (
-          <ValidateAccessRouteCms>{render && render(routeProps)}</ValidateAccessRouteCms>
+          <ValidateAccessRouteCms isForEvent isForOrganization={false}>
+            {render && render(routeProps)}
+          </ValidateAccessRouteCms>
         ) : (
           <Redirect push to={`${url}/agenda`} />
         )
