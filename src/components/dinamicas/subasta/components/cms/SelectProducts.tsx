@@ -38,7 +38,7 @@ export default function SelectProducts({ products, onclick }: Omit<ProductsProps
             </Col>
           ))
         ) : (
-          <Result status='info' icon={<AntCloudOutlined />} title='No hay productos creados.' />
+          <Result style={{margin: 'auto'}} status='info' icon={<AntCloudOutlined />} title='No hay productos creados.' />
         )}
       </Row>
     </Card>
