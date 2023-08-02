@@ -17,7 +17,7 @@ import WithEviusContext, { WithEviusContextProps } from '@context/withContext'
 
 /** Components */
 import SurveyComponent from './SurveyComponent'
-import ResultsPanel from './resultsPanel'
+import ResultsPanel from './ResultsPanel'
 import QuizProgress from '@components/quiz/QuizProgress'
 import { LoadingOutlined } from '@ant-design/icons'
 
