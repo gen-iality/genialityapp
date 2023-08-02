@@ -1,13 +1,31 @@
-import singleAnswerType from './singleAnswerType'
-import multipleAnswerType from './multipleAnswerType'
+function singleAnswerType(question) {
+  const optionIndex = (question.choices ?? []).findIndex(
+    (item) =>
+      item.propertyHash.value === question.value || item.itemValue === question.value,
+  )
+  return optionIndex
+}
 
-async function getResponsesIndex(question) {
+function multipleAnswerType(question) {
+  let optionIndex = []
+  question.value.forEach((value) => {
+    optionIndex = [
+      ...optionIndex,
+      (question.choices ?? []).findIndex(
+        (item) => item.propertyHash.value === value || item.itemValue === value,
+      ),
+    ]
+  })
+  return optionIndex
+}
+
+function getResponsesIndex(question) {
   if (typeof question.value === 'object') {
     // Busca el index de la opcion escogida
-    return await multipleAnswerType(question)
-  } else {
-    return await singleAnswerType(question)
+    return multipleAnswerType(question)
   }
+
+  return singleAnswerType(question)
 }
 
 export default getResponsesIndex

@@ -217,7 +217,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
       question.correctAnswer !== undefined ? badCount === 0 && rightCount == 1 : undefined
 
     /** funcion para validar tipo de respuesta multiple o unica */
-    const responseIndex = await getResponsesIndex(question)
+    const responseIndex = getResponsesIndex(question)
     const optionIndex = responseIndex
 
     optionQuantity = (question.choices ?? []).length

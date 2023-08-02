@@ -1,4 +1,4 @@
-import GetResponsesIndex from './getResponsesIndex'
+import getResponsesIndex from './getResponsesIndex'
 import SavingResponseByUserId from './savingResponseByUserId'
 
 // Componente que ejecuta el servicio para registar votos
@@ -21,28 +21,27 @@ function RegisterVote(surveyData, question, infoUser, eventUsers, voteWeight) {
     /** Si la respuesta es correcta se asignan los puntos */
     if (correctAnswer) pointsForCorrectAnswer += surveyPoints
     /** funcion para validar tipo de respuesta multiple o unica */
-    GetResponsesIndex(question).then((responseIndex) => {
-      optionQuantity = question.choices.length
-      const optionIndex = responseIndex
+    const responseIndex = getResponsesIndex(question)
+    optionQuantity = question.choices.length
+    const optionIndex = responseIndex
 
-      const infoOptionQuestion =
-        surveyData.allow_gradable_survey === 'true'
-          ? { optionQuantity, optionIndex, correctAnswer }
-          : { optionQuantity, optionIndex }
+    const infoOptionQuestion =
+      surveyData.allow_gradable_survey === 'true'
+        ? { optionQuantity, optionIndex, correctAnswer }
+        : { optionQuantity, optionIndex }
 
-      // Se envia al servicio el id de la encuesta, de la pregunta y los datos
-      // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
-      if (!(Object.keys(infoUser).length === 0)) {
-        SavingResponseByUserId(
-          surveyData,
-          question,
-          infoUser,
-          eventUsers,
-          voteWeight,
-          infoOptionQuestion,
-        )
-      }
-    })
+    // Se envia al servicio el id de la encuesta, de la pregunta y los datos
+    // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
+    if (!(Object.keys(infoUser).length === 0)) {
+      SavingResponseByUserId(
+        surveyData,
+        question,
+        infoUser,
+        eventUsers,
+        voteWeight,
+        infoOptionQuestion,
+      )
+    }
   }
   return pointsForCorrectAnswer
 }
