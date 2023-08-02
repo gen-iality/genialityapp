@@ -45,7 +45,7 @@ import MemberSettings from './memberSettings'
 import TemplateMemberSettings from './templateMemberSettings'
 import MenuLanding from '@components/menuLanding/index'
 import NoMatchPage from '@components/notFoundPage/NoMatchPage'
-import ValidateAccessRouteCms from '@components/roles/hooks/validateAccessRouteCms'
+import ValidateAccessRouteCms from '@components/roles/hooks/ValidateAccessRouteCms'
 import OrganizationTimeTrackingPage from './timetracking/OrganizationTimeTrackingPage'
 
 interface IProtected extends RouteProps {

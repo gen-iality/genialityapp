@@ -35,7 +35,7 @@ import { Layout, Row, Col, Button, Result, Tag } from 'antd'
 import { AdminUsers } from '@components/AdminUsers/AdminUsers'
 import loadable from '@loadable/component'
 import NoMatchPage from '../notFoundPage/NoMatchPage'
-import ValidateAccessRouteCms from '../roles/hooks/validateAccessRouteCms'
+import ValidateAccessRouteCms from '../roles/hooks/ValidateAccessRouteCms'
 import { StateMessage } from '@context/MessageService'
 import { handleRequestError } from '@helpers/utils'
 import {
