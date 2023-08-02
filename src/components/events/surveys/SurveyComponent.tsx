@@ -293,14 +293,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
           {showingFeedback && (
             <SurveyQuestionFeedback
               questions={currentQuestionsForFeedback}
-              onNextClick={() => {
-                setShowingFeedback(false)
-                surveyModel.nextPage()
-                if (surveyModel.state === 'completed') {
-                  setIsSaveButtonShown(true)
-                  setCurrentPage(queryData._id, currentUser.value._id, 0)
-                }
-              }}
+              onNextClick={handleCloseFeedBack}
             />
           )}
           {/* <Drawer
