@@ -1,5 +1,5 @@
-import { DeleteOutlined, PlusOutlined, SaveOutlined, StopOutlined } from '@ant-design/icons';
-import { Alert, Button, Card, Col, Modal, Row, Skeleton, Space, Table } from 'antd';
+import { CloseCircleOutlined, DeleteOutlined, PlayCircleOutlined, PlusOutlined, SaveOutlined, SelectOutlined, StopOutlined } from '@ant-design/icons';
+import { Alert, Button, Card, Col, Empty, Modal, Row, Skeleton, Space, Table, Typography } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import React, { useContext, useState } from 'react';
 
@@ -85,7 +85,7 @@ export default function ExecuteAuction() {
               className='animate__animated animate__fadeInDown'
               type='primary'
               danger
-              icon={<StopOutlined />}
+              icon={<CloseCircleOutlined />}
               onClick={auctionFinish}>
               Finalizar subasta
             </Button>
@@ -96,7 +96,7 @@ export default function ExecuteAuction() {
             <Button
               className='animate__animated animate__fadeInDown'
               type='primary'
-              icon={<PlusOutlined />}
+              icon={auction?.currentProduct ? <SelectOutlined /> : <PlayCircleOutlined />}
               onClick={() => {
                 refresh();
                 setVisibility(true);
@@ -110,7 +110,7 @@ export default function ExecuteAuction() {
             <Button
               className='animate__animated animate__flip'
               onClick={closeBids}
-              icon={<DeleteOutlined />}
+              icon={<CloseCircleOutlined />}
               danger
               type='primary'>
               Cerrar pujas
@@ -134,24 +134,26 @@ export default function ExecuteAuction() {
             hoverable={true}
             style={{ height: 450, borderRadius: 20 }}
             headStyle={{ textAlign: 'center' }}
-            title={auction?.currentProduct ? auction?.currentProduct.name : 'Sin producto asignado'}>
-            <Space style={{ width: '100%', height: 300, justifyContent: 'center' }}>
-              {auction?.currentProduct ? (
-                <div
+            cover={
+              auction?.currentProduct ? (
+                <img
                   className='animate__animated animate__flipInX'
-                  onClick={() => {}}
-                  style={{
-                    width: 310,
-                    height: 320,
-                    backgroundImage: `url(${auction?.currentProduct.images[0].url})`,
-                    backgroundSize: 'contain',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                  }}></div>
+                  alt='imagen del producto'
+                  src={auction?.currentProduct.images[0].url}
+                  style={{ height: '370px', objectFit: 'fill', backgroundColor: '#C4C4C440', borderRadius: '20px 20px 0 0px' }}
+                />
               ) : (
-                <Skeleton.Image className='animate__animated animate__flipInX' />
-              )}
-            </Space>
+                <Empty
+                  image={<Skeleton.Image className='animate__animated animate__flipInX' />}
+                  style={{ height: '370px', display: 'grid', justifyContent: 'center', alignItems: 'center' }}
+                  description={'Sin imagen'}
+                />
+              )
+            }
+            >
+              <Card.Meta 
+                title={<Typography.Text strong>{auction?.currentProduct ? auction?.currentProduct.name : 'Sin producto asignado'}</Typography.Text>}
+              />
           </Card>
         </Col>
 
