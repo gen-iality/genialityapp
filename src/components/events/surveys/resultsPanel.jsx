@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Card, Space } from 'antd'
+import { Alert, Card, Space, Typography } from 'antd'
 import SurveyAnswers from './services/surveyAnswersService'
 import { LoadingOutlined } from '@ant-design/icons'
 import useSurveyQuery from './hooks/useSurveyQuery'
@@ -8,6 +8,8 @@ function ResultsPanel(props) {
   const { eventId, idSurvey, currentUser } = props
 
   const query = useSurveyQuery(eventId, idSurvey)
+  // The first question is not a real question!!
+  const realQuestions = (query?.data?.questions || []).filter((question) => !!question.id)
 
   const [userAnswers, setUserAnswers] = useState(undefined)
 
@@ -27,33 +29,48 @@ function ResultsPanel(props) {
     if (!query.data) return
     if (!idSurvey || !currentUser.value._id) return
 
-    const userAnswersLocal = []
+    console.debug(
+      'got questions to see its answers:',
+      query.data.questions,
+      'but real ones:',
+      realQuestions,
+    )
 
-    ;(async () => {
-      // For each question, search thhe user's answer and save all in userAnswersLocal
-      for (let index = 0; index < query.data.questions.length; index++) {
-        const question = query.data.questions[index]
-        // The first question is not a real question!!
-        if (!question.id) continue
+    Promise.all(
+      realQuestions.map(async (question) => {
+        if (!question.id) return null
         // Search the answer
         const userAnswer = await getUserAnswers(question.id)
 
+        const basicAnswerReport = {
+          exists: false,
+          id: question.id,
+          correctAnswer: question.correctAnswer,
+          title: question.title,
+        }
+
         // Save the current question, and the correct answer
         if (userAnswer !== undefined) {
-          userAnswersLocal.push({
-            id: question.id,
+          return {
+            ...basicAnswerReport,
+            exists: true,
             answer: userAnswer.response,
-            correctAnswer: question.correctAnswer,
-            title: question.title,
             isCorrectAnswer: userAnswer.correctAnswer,
-          })
+          }
         } else {
-          console.debug('no answer found for question.id:', question.id)
+          console.debug('no answer found for question.id:', question.id, question)
+          return {
+            ...basicAnswerReport,
+            exists: false,
+            answer: undefined,
+            isCorrectAnswer: undefined,
+          }
         }
-      }
-      // Save all user's answers
-      setUserAnswers(userAnswersLocal)
-    })()
+      }),
+    ).then((userAnswersLocalList) => {
+      const newUserAnswers = userAnswersLocalList.filter((report) => report !== null)
+      setUserAnswers(newUserAnswers)
+    })
   }, [currentUser.value._id, idSurvey, query.data])
 
   return (
@@ -67,20 +84,27 @@ function ResultsPanel(props) {
       {userAnswers !== undefined && (
         <>
           <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+            <Alert
+              type="info"
+              message={`Se han obtenido ${realQuestions.length} preguntas`}
+            />
             {userAnswers.map((answer, index) => (
               <Card key={index}>
-                <p style={{ fontWeight: '700' }}>{`${index + 1}. ${answer.title}`}</p>
-                <p
-                  style={{
-                    fontWeight: '700',
-                  }}
-                >{`Respuesta correcta: ${answer.correctAnswer}`}</p>
-                <p
-                  style={{
-                    fontWeight: '700',
-                    color: answer.isCorrectAnswer ? 'green' : 'red',
-                  }}
-                >{`Tu respuesta: ${answer.answer}`}</p>
+                <Typography.Paragraph strong>
+                  {`${index + 1}. ${answer.title}`}
+                </Typography.Paragraph>
+                <Typography.Paragraph>
+                  {'Respuesta correcta: '}
+                  <Typography.Text strong>{answer.correctAnswer}</Typography.Text>
+                </Typography.Paragraph>
+                {answer.exists ? (
+                  <Alert
+                    type={answer.isCorrectAnswer ? 'success' : 'error'}
+                    message={`Tu respuesta: ${answer.answer || '<vacío>'}`}
+                  />
+                ) : (
+                  <Alert type="warning" message="La pregunta no fue respondida" />
+                )}
               </Card>
             ))}
           </Space>
