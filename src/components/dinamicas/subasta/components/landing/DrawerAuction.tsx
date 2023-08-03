@@ -104,7 +104,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
       }}
       title={
         <Row justify='end' align='middle'>
-          <Typography.Title style={{ display: 'fex', margin: '1px' }} level={3}>
+          <Typography.Title style={{ display: 'fex', margin: '1px' }} level={5}>
             Evento: {auction?.name || 'Subasta'}
           </Typography.Title>
         </Row>
@@ -118,8 +118,8 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
       onClose={setOpenOrClose}
       width={'100vw'}
       destroyOnClose={true}>
-      <Row gutter={[16, 8]}>
-        <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={10} style={{ height: '100%' }}>
+      <Row justify={'space-between'} gutter={[16, 8]} wrap>
+        <Col xs={24} sm={24} md={24} lg={10} xl={12} xxl={12} style={{ height: '100%' }}>
           <Row gutter={[0, 8]}>
             <Col span={24}>
               <Card
@@ -209,7 +209,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
             </Col>
           </Row>
         </Col>
-        <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={10}>
+        <Col xs={24} sm={24} md={24} lg={8} xl={6} xxl={6}>
           <Row gutter={[0, 8]} /* justify='center' */>
             <Col span={24}>
               <CardProduct auction={auction} />
@@ -244,7 +244,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
             </Modal>
           </Row>
         </Col>
-        <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4}>
+        <Col xs={24} sm={24} md={24} lg={6} xl={4} xxl={4}>
           <ButtonsContainer
             validate={!auction.playing || !canOffer}
             onClick={()=>setmodalOffer(true)}

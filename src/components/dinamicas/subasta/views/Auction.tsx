@@ -10,7 +10,7 @@ import ConfigAppearance from '../components/cms/ConfigAppearance';
 
 export default function AuctionView({auction} : {auction : Auction}) {
 
-  const { loadingConfig,  } = useContext(AuctionContext);
+  const { loadingConfig, eventId } = useContext(AuctionContext);
   const [currenTab, setcurrenTab] = useState('1')
   return (
     <Tabs defaultActiveKey={currenTab} onTabClick={(key)=> setcurrenTab(key)}>
@@ -20,7 +20,7 @@ export default function AuctionView({auction} : {auction : Auction}) {
       </Tabs.TabPane>
 
       <Tabs.TabPane tab='Apariencia' key={4}>
-      <ConfigAppearance/>
+      <ConfigAppearance auction={auction} eventId={eventId}/>
       </Tabs.TabPane>
       
       <Tabs.TabPane tab='Productos' key={2}>

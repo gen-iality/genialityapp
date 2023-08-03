@@ -77,8 +77,10 @@ export default function CreateProducts({reload}: {reload: boolean}) {
         visible={modal.visibility}
         title={modal.edit ? 'Editar producto' : 'Agregar producto'}
         footer={false}
-        closable={false}
+        closable
+        onCancel={resetModal}
         destroyOnClose
+        style={{ top: 20 }}
         okText={'Guardar'}>
         <ModalProducts
           key={`${productSelect._id}`}
