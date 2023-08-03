@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
-import { Checkbox, InputNumber, Select, Space, Typography } from 'antd';
+import React, { useEffect } from 'react';
+import { Checkbox, Input, InputNumber, Select, Space, Typography } from 'antd';
 import { extraProperties } from '../interfaces/interfaces';
 
 export const ConfigAdvancePayment = ({
+  valueUrlExternalPayment,
+  onChangeExternalPayment,
+  onChangeUrlExternalPayment,
+  checkedExternalPayment,
   externalPayment,
   changeValue = () => {},
   valueInput = 0,
@@ -10,11 +14,11 @@ export const ConfigAdvancePayment = ({
   currency = 'COP',
   changeCurrency = () => {},
 }: extraProperties) => {
-  const [checkedExternalPayment, setCheckedExternalPayment] = useState(false);
-
-  const onChangeLocationPayment = (checked: boolean) => {
-    setCheckedExternalPayment(checked);
-  };
+  useEffect(() => {
+    if (!checkedExternalPayment) {
+      onChangeUrlExternalPayment('');
+    }
+  }, [checkedExternalPayment]);
 
   return (
     <Space direction='vertical'>
@@ -39,13 +43,23 @@ export const ConfigAdvancePayment = ({
           ]}
           onChange={changeCurrency}
         />
+        <Typography.Text style={{ marginTop: '8px' }}>El valor mínimo es de $2000 pesos o $1 dolar.</Typography.Text>
       </Space>
-      <Space>
-        <Checkbox onChange={(e) => onChangeLocationPayment(e.target.checked)} checked={checkedExternalPayment}>
+      <Space direction='vertical'>
+        <Checkbox
+          onChange={(e) => onChangeExternalPayment(e.target.checked)}
+          checked={checkedExternalPayment}
+          value={externalPayment}>
           Manejar pago de manera externa
         </Checkbox>
+        {checkedExternalPayment && (
+          <Input
+            placeholder='Ingrese la url'
+            onChange={({ target: { value } }) => onChangeUrlExternalPayment(value)}
+            value={valueUrlExternalPayment}
+          />
+        )}
       </Space>
-      <Typography.Text style={{ marginTop: '8px' }}>El valor mínimo es de $2000 pesos o $1 dolar.</Typography.Text>
     </Space>
   );
 };

@@ -1,5 +1,10 @@
 import { ReactNode } from 'react';
 export interface extraProperties {
+  valueUrlExternalPayment:string;
+  checkedExternalPayment:boolean,
+  onChangeUrlExternalPayment:(newUrl:string)=>{},
+  onChangeExternalPayment:(externalPayment:boolean)=>{}
+  externalPayment:boolean;
   callBackSelectedItem?: (data: string) => void;
   extraState?: boolean;
   valueInput?: number
