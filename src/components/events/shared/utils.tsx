@@ -125,10 +125,16 @@ export const MenuItems = [
     ],
   },
   {
-    name: 'Juegos',
+    name: 'Dinamicas',
     icon: <RocketOutlined />,
     key: 'games',
     items: [
+      {
+        name: 'Subasta',
+        path: '/subasta',
+        key: 'Subasta',
+        onClick: handleClick,
+      },
       {
         name: 'Bingo',
         path: '/bingo',
