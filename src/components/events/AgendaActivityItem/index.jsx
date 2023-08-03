@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Avatar, Card, Space, Timeline, Comment, Badge, Grid, Button, Typography } from 'antd';
+import { Row, Col, Avatar, Card, Space, Timeline, Comment, Badge, Grid, Button, Typography, Modal } from 'antd';
 import { useHistory } from 'react-router-dom';
 import Moment from 'moment-timezone';
 import './style.scss';
@@ -30,6 +30,7 @@ function AgendaActivityItem(props) {
   const [related_meetings, setRelatedMeetings] = useState();
   const [meetingState, setMeetingState] = useState(null);
   const [typeActivity, setTypeActivity] = useState(null);
+  const [descriptionActiveModal, setDescriptionActiveModal] = useState(false);
   const intl = useIntl();
 
   const timeZone = Moment.tz.guess();
@@ -482,19 +483,56 @@ function AgendaActivityItem(props) {
                                     className='descripcion'
                                     content={
                                       cEvent.value?._id !== '62c5e89176dfb307163c05a9' && (
-                                        <div
-                                          style={{
-                                            overflow: 'hidden',
-                                            display: '-webkit-box',
-                                            WebkitLineClamp: '3',
-                                            WebkitBoxOrient: 'vertical',
-                                            width: '100%',
-                                            color: cEvent.value.styles.textMenu,
-                                          }}
-                                          dangerouslySetInnerHTML={{
-                                            __html: item.description,
-                                          }}
-                                        />
+                                        <>
+                                          <div
+                                            style={{
+                                              overflow: 'hidden',
+                                              display: '-webkit-box',
+                                              WebkitLineClamp: '3',
+                                              WebkitBoxOrient: 'vertical',
+                                              width: '100%',
+                                              color: cEvent.value.styles.textMenu,
+                                            }}
+                                          >
+                                            {item?.description?.length > 200 ?
+                                                <p style={{color: cEvent.value.styles.textMenu}} dangerouslySetInnerHTML={{ __html: item?.description.slice(0, 200) }}></p>
+                                          :
+                                                <p style={{color: cEvent.value.styles.textMenu}} dangerouslySetInnerHTML={{ __html: item?.description}}></p>
+                                            }
+                                            {item?.description?.length > 200 && 
+                                            <>
+                                              <Button onClick={(event) => {
+                                                event.stopPropagation();
+                                                setDescriptionActiveModal(true);
+                                              }}>Ver más detalle</Button>
+                                              <Modal 
+                                                title="Detalle de la actividad" 
+                                                footer={null}
+                                                visible={descriptionActiveModal} 
+                                                onCancel={(event) => {
+                                                  event.stopPropagation();
+                                                  setDescriptionActiveModal(false);
+                                                }}
+                                              >
+                                                <p style={{color: cEvent.value.styles.textMenu}} dangerouslySetInnerHTML={{ __html: item?.description}}></p>
+                                              </Modal>
+                                            </>
+                                          }
+                                          </div>
+                                          {/* <div
+                                            style={{
+                                              overflow: 'hidden',
+                                              display: '-webkit-box',
+                                              WebkitLineClamp: '3',
+                                              WebkitBoxOrient: 'vertical',
+                                              width: '100%',
+                                              color: cEvent.value.styles.textMenu,
+                                            }}
+                                            dangerouslySetInnerHTML={{
+                                              __html: item.description,
+                                            }}
+                                          />*/}
+                                        </>
                                       )
                                     }
                                   />
