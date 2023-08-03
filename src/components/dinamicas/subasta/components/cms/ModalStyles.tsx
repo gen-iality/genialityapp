@@ -26,7 +26,7 @@ export default function ModalStyles({ onOk, type, styles}: ModalStylesProps) {
 
       case 'done':
         const { url } = response
-        //onOk('general', { backgroundImage: url })
+        onOk('general', { backgroundImage: url })
             break;
       case 'uploading':
         break;
@@ -77,7 +77,6 @@ export default function ModalStyles({ onOk, type, styles}: ModalStylesProps) {
           beforeUpload={handleBeforeUpload}
           listType='picture'
           onChange={onChange}
-          fileList={[]}
           customRequest={uploadImagedummyRequest}
           name='file'
           maxCount={1}
