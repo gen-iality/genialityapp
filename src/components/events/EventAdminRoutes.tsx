@@ -35,7 +35,7 @@ import { Layout, Row, Col, Button, Result, Tag } from 'antd'
 import { AdminUsers } from '@components/AdminUsers/AdminUsers'
 import loadable from '@loadable/component'
 import NoMatchPage from '../notFoundPage/NoMatchPage'
-import ValidateAccessRouteCms from '../roles/hooks/validateAccessRouteCms'
+import ValidateAccessRouteCms from '../roles/hooks/ValidateAccessRouteCms'
 import { StateMessage } from '@context/MessageService'
 import { handleRequestError } from '@helpers/utils'
 import {
@@ -88,7 +88,9 @@ const Protected: FunctionComponent<IProtected> = (props) => {
       {...rest}
       render={(routeProps) =>
         event?.user_properties && event?.user_properties?.length > 0 ? (
-          <ValidateAccessRouteCms>{render && render(routeProps)}</ValidateAccessRouteCms>
+          <ValidateAccessRouteCms isForEvent>
+            {render && render(routeProps)}
+          </ValidateAccessRouteCms>
         ) : (
           <Redirect push to={`${url}/agenda`} />
         )

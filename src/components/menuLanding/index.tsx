@@ -31,9 +31,8 @@ interface IMenuItem {
 }
 
 interface IMenuLandingProps {
-  organization: any
-  organizationObj: any
-  event: any
+  org?: any
+  event?: any
 }
 
 const { Option } = Select
@@ -219,14 +218,14 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
     console.debug('requesting menu items from back-end')
     const menuBase = { ...menu }
     let menuLanding: any = {}
-    if (props.organization != 1) {
+    if (!props.org) {
       const token = await GetTokenUserFirebase()
       menuLanding = await Actions.getAll(`/api/events/${props.event._id}?token=${token}`)
       console.debug('menuLanding', menuLanding)
     } else {
       // Obtener de organización
 
-      menuLanding.itemsMenu = props.organizationObj.itemsMenu || []
+      menuLanding.itemsMenu = props.org.itemsMenu || []
       const newMenuItems = menuLanding.itemsMenu
       setMenuItems(newMenuItems) // I think this is going thus
     }
@@ -288,13 +287,13 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
       newMenu.allow_register = false;
     }*/
 
-    if (props.organization !== 1) {
+    if (!props.org) {
       const token = await GetTokenUserFirebase()
       await Actions.put(`api/events/${props.event._id}?token=${token}`, newMenu)
     } else {
       // Actualizar organizacion
       const updateOrganization = {
-        ...props.organizationObj,
+        ...props.org,
         itemsMenu: { ...menu },
       }
       const resp = await OrganizationApi.editMenu(
@@ -435,7 +434,7 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
       <Form {...formLayout} size="small" onFinish={submit}>
         <Header
           title={
-            props.organization != 1
+            !props.org
               ? 'Habilitar secciones del curso'
               : 'Secciones a habilitar para cada curso'
           }
