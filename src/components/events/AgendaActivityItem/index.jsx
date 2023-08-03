@@ -506,7 +506,7 @@ function AgendaActivityItem(props) {
                                                 setDescriptionActiveModal(true);
                                               }}>Ver más detalle</Button>
                                               <Modal 
-                                                title="Detalle de la actividad" 
+                                                /* title="Detalle de la actividad" */ 
                                                 footer={null}
                                                 visible={descriptionActiveModal} 
                                                 onCancel={(event) => {
@@ -514,7 +514,10 @@ function AgendaActivityItem(props) {
                                                   setDescriptionActiveModal(false);
                                                 }}
                                               >
-                                                <p style={{color: cEvent.value.styles.textMenu}} dangerouslySetInnerHTML={{ __html: item?.description}}></p>
+                                                <Space direction='vertical'>
+                                                  <Typography.Text strong style={{color: cEvent.value.styles.textMenu}}>{item.name}</Typography.Text>
+                                                  <p style={{color: cEvent.value.styles.textMenu}} dangerouslySetInnerHTML={{ __html: item?.description}}></p>
+                                                </Space>
                                               </Modal>
                                             </>
                                           }
