@@ -1,6 +1,7 @@
 import { UploadFile } from 'antd/lib/upload/interface';
 import DrawerAuction from '../components/landing/DrawerAuction';
 import ButtonsContainer from '../components/landing/ButtonsContainer';
+import { background_color } from '../../../games/bingo/constants/constants';
 export interface AuctionConfig {
     name:     string,
 	currency: string,
@@ -8,10 +9,14 @@ export interface AuctionConfig {
 }
 
 export interface DrawerAuctionProps {
-    auction: Auction
-    openOrClose : boolean
-    eventId: string
+    auction:        Auction
+    openOrClose :   boolean
+    eventId:        string
     setOpenOrClose: ()=> void
+}
+export interface ConfigStyleProps {
+    auction: Auction
+    eventId?: string
 }
 export interface ApiInterface  {
     getOne:    <T>(event: string) => Promise<T | null>, 
@@ -29,48 +34,72 @@ export interface ProductsProps {
     onDelete: (id :string, images : UploadFile[]) => void
 }
 export interface ModalProps {
-    product : ModalProduct
-    onChange :  (newList : any) => Promise<void>
-    onSave :    (save : any) => Promise<void>
-    onCancel :  (newList : any, update? : boolean) => Promise<void>
+    product:    ModalProduct
+    onChange:  (newList : any) => Promise<void>
+    onSave:    (save : any) => Promise<void>
+    onCancel:  (newList : any, update? : boolean) => Promise<void>
 }
 export interface Auction {
-    _id:        string;
-    name:       string;
-    currency:   ICurrency;
-    event_id:   string;
-    updated_at: string;
-    created_at: string;
-    currentProduct?: Products | null
-    published? : boolean
-    opened? : boolean
-    playing? : boolean
+    _id:                string;
+    name:               string;
+    currency:           ICurrency;
+    event_id:           string;
+    updated_at:         string;
+    created_at:         string;
+    styles?:            AuctionStyles
+    currentProduct?:    Products | null
+    published?:         boolean
+    opened?:            boolean
+    playing?:           boolean
+}
+export interface ModalConfig {
+    visible: boolean
+    type : keyof AuctionStyles
 }
 
+export interface ModalStylesProps {
+    onOk: (type : keyof AuctionStyles, data: any ) => Promise<void>
+    styles?: AuctionStyles
+    type: keyof AuctionStyles
+}
+export interface AuctionStyles {
+    general?: {
+        backgroundColor?:   string
+        backgroundImage?:   string
+    }
+    list?:              StyleCard
+    cardProduct?:       StyleCard
+    buttons?:           StyleCard
+}
+
+interface StyleCard {
+    color : string
+    backgroundColor : string
+}
 export interface IBids {
     date: string
     name: string
     offered: number
 }
 export interface Products {
-    _id:         string;
-    name:        string;
-    description: string;
-    images:      UploadFile[];
-    start_price:  number;
-    price:        number;
-    end_price?:    number;
-    type:        ProductType;
-    state:       ProductState
+    _id:            string;
+    name:           string;
+    description:    string;
+    images:         UploadFile[];
+    start_price:    number;
+    price:          number;
+    end_price?:     number;
+    type:           ProductType;
+    state:          ProductState
 }
 
 export interface ModalProduct {
-    _id? :        string
-    name:        string;
-    description: string;
-    start_price:  number;
-    state:       ProductState
-    images:       UploadFile[];
+    _id? :          string
+    name:           string;
+    description:    string;
+    start_price:    number;
+    state:          ProductState
+    images:         UploadFile[];
 }
 export interface DrawerRules {
     showDrawerRules: boolean

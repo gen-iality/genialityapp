@@ -6,7 +6,7 @@ import { DispatchMessageService } from '@/context/MessageService';
 
 export const uploadImagedummyRequest = async ({ file, onSuccess, onError }: any) => {
   const imagenUrl = await uploadImageData(file);
-  if (imagenUrl) {
+  if (imagenUrl) { 
     onSuccess({ url: imagenUrl });
   } else {
     onError('error');
@@ -15,13 +15,13 @@ export const uploadImagedummyRequest = async ({ file, onSuccess, onError }: any)
 
 export const deleteImage = async (
   file: UploadFile,
-  setProductSelect: React.Dispatch<React.SetStateAction<ModalProduct>>,
-  newFileList: UploadFile[]
+  setProductSelect: React.Dispatch<React.SetStateAction<ModalProduct>> = () => {},
+  newFileList: UploadFile[] = []
 ) => {
   const success = 'file deleted successfully'
   if (file.url || file.response?.url) {
     const response = await deleteFireStorageData(file.url || file.response.url);
-    if (response === success) setProductSelect((prev) => ({ ...prev, images: newFileList }));
+    if (response === success && setProductSelect) setProductSelect((prev) => ({ ...prev, images: newFileList }));
   } else {
     DispatchMessageService({ type: 'error', msj: 'No se encontro la ruta de la imagen', action: 'show' });
   }
@@ -47,12 +47,14 @@ export const AuctionExample : Required<Auction> = {
   event_id: '1',
   name: 'Subasta de prueba',
   updated_at: '2021-08-10T17:00:00.000Z',
+  styles: {
+  },
   currentProduct: {
     _id: '1',
     description: 'Producto de prueba',
     name  : 'Producto de prueba',
-    price : 0,
-    start_price : 0,
+    price : 10000,
+    start_price : 10000,
     type : 'just-auction',
     state: 'waiting',
     images : [{

@@ -1,34 +1,53 @@
 import React, { useState } from 'react';
-import { Card, Col, Row, Tabs, Grid, Empty, Typography, Statistic, Tooltip, Result, Button, Space } from 'antd';
+import { Card, Col, Row, Tabs, Grid, Empty, Typography, Statistic, Tooltip, Result, Button, Space, Modal } from 'antd';
 import { AuctionExample, TabsDrawerAuction } from '../../utils/utils';
 import { CommentOutlined, FileProtectOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import Meta from 'antd/lib/card/Meta';
-const { useBreakpoint } = Grid;
+import { AuctionStyles, ConfigStyleProps, ModalConfig } from '../../interfaces/auction.interface';
+import { saveAuctioFirebase } from '../../services/Execute.service';
+import ModalStyles from './ModalStyles';
 
-export default function ConfigAppearance() {
+
+export default function ConfigAppearance({auction, eventId} : ConfigStyleProps) {
+  const [configModal, setconfigModal] = useState<ModalConfig>({
+    visible: false,
+    type: 'general'
+  })
+  const onOk = async (type: keyof AuctionStyles,data: any) => {
+    await saveAuctioFirebase(eventId || '', { ...auction, styles: { ...auction.styles, [type]: { ...data} } });
+  }
+  const openModal = (type : keyof AuctionStyles) => {
+    setconfigModal({ type, visible: true })
+  }
   return (
-    <Row gutter={[16, 8]} style={{ padding: 10 }}>
-      <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={10} style={{ height: '100%' }}>
-        <Row gutter={[0, 8]}style={{ paddingRight: 10}}>
-          <Col span={24} style={{ paddingBottom: 10, paddingLeft: 10}}>
+    <Space className='container'>
+      <Modal
+      visible={configModal.visible}
+      closable={true}
+      onCancel={()=>setconfigModal({ ...configModal, visible: false })}
+      onOk={()=>setconfigModal({ ...configModal, visible: false })}
+      destroyOnClose      
+      >
+        <ModalStyles key={'ModalConfigAuctionStyles'} styles={auction.styles} type={configModal.type}  onOk={onOk} />
+      </Modal>
+      <Button type='primary' className='btnBackground' onClick={()=>{openModal('general')}}>Cambiar fondo</Button>
+      <Row gutter={[16, 8]} className='cardLanding' style={{ background: auction.styles ? auction.styles.general?.backgroundColor : ''}}>
+      <Col  style={{ height: '100%', width: 500 }}>
+        <Row gutter={[0, 8]}style={{ paddingRight: 10, width: '100%'}}>
+          <Col span={24} >
           <Tooltip title="Transmicion o video">
             <Card
-              className='products'
+              className='cardsConfigStyle'
               style={{
                 backgroundColor: 'transparent',
-                height: 270,
+                height: 250,
                 width: '100%',
                 borderRadius: '20px',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
               }}
-              bordered={true}
-              bodyStyle={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
+              bordered={true}>
             <Result
             subTitle="Seccion de transmicion o video" 
             icon={  <VideoCameraOutlined style={{ fontSize: 50 }} />}
@@ -36,15 +55,14 @@ export default function ConfigAppearance() {
             </Card>
             </Tooltip>
           </Col>
-          <Col span={24} style={{ paddingBottom: 10, paddingLeft: 10}} >
+          <Col span={24}  >
           <Tooltip title="Seccion de pujas e historial de articulos">
             <Card
-              className='products'
-              style={{ borderRadius: '20px' }}
-              hoverable
+              className='cardsConfigStyle'
+              style={{ borderRadius: '20px', height: 230, width: '100%' }}
               bordered={true}
               bodyStyle={{ padding: '0px 20px' }}>
-              <Tabs defaultActiveKey={TabsDrawerAuction.Bids} draggable style={{ width: '100%' }}>
+              <Tabs defaultActiveKey={TabsDrawerAuction.Bids} draggable style={{ width: '100%', height: 300 }}>
                 <Tabs.TabPane key={TabsDrawerAuction.Bids} tab='Pujas'>
                   <Row justify='center'>
                     <Col span={24}>
@@ -71,14 +89,13 @@ export default function ConfigAppearance() {
           </Col>
         </Row>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={10}>
+      <Col >
         <Row gutter={[0, 8]}>
           <Col span={24}>
-          <Tooltip title="xd">
+          <Tooltip title="Visualización de productos">
             <Card
-             className='products'
-              hoverable={true}
-              style={{ height: 550, borderRadius: 20 }}
+             className='cardsConfigStyle'
+              style={{ height: 350, borderRadius: 20, width: 250 }}
               headStyle={{ textAlign: 'center' }}
               cover={
                 <img
@@ -86,9 +103,8 @@ export default function ConfigAppearance() {
                   alt='imagen del producto'
                   src={AuctionExample.currentProduct?.images[0].url ?? ''}
                   style={{
-                    height: '410px',
-                    objectFit: 'fill',
-                    backgroundColor: '#C4C4C440',
+                    height: '210px',
+                    objectFit: 'cover',
                     borderRadius: '20px 20px 0 0px',
                   }}
                 />
@@ -114,8 +130,9 @@ export default function ConfigAppearance() {
           </Col>
         </Row>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4}>
-      <Card bordered={false} style={{ height: '100%', backgroundColor: 'transparent' }}>
+      <Col style={{ width: 200}}>
+      <Tooltip title="Botones de accion">
+        <Card bordered={false} style={{ height: '100%', backgroundColor: 'transparent' }}>
     <Row gutter={[16, 16]}>
         <Col span={24}>
             <Row justify='center'>
@@ -162,8 +179,10 @@ export default function ConfigAppearance() {
             </Button>
         </Col>
     </Row>
-</Card>
+        </Card>
+        </Tooltip>
       </Col>
     </Row>
+    </Space>
   );
 }
