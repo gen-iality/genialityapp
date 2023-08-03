@@ -56,7 +56,7 @@ const ActivityBlock = ({ preview, title }: PropsPreLanding) => {
             style={{paddingTop: 10}}
             renderItem={activity => (
               <List.Item style={{border: 'none', backgroundColor: bgColor}}>
-                <Card hoverable style={{borderRadius: 10, border: 'none', backgroundColor: bgColor}} 
+                <Card style={{borderRadius: 10, border: 'none', backgroundColor: bgColor}} 
                 bodyStyle={isMobile || mobilePreview === 'tablet' || screens.sm ? {padding: 20} : {}}
                 >
                   <Row justify={isMobile ? 'start' : 'space-between'} >
