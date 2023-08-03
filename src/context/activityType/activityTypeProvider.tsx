@@ -262,7 +262,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
         let editActivity: any = { video: urlVideo }
 
         if(videoId){
-          editActivity.vimeo_id = videoId
+          editActivity.videoId = videoId
         }
         const respUrlVideo = await AgendaApi.editOne(editActivity, activityEdit, cEvent.value._id);
         if (respUrlVideo) {
@@ -400,7 +400,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
             } else if (theseAreVideo.includes(typeIncoming as ActivityType.ContentValue)) {
               setActivityType(MainUI.VIDEO);
               setContentSource(agendaInfo.video || null);
-              setVideoId(agendaInfo.vimeo_id)
+              setVideoId(agendaInfo.videoId)
               /* console.debug('from beginning contentSource is going to be:', agendaInfo.video || null); */
             } else if (theseAreMeeting.includes(typeIncoming as ActivityType.ContentValue)) {
               setActivityType(MainUI.MEETING);

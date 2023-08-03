@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable jsx-a11y/iframe-has-title */
 /* eslint-disable no-console */
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import {
   Card,
@@ -17,9 +17,11 @@ import {
   Badge,
   Popconfirm,
   Result,
+  Dropdown,
+  Menu,
 } from 'antd';
 import ReactPlayer from 'react-player';
-import { CheckCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
+import { CheckCircleOutlined, DownOutlined, DownloadOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
 import useActivityType from '@context/activityType/hooks/useActivityType';
 import { useContext, useState } from 'react';
 import AgendaContext from '@context/AgendaContext';
@@ -31,8 +33,7 @@ import convertSecondsToHourFormat from '../../utils/convertSecondsToHourFormat';
 import { TypeDisplayment } from '@context/activityType/constants/enum'
 import { Option } from 'antd/lib/mentions';
 import { useGetStatusVideoVimeo } from '../../hooks/useGetStatusVideoVimeo';
-import { downloadVideoById } from '../../helpers/vimeo-helpers';
-
+import { LoadingOutlined } from '@ant-design/icons';
 interface VideoPreviewerCardProps {
   type: ActivityType.TypeAsDisplayment,
   activityName: string,
@@ -59,6 +60,10 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
     record,
     saveConfig,
   } = useContext(AgendaContext);
+  const { urlVideo, visibleReactPlayer } : {urlVideo: string, visibleReactPlayer: any} = obtainUrl(props.type, data);
+  const [intervalState, setIntervalState] = useState<NodeJS.Timer>()
+  const {isLoading, statusVide, downloads, getStatusVideo } = useGetStatusVideoVimeo(videoId)
+  
 
   /* console.debug('VideoPreviewerCard.dataLive:', dataLive); */
 
@@ -71,8 +76,15 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
       <><Spin/><p>Esperando recurso...</p></>
     );
 
-    const { urlVideo, visibleReactPlayer } : {urlVideo: string, visibleReactPlayer: any} = obtainUrl(props.type, data);
-    const {isLoading, statusVide, downloads } = useGetStatusVideoVimeo(videoId)
+    useEffect(() => {
+      if(!videoId || downloads.length > 0) {
+        return clearInterval(intervalState)
+      } 
+      const interval = setInterval(getStatusVideo, 5000);
+      setIntervalState(interval)
+      return () => clearInterval(interval);
+    }, [videoId, downloads]);
+
     return (
       <>
         {errorOcurred || statusVide==='error' ? (
@@ -93,7 +105,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
             status='info'
             title='Espérenos'
             subTitle={'El video se encuentra siendo procesado, estara disponible en breve'}
-            icon={<EmoticonSadOutline />}
+            icon={<LoadingOutlined />}
           />
           }
             {visibleReactPlayer && statusVide === 'complete' && !isLoading && (
@@ -117,15 +129,33 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
               />
                {
                   downloads?.length > 0 && 
-                    <Button
-                      type='primary'
-                      onClick={() => downloadVideoById(videoId)}
-                    >
-                    Descargar
-                   </Button>
+                  <Dropdown 
+                    overlay={<Menu>
+                                {
+                                  downloads.map(item=>(
+                                      <Menu.Item
+                                        key='menu-item-1'
+                                        onClick={() => {
+                                          const link = document.createElement("a");
+                                          link.href = item.link;
+                                          link.download = 'video.mp4';
+                                          link.click();}}>
+                                        {`Calidad ${item.quality} ${item.rendition} - ${item.size_short}`}
+                                      </Menu.Item>
+                                  ))
+                                }
+                            </Menu>}
+                   trigger={['click', 'hover']}>
+                  <Button type='primary' size='middle' >
+                    <Space>
+                      <DownloadOutlined />
+                      Descargar
+                      <DownOutlined />
+                    </Space>
+                  </Button>
+                </Dropdown>
             }
               </>
-              
             )}
           </>
         )}
