@@ -21,7 +21,7 @@ import {
   Menu,
 } from 'antd';
 import ReactPlayer from 'react-player';
-import { CheckCircleOutlined, DownOutlined, PlusCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
+import { CheckCircleOutlined, DownOutlined, DownloadOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
 import useActivityType from '@context/activityType/hooks/useActivityType';
 import { useContext, useState } from 'react';
 import AgendaContext from '@context/AgendaContext';
@@ -140,7 +140,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
                                           link.href = item.link;
                                           link.download = 'video.mp4';
                                           link.click();}}>
-                                        {item.rendition}
+                                        {`Calidad ${item.quality} ${item.rendition} - ${item.size_short}`}
                                       </Menu.Item>
                                   ))
                                 }
@@ -148,7 +148,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
                    trigger={['click', 'hover']}>
                   <Button type='primary' size='middle' >
                     <Space>
-                      <PlusCircleOutlined />
+                      <DownloadOutlined />
                       Descargar
                       <DownOutlined />
                     </Space>
