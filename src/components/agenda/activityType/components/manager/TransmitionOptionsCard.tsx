@@ -18,14 +18,14 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
     type,
   } = props;
 
-  console.log({ type })
   const [isDeleting, setIsDeleting] = useState(false);
   const {
     is,
     setActivityContentType,
     executer_stopStream,
     resetActivityType,
-    setVideoId
+    setVideoId,
+    videoId
   } = useActivityType();
 
   const {
@@ -69,8 +69,12 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
   }, [type])
 
   const handleConfirmDeleting = async () => {
-    //toDo: consumir el endpoint para eliminar los videos de vimeo
     setIsDeleting(true);
+    if ( videoId ) {
+        const res =  await AgendaApi.deleteVideoVimeo(videoId)
+        console.log('epaaa---', res );
+    }
+     
     if (isVisible && meeting_id) {
       try {
         executer_stopStream();
@@ -100,6 +104,8 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
     /* console.debug('config saved - habilitar_ingreso:', value); */
 
     setActivityContentType(null); // last "toggleActivitySteps('initial')";
+
+    
     switch (type) {
       case TypeDisplayment.VIDEO:
         /* console.debug('TransmitionOptionsCard reset AT to video'); */
@@ -116,6 +122,8 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
         /* console.debug('TransmitionOptionsCard reset AT to liveBroadcast'); */
         await resetActivityType(MainUI.LIVE);
     }
+    
+
     setIsDeleting(false);
   };
 

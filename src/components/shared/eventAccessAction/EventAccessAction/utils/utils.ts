@@ -135,7 +135,7 @@ export const assignStatusAccordingToAction = ({
 			setButtonsActions(buttonsAction);
 			break;
 		case 'ACTION_LOG_IN_OR_REGISTER_FOR_THE_EVENT_PAYMENT':
-			buttonsAction = [{ label: 'Comprar ticket', action: () => helperDispatch({ type: 'showLogin', visible: true }) }];
+			buttonsAction = [{ label: 'Comprar entrada', action: () => helperDispatch({ type: 'showLogin', visible: true }) }];
 			// if (bingoExists) buttonsAction.push({ label: 'Imprimir cartón', action: () => handleChangeTypeModal('registerForTheEvent') })
 	
 			setButtonsActions(buttonsAction);
@@ -147,7 +147,7 @@ export const assignStatusAccordingToAction = ({
 			setButtonsActions(buttonsAction);
 			break;
 		case 'ACTION_REGISTER_FOR_THE_EVENT_PAYMENT':
-			buttonsAction = [{ label: 'Comprar ticket', action: () => handleChangeTypeModal('registerForTheEventPayment') }];
+			buttonsAction = [{ label: 'Comprar entrada', action: () => handleChangeTypeModal('registerForTheEventPayment') }];
 			// if (bingoExists) buttonsAction.push({ label: 'Imprimir cartón', action: () => handleChangeTypeModal('registerForTheEvent') })
 	
 			setButtonsActions(buttonsAction);

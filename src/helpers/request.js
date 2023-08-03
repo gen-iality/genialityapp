@@ -1279,6 +1279,9 @@ export const AgendaApi = {
   getStatusVideoVimeo: async (videoId) => {
     return await Actions.get(`api/vimeo/videos/${videoId}`);
   },
+  deleteVideoVimeo: async (videoId) => {
+    return await Actions.delete(`api/vimeo/videos/${videoId}`,'');
+  },
 };
 export const SpeakersApi = {
   byEvent: async (event) => {

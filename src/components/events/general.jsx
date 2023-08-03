@@ -9,7 +9,7 @@ import { injectIntl } from 'react-intl';
 import SelectInput from '../shared/selectInput';
 import Loading from '../loaders/loading';
 // import DateEvent from './dateEvent';
-import { Switch, Card, Row, Col, Tabs, Input, Select, Modal, Form, Checkbox } from 'antd';
+import { Switch, Card, Row, Col, Tabs, Input, Select, Modal, Form, Checkbox, Typography } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
@@ -27,6 +27,8 @@ import ActivityRedirectForm from '../shared/ActivityRedirectForm';
 import CustomPasswordLabel from './CustomPasswordLabel';
 import LandingRedirectForm from '../shared/LandingRedirectForm';
 import CustomDateEvent from './multiples-fechas/CustomDateEvent';
+import { ConfigAdvancePayment } from '../shared/accessTypeCard/components/ConfigAdvancePayment';
+import { isValidUrl } from '@/hooks/useIsValidUrl';
 
 Moment.locale('es');
 // const { Title, Text } = Typography;
@@ -443,7 +445,19 @@ class General extends Component {
     this.setState({ event: { ...this.state.event, ...values } });
   }
 
-  //*********** FIN FUNCIONES DEL FORMULARIO
+  validateUrlExtensionPayment (url = '', externalPayment = false) {
+    if(url.length === 0 && externalPayment){
+      DispatchMessageService({ action:'show', type:'error',msj:'Url no debe estar vacia'});
+      return false;
+    } 
+    if(externalPayment){
+      if(!isValidUrl(url)){
+        DispatchMessageService({ action:'show', type:'error',msj:'Debe ingresar una url valida'});
+        return false;
+      }
+    }
+      return true
+  }
 
   //Envío de datos
   async submit() {
@@ -482,6 +496,8 @@ class General extends Component {
         active: event.payment?.active || false,
         price: event.payment?.price || minValueEvent,
         currency: event.payment?.currency || 'COP',
+        externalPayment: event.payment?.externalPayment ?? false,
+        urlExternalPayment: event.payment?.urlExternalPayment ?? ''
       },
       picture: image,
       video: event.video || null,
@@ -523,7 +539,6 @@ class General extends Component {
       custom_password_label: this.state.customPasswordLabel || 'Contraseña',
       show_event_date: this.state.event.show_event_date,
     };
-
     try {
       if (event._id) {
         const info = await EventsApi.editOne(data, event._id);
@@ -665,6 +680,7 @@ class General extends Component {
   //Esto es para la configuración de autenticación. Nuevo flujo de Login, cambiar los campos internamente
   changeAccessTypeForEvent = (value) => {
     const minValueEvent = 2000;
+    const DefatulExternalPaymentState = false
     this.setState({ accessSelected: value });
     switch (value) {
       case 'PAYMENT_EVENT':
@@ -679,6 +695,8 @@ class General extends Component {
               active: value === 'PAYMENT_EVENT',
               price: minValueEvent,
               currency: 'COP',
+              externalPayment: DefatulExternalPaymentState,
+              urlExternalPayment:''
             },
           },
         });
@@ -695,6 +713,8 @@ class General extends Component {
               active: false,
               price: minValueEvent,
               currency: 'COP',
+              externalPayment: DefatulExternalPaymentState,
+              urlExternalPayment:''
             },
           },
         });
@@ -710,6 +730,8 @@ class General extends Component {
               active: false,
               price: minValueEvent,
               currency: 'COP',
+              externalPayment: DefatulExternalPaymentState,
+              urlExternalPayment:''
             },
           },
         });
@@ -725,6 +747,8 @@ class General extends Component {
               active: false,
               price: minValueEvent,
               currency: 'COP',
+              externalPayment: DefatulExternalPaymentState,
+              urlExternalPayment:''
             },
           },
         });
@@ -734,6 +758,53 @@ class General extends Component {
         break;
     }
   };
+
+  onChangePrice =  (newPrice) => {
+    this.setState({
+      event: {
+        ...this.state.event,
+        payment: {
+          ...this.state.event.payment,
+          price: newPrice,
+        },
+      },
+    });
+  }
+
+  onChangeCurrency = (newCurrency) => {
+    this.setState({
+      event: {
+        ...this.state.event,
+        payment: {
+          ...this.state.event.payment,
+          currency:newCurrency
+        },
+      },
+    });
+  }
+  onChangeExternalPayment = (externalPayment) => {
+    this.setState({
+      event: {
+        ...this.state.event,
+        payment: {
+          ...this.state.event.payment,
+          externalPayment
+        },
+      },
+    });
+  }
+
+  onChangeUrlExternalPayment = (urlExternalPayment) => {
+    this.setState({
+      event: {
+        ...this.state.event,
+        payment: {
+          ...this.state.event.payment,
+          urlExternalPayment
+        },
+      },
+    });
+  }
   /** RESTRICIONES */
   theEventIsActive = (state) => {
     this.setState({
@@ -1121,9 +1192,8 @@ class General extends Component {
                           event: {
                             ...this.state.event,
                             payment: {
+                              ...this.state.event.payment,
                               currency,
-                              active: this.state.event.payment?.active,
-                              price: this.state.event.payment?.price,
                             },
                           },
                         });
@@ -1133,6 +1203,7 @@ class General extends Component {
                     />
                   </Col>
                 ))}
+                {console.log('accessSelected', this.state.event.payment)}
                 {accessSelected === 'PUBLIC_EVENT_WITH_REGISTRATION' && (
                   <Col span={24}>
                     <Card style={{ borderRadius: '8px' }}>
@@ -1147,6 +1218,24 @@ class General extends Component {
                           </Col>
                         </Row>
                       </Form.Item>
+                    </Card>
+                  </Col>
+                )}
+                {accessSelected === 'PAYMENT_EVENT' && (
+                  <Col span={24}>
+                    <Card style={{ borderRadius: '8px' }}>
+                      <Typography variant="h1" >Configuracion avanzada</Typography>
+                      <ConfigAdvancePayment 
+                        valueInput={this.state.event.payment?.price} 
+                        changeValue={this.onChangePrice} 
+                        payment = {accessSelected === 'PAYMENT_EVENT'} 
+                        currency={this.state.event.payment.currency}  
+                        changeCurrency = {this.onChangeCurrency}
+                        onChangeUrlExternalPayment={this.onChangeUrlExternalPayment}
+                        onChangeExternalPayment = {this.onChangeExternalPayment} 
+                        valueUrlExternalPayment = {this.state.event.payment?.urlExternalPayment}
+                        checkedExternalPayment={this.state.event.payment.externalPayment}
+                        />
                     </Card>
                   </Col>
                 )}
