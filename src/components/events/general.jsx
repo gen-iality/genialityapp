@@ -9,7 +9,7 @@ import { injectIntl } from 'react-intl';
 import SelectInput from '../shared/selectInput';
 import Loading from '../loaders/loading';
 // import DateEvent from './dateEvent';
-import { Switch, Card, Row, Col, Tabs, Input, Select, Modal, Form, Checkbox } from 'antd';
+import { Switch, Card, Row, Col, Tabs, Input, Select, Modal, Form, Checkbox, Typography } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
@@ -27,6 +27,7 @@ import ActivityRedirectForm from '../shared/ActivityRedirectForm';
 import CustomPasswordLabel from './CustomPasswordLabel';
 import LandingRedirectForm from '../shared/LandingRedirectForm';
 import CustomDateEvent from './multiples-fechas/CustomDateEvent';
+import { ConfigAdvancePayment } from '../shared/accessTypeCard/components/ConfigAdvancePayment';
 
 Moment.locale('es');
 // const { Title, Text } = Typography;
@@ -523,7 +524,6 @@ class General extends Component {
       custom_password_label: this.state.customPasswordLabel || 'Contraseña',
       show_event_date: this.state.event.show_event_date,
     };
-
     try {
       if (event._id) {
         const info = await EventsApi.editOne(data, event._id);
@@ -679,6 +679,7 @@ class General extends Component {
               active: value === 'PAYMENT_EVENT',
               price: minValueEvent,
               currency: 'COP',
+              externalPayment: false
             },
           },
         });
@@ -1133,6 +1134,7 @@ class General extends Component {
                     />
                   </Col>
                 ))}
+                {console.log('accessSelected',accessSelected)}
                 {accessSelected === 'PUBLIC_EVENT_WITH_REGISTRATION' && (
                   <Col span={24}>
                     <Card style={{ borderRadius: '8px' }}>
@@ -1147,6 +1149,37 @@ class General extends Component {
                           </Col>
                         </Row>
                       </Form.Item>
+                    </Card>
+                  </Col>
+                )}
+                {accessSelected === 'PAYMENT_EVENT' && (
+                  <Col span={24}>
+                    <Card style={{ borderRadius: '8px' }}>
+                      <Typography variant="h1" >Configuracion avanzada</Typography>
+                      <ConfigAdvancePayment 
+                        valueInput={this.state.event.payment?.price} changeValue={
+                        (newPrice) => {
+                          this.setState({
+                            event: {
+                              ...this.state.event,
+                              payment: {
+                                price: newPrice,
+                              },
+                            },
+                          });
+                        }} 
+                        
+                        payment = {accessSelected === 'PAYMENT_EVENT'} currency={this.state.event.payment.currency}  changeCurrency = {(newCurrency) => {
+                          this.setState({
+                            event: {
+                              ...this.state.event,
+                              payment: {
+                                ...this.state.event.payment,
+                                currency:newCurrency
+                              },
+                            },
+                          });
+                        }}/>
                     </Card>
                   </Col>
                 )}
