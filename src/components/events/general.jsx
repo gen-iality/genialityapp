@@ -29,6 +29,7 @@ import LandingRedirectForm from '../shared/LandingRedirectForm';
 import CustomDateEvent from './multiples-fechas/CustomDateEvent';
 import { ConfigAdvancePayment } from '../shared/accessTypeCard/components/ConfigAdvancePayment';
 import { isValidUrl } from '@/hooks/useIsValidUrl';
+import WithouHistoryEventPased from '../shared/WithouHistoryEventPased';
 
 Moment.locale('es');
 // const { Title, Text } = Typography;
@@ -74,6 +75,7 @@ class General extends Component {
       registrationMessage: props.event && props.event.registration_message ? props.event.registration_message : '',
       redirect_activity: null,
       show_event_date: false,
+      hide_event_in_passed:false,
       // redirect_landing: null,
       itemsMenu: [],
       // Estado inicial de la seccion de formulario de registro
@@ -538,7 +540,9 @@ class General extends Component {
       is_custom_password_label: this.state.isCustomPasswordLabel || false,
       custom_password_label: this.state.customPasswordLabel || 'Contraseña',
       show_event_date: this.state.event.show_event_date,
+      hide_event_in_passed:this.state.event.hide_event_in_passed ?? false
     };
+    console.log('data',data)
     try {
       if (event._id) {
         const info = await EventsApi.editOne(data, event._id);
@@ -825,7 +829,18 @@ class General extends Component {
     });
   };
 
+  onChangeHideEvents = (checked)=>{
+    this.setState({
+      event: {
+        ...this.state.event,
+        hide_event_in_passed: checked,
+      },
+    });
+  }
+
   render() {
+    console.log('this.props.event',this.state)
+
     const {
       event,
       categories,
@@ -992,6 +1007,10 @@ class General extends Component {
                   <Form.Item label={'Especificar fechas'}>
                     <CustomDateEvent eventId={this.props.event._id} updateEvent={this.props.updateEvent} />
                   </Form.Item>
+                  <WithouHistoryEventPased
+                    initialState={event?.hide_event_in_passed ?? false}
+                    onChangeHideEvents={this.onChangeHideEvents}
+                  />
                   <Form.Item label={'Ocultar fecha del evento'}>
                     <Checkbox onChange={(e) => this.onChangeCheckDate(e.target.checked)} checked={event.show_event_date}>
                       Seleccione esta opción si deseas que tu fecha no sea visible para tu evento

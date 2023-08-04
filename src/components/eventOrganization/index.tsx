@@ -291,18 +291,23 @@ function EventOrganization({ match }: OrganizationProps) {
                     </Badge>
                     <Row gutter={[16, 16]}>
                       {eventsOld && eventsOld.length > 0 ? (
-                        eventsOld.map((event, index) => (
-                          <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
-                            <EventCard
-                              bordered={false}
-                              key={event._id}
-                              event={event}
-                              action={{ name: 'Ver', url: `landing/${event._id}` }}
-                              buttonBuyOrRegistered
-                              textButtonBuyOrRegistered={getTextButtonBuyOrRegistered(event)}
-                            />
-                          </Col>
-                        ))
+                        eventsOld.map((event, index) => {
+                          if(event.hide_event_in_passed){
+                            return null
+                          }
+                          return (
+                            <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
+                              <EventCard
+                                bordered={false}
+                                key={event._id}
+                                event={event}
+                                action={{ name: 'Ver', url: `landing/${event._id}` }}
+                                buttonBuyOrRegistered
+                                textButtonBuyOrRegistered={getTextButtonBuyOrRegistered(event)}
+                              />
+                            </Col>
+                          )
+                        })
                       ) : (
                         <div
                           style={{

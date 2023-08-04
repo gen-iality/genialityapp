@@ -53,7 +53,7 @@ export const ConfigAdvancePayment = ({
         </Checkbox>
         {checkedExternalPayment && (
           <Input
-            placeholder='Ingrese la url'
+            placeholder='https://example.com'
             onChange={({ target: { value } }) => onChangeUrlExternalPayment(value)}
             value={valueUrlExternalPayment}
           />
