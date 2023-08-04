@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
 export type ImageUploaderDragAndDropType = {
-  imageDataCallBack: (file: object | null) => void;
+  imageDataCallBack: (file: string | null) => void;
   imageUrl: string;
   width: number | string | null;
   height: number | string | null;
@@ -9,6 +9,7 @@ export type ImageUploaderDragAndDropType = {
   hoverable?: boolean
   compactMode?: boolean
   bodyStyles?: React.CSSProperties
+  onRemove?: ()=>void 
   getDimensionsCallback?: (dimensions: { width: number, height: number }) => void
 };
 

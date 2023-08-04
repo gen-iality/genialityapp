@@ -1,10 +1,13 @@
-import { Col, Row, Badge, Grid, Space, Divider, Image, Empty, Button, Typography, Card } from 'antd';
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-console */
+/* eslint-disable array-callback-return */
+/* eslint-disable jsx-a11y/alt-text */
+import { Col, Row, Badge, Space, Image, Empty, Button, Typography, Card } from 'antd';
 import { useEffect, useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { OrganizationApi, OrganizationFuction } from '../../helpers/request';
 import EventCard from '../shared/eventCard';
 import moment from 'moment';
-import ModalAuth from '../authentication/ModalAuth';
 import ModalLoginHelpers from '../authentication/ModalLoginHelpers';
 import { EditOutlined } from '@ant-design/icons';
 import Loading from '../profile/loading';
@@ -56,7 +59,6 @@ function EventOrganization({ match }: OrganizationProps) {
   const getMyOrganizations = async () => {
     try {
       const organizations: Organization[] = await OrganizationApi.mine();
-      console.log(organizations, 'organizations');
       if (organizations?.length > 0) {
         setMyorganizations(organizations.map((item) => item.id));
       }
@@ -67,7 +69,6 @@ function EventOrganization({ match }: OrganizationProps) {
 
   const fetchItem = async (orgId: string) => {
     const events = await OrganizationFuction.getEventsNextByOrg(orgId);
-    console.log('events',events)
     let proximos: any = [];
     let pasados: any = [];
     let fechaActual = moment();
@@ -100,9 +101,12 @@ function EventOrganization({ match }: OrganizationProps) {
     if (isUserRegisterInEvent(event._id)) {
       return 'Ingresar';
     }
-
     if (havePaymentEvent(event)) {
-      return `Comprar por $ ${event.payment.price} ${event?.payment?.currency}`;
+      if (event.payment.externalPayment) {
+        return 'Comprar';
+      } else {
+        return `Comprar por $ ${event.payment.price} ${event?.payment?.currency}`;
+      }
     }
 
     return 'Inscribirse';
@@ -287,18 +291,23 @@ function EventOrganization({ match }: OrganizationProps) {
                     </Badge>
                     <Row gutter={[16, 16]}>
                       {eventsOld && eventsOld.length > 0 ? (
-                        eventsOld.map((event, index) => (
-                          <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
-                            <EventCard
-                              bordered={false}
-                              key={event._id}
-                              event={event}
-                              action={{ name: 'Ver', url: `landing/${event._id}` }}
-                              buttonBuyOrRegistered
-                              textButtonBuyOrRegistered={getTextButtonBuyOrRegistered(event)}
-                            />
-                          </Col>
-                        ))
+                        eventsOld.map((event, index) => {
+                          if(event.hide_event_in_passed){
+                            return null
+                          }
+                          return (
+                            <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
+                              <EventCard
+                                bordered={false}
+                                key={event._id}
+                                event={event}
+                                action={{ name: 'Ver', url: `landing/${event._id}` }}
+                                buttonBuyOrRegistered
+                                textButtonBuyOrRegistered={getTextButtonBuyOrRegistered(event)}
+                              />
+                            </Col>
+                          )
+                        })
                       ) : (
                         <div
                           style={{

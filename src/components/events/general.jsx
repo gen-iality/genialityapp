@@ -29,6 +29,7 @@ import LandingRedirectForm from '../shared/LandingRedirectForm';
 import CustomDateEvent from './multiples-fechas/CustomDateEvent';
 import { ConfigAdvancePayment } from '../shared/accessTypeCard/components/ConfigAdvancePayment';
 import { isValidUrl } from '@/hooks/useIsValidUrl';
+import WithouHistoryEventPased from '../shared/WithouHistoryEventPased';
 
 Moment.locale('es');
 // const { Title, Text } = Typography;
@@ -74,6 +75,7 @@ class General extends Component {
       registrationMessage: props.event && props.event.registration_message ? props.event.registration_message : '',
       redirect_activity: null,
       show_event_date: false,
+      hide_event_in_passed:false,
       // redirect_landing: null,
       itemsMenu: [],
       // Estado inicial de la seccion de formulario de registro
@@ -538,7 +540,9 @@ class General extends Component {
       is_custom_password_label: this.state.isCustomPasswordLabel || false,
       custom_password_label: this.state.customPasswordLabel || 'Contraseña',
       show_event_date: this.state.event.show_event_date,
+      hide_event_in_passed:this.state.event.hide_event_in_passed ?? false
     };
+    console.log('data',data)
     try {
       if (event._id) {
         const info = await EventsApi.editOne(data, event._id);
@@ -825,7 +829,18 @@ class General extends Component {
     });
   };
 
+  onChangeHideEvents = (checked)=>{
+    this.setState({
+      event: {
+        ...this.state.event,
+        hide_event_in_passed: checked,
+      },
+    });
+  }
+
   render() {
+    console.log('this.props.event',this.state)
+
     const {
       event,
       categories,
@@ -992,6 +1007,10 @@ class General extends Component {
                   <Form.Item label={'Especificar fechas'}>
                     <CustomDateEvent eventId={this.props.event._id} updateEvent={this.props.updateEvent} />
                   </Form.Item>
+                  <WithouHistoryEventPased
+                    initialState={event?.hide_event_in_passed ?? false}
+                    onChangeHideEvents={this.onChangeHideEvents}
+                  />
                   <Form.Item label={'Ocultar fecha del evento'}>
                     <Checkbox onChange={(e) => this.onChangeCheckDate(e.target.checked)} checked={event.show_event_date}>
                       Seleccione esta opción si deseas que tu fecha no sea visible para tu evento
@@ -1164,7 +1183,7 @@ class General extends Component {
               <BackTop />
             </Tabs.TabPane>
             <Tabs.TabPane tab='Tipos de acceso' key='2' style={{ paddingLeft: '32px', paddingRight: '32px' }}>
-              <Row justify='start' wrap gutter={[32, 8]}>
+              <Row justify='start' wrap gutter={[16, 16]}>
                 {AccessTypeCardData.map((item) => (
                   <Col key={item.id} xs={24} sm={24} md={24} lg={12} xl={6} xxl={6}>
                     <AccessTypeCard
@@ -1203,8 +1222,8 @@ class General extends Component {
                     />
                   </Col>
                 ))}
-                {console.log('accessSelected', this.state.event.payment)}
-                {accessSelected === 'PUBLIC_EVENT_WITH_REGISTRATION' && (
+                {/* {console.log('accessSelected', this.state.event.payment)} */}
+                {/* {accessSelected === 'PUBLIC_EVENT_WITH_REGISTRATION' && (
                   <Col span={24}>
                     <Card style={{ borderRadius: '8px' }}>
                       <Form.Item
@@ -1220,11 +1239,11 @@ class General extends Component {
                       </Form.Item>
                     </Card>
                   </Col>
-                )}
+                )} */}
                 {accessSelected === 'PAYMENT_EVENT' && (
                   <Col span={24}>
-                    <Card style={{ borderRadius: '8px' }}>
-                      <Typography variant="h1" >Configuracion avanzada</Typography>
+                    <Card style={{ borderRadius: '8px', boxShadow: '0px 2px 0px 2px #2593FC' }}>
+                      <Typography.Title level={4}>Configuración avanzada</Typography.Title>
                       <ConfigAdvancePayment 
                         valueInput={this.state.event.payment?.price} 
                         changeValue={this.onChangePrice} 
@@ -1235,7 +1254,7 @@ class General extends Component {
                         onChangeExternalPayment = {this.onChangeExternalPayment} 
                         valueUrlExternalPayment = {this.state.event.payment?.urlExternalPayment}
                         checkedExternalPayment={this.state.event.payment.externalPayment}
-                        />
+                      />
                     </Card>
                   </Col>
                 )}
