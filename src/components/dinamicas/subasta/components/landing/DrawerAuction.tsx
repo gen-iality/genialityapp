@@ -32,6 +32,7 @@ import DrawerRules from '@/components/games/whereIs/auxiliarDrawers/DrawerRules'
 import DrawerChat from '@/components/games/whereIs/auxiliarDrawers/DrawerChat';
 import ButtonsContainer from './ButtonsContainer';
 import { UseUserEvent } from '@/context/eventUserContext';
+import { getCorrectColor } from '@/helpers/utils';
 
 const { useBreakpoint } = Grid;
 
@@ -93,7 +94,8 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
         padding: '1px 24px',
       }}
       bodyStyle={{
-        backgroundImage: `url(${cEvent.value?.styles?.BackgroundImage})`,
+        backgroundImage : `url(${auction.styles?.general?.backgroundImage})`,
+        backgroundColor: auction.styles?.general?.backgroundColor,
         backgroundRepeat: 'no-repeat',
         backgroundAttachment: 'fixed',
         backgroundSize: 'cover',
@@ -135,7 +137,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
               </Card>
             </Col>
             <Col span={24}>
-              <Card style={{ borderRadius: '20px' }} bordered={false} bodyStyle={{ padding: '0px 20px' }}>
+              <Card style={{ borderRadius: '20px', backgroundColor: auction.styles?.cards?.backgroundColor || ''}} bordered={false} bodyStyle={{ padding: '0px 20px' }}>
                 <Tabs
                   defaultActiveKey={TabsDrawerAuction.Bids}
                   draggable
@@ -154,10 +156,10 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                                 <Skeleton avatar title={false} loading={loading}>
                                   <List.Item.Meta
                                     avatar={<Avatar>{item.name[0] || 'A'}</Avatar>}
-                                    title={<a>{item.name}</a>}
+                                    title={item.name}
                                     description={item.date}
                                   />
-                                  <Statistic value={item.offered} prefix='$' suffix={auction.currency} />
+                                  <Statistic  value={item.offered} prefix='$' suffix={auction.currency} />
                                 </Skeleton>
                               </List.Item>
                             )}
@@ -183,10 +185,10 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                                 <Skeleton avatar title={false} loading={ProductsLoading}>
                                   <List.Item.Meta
                                     avatar={<Avatar src={item.images[0].url}></Avatar>}
-                                    title={<a>{item.name}</a>}
+                                    title={item.name}
                                   />
                                   <Statistic
-                                    valueStyle={{ color: '#3f8600' }}
+                                    valueStyle={{ color: getCorrectColor(auction.styles?.cards?.backgroundColor)}}
                                     value={item.end_price ?? item.price}
                                     prefix='OLD $'
                                     suffix={auction.currency}
@@ -246,6 +248,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
         </Col>
         <Col xs={24} sm={24} md={24} lg={6} xl={4} xxl={4}>
           <ButtonsContainer
+            styles={{backgroundColor: auction.styles?.cards?.backgroundColor || '', color: auction.styles?.cards?.color || ''}}
             validate={!auction.playing || !canOffer}
             onClick={()=>setmodalOffer(true)}
             setshowDrawerChat={setshowDrawerChat}
