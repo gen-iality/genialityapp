@@ -223,6 +223,16 @@ const Headers = (props: Props) => {
 	window.location.href = `${window.location.origin}/organization/${cEvent.value.organizer_id}/events`;
 	};
 
+	const isEventWithPAyment =(cEvent:any) => {
+		if(!cEvent)return true
+
+		if(cEvent?.value?.payment?.active){
+			return true
+		}
+		return false
+	}
+
+
 	return (
 		<Fragment>
 			<Header
@@ -274,7 +284,7 @@ const Headers = (props: Props) => {
 							screens.xs ? (
 								<div style={{position:'absolute', right:15, top:6}}>
 									<Space>
-										<Dropdown overlay={MenuMobile}>
+										{ !isEventWithPAyment(cEvent) && <Dropdown overlay={MenuMobile}>
 											<Button
 												style={{
 													backgroundColor: '#3681E3',
@@ -285,14 +295,14 @@ const Headers = (props: Props) => {
 												shape='circle'
 												icon={<AccountCircleIcon style={{ fontSize: '28px' }} />}
 											/>
-										</Dropdown>
+										</Dropdown>}
 									</Space>
 								</div>
 							) : (
 								<Space>
 									{showButtons.buttonlogin  ? (
 										<>
-											{recordTypeForThisEvent(cEvent) !== 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS' &&  (
+											{recordTypeForThisEvent(cEvent) !== 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS' && !isEventWithPAyment(cEvent) &&(
 												<Button
 													icon={<LockOutlined />}
 													style={{
@@ -328,7 +338,7 @@ const Headers = (props: Props) => {
 										</Space>
 									)}
 
-									{showButtons.buttonregister && !isOrganizationCETA()&& (
+									{showButtons.buttonregister && !isOrganizationCETA() && !isEventWithPAyment(cEvent) && (
 										<Button
 											style={{
 												backdropFilter: 'blur(8px)',
