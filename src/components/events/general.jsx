@@ -1164,7 +1164,7 @@ class General extends Component {
               <BackTop />
             </Tabs.TabPane>
             <Tabs.TabPane tab='Tipos de acceso' key='2' style={{ paddingLeft: '32px', paddingRight: '32px' }}>
-              <Row justify='start' wrap gutter={[32, 8]}>
+              <Row justify='start' wrap gutter={[16, 16]}>
                 {AccessTypeCardData.map((item) => (
                   <Col key={item.id} xs={24} sm={24} md={24} lg={12} xl={6} xxl={6}>
                     <AccessTypeCard
@@ -1203,8 +1203,8 @@ class General extends Component {
                     />
                   </Col>
                 ))}
-                {console.log('accessSelected', this.state.event.payment)}
-                {accessSelected === 'PUBLIC_EVENT_WITH_REGISTRATION' && (
+                {/* {console.log('accessSelected', this.state.event.payment)} */}
+                {/* {accessSelected === 'PUBLIC_EVENT_WITH_REGISTRATION' && (
                   <Col span={24}>
                     <Card style={{ borderRadius: '8px' }}>
                       <Form.Item
@@ -1220,11 +1220,11 @@ class General extends Component {
                       </Form.Item>
                     </Card>
                   </Col>
-                )}
+                )} */}
                 {accessSelected === 'PAYMENT_EVENT' && (
                   <Col span={24}>
-                    <Card style={{ borderRadius: '8px' }}>
-                      <Typography variant="h1" >Configuracion avanzada</Typography>
+                    <Card style={{ borderRadius: '8px', boxShadow: '0px 2px 0px 2px #2593FC' }}>
+                      <Typography.Title level={4}>Configuración avanzada</Typography.Title>
                       <ConfigAdvancePayment 
                         valueInput={this.state.event.payment?.price} 
                         changeValue={this.onChangePrice} 
@@ -1235,7 +1235,7 @@ class General extends Component {
                         onChangeExternalPayment = {this.onChangeExternalPayment} 
                         valueUrlExternalPayment = {this.state.event.payment?.urlExternalPayment}
                         checkedExternalPayment={this.state.event.payment.externalPayment}
-                        />
+                      />
                     </Card>
                   </Col>
                 )}
