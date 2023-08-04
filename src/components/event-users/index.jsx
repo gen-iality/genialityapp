@@ -1,5 +1,9 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable no-useless-concat */
+/* eslint-disable no-lone-blocks */
+/* eslint-disable no-console */
 import { Component, Fragment } from 'react';
-import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from 'react-intl';
+import { FormattedDate, FormattedTime } from 'react-intl';
 import { firestore } from '../../helpers/firebase';
 import { BadgeApi, EventsApi, RolAttApi } from '../../helpers/request';
 import UserModal from '../modal/modalUser';
@@ -7,9 +11,9 @@ import ErrorServe from '../modal/serverError';
 import { utils, writeFileXLSX } from 'xlsx';
 import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from '../../helpers/utils';
 import Moment from 'moment';
+
 import {
   Button,
-  Card,
   Col,
   Drawer,
   Image,
@@ -23,7 +27,7 @@ import {
   Select,
   Dropdown,
   Menu,
-  Modal,
+  message,
 } from 'antd';
 
 import updateAttendees from './eventUserRealTime';
@@ -45,14 +49,13 @@ import Header from '../../antdComponents/Header';
 import TableA from '../../antdComponents/Table';
 import Highlighter from 'react-highlight-words';
 import { DispatchMessageService } from '../../context/MessageService';
-import Loading from '../profile/loading';
-import moment from 'moment';
 import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox';
 import { HelperContext } from '@/context/helperContext/helperContext';
 import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton';
 import { UsersPerEventOrActivity } from './utils/utils';
 import printBagdeUser from '../badge/utils/printBagdeUser';
 import ModalUsersOrganization from '../user-organization-to-event/components/ModalUsersOrganization';
+import PasswordAssistant from './PasswordAssistant';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -123,19 +126,61 @@ class ListEventUser extends Component {
     this.setState({ modalUserOrganization: false });
   };
 
+  handleRecoveryPass = async (email) => {
+    try {
+      let resp = await EventsApi.changePasswordUser(email, window.location.href);
+      if (resp) {
+        this.setState({
+          recoveryMessage: `Se ha enviado correo nueva contraseña a: ${email}`,
+          resul: 'OK',
+          status: 'success',
+          showConfirm: false,
+        });
+        message.success(`Se ha enviado el correo de recuperación de contraseña a: ${email}`);
+      }
+    } catch (error) {
+      this.setState({
+        recoveryMessage: 'Ocurrió un error al enviar el correo de recuperación de contraseña',
+        resul: 'Error', 
+        status: 'error', 
+        showConfirm: false,
+      });
+      message.error('Ocurrió un error al enviar el correo de recuperación de contraseña');
+    }
+  }
+  openModal = () => {
+    // Lógica a ejecutar cuando se abre el modal
+    this.setState({ showConfirm: true });
+  };
+
+  handleOk = () => {
+    // Lógica a ejecutar cuando se confirme el modal
+    this.setState({ showConfirm: false });
+  };
+
+  handleCancel = () => {
+    // Lógica a ejecutar cuando se cancele el modal
+    this.setState({ showConfirm: false });
+  };
   // eslint-disable-next-line no-unused-vars
   editcomponent = (text, item, index) => {
     const { eventIsActive } = this.context;
+    // const { recoveryMessage, status } = this.state;
     return (
-      <Tooltip placement='topLeft' title='Editar'>
-        <Button
-          type={'primary'}
-          icon={<EditOutlined />}
-          size='small'
-          onClick={() => this.openEditModalUser(item)}
-          disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
-        />
-      </Tooltip>
+      <Space>
+        <Tooltip placement='topLeft' title='Editar'>
+          <Button
+            type={'primary'}
+            icon={<EditOutlined />}
+            size='small'
+            onClick={() => this.openEditModalUser(item)}
+            disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+          />
+        </Tooltip>
+        <PasswordAssistant onOk={() => this.handleRecoveryPass(item.email)}>
+          <p>¿Estás seguro de que deseas enviar el correo para cambiar la contraseña?</p>
+        </PasswordAssistant>
+      </Space>
     );
   };
 
@@ -153,7 +198,7 @@ class ListEventUser extends Component {
   rol_component = (text, item, index) => {
     if (this.state.rolesList) {
       for (let role of this.state.rolesList) {
-        if (item.rol_id == role._id) {
+        if (item.rol_id === role._id) {
           item['rol_name'] = role.name;
           return <p>{role.name}</p>;
         }
@@ -445,12 +490,12 @@ class ListEventUser extends Component {
                   updatedAttendees[i].user[key.name] || JSON.stringify(updatedAttendees[i][key.name]);
               }
               if (extraFields) {
-                let codearea = extraFields?.filter((field) => field.type == 'codearea');
+                let codearea = extraFields?.filter((field) => field.type === 'codearea');
                 if (
                   codearea[0] &&
                   updatedAttendees[i] &&
                   Object.keys(updatedAttendees[i]).includes(codearea[0].name) &&
-                  key.name == codearea[0].name
+                  key.name === codearea[0].name
                 ) {
                   updatedAttendees[i][codearea[0].name] = updatedAttendees[i]['code']
                     ? '(' + updatedAttendees[i]['code'] + ')' + updatedAttendees[i].properties[codearea[0].name]
@@ -462,7 +507,7 @@ class ListEventUser extends Component {
                       ? updatedAttendees[i]['properties'][key.name][0]
                       : updatedAttendees[i]['properties'][key.name];
                     updatedAttendees[i]['textodeautorizacionparaimplementarenelmeetupfenalcoycolsubsidio'] =
-                      self.props.event._id == '60c8affc0b4f4b417d252b29' ? 'SI' : '';
+                      self.props.event._id === '60c8affc0b4f4b417d252b29' ? 'SI' : '';
                   }
                 }
               }
@@ -566,7 +611,6 @@ class ListEventUser extends Component {
   checkIn = async (id, item) => {
     let checkInStatus = null;
     const { qrData } = this.state;
-    const { event } = this.props;
     qrData.another = true;
     /*  try {
       let resp = await TicketsApi.checkInAttendee(event._id, id);
@@ -813,9 +857,7 @@ class ListEventUser extends Component {
       extraFields,
       spacesEvent,
       editUser,
-      stage,
       ticket,
-      ticketsOptions,
       localChanges,
       quantityUsersSync,
       lastUpdate,
