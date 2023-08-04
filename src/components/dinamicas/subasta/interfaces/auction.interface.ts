@@ -103,6 +103,7 @@ export interface ButtonsContainerProps {
 	setshowDrawerChat: React.Dispatch<React.SetStateAction<boolean>>
 	setshowDrawerRules: React.Dispatch<React.SetStateAction<boolean>>
 	closedrawer: () => void
+    styles?: React.CSSProperties
 }
 export interface ImagesData { 
     file :  UploadFile;
