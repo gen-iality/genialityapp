@@ -52,29 +52,17 @@ export interface Auction {
     opened?:            boolean
     playing?:           boolean
 }
-export interface ModalConfig {
-    visible: boolean
-    type : keyof AuctionStyles
-}
-
-export interface ModalStylesProps {
-    onOk: (type : keyof AuctionStyles, data: any ) => Promise<void>
-    styles?: AuctionStyles
-    type: keyof AuctionStyles
-}
 export interface AuctionStyles {
     general?: {
         backgroundColor?:   string
         backgroundImage?:   string
     }
-    list?:              StyleCard
-    cardProduct?:       StyleCard
-    buttons?:           StyleCard
+    cards?:       StyleCard
 }
 
 interface StyleCard {
-    color : string
-    backgroundColor : string
+    color?: string
+    backgroundColor?: string
 }
 export interface IBids {
     date: string

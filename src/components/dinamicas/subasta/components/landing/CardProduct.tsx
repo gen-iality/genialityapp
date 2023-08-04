@@ -2,14 +2,17 @@ import { Card, Empty, Skeleton, Space, Statistic, Typography } from 'antd'
 import React from 'react'
 import { DrawerAuctionProps } from '../../interfaces/auction.interface'
 import Meta from 'antd/lib/card/Meta'
+import { Text } from 'react-konva';
+import { getCorrectColor } from '@/helpers/utils';
 
 export default function CardProduct({auction} : Partial<DrawerAuctionProps>) {
   return (
     <Card
+    bordered={false}
     hoverable={true}
-    style={{ height: 550, borderRadius: 20 }}
+    style={{ height: 550, borderRadius: 20 , backgroundColor: auction?.styles?.cards?.backgroundColor || ''}}
     headStyle={{ textAlign: 'center' }}
-    /* title={auction?.currentProduct ? `Artículo: ${auction?.currentProduct.name}` : 'Sin producto asignado'} */
+
     cover={
       auction?.currentProduct ? (
         <img
@@ -27,12 +30,14 @@ export default function CardProduct({auction} : Partial<DrawerAuctionProps>) {
       )
     }>
       <Meta 
-        title={<Typography.Text strong>{auction?.currentProduct ? auction?.currentProduct.name : 'Sin producto asignado'}</Typography.Text>}
+        title={<Typography.Text style={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor)}} strong>{auction?.currentProduct ? auction?.currentProduct.name : 'Sin producto asignado'}</Typography.Text>}
         description={
           <Statistic 
-            title="Valor del artículo"
+           valueStyle={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor)}}
+            title={<Typography.Text style={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor)}} >Valor del artículo</Typography.Text>}
             className='animate__animated animate__flipInX' 
-            prefix='$' value={auction?.currentProduct?.price|| 0} 
+            prefix='$' 
+            value={auction?.currentProduct?.price|| 0} 
             suffix={auction?.currency}
           />
         } 
