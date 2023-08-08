@@ -45,6 +45,7 @@ export const ModalAddAndEditUsers = ({
   const [dataToAddUser, setdataToAddUser] = useState<any>();
   const [haveDinamicProperties, setHaveDinamicProperties] = useState(false);
   const { current, onLastStep, onNextStep } = useSteps(3);
+  const [addToUserEvents, setAddToUserEvents] = useState(false);
   const {
     backToCreate,
     loadingRequest,
@@ -58,6 +59,9 @@ export const ModalAddAndEditUsers = ({
     setLoadingRequest,
     setbackToCreate,
   } = useResultsUserOrganizations();
+  const onChangeAddUserToEvent = (checked: boolean) => {
+    setAddToUserEvents(checked);
+  };
 
   const onFinisUserOrganizationStep = (values: FormUserOrganization) => {
     setdataBasic(values);
@@ -148,7 +152,7 @@ export const ModalAddAndEditUsers = ({
     if (alreadyExistUser) return resultUserExistIntoOrganization(newUser.email);
 
     try {
-      const respUser = await OrganizationApi.saveUser(organizationId, { properties: userToOrganization });
+      const respUser = await OrganizationApi.saveUser(organizationId, { properties: userToOrganization }, addToUserEvents);
 
       if (respUser._id) {
         setLoadingRequest(false);
@@ -284,6 +288,8 @@ export const ModalAddAndEditUsers = ({
             setimageFile={setImagesFile}
             filesSelected={imageFile}
             onFinish={onFinisUserOrganizationStep}
+            addToUserEvents={addToUserEvents}
+            onChangeAddUserToEvent={onChangeAddUserToEvent}
           />
           <Button onClick={() => formBasicData.submit()}>Siguiente</Button>
         </div>
