@@ -235,6 +235,15 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
                   />
                   <br />
                   <strong>URL:</strong> {videoURL}
+                  <br />
+                  <Button
+                    type="link"
+                    onClick={() => {
+                      resetActivityType('video')
+                    }}
+                  >
+                    Eliminar contenido (para reasginar)
+                  </Button>
                 </Card>
               </Col>
             )}
