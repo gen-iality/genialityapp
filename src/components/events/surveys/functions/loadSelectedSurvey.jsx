@@ -73,6 +73,9 @@ async function loadSelectedSurvey(eventId, idSurvey, userId) {
   dataSurvey.showPrevButton = false
   // Asigna textos al completar encuesta y al ver la encuesta vacia
   dataSurvey.completedHtml = 'Gracias por contestar!'
+  dataSurvey.completedHtml = `${dataSurvey.completedHtml}<br>${''}<br>${
+    dataSurvey.neutral_Message ? dataSurvey.neutral_Message : ''
+  }`
   //dataSurvey.questionsOnPageMode = 'singlePage';
   if (dataSurvey.allow_gradable_survey === 'true' && dataSurvey.initialMessage) {
     // Permite mostrar el contador y asigna el tiempo limite de la encuesta y por pagina
