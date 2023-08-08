@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import { IdcardOutlined, LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, FormInstance, FormProps, Input } from 'antd';
+import React from 'react';
+import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
+import { Checkbox, Form, FormInstance, FormProps, Input } from 'antd';
 import { FormUserOrganization } from '../interface/organization.interface';
 import { useIntl } from 'react-intl';
 import { UseEventContext } from '@/context/eventContext';
@@ -12,9 +12,18 @@ interface Props extends FormProps {
   form: FormInstance<FormUserOrganization>;
   setimageFile: React.Dispatch<React.SetStateAction<UploadFile | undefined>>;
   filesSelected?: UploadFile | undefined;
+  addToUserEvents: boolean;
+  onChangeAddUserToEvent: (checked: boolean) => void;
 }
 
-export const UserOrganizationForm = ({ form, setimageFile, filesSelected, onFinish }: Props) => {
+export const UserOrganizationForm = ({
+  form,
+  setimageFile,
+  filesSelected,
+  onFinish,
+  addToUserEvents,
+  onChangeAddUserToEvent,
+}: Props) => {
   const intl = useIntl();
 
   const cEvent = UseEventContext();
@@ -132,6 +141,11 @@ export const UserOrganizationForm = ({ form, setimageFile, filesSelected, onFini
               })}
               prefix={<UserOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
             />
+          </Form.Item>
+          <Form.Item label={<label style={{ marginTop: '2%' }}>Agregar usuario a todos los eventos actuales</label>}>
+            <Checkbox checked={addToUserEvents} onChange={({ target: { checked } }) => onChangeAddUserToEvent(checked)}>
+              Se agregara el nuevo usuario a los eventos actualmente creados
+            </Checkbox>
           </Form.Item>
         </Form>
       </div>
