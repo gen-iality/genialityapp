@@ -107,7 +107,11 @@ const ResultsPanel: FunctionComponent<IResultsPanelProps> = (props) => {
                 </Typography.Paragraph>
                 {answer.exists ? (
                   <Alert
-                    type={answer.isCorrectAnswer ? 'success' : 'error'}
+                    type={
+                      answer.isCorrectAnswer || answer.correctAnswer === answer.answer
+                        ? 'success'
+                        : 'error'
+                    }
                     message={`Tu respuesta: ${answer.answer || '<vacío>'}`}
                   />
                 ) : (
