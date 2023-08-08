@@ -104,7 +104,14 @@ export const EventProgressProvider: FunctionComponent<PropsWithChildren> = (prop
       return attendee.checked_in
     })
 
-    setCheckedInRawActivities(checkedInOnes)
+    setCheckedInRawActivities((previous) => {
+      return [
+        ...previous,
+        ...checkedInOnes.filter(
+          (one) => !previous.map((last) => last._id).includes(one._id),
+        ),
+      ]
+    })
     console.debug(`Got ${checkedInOnes.length} attendees`)
   }
 
