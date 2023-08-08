@@ -1739,3 +1739,4 @@ window.AgendaApi = AgendaApi
 window.UsersApi = UsersApi
 window.CerticationLogsApi = CerticationLogsApi
 window.CerticationsApi = CerticationsApi
+window.SurveysApi = SurveysApi

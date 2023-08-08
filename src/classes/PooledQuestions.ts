@@ -1,4 +1,4 @@
-import { SurveyQuestion } from '@components/events/surveys/models/types'
+import { SurveyQuestion } from '@components/events/surveys/types'
 import { getQuestionsRef } from '@components/events/surveys/services/surveys'
 
 /**

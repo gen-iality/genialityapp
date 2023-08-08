@@ -9,6 +9,7 @@ import {
   useEffect,
   useMemo,
   useCallback,
+  PropsWithChildren,
 } from 'react'
 import { useEventContext } from './eventContext'
 import { useUserEvent } from './eventUserContext'
@@ -56,7 +57,7 @@ const EventProgressContext = createContext<EventProgressContextState>(initialCon
 
 export default EventProgressContext
 
-export const EventProgressProvider: FunctionComponent = (props) => {
+export const EventProgressProvider: FunctionComponent<PropsWithChildren> = (props) => {
   const { children } = props
 
   const cEventContext = useEventContext()

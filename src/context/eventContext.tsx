@@ -1,5 +1,12 @@
 // TODO: rename to EventContext everywhere
-import { useState, createContext, useEffect, useContext, FunctionComponent } from 'react'
+import {
+  useState,
+  createContext,
+  useEffect,
+  useContext,
+  FunctionComponent,
+  PropsWithChildren,
+} from 'react'
 import { useParams } from 'react-router-dom'
 import { EventsApi } from '@helpers/request'
 import NotFoundPage from '@components/notFoundPage/NotFoundPage'
@@ -31,7 +38,7 @@ const EventContext = createContext<EventContextState>(initialContextState)
 export default EventContext
 export const CurrentEventContext = EventContext
 
-const EventProvider: FunctionComponent = (props) => {
+const EventProvider: FunctionComponent<PropsWithChildren> = (props) => {
   const { children } = props
   const [eventContext, setEventContext] = useState<EventContextState>(initialContextState)
   const [formatedEventName, setFormatedEventName] = useState<string | null>(null)

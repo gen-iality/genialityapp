@@ -12,7 +12,7 @@ import { Spin, Button, Drawer } from 'antd'
 /** Funciones externas */
 import messageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey'
 import getResponsesIndex from './functions/getResponsesIndex'
-import savingResponseByUserId from './functions/savingResponseByUserId'
+import saveResponseByUserId from './functions/saveResponseByUserId'
 
 /** Contexts */
 import { useEventContext } from '@context/eventContext'
@@ -217,7 +217,8 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
       question.correctAnswer !== undefined ? badCount === 0 && rightCount == 1 : undefined
 
     /** funcion para validar tipo de respuesta multiple o unica */
-    const responseIndex = await getResponsesIndex(question)
+    const responseIndex = getResponsesIndex(question)
+    console.debug(`question: ${question} got response index to: ${responseIndex}`)
     const optionIndex = responseIndex
 
     optionQuantity = (question.choices ?? []).length
@@ -233,7 +234,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
     // Se envia al servicio el id de la encuesta, de la pregunta y los datos
     // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
     if (!(Object.keys(currentUser).length === 0)) {
-      savingResponseByUserId(
+      saveResponseByUserId(
         queryData,
         question,
         currentUser,
@@ -293,14 +294,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
           {showingFeedback && (
             <SurveyQuestionFeedback
               questions={currentQuestionsForFeedback}
-              onNextClick={() => {
-                setShowingFeedback(false)
-                surveyModel.nextPage()
-                if (surveyModel.state === 'completed') {
-                  setIsSaveButtonShown(true)
-                  setCurrentPage(queryData._id, currentUser.value._id, 0)
-                }
-              }}
+              onNextClick={handleCloseFeedBack}
             />
           )}
           {/* <Drawer

@@ -161,7 +161,7 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
                 />
               ),
             () =>
-              ![activityContentValues.quizing, activityContentValues.survey].includes(
+              [activityContentValues.quizing, activityContentValues.survey].includes(
                 agenda.type?.name as any,
               ) ? (
                 isDev || isStage ? (

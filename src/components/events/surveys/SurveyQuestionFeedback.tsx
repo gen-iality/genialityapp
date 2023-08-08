@@ -39,6 +39,7 @@ function SurveyQuestionFeedback(props: SurveyQuestionFeedbackProps) {
       props.questions.map((question) => ({
         answer: question.questionValue,
         correct: question.correctAnswer,
+        points: question.points,
       })),
     [props.questions],
   )

@@ -1,4 +1,11 @@
-import { useState, useEffect, createContext, useContext, FunctionComponent } from 'react'
+import {
+  useState,
+  useEffect,
+  createContext,
+  useContext,
+  FunctionComponent,
+  PropsWithChildren,
+} from 'react'
 import { EventsApi } from '@helpers/request'
 import { useEventContext } from './eventContext'
 import { app } from '@helpers/firebase'
@@ -25,7 +32,7 @@ export default EventUserContext
 
 export const CurrentEventUserContext = EventUserContext
 
-const UserEventProvider: FunctionComponent = (props) => {
+const UserEventProvider: FunctionComponent<PropsWithChildren> = (props) => {
   const { children } = props
 
   const cEvent = useEventContext()
