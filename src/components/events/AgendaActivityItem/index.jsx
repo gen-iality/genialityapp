@@ -484,7 +484,7 @@ function AgendaActivityItem(props) {
                                     content={
                                       cEvent.value?._id !== '62c5e89176dfb307163c05a9' && (
                                         <>
-                                          <div
+                                          <Space direction='vertical'
                                             style={{
                                               overflow: 'hidden',
                                               display: '-webkit-box',
@@ -494,19 +494,18 @@ function AgendaActivityItem(props) {
                                               color: cEvent.value.styles.textMenu,
                                             }}
                                           >
-                                            {item?.description?.length > 200 ?
-                                                <p style={{color: cEvent.value.styles.textMenu}} dangerouslySetInnerHTML={{ __html: item?.description.slice(0, 200) }}></p>
+                                            {item?.description?.length > 150 ?
+                                                <p style={{color: cEvent.value.styles.textMenu}} dangerouslySetInnerHTML={{ __html: item?.description.slice(0, 150) + '...'}}></p>
                                           :
                                                 <p style={{color: cEvent.value.styles.textMenu}} dangerouslySetInnerHTML={{ __html: item?.description}}></p>
                                             }
-                                            {item?.description?.length > 200 && 
+                                            {item?.description?.length > 150 && 
                                             <>
                                               <Button onClick={(event) => {
                                                 event.stopPropagation();
                                                 setDescriptionActiveModal(true);
                                               }}>Ver más detalle</Button>
-                                              <Modal 
-                                                /* title="Detalle de la actividad" */ 
+                                              <Modal  
                                                 footer={null}
                                                 visible={descriptionActiveModal} 
                                                 onCancel={(event) => {
@@ -521,7 +520,7 @@ function AgendaActivityItem(props) {
                                               </Modal>
                                             </>
                                           }
-                                          </div>
+                                          </Space>
                                           {/* <div
                                             style={{
                                               overflow: 'hidden',
