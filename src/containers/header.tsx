@@ -144,6 +144,15 @@ const Headers = (props: Props) => {
 		});
 	};
 
+	const isEventWithPayment =(cEvent:any) => {
+		if(!cEvent)return true
+
+		if(cEvent?.value?.payment?.active){
+			return true
+		}
+		return false
+	}
+
 	const MenuMobile = (
 		<Menu>
 			<Menu.Item
@@ -154,9 +163,11 @@ const Headers = (props: Props) => {
 				<FormattedMessage id='header.expired_signin' defaultMessage='Sign In' />
 			</Menu.Item>
 		{
-			!isOrganizationCETA()
+			!isOrganizationCETA() 
 			&& 
-			<Menu.Item
+			!isEventWithPayment(cEvent)
+			&&
+			 <Menu.Item
 				key='menu-item-menu-mobile-2'
 				onClick={() => {
 					helperDispatch({ type: 'showRegister', visible: true, organization: WhereHerePath() });
@@ -223,14 +234,7 @@ const Headers = (props: Props) => {
 	window.location.href = `${window.location.origin}/organization/${cEvent.value.organizer_id}/events`;
 	};
 
-	const isEventWithPAyment =(cEvent:any) => {
-		if(!cEvent)return true
-
-		if(cEvent?.value?.payment?.active){
-			return true
-		}
-		return false
-	}
+	
 
 
 	return (
@@ -284,7 +288,7 @@ const Headers = (props: Props) => {
 							screens.xs ? (
 								<div style={{position:'absolute', right:15, top:6}}>
 									<Space>
-										{ !isEventWithPAyment(cEvent) && <Dropdown overlay={MenuMobile}>
+										<Dropdown overlay={MenuMobile}>
 											<Button
 												style={{
 													backgroundColor: '#3681E3',
@@ -295,14 +299,14 @@ const Headers = (props: Props) => {
 												shape='circle'
 												icon={<AccountCircleIcon style={{ fontSize: '28px' }} />}
 											/>
-										</Dropdown>}
+										</Dropdown>
 									</Space>
 								</div>
 							) : (
 								<Space>
 									{showButtons.buttonlogin  ? (
 										<>
-											{recordTypeForThisEvent(cEvent) !== 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS' && !isEventWithPAyment(cEvent) &&(
+											{recordTypeForThisEvent(cEvent) !== 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS'  &&(
 												<Button
 													icon={<LockOutlined />}
 													style={{
@@ -338,7 +342,7 @@ const Headers = (props: Props) => {
 										</Space>
 									)}
 
-									{showButtons.buttonregister && !isOrganizationCETA() && !isEventWithPAyment(cEvent) && (
+									{showButtons.buttonregister && !isOrganizationCETA() && !isEventWithPayment(cEvent) && (
 										<Button
 											style={{
 												backdropFilter: 'blur(8px)',
