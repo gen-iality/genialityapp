@@ -57,6 +57,11 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
 
   const onDeleteTakenActivities = () => {
     setDeletingTakenActivitiesCounter((previous) => previous + 1)
+    if (currentUser.value?._id) {
+      FB.ActivityProgresses.resetAttendees(eventId, currentUser.value._id).then(() => {
+        console.log('reset checked_in_activities')
+      })
+    }
   }
 
   useEffect(() => {
