@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { NavLink, useParams, useRouteMatch } from 'react-router-dom'
+import { NavLink, useParams, useMatch } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Button, Col, Divider, Menu, Row } from 'antd'
 import { EventsApi } from '@helpers/request'
@@ -26,7 +26,7 @@ const MenuConfig = (props) => {
   })
 
   const params = useParams()
-  const match = useRouteMatch()
+  const match = useMatch()
 
   const eventId = params.event
 

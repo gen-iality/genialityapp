@@ -1,4 +1,4 @@
-import { Route, Routes, useRouteMatch } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 /** --------------------
  *  secciones del curso
  * ---------------------*/
@@ -7,7 +7,7 @@ import FeriasList from '../../events/ferias/FeriasList'
 import { useEventContext } from '@context/eventContext'
 
 const FeriasSectionRoutes = () => {
-  const { path } = useRouteMatch()
+  const { pathname: path } = useLocation()
   const cEvent = useEventContext()
 
   if (!cEvent.value) return <h1>Cargando...</h1>

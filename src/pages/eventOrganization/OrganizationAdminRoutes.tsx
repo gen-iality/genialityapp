@@ -7,8 +7,9 @@ import {
   Routes,
   useParams,
   useLocation,
-  useRouteMatch,
   RouteProps,
+  useMatch,
+  useMatches,
 } from 'react-router-dom'
 
 /** Antd imports */
@@ -70,7 +71,7 @@ const Protected: FunctionComponent<IProtected> = ({ render, org, ...rest }) => (
 const OrganizationAdminRoutes: FunctionComponent = () => {
   const params = useParams<{ id?: string }>()
   const location = useLocation()
-  const match = useRouteMatch()
+  const match = useMatch('')
   const organizationId = params.id
 
   const [organization, setOrganization] = useState<any>({})

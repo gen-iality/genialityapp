@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { CategoriesAgendaApi, TypesAgendaApi } from '@helpers/request'
 import { Tag } from 'antd'
 import CMS from '../newComponent/CMS'
-import { useRouteMatch } from 'react-router'
+import { useMatch } from 'react-router'
 
 const AgendaTypeCat = (props) => {
   const columnsOriginal = [
@@ -11,7 +11,7 @@ const AgendaTypeCat = (props) => {
       dataIndex: 'name',
     },
   ]
-  const match = useRouteMatch()
+  const match = useMatch()
 
   const [columns, setColumns] = useState([])
   const eventID = props.event._id

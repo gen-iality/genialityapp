@@ -5,27 +5,28 @@ import Empresas from './empresas'
 import Stands from './gestionStands'
 
 function EmpresasRoutes({ event, matchUrl }) {
+  const routeProps = {}
   return (
     <Routes>
       <Route
         exact
         path={`${matchUrl}/`}
-        render={(routeProps) => <Empresas {...routeProps} event={event} />}
+        element={<Empresas {...routeProps} event={event} />}
       />
       <Route
         exact
         path={`${matchUrl}/crear`}
-        render={(routeProps) => <CrearEditarEmpresa {...routeProps} a={routeProps.} event={event} />}
+        element={<CrearEditarEmpresa {...routeProps} event={event} />}
       />
       <Route
         exact
         path={`${matchUrl}/configuration`}
-        render={(routeProps) => <Stands {...routeProps} event={event} />}
+        element={<Stands {...routeProps} event={event} />}
       />{' '}
       <Route
         exact
         path={`${matchUrl}/editar/:companyId`}
-        render={(routeProps) => <CrearEditarEmpresa {...routeProps} event={event} />}
+        element={<CrearEditarEmpresa {...routeProps} event={event} />}
       />
     </Routes>
   )

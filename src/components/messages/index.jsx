@@ -1,10 +1,10 @@
 import { Fragment } from 'react'
-import { Route, Routes, useRouteMatch } from 'react-router-dom'
+import { Route, Routes, useMatch } from 'react-router-dom'
 import InvitationDetail from './invitationDetail'
 import InvitationsList from './list'
 
 function Messages(props) {
-  const match = useRouteMatch()
+  const match = useMatch()
 
   return (
     <Fragment>
