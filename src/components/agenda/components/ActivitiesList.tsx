@@ -223,14 +223,12 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
 
   return (
     <>
-      {currentEventUser.value?.rol.type === 'admin' ? (
-        <>
-          <DeleteActivitiesTakenButton
-            eventId={eventId}
-            cEventUserId={eventUserId}
-            onDelete={onDeleteTakenActivities}
-          />
-        </>
+      {currentEventUser.value?.rol.type === 'admin' || isDev || isStage ? (
+        <DeleteActivitiesTakenButton
+          eventId={eventId}
+          cEventUserId={eventUserId}
+          onDelete={onDeleteTakenActivities}
+        />
       ) : undefined}
       <ModuledActivityDisplayer
         list={publishedTruncatedAgendaList}
