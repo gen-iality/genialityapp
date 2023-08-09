@@ -28,7 +28,9 @@ const OrganizationPaymentConfirmationModal: FunctionComponent<
       onCancel={() => dispatch({ type: 'ABORT' })}
     >
       <p>Para ingresar a este contenido debes tener una cuenta con un plan pago</p>
-      <p>El costo del plan es: ${money}</p>
+      <p>
+        El costo del plan es: <b>${money}</b>
+      </p>
     </Modal>
   )
 }

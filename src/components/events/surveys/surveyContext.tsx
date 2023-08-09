@@ -36,6 +36,7 @@ export type SurveyContextType = {
   checkIfSurveyWasAnswered?: boolean
   shouldDisplayGraphics?: boolean
   shouldDisplayRanking?: boolean
+  completionStatus?: 'running' | 'completed'
 }
 
 export type CustomContextMethodType = {
@@ -111,6 +112,10 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({
 
     return state.surveyStatus?.surveyCompleted === 'completed'
   }, [state])
+
+  const completionStatus = useMemo(() => {
+    return state.surveyStatus?.surveyCompleted
+  }, [state.surveyStatus?.surveyCompleted])
 
   const checkThereIsAnotherTry = useMemo(() => {
     // If tried (in Firebase) is < that tries (in MongoDB), then the user can see the survey
@@ -208,6 +213,7 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({
         shouldDisplaySurveyNotPublishedMenssage,
         shouldDisplayGraphics,
         shouldDisplayRanking,
+        completionStatus,
         surveyStatsString,
         checkThereIsAnotherTry,
         startAnswering,

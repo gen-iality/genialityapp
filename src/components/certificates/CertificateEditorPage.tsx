@@ -163,8 +163,8 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
       setNoFinalCertRows(
         Array.isArray(data.content) ? data.content : JSON.parse(data.content),
       )
-    form.setFieldsValue({ ...data })
     form.setFieldsValue({
+      ...data,
       content: typeof data.content === 'string' ? JSON.parse(data.content) : data.content,
     })
   }
@@ -613,7 +613,12 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
 
       <Row gutter={[16, 16]}>
         <Col span={24}>
-          <Form.Item name="content" label="Filas" initialValue={noFinalCertRows}>
+          <Form.Item
+            name="content"
+            value={noFinalCertRows}
+            label="Filas"
+            // initialValue={noFinalCertRows}
+          >
             <CertificateRows onChange={setNoFinalCertRows} />
           </Form.Item>
         </Col>
