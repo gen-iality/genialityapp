@@ -367,8 +367,8 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       title: 'Progreso',
       ellipsis: true,
       sorter: (a: any, b: any) =>
-        a.activity_progresses?.progress_all_activities -
-        b.activity_progresses?.progress_all_activities,
+        a.activity_progresses?.progress_filtered_activities -
+        b.activity_progresses?.progress_filtered_activities,
       ...getColumnSearchProps('progreso', (value) => value.postprocess_progress),
       render: (item) => (
         <>
