@@ -26,8 +26,8 @@ class EventCard extends Component {
       const MIN_DATES = 1
       const EVENT_WITH_ONE_DATE = 1
       const FIRST_DATE = 0
-      const LAST_DATE = event.dates.length - 1
       if (event.dates?.length >= MIN_DATES) {
+        const LAST_DATE = event.dates?.length - 1
         if (event.dates?.length === EVENT_WITH_ONE_DATE) {
           return <time dateTime={event.dates[FIRST_DATE].start}>{Moment(event.dates[FIRST_DATE].start).format('DD MMM YYYY')}</time>;
         }else{
