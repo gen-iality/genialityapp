@@ -40,7 +40,7 @@ import ActivityTypeSelector from '../activityType/ActivityTypeSelector'
 
 import { hourWithAdditionalMinutes } from '../hooks/useHourWithAdditionalMinutes'
 import SpeakerEditPage from '@components/speakers/SpeakerEditPage'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export interface FormValues {
   name: string
@@ -84,10 +84,10 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
   const [isSpeakerModalOpened, setIsSpeakerModalOpened] = useState(false)
 
   const ref = useRef<InputRef>(null)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const goSection = useCallback((path: string, state?: any) => {
-    history.push(path, state)
+    navigate(path, state)
   }, [])
 
   useEffect(() => {

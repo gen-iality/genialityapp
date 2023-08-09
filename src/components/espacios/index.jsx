@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import Espacios from './Espacios'
 import Espacio from './Espacio'
 
@@ -8,7 +8,7 @@ function EspacioRoutes(props) {
 
   return (
     <Fragment>
-      <Switch>
+      <Routes>
         <Route
           exact
           path={`${matchUrl}/`}
@@ -19,7 +19,7 @@ function EspacioRoutes(props) {
           path={`${matchUrl}/espacio`}
           render={() => <Espacio event={event} parentUrl={matchUrl} {...props} />}
         />
-      </Switch>
+      </Routes>
     </Fragment>
   )
 }

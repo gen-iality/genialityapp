@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { RolAttApi } from '@helpers/request'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { handleRequestError } from '@helpers/utils'
 import { Row, Col, Form, Input, Modal } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
@@ -20,7 +20,7 @@ const TipoAsistente = (props) => {
   const location = useLocation()
 
   const locationState = location.state //si viene new o edit en el state, si es edit es un id
-  const history = useHistory()
+  const navigate = useNavigate()
   const [tipoAsistente, setTipoAsistente] = useState({ event_id: props.event._id })
 
   useEffect(() => {
@@ -60,7 +60,7 @@ const TipoAsistente = (props) => {
 
         StateMessage.destroy('loading')
         StateMessage.show(null, 'success', 'Información guardada correctamente!')
-        history.push(`${props.parentUrl}`)
+        navigate(`${props.parentUrl}`)
       } catch (e) {
         StateMessage.destroy('loading')
         StateMessage.show(null, 'error', handleRequestError(e).message)
@@ -94,7 +94,7 @@ const TipoAsistente = (props) => {
                 'success',
                 'Se eliminó la información correctamente!',
               )
-              history.push(`${props.parentUrl}`)
+              navigate(`${props.parentUrl}`)
             } catch (e) {
               StateMessage.destroy('loading')
               StateMessage.show(null, 'error', handleRequestError(e).message)

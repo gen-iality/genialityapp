@@ -1,4 +1,4 @@
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Tooltip, Typography, Row, Col, Button } from 'antd'
 import {
   PlusCircleOutlined,
@@ -31,7 +31,7 @@ interface HeaderProps {
 }
 
 const Header: FunctionComponent<HeaderProps> = (props) => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const { eventIsActive } = useHelper()
   const {
     title, //titulo del encabezado
@@ -61,7 +61,7 @@ const Header: FunctionComponent<HeaderProps> = (props) => {
           <Tooltip placement="bottomLeft" title="Atrás">
             <ArrowLeftOutlined
               id="goBack"
-              onClick={() => (customBack ? history.push(customBack) : history.goBack())}
+              onClick={() => (customBack ? navigate(customBack) : navigate(-1))}
               style={{ marginRight: '10px' }}
             />
           </Tooltip>

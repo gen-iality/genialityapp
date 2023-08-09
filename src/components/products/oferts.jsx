@@ -6,7 +6,7 @@ import API from '@helpers/request'
 import Header from '@antdComponents/Header'
 
 const OfertProduts = (props) => {
-  // const goBack = () => props.history.goBack()
+  // const goBack = () => props.navigate(-1)
   const [oferts, setOferts] = useState([])
 
   const params = useParams()

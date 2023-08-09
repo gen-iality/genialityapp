@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import { Route, Switch, useRouteMatch } from 'react-router-dom'
+import { Route, Routes, useRouteMatch } from 'react-router-dom'
 import InvitationDetail from './invitationDetail'
 import InvitationsList from './list'
 
@@ -8,7 +8,7 @@ function Messages(props) {
 
   return (
     <Fragment>
-      <Switch>
+      <Routes>
         <Route
           exact
           path={`${match.url}/`}
@@ -26,7 +26,7 @@ function Messages(props) {
             <InvitationDetail event={props.event} matchUrl={match.url} {...props} />
           )}
         />
-      </Switch>
+      </Routes>
     </Fragment>
   )
 }

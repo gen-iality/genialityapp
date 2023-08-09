@@ -1,4 +1,4 @@
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 
 import CrearEditarEmpresa from './crearEditarEmpresa'
 import Empresas from './empresas'
@@ -6,7 +6,7 @@ import Stands from './gestionStands'
 
 function EmpresasRoutes({ event, matchUrl }) {
   return (
-    <Switch>
+    <Routes>
       <Route
         exact
         path={`${matchUrl}/`}
@@ -15,7 +15,7 @@ function EmpresasRoutes({ event, matchUrl }) {
       <Route
         exact
         path={`${matchUrl}/crear`}
-        render={(routeProps) => <CrearEditarEmpresa {...routeProps} event={event} />}
+        render={(routeProps) => <CrearEditarEmpresa {...routeProps} a={routeProps.} event={event} />}
       />
       <Route
         exact
@@ -27,7 +27,7 @@ function EmpresasRoutes({ event, matchUrl }) {
         path={`${matchUrl}/editar/:companyId`}
         render={(routeProps) => <CrearEditarEmpresa {...routeProps} event={event} />}
       />
-    </Switch>
+    </Routes>
   )
 }
 

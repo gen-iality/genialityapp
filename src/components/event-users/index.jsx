@@ -35,7 +35,8 @@ import {
 } from 'antd'
 
 import updateAttendees from './eventUserRealTime'
-import { Link, withRouter } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { withRouter } from '@/withRouter'
 import {
   EditOutlined,
   FullscreenOutlined,

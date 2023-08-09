@@ -25,6 +25,7 @@ import Header from '@antdComponents/Header'
 import BackTop from '@antdComponents/BackTop'
 import { StateMessage } from '@context/MessageService'
 import { handleRequestError } from '@helpers/utils'
+import { useMatch, useNavigate } from 'react-router'
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -131,7 +132,8 @@ export const defaultInitialValues = {
 export const companyFormKeys = keys(defaultInitialValues)
 
 function CrearEditarEmpresa(props) {
-  const { event, match, history } = props
+  const { event } = props
+  const match = useMatch()
   const { companyId } = match.params
   const [standTypesOptions, loadingStandTypes] = useGetEventCompaniesStandTypesOptions(
     event._id,
@@ -143,6 +145,7 @@ function CrearEditarEmpresa(props) {
     props.location.state.edit,
   )
   const [tamanio, setTamanio] = useState(0)
+  const navigate = useNavigate()
 
   useEffect(() => {
     firestore
@@ -175,7 +178,7 @@ function CrearEditarEmpresa(props) {
           .then(() => {
             StateMessage.destroy('loading')
             StateMessage.show(null, 'success', 'Empresa creada correctamente!')
-            history.push(`/eventadmin/${event._id}/empresas`)
+            navigate(`/eventadmin/${event._id}/empresas`)
           })
           .catch((error) => {
             StateMessage.destroy('loading')
@@ -188,7 +191,7 @@ function CrearEditarEmpresa(props) {
         StateMessage.show(null, 'error', 'Favor de llenar los campos requeridos')
       }
     },
-    [history, event._id, props.location.state.edit, tamanio],
+    [navigate, event._id, props.location.state.edit, tamanio],
   )
 
   const remove = () => {
@@ -220,7 +223,7 @@ function CrearEditarEmpresa(props) {
                 'success',
                 'Se eliminó la información correctamente!',
               )
-              history.push(`/eventadmin/${event._id}/empresas`)
+              navigate(`/eventadmin/${event._id}/empresas`)
             } catch (e) {
               StateMessage.destroy('loading')
               StateMessage.show(null, 'error', handleRequestError(e).message)

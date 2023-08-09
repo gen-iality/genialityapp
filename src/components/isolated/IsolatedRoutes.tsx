@@ -1,6 +1,6 @@
 import { ReactElement } from 'react'
 import { Fragment } from 'react'
-import { Route, Switch, useHistory } from 'react-router-dom'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import { Button, Typography } from 'antd'
 
 import { QuizProgressPage } from './quiz/QuizProgressPage'
@@ -68,10 +68,10 @@ const uiSet: UI[] = [
 ]
 
 function Home(props: HomeProps) {
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const createHandler = (url: string) => {
-    return () => history.push(`${props.matchUrl}/${url}`)
+    return () => navigate(`${props.matchUrl}/${url}`)
   }
 
   const CustomButton = (ui: UI) => (
@@ -95,7 +95,7 @@ function IsolatedRoutes(props: any) {
 
   return (
     <Fragment>
-      <Switch>
+      <Routes>
         <Route
           exact
           path={`${matchUrl}/`}
@@ -109,7 +109,7 @@ function IsolatedRoutes(props: any) {
             render={() => <ui.Component event={event} matchUrl={matchUrl} />}
           />
         ))}
-      </Switch>
+      </Routes>
     </Fragment>
   )
 }

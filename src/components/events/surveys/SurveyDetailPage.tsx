@@ -1,6 +1,6 @@
 /** Hooks and CustomHooks */
 import { useState, useEffect, useCallback, FunctionComponent } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import useAsyncPrepareQuizStats from '@components/quiz/useAsyncPrepareQuizStats'
 import useSurveyQuery from './hooks/useSurveyQuery'
 import { Card, Result, Button, Space, Spin, Col, Row, Alert } from 'antd'
@@ -30,7 +30,7 @@ const SurveyDetailPage: FunctionComponent<
 > = (props) => {
   const { surveyId, cEvent } = props
   const handleGoToCertificate = useCallback(() => {
-    history.push(`/landing/${cEvent.value?._id}/certificate`)
+    navigate(`/landing/${cEvent.value?._id}/certificate`)
   }, [cEvent.value])
 
   const [enableGoToCertificate, setEnableGoToCertificate] = useState(false)
@@ -42,7 +42,7 @@ const SurveyDetailPage: FunctionComponent<
   const currentUser = useCurrentUser()
 
   const query = useSurveyQuery(cEvent.value?._id, surveyId, isResetingSurvey)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   useEffect(() => {
     cSurvey.loadSurvey({ ...(query.data as any) })

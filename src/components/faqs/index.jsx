@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import Faqs from './faqs'
 import Faq from './faq'
 
@@ -7,7 +7,7 @@ function FaqsRoutes(props) {
   const { event, matchUrl } = props
   return (
     <Fragment>
-      <Switch>
+      <Routes>
         <Route
           exact
           path={`${matchUrl}/`}
@@ -18,7 +18,7 @@ function FaqsRoutes(props) {
           path={`${matchUrl}/faq`}
           render={() => <Faq event={event} parentUrl={matchUrl} {...props} />}
         />
-      </Switch>
+      </Routes>
     </Fragment>
   )
 }

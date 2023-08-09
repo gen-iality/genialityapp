@@ -1,4 +1,4 @@
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 
 import TimeTracking from './TimeTracking'
 import { FunctionComponent } from 'react'
@@ -12,13 +12,13 @@ const TimeTrackingRoutes: FunctionComponent<ITimeTrackingRoutesProps> = (props) 
   const { event, matchUrl } = props
   return (
     <>
-      <Switch>
+      <Routes>
         <Route
           exact
           path={`${matchUrl}/`}
           render={() => <TimeTracking event={event} />}
         />
-      </Switch>
+      </Routes>
     </>
   )
 }

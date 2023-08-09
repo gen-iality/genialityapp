@@ -1,4 +1,4 @@
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import Herramientas from './Herramientas'
 import Herramienta from './Herramienta'
 
@@ -7,7 +7,7 @@ function HerramientaRoutes(props) {
 
   return (
     <>
-      <Switch>
+      <Routes>
         <Route
           exact
           path={`${matchUrl}/`}
@@ -18,7 +18,7 @@ function HerramientaRoutes(props) {
           path={`${matchUrl}/herramienta`}
           render={() => <Herramienta event={event} parentUrl={matchUrl} {...props} />}
         />
-      </Switch>
+      </Routes>
     </>
   )
 }

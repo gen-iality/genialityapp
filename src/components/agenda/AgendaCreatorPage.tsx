@@ -8,7 +8,7 @@ import {
 } from 'react'
 
 import { Col, Form, Input, Row, Select, TimePicker } from 'antd'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import AgendaContext from '@context/AgendaContext'
 import { hourWithAdditionalMinutes } from './hooks/useHourWithAdditionalMinutes'
 import useAvailableDaysFromEvent from './hooks/useAvailableDaysFromEvent'
@@ -42,7 +42,7 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
   const [form] = Form.useForm<FormValues>()
   const allDays = useAvailableDaysFromEvent(props.event)
 
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const { formWidgetFlow, saveActivityType, setActivityType } = useActivityType()
 
@@ -97,7 +97,7 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
     }
 
     console.debug('redirecting to /activity')
-    history.push(`${props.parentUrl}/activity`, { edit: currentAgenda._id })
+    navigate(`${props.parentUrl}/activity`, { edit: currentAgenda._id })
   }, [shouldRedirect, currentAgenda, cAgenda?.activityEdit])
 
   useEffect(() => {

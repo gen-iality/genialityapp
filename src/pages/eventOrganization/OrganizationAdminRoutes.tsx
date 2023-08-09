@@ -4,7 +4,7 @@ import {
   Route,
   NavLink,
   redirect,
-  Switch,
+  Routes,
   useParams,
   useLocation,
   useRouteMatch,
@@ -174,7 +174,7 @@ const OrganizationAdminRoutes: FunctionComponent = () => {
               </a>
             </Tag>
 
-            <Switch>
+            <Routes>
               <Route
                 exact
                 path={`${match.url}/`}
@@ -300,7 +300,7 @@ const OrganizationAdminRoutes: FunctionComponent = () => {
                   <NoMatchPage parentUrl={routeProps.match.path} org={organization} />
                 )}
               />
-            </Switch>
+            </Routes>
           </div>
         )}
       </Layout.Content>

@@ -1,4 +1,4 @@
-import { Route, Switch, useRouteMatch } from 'react-router-dom'
+import { Route, Routes, useRouteMatch } from 'react-router-dom'
 /** --------------------
  *  secciones del curso
  * ---------------------*/
@@ -12,14 +12,14 @@ const ProductoSectionRoutes = () => {
 
   if (!cEvent.value) return <h1>Cargando...</h1>
   return (
-    <Switch>
+    <Routes>
       <Route exact path={`${path}`}>
         <ProductList />
       </Route>
       <Route path={`${path}/:id/detailsproducts`}>
         <DetailsProduct />
       </Route>
-    </Switch>
+    </Routes>
   )
 }
 export default ProductoSectionRoutes

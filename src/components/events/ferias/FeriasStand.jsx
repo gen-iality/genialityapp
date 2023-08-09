@@ -1,16 +1,14 @@
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import { Badge } from 'antd'
 
 function FeriasStand(props) {
-  const history = useHistory()
+  const navigate = useNavigate()
   return (
     <>
       <div
         style={{ position: 'relative', cursor: 'pointer' }}
         onClick={() => {
-          history.push(
-            `/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`,
-          )
+          navigate(`/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`)
         }}
       >
         <div

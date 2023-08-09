@@ -1,4 +1,4 @@
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 
 /** --------------------
  *  secciones del curso
@@ -12,7 +12,7 @@ const ProductSectionRoutes = (props) => {
   const { matchUrl } = props
 
   return (
-    <Switch>
+    <Routes>
       <Route exact path={`${matchUrl}/`}>
         <Product {...props} />
       </Route>
@@ -25,7 +25,7 @@ const ProductSectionRoutes = (props) => {
       <Route exact path={`${matchUrl}/:id/oferts`}>
         <OfertProduts {...props} />
       </Route>
-    </Switch>
+    </Routes>
   )
 }
 export default ProductSectionRoutes

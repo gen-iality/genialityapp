@@ -4,7 +4,7 @@ import {
   BrowserRouter as Router,
   Route,
   redirect,
-  Switch,
+  Routes,
   RouteProps,
 } from 'react-router-dom'
 import EventAdminRoutes from '@components/events/EventAdminRoutes'
@@ -83,7 +83,7 @@ const ContentContainer = () => {
       }}
     >
       <main className="main" style={{ minHeight: '100vh' }}>
-        <Switch>
+        <Routes>
           {/** Private routes */}
           <PrivateRoute
             exact
@@ -199,7 +199,7 @@ const ContentContainer = () => {
               render={(routeProps) => <MainProfile {...routeProps} />}
             />
           )}
-        </Switch>
+        </Routes>
       </main>
     </Router>
   )

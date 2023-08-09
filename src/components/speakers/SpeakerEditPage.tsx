@@ -1,5 +1,5 @@
 import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react'
-import { redirect as redirectRouter, useHistory, useLocation } from 'react-router-dom'
+import { redirect as redirectRouter, useNavigate, useLocation } from 'react-router-dom'
 import EviusReactQuill from '../shared/eviusReactQuill'
 import { fieldsSelect, handleRequestError, handleSelect } from '@helpers/utils'
 import { CategoriesAgendaApi, EventsApi, SpeakersApi } from '@helpers/request'
@@ -74,7 +74,7 @@ const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
   const [editDataIsLoading, setEditDataIsLoading] = useState(true)
 
   const { state } = useLocation<any>()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   useEffect(() => {
     dataTheLoaded()
@@ -160,7 +160,7 @@ const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
         else await SpeakersApi.create(eventID, body)
         StateMessage.destroy('loading')
         StateMessage.show(null, 'success', 'Conferencista guardado correctamente!')
-        if (!justCreate) history.push(parentUrl)
+        if (!justCreate) navigate(parentUrl)
         else if (props.onCreated) props.onCreated()
       } catch (e) {
         StateMessage.destroy('loading')
@@ -216,7 +216,7 @@ const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
 
   //FN para ir a una ruta específica (ruedas en los select)
   function goSection(path: string, state: any) {
-    history.push(path, state)
+    navigate(path, state)
   }
 
   const prefixSelector = (

@@ -1,5 +1,5 @@
 import { Component, FunctionComponent } from 'react'
-import { Route, redirect, Switch, Link, RouteProps } from 'react-router-dom'
+import { Route, redirect, Routes, Link, RouteProps } from 'react-router-dom'
 import dayjs from 'dayjs'
 import momentLocalizer from 'react-widgets-moment'
 import Loading from '../loaders/loading'
@@ -29,7 +29,7 @@ import ConferenceRoute from '../zoom/index'
 import ReportNetworking from '../networking/report'
 import NewsSectionRoutes from '../news/newsRoute'
 import ProductSectionRoutes from '../products/productsRoute'
-import { withRouter } from 'react-router-dom'
+import { withRouter } from '@/withRouter'
 import withContext from '@context/withContext'
 import { Layout, Row, Col, Button, Result, Tag } from 'antd'
 import { AdminUsers } from '@components/AdminUsers/AdminUsers'
@@ -252,7 +252,7 @@ class EventAdminRoutes extends Component {
             </Col>
           </Row>
           <section className="section event-wrapper">
-            <Switch>
+            <Routes>
               <Route
                 exact
                 path={`${match.url}/`}
@@ -564,7 +564,7 @@ class EventAdminRoutes extends Component {
                   <NoMatchPage eventId={event._id} event={event} parentUrl={match.url} />
                 )}
               />
-            </Switch>
+            </Routes>
           </section>
         </Content>
       </Layout>

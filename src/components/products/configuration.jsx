@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Col, Row, Spin, Switch } from 'antd'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import ReactQuill from 'react-quill'
 import { toolbarEditor } from '@helpers/constants'
 
@@ -14,7 +14,7 @@ const Configuration = (props) => {
   const [isLoading, setIsLoading] = useState(false)
   const [loadingData, setLoadingData] = useState(true)
 
-  const history = useHistory()
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (props.eventId) {
@@ -31,7 +31,7 @@ const Configuration = (props) => {
     }
   }, [])
 
-  const goBack = () => history.goBack()
+  const goBack = () => navigate(-1)
   function onChange(checked) {
     setCheckSubasta(checked)
   }

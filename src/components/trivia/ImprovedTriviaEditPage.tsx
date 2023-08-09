@@ -1,6 +1,6 @@
 import { FunctionComponent, useState, useEffect } from 'react'
 
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { Col, Row } from 'antd'
 import TriviaEditor from './TriviaEditor'
@@ -17,9 +17,9 @@ interface ITriviaEditPageProps {
 const TriviaEditPage: FunctionComponent<ITriviaEditPageProps> = (props) => {
   const { event, parentUrl } = props
   const params = useParams<ParamsType>()
-  const history = useHistory()
+  const navigate = useNavigate()
 
-  const goBack = () => history.push(`${parentUrl}`)
+  const goBack = () => navigate(`${parentUrl}`)
 
   return (
     <Row justify="center" wrap gutter={8}>

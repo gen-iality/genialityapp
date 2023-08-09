@@ -1,4 +1,4 @@
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import Tickets from './tickets'
 import Ticket from './ticket'
 
@@ -7,7 +7,7 @@ function TicketsRoutes(props) {
 
   return (
     <>
-      <Switch>
+      <Routes>
         <Route
           exact
           path={`${matchUrl}/`}
@@ -18,7 +18,7 @@ function TicketsRoutes(props) {
           path={`${matchUrl}/ticket`}
           render={() => <Ticket event={event} parentUrl={matchUrl} {...props} />}
         />
-      </Switch>
+      </Routes>
     </>
   )
 }

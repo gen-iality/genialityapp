@@ -6,7 +6,7 @@ import {
   BarsOutlined,
   ReloadOutlined,
 } from '@ant-design/icons'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import CMS from '../newComponent/CMS'
 
 const { Text } = Typography
@@ -14,7 +14,7 @@ const { Text } = Typography
 function InvitationsList(props) {
   const { match, eventId, matchUrl } = props
 
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const columns = [
     {
@@ -92,7 +92,7 @@ function InvitationsList(props) {
             <Col>
               <Button
                 onClick={() => {
-                  history.push(`/eventadmin/${eventId}/dashboard`)
+                  navigate(`/eventadmin/${eventId}/dashboard`)
                 }}
                 type="ghost"
                 icon={<LineChartOutlined />}

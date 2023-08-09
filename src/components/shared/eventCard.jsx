@@ -1,6 +1,6 @@
 /** React's libraries */
 import { useState } from 'react'
-import { Link, useHistory, useLocation } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import dayjs from 'dayjs'
 import PropTypes from 'prop-types'
 
@@ -32,7 +32,7 @@ const EventCard = ({
   paymentDispatch,
   organization,
 }) => {
-  let history = useHistory()
+  let navigate = useNavigate()
   let location = useLocation()
 
   const [isOpenModal, setIsOpenModal] = useState(false)

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Route, Switch, useLocation } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import InvitedUsers from './eventUsersList'
 import CreateMessage from './send'
 import ImportUsers from '../import-users/importUser'
@@ -26,7 +26,7 @@ function ListaInvitados(props) {
 
   return (
     <>
-      <Switch>
+      <Routes>
         <Route
           exact
           path={`${parentUrl}/invitados`}
@@ -64,7 +64,7 @@ function ListaInvitados(props) {
             />
           )}
         />
-      </Switch>
+      </Routes>
     </>
   )
 }

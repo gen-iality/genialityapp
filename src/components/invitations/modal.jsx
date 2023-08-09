@@ -1,5 +1,5 @@
 import { Component, Fragment } from 'react'
-import { withRouter } from 'react-router-dom'
+import { withRouter } from '@/withRouter'
 import { Modal, Button } from 'antd'
 
 class ModalInvitationError extends Component {

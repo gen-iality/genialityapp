@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import Agenda from './agenda'
 import AgendaTypeCat from './typecat'
 import AgendaTypeCatCE from './AgendaTypeCatCE'
@@ -12,7 +12,7 @@ function AgendaRoutes(props) {
 
   return (
     <Fragment>
-      <Switch>
+      <Routes>
         <Route
           exact
           path={`${matchUrl}/`}
@@ -61,7 +61,7 @@ function AgendaRoutes(props) {
             <AgendaTypeCatCE event={event} matchUrl={routeProps.match.url} />
           )}
         />
-      </Switch>
+      </Routes>
     </Fragment>
   )
 }

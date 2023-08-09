@@ -1,5 +1,6 @@
 import { Component } from 'react'
-import { withRouter, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { withRouter } from '@/withRouter'
 import { EventsApi, UsersApi, eventTicketsApi } from '@helpers/request'
 import { Table, Input, Button, Space, Menu, Row, Col, Tag } from 'antd'
 import {
@@ -270,7 +271,7 @@ class EventUsersList extends Component {
 
     // if (attendeesForSendMessage && attendeesForSendMessage.length > 0) {
     this.props.setGuestSelected(attendeesForSendMessage)
-    this.props.history.push(`${this.props.match.url}/createmessage`)
+    this.props.navigate(`${this.props.match.url}/createmessage`)
     // } else {
     //   this.setState({ modalVisible: modalVisible ? false : true });
     // }

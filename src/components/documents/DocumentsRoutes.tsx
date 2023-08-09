@@ -1,5 +1,5 @@
 import { Fragment, FunctionComponent } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import Documents from './documents'
 import Document from './Document'
 
@@ -13,7 +13,7 @@ const DocumentsRoutes: FunctionComponent<IDocumentsRoutesProps> = (props) => {
 
   return (
     <Fragment>
-      <Switch>
+      <Routes>
         <Route
           exact
           path={`${matchUrl}/`}
@@ -24,7 +24,7 @@ const DocumentsRoutes: FunctionComponent<IDocumentsRoutesProps> = (props) => {
           path={`${matchUrl}/document`}
           render={() => <Document event={event} parentUrl={matchUrl} />}
         />
-      </Switch>
+      </Routes>
     </Fragment>
   )
 }

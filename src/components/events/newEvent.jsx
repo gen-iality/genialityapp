@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { withRouter } from 'react-router-dom'
+import { withRouter } from '@/withRouter'
 import {
   Actions,
   OrganizationFuction,
@@ -331,7 +331,7 @@ class NewEvent extends Component {
   };
 
   goTo = (route) => {
-    this.props.history.push(`${this.props.match.url}/${route}`);
+    this.props.navigate(`${this.props.match.url}/${route}`);
   }; */
 
   /*Funciones para navegar en el paso a paso */

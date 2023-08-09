@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import CertificateListPage from './CertificateListPage'
 import CertificateEditorPage from './CertificateEditorPage'
 
@@ -7,7 +7,7 @@ function CertificateRoutes(props: any) {
   const { event, matchUrl } = props
   return (
     <Fragment>
-      <Switch>
+      <Routes>
         <Route
           exact
           path={`${matchUrl}/`}
@@ -20,7 +20,7 @@ function CertificateRoutes(props: any) {
             <CertificateEditorPage event={event} parentUrl={matchUrl} {...props} />
           )}
         />
-      </Switch>
+      </Routes>
     </Fragment>
   )
 }

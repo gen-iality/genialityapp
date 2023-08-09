@@ -13,7 +13,7 @@ import { RouterPrompt } from '@antdComponents/RoutePrompt'
 import { StateMessage } from '@context/MessageService'
 import Loading from '../profile/loading'
 
-import { redirect, useHistory, useLocation } from 'react-router'
+import { redirect, useNavigate, useLocation } from 'react-router'
 
 import AgendaContext from '@context/AgendaContext'
 import { AgendaApi, DocumentsApi } from '@helpers/request'
@@ -65,7 +65,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
 
   const [form] = Form.useForm<FormValues>()
 
-  const history = useHistory()
+  const navigate = useNavigate()
   const location = useLocation<LocationStateType>()
 
   const deleteActivity = useDeleteActivity()
@@ -138,7 +138,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
         // cAgenda.setIsPublished(true)
       } else if (changePathWithoutSaving) {
         console.log('go to', props.parentUrl)
-        history.push(`${props.parentUrl}`)
+        navigate(`${props.parentUrl}`)
       }
 
       StateMessage.show(null, 'success', 'Información guardada correctamente!')
@@ -217,7 +217,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
           deleteActivity(props.event._id, currentAgenda._id!, currentAgenda.name).then(
             () => {
               setShouldRedirect(true)
-              history.push(`${props.parentUrl}`)
+              navigate(`${props.parentUrl}`)
             },
           )
         },

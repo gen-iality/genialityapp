@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { ChromePicker } from 'react-color'
 import { CategoriesAgendaApi, TypesAgendaApi } from '@helpers/request'
 import { handleRequestError } from '@helpers/utils'
@@ -23,7 +23,7 @@ const AgendaTypeCatCE = (props) => {
     subject === 'addcategorias' || subject === 'editcategorias'
       ? CategoriesAgendaApi
       : TypesAgendaApi
-  const history = useHistory()
+  const navigate = useNavigate()
   const [categoryValues, setCategoryValues] = useState({})
   const [name, setName] = useState('')
   const [color, setColor] = useState('#000000')
@@ -68,7 +68,7 @@ const AgendaTypeCatCE = (props) => {
 
         StateMessage.destroy('loading')
         StateMessage.show(null, 'success', 'Información guardada correctamente!')
-        history.push(
+        navigate(
           `${props.matchUrl}/${
             subject === 'addcategorias' || subject === 'editcategorias'
               ? 'categorias'
@@ -114,7 +114,7 @@ const AgendaTypeCatCE = (props) => {
                 'success',
                 'Se eliminó la información correctamente!',
               )
-              history.push(
+              navigate(
                 `${props.matchUrl}/${
                   subject === 'addcategorias' || subject === 'editcategorias'
                     ? 'categorias'

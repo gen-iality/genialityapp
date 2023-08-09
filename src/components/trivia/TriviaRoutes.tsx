@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import TriviaListPage from './TriviaListPage'
 
 import ImprovedTriviaEditPage from './ImprovedTriviaEditPage'
@@ -18,7 +18,7 @@ const TriviaRoutes: FunctionComponent<ITriviaRoutesProps> = (props) => {
 
   return (
     <>
-      <Switch>
+      <Routes>
         <Route
           exact
           path={`${matchUrl}/`}
@@ -69,7 +69,7 @@ const TriviaRoutes: FunctionComponent<ITriviaRoutesProps> = (props) => {
             />
           )}
         />
-      </Switch>
+      </Routes>
     </>
   )
 }

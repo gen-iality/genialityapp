@@ -1,5 +1,6 @@
 import { Component } from 'react'
-import { redirect, Link, withRouter } from 'react-router-dom'
+import { redirect, Link } from 'react-router-dom'
+import { withRouter } from '@/withRouter'
 import dayjs from 'dayjs'
 import 'dayjs/locale/es-us'
 import { EventsApi } from '@helpers/request'

@@ -1,5 +1,5 @@
 import { FunctionComponent, useEffect, useMemo, useState } from 'react'
-import { redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom'
+import { redirect, Route, Routes, useLocation, useResolvedPath } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
 import { setSpaceNetworking } from '../../../redux/networking/actions'
@@ -79,7 +79,7 @@ interface IEventSectionRoutesProps extends MapStateToProps, MapDispatchToProps {
 const EventSectionRoutes: FunctionComponent<
   WithEviusContextProps<IEventSectionRoutesProps>
 > = (props) => {
-  const { path } = useRouteMatch()
+  const { pathname: path } = useLocation()
   const { event_id, event_name } = useParams<{ event_id?: string; event_name?: string }>()
   const { GetPermissionsEvent } = useHelper()
   const cEventUser = useUserEvent()
@@ -245,7 +245,7 @@ const EventSectionRoutes: FunctionComponent<
         </>
       )}
 
-      <Switch>
+      <Routes>
         <Route exact path={`${path}/`}>
           {props.cEvent.value?.itemsMenu && redirect(validateTypeUrl())}
         </Route>
@@ -379,7 +379,7 @@ const EventSectionRoutes: FunctionComponent<
         <Route path={`${path}/responsePayu`}>
           <ResponsePayu />
         </Route>
-      </Switch>
+      </Routes>
     </>
   )
 }

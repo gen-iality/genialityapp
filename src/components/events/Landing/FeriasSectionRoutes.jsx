@@ -1,4 +1,4 @@
-import { Route, Switch, useRouteMatch } from 'react-router-dom'
+import { Route, Routes, useRouteMatch } from 'react-router-dom'
 /** --------------------
  *  secciones del curso
  * ---------------------*/
@@ -12,14 +12,14 @@ const FeriasSectionRoutes = () => {
 
   if (!cEvent.value) return <h1>Cargando...</h1>
   return (
-    <Switch>
+    <Routes>
       <Route exact path={`${path}`}>
         <FeriasList event_id={cEvent.value._id} />
       </Route>
       <Route path={`${path}/:id/detailsCompany`}>
         <FeriasDetail eventId={cEvent.value._id} />
       </Route>
-    </Switch>
+    </Routes>
   )
 }
 export default FeriasSectionRoutes

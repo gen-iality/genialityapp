@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { SpacesApi } from '@helpers/request'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { handleRequestError } from '@helpers/utils'
 import { Row, Col, Form, Input, Modal } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
@@ -18,7 +18,7 @@ const Espacio = (props) => {
   const eventID = props.event._id
   const location = useLocation()
   const locationState = location.state //si viene new o edit en el state, si es edit es un id
-  const history = useHistory()
+  const navigate = useNavigate()
   const [espacio, setEspacio] = useState({})
 
   useEffect(() => {
@@ -49,7 +49,7 @@ const Espacio = (props) => {
         }
         StateMessage.destroy('loading')
         StateMessage.show(null, 'success', 'Información guardada correctamente!')
-        history.push(`${props.parentUrl}/espacios`)
+        navigate(`${props.parentUrl}/espacios`)
       } catch (e) {
         StateMessage.destroy('loading')
         StateMessage.show(null, 'error', handleRequestError(e).message)
@@ -87,7 +87,7 @@ const Espacio = (props) => {
                 'success',
                 'Se eliminó la información correctamente!',
               )
-              history.push(`${props.parentUrl}/espacios`)
+              navigate(`${props.parentUrl}/espacios`)
             } catch (e) {
               StateMessage.destroy('loading')
               StateMessage.show(null, 'error', handleRequestError(e).message)

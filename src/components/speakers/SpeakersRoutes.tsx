@@ -1,4 +1,4 @@
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import SpeakersListPage from './SpeakersListPage'
 import SpeakerEditPage from './SpeakerEditPage'
 import { FunctionComponent } from 'react'
@@ -12,7 +12,7 @@ const SpeakersRoutes: FunctionComponent<ISpeakersRoutesProps> = (props) => {
   const { eventID, matchUrl } = props
 
   return (
-    <Switch>
+    <Routes>
       <Route
         exact
         path={`${matchUrl}/`}
@@ -23,7 +23,7 @@ const SpeakersRoutes: FunctionComponent<ISpeakersRoutesProps> = (props) => {
         path={`${matchUrl}/speaker`}
         render={() => <SpeakerEditPage eventID={eventID} parentUrl={matchUrl} />}
       />
-    </Switch>
+    </Routes>
   )
 }
 
