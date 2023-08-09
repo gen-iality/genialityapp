@@ -190,6 +190,23 @@ export const EventProgressProvider: FunctionComponent<PropsWithChildren> = (prop
       JSON.stringify(eventUser.activity_progresses)
     )
       return
+
+    FB.ActivityProgresses.edit(
+      eventUser.event_id,
+      eventUser.account_id,
+      {
+        activities: rawActivities.map((activity) => activity._id!),
+        checked_in_activities: filteredActivities.map((activity) => activity._id!),
+        filtered_activities: checkedInRawActivities.map((attendee) => attendee._id!),
+      },
+      { merge: true },
+    ).finally(() =>
+      console.log(
+        'activity progresses updated in:',
+        eventUser.event_id,
+        eventUser.account_id,
+      ),
+    )
     console.debug('save new eventUser with progresses:', eventUser)
     await UsersApi.editEventUser(eventUser, cEventContext.value._id, eventUser._id)
   }
