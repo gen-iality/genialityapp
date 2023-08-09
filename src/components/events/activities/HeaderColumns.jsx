@@ -30,8 +30,8 @@ const HeaderColumns = (props) => {
   const { currentActivity } = useHelper()
   const cEvent = useEventContext()
 
-  const { getRequestByActivity, setRefActivity, setActivityEdit, typeActivity } =
-    useContext(AgendaContext)
+  const getRequestByActivity = () => {} // missing function
+  const { setRefActivity, setActivityEdit, typeActivity } = useContext(AgendaContext)
 
   // Se ejecuta cuando tiene una lección para establecer la referencia y obtener los request
   useEffect(() => {
