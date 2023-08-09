@@ -41,21 +41,20 @@ export const listenAuction = (eventId: string, setConfig: any) => {
       }
     });
 };
-export const listenBids = (eventId: string, productID : string , setBids: any, setLoading? : any) => {
-
-  return firestore
-    .collection(`auctionByEventId`)
-    .doc(eventId)
-    .collection('Products')
-    .doc(productID)
-    .collection('Bids')
-    .onSnapshot((snapshot) => {
-      if (!snapshot.empty) {
-        const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })) 
-        setBids(data);
-      } else {
-        setBids([]);
-      }
-      setLoading(false)
-    });
+export const listenBids = (eventId: string, productID: string, setBids: any, setLoading?: any) => {
+    return firestore
+      .collection(`auctionByEventId`)
+      .doc(eventId)
+      .collection('Bids')
+      .where('productId', '==', productID)
+      .orderBy('offered', 'desc')
+      .onSnapshot((snapshot) => {
+        if (!snapshot.empty) {
+          const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+          setBids(data);
+        } else {
+          setBids([]);
+        }
+        setLoading(false)
+      });
 };

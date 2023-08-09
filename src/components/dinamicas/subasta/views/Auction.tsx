@@ -7,6 +7,7 @@ import { AuctionContext } from '../context/AuctionContext';
 import ExecuteAuction from './ExecuteAuction';
 import CreateProducts from './CreateProducts';
 import ConfigAppearance from '../components/cms/ConfigAppearance';
+import Report from '../components/cms/Report';
 
 export default function AuctionView({auction} : {auction : Auction}) {
 
@@ -33,7 +34,7 @@ export default function AuctionView({auction} : {auction : Auction}) {
       
 
       <Tabs.TabPane tab='Reporte de subasta' key={5}>
-
+        <Report eventId={eventId} />
       </Tabs.TabPane>
     </Tabs>
   );

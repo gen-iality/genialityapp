@@ -1,7 +1,6 @@
 import { UploadFile } from 'antd/lib/upload/interface';
-import DrawerAuction from '../components/landing/DrawerAuction';
-import ButtonsContainer from '../components/landing/ButtonsContainer';
-import { background_color } from '../../../games/bingo/constants/constants';
+import event from '@/components/events/event';
+
 export interface AuctionConfig {
     name:     string,
 	currency: string,
@@ -66,6 +65,7 @@ interface StyleCard {
 }
 export interface IBids {
     date: string
+    productId: string
     name: string
     offered: number
 }
@@ -89,7 +89,10 @@ export interface ModalProduct {
     state:          ProductState
     images:         UploadFile[];
 }
-export interface DrawerRules {
+export interface ReportProps {
+    eventId: string
+}
+export interface DrawerRulesProps {
     showDrawerRules: boolean
     setshowDrawerRules: (value : boolean) => void
     auctionRules: {

@@ -94,13 +94,11 @@ export const getProducts =  async  (eventId : string) => {
     }
 }
 
-export const saveOffer =  async  (eventId: string, productID : string, offer: IBids, auction: Auction ) => {
+export const saveOffer =  async  (eventId: string, offer: IBids, auction: Auction ) => {
   try {
     const response = await firestore
     .collection(`auctionByEventId`)
     .doc(eventId)
-    .collection('Products')
-    .doc(productID)
     .collection('Bids')
     .add(offer)
       
@@ -108,9 +106,24 @@ export const saveOffer =  async  (eventId: string, productID : string, offer: IB
         await saveAuctioFirebase(eventId, { ...auction, currentProduct:{ ...auction.currentProduct, price: offer.offered }});
       }
     } catch (error) {
-      console.log(error);
-
       DispatchMessageService({ type: 'error', msj: 'Error al enviar oferta', action: 'show' });
       return false;
     }
 }
+ export const getOffers =  async  (eventId: string) => {
+  try {
+    const querySnapshot = await firestore
+    .collection(`auctionByEventId`)
+    .doc(eventId)
+    .collection('Bids')
+    .get()
+
+    const data = querySnapshot.docs.map((product) => ({ id  : product.id,  ...product.data() }))
+    return data
+    } catch (error) {
+      console.log(error);
+
+      DispatchMessageService({ type: 'error', msj: 'Error al enviar oferta', action: 'show' });
+      return [];
+    }
+ }
