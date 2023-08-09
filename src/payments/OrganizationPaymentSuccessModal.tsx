@@ -64,7 +64,7 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
       En Endocampus encontrará una amplia variedad de Simposios, Congresos, Cursos y Materiales educativos de alta calidad, desarrollado por líderes de opinión en diferentes patologías de la Endocrinología. Nuestro objetivo es brindarle una experiencia de aprendizaje enriquecedora.
       Le invitamos a explorar nuestra plataforma</p>`,
       'Ir a ' + organization.name,
-      'Has sido inscrita/o de manera satisfactoria ',
+      `Has sido inscrita/o de manera satisfactoria a  ${organization.name}.`,
     )
 
     StateMessage.destroy('presend')
