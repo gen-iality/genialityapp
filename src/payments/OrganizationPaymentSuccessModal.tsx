@@ -57,18 +57,18 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
     await EventsApi.sendGenericMail(
       organizationUser?.user?.email,
       `http://${window.location.host}/organization/${organization._id}`,
-      `Bienvenido, has sido inscrito de manera satisfactoria  a "${organization.name}". Podrás disfrutar de todo el contenido del portal de conocimiento en endocrinologia más grande de America latina.
-      En la parte inferior encontraras un enlace de acceso rápido.`,
+      `<p>Bienvenida/o, has sido inscrita/o de manera satisfactoria  a "${organization.name}".</p> 
+      <p>Plataforma de educación médica virtual de la Asociación Colombiana de Endocrinología, Diabetes y Metabolismo - ACE</p>
+      <p>Nos complace darle la más cordial bienvenida a nuestra plataforma educativa.</p>
+      <p>
+      En Endocampus encontrará una amplia variedad de Simposios, Congresos, Cursos y Materiales educativos de alta calidad, desarrollado por líderes de opinión en diferentes patologías de la Endocrinología. Nuestro objetivo es brindarle una experiencia de aprendizaje enriquecedora.
+      Le invitamos a explorar nuestra plataforma</p>`,
       'Ir a ' + organization.name,
-      'Inscripción cursos pagos',
+      'Has sido inscrita/o de manera satisfactoria ',
     )
 
     StateMessage.destroy('presend')
-    StateMessage.show(
-      null,
-      'success',
-      'todo bonito, todo contento, inscripción en progreso',
-    )
+    StateMessage.show(null, 'success', 'Inscripción en progreso')
   }
 
   useEffect(() => {
