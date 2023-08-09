@@ -184,13 +184,6 @@ export const EventProgressProvider: FunctionComponent<PropsWithChildren> = (prop
       progress_filtered_activities: progressFilteredActivities,
       progress_of_quices: progressOfQuices,
     }
-    // More injection of data
-    eventUser.activity_progresses.viewed_activity_map = Object.fromEntries(
-      eventUser.activity_progresses.activities.map((activityId: string) => [
-        activityId,
-        eventUser.activity_progresses.checked_in_activities.includes(activityId),
-      ]),
-    )
     // Check if the new data is really new data
     if (
       JSON.stringify(lastEventUser.activity_progresses) ===
