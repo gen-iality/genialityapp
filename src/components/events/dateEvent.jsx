@@ -4,7 +4,8 @@ import { EventsApi } from '@helpers/request'
 import { Button, notification } from 'antd'
 
 import DayPicker, { DateUtils } from 'react-day-picker'
-import 'react-day-picker/lib/style.css'
+// import 'react-day-picker/lib/style.css'
+import 'react-day-picker/dist/style.css'
 
 class DateEvent extends Component {
   constructor(props) {
