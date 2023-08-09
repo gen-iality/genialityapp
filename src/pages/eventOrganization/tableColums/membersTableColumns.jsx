@@ -182,7 +182,7 @@ export const columns = (
     newColumns.push(editOption)
 
     setColumns(newColumns)
-  }, [])
+  }, [columnsData])
 
   return columns
 }
