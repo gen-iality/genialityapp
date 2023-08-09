@@ -1,5 +1,5 @@
 import { Component, FunctionComponent } from 'react'
-import { Route, Redirect, Switch, Link, RouteProps } from 'react-router-dom'
+import { Route, redirect, Switch, Link, RouteProps } from 'react-router-dom'
 import dayjs from 'dayjs'
 import momentLocalizer from 'react-widgets-moment'
 import Loading from '../loaders/loading'
@@ -92,7 +92,7 @@ const Protected: FunctionComponent<IProtected> = (props) => {
             {render && render(routeProps)}
           </ValidateAccessRouteCms>
         ) : (
-          <Redirect push to={`${url}/agenda`} />
+          <>{redirect(`${url}/agenda`)}</>
         )
       }
     />
@@ -256,11 +256,11 @@ class EventAdminRoutes extends Component {
               <Route
                 exact
                 path={`${match.url}/`}
-                render={() => (
-                  <Redirect
-                    to={`${match.url}${match.url.substr(-1) === '/' ? 'main' : '/main'}`}
-                  />
-                )}
+                render={() =>
+                  redirect(
+                    `${match.url}${match.url.substr(-1) === '/' ? 'main' : '/main'}`,
+                  )
+                }
               />
               <Protected
                 path={`${match.url}/main`}

@@ -1,5 +1,5 @@
 import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react'
-import { Redirect, useHistory, useLocation } from 'react-router-dom'
+import { redirect as redirectRouter, useHistory, useLocation } from 'react-router-dom'
 import EviusReactQuill from '../shared/eviusReactQuill'
 import { fieldsSelect, handleRequestError, handleSelect } from '@helpers/utils'
 import { CategoriesAgendaApi, EventsApi, SpeakersApi } from '@helpers/request'
@@ -241,7 +241,7 @@ const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
     </Select>
   )
 
-  if (!state || redirect) return <Redirect to={parentUrl} />
+  if (!state || redirect) return redirectRouter(parentUrl)
 
   return (
     <Form onFinish={() => submit(data)} {...formLayout}>

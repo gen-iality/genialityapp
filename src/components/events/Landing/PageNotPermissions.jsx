@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { useUserEvent } from '@context/eventUserContext'
 import { useEventContext } from '@context/eventContext'
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions'
-import { Redirect } from 'react-router-dom'
+import { redirect } from 'react-router-dom'
 import { EventsApi } from '@helpers/request'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import UserLoginContainer from '../UserLoginContainer'
@@ -71,7 +71,7 @@ const PageNotPermissions = (props) => {
         <>
           {' '}
           {redirect !== null ||
-            (redirect !== undefined && <Redirect to={`${urlsection}${redirect}`} />)}
+            (redirect !== undefined && redirect(`${urlsection}${redirect}`))}
           {/* Sección quemada para curso de subasta sileciosa FTDJ */}
           {isLoading && (
             <div style={{ textAlign: 'center' }}>

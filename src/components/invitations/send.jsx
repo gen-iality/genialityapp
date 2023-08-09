@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { Redirect, Link, withRouter } from 'react-router-dom'
+import { redirect, Link, withRouter } from 'react-router-dom'
 import dayjs from 'dayjs'
 import 'dayjs/locale/es-us'
 import { EventsApi } from '@helpers/request'
@@ -202,8 +202,7 @@ class SendRsvp extends Component {
 
   render() {
     const { disabled, include_date, isLoading } = this.state
-    if (this.state.redirect)
-      return <Redirect to={{ pathname: this.state.url_redirect }} />
+    if (this.state.redirect) return redirect(this.state.url_redirect)
     return (
       <>
         <Form {...formLayout}>

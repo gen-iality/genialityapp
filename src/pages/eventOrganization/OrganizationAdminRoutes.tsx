@@ -3,7 +3,7 @@ import { useState, useEffect, FunctionComponent } from 'react'
 import {
   Route,
   NavLink,
-  Redirect,
+  redirect,
   Switch,
   useParams,
   useLocation,
@@ -61,7 +61,6 @@ const Protected: FunctionComponent<IProtected> = ({ render, org, ...rest }) => (
           {render && render(routeProps)}
         </ValidateAccessRouteCms>
       ) : (
-        // <Redirect push to={`${url}/agenda`} />
         <>{console.log('debug no hay orgId')}</>
       )
     }
@@ -179,7 +178,7 @@ const OrganizationAdminRoutes: FunctionComponent = () => {
               <Route
                 exact
                 path={`${match.url}/`}
-                render={() => <Redirect to={`${match.url}/events`} />}
+                render={() => <>{redirect(`${match.url}/events`)}</>}
               />
               <Protected
                 exact

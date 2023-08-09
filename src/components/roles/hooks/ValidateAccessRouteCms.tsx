@@ -6,7 +6,7 @@ import {
   useEffect,
   useState,
 } from 'react'
-import { Redirect } from 'react-router-dom'
+import { redirect } from 'react-router-dom'
 import useHasRole from './userhasRole'
 import { Alert, Spin } from 'antd'
 import { useUserEvent } from '@context/eventUserContext'
@@ -55,7 +55,7 @@ const ValidateAccessRouteCms: FunctionComponent<
       setComponent(children)
       setThisComponentIsLoading(false)
     } else {
-      setComponent(<Redirect to={`/noaccesstocms/${eventId}/true`} />)
+      setComponent(() => <>{redirect(`/noaccesstocms/${eventId}/true`)}</>)
       setThisComponentIsLoading(false)
     }
   }
@@ -74,7 +74,7 @@ const ValidateAccessRouteCms: FunctionComponent<
       setComponent(children)
       setThisComponentIsLoading(false)
     } else {
-      setComponent(<Redirect to={`/noaccesstocms/withoutPermissions/true`} />)
+      setComponent(() => <>redirect(`/noaccesstocms/withoutPermissions/true`)</>)
       setThisComponentIsLoading(false)
     }
   }
@@ -95,7 +95,7 @@ const ValidateAccessRouteCms: FunctionComponent<
 
   /** No se permite acceso al cms si el usuario no tiene eventUser */
   if (!cEventUser.value && cEventUser.status === 'LOADED')
-    return <Redirect to={`/noaccesstocms/${eventId}/true`} />
+    return redirect(`/noaccesstocms/${eventId}/true`)
 
   return (
     <Spin tip="Cargando..." size="large" spinning={thisComponentIsLoading}>

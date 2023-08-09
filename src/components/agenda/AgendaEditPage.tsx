@@ -13,7 +13,7 @@ import { RouterPrompt } from '@antdComponents/RoutePrompt'
 import { StateMessage } from '@context/MessageService'
 import Loading from '../profile/loading'
 
-import { Redirect, useHistory, useLocation } from 'react-router'
+import { redirect, useHistory, useLocation } from 'react-router'
 
 import AgendaContext from '@context/AgendaContext'
 import { AgendaApi, DocumentsApi } from '@helpers/request'
@@ -238,7 +238,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
     cAgenda.saveConfig()
   }, [cAgenda.isPublished])
 
-  if (!location.state || shouldRedirect) return <Redirect to={props.parentUrl} />
+  if (!location.state || shouldRedirect) return redirect(props.parentUrl)
 
   return (
     <Form

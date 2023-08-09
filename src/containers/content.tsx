@@ -3,7 +3,7 @@ import { Grid, Spin, Layout } from 'antd'
 import {
   BrowserRouter as Router,
   Route,
-  Redirect,
+  redirect,
   Switch,
   RouteProps,
 } from 'react-router-dom'
@@ -190,7 +190,7 @@ const ContentContainer = () => {
             <Route
               exact
               path="/myprofile"
-              render={() => <Redirect to="/myprofile/organization" />}
+              render={() => <>{redirect('/myprofile/organization')}</>}
             />
           ) : (
             <PrivateRoute
