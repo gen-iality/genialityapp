@@ -317,6 +317,7 @@ const ActivityProgresses = {
    * @returns A Firebase collection reference object.
    */
   collection: (eventId: string) => {
+    if (typeof eventId === 'undefined') throw new Error(`eventId cannot be ${eventId}`)
     return Events.ref(eventId).collection(ActivityProgresses.name)
   },
   /**
@@ -326,6 +327,8 @@ const ActivityProgresses = {
    * @returns A Firebase document reference object,
    */
   ref: (eventId: string, userId: string) => {
+    if (typeof eventId === 'undefined') throw new Error(`eventId cannot be ${eventId}`)
+    if (typeof userId === 'undefined') throw new Error(`userId cannot be ${userId}`)
     return ActivityProgresses.collection(eventId).doc(userId)
   },
   /**
@@ -362,9 +365,13 @@ const ActivityProgresses = {
     eventId: string,
     userId: string,
     data: ActivityProgressesData,
-    options: SetOptions,
+    options?: SetOptions,
   ) => {
-    await ActivityProgresses.ref(eventId, userId).set(data, options)
+    await ActivityProgresses.ref(eventId, userId).set(data, options || {})
+  },
+  resetAttendees: async (eventId: string, userId: string) => {
+    const data = { checked_in_activities: [] } as any as ActivityProgressesData
+    await ActivityProgresses.edit(eventId, userId, data, { merge: true })
   },
 }
 
