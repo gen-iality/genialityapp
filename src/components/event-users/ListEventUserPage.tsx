@@ -7,31 +7,21 @@ import {
 } from '@helpers/request'
 import { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react'
 
-import {
-  fieldNameEmailFirst,
-  handleRequestError,
-  parseData2Excel,
-  sweetAlert,
-} from '@helpers/utils'
+import { fieldNameEmailFirst, parseData2Excel } from '@helpers/utils'
 
 import Header from '@antdComponents/Header'
 import {
   Button,
-  Checkbox,
   Col,
   Image,
   Input,
   InputRef,
-  List,
-  Modal,
-  Result,
   Row,
   Space,
   Spin,
   Table,
   Tag,
   Tooltip,
-  Typography,
 } from 'antd'
 
 import { IDynamicFieldData } from '@components/dynamic-fields/types'
@@ -45,18 +35,14 @@ import Highlighter from 'react-highlight-words'
 import { utils, writeFileXLSX } from 'xlsx'
 
 import {
-  CheckOutlined,
   DownloadOutlined,
   EditOutlined,
-  LoadingOutlined,
   PlusCircleOutlined,
-  SafetyCertificateOutlined,
   SearchOutlined,
   StarOutlined,
   UploadOutlined,
   UsergroupAddOutlined,
 } from '@ant-design/icons'
-import { checkinAttendeeInActivity } from '@helpers/HelperAuth'
 import UserModal from '../modal/modalUser'
 import { Link } from 'react-router-dom'
 import { StateMessage } from '@context/MessageService'
