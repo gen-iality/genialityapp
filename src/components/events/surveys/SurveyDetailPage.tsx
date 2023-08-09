@@ -139,7 +139,8 @@ const SurveyDetailPage: FunctionComponent<
     <>
       {cSurvey.shouldDisplaySurveyIsNotLoaded ? (
         <Result icon={<LoadingOutlined />} title="Espere mientras se cargan los datos" />
-      ) : cSurvey.shouldDisplaySurveyAnswered ? (
+      ) : cSurvey.shouldDisplaySurveyAnswered ||
+        cSurvey.completionStatus !== 'completed' ? (
         <Space
           direction="vertical"
           size="middle"
@@ -163,7 +164,17 @@ const SurveyDetailPage: FunctionComponent<
             }
             showIcon
           />
-          <Alert message="Ya has contestado este exámen" type="success" showIcon />
+          {cSurvey.surveyStatus?.surveyCompleted === 'completed' ? (
+            <Alert message="Ya has contestado este exámen" type="success" showIcon />
+          ) : cSurvey.surveyStatus?.surveyCompleted === 'running' ? (
+            <Alert message="El examen está en progreso" type="warning" showIcon />
+          ) : (
+            <Alert
+              message="No hay informe de completado para este curso"
+              type="info"
+              showIcon
+            />
+          )}
           {/* <Result
             // style={{ height: '50%', padding: '75px 75px 20px' }}
             status="success"

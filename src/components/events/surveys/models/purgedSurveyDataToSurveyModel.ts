@@ -32,6 +32,9 @@ export default (surveyData: SurveyPreModel) => {
   jsonObj.showPrevButton = false
   // Asigna textos al completar encuesta y al ver la encuesta vacia
   jsonObj.completedHtml = 'Gracias por contestar!'
+  jsonObj.completedHtml = `${jsonObj.completedHtml}<br>${''}<br>${
+    jsonObj.neutral_Message ?? ''
+  }`
   //jsonObj.questionsOnPageMode = 'singlePage';
   if (jsonObj.allow_gradable_survey === 'true' && jsonObj.initialMessage) {
     // Permite mostrar el contador y asigna el tiempo limite de la encuesta y por pagina
