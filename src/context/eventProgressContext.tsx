@@ -174,22 +174,22 @@ export const EventProgressProvider: FunctionComponent<PropsWithChildren> = (prop
       console.warn('call saveProgressReport when event user is defined ONLY')
       return
     }
-    eventUser.activity_progresses = {
-      // ID list of activities
-      activities: rawActivities.map((activity) => activity._id!),
-      filtered_activities: filteredActivities.map((activity) => activity._id!),
-      checked_in_activities: checkedInRawActivities.map((attendee) => attendee._id!),
-      // Calced progresses
-      progress_all_activities: progressRawActivities,
-      progress_filtered_activities: progressFilteredActivities,
-      progress_of_quices: progressOfQuices,
-    }
-    // Check if the new data is really new data
-    if (
-      JSON.stringify(lastEventUser.activity_progresses) ===
-      JSON.stringify(eventUser.activity_progresses)
-    )
-      return
+    // eventUser.activity_progresses = {
+    //   // ID list of activities
+    //   activities: rawActivities.map((activity) => activity._id!),
+    //   filtered_activities: filteredActivities.map((activity) => activity._id!),
+    //   checked_in_activities: checkedInRawActivities.map((attendee) => attendee._id!),
+    //   // Calced progresses
+    //   progress_all_activities: progressRawActivities,
+    //   progress_filtered_activities: progressFilteredActivities,
+    //   progress_of_quices: progressOfQuices,
+    // }
+    // // Check if the new data is really new data
+    // if (
+    //   JSON.stringify(lastEventUser.activity_progresses) ===
+    //   JSON.stringify(eventUser.activity_progresses)
+    // )
+    //   return
 
     FB.ActivityProgresses.edit(
       eventUser.event_id,
@@ -208,7 +208,7 @@ export const EventProgressProvider: FunctionComponent<PropsWithChildren> = (prop
       ),
     )
     console.debug('save new eventUser with progresses:', eventUser)
-    await UsersApi.editEventUser(eventUser, cEventContext.value._id, eventUser._id)
+    // await UsersApi.editEventUser(eventUser, cEventContext.value._id, eventUser._id)
   }
 
   const progressRawActivities = useMemo(
