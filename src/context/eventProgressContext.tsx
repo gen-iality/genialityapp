@@ -16,6 +16,7 @@ import { useUserEvent } from './eventUserContext'
 import { activityContentValues } from './activityType/constants/ui'
 import { calcProgress } from '@/wrappers/EventProgressWrapper'
 import filterActivitiesByProgressSettings from '@Utilities/filterActivitiesByProgressSettings'
+import { DocumentData } from 'firebase/firestore'
 
 type AttendeeType = any
 
@@ -25,6 +26,7 @@ export interface EventProgressContextState {
   checkedInRawActivities: AttendeeType[]
   checkedInFilteredActivities: AttendeeType[]
   nonPublishedActivityIDs: string[]
+  viewedActivities: string[]
   isLoading: boolean
   progressRawActivities: number
   progressFilteredActivities: number
@@ -33,7 +35,11 @@ export interface EventProgressContextState {
   updateRawAttendees: () => Promise<void>
   getAttendeesForActivities: (activityIds: string[]) => AttendeeType[]
   calcProgress: (current: number, total: number) => number
+  /**
+   * @deprecated this function will be removed in next iterations
+   */
   saveProgressReport: () => Promise<void>
+  addViewedActivity: (activityId: string) => Promise<void>
 }
 
 const initialContextState: EventProgressContextState = {
@@ -42,6 +48,7 @@ const initialContextState: EventProgressContextState = {
   checkedInRawActivities: [],
   checkedInFilteredActivities: [],
   nonPublishedActivityIDs: [],
+  viewedActivities: [],
   isLoading: false,
   progressRawActivities: 0,
   progressFilteredActivities: 0,
@@ -51,6 +58,7 @@ const initialContextState: EventProgressContextState = {
   getAttendeesForActivities: () => [],
   calcProgress: () => 0,
   saveProgressReport: () => Promise.resolve(),
+  addViewedActivity: () => Promise.resolve(),
 }
 
 const EventProgressContext = createContext<EventProgressContextState>(initialContextState)
@@ -67,12 +75,47 @@ export const EventProgressProvider: FunctionComponent<PropsWithChildren> = (prop
   const [rawActivities, setRawActivities] = useState<ExtendedAgendaType[]>([])
   const [checkedInRawActivities, setCheckedInRawActivities] = useState<AttendeeType[]>([])
 
+  const [viewedActivities, setViewedActivities] = useState<string[]>([])
+
   const [nonPublishedActivityIDs, setNonPublishedActivityIDs] = useState<string[]>([])
 
   const [filteredActivities, setFilteredActivities] = useState<ExtendedAgendaType[]>([])
   const [checkedInFilteredActivities, setCheckedInFilteredActivities] = useState<
     AttendeeType[]
   >([])
+
+  useEffect(() => {
+    if (!cEventUser.value) return
+
+    const { account_id, event_id } = cEventUser.value
+    FB.ActivityProgresses.get(event_id, account_id).then((data) => {
+      setViewedActivities(data?.viewed_activities ?? [])
+    })
+  }, [cEventUser])
+
+  const addViewedActivity = async (activityId: string) => {
+    if (viewedActivities.includes(activityId)) return
+
+    console.log('new activity is added as viewed activity:', activityId)
+    const newViewedActivities = [...viewedActivities, activityId]
+
+    FB.ActivityProgresses.edit(
+      cEventUser.value.event_id,
+      cEventUser.value.account_id,
+      {
+        activities: rawActivities.map((activity) => activity._id!),
+        filtered_activities: filteredActivities.map((activity) => activity._id!),
+        viewed_activities: newViewedActivities,
+      },
+      { merge: true },
+    ).finally(() =>
+      console.log(
+        'activity progresses created in:',
+        cEventUser.value.event_id,
+        cEventUser.value.account_id,
+      ),
+    )
+  }
 
   const updateRawActivities = async () => {
     // Request for all the raw event activities
@@ -168,47 +211,7 @@ export const EventProgressProvider: FunctionComponent<PropsWithChildren> = (prop
   }
 
   const saveProgressReport = async () => {
-    const eventUser = cEventUser.value
-    const lastEventUser = { ...eventUser }
-    if (!eventUser) {
-      console.warn('call saveProgressReport when event user is defined ONLY')
-      return
-    }
-    // eventUser.activity_progresses = {
-    //   // ID list of activities
-    //   activities: rawActivities.map((activity) => activity._id!),
-    //   filtered_activities: filteredActivities.map((activity) => activity._id!),
-    //   checked_in_activities: checkedInRawActivities.map((attendee) => attendee._id!),
-    //   // Calced progresses
-    //   progress_all_activities: progressRawActivities,
-    //   progress_filtered_activities: progressFilteredActivities,
-    //   progress_of_quices: progressOfQuices,
-    // }
-    // // Check if the new data is really new data
-    // if (
-    //   JSON.stringify(lastEventUser.activity_progresses) ===
-    //   JSON.stringify(eventUser.activity_progresses)
-    // )
-    //   return
-
-    FB.ActivityProgresses.edit(
-      eventUser.event_id,
-      eventUser.account_id,
-      {
-        activities: rawActivities.map((activity) => activity._id!),
-        checked_in_activities: filteredActivities.map((activity) => activity._id!),
-        filtered_activities: checkedInRawActivities.map((attendee) => attendee._id!),
-      },
-      { merge: true },
-    ).finally(() =>
-      console.log(
-        'activity progresses updated in:',
-        eventUser.event_id,
-        eventUser.account_id,
-      ),
-    )
-    console.debug('save new eventUser with progresses:', eventUser)
-    // await UsersApi.editEventUser(eventUser, cEventContext.value._id, eventUser._id)
+    console.warn('')
   }
 
   const progressRawActivities = useMemo(
@@ -301,6 +304,7 @@ export const EventProgressProvider: FunctionComponent<PropsWithChildren> = (prop
         checkedInRawActivities,
         checkedInFilteredActivities,
         nonPublishedActivityIDs,
+        viewedActivities,
         isLoading,
         updateRawActivities,
         updateRawAttendees,
@@ -310,6 +314,7 @@ export const EventProgressProvider: FunctionComponent<PropsWithChildren> = (prop
         progressOfQuices,
         calcProgress,
         saveProgressReport,
+        addViewedActivity,
       }}
     >
       {children}

@@ -361,7 +361,12 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
           <EventProgressWrapper
             event={event}
             eventUser={item}
-            render={({ isLoading, activities, checkedInActivities }) => {
+            render={({
+              isLoading,
+              activities,
+              checkedInActivities,
+              viewedActivities,
+            }) => {
               // setProgressMap((previous) => ({
               //   ...previous,
               //   [item._id]: `${
@@ -377,12 +382,12 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
                         setIsProgressingModalOpened(true)
                         setWatchedUserInProgressingModal(item)
                       }}
-                    >{`${checkedInActivities.length}/${Math.max(
+                    >{`${viewedActivities.length}/${Math.max(
                       activities.length,
                       preAllActivities.length,
                     )}`}</Button>
                   ) : (
-                    <>{checkedInActivities.length > 0 ? 'Visto' : 'No visto'}</>
+                    <>{viewedActivities.length > 0 ? 'Visto' : 'No visto'}</>
                   )}
                 </>
               )
@@ -553,7 +558,8 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
 
     const unsubscribe = eventUsersRef.onSnapshot((observer) => {
       const allEventUserData: any[] = []
-      const newProgressMap: { [key: string]: string }[] = []
+
+      const eventUserAndUserPairIds: { eu: string; u: string }[] = []
       observer.forEach((result) => {
         const data = result.data()
         // console.log('result:', data)
@@ -582,14 +588,46 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
           ...data.properties,
           ...data,
         })
-        newProgressMap[data._id] = data.postprocess_progress
+        // newProgressMap[data._id] = data.postprocess_progress
+
+        eventUserAndUserPairIds.push({ eu: data._id, u: data.account_id })
       })
 
       // Now, update all updates
-      setProgressMap((previous: any) => ({
-        ...previous,
-        ...newProgressMap,
-      }))
+      // setProgressMap((previous: any) => ({
+      //   ...previous,
+      //   ...newProgressMap,
+      // }))
+
+      Promise.all(
+        eventUserAndUserPairIds.map(async ({ eu, u }) => {
+          return {
+            eu,
+            u,
+            ap: await FB.ActivityProgresses.get(event._id, u),
+          }
+        }),
+      )
+        .then((euup) => {
+          return euup.filter(({ ap }) => typeof ap !== 'undefined')
+        })
+        .then((euup) => {
+          let newProgressMap: { [key: string]: string } = {}
+          euup.forEach((euu) => {
+            if (!euu.ap) {
+              newProgressMap[euu.eu] = 'Sin progreso'
+              return
+            }
+            newProgressMap[euu.eu] = `${
+              (euu.ap.viewed_activities ?? []).length
+            }/${Math.max(
+              (euu.ap.activities ?? []).length,
+              (preAllActivities ?? []).length,
+            )}`
+          })
+          setProgressMap((previous: any) => ({ ...previous, ...newProgressMap }))
+          console.log(newProgressMap)
+        })
 
       setDataSource(allEventUserData)
     })
