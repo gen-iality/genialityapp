@@ -53,6 +53,7 @@ import EventProgressWrapper from '@/wrappers/EventProgressWrapper'
 import EnrollEventUserFromOrganizationMember from './EnrollEventUserFromOrganizationMember'
 import ModalPassword from './ModalPassword'
 import { FilterConfirmProps } from 'antd/lib/table/interface'
+import filterActivitiesByProgressSettings from '@Utilities/filterActivitiesByProgressSettings'
 
 interface ITimeTrackingStatsProps {
   user: any
@@ -602,12 +603,13 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
               newProgressMap[euu.eu] = 'Sin progreso'
               return
             }
+            const itsActivities = filterActivitiesByProgressSettings(
+              preAllActivities,
+              event.progress_settings || {},
+            )
             newProgressMap[euu.eu] = `${
               (euu.ap.viewed_activities ?? []).length
-            }/${Math.max(
-              (euu.ap.activities ?? []).length,
-              (preAllActivities ?? []).length,
-            )}`
+            }/${Math.max((euu.ap.activities ?? []).length, (itsActivities ?? []).length)}`
           })
           setProgressMap((previous: any) => ({ ...previous, ...newProgressMap }))
           console.log(newProgressMap)
