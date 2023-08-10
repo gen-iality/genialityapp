@@ -1,6 +1,11 @@
 import { SurveyQuestion } from '@components/events/surveys/types'
 import { getQuestionsRef } from '@components/events/surveys/services/surveys'
 
+const console = {
+  debug: (...args: any) => {},
+  error: (...args: any) => {},
+}
+
 /**
  * This class enable creating a representation of the polled questions in local
  * and remoto (Firebase, using the Firebase API, according to the surveyId and userId).
