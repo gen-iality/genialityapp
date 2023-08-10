@@ -68,7 +68,8 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
         setWasNotifiedForProgress(true)
       })
       // Request to update the attendees
-      cEventProgress.updateRawAttendees().then(() => cEventProgress.saveProgressReport())
+      cEventProgress.updateRawAttendees()
+      cEventProgress.addViewedActivity(currentActivity._id)
     }
   }
 
@@ -143,10 +144,6 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
       }
     }
   }, [currentActivity, cEventUser.status])
-
-  useEffect(() => {
-    cEventProgress.saveProgressReport()
-  }, [cEventProgress.checkedInRawActivities])
 
   const goToActivityIdPage = async (activityId: string) => {
     history.push(`/landing/${cEvent?.value._id}/activity/${activityId}`)

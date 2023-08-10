@@ -5,7 +5,7 @@ type ProgressSettingsType = {
   enable_mode?: string[]
 }
 
-export default function filterActivitiesByProgressSettings(
+function filterActivitiesByProgressSettings(
   activities: ExtendedAgendaType[],
   progressSettings: ProgressSettingsType,
 ): ExtendedAgendaType[] {
@@ -44,3 +44,9 @@ export default function filterActivitiesByProgressSettings(
   )
   return newFilteredActivities
 }
+
+// Testing stuffs
+// @ts-expect-error
+window.filterActivitiesByProgressSettings = filterActivitiesByProgressSettings
+
+export default filterActivitiesByProgressSettings

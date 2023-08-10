@@ -36,10 +36,6 @@ export function DeleteActivitiesTakenButton(props: DeleteActivitiesTakenButtonPr
     [cEventUserId, eventId],
   )
 
-  if (!(import.meta.env.MODE || '').includes('staging')) {
-    return null
-  }
-
   return (
     <Link
       to={`/landing/${eventId}/${

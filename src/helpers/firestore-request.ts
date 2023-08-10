@@ -4,7 +4,7 @@
  */
 
 import { firestore } from '@helpers/firebase'
-import { DocumentData, SetOptions } from 'firebase/firestore'
+import { DocumentData, SetOptions, doc } from 'firebase/firestore'
 
 const Attendees = {
   collection: (activityId: string) => {
@@ -300,6 +300,92 @@ const Hosts = {
   },
 }
 
+export type ActivityProgressesData = {
+  activities: string[]
+  filtered_activities: string[]
+  viewed_activities: string[]
+}
+
+/**
+ * Lets you to save the user's activity progress. Uses the collection `events`.
+ */
+const ActivityProgresses = {
+  name: 'activityProgresses',
+  /**
+   * Gets the Firebase collection reference from the provided event ID.
+   * @param eventId The event ID.
+   * @returns A Firebase collection reference object.
+   */
+  collection: (eventId: string) => {
+    if (typeof eventId === 'undefined') throw new Error(`eventId cannot be ${eventId}`)
+    return Events.ref(eventId).collection(ActivityProgresses.name)
+  },
+  /**
+   * Gets the activity progresses document reference.
+   * @param eventId The event ID.
+   * @param userId The user ID.
+   * @returns A Firebase document reference object,
+   */
+  ref: (eventId: string, userId: string) => {
+    if (typeof eventId === 'undefined') throw new Error(`eventId cannot be ${eventId}`)
+    if (typeof userId === 'undefined') throw new Error(`userId cannot be ${userId}`)
+    return ActivityProgresses.collection(eventId).doc(userId)
+  },
+  /**
+   * Gets an activity progresses document data. If there is no data, then
+   * undefined is returned.
+   *
+   * @param eventId The event ID.
+   * @param userId The user ID.
+   * @returns An exactly document data.
+   */
+  get: async (eventId: string, userId: string) => {
+    const documentRef = ActivityProgresses.ref(eventId, userId)
+    const document = await documentRef.get()
+    if (!document.exists) return
+    return document.data() as ActivityProgressesData
+  },
+  /**
+   * Updates an activity progresses document.
+   * @param eventId The event ID.
+   * @param userId The user ID.
+   * @param data Any data to update.
+   */
+  update: async (eventId: string, userId: string, data: ActivityProgressesData) => {
+    await ActivityProgresses.ref(eventId, userId).update(data)
+  },
+  /**
+   * Edits an activity progresses document.
+   * @param eventId The event ID.
+   * @param userId The user ID.
+   * @param data Any data to edit.
+   * @param options Firebase options for the editing process.
+   */
+  edit: async (
+    eventId: string,
+    userId: string,
+    data: ActivityProgressesData,
+    options?: SetOptions,
+  ) => {
+    await ActivityProgresses.ref(eventId, userId).set(data, options || {})
+  },
+  /**
+   * Reset the attendees register.
+   * @param eventId The event ID.
+   * @param userId The user ID.
+   *
+   * @deprecated use `resetViewedActivities` instead
+   */
+  resetAttendees: async (eventId: string, userId: string) => {
+    const data = { checked_in_activities: [] } as any as ActivityProgressesData
+    await ActivityProgresses.edit(eventId, userId, data, { merge: true })
+  },
+  resetViewedActivities: async (eventId: string, userId: string) => {
+    const data = { viewed_activities: [] } as any as ActivityProgressesData
+    await ActivityProgresses.edit(eventId, userId, data, { merge: true })
+  },
+}
+
 export const FB = {
   Attendees,
   Activities,
@@ -309,4 +395,5 @@ export const FB = {
   Connections,
   Configs,
   Hosts,
+  ActivityProgresses,
 }

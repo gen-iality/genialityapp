@@ -31,6 +31,12 @@ export interface CourseProgressBarProps {
 function CourseProgressBar(props: CourseProgressBarProps) {
   const { activities: incomingActivities, eventUser, eventId } = props
 
+  /**
+   * @todo use viewedActivities instead the attendee directly because:
+   * - the deprecated way we have to do many requesting
+   * - it is the easy way
+   * - less requesting, did I say this already?
+   */
   const [attendees, setAttendees] = useState<(Activity & { checked_in?: boolean })[]>([])
   const [watchedActivityId, setWatchedActivityId] = useState<undefined | string>()
   const [isLoading, setIsLoading] = useState(false)

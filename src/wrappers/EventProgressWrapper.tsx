@@ -1,14 +1,12 @@
-import { ExtendedAgendaType } from '@Utilities/types/AgendaType'
-// import { FB } from '@helpers/firestore-request'
-// import { AgendaApi } from '@helpers/request'
+import { FB } from '@helpers/firestore-request'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { FunctionComponent } from 'react'
 
 interface IWrappedProps {
   isLoading?: boolean
-  activities: ExtendedAgendaType[]
-  checkedInActivities: any[]
+  activities: string[]
+  viewedActivities: string[]
   reload: (forceRefresh?: boolean) => Promise<void>
 }
 
@@ -31,13 +29,16 @@ const EventProgressWrapper: FunctionComponent<IEventProgressWrapperProps> = (pro
   const { event, eventUser, render } = props
 
   const [isLoading, setIsLoading] = useState(false)
-  const [activities, setActivities] = useState<ExtendedAgendaType[]>([])
-  const [checkedInActivities, setCheckedInActivities] = useState<any[]>([])
+  const [activities, setActivities] = useState<string[]>([])
+  const [viewedActivities, setViewedActivities] = useState<string[]>([])
 
   const reload = async () => {
-    const { activities, checked_in_activities } = eventUser.activity_progresses ?? {}
-    setActivities(activities || [])
-    setCheckedInActivities(checked_in_activities || [])
+    const ap = await FB.ActivityProgresses.get(event._id, eventUser.account_id)
+    if (ap) {
+      const { activities, viewed_activities } = ap
+      setActivities(activities || [])
+      setViewedActivities(viewed_activities || [])
+    }
   }
 
   useEffect(() => {
@@ -51,7 +52,7 @@ const EventProgressWrapper: FunctionComponent<IEventProgressWrapperProps> = (pro
   return render({
     isLoading,
     activities,
-    checkedInActivities,
+    viewedActivities,
     reload,
   })
 }
