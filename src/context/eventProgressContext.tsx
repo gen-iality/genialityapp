@@ -102,8 +102,12 @@ export const EventProgressProvider: FunctionComponent<PropsWithChildren> = (prop
       cEventUser.value.event_id,
       cEventUser.value.account_id,
       {
-        activities: rawActivities.map((activity) => activity._id!),
-        filtered_activities: filteredActivities.map((activity) => activity._id!),
+        activities: rawActivities
+          .map((activity) => activity._id!)
+          .filter((id) => !nonPublishedActivityIDs.includes(id)),
+        filtered_activities: filteredActivities
+          .map((activity) => activity._id!)
+          .filter((id) => !nonPublishedActivityIDs.includes(id)),
         viewed_activities: newViewedActivities,
       },
       { merge: true },
