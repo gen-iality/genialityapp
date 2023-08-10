@@ -113,6 +113,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
   const [isEnrollingModalOpened, setIsEnrollingModalOpened] = useState(false)
   const [watchedUserInProgressingModal, setWatchedUserInProgressingModal] =
     useState<any>()
+  const [nonPublishedActivityIDs, setNonPublishedActivityIDs] = useState<string[]>([])
 
   // TODO: if activity_id, then load to activity
   const [activity, setActivity] = useState<any | undefined>()
@@ -373,7 +374,10 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
                       }}
                     >{`${viewedActivities.length}/${Math.max(
                       activities.length,
-                      preAllActivities.length,
+                      preAllActivities.filter(
+                        ({ _id }: { _id: string }) =>
+                          !nonPublishedActivityIDs.includes(_id),
+                      ).length,
                     )}`}</Button>
                   ) : (
                     <>{viewedActivities.length > 0 ? 'Visto' : 'No visto'}</>
@@ -687,6 +691,24 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       }
     }
   }, [])
+
+  useEffect(() => {
+    allActivities.forEach((activity) => {
+      FB.Activities.ref(event._id, activity._id!).onSnapshot((snapshot) => {
+        const data = snapshot.data()
+        if (!data) return
+        const flag = !!data.isPublished
+
+        if (!flag) {
+          setNonPublishedActivityIDs((previous) => [...previous, activity._id!])
+        } else {
+          setNonPublishedActivityIDs((previous) =>
+            previous.filter((id) => id !== activity._id!),
+          )
+        }
+      })
+    })
+  }, [allActivities])
 
   return (
     <>
