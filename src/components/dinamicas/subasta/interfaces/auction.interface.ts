@@ -66,7 +66,9 @@ interface StyleCard {
 export interface IBids {
     date: string
     productId: string
+    productName : string
     name: string
+    userId: string
     offered: number
 }
 export interface Products {
@@ -86,11 +88,11 @@ export interface ModalProduct {
     name:           string;
     description:    string;
     start_price:    number;
-    state:          ProductState
     images:         UploadFile[];
 }
 export interface ReportProps {
     eventId: string
+    reload: boolean
 }
 export interface DrawerRulesProps {
     showDrawerRules: boolean

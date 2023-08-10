@@ -32,9 +32,8 @@ export default function AuctionView({auction} : {auction : Auction}) {
         <ExecuteAuction/>
       </Tabs.TabPane>
       
-
       <Tabs.TabPane tab='Reporte de subasta' key={5}>
-        <Report eventId={eventId} />
+        <Report eventId={eventId} reload={currenTab === '5'} />
       </Tabs.TabPane>
     </Tabs>
   );

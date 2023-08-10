@@ -71,9 +71,11 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
       saveOffer(
         eventId,
         {
+          productName: auction?.currentProduct?.name,
           productId : auction?.currentProduct?._id,
           date: new Date().toLocaleString(),
           name: userName || 'Anónimo',
+          userId : cEventUser.value?.user?._id,
           offered: Number(data.offerValue),
         },
         auction

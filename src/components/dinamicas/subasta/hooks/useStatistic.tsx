@@ -3,7 +3,7 @@ import { listenAuction } from '../services/Execute.service';
 import { Auction } from '../interfaces/auction.interface';
 import { getOffers } from '../services';
 
-export const useSatistic = (eventId: string) => {
+export const useSatistic = (eventId: string,reload: boolean) => {
   const [offers, setOffers] = useState<any[]>([]);
 
 const callOffers = async () => {
@@ -16,7 +16,7 @@ const callOffers = async () => {
 }
   useEffect(() => {
     callOffers();
-  },[]);
+  },[reload]);
 
   return {
     offers

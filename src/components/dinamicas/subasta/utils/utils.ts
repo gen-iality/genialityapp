@@ -1,5 +1,5 @@
 import { uploadImageData } from '@/Utilities/uploadImageData';
-import { Auction, ModalProduct } from '../interfaces/auction.interface';
+import { Auction, IBids, ModalProduct, Products } from '../interfaces/auction.interface';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { deleteFireStorageData } from '@/Utilities/deleteFireStorageData';
 import { DispatchMessageService } from '@/context/MessageService';
@@ -32,12 +32,15 @@ export enum TabsDrawerAuction {
   History = 'History',
 }
 
-export const InitialModalState: ModalProduct = {
+export const InitialModalState : Products = {
   description: '',
   images: [],
   start_price: 0,
   name: '',
+  _id: '',
   state: 'waiting',
+  price : 0,
+  type : 'just-auction',
 };
 
 export const AuctionExample : Required<Auction> = {
@@ -66,4 +69,54 @@ export const AuctionExample : Required<Auction> = {
   opened  : false,
   playing : false,
   published : false
+}
+
+export const orgOfferds = (Bids : IBids[]) => {
+  const labels : string[] = []
+  const values : any[] = []
+  const participants : any[] = []
+  Bids.forEach((bid) => {
+    if(!labels.includes(bid.productName)) {
+      labels.push(bid.productName)
+      values.push(1)
+    }else {
+      const index = labels.findIndex((label) => label === bid.productName)
+      values[index] += 1
+      participants[index] = filterUserID(Bids,bid.productId).length
+    }
+
+  })
+
+  return {labels,values, participants}
+}
+
+
+
+export const filterUserID = (array : IBids[],product? : string) => {
+  const userIdMap = new Map();
+  return array.reduce((resultado :any[], objeto) => {
+    const  validateProduct = product ? objeto.productId === product : true
+    if (!userIdMap.has(objeto.userId) && validateProduct) {
+      userIdMap.set(objeto.userId, true);
+      resultado.push(objeto);
+    }
+    return resultado;
+  }, []);
+}
+
+
+export const priceChartValues = (products : Products[]) => {
+  const startPrices : number[] = []
+  const increases : number[] = []
+  const auctioneds = products.filter((product) => product.state === 'auctioned')
+  auctioneds.forEach((product) => {
+      startPrices.push(product.start_price)
+      increases.push( product.price - product.start_price)
+  })
+  
+  return { 
+    labelsProducts: auctioneds.map((product) => product.name),
+    startPrices,
+    increases
+  }
 }

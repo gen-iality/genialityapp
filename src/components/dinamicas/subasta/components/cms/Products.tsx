@@ -6,10 +6,10 @@ import { AntCloudOutlined, DeleteOutlined } from '@ant-design/icons';
 export default function Products({ products, onclick, onDelete }: ProductsProps) {
   return (
     <>
-      <Row wrap gutter={[16, 16]}>
+      <Row wrap gutter={[16, 16]} style={{ padding: 10}}>
         {products?.length > 0 ? (
           products?.map((product) => (
-            <Col xs={24} sm={24} md={12} lg={8} xl={7} xxl={4} key={product._id}>
+            <Col xs={24} sm={24} md={12} lg={8} xl={7} xxl={8} key={product._id}>
               <Card
                 className='products'
                 key={product._id + 'card'}

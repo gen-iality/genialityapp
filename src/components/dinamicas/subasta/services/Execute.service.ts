@@ -46,8 +46,7 @@ export const listenBids = (eventId: string, productID: string, setBids: any, set
       .collection(`auctionByEventId`)
       .doc(eventId)
       .collection('Bids')
-      .where('productId', '==', productID)
-      .orderBy('offered', 'desc')
+      .where('productId', '==', productID)     
       .onSnapshot((snapshot) => {
         if (!snapshot.empty) {
           const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
