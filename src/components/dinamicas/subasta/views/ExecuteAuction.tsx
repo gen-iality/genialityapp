@@ -11,7 +11,7 @@ import SelectProducts from '../components/cms/SelectProducts';
 import { DispatchMessageService } from '@/context/MessageService';
 import { saveAuctioFirebase } from '../services/Execute.service';
 import { useBids } from '../hooks/useBids';
-import { updateProduct } from '../services';
+import { deleteOffers, updateProduct } from '../services';
 
 
 
@@ -70,6 +70,14 @@ export default function ExecuteAuction() {
         }
     }
   };
+  const cancelBids = async () => {
+    if (auction){ 
+     const save = await saveAuctioFirebase(eventId, { ...auction, playing: false });
+        if(save && auction.currentProduct){
+          deleteOffers(eventId, auction.currentProduct._id)
+        }
+    }
+  };
   const auctionFinish = async () => {
     if (auction) {
       await saveAuctioFirebase(eventId, { ...auction, currentProduct: null, playing: false });
@@ -106,16 +114,28 @@ export default function ExecuteAuction() {
           )}
         </Col>
         {auction?.playing && (
+          <>
+          <Col>
+            <Button
+              className='animate__animated animate__flip'
+              onClick={cancelBids}
+              icon={<CloseCircleOutlined />}
+              danger
+              type='primary'>
+              Cancelar Pujas
+            </Button>
+          </Col>
           <Col>
             <Button
               className='animate__animated animate__flip'
               onClick={closeBids}
-              icon={<CloseCircleOutlined />}
-              danger
+              icon={<SaveOutlined />}
+              
               type='primary'>
-              Cerrar pujas
+              Guardar Pujas
             </Button>
           </Col>
+          </>
         )}
         <Modal
           width={'60%'}

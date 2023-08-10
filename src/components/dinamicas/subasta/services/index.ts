@@ -72,6 +72,8 @@ export const deleteProduct =  async  (eventId : string, id :string ) => {
 
 export const updateProduct =  async  (eventId : string, params : Products ) => {
   try {
+    console.log(params);
+    
       const response = await apiProduct.editOne<Products>(eventId,params._id,params);
       return response;
     } catch (error) {
@@ -110,6 +112,31 @@ export const saveOffer =  async  (eventId: string, offer: IBids, auction: Auctio
       return false;
     }
 }
+ export const deleteOffers =  async  (eventId: string,productId : string) => {
+  try {
+    const querySnapshot = await firestore
+    .collection(`auctionByEventId`)
+    .doc(eventId)
+    .collection('Bids')
+    .where('productId', '==', productId)
+    .get()
+
+    const data = querySnapshot.docs.forEach((item) => {
+      item.ref.delete().then(() => {
+        
+      })
+      .catch((error) => {
+        console.log('fallo al eliminar',error);
+      });
+    })
+    return data
+    } catch (error) {
+      console.log(error);
+
+      DispatchMessageService({ type: 'error', msj: 'Error al enviar oferta', action: 'show' });
+      return [];
+    }
+ }
  export const getOffers =  async  (eventId: string) => {
   try {
     const querySnapshot = await firestore
@@ -127,3 +154,4 @@ export const saveOffer =  async  (eventId: string, offer: IBids, auction: Auctio
       return [];
     }
  }
+

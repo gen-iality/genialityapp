@@ -1,5 +1,5 @@
 import { uploadImageData } from '@/Utilities/uploadImageData';
-import { Auction, IBids, ModalProduct, Products } from '../interfaces/auction.interface';
+import { Auction, IBids, Products } from '../interfaces/auction.interface';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { deleteFireStorageData } from '@/Utilities/deleteFireStorageData';
 import { DispatchMessageService } from '@/context/MessageService';
@@ -15,7 +15,7 @@ export const uploadImagedummyRequest = async ({ file, onSuccess, onError }: any)
 
 export const deleteImage = async (
   file: UploadFile,
-  setProductSelect: React.Dispatch<React.SetStateAction<ModalProduct>> = () => {},
+  setProductSelect: React.Dispatch<React.SetStateAction<Products>> = () => {},
   newFileList: UploadFile[] = []
 ) => {
   const success = 'file deleted successfully'

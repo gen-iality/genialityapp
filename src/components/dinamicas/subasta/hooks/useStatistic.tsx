@@ -15,7 +15,7 @@ const callOffers = async () => {
       }
 }
   useEffect(() => {
-    callOffers();
+   if(reload) callOffers();
   },[reload]);
 
   return {
