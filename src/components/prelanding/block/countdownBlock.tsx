@@ -22,6 +22,7 @@ const CountdownBlock: React.FC<CountdownBlockProps> = ({
   const [dateLimitContador, setDateLimitContador] = useState<string | null>(null);
   const intl = useIntl();
   useEffect(() => {
+    if(date === null)return setDateLimitContador(null)
     const dateSplit = date.split(' ');
     const dateFormat = dateSplit.join('T');
     setDateLimitContador(dateFormat);
