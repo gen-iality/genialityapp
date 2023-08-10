@@ -303,7 +303,7 @@ const Hosts = {
 export type ActivityProgressesData = {
   activities: string[]
   filtered_activities: string[]
-  checked_in_activities: string[]
+  viewed_activities: string[]
 }
 
 /**
@@ -369,8 +369,19 @@ const ActivityProgresses = {
   ) => {
     await ActivityProgresses.ref(eventId, userId).set(data, options || {})
   },
+  /**
+   * Reset the attendees register.
+   * @param eventId The event ID.
+   * @param userId The user ID.
+   *
+   * @deprecated use `resetViewedActivities` instead
+   */
   resetAttendees: async (eventId: string, userId: string) => {
     const data = { checked_in_activities: [] } as any as ActivityProgressesData
+    await ActivityProgresses.edit(eventId, userId, data, { merge: true })
+  },
+  resetViewedActivities: async (eventId: string, userId: string) => {
+    const data = { viewed_activities: [] } as any as ActivityProgressesData
     await ActivityProgresses.edit(eventId, userId, data, { merge: true })
   },
 }
