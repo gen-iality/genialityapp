@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { useIntl } from 'react-intl'
-import { Button, Tabs, Typography, Col, Card, List, Avatar, Row, Grid, Space } from 'antd'
+import { Button, Tabs, Col, Card, List, Avatar, Row, Grid, Space } from 'antd'
 import WithEviusContext from '@context/withContext'
 import { connect } from 'react-redux'
 import ModalSpeaker from '../modalSpeakers'

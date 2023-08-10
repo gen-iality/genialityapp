@@ -361,18 +361,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
           <EventProgressWrapper
             event={event}
             eventUser={item}
-            render={({
-              isLoading,
-              activities,
-              checkedInActivities,
-              viewedActivities,
-            }) => {
-              // setProgressMap((previous) => ({
-              //   ...previous,
-              //   [item._id]: `${
-              //     checkedInActivities.filter((attendee) => attendee.checked_in).length
-              //   }/${Math.max(activities.length, preAllActivities.length)}`,
-              // }))
+            render={({ isLoading, activities, viewedActivities }) => {
               return (
                 <>
                   {isLoading && <Spin />}
@@ -562,7 +551,6 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       const eventUserAndUserPairIds: { eu: string; u: string }[] = []
       observer.forEach((result) => {
         const data = result.data()
-        // console.log('result:', data)
 
         // Fix the date
         if (data.checkedin_at) data.checkedin_at = dayjs(data.checkedin_at.toDate())
@@ -582,22 +570,14 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
           (activities ?? []).length,
           (preAllActivities ?? []).length,
         )}`
-        // await FB.Attendees.get(event._id, data._id)
         allEventUserData.push({
           // the organization user properties here... (for now, nothing)
           ...data.properties,
           ...data,
         })
-        // newProgressMap[data._id] = data.postprocess_progress
 
         eventUserAndUserPairIds.push({ eu: data._id, u: data.account_id })
       })
-
-      // Now, update all updates
-      // setProgressMap((previous: any) => ({
-      //   ...previous,
-      //   ...newProgressMap,
-      // }))
 
       Promise.all(
         eventUserAndUserPairIds.map(async ({ eu, u }) => {

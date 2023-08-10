@@ -16,7 +16,6 @@ import { useUserEvent } from './eventUserContext'
 import { activityContentValues } from './activityType/constants/ui'
 import { calcProgress } from '@/wrappers/EventProgressWrapper'
 import filterActivitiesByProgressSettings from '@Utilities/filterActivitiesByProgressSettings'
-import { DocumentData } from 'firebase/firestore'
 
 type AttendeeType = any
 

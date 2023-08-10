@@ -19,7 +19,6 @@ import { columns } from './tableColums/membersTableColumns'
 import { OrganizationApi, EventsApi, AgendaApi, PositionsApi } from '@helpers/request'
 
 /** Context */
-import withContext from '@context/withContext'
 import { FB } from '@helpers/firestore-request'
 import { StateMessage } from '@context/MessageService'
 
@@ -379,4 +378,4 @@ const OrganizationMembersPage: FunctionComponent<IOrganizationMembersPageProps> 
     </>
   )
 }
-export default withContext(OrganizationMembersPage)
+export default OrganizationMembersPage
