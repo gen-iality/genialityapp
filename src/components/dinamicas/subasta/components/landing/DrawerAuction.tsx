@@ -19,7 +19,6 @@ import {
   Form,
   Button,
 } from 'antd';
-import { UseEventContext } from '@/context/eventContext';
 import HCOActividad from '@/components/events/AgendaActividadDetalle/HOC_Actividad';
 import { CloseOutlined } from '@ant-design/icons';
 import { DrawerAuctionProps } from '../../interfaces/auction.interface';
@@ -28,7 +27,7 @@ import { useBids } from '../../hooks/useBids';
 import { saveOffer } from '../../services';
 import useProducts from '../../hooks/useProducts';
 import { TabsDrawerAuction } from '../../utils/utils';
-import DrawerRules from '@/components/games/whereIs/auxiliarDrawers/DrawerRules';
+import DrawerRules from './DrawerRules';
 import DrawerChat from '@/components/games/whereIs/auxiliarDrawers/DrawerChat';
 import ButtonsContainer from './ButtonsContainer';
 import { UseUserEvent } from '@/context/eventUserContext';
@@ -37,18 +36,18 @@ import { getCorrectColor } from '@/helpers/utils';
 const { useBreakpoint } = Grid;
 
 export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, eventId }: DrawerAuctionProps) {
-  const cEvent = UseEventContext();
   const screens = useBreakpoint();
   let cEventUser = UseUserEvent();
 
   const { products, getProducts, loading: ProductsLoading } = useProducts(eventId);
+
   const { Bids, loading } = useBids(eventId, auction?.currentProduct?._id, auction?.playing);
   const [canOffer, setcanOffer] = useState(true);
   const [showDrawerChat, setshowDrawerChat] = useState<boolean>(false);
   const [showDrawerRules, setshowDrawerRules] = useState<boolean>(false);
   const [modalOffer, setmodalOffer] = useState<boolean>(false);
-  const userName = cEventUser.value?.properties?.names || cEventUser.value?.user?.names
-  
+  const userName = cEventUser.value?.properties?.names || cEventUser.value?.user?.names;
+
   const validOffer = (value: string): boolean => {
     const offer = Number(value);
     return auction?.currentProduct?.price !== undefined && offer > auction?.currentProduct?.price;
@@ -71,15 +70,17 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
     if (isValid && auction?.currentProduct?._id && data.offerValue) {
       saveOffer(
         eventId,
-        auction?.currentProduct?._id,
         {
+          productName: auction?.currentProduct?.name,
+          productId : auction?.currentProduct?._id,
           date: new Date().toLocaleString(),
           name: userName || 'Anónimo',
+          userId : cEventUser.value?.user?._id,
           offered: Number(data.offerValue),
         },
         auction
       );
-      setmodalOffer(false)
+      setmodalOffer(false);
     }
     if (!isValid) {
       notification.warning({
@@ -94,7 +95,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
         padding: '1px 24px',
       }}
       bodyStyle={{
-        backgroundImage : `url(${auction.styles?.general?.backgroundImage})`,
+        backgroundImage: `url(${auction.styles?.general?.backgroundImage})`,
         backgroundColor: auction.styles?.general?.backgroundColor,
         backgroundRepeat: 'no-repeat',
         backgroundAttachment: 'fixed',
@@ -137,11 +138,14 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
               </Card>
             </Col>
             <Col span={24}>
-              <Card style={{ borderRadius: '20px', backgroundColor: auction.styles?.cards?.backgroundColor || ''}} bordered={false} bodyStyle={{ padding: '0px 20px' }}>
+              <Card
+                style={{ borderRadius: '20px', backgroundColor: auction.styles?.cards?.backgroundColor || '' }}
+                bordered={false}
+                bodyStyle={{ padding: '0px 20px' }}>
                 <Tabs
                   defaultActiveKey={TabsDrawerAuction.Bids}
                   draggable
-                  style={{ width: '100%' }}
+                  style={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor) }}
                   onChange={reloadProducts}
                   tabBarStyle={{ margin: '0px' }}>
                   <Tabs.TabPane key={TabsDrawerAuction.Bids} tab='Pujas'>
@@ -156,10 +160,25 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                                 <Skeleton avatar title={false} loading={loading}>
                                   <List.Item.Meta
                                     avatar={<Avatar>{item.name[0] || 'A'}</Avatar>}
-                                    title={item.name}
-                                    description={item.date}
+                                    title={
+                                      <Typography.Text
+                                        style={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor) }}>
+                                        {item.name}
+                                      </Typography.Text>
+                                    }
+                                    description={
+                                      <Typography.Text
+                                        style={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor) }}>
+                                        {item.date}
+                                      </Typography.Text>
+                                    }
                                   />
-                                  <Statistic  value={item.offered} prefix='$' suffix={auction.currency} />
+                                  <Statistic
+                                    valueStyle={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor) }}
+                                    value={item.offered}
+                                    prefix='$'
+                                    suffix={auction.currency}
+                                  />
                                 </Skeleton>
                               </List.Item>
                             )}
@@ -185,10 +204,15 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                                 <Skeleton avatar title={false} loading={ProductsLoading}>
                                   <List.Item.Meta
                                     avatar={<Avatar src={item.images[0].url}></Avatar>}
-                                    title={item.name}
+                                    title={
+                                      <Typography.Text
+                                        style={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor) }}>
+                                        {item.name}
+                                      </Typography.Text>
+                                    }
                                   />
                                   <Statistic
-                                    valueStyle={{ color: getCorrectColor(auction.styles?.cards?.backgroundColor)}}
+                                    valueStyle={{ color: getCorrectColor(auction.styles?.cards?.backgroundColor) }}
                                     value={item.end_price ?? item.price}
                                     prefix='OLD $'
                                     suffix={auction.currency}
@@ -216,23 +240,22 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
             <Col span={24}>
               <CardProduct auction={auction} />
             </Col>
-            <Modal
-            visible={modalOffer}
-            footer={null}
-            closable
-            destroyOnClose
-            onCancel={()=>setmodalOffer(false)}
->
-              <Form onFinish={onBid} layout='vertical' style={{ margin: 15}}>
+            <Modal visible={modalOffer} footer={null} closable destroyOnClose onCancel={() => setmodalOffer(false)}>
+              <Form onFinish={onBid} layout='vertical' style={{ margin: 15 }}>
                 <Form.Item
                   name={'offerValue'}
                   label='Valor de la puja'
                   initialValue={auction.currentProduct?.price || 0}
                   rules={[
                     { required: true, message: `Se requiere un valor mínimo de  ${auction.currentProduct?.price}` },
-                  ]}
-                  >
-                  <Input defaultValue={auction.currentProduct?.price} size='large' type='number' prefix='$' suffix={auction.currency} />
+                  ]}>
+                  <Input
+                    defaultValue={auction.currentProduct?.price}
+                    size='large'
+                    type='number'
+                    prefix='$'
+                    suffix={auction.currency}
+                  />
                 </Form.Item>
                 <Button
                   style={{ width: '100%' }}
@@ -248,15 +271,18 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
         </Col>
         <Col xs={24} sm={24} md={24} lg={6} xl={4} xxl={4}>
           <ButtonsContainer
-            styles={{backgroundColor: auction.styles?.cards?.backgroundColor || '', color: auction.styles?.cards?.color || ''}}
+            styles={{
+              backgroundColor: auction.styles?.cards?.backgroundColor || '#FFFFFF',
+              color: auction.styles?.cards?.color || '#000000',
+            }}
             validate={!auction.playing || !canOffer}
-            onClick={()=>setmodalOffer(true)}
+            onClick={() => setmodalOffer(true)}
             setshowDrawerChat={setshowDrawerChat}
             setshowDrawerRules={setshowDrawerRules}
             closedrawer={setOpenOrClose}
           />
 
-          <DrawerRules showDrawerRules={showDrawerRules} setshowDrawerRules={setshowDrawerRules} />
+          <DrawerRules showDrawerRules={showDrawerRules} setshowDrawerRules={setshowDrawerRules}  auctionRules={{rules: ''}}/>
           <DrawerChat showDrawerChat={showDrawerChat} setshowDrawerChat={setshowDrawerChat} />
         </Col>
       </Row>

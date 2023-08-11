@@ -275,6 +275,6 @@ const hexToRgb = (hex) => {
 };
 const setContrast = (rgb) => ((rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000 > 125 ? 'black' : 'white');
 
-export const getCorrectColor = (color) => {
+export const getCorrectColor = (color = '#FFFFFF') => {
   return setContrast(hexToRgb(color));
 };

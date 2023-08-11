@@ -34,7 +34,7 @@ export default function CreateAuction({ active, auction }: CreateProps) {
           onCancel={() => setModal(false)}
           destroyOnClose={true}
           footer={[
-            <Button key={'btnCancelar'} type='default' onClick={() => {}} icon={<CloseCircleOutlined />}>
+            <Button key={'btnCancelar'} type='default' onClick={() => setModal(false)} icon={<CloseCircleOutlined />}>
               Cancelar
             </Button>,
             <Button
@@ -77,7 +77,7 @@ export default function CreateAuction({ active, auction }: CreateProps) {
                 </Typography.Paragraph>
 
                 <Typography.Paragraph>
-                  Para confirmar que deseas borrar toda la configuración de la Subasta, escribe la siguiente palabra:
+                  Para confirmar que deseas borrar toda la configuración de la subasta, escribe la siguiente palabra:
                   <Typography.Text strong type='danger'>
                     {` ${auction?.name ?? ''}`}
                   </Typography.Text>

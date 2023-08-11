@@ -1,14 +1,13 @@
 import { Drawer, Input, PageHeader, Typography } from 'antd';
 import { FileProtectOutlined } from '@ant-design/icons';
-import { DrawerRulesInterface } from '../../interfaces/bingo';
 import { UseEventContext } from '@/context/eventContext';
-import { DrawerRules } from '../../interfaces/auction.interface';
+import { DrawerRulesProps } from '../../interfaces/auction.interface';
 
 const { Title } = Typography;
 
-const DrawerRules = ({ showDrawerRules, setshowDrawerRules, }: DrawerRules) => {
+const DrawerRules = ({ showDrawerRules, setshowDrawerRules, }: DrawerRulesProps) => {
   let cEvent = UseEventContext();
-
+  
   return (
     <Drawer
       width={'30vw'}
@@ -40,7 +39,7 @@ const DrawerRules = ({ showDrawerRules, setshowDrawerRules, }: DrawerRules) => {
         autoSize={{ minRows: 25, maxRows: 25 }}
         cols={20}
         wrap='hard'
-        placeholder={'Reglamento del Bingo'}
+        placeholder={'Reglamento de  la subasta'}
         readOnly={true}
         value={''}
       />

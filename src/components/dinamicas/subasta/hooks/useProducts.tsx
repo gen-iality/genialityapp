@@ -1,6 +1,6 @@
 import * as service from '../services/index';
 import { useEffect, useState } from 'react';
-import { ModalProduct, Products } from '../interfaces/auction.interface';
+import { ModalProduct, ProductState, Products } from '../interfaces/auction.interface';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { deleteFireStorageData } from '@/Utilities/deleteFireStorageData';
 
@@ -42,6 +42,7 @@ const useProducts = (eventId: string) => {
     if (!id) return;
     const response = await service.deleteProduct(eventId, id);
     if (response) {
+      await service.deleteOffersByProduct(eventId,id)
       await deleteImages(images);
       refresh();
     }
@@ -54,17 +55,17 @@ const useProducts = (eventId: string) => {
     }
   };
 
-  const updateProduct = async (data: ModalProduct, images: UploadFile[]) => {
+  const updateProduct = async (data: ModalProduct, images: UploadFile[], state: ProductState, price?: number ) => {
     const { name, description, start_price } = data;
     const response = await service.updateProduct(eventId, {
       type: 'just-auction',
       name,
       description,
       images: FilterImage(images),
-      _id: data._id || '',
-      price: start_price,
+      _id: data._id ?? '',
+      price: price ?? start_price,
       start_price,
-      state: 'waiting'
+      state
     });
     if (response) refresh();
   };

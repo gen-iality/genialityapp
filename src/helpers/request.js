@@ -496,6 +496,10 @@ export const AuctionApi = {
   deleteOne: async (event, subasta_id) => {
     let token = await GetTokenUserFirebase();
     return await Actions.delete(`/api/events/${event}/subastas/${subasta_id}?token=${token}`,'', true);
+  },
+  resetProducts: async (event) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`/api/events/${event}/subastas/reset-products?token=${token}`,'', true);
   }
 };
 export const AuctionProductApi = {
