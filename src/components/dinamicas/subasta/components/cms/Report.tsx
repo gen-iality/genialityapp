@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Card, Col, Divider, Result, Row, Statistic } from 'antd';
+import { Card, Col, Divider, Result, Row, Space, Statistic } from 'antd';
 import { Bar } from 'react-chartjs-2';
 import { useSatistic } from '../../hooks/useStatistic';
 import { ReportProps } from '../../interfaces/auction.interface';
@@ -27,7 +27,7 @@ export default function Report({ eventId, reload }: ReportProps) {
         borderWidth: 2,
       },
       {
-        label: 'Participantes unicos',
+        label: 'Participantes únicos',
         data: participants,
         backgroundColor: '#332d62',
         borderColor: '#332d62',
@@ -39,7 +39,7 @@ export default function Report({ eventId, reload }: ReportProps) {
     labels: labelsProducts,
     datasets: [
       {
-        label: 'precio inicial',
+        label: 'Precio inicial',
         data: startPrices,
         backgroundColor: '#6e58b1',
         borderColor: '#6e58b1',
@@ -76,33 +76,33 @@ export default function Report({ eventId, reload }: ReportProps) {
 
   return (
     <>
-      <Row justify='center' gutter={[16, 16]}>
+      <Row justify='center' gutter={[32, 32]}>
         <Col xs={24} sm={24} md={16} lg={16} xl={16} xxl={10}>
-          <Card style={{ borderRadius: 20 }} title={'Grafica de pujas x producto'}>
+          <Card style={{ borderRadius: 20 }} title={'Gráfica de pujas x producto'}>
             {/*@ts-ignore */}
             <Bar data={data} options={options} />
           </Card>
         </Col>
         <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={10}>
           <Col style={{ display: 'flex', justifyContent: 'center', margin: 10 }}>
-            <Card style={{ width: 300 }} hoverable>
+            <Card style={{ width: 300, cursor: 'default' }} hoverable>
               <Statistic
                 valueStyle={{ textAlign: 'center', fontSize: 30 }}
-                title='Articulos Subastados'
+                title='Articulos subastados'
                 value={labels.length}
               />
             </Card>
           </Col>
           <Col style={{ display: 'flex', justifyContent: 'center', margin: 10 }}>
-            <Card style={{ width: 300 }} hoverable>
-              <Statistic valueStyle={{ textAlign: 'center', fontSize: 30 }} title='Total Pujas' value={offers.length} />
+            <Card style={{ width: 300, cursor: 'default' }} hoverable>
+              <Statistic valueStyle={{ textAlign: 'center', fontSize: 30 }} title='Total de pujas' value={offers.length} />
             </Card>
           </Col>
           <Col style={{ display: 'flex', justifyContent: 'center', margin: 10 }}>
-            <Card style={{ width: 300 }} hoverable>
+            <Card style={{ width: 300, cursor: 'default' }} hoverable>
               <Statistic
                 valueStyle={{ textAlign: 'center', fontSize: 30 }}
-                title='Total Participantes'
+                title='Total de participantes'
                 value={filterUserID(offers).length}
               />
             </Card>
@@ -112,7 +112,7 @@ export default function Report({ eventId, reload }: ReportProps) {
       <Divider />
       <Row justify='center' gutter={[16, 16]} style={{ margin: 10 }}>
         <Col xs={24} sm={24} md={16} lg={16} xl={16} xxl={10}>
-          <Card style={{ borderRadius: 20 }} title={'Grafica de ganancias x producto'}>
+          <Card style={{ borderRadius: 20 }} title={'Gráfica de ganancias por producto'}>
             <Bar data={dataCre} options={optionsCar} />
           </Card>
         </Col>
@@ -120,7 +120,7 @@ export default function Report({ eventId, reload }: ReportProps) {
           {/*       <Card style={{ borderRadius: 20 }}>
           <Pie data={dataCre} options={optionsCar} />
         </Card> */}
-          <Result title='Proximamente'></Result>
+          <Result title='Próximamente'></Result>
         </Col>
       </Row>
     </>
