@@ -3,6 +3,7 @@ import { Auction, IBids, Products } from '../interfaces/auction.interface';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { deleteFireStorageData } from '@/Utilities/deleteFireStorageData';
 import { DispatchMessageService } from '@/context/MessageService';
+import moment from 'moment';
 
 export const uploadImagedummyRequest = async ({ file, onSuccess, onError }: any) => {
   const imagenUrl = await uploadImageData(file);
@@ -119,4 +120,16 @@ export const priceChartValues = (products : Products[]) => {
     startPrices,
     increases
   }
+}
+
+
+export const orderByOfferdAndDate = (data : IBids[]) => {
+  return data.sort((a,b ) => {
+    // Si las propiedades "offered" son diferentes, ordenar por ellas
+    return b.offered - a.offered;
+    // Si las propiedades "offered" son iguales, ordenar por "date"
+   /*  const dateA = moment(a.date, 'YYYY-MM-DD  hh:mm:ss');
+    const dateB = moment(b.date, 'YYYY-MM-DD hh:mm:ss');
+    return dateA.isBefore(dateB) ? -1 : dateA.isAfter(dateB) ? 1 : 0; */
+  })
 }
