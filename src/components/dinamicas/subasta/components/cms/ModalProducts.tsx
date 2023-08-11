@@ -52,26 +52,6 @@ export default function ModalProducts({ product, onChange, onCancel, onSave }: M
             formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
           />
         </Form.Item>
-        <Form.Item
-          rules={[{ required: true, message: 'Es necesario el estado del producto' }]}
-          label={'Estado'}
-          name={'state'}
-          initialValue={product.state}>
-          <Select
-            style={{ width: '100%' }}
-            options={[{
-              label: 'En espera',
-              value: 'waiting'
-            },{
-              label: 'Subastado',
-              value: 'auctioned'
-            },{
-              label: 'En progreso',
-              value: 'progress'
-            }]}
-          />
-        </Form.Item>
-
         <Form.Item  rules={[{ required: true, message: 'Es necesaria la descripción del producto' }]} label={'Descripción'} name={'description'} initialValue={product.description || ''}>
           <TextArea maxLength={100}  rows={2} placeholder={'Ej: Hecha por el artista..'} />
         </Form.Item>

@@ -1,8 +1,7 @@
-import { Card, Empty, Skeleton, Space, Statistic, Typography } from 'antd'
+import { Card, Empty, Skeleton, Statistic, Typography } from 'antd'
 import React from 'react'
 import { DrawerAuctionProps } from '../../interfaces/auction.interface'
 import Meta from 'antd/lib/card/Meta'
-import { Text } from 'react-konva';
 import { getCorrectColor } from '@/helpers/utils';
 
 export default function CardProduct({auction} : Partial<DrawerAuctionProps>) {

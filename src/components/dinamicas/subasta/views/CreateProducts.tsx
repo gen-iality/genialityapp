@@ -4,7 +4,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Button, Modal, Row } from 'antd';
 import useProducts from '../hooks/useProducts';
 import ModalProducts from '../components/cms/ModalProducts';
-import { ImagesData, ModalProduct } from '../interfaces/auction.interface';
+import { ImagesData, ModalProduct, Products as IProduct } from '../interfaces/auction.interface';
 import { InitialModalState, deleteImage } from '../utils/utils';
 import { AuctionContext } from '../context/AuctionContext';
 import Loading from '@/components/profile/loading';
@@ -13,7 +13,7 @@ import { UploadFile } from 'antd/lib/upload/interface';
 
 export default function CreateProducts({reload}: {reload: boolean}) {
   const [modal, setmodal] = useState({ visibility: false, edit: false });
-  const [productSelect, setProductSelect] = useState<ModalProduct>(InitialModalState);
+  const [productSelect, setProductSelect] = useState<IProduct>(InitialModalState);
   const { eventId } = useContext(AuctionContext);
   const { products, createProduct, deleteProduct, updateProduct, loading, deleteImages, refresh } = useProducts(eventId);
   useEffect(() => {
@@ -45,10 +45,9 @@ export default function CreateProducts({reload}: {reload: boolean}) {
   };
 
   const onSave = async (product: ModalProduct) => {
-    if (productSelect.images.length === 0)
-      return DispatchMessageService({ type: 'error', msj: 'Debe añadir por lo menos una imagen', action: 'show' });
-    if (modal.edit) {
-      await updateProduct(product, productSelect.images);
+    if (productSelect.images.length === 0)  return DispatchMessageService({ type: 'error', msj: 'Debe añadir por lo menos una imagen', action: 'show' });
+      if (modal.edit) {
+      await updateProduct(product, productSelect.images,productSelect.state,productSelect.price);
     } else {
       await createProduct(product, productSelect.images);
     }
@@ -65,7 +64,6 @@ export default function CreateProducts({reload}: {reload: boolean}) {
       await deleteImages(images);
     } else {
       const newImages = images.filter((img) => !img.url);
-
       await deleteImages(newImages);
     }
     resetModal();
