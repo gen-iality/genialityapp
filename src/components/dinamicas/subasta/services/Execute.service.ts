@@ -1,5 +1,6 @@
 import { firestore } from '@/helpers/firebase';
 import { Auction } from '../interfaces/auction.interface';
+import { orderByOfferdAndDate } from '../utils/utils';
 
 export const saveAuctioFirebase = async (eventId: string, createAuction: Auction) => {
   try {
@@ -57,8 +58,8 @@ export const listenBids = (eventId: string, productID: string, setBids: any, set
     .where('productId', '==', productID)
     .onSnapshot((snapshot) => {
       if (!snapshot.empty) {
-        const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        setBids(data);
+        const data: any[] = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        setBids(orderByOfferdAndDate(data));
       } else {
         setBids([]);
       }
