@@ -86,7 +86,7 @@ const UserStatusAndMenu = (props: any) => {
 					)}
 				</Menu.ItemGroup>
 			)}
-			{visible && <Menu.ItemGroup
+			{visible && props?.userEvent?.is_admin && <Menu.ItemGroup
 				key='user-status-menu-item-group-2'
 				title={intl.formatMessage({
 					id: 'header.title.Management',

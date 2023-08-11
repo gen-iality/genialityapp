@@ -114,12 +114,18 @@ const MainProfile = (props) => {
   };
 
   const myOrganizations = async () => {
-    const organizations = await OrganizationApi.mine();
-    const organizationsFilter = organizations.filter((orgData) => orgData.id);
-    const organizationDataSorted = organizationsFilter.sort((a, b) => moment(b.created_at) - moment(a.created_at));
-    setorganizations(organizationDataSorted);
-    setorganizationsLimited(organizationDataSorted.slice(0, 5));
-    setOrganizationsIsLoading(false);
+    if(props.cUser?.value?.is_admin){
+      const organizations = await OrganizationApi.mine();
+      const organizationsFilter = organizations.filter((orgData) => orgData.id);
+      const organizationDataSorted = organizationsFilter.sort((a, b) => moment(b.created_at) - moment(a.created_at));
+      setorganizations(organizationDataSorted);
+      setorganizationsLimited(organizationDataSorted.slice(0, 5));
+      setOrganizationsIsLoading(false);
+    }else{
+      setorganizations([]);
+      setorganizationsLimited([]);
+      setOrganizationsIsLoading();
+    }
   };
 
   const fetchItem = async () => {
@@ -151,6 +157,10 @@ const MainProfile = (props) => {
     }
   }, []);
 
+  useEffect(() => {
+    fetchItem();
+  }, [props.cUser?.value?.is_admin])
+  
   useEffect(() => {
     if (activeTab !== '2') return;
     fetchItem();
@@ -436,7 +446,7 @@ const MainProfile = (props) => {
                   </Row>
                 </TabPane>
               )}
-              <TabPane tab='Organizaciones' key='2'>
+              {props.cUser?.value?.is_admin && <TabPane tab='Organizaciones' key='2'>
                 {organizationsIsLoading ? (
                   <Loading />
                 ) : (
@@ -454,7 +464,7 @@ const MainProfile = (props) => {
                       })}
                   </Row>
                 )}
-              </TabPane>
+              </TabPane>}
               <TabPane tab='Eventos creados' key='3'>
                 {eventsIHaveCreatedIsLoading ? (
                   <Loading />
