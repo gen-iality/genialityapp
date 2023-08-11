@@ -1,17 +1,21 @@
-import React, { useEffect } from 'react';
-import { Card, Col, Divider, Result, Row, Statistic } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Card, Col, Divider, Input, Modal, Result, Row, Space, Statistic, Typography } from 'antd';
 import { Bar } from 'react-chartjs-2';
 import { useSatistic } from '../../hooks/useStatistic';
 import { ReportProps } from '../../interfaces/auction.interface';
 import { filterUserID, orgOfferds, priceChartValues } from '../../utils/utils';
 
 import useProducts from '../../hooks/useProducts';
+import { CloseCircleOutlined, DeleteOutlined, RollbackOutlined } from '@ant-design/icons';
 
 export default function Report({ eventId, reload }: ReportProps) {
   const { offers } = useSatistic(eventId, reload);
   const { products, refresh } = useProducts(eventId);
+  const [modal, setModal] = useState<boolean>(false);
+  const [permit, setPermit] = useState<boolean>(true);
+
   useEffect(() => {
-    if(reload) refresh();
+    if (reload) refresh();
   }, [reload]);
 
   const { labels, values, participants } = orgOfferds(offers);
@@ -76,6 +80,69 @@ export default function Report({ eventId, reload }: ReportProps) {
 
   return (
     <>
+      <Row justify='end'>
+      <Modal
+          visible={modal}
+          onCancel={() => setModal(false)}
+          destroyOnClose={true}
+          footer={[
+            <Button key={'btnCancelar'} type='default' onClick={() => setModal(false)} icon={<CloseCircleOutlined />}>
+              Cancelar
+            </Button>,
+            <Button
+              key={'btnEliminar'}
+              type='primary'
+              danger
+              onClick={() => {
+                setModal(false);
+                //deleteAuction(auction?._id);
+              }}
+              disabled={permit}
+              icon={<DeleteOutlined />}>
+              Reiniciar
+            </Button>,
+          ]}>
+          <Result
+            status={'warning'}
+            title={
+              <Typography.Text strong type='warning' style={{ fontSize: 22 }}>
+                ¿Quieres Reiniciar los datos?
+              </Typography.Text>
+            }
+            extra={
+              <Input
+                placeholder={'Reiniciar'}
+                onChange={(e) => {
+                  if (e.target.value === 'Reiniciar') {
+                    setPermit(false);
+                  } else {
+                    setPermit(true);
+                  }
+                }}
+              />
+            }
+            subTitle={
+              <Space style={{ textAlign: 'justify' }} direction='vertical'>
+                <Typography.Paragraph>
+                  Esta acción borrará permanentemente los datos de las pujas asi como el precio de los productos subastados.
+                </Typography.Paragraph>
+
+                <Typography.Paragraph>
+                  Para confirmar que deseas eliminar los datos de la Subasta, escribe la siguiente palabra: 
+                  <Typography.Text strong type='danger'>
+                   {' Reiniciar'}
+                  </Typography.Text>
+                </Typography.Paragraph>
+              </Space>
+            }
+          />
+        </Modal>
+      {true && (
+        <Button icon={<RollbackOutlined />} danger type='primary' onClick={() => setModal(true)}>
+          Reiniciar Subasta
+        </Button>
+      )}
+      </Row>
       <Row justify='center' gutter={[16, 16]}>
         <Col xs={24} sm={24} md={16} lg={16} xl={16} xxl={10}>
           <Card style={{ borderRadius: 20 }} title={'Grafica de pujas x producto'}>

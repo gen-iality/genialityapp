@@ -112,7 +112,7 @@ export const saveOffer =  async  (eventId: string, offer: IBids, auction: Auctio
       return false;
     }
 }
- export const deleteOffers =  async  (eventId: string,productId : string) => {
+ export const deleteOffersByProduct =  async  (eventId: string,productId : string) => {
   try {
     const querySnapshot = await firestore
     .collection(`auctionByEventId`)
@@ -126,7 +126,31 @@ export const saveOffer =  async  (eventId: string, offer: IBids, auction: Auctio
         
       })
       .catch((error) => {
-        console.log('fallo al eliminar',error);
+        console.log('fallo al eliminar');
+      });
+    })
+    return data
+    } catch (error) {
+      console.log(error);
+
+      DispatchMessageService({ type: 'error', msj: 'Error al enviar oferta', action: 'show' });
+      return [];
+    }
+ }
+ export const deleteOffers =  async  (eventId: string,productId : string) => {
+  try {
+    const querySnapshot = await firestore
+    .collection(`auctionByEventId`)
+    .doc(eventId)
+    .collection('Bids')
+    .get()
+
+    const data = querySnapshot.docs.forEach((item) => {
+      item.ref.delete().then(() => {
+        
+      })
+      .catch((error) => {
+        console.log('fallo al eliminar');
       });
     })
     return data
