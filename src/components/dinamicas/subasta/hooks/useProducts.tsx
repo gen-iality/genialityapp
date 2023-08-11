@@ -42,6 +42,7 @@ const useProducts = (eventId: string) => {
     if (!id) return;
     const response = await service.deleteProduct(eventId, id);
     if (response) {
+      await service.deleteOffersByProduct(eventId,id)
       await deleteImages(images);
       refresh();
     }

@@ -10,7 +10,9 @@ export default function ButtonsContainer({
 	setshowDrawerChat = () => {},
 	setshowDrawerRules = () => {},
 	closedrawer,
-    styles={},
+    styles={
+        backgroundColor: '#FFFFFF'
+    },
 }: ButtonsContainerProps) {
  const btnPujar = {
     width: '150px',
@@ -18,6 +20,7 @@ export default function ButtonsContainer({
     border: `10px solid #CECECE`,
     boxShadow: ' 0px 4px 4px rgba(0, 0, 0, 0.25)',
 }
+
   return (
     <Card bordered={false} style={{ height: '100%', backgroundColor: 'transparent' }}>
     <Row gutter={[16, 16]}>

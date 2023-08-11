@@ -34,7 +34,7 @@ export default function CreateAuction({ active, auction }: CreateProps) {
           onCancel={() => setModal(false)}
           destroyOnClose={true}
           footer={[
-            <Button key={'btnCancelar'} type='default' onClick={() => {}} icon={<CloseCircleOutlined />}>
+            <Button key={'btnCancelar'} type='default' onClick={() => setModal(false)} icon={<CloseCircleOutlined />}>
               Cancelar
             </Button>,
             <Button

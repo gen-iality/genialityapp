@@ -11,7 +11,7 @@ import SelectProducts from '../components/cms/SelectProducts';
 import { DispatchMessageService } from '@/context/MessageService';
 import { saveAuctioFirebase } from '../services/Execute.service';
 import { useBids } from '../hooks/useBids';
-import { deleteOffers, updateProduct } from '../services';
+import { deleteOffersByProduct, updateProduct } from '../services';
 
 
 
@@ -74,7 +74,7 @@ export default function ExecuteAuction() {
     if (auction){ 
      const save = await saveAuctioFirebase(eventId, { ...auction, playing: false });
         if(save && auction.currentProduct){
-          deleteOffers(eventId, auction.currentProduct._id)
+          deleteOffersByProduct(eventId, auction.currentProduct._id)
         }
     }
   };

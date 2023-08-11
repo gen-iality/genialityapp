@@ -22,6 +22,7 @@ export interface ApiInterface  {
     createOne: <T>(event: string, data: any) => Promise<T> 
     deleteOne: (event: string, subasta_id: string) => Promise<boolean>
     editOne:   <T>(event: string, id: string, data : any) => Promise<T>
+    resetProducts:  <T>(event: string) => Promise<T>
 }
 export interface CreateProps {
     active:   boolean

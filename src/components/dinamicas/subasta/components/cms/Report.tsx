@@ -1,17 +1,23 @@
-import React, { useEffect } from 'react';
-import { Card, Col, Divider, Result, Row, Space, Statistic } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Card, Col, Divider, Input, Modal, Result, Row, Space, Statistic, Typography } from 'antd';
 import { Bar } from 'react-chartjs-2';
 import { useSatistic } from '../../hooks/useStatistic';
 import { ReportProps } from '../../interfaces/auction.interface';
 import { filterUserID, orgOfferds, priceChartValues } from '../../utils/utils';
 
 import useProducts from '../../hooks/useProducts';
+import { CloseCircleOutlined, DeleteOutlined, ReloadOutlined, RollbackOutlined } from '@ant-design/icons';
+import { resetProducts } from '../../services';
+import { DispatchMessageService } from '@/context/MessageService';
 
 export default function Report({ eventId, reload }: ReportProps) {
-  const { offers } = useSatistic(eventId, reload);
+  const { offers,callOffers } = useSatistic(eventId, reload);
   const { products, refresh } = useProducts(eventId);
+  const [modal, setModal] = useState<boolean>(false);
+  const [permit, setPermit] = useState<boolean>(true);
+
   useEffect(() => {
-    if(reload) refresh();
+    if (reload) refresh();
   }, [reload]);
 
   const { labels, values, participants } = orgOfferds(offers);
@@ -73,54 +79,132 @@ export default function Report({ eventId, reload }: ReportProps) {
       },
     },
   };
-
+  const reset = async () => {
+  const response =  await resetProducts(eventId)
+  if(response){
+    DispatchMessageService({ type: 'success', msj: 'Datos Reiniciados', action: 'show' });
+    refresh()
+    callOffers()
+  }
+  }
   return (
     <>
-      <Row justify='center' gutter={[32, 32]}>
-        <Col xs={24} sm={24} md={16} lg={16} xl={16} xxl={10}>
-          <Card style={{ borderRadius: 20 }} title={'Gráfica de pujas x producto'}>
-            {/*@ts-ignore */}
-            <Bar data={data} options={options} />
-          </Card>
-        </Col>
-        <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={10}>
-          <Col style={{ display: 'flex', justifyContent: 'center', margin: 10 }}>
-            <Card style={{ width: 300, cursor: 'default' }} hoverable>
-              <Statistic
-                valueStyle={{ textAlign: 'center', fontSize: 30 }}
-                title='Articulos subastados'
-                value={labels.length}
+      <Row justify='end' style={{paddingBottom: '10px'}}>
+        <Modal
+          visible={modal}
+          onCancel={() => setModal(false)}
+          destroyOnClose={true}
+          footer={[
+            <Button key={'btnCancelar'} type='default' onClick={() => setModal(false)} icon={<CloseCircleOutlined />}>
+              Cancelar
+            </Button>,
+            <Button
+              key={'btnEliminar'}
+              type='primary'
+              danger
+              onClick={() => {
+                setModal(false);
+                reset()
+              }}
+              disabled={permit}
+              icon={<DeleteOutlined />}>
+              Reiniciar
+            </Button>,
+          ]}>
+          <Result
+            status={'warning'}
+            title={
+              <Typography.Text strong type='warning' style={{ fontSize: 22 }}>
+                ¿Quieres reiniciar los datos?
+              </Typography.Text>
+            }
+            extra={
+              <Input
+                placeholder={'Reiniciar'}
+                onChange={(e) => {
+                  if (e.target.value === 'Reiniciar') {
+                    setPermit(false);
+                  } else {
+                    setPermit(true);
+                  }
+                }}
               />
-            </Card>
-          </Col>
-          <Col style={{ display: 'flex', justifyContent: 'center', margin: 10 }}>
-            <Card style={{ width: 300, cursor: 'default' }} hoverable>
-              <Statistic valueStyle={{ textAlign: 'center', fontSize: 30 }} title='Total de pujas' value={offers.length} />
-            </Card>
-          </Col>
-          <Col style={{ display: 'flex', justifyContent: 'center', margin: 10 }}>
-            <Card style={{ width: 300, cursor: 'default' }} hoverable>
-              <Statistic
-                valueStyle={{ textAlign: 'center', fontSize: 30 }}
-                title='Total de participantes'
-                value={filterUserID(offers).length}
-              />
-            </Card>
-          </Col>
-        </Col>
+            }
+            subTitle={
+              <Space style={{ textAlign: 'justify' }} direction='vertical'>
+                <Typography.Paragraph>
+                  Esta acción borrará permanentemente los datos de las pujas así como el precio de los productos subastados.
+                </Typography.Paragraph>
+
+                <Typography.Paragraph>
+                  Para confirmar que deseas eliminar los datos de la subasta, escribe la siguiente palabra: 
+                  <Typography.Text strong type='danger'>
+                   {' Reiniciar'}
+                  </Typography.Text>
+                </Typography.Paragraph>
+              </Space>
+            }
+          />
+        </Modal>
+      {true && (
+        <Button icon={<ReloadOutlined />} danger type='primary' onClick={() => setModal(true)}>
+          Reiniciar subasta
+        </Button>
+      )}
       </Row>
-      <Divider />
-      <Row justify='center' gutter={[16, 16]} style={{ margin: 10 }}>
-        <Col xs={24} sm={24} md={16} lg={16} xl={16} xxl={10}>
-          <Card style={{ borderRadius: 20 }} title={'Gráfica de ganancias por producto'}>
-            <Bar data={dataCre} options={optionsCar} />
+      <Row gutter={[32, 32]}>
+        <Col span={12}>
+          <Card 
+            hoverable 
+            style={{/* minHeight: '55vh', */ cursor: 'default', borderRadius: '20px'}} 
+            title={'Gráfica de pujas por producto'}
+            headStyle={{border: 'none'}}
+          >
+            <Space direction='vertical' size={16}>
+              {/*@ts-ignore */}
+              <Bar data={data} options={options} /> 
+
+              <Row gutter={[8, 8]} wrap>
+                <Col span={8}>
+                  <Card style={{ height: '100%', cursor: 'default', border: '1px solid #C4C4C480' }}>
+                    <Statistic
+                      valueStyle={{ textAlign: 'center', fontSize: 30 }}
+                      title='Articulos subastados'
+                      value={labels.length}
+                    />
+                  </Card>
+                </Col>
+                <Col span={8}>
+                  <Card style={{ height: '100%', cursor: 'default', border: '1px solid #C4C4C480' }}>
+                    <Statistic valueStyle={{ textAlign: 'center', fontSize: 30 }} title='Total de pujas' value={offers.length} />
+                  </Card>
+                </Col>
+                <Col span={8}>
+                  <Card style={{ height: '100%', cursor: 'default', border: '1px solid #C4C4C480' }}>
+                    <Statistic
+                      valueStyle={{ textAlign: 'center', fontSize: 30 }}
+                      title='Total de participantes'
+                      value={filterUserID(offers).length}
+                    />
+                  </Card>
+                </Col>
+              </Row>
+            </Space>
           </Card>
         </Col>
-        <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={10}>
-          {/*       <Card style={{ borderRadius: 20 }}>
-          <Pie data={dataCre} options={optionsCar} />
-        </Card> */}
-          <Result title='Próximamente'></Result>
+        <Col span={12}>
+          <Card 
+            hoverable 
+            style={{/* minHeight: '55vh', */ cursor: 'default', borderRadius: '20px'}}
+            title={'Gráfica de ganancias por producto'}
+            headStyle={{border: 'none'}}
+          >
+            <Space direction='vertical' size={16} style={{width: '100%'}}>
+              <Bar data={dataCre} options={optionsCar} />
+
+              <Result title='Próximamente'></Result>
+            </Space>
+          </Card>
         </Col>
       </Row>
     </>

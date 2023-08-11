@@ -23,10 +23,6 @@ export default function ConfigAppearance({ auction, eventId }: ConfigStyleProps)
     }
   };
 
-  useEffect(() => {
-    console.log(configStyle);
-  }, [configStyle]);
-
   return (
     <Row gutter={[16, 16]} style={{ display: 'flex' }}>
       <Button  onClick={onOk} type='primary' style={{ position: 'absolute', right: 10, borderRadius: 5 }}>
