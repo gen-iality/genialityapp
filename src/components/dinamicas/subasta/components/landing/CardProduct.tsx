@@ -24,7 +24,7 @@ export default function CardProduct({auction} : Partial<DrawerAuctionProps>) {
         <Empty
           image={<Skeleton.Image className='animate__animated animate__flipInX' />}
           style={{ height: '410px', display: 'grid', justifyContent: 'center', alignItems: 'center' }}
-          description={'Sin imagen'}
+          description={<div style={{color: getCorrectColor(auction?.styles?.cards?.backgroundColor)}}>Sin imagen</div>}
         />
       )
     }>
