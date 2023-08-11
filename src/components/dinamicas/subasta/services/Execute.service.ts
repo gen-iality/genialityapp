@@ -10,7 +10,6 @@ export const saveAuctioFirebase = async (eventId: string, createAuction: Auction
 
     return true;
   } catch (error) {
-    console.log(error);
     return false;
   }
 };

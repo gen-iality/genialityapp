@@ -9,8 +9,6 @@ export const useSatistic = (eventId: string,reload: boolean) => {
 const callOffers = async () => {
     if (eventId) {
         const data = await getOffers(eventId);
-        console.log(eventId,'data', data);
-        
         setOffers(data);
       }
 }
@@ -19,6 +17,7 @@ const callOffers = async () => {
   },[reload]);
 
   return {
-    offers
+    offers,
+    callOffers
   };
 };

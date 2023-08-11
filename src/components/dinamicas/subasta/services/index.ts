@@ -4,7 +4,17 @@ import { AuctionApi, AuctionProductApi } from '@/helpers/request';
 import { firestore } from "@/helpers/firebase";
 import { saveAuctioFirebase } from "./Execute.service";
 const api : ApiInterface = AuctionApi
-const apiProduct : ApiInterface = AuctionProductApi
+const apiProduct : Omit<ApiInterface,  'resetProducts'> = AuctionProductApi
+export const resetProducts =  async  (eventId : string) => {
+    try {
+        const response = await api.resetProducts<any>(eventId);
+        await deleteOffers(eventId)
+        return response;
+      } catch (error) {
+        DispatchMessageService({ type: 'error', msj: 'No se logro reiniciar los datos', action: 'show' });
+        return null;
+      }
+}
 export const createAuction =  async  (eventId : string, params : AuctionConfig) => {
     try {
         const response = await api.createOne<Auction>(eventId,params);
@@ -28,7 +38,7 @@ export const updateAuction =  async  (eventId : string, auctionId: string ,param
 
 export const getAuction =  async  (eventId : string) => {
     try {
-        console.log(eventId)
+
         const response = await api.getOne<Auction>(eventId);
         return response;
       } catch (error) {
@@ -37,7 +47,7 @@ export const getAuction =  async  (eventId : string) => {
 }
 export const deleteAuction =  async  (eventId : string, auctionId: string) => {
     try {
-        console.log(eventId)
+
         const response = await api.deleteOne(eventId,auctionId);
         return true;
       } catch (error) {
@@ -72,7 +82,6 @@ export const deleteProduct =  async  (eventId : string, id :string ) => {
 
 export const updateProduct =  async  (eventId : string, params : Products ) => {
   try {
-    console.log(params);
     
       const response = await apiProduct.editOne<Products>(eventId,params._id,params);
       return response;
@@ -137,7 +146,7 @@ export const saveOffer =  async  (eventId: string, offer: IBids, auction: Auctio
       return [];
     }
  }
- export const deleteOffers =  async  (eventId: string,productId : string) => {
+ export const deleteOffers =  async  (eventId: string) => {
   try {
     const querySnapshot = await firestore
     .collection(`auctionByEventId`)

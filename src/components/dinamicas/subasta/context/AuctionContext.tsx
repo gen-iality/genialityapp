@@ -36,9 +36,7 @@ export default function AuctionProvider(props: Props) {
       }
     }
   }, []);
-  useEffect(() => {
-console.log(auction);
-  }, [auction]);
+
 
   const getAuction = async () => {
     const data = await service.getAuction(eventId);
@@ -65,7 +63,7 @@ console.log(auction);
     if (!auctionId) return;
     setLoadingConfig(true);
     const response = await service.updateAuction(eventId, auctionId, params);
-    if (response) await saveAuctioFirebase(eventId, {...response, opened : auction?.opened, published : auction?.published, currentProduct : auction?.currentProduct, playing : auction?.playing});
+    if (response) await saveAuctioFirebase(eventId, {...response, opened : auction?.opened, published : auction?.published, currentProduct : auction?.currentProduct, playing : auction?.playing, styles: auction?.styles});
 
     setLoadingConfig(false);
   };

@@ -272,8 +272,8 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
         <Col xs={24} sm={24} md={24} lg={6} xl={4} xxl={4}>
           <ButtonsContainer
             styles={{
-              backgroundColor: auction.styles?.cards?.backgroundColor || '',
-              color: auction.styles?.cards?.color || '',
+              backgroundColor: auction.styles?.cards?.backgroundColor || '#FFFFFF',
+              color: auction.styles?.cards?.color || '#000000',
             }}
             validate={!auction.playing || !canOffer}
             onClick={() => setmodalOffer(true)}

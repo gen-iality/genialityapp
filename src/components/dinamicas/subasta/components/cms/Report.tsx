@@ -7,9 +7,11 @@ import { filterUserID, orgOfferds, priceChartValues } from '../../utils/utils';
 
 import useProducts from '../../hooks/useProducts';
 import { CloseCircleOutlined, DeleteOutlined, RollbackOutlined } from '@ant-design/icons';
+import { resetProducts } from '../../services';
+import { DispatchMessageService } from '@/context/MessageService';
 
 export default function Report({ eventId, reload }: ReportProps) {
-  const { offers } = useSatistic(eventId, reload);
+  const { offers,callOffers } = useSatistic(eventId, reload);
   const { products, refresh } = useProducts(eventId);
   const [modal, setModal] = useState<boolean>(false);
   const [permit, setPermit] = useState<boolean>(true);
@@ -77,7 +79,14 @@ export default function Report({ eventId, reload }: ReportProps) {
       },
     },
   };
-
+  const reset = async () => {
+  const response =  await resetProducts(eventId)
+  if(response){
+    DispatchMessageService({ type: 'success', msj: 'Datos Reiniciados', action: 'show' });
+    refresh()
+    callOffers()
+  }
+  }
   return (
     <>
       <Row justify='end'>
@@ -95,7 +104,7 @@ export default function Report({ eventId, reload }: ReportProps) {
               danger
               onClick={() => {
                 setModal(false);
-                //deleteAuction(auction?._id);
+                reset()
               }}
               disabled={permit}
               icon={<DeleteOutlined />}>
