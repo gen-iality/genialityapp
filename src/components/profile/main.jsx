@@ -124,7 +124,7 @@ const MainProfile = (props) => {
     }else{
       setorganizations([]);
       setorganizationsLimited([]);
-      setOrganizationsIsLoading();
+      setOrganizationsIsLoading(false);
     }
   };
 
@@ -454,7 +454,7 @@ const MainProfile = (props) => {
                     <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
                       <NewCard entityType='organization' cUser={props.cUser} fetchItem={fetchItem} />
                     </Col>
-                    {organizations.length > 0 &&
+                    {organizations.length > 0 && 
                       organizations.map((organization, index) => {
                         return (
                           <Col key={index} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
