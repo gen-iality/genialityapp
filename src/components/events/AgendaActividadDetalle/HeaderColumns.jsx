@@ -315,7 +315,7 @@ const HeaderColumns = (props) => {
               onClick={() => {
                 setOpenOrCloseModalDrawer(true);
               }}>
-              ¡Jugar BINGO!
+              ¡Jugar {cEvent?.value?._id === '64d2b7f39b9f9cc49008a263' ? 'LOTERÍA' : 'BINGO'}!
             </Button>
             <DrawerBingo openOrClose={openOrCloseModalDrawer} setOpenOrClose={setOpenOrCloseModalDrawer} />
           </Row>
