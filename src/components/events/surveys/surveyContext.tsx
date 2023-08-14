@@ -10,6 +10,8 @@ import {
 } from './services/surveyStatus'
 
 import { getAnswersRef, getQuestionsRef, getUserProgressRef } from './services/surveys'
+import { Modal, message, notification } from 'antd'
+import { StateMessage } from '@context/MessageService'
 
 export enum SurveyContextAction {
   SURVEY_LOADED = 'SURVEY_LOADED',
@@ -28,12 +30,12 @@ export type SurveyContextType = {
   surveyStatus: any
   answering: boolean
   // Flags
-  shouldDisplaySurveyIsNotLoaded?: boolean
-  shouldDisplaySurveyClosedMenssage?: boolean
-  shouldDisplaySurveyNotPublishedMenssage?: boolean
-  checkThereIsAnotherTry?: boolean
-  shouldDisplaySurveyAnswered?: boolean
-  checkIfSurveyWasAnswered?: boolean
+  isNoData?: boolean
+  isNotOpenedYet?: boolean
+  isNotPublishedYet?: boolean
+  isThereAnotherTry?: boolean
+  isCompletedWithoutAnotherTry?: boolean
+  isCompleted?: boolean
   shouldDisplayGraphics?: boolean
   shouldDisplayRanking?: boolean
   completionStatus?: 'running' | 'completed'
@@ -105,7 +107,7 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({
     dispatch({ type: SurveyContextAction.SURVEY_LOADED, survey })
   }
 
-  const checkIfSurveyWasAnswered = useMemo(() => {
+  const isCompleted = useMemo(() => {
     if (!state.surveyStatus) {
       return false
     }
@@ -117,7 +119,7 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({
     return state.surveyStatus?.surveyCompleted
   }, [state.surveyStatus?.surveyCompleted])
 
-  const checkThereIsAnotherTry = useMemo(() => {
+  const isThereAnotherTry = useMemo(() => {
     // If tried (in Firebase) is < that tries (in MongoDB), then the user can see the survey
     if (!state.survey || !state.surveyStatus) return true
     console.debug(`survey tries:${state.survey.tries} tried:${state.surveyStatus.tried}`)
@@ -126,8 +128,15 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({
 
   const startAnswering = () => {
     console.log('start answering again')
-    if (checkThereIsAnotherTry)
+    if (isThereAnotherTry) {
       dispatch({ type: SurveyContextAction.ANSWERING_AGAIN, answering: true })
+      notification.open({
+        message: 'Cuestionario',
+        description: 'Pronto va a empezar de nuevo',
+      })
+    } else {
+      StateMessage.show(null, 'warning', 'El examen está nuevamente restaurada')
+    }
   }
 
   const stopAnswering = () => {
@@ -135,25 +144,25 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({
     dispatch({ type: SurveyContextAction.ANSWERING_AGAIN, answering: false })
   }
 
-  const shouldDisplaySurveyAnswered = useMemo(() => {
-    if (checkThereIsAnotherTry && state.answering) {
+  const isCompletedWithoutAnotherTry = useMemo(() => {
+    if (isThereAnotherTry && state.answering) {
       return false
     }
-    return checkIfSurveyWasAnswered
-  }, [state, checkThereIsAnotherTry, checkIfSurveyWasAnswered])
+    return isCompleted
+  }, [state, isThereAnotherTry, isCompleted])
 
-  const shouldDisplaySurveyIsNotLoaded = useMemo(() => {
+  const isNoData = useMemo(() => {
     return state.survey == null || !state.surveyStatus
   }, [state])
 
-  const shouldDisplaySurveyClosedMenssage = useMemo(() => {
+  const isNotOpenedYet = useMemo(() => {
     if (state.survey === undefined || state.survey === null) {
       return false
     }
     return !state.survey.isOpened
   }, [state.survey])
 
-  const shouldDisplaySurveyNotPublishedMenssage = useMemo(() => {
+  const isNotPublishedYet = useMemo(() => {
     if (state.survey === undefined || state.survey === null) {
       return false
     }
@@ -166,7 +175,7 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({
       return false
     }
 
-    if (!checkIfSurveyWasAnswered) {
+    if (!isCompleted) {
       console.debug('not show graphics because checkIfSurveyWasAnswered() is false')
     }
 
@@ -177,7 +186,7 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({
 
     console.debug('not show graphics because survey.displayGraphsInSurveys is false')
     return false
-  }, [state, checkIfSurveyWasAnswered])
+  }, [state, isCompleted])
 
   const shouldDisplayRanking = useMemo(() => {
     if (!state.survey) {
@@ -191,6 +200,8 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({
     await getUserProgressRef(state.survey._id, userId).delete()
     await getAnswersRef(state.survey._id, userId).delete()
     await getQuestionsRef(state.survey._id, userId).delete()
+
+    Modal.info({ title: 'Cuestionario', content: 'Se ha hacer nuevamente...' })
   }
 
   const surveyStatsString = useMemo(() => {
@@ -206,16 +217,16 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({
       value={{
         ...state,
         loadSurvey,
-        checkIfSurveyWasAnswered,
-        shouldDisplaySurveyIsNotLoaded,
-        shouldDisplaySurveyAnswered,
-        shouldDisplaySurveyClosedMenssage,
-        shouldDisplaySurveyNotPublishedMenssage,
+        isCompleted,
+        isNoData,
+        isCompletedWithoutAnotherTry,
+        isNotOpenedYet,
+        isNotPublishedYet,
         shouldDisplayGraphics,
         shouldDisplayRanking,
         completionStatus,
         surveyStatsString,
-        checkThereIsAnotherTry,
+        isThereAnotherTry,
         startAnswering,
         stopAnswering,
         resetSurveyStatus,
