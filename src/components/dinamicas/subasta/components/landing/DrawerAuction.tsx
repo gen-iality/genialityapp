@@ -123,7 +123,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
       destroyOnClose={true}>
       <Row justify={'space-between'} gutter={[16, 8]} wrap>
         <Col xs={24} sm={24} md={24} lg={10} xl={12} xxl={12} style={{ height: '100%' }}>
-          <Row gutter={[0, 8]}>
+          <Row gutter={[16, 16]}>
             <Col span={24}>
               <Card
                 style={{ backgroundColor: 'transparent' }}
@@ -139,8 +139,9 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
             </Col>
             <Col span={24}>
               <Card
-                style={{ borderRadius: '20px', backgroundColor: auction.styles?.cards?.backgroundColor || '' }}
+                style={{ borderRadius: '20px', backgroundColor: auction.styles?.cards?.backgroundColor || '', maxHeight: '450px', overflowY: 'auto' }}
                 bordered={false}
+                className='desplazar'
                 bodyStyle={{ padding: '0px 20px' }}>
                 <Tabs
                   defaultActiveKey={TabsDrawerAuction.Bids}
@@ -153,6 +154,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                       <Col span={24}>
                         {Bids.length > 0 ? (
                           <List
+                            style={{height: '100%'}}
                             loading={loading}
                             dataSource={Bids}
                             renderItem={(item) => (
