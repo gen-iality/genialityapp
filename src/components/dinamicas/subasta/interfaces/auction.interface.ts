@@ -1,5 +1,8 @@
 import { UploadFile } from 'antd/lib/upload/interface';
-import event from '@/components/events/event';
+
+export interface AcutionProps {
+    event :  any
+}
 
 export interface AuctionConfig {
     name:     string,
@@ -27,6 +30,7 @@ export interface ApiInterface  {
 export interface CreateProps {
     active:   boolean
     auction?: Auction
+    event?:    any
 }
 export interface ProductsProps {
     products: Products[]

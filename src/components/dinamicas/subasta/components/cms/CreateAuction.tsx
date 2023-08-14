@@ -1,22 +1,24 @@
-import { CloseCircleOutlined, DeleteOutlined, InfoCircleOutlined, SaveOutlined, TagOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Form, Input, Modal, Result, Row, Select, Space, Switch, Typography } from 'antd';
+import { CloseCircleOutlined, DeleteOutlined, InfoCircleOutlined, SaveOutlined, TagOutlined, WarningOutlined } from '@ant-design/icons';
+import { Alert, Button, Card, Col, Form, Input, Modal, Result, Row, Select, Space, Switch, Typography } from 'antd';
 import React, { useContext, useState } from 'react';
 import { AuctionContext } from '../../context/AuctionContext';
 import { AuctionConfig, CreateProps } from '../../interfaces/auction.interface';
 import { saveAuctioFirebase } from '../../services/Execute.service';
+import { UseEventContext } from '@/context/eventContext';
 
-export default function CreateAuction({ active, auction }: CreateProps) {
+export default function CreateAuction({ active, auction, event }: CreateProps) {
   const [modal, setModal] = useState<boolean>(false);
   const [permit, setPermit] = useState<boolean>(true);
   const { saveAuction, deleteAuction, uptadeAuction, eventId } = useContext(AuctionContext);
+  const isAnonymously = event?.visibility === 'ANONYMOUS';
   const [loading, setLoading] = useState<boolean>(false);
 
   const onChange = async (value: boolean, key: string) => {
-    setLoading(true)
+    setLoading(true);
     if (auction) {
       await saveAuctioFirebase(eventId, { ...auction, [key]: value });
     }
-    setLoading(false)
+    setLoading(false);
   };
   const CreateOrUpdate = async (data: AuctionConfig) => {
     if (auction?._id) {
@@ -88,7 +90,7 @@ export default function CreateAuction({ active, auction }: CreateProps) {
         </Modal>
         <Row justify='end' gutter={[8, 8]} style={{ paddingBottom: 15 }}>
           <Col>
-            <Button type='primary' icon={<SaveOutlined />} htmlType='submit'>
+            <Button type='primary' disabled={isAnonymously} icon={<SaveOutlined />} htmlType='submit'>
               Guardar
             </Button>
           </Col>
@@ -99,6 +101,9 @@ export default function CreateAuction({ active, auction }: CreateProps) {
               </Button>
             </Col>
           )}
+        </Row>
+        <Row justify={active ? 'start' : 'center'} style={{ padding: 10}}>
+        {isAnonymously && (  <Alert type='error' icon={<WarningOutlined />} showIcon  message={'Los eventos con "registro sin autenticacion" no son validos para una subasta'} />)}
         </Row>
         <Row justify='center' gutter={[16, 16]}>
           <Col span={16}>
