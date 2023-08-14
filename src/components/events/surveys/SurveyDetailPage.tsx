@@ -46,6 +46,7 @@ const SurveyDetailPage: FunctionComponent<
 
   useEffect(() => {
     cSurvey.loadSurvey({ ...(query.data as any) })
+    console.log('survey data:', query.data, cSurvey)
   }, [query.data])
 
   const showResultsPanel = () => {
@@ -135,12 +136,19 @@ const SurveyDetailPage: FunctionComponent<
     )
   }
 
-  return (
-    <>
-      {cSurvey.shouldDisplaySurveyIsNotLoaded ? (
-        <Result icon={<LoadingOutlined />} title="Espere mientras se cargan los datos" />
-      ) : cSurvey.shouldDisplaySurveyAnswered ||
-        cSurvey.completionStatus !== 'completed' ? (
+  if (cSurvey.isNoData) {
+    return (
+      <Result
+        icon={<LoadingOutlined />}
+        title="Espere mientras se cargan los datos"
+        subTitle="Solicitando datos..."
+      />
+    )
+  }
+
+  if (cSurvey.isCompletedWithoutAnotherTry) {
+    return (
+      <>
         <Space
           direction="vertical"
           size="middle"
@@ -149,16 +157,16 @@ const SurveyDetailPage: FunctionComponent<
         >
           <Alert
             message={
-              cSurvey.shouldDisplaySurveyNotPublishedMessage
+              cSurvey.isNotPublishedYet
                 ? 'Examen no disponible'
-                : cSurvey.shouldDisplaySurveyClosedMenssage
+                : cSurvey.isNotOpenedYet
                 ? 'Examen cerrado'
                 : 'Examen abierto'
             }
             type={
-              cSurvey.shouldDisplaySurveyNotPublishedMessage
+              cSurvey.isNotPublishedYet
                 ? 'error'
-                : cSurvey.shouldDisplaySurveyClosedMenssage
+                : cSurvey.isNotOpenedYet
                 ? 'warning'
                 : 'info'
             }
@@ -175,41 +183,33 @@ const SurveyDetailPage: FunctionComponent<
               showIcon
             />
           )}
-          {/* <Result
-            // style={{ height: '50%', padding: '75px 75px 20px' }}
-            status="success"
-            title="Ya has contestado este exámen"
-          /> */}
           <QuizProgress
             eventId={cEvent.value._id}
             userId={currentUser.value._id}
             surveyId={surveyId}
           />
-          <Button onClick={() => showResultsPanel()} type="primary" key="console">
+          <Button onClick={() => showResultsPanel()} type="dashed" key="console">
             Ver mis respuestas
           </Button>
-
-          {cSurvey.shouldDisplaySurveyClosedMenssage ? (
+          {cSurvey.isNotOpenedYet ? (
             <Alert message="Examen cerrado" type="warning" showIcon />
           ) : (
-            <>
-              {cSurvey.checkThereIsAnotherTry && (
-                <Button
-                  onClick={() => {
-                    setIsResetingSurvey(true)
-                    cSurvey.resetSurveyStatus(currentUser.value._id).then(() => {
-                      cSurvey.startAnswering()
-                      setIsResetingSurvey(false)
-                    })
-                  }}
-                  type="primary"
-                  key="console"
-                  disabled={isResetingSurvey}
-                >
-                  Responder de nuevo {isResetingSurvey && <Spin />}
-                </Button>
-              )}
-            </>
+            cSurvey.isThereAnotherTry && (
+              <Button
+                onClick={() => {
+                  setIsResetingSurvey(true)
+                  cSurvey.resetSurveyStatus(currentUser.value._id).then(() => {
+                    cSurvey.startAnswering()
+                    setIsResetingSurvey(false)
+                  })
+                }}
+                type="primary"
+                key="console"
+                disabled={isResetingSurvey}
+              >
+                Responder de nuevo {isResetingSurvey && <Spin />}
+              </Button>
+            )
           )}
 
           {showingResultsPanel && (
@@ -219,22 +219,32 @@ const SurveyDetailPage: FunctionComponent<
               surveyId={surveyId}
             />
           )}
-
           {enableGoToCertificate && (
             <Button type="primary" onClick={handleGoToCertificate}>
               Descargar certificado
             </Button>
           )}
         </Space>
-      ) : cSurvey.shouldDisplaySurveyNotPublishedMessage ? (
-        <Result title="Este exámen no se encuentra publicada" status="warning" />
-      ) : cSurvey.shouldDisplaySurveyClosedMenssage ? (
-        <Result title="Este exámen se encuentra cerrado" status="warning" />
-      ) : (
-        <Card className="surveyCard">
-          <SurveyComponent eventId={cEvent.value?._id} queryData={query.data} />
-        </Card>
-      )}
+        <Row>
+          <Col span={24}>Llevas {cSurvey.surveyStatsString}</Col>
+        </Row>
+      </>
+    )
+  }
+
+  if (cSurvey.isNotPublishedYet) {
+    return <Result title="Este exámen no se encuentra publicada" status="warning" />
+  }
+
+  if (cSurvey.isNotOpenedYet) {
+    return <Result title="Este exámen se encuentra cerrado" status="warning" />
+  }
+
+  return (
+    <>
+      <Card className="surveyCard">
+        <SurveyComponent eventId={cEvent.value?._id} queryData={query.data} />
+      </Card>
       <Row>
         <Col span={24}>Llevas {cSurvey.surveyStatsString}</Col>
       </Row>
