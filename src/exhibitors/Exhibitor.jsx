@@ -247,7 +247,11 @@ class Exhibitor extends Component {
         </div>
 
         {isNonEmptyArray(gallery) && (
-          <div className={`main-stand-gallery ${this.state.showGallery ? 'active' : ''}`}>
+          <div
+            className={classNames('main-stand-gallery', {
+              active: this.state.showGallery,
+            })}
+          >
             <div className="main-stand-gallery-overlay" />
             <div
               className="main-stand-gallery-close-window"
@@ -279,9 +283,13 @@ class Exhibitor extends Component {
         )}
 
         {isNonEmptyArray(services) && (
-          <div className={`main-stand-modal ${this.state.showServices ? 'active' : ''}`}>
+          <div
+            className={classNames('main-stand-modal', {
+              active: this.state.showServices,
+            })}
+          >
             <div className="main-stand-modal-overlay" onClick={this.handleHideServices} />
-            <div className={`main-stand-modal-container`}>
+            <div className="main-stand-modal-container">
               <div className="main-stand-modal-header">
                 <div className="main-stand-modal-header-title">Servicios</div>
                 <div
@@ -324,9 +332,9 @@ class Exhibitor extends Component {
         )}
 
         <div
-          className={`main-stand-modal main-stand-modal-contact-info ${
-            this.state.showInfo ? 'active' : ''
-          }`}
+          className={classNames('main-stand-modal', 'main-stand-modal-contact-info', {
+            active: this.state.showInfo,
+          })}
         >
           <div className="main-stand-modal-overlay" onClick={this.handleHideInfo} />
           <div className={`main-stand-modal-container`}>
@@ -359,9 +367,9 @@ class Exhibitor extends Component {
         </div>
 
         <div
-          className={`main-stand-modal main-stand-modal-video ${
-            this.state.showVideo ? 'active' : ''
-          }`}
+          className={classNames('main-stand-modal', 'main-stand-modal-video', {
+            active: this.state.showVideo,
+          })}
         >
           <div className="main-stand-modal-overlay" onClick={this.handleHideVideo} />
           <div className="main-stand-modal-close-window" onClick={this.handleHideVideo}>
