@@ -37,6 +37,7 @@ import { useEventContext } from '@context/eventContext'
 import { useCurrentUser } from '@context/userContext'
 import { StateMessage } from '@context/MessageService'
 import dayjs from 'dayjs'
+import classNames from 'classnames'
 
 /**TODO::ocaciona error en ios */
 
@@ -582,7 +583,9 @@ const FormRegister = ({
         if (type === 'tituloseccion') {
           input = (
             <>
-              <div className={`label has-text-grey ${mandatory ? 'required' : ''}`}>
+              <div
+                className={classNames('label', 'has-text-grey', { required: mandatory })}
+              >
                 <div
                   dangerouslySetInnerHTML={{
                     __html: label,

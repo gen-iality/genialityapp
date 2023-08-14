@@ -10,6 +10,7 @@ import { fetchRol } from '../../../redux/rols/actions'
 import ConferenceTabs from './conferenceTabs'
 
 import { FB } from '@helpers/firestore-request'
+import classNames from 'classnames'
 
 class ZoomComponent extends Component {
   constructor(props) {
@@ -286,9 +287,10 @@ class ZoomComponent extends Component {
     } = this.state
     return (
       <div
-        className={`content-zoom ${isMedium ? 'mediumScreen' : ''} ${
-          isMinimize ? 'minimizeScreen' : ''
-        }`}
+        className={classNames('content-zoom', {
+          mediumScreen: isMedium,
+          minimizeScreen: isMinimize,
+        })}
       >
         <div className="buttons-header">
           <div>

@@ -18,6 +18,7 @@ import {
 } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { StateMessage } from '@context/MessageService'
+import classNames from 'classnames'
 
 const { Panel } = Collapse
 const { TextArea } = Input
@@ -246,7 +247,7 @@ const userInfoCard = ({
           <>
             <p
               style={{ fontSize: '1.3em' }}
-              className={`label has-text-grey ${mandatory ? 'required' : ''}`}
+              className={classNames('label', 'has-text-grey', { required: mandatory })}
             >
               <strong>{label}</strong>
             </p>
