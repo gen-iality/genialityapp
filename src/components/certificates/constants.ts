@@ -15,6 +15,7 @@ export const availableTags = [
   { tag: 'ticket.name', label: 'Nombre del tiquete', value: 'ticket.title' },
   { tag: 'rol.name', label: 'Nombre del Rol' },
   { tag: 'user.ID', label: 'ID de usuario', value: 'ID' },
+  { tag: 'system.now_date', label: 'Fecha actual' },
 ]
 
 export const defaultCertRows: CertRow[] = [

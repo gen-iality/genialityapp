@@ -57,6 +57,13 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
 
   const onDeleteTakenActivities = () => {
     setDeletingTakenActivitiesCounter((previous) => previous + 1)
+    if (currentUser.value?._id) {
+      FB.ActivityProgresses.resetViewedActivities(eventId, currentUser.value._id).then(
+        () => {
+          console.log('reset viewed_activities')
+        },
+      )
+    }
   }
 
   useEffect(() => {
@@ -223,14 +230,12 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
 
   return (
     <>
-      {currentEventUser.value?.rol.type === 'admin' ? (
-        <>
-          <DeleteActivitiesTakenButton
-            eventId={eventId}
-            cEventUserId={eventUserId}
-            onDelete={onDeleteTakenActivities}
-          />
-        </>
+      {currentEventUser.value?.rol.type === 'admin' || isDev || isStage ? (
+        <DeleteActivitiesTakenButton
+          eventId={eventId}
+          cEventUserId={eventUserId}
+          onDelete={onDeleteTakenActivities}
+        />
       ) : undefined}
       <ModuledActivityDisplayer
         list={publishedTruncatedAgendaList}

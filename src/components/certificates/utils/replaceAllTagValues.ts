@@ -1,5 +1,6 @@
 import { CertRow } from 'html2pdf-certs'
 import { availableTags } from '../constants'
+import dayjs from 'dayjs'
 
 export function replaceAllTagValues(
   event: any,
@@ -18,6 +19,14 @@ export function replaceAllTagValues(
       const rols = roles.find((currentRol) => currentRol._id === userData.rol_id)
       const rolName = rols ? rols.name.toUpperCase() : 'Sin rol'
       value = rolName
+    } else if (item.tag.includes('system.')) {
+      switch (item.tag) {
+        case 'system.now_date':
+          value = dayjs(new Date()).format('DD/MM/YYYY')
+          break
+        default:
+          value = userData.properties[item.value || '']
+      }
     } else {
       value = userData.properties[item.value || '']
     }
