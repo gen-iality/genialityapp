@@ -28,7 +28,7 @@ import { saveOffer } from '../../services';
 import useProducts from '../../hooks/useProducts';
 import { TabsDrawerAuction } from '../../utils/utils';
 import DrawerRules from './DrawerRules';
-import DrawerChat from '@/components/games/whereIs/auxiliarDrawers/DrawerChat';
+import DrawerChat from '@/components/games/bingo/components/auxiliarDrawers/DrawerChat';
 import ButtonsContainer from './ButtonsContainer';
 import { UseUserEvent } from '@/context/eventUserContext';
 import { getCorrectColor } from '@/helpers/utils';
