@@ -14,6 +14,7 @@ import Loading from '../profile/loading';
 import { DataOrganizations, Organization, OrganizationProps } from './types';
 import { UseCurrentUser } from '@/context/userContext';
 import { useGetEventsWithUser } from './hooks/useGetEventsWithUser';
+import { ModalCertificatesByOrganizacionAndUser } from './components/ModalCertificatesByOrganizacionAndUser';
 
 function EventOrganization({ match }: OrganizationProps) {
   const { Title, Text, Paragraph } = Typography;
@@ -27,6 +28,7 @@ function EventOrganization({ match }: OrganizationProps) {
   const [eventsOld, setEventsOld] = useState<any[]>([]);
   const [myOrganizations, setMyorganizations] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isModalCertificatesOpen, setIsModalCertificatesOpen] = useState(false);
   const { eventsWithEventUser, isLoading: isLoadingOtherEvents } = useGetEventsWithUser(
     match.params.id,
     cUser.value?._id
@@ -213,9 +215,21 @@ function EventOrganization({ match }: OrganizationProps) {
                   <Col style={{ width: '100%' }}>
                     {/* Lista otros eventos en los que esta inscrito el usuario*/}
                     <Card style={{ width: '100%', borderRadius: 20 }}>
-                      <Badge offset={[60, 22]} count={`${eventsWithEventUser.length} Eventos`}>
-                        <Title level={2}>Mis eventos</Title>
-                      </Badge>
+                      <Row justify='space-between'>
+                        <Badge offset={[60, 22]} count={`${eventsWithEventUser.length} Eventos`}>
+                          <Title level={2}>Mis eventos</Title>
+                        </Badge>
+                        <Button type='primary' onClick={() => setIsModalCertificatesOpen(true)}>
+                          Ver mis certificados
+                        </Button>
+                      </Row>
+                      {isModalCertificatesOpen && (
+                        <ModalCertificatesByOrganizacionAndUser
+                          visible={isModalCertificatesOpen}
+                          onClose={() => setIsModalCertificatesOpen(false)}
+                          eventsWithEventUser={eventsWithEventUser}
+                        />
+                      )}
                       <Row gutter={[16, 16]}>
                         {isLoadingOtherEvents && (
                           <div style={{ width: '100vw', height: '100vh', textAlign: 'center' }}>
