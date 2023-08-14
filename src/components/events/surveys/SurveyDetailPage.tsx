@@ -149,14 +149,14 @@ const SurveyDetailPage: FunctionComponent<
         >
           <Alert
             message={
-              cSurvey.shouldDisplaySurveyNotPublishedMenssage
+              cSurvey.shouldDisplaySurveyNotPublishedMessage
                 ? 'Examen no disponible'
                 : cSurvey.shouldDisplaySurveyClosedMenssage
                 ? 'Examen cerrado'
                 : 'Examen abierto'
             }
             type={
-              cSurvey.shouldDisplaySurveyNotPublishedMenssage
+              cSurvey.shouldDisplaySurveyNotPublishedMessage
                 ? 'error'
                 : cSurvey.shouldDisplaySurveyClosedMenssage
                 ? 'warning'
@@ -167,7 +167,7 @@ const SurveyDetailPage: FunctionComponent<
           {cSurvey.surveyStatus?.surveyCompleted === 'completed' ? (
             <Alert message="Ya has contestado este exámen" type="success" showIcon />
           ) : cSurvey.surveyStatus?.surveyCompleted === 'running' ? (
-            <Alert message="El examen está en progreso" type="warning" showIcon />
+            <Alert message="El examen está en progreso" type="info" showIcon />
           ) : (
             <Alert
               message="No hay informe de completado para este curso"
@@ -226,7 +226,7 @@ const SurveyDetailPage: FunctionComponent<
             </Button>
           )}
         </Space>
-      ) : cSurvey.shouldDisplaySurveyNotPublishedMenssage ? (
+      ) : cSurvey.shouldDisplaySurveyNotPublishedMessage ? (
         <Result title="Este exámen no se encuentra publicada" status="warning" />
       ) : cSurvey.shouldDisplaySurveyClosedMenssage ? (
         <Result title="Este exámen se encuentra cerrado" status="warning" />
