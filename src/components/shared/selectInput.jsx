@@ -1,6 +1,7 @@
 import { Component } from 'react'
 import Select from 'react-select'
 import { FormattedMessage } from 'react-intl'
+import classNames from 'classnames'
 
 class SelectInput extends Component {
   constructor(props) {
