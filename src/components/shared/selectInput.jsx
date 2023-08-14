@@ -45,7 +45,7 @@ class SelectInput extends Component {
     const { name, isMulti, required } = this.props
     return (
       <div className="field">
-        <label className={classNames('label', { required: mandatory })}>{name}</label>
+        <label className={classNames('label', { required })}>{name}</label>
         <div className="control">
           <Select
             id="selectOrganization"
