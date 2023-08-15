@@ -16,8 +16,8 @@ const styles: {
   goodAnswer: CSSProperties
   badAnswer: CSSProperties
 } = {
-  goodAnswer: { backgroundColor: '#3ab540' },
-  badAnswer: { backgroundColor: '#ff6354' },
+  goodAnswer: { backgroundColor: '#c5e2c7' },
+  badAnswer: { backgroundColor: '#ead2d9' },
 }
 
 const TriviaAnswerMatrixPage: FunctionComponent<Props> = (props) => {
