@@ -22,19 +22,30 @@ export default function useRequestAnswers(surveyId: string, questions: any[]) {
     })
     // Process that
     Promise.all(promises).then((questionAndResponseList) => {
-      const data: UserAnswersPair[] = []
-      questionAndResponseList.map((questionAndResponses) => {
-        questionAndResponses.responses.forEach((response) => {
-          data.push({
+      const promises = questionAndResponseList.map(async (questionAndResponses) => {
+        const promises = questionAndResponses.responses.map(async (response) => {
+          const status = await FB.VotingStatus.SurveyStatus.get(
+            response.id_user,
+            response.id_survey,
+          )
+          return {
             userId: response.id_user,
             username: response.user_name,
             answer: response.response,
             questionId: questionAndResponses.question.id,
-          })
+            right: status?.right ?? 0,
+            tried: status?.tried ?? 0,
+          } as UserAnswersPair
         })
+
+        const manyData = await Promise.all(promises)
+        return manyData
       })
 
-      setUserAnswersPairs(data)
+      Promise.all(promises).then((manyList) => {
+        const flatList = manyList.flat()
+        setUserAnswersPairs(flatList)
+      })
     })
   }, [surveyId, questions])
 
