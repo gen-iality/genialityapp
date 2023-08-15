@@ -1,9 +1,10 @@
-import { Button, Drawer, DrawerProps, Space, Tooltip, Typography } from 'antd';
+import { Button, Drawer, DrawerProps, Space, Tooltip, Typography, Grid } from 'antd';
 import { useGetCertificatesByEvents } from '../hooks/useGetCertificatesByEvents';
 import CertificatesByEventsAndUserList from './CertificatesByEventsAndUserList';
-import { isMobile } from 'react-device-detect';
 import CertificateOutlineIcon from '@2fd/ant-design-icons/lib/CertificateOutline';
 import { CloseOutlined } from '@ant-design/icons';
+
+const { useBreakpoint } = Grid;
 
 interface Props extends DrawerProps {
   organizationId: string;
@@ -15,6 +16,8 @@ export const ModalCertificatesByOrganizacionAndUser = ({ eventUserId, organizati
     organizationId,
     eventUserId
   );
+  const screens = useBreakpoint();
+
   //toDo: Validar el mobile para el width del drawer
   return (
     <Drawer 
@@ -26,7 +29,7 @@ export const ModalCertificatesByOrganizacionAndUser = ({ eventUserId, organizati
       }
       footer={false} 
       destroyOnClose {...modalProps}
-      width={isMobile ? '100%' : '450px'}
+      width={screens.xs ? '100%' : '450px'}
       closable={false}
       visible={modalProps.visible}
       headerStyle={{ border: 'none', padding: 10 }}

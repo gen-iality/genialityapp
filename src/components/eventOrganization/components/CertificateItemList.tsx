@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, Col, Image, List, Modal, Result, Space, Spin, Typography } from 'antd';
+import { Avatar, Button, Card, Col, Image, List, Modal, Result, Space, Spin, Typography, Grid } from 'antd';
 import { CertsApi, RolAttApi } from '@/helpers/request';
 import Moment from 'moment';
 import { DownloadOutlined } from '@ant-design/icons';
@@ -7,6 +7,7 @@ import { ArrayToStringCerti, replaceAllTagValues } from '@/components/certificad
 import { imgBackground } from '@/components/agenda/utils/constants';
 import CertificateOutlineIcon from '@2fd/ant-design-icons/lib/CertificateOutline';
 
+const { useBreakpoint } = Grid;
 interface Props {
   certificate: Certificates;
   isMobile: boolean;
@@ -14,6 +15,8 @@ interface Props {
   eventUserValue: any;
 }
 export const CertificateItemList = ({ certificate, isMobile, eventValue, eventUserValue }: Props) => {
+  const screens = useBreakpoint();
+  
   const generateCert = async (dataUser: UserData, cert: Certificates) => {
     const modal = Modal.success({
       title: 'Generando certificado',
@@ -47,11 +50,11 @@ export const CertificateItemList = ({ certificate, isMobile, eventValue, eventUs
   };
   //toDo: corregir tema de mobile
   return (
-    <List.Item 
+    <List.Item
       key={certificate.name} 
       extra={
         <Button
-          size={isMobile ? 'small' : 'large'}
+          size={screens.xs ? 'small' : 'large'}
           onClick={() => generateCert(eventUserValue, certificate)}
           style={{
             border: 'none',
@@ -60,7 +63,7 @@ export const CertificateItemList = ({ certificate, isMobile, eventValue, eventUs
           }}
           key={'download' + certificate._id}
           icon={<DownloadOutlined style={{ color: eventValue.styles.textMenu/* , fontSize: '60px'  */}} />}>
-          {!isMobile && <Typography.Text style={{ color: eventValue.styles.textMenu }}>Descargar</Typography.Text>}
+          {!screens.xs && <Typography.Text style={{ color: eventValue.styles.textMenu }}>Descargar</Typography.Text>}
         </Button>
       }
     >
