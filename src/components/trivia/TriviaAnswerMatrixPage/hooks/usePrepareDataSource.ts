@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { UserAnswersPair } from '../types'
+import convertAnswer from '../utils/convert-answer'
 
 export default function usePrepareDataSource(userAnswersPairs: UserAnswersPair[]) {
   const [dataSource, setDataSource] = useState<any[]>([])
@@ -24,23 +25,7 @@ export default function usePrepareDataSource(userAnswersPairs: UserAnswersPair[]
       itsData.map((row) => {
         newData.names = row.username
 
-        let answer = ''
-        if (typeof row.answer === 'string') {
-          if (row.answer.length === 0) {
-            answer = '<vacío>'
-          } else {
-            answer = row.answer
-          }
-        } else if (Array.isArray(row.answer)) {
-          if ((row.answer as any[]).length === 0) {
-            answer = '[ <vacío> ]'
-          } else {
-            answer = (row.answer as any[]).join(', ')
-          }
-        } else {
-          answer = JSON.stringify(row.answer)
-        }
-        newData[row.questionId] = answer
+        newData[row.questionId] = convertAnswer(row.answer)
       })
 
       allData.push(newData)
