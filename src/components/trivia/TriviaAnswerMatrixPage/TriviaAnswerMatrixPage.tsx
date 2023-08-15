@@ -36,6 +36,7 @@ const styles: {
 const TriviaAnswerMatrixPage: FunctionComponent<Props> = (props) => {
   const { surveyId, event } = props
 
+  const [isLoading, setIsLoading] = useState(true)
   const [columns, setColumns] = useState<ColumnType<any>[]>([])
 
   const survey = useFetchSurvey(event._id, surveyId)
@@ -47,7 +48,9 @@ const TriviaAnswerMatrixPage: FunctionComponent<Props> = (props) => {
 
   const userAnswersPairs = useRequestAnswers(surveyId, questions)
 
-  const dataSource = usePrepareDataSource(userAnswersPairs)
+  const dataSource = usePrepareDataSource(userAnswersPairs, () => {
+    if (isLoading) setIsLoading(false)
+  })
 
   const onExportAsXLXS = useExportAsXLSX(dataSource, survey, questions)
 
@@ -111,7 +114,12 @@ const TriviaAnswerMatrixPage: FunctionComponent<Props> = (props) => {
           <Button onClick={onExportAsXLXS}>Exportar como XLXS</Button>
         </Space>
       </Space>
-      <Table dataSource={dataSource} columns={columns} scroll={{ x: 'max-content' }} />
+      <Table
+        loading={isLoading}
+        dataSource={dataSource}
+        columns={columns}
+        scroll={{ x: 'max-content' }}
+      />
     </>
   )
 }
