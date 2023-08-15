@@ -1,8 +1,6 @@
-import { FunctionComponent, useEffect, useRef, useState } from 'react'
+import { FunctionComponent, useEffect, useState } from 'react'
 
-import { toolbarEditor } from '@helpers/constants'
 import ReactQuill from 'react-quill'
-import { Input } from 'antd'
 
 interface IRichTextEditorProps {
   value?: string
@@ -10,32 +8,21 @@ interface IRichTextEditorProps {
 }
 
 const RichTextEditor: FunctionComponent<IRichTextEditorProps> = (props) => {
-  const { value, onChange = () => {} } = props
-  const [lastValue, setLastValue] = useState('')
+  const { value: incomingValue, onChange = () => {} } = props
 
-  const ref = useRef<any>(null)
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [content, setContent] = useState('')
+
+  useEffect(() => onChange(content), [content])
 
   useEffect(() => {
-    if (ref.current && value) {
-      const editor = ref.current.getEditor()
-      console.log('editor', editor)
-      if (lastValue !== value) {
-        editor.setText(value)
-      }
+    if (incomingValue && !isLoaded) {
+      setIsLoaded(true)
+      setContent(incomingValue)
     }
-  }, [value, ref])
+  }, [incomingValue, isLoaded])
 
-  // return (
-  //   <ReactQuill
-  //     ref={ref}
-  //     modules={toolbarEditor}
-  //     onChange={(content) => {
-  //       onChange(content)
-  //       setLastValue(content)
-  //     }}
-  //   />
-  // )
-  return <Input.TextArea value={value} onChange={onChange} />
+  return <ReactQuill value={content} onChange={(content) => setContent(content)} />
 }
 
 export default RichTextEditor
