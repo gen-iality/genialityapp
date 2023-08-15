@@ -37,7 +37,7 @@ export default function useExportAsXLSX(
 
     // This lines has burnt header: "names"
     const tableAsArray = [
-      ['Nombre de usuario', 'Correctas', 'Intentos', ...headerTableAsArray],
+      ['Nombre de usuario', 'Puntos', 'Intentos', ...headerTableAsArray],
       ...bodyTableAsArray,
     ]
 

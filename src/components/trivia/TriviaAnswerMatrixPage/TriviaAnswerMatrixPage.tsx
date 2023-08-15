@@ -39,9 +39,25 @@ const TriviaAnswerMatrixPage: FunctionComponent<Props> = (props) => {
   const onExportAsXLXS = useExportAsXLSX(dataSource, survey, questions)
 
   useEffect(() => {
+    // : min. N
+    const extraScoreTitle =
+      typeof survey?.points === 'number' ? `(min. ${survey?.points})` : ''
+
+    // Set the columns
     setColumns([
       { title: 'Usuario', dataIndex: 'names' },
-      { title: 'Correctas', dataIndex: 'right' },
+      {
+        title: `Puntos ${extraScoreTitle}`.trim(),
+        dataIndex: 'right',
+        render: (item) => {
+          return {
+            props: {
+              style: (survey?.points ?? 0) <= item ? styles.goodAnswer : styles.badAnswer,
+            },
+            children: item,
+          }
+        },
+      },
       { title: 'Intentos', dataIndex: 'tried' },
       ...questions.map(
         (question: any) =>
@@ -82,7 +98,7 @@ const TriviaAnswerMatrixPage: FunctionComponent<Props> = (props) => {
           <Button onClick={onExportAsXLXS}>Exportar como XLXS</Button>
         </Space>
       </Space>
-      <Table dataSource={dataSource} columns={columns} scroll={{ x: true }} />
+      <Table dataSource={dataSource} columns={columns} scroll={{ x: 'max-content' }} />
     </>
   )
 }
