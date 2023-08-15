@@ -55,9 +55,12 @@ const TriviaAnswerMatrixPage: FunctionComponent<Props> = (props) => {
               }
               const isOk =
                 convertAnswer(currentQuestion.correctAnswer) == convertAnswer(item)
-              return (
-                <Badge style={isOk ? styles.goodAnswer : styles.badAnswer} count={item} />
-              )
+              return {
+                props: {
+                  style: isOk ? styles.goodAnswer : styles.badAnswer,
+                },
+                children: item,
+              }
             },
           }) as (typeof columns)[number],
       ),
