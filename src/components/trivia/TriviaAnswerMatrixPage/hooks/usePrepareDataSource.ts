@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react'
 import { UserAnswersPair } from '../types'
 import convertAnswer from '../utils/convert-answer'
 
-export default function usePrepareDataSource(userAnswersPairs: UserAnswersPair[]) {
+export default function usePrepareDataSource(
+  userAnswersPairs: UserAnswersPair[],
+  onLoaded?: () => void,
+) {
   const [dataSource, setDataSource] = useState<any[]>([])
 
   useEffect(() => {
@@ -34,6 +37,8 @@ export default function usePrepareDataSource(userAnswersPairs: UserAnswersPair[]
       allData.push(newData)
     })
     setDataSource(allData)
+
+    if (typeof onLoaded === 'function') onLoaded()
   }, [userAnswersPairs])
 
   return dataSource
