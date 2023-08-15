@@ -16,8 +16,6 @@ export default function useExportAsXLSX(
     ...Object.fromEntries(questionInfoIdList),
   }
   return () => {
-    const rows: string[][] = []
-
     // The right order of the question IDs
     const orderedQuestionId = questionInfoIdList.map(
       (questionInfoId) => questionInfoId[0],

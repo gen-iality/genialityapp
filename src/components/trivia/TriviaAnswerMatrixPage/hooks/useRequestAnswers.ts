@@ -38,8 +38,7 @@ export default function useRequestAnswers(surveyId: string, questions: any[]) {
           } as UserAnswersPair
         })
 
-        const manyData = await Promise.all(promises)
-        return manyData
+        return await Promise.all(promises)
       })
 
       Promise.all(promises).then((manyList) => {
