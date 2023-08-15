@@ -12,12 +12,25 @@ type Props = {
   event: any
 }
 
+const tonalities = {
+  autumn: {
+    good: '#d7e2d3',
+    bad: '#edb18a',
+  },
+  pastel: {
+    good: '#c5e2c7',
+    bad: '#ead2d9',
+  },
+}
+
+const tonality: keyof typeof tonalities = 'autumn'
+
 const styles: {
   goodAnswer: CSSProperties
   badAnswer: CSSProperties
 } = {
-  goodAnswer: { backgroundColor: '#c5e2c7' },
-  badAnswer: { backgroundColor: '#ead2d9' },
+  goodAnswer: { backgroundColor: tonalities[tonality].good },
+  badAnswer: { backgroundColor: tonalities[tonality].bad },
 }
 
 const TriviaAnswerMatrixPage: FunctionComponent<Props> = (props) => {
