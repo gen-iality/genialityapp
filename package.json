@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "vite --mode staging",
     "prod": "vite --mode prod_evius",
-    "devgeniality_real": "vite --mode geniality_development_real",
     "devgeniality": "vite --mode geniality_development",
     "localgeniality": "vite --mode geniality_local",
     "prodgeniality": "vite --mode geniality_production",
