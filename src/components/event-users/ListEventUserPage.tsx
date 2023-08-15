@@ -7,31 +7,21 @@ import {
 } from '@helpers/request'
 import { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react'
 
-import {
-  fieldNameEmailFirst,
-  handleRequestError,
-  parseData2Excel,
-  sweetAlert,
-} from '@helpers/utils'
+import { fieldNameEmailFirst, parseData2Excel } from '@helpers/utils'
 
 import Header from '@antdComponents/Header'
 import {
   Button,
-  Checkbox,
   Col,
   Image,
   Input,
   InputRef,
-  List,
-  Modal,
-  Result,
   Row,
   Space,
   Spin,
   Table,
   Tag,
   Tooltip,
-  Typography,
 } from 'antd'
 
 import { IDynamicFieldData } from '@components/dynamic-fields/types'
@@ -45,18 +35,14 @@ import Highlighter from 'react-highlight-words'
 import { utils, writeFileXLSX } from 'xlsx'
 
 import {
-  CheckOutlined,
   DownloadOutlined,
   EditOutlined,
-  LoadingOutlined,
   PlusCircleOutlined,
-  SafetyCertificateOutlined,
   SearchOutlined,
   StarOutlined,
   UploadOutlined,
   UsergroupAddOutlined,
 } from '@ant-design/icons'
-import { checkinAttendeeInActivity } from '@helpers/HelperAuth'
 import UserModal from '../modal/modalUser'
 import { Link } from 'react-router-dom'
 import { StateMessage } from '@context/MessageService'
@@ -67,6 +53,7 @@ import EventProgressWrapper from '@/wrappers/EventProgressWrapper'
 import EnrollEventUserFromOrganizationMember from './EnrollEventUserFromOrganizationMember'
 import ModalPassword from './ModalPassword'
 import { FilterConfirmProps } from 'antd/lib/table/interface'
+import filterActivitiesByProgressSettings from '@Utilities/filterActivitiesByProgressSettings'
 
 interface ITimeTrackingStatsProps {
   user: any
@@ -127,6 +114,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
   const [isEnrollingModalOpened, setIsEnrollingModalOpened] = useState(false)
   const [watchedUserInProgressingModal, setWatchedUserInProgressingModal] =
     useState<any>()
+  const [nonPublishedActivityIDs, setNonPublishedActivityIDs] = useState<string[]>([])
 
   // TODO: if activity_id, then load to activity
   const [activity, setActivity] = useState<any | undefined>()
@@ -367,21 +355,15 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       title: 'Progreso',
       ellipsis: true,
       sorter: (a: any, b: any) =>
-        a.activity_progresses?.progress_all_activities -
-        b.activity_progresses?.progress_all_activities,
+        a.activity_progresses?.progress_filtered_activities -
+        b.activity_progresses?.progress_filtered_activities,
       ...getColumnSearchProps('progreso', (value) => value.postprocess_progress),
       render: (item) => (
         <>
           <EventProgressWrapper
             event={event}
             eventUser={item}
-            render={({ isLoading, activities, checkedInActivities }) => {
-              // setProgressMap((previous) => ({
-              //   ...previous,
-              //   [item._id]: `${
-              //     checkedInActivities.filter((attendee) => attendee.checked_in).length
-              //   }/${Math.max(activities.length, preAllActivities.length)}`,
-              // }))
+            render={({ isLoading, activities, viewedActivities }) => {
               return (
                 <>
                   {isLoading && <Spin />}
@@ -391,12 +373,15 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
                         setIsProgressingModalOpened(true)
                         setWatchedUserInProgressingModal(item)
                       }}
-                    >{`${checkedInActivities.length}/${Math.max(
+                    >{`${viewedActivities.length}/${Math.max(
                       activities.length,
-                      preAllActivities.length,
+                      preAllActivities.filter(
+                        ({ _id }: { _id: string }) =>
+                          !nonPublishedActivityIDs.includes(_id),
+                      ).length,
                     )}`}</Button>
                   ) : (
-                    <>{checkedInActivities.length > 0 ? 'Visto' : 'No visto'}</>
+                    <>{viewedActivities.length > 0 ? 'Visto' : 'No visto'}</>
                   )}
                 </>
               )
@@ -567,10 +552,10 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
 
     const unsubscribe = eventUsersRef.onSnapshot((observer) => {
       const allEventUserData: any[] = []
-      const newProgressMap: { [key: string]: string }[] = []
+
+      const eventUserAndUserPairIds: { eu: string; u: string }[] = []
       observer.forEach((result) => {
         const data = result.data()
-        // console.log('result:', data)
 
         // Fix the date
         if (data.checkedin_at) data.checkedin_at = dayjs(data.checkedin_at.toDate())
@@ -590,20 +575,45 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
           (activities ?? []).length,
           (preAllActivities ?? []).length,
         )}`
-        // await FB.Attendees.get(event._id, data._id)
         allEventUserData.push({
           // the organization user properties here... (for now, nothing)
           ...data.properties,
           ...data,
         })
-        newProgressMap[data._id] = data.postprocess_progress
+
+        eventUserAndUserPairIds.push({ eu: data._id, u: data.account_id })
       })
 
-      // Now, update all updates
-      setProgressMap((previous: any) => ({
-        ...previous,
-        ...newProgressMap,
-      }))
+      Promise.all(
+        eventUserAndUserPairIds.map(async ({ eu, u }) => {
+          return {
+            eu,
+            u,
+            ap: await FB.ActivityProgresses.get(event._id, u),
+          }
+        }),
+      )
+        .then((euup) => {
+          return euup.filter(({ ap }) => typeof ap !== 'undefined')
+        })
+        .then((euup) => {
+          let newProgressMap: { [key: string]: string } = {}
+          euup.forEach((euu) => {
+            if (!euu.ap) {
+              newProgressMap[euu.eu] = 'Sin progreso'
+              return
+            }
+            const itsActivities = filterActivitiesByProgressSettings(
+              preAllActivities,
+              event.progress_settings || {},
+            )
+            newProgressMap[euu.eu] = `${
+              (euu.ap.viewed_activities ?? []).length
+            }/${Math.max((euu.ap.activities ?? []).length, (itsActivities ?? []).length)}`
+          })
+          setProgressMap((previous: any) => ({ ...previous, ...newProgressMap }))
+          console.log(newProgressMap)
+        })
 
       setDataSource(allEventUserData)
     })
@@ -683,6 +693,24 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       }
     }
   }, [])
+
+  useEffect(() => {
+    allActivities.forEach((activity) => {
+      FB.Activities.ref(event._id, activity._id!).onSnapshot((snapshot) => {
+        const data = snapshot.data()
+        if (!data) return
+        const flag = !!data.isPublished
+
+        if (!flag) {
+          setNonPublishedActivityIDs((previous) => [...previous, activity._id!])
+        } else {
+          setNonPublishedActivityIDs((previous) =>
+            previous.filter((id) => id !== activity._id!),
+          )
+        }
+      })
+    })
+  }, [allActivities])
 
   return (
     <>

@@ -14,6 +14,7 @@ import DynamicSelectField from './DynamicSelectField'
 import DynamicTextField from './DynamicTextField'
 import DynamicTermsAndCondictionsField from './DynamicTermsAndCondictionsField'
 import { IDynamicFieldData } from './types'
+import classNames from 'classnames'
 
 type FormValuesType = any
 
@@ -130,7 +131,9 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
         if (type === 'tituloseccion') {
           return (
             <div key={`item ${index}`}>
-              <div className={`label has-text-grey ${mandatory ? 'required' : ''}`}>
+              <div
+                className={classNames('label', 'has-text-grey', { required: mandatory })}
+              >
                 <div dangerouslySetInnerHTML={{ __html: label }}></div>
               </div>
               <Divider />

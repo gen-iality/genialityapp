@@ -6,6 +6,7 @@ import {
   SyncOutlined,
 } from '@ant-design/icons'
 import ClipboardTextOff from '@2fd/ant-design-icons/lib/ClipboardTextOff'
+import classNames from 'classnames'
 
 const { Title } = Typography
 
@@ -107,10 +108,12 @@ function SurveyCard(props) {
                                     ? ' ghost'
                                     : 'primary'
                                 }
-                                className={`${
-                                  survey.isOpened === 'true' &&
-                                  'animate__animated  animate__pulse animate__slower animate__infinite'
-                                }`}
+                                className={classNames({
+                                  animate__animated: survey.isOpened === 'true',
+                                  animate__pulse: survey.isOpened === 'true',
+                                  animate__slower: survey.isOpened === 'true',
+                                  animate__infinite: survey.isOpened === 'true',
+                                })}
                                 onClick={() => {
                                   handleClick(survey)
                                 }}

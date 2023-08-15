@@ -41,6 +41,14 @@ const TriviaListPage: FunctionComponent<ITriviaListPageProps> = (props) => {
       ),
     },
     {
+      title: 'Informe global',
+      width: 200,
+      ellipsis: true,
+      render: (survey: SurveyType) => (
+        <Link to={`${props.matchUrl}/all-answers/${survey._id}`}>Ver informe</Link>
+      ),
+    },
+    {
       title: 'Publicada',
       dataIndex: 'publish',
       ellipsis: true,

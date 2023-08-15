@@ -36,6 +36,7 @@ import { uploadImagedummyRequest } from '@Utilities/imgUtils'
 import LikertScaleEditor from '../quiz/LikertScaleEditor'
 import { SurveyQuestion } from '@components/events/surveys/types'
 import TextArea from 'antd/lib/input/TextArea'
+import classNames from 'classnames'
 
 const { Option } = Select
 
@@ -724,13 +725,10 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
                     </style>
                     <Space
                       direction="horizontal"
-                      className={
-                        questionType === 'ranking'
-                          ? 'abc-ranking'
-                          : questionType === 'rating'
-                          ? 'abc-ranking'
-                          : undefined
-                      }
+                      className={classNames({
+                        'abc-ranking':
+                          questionType === 'ranking' || questionType === 'rating',
+                      })}
                       style={questionType === 'ranking' ? { width: '100%' } : undefined}
                     >
                       {questionType === 'radiogroup' ? (

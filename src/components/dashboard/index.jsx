@@ -32,6 +32,7 @@ import API from '@helpers/request'
 import { GetTokenUserFirebase } from '@helpers/HelperAuth'
 import { StateMessage } from '@context/MessageService'
 import Header from '@antdComponents/Header'
+import classNames from 'classnames'
 
 const { Title } = Typography
 // Estilos pagina pdf
@@ -499,7 +500,10 @@ class DashboardEvent extends Component {
                   </Tooltip>
                 </Col>
 
-                <Col className={this.state.printButton ? '' : 'pagebreak'} span={24}>
+                <Col
+                  className={classNames({ pagebreak: !this.state.printButton })}
+                  span={24}
+                >
                   <Tooltip title={this.state.desc3} placement="top" mouseEnterDelay={0.5}>
                     <Card hoverable>
                       <Statistic
@@ -529,7 +533,7 @@ class DashboardEvent extends Component {
             style={{ paddingTop: '20px' }}
           >
             <Col
-              className={this.state.printButton ? '' : 'pagebreak'}
+              className={classNames({ pagebreak: !this.state.printButton })}
               span={this.state.printButton ? 18 : 24}
             >
               <Tooltip title={this.state.desc4} placement="top" mouseEnterDelay={0.5}>

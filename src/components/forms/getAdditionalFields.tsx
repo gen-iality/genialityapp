@@ -34,6 +34,7 @@ dayjs.extend(weekOfYear)
 dayjs.extend(weekYear)
 import { deleteFireStorageData } from '@Utilities/deleteFireStorageData'
 import { countryApi } from '@helpers/request'
+import classNames from 'classnames'
 /**TODO::ocaciona error en ios */
 
 const { Option } = Select
@@ -231,7 +232,9 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
       if (type === 'tituloseccion') {
         input = (
           <>
-            <div className={`label has-text-grey ${mandatory ? 'required' : ''}`}>
+            <div
+              className={classNames('label', 'has-text-grey', { required: mandatory })}
+            >
               <div
                 dangerouslySetInnerHTML={{
                   __html: label,
