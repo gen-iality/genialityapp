@@ -1,10 +1,11 @@
-import { FunctionComponent, useEffect, useMemo, useState } from 'react'
+import { CSSProperties, FunctionComponent, useEffect, useMemo, useState } from 'react'
 import useFetchSurvey from './hooks/useFetchSurvey'
-import { Spin, Typography, Table, Space, Button } from 'antd'
+import { Spin, Typography, Table, Space, Button, Badge } from 'antd'
 import { ColumnType } from 'antd/es/table'
 import useRequestAnswers from './hooks/useRequestAnswers'
 import usePrepareDataSource from './hooks/usePrepareDataSource'
 import useExportAsXLSX from './hooks/useExportAsXLSX'
+import convertAnswer from './utils/convert-answer'
 
 type Props = {
   surveyId: string
@@ -29,13 +30,37 @@ const TriviaAnswerMatrixPage: FunctionComponent<Props> = (props) => {
 
   const onExportAsXLXS = useExportAsXLSX(dataSource, survey, questions)
 
+  const styles: {
+    goodAnswer: CSSProperties
+    badAnswer: CSSProperties
+  } = {
+    goodAnswer: { backgroundColor: '#3ab540' },
+    badAnswer: { backgroundColor: '#ff6354' },
+  }
+
   useEffect(() => {
     setColumns([
       { title: 'Usuario', dataIndex: 'names' },
-      ...questions.map((question: any) => ({
-        title: question.title,
-        dataIndex: question.id,
-      })),
+      ...questions.map(
+        (question: any) =>
+          ({
+            title: question.title,
+            dataIndex: question.id,
+            render: (item, record) => {
+              const currentQuestion = questions.find(
+                (_question) => _question.id == question.id,
+              )
+              if (!currentQuestion) {
+                return item
+              }
+              const isOk =
+                convertAnswer(currentQuestion.correctAnswer) == convertAnswer(item)
+              return (
+                <Badge style={isOk ? styles.goodAnswer : styles.badAnswer} count={item} />
+              )
+            },
+          }) as (typeof columns)[number],
+      ),
     ])
   }, [questions])
 
