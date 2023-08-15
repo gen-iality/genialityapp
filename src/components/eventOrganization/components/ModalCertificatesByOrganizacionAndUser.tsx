@@ -3,21 +3,26 @@ import { useGetCertificatesByEvents } from '../hooks/useGetCertificatesByEvents'
 import CertificatesByEventsAndUserList from './CertificatesByEventsAndUserList';
 
 interface Props extends DrawerProps {
-  eventsWithEventUser: { [key: string]: any }[];
+  organizationId: string;
+  eventUserId: string;
 }
 
-export const ModalCertificatesByOrganizacionAndUser = ({ eventsWithEventUser, ...modalProps }: Props) => {
-  const { certificatesByEvents, isLoading } = useGetCertificatesByEvents(eventsWithEventUser);
+export const ModalCertificatesByOrganizacionAndUser = ({ eventUserId, organizationId, ...modalProps }: Props) => {
+  const { certificatesByEvents, eventsWithEventUser, eventUsers, isLoading } = useGetCertificatesByEvents(
+    organizationId,
+    eventUserId
+  );
   //toDo: Validar el mobile para el width del drawer
   return (
     <Drawer title='Lista de usuarios de la organización' footer={false} destroyOnClose {...modalProps}>
-        <CertificatesByEventsAndUserList
-          itemLayout="vertical"
-          eventsWithEventUser={eventsWithEventUser}
-          loading={isLoading}
-          dataSource={certificatesByEvents}
-          style={{ marginTop: '10px', overflowY: 'auto' }}
-        />
+      <CertificatesByEventsAndUserList
+        eventUsers={eventUsers}
+        itemLayout='vertical'
+        eventsWithEventUser={eventsWithEventUser}
+        loading={isLoading}
+        dataSource={certificatesByEvents}
+        style={{ marginTop: '10px', overflowY: 'auto' }}
+      />
     </Drawer>
   );
 };

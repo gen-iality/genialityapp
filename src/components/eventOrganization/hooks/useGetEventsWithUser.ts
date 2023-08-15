@@ -1,18 +1,22 @@
 import { OrganizationApi } from '@/helpers/request'
 import { useEffect, useState } from 'react'
 
-export const useGetEventsWithUser = (organizationId: string, eventUserId: string) => {
+export const useGetEventsWithUser = (organizationId: string, eventUserId: string, eventUser: boolean = false) => {
     const [eventsWithEventUser, setEventsWithEventUser] = useState<any[]>([])
+    const [eventUsers, setEventUsers] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
 
-    const getUser = async () => {
+    const getEventFromOrganizationByUser = async () => {
         try {
             if (!eventUserId) {
                 setIsLoading(false)
                 return
             }
-            const { data } = await OrganizationApi.getEventsWithUserOrg(organizationId, eventUserId)
+            const { data } = await OrganizationApi.getEventsWithUserOrg(organizationId, eventUserId, eventUser)
             setEventsWithEventUser( data.map(( item: any )=> item.event ) )
+            if(eventUser){
+                setEventUsers( data.map(( item: any )=> item.event_user ) )
+            }
         } catch (error) {
             setEventsWithEventUser([])
         } finally {
@@ -21,11 +25,12 @@ export const useGetEventsWithUser = (organizationId: string, eventUserId: string
     }
 
     useEffect(() => {
-        getUser()
-    }, [organizationId, eventUserId])
+        getEventFromOrganizationByUser()
+    }, [organizationId, eventUserId,eventUser])
 
     return {
         eventsWithEventUser,
-        isLoading
+        isLoading,
+        eventUsers
     }
 }
