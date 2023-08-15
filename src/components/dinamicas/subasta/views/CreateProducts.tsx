@@ -11,10 +11,9 @@ import Loading from '@/components/profile/loading';
 import { DispatchMessageService } from '@/context/MessageService';
 import { UploadFile } from 'antd/lib/upload/interface';
 
-export default function CreateProducts({reload}: {reload: boolean}) {
+export default function CreateProducts({reload, eventId}: {reload: boolean,eventId: string}) {
   const [modal, setmodal] = useState({ visibility: false, edit: false });
   const [productSelect, setProductSelect] = useState<IProduct>(InitialModalState);
-  const { eventId } = useContext(AuctionContext);
   const { products, createProduct, deleteProduct, updateProduct, loading, deleteImages, refresh } = useProducts(eventId);
   useEffect(() => {
     refresh()

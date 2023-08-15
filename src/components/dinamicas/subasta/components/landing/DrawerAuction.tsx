@@ -30,14 +30,13 @@ import { TabsDrawerAuction } from '../../utils/utils';
 import DrawerRules from './DrawerRules';
 import DrawerChat from '@/components/games/bingo/components/auxiliarDrawers/DrawerChat';
 import ButtonsContainer from './ButtonsContainer';
-import { UseUserEvent } from '@/context/eventUserContext';
 import { getCorrectColor } from '@/helpers/utils';
 
 const { useBreakpoint } = Grid;
 
-export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, eventId }: DrawerAuctionProps) {
+export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, eventId, cEventUser , cEvent}: DrawerAuctionProps) {
   const screens = useBreakpoint();
-  let cEventUser = UseUserEvent();
+
 
   const { products, getProducts, loading: ProductsLoading } = useProducts(eventId);
 
@@ -284,7 +283,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
             closedrawer={setOpenOrClose}
           />
 
-          <DrawerRules showDrawerRules={showDrawerRules} setshowDrawerRules={setshowDrawerRules}  auctionRules={{rules: ''}}/>
+          <DrawerRules cEvent={cEvent} showDrawerRules={showDrawerRules} setshowDrawerRules={setshowDrawerRules}  auctionRules={{rules: ''}}/>
           <DrawerChat showDrawerChat={showDrawerChat} setshowDrawerChat={setshowDrawerChat} />
         </Col>
       </Row>

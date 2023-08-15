@@ -9,9 +9,8 @@ import CreateProducts from './CreateProducts';
 import ConfigAppearance from '../components/cms/ConfigAppearance';
 import Report from '../components/cms/Report';
 
-export default function AuctionView({auction,event} : {auction : Auction, event: any}) {
+export default function AuctionView({auction,event,eventId,loadingConfig} : {auction : Auction, event: any,loadingConfig : boolean, eventId : string }) {
 
-  const { loadingConfig, eventId } = useContext(AuctionContext);
   const [currenTab, setcurrenTab] = useState('1')
   return (
     <Tabs defaultActiveKey={currenTab} onTabClick={(key)=> setcurrenTab(key)}>
@@ -25,11 +24,11 @@ export default function AuctionView({auction,event} : {auction : Auction, event:
       </Tabs.TabPane>
       
       <Tabs.TabPane tab='Productos' key={2}>
-        <CreateProducts reload={currenTab === '2'}/>
+        <CreateProducts reload={currenTab === '2'} eventId={eventId}/>
       </Tabs.TabPane>
 
       <Tabs.TabPane tab='Ejecución' key={3}>
-        <ExecuteAuction/>
+        <ExecuteAuction auction={auction} eventId={eventId}/>
       </Tabs.TabPane>
       
       <Tabs.TabPane tab='Reporte de subasta' key={5}>

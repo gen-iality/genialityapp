@@ -6,7 +6,7 @@ import Loading from '@/components/profile/loading';
 import { AcutionProps } from '../interfaces/auction.interface';
 
 export default function Initial({event} : AcutionProps) {
-  const { auction, loading } = useContext(AuctionContext);
+  const { auction, loading ,loadingConfig, eventId } = useContext(AuctionContext);
   return (
     <>
       {loading ? (
@@ -14,7 +14,7 @@ export default function Initial({event} : AcutionProps) {
       ) : !auction ? (
         <CreateAuction key={'primary-config'} active={false} event={event}/>
       ) : (
-        <AuctionView auction={auction} event={event}/>
+        <AuctionView auction={auction} event={event} eventId={eventId} loadingConfig={loadingConfig}/>
       )}
     </>
   );

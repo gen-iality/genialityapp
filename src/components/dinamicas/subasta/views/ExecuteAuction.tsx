@@ -1,12 +1,11 @@
-import { CloseCircleOutlined, DeleteOutlined, PlayCircleOutlined, PlusOutlined, SaveOutlined, SelectOutlined, StopOutlined } from '@ant-design/icons';
-import { Alert, Button, Card, Col, Empty, Modal, Row, Skeleton, Space, Table, Typography } from 'antd';
+import { CloseCircleOutlined, PlayCircleOutlined, SaveOutlined, SelectOutlined } from '@ant-design/icons';
+import {  Button, Card, Col, Empty, Modal, Row, Skeleton, Table, Typography } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 
 import useProducts from '../hooks/useProducts';
-import { AuctionContext } from '../context/AuctionContext';
 import Loading from '@/components/profile/loading';
-import { IBids, Products } from '../interfaces/auction.interface';
+import { GeneralAuctionProps, IBids, Products } from '../interfaces/auction.interface';
 import SelectProducts from '../components/cms/SelectProducts';
 import { DispatchMessageService } from '@/context/MessageService';
 import { saveAuctioFirebase } from '../services/Execute.service';
@@ -35,10 +34,9 @@ const columns: ColumnsType<IBids> = [
   },
 ];
 
-export default function ExecuteAuction() {
+export default function ExecuteAuction( {auction, eventId} : GeneralAuctionProps) {
   const [currentPage, setcurrentPage] = useState(1);
   const [visibility, setVisibility] = useState(false);
-  const { eventId, auction } = useContext(AuctionContext);
   const { products, loading, refresh } = useProducts(eventId);
   const { Bids, setBids, loading: Loadbids } = useBids(eventId, auction?.currentProduct?._id, auction?.playing);
   const [selectedProduct, setselectedProduct] = useState<Products | null>(null);

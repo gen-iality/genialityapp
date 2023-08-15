@@ -337,7 +337,7 @@ const HeaderColumns = (props) => {
               >
               Abrir Subasta
             </Button>
-            <DrawerAuction auction={auction} eventId={cEvent.value?._id} openOrClose={openModalAuction && auction?.opened} setOpenOrClose={() => {
+            <DrawerAuction auction={auction} eventId={cEvent.value?._id} openOrClose={openModalAuction && auction?.opened}  cEventUser={cEventUSer} cEvent={cEvent} setOpenOrClose={() => {
                 setOpenModalAuction(false);
               }} />
           </Row>

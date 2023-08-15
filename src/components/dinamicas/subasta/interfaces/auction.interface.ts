@@ -14,11 +14,13 @@ export interface DrawerAuctionProps {
     auction:        Auction
     openOrClose :   boolean
     eventId:        string
+    cEventUser?:     any
+    cEvent?:        any
     setOpenOrClose: ()=> void
 }
-export interface ConfigStyleProps {
+export interface GeneralAuctionProps {
     auction: Auction
-    eventId?: string
+    eventId: string
 }
 export interface ApiInterface  {
     getOne:    <T>(event: string) => Promise<T | null>, 
@@ -102,6 +104,7 @@ export interface ReportProps {
 export interface DrawerRulesProps {
     showDrawerRules: boolean
     setshowDrawerRules: (value : boolean) => void
+    cEvent: any
     auctionRules: {
         rules : any
     }
