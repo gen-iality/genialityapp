@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { UserAnswersPair } from '../types'
-import convertAnswer from '../utils/convert-answer'
+import makePrintableQuestionAnswer from '../utils/make-printable-question-answer'
 
 export default function usePrepareDataSource(
   userAnswersPairs: UserAnswersPair[],
@@ -31,7 +31,7 @@ export default function usePrepareDataSource(
         newData.right = row.right
         newData.tried = row.tried
 
-        newData[row.questionId] = convertAnswer(row.answer)
+        newData[row.questionId] = makePrintableQuestionAnswer(row.answer)
       })
 
       allData.push(newData)
