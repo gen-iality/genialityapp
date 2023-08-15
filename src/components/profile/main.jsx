@@ -45,7 +45,7 @@ const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
 
 const MainProfile = (props) => {
-  const [activeTab, setActiveTab] = useState();
+  const [activeTab, setActiveTab] = useState('1');
   const [events, setevents] = useState([]);
   const [tickets, settickets] = useState([]);
   const [organizations, setorganizations] = useState([]);
@@ -142,21 +142,28 @@ const MainProfile = (props) => {
 
   useEffect(() => {
     fetchItem();
-    switch (selectedTab) {
-      case 'organization':
-        setActiveTab('2');
-        break;
-      case 'events':
-        setActiveTab('3');
-        break;
-      case 'tickets':
-        setActiveTab('4');
-        break;
-      default:
-        setActiveTab('1');
-    }
   }, []);
 
+  useEffect(() => {
+    if(props.cUser?.value?.is_admin){
+      switch (selectedTab) {
+        case 'organization':
+          setActiveTab('2');
+          break;
+        case 'events':
+          setActiveTab('3');
+          break;
+        case 'tickets':
+          setActiveTab('4');
+          break;
+        default:
+          setActiveTab('1');
+      }
+    }else{
+      setActiveTab('4');
+    }
+  }, [props.cUser?.value?.is_admin])
+  
   useEffect(() => {
     fetchItem();
   }, [props.cUser?.value?.is_admin])
@@ -273,7 +280,7 @@ const MainProfile = (props) => {
               onTabClick={(key) => {
                 setActiveTab(key);
               }}>
-              {!screens.xs && (
+              {!screens.xs && props.cUser?.value?.is_admin && (
                 <TabPane
                   tab={
                     <Space size={0}>
@@ -465,7 +472,7 @@ const MainProfile = (props) => {
                   </Row>
                 )}
               </TabPane>}
-              <TabPane tab='Eventos creados' key='3'>
+              {props.cUser?.value?.is_admin && <TabPane tab='Eventos creados' key='3'>
                 {eventsIHaveCreatedIsLoading ? (
                   <Loading />
                 ) : (
@@ -504,7 +511,7 @@ const MainProfile = (props) => {
                     })}
                   </Row>
                 )}
-              </TabPane>
+              </TabPane>}
               <TabPane tab='Inscripciones a eventos' key='4'>
                 {eventsThatIHaveParticipatedIsLoading ? (
                   <Loading />

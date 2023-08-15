@@ -11,8 +11,8 @@ export const useGetEventsWithUser = (organizationId: string, eventUserId: string
                 setIsLoading(false)
                 return
             }
-            const { events } = await OrganizationApi.getEventsWithUserOrg(organizationId, eventUserId)
-            setEventsWithEventUser(events)
+            const { data } = await OrganizationApi.getEventsWithUserOrg(organizationId, eventUserId)
+            setEventsWithEventUser( data.map(( item: any )=> item.event ) )
         } catch (error) {
             setEventsWithEventUser([])
         } finally {

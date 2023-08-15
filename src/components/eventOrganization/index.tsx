@@ -219,9 +219,9 @@ function EventOrganization({ match }: OrganizationProps) {
                         <Badge offset={[60, 22]} count={`${eventsWithEventUser.length} Eventos`}>
                           <Title level={2}>Mis eventos</Title>
                         </Badge>
-                        <Button type='primary' onClick={() => setIsModalCertificatesOpen(true)}>
+                        {/* <Button type='primary' onClick={() => setIsModalCertificatesOpen(true)}>
                           Ver mis certificados
-                        </Button>
+                        </Button> */}
                       </Row>
                       {isModalCertificatesOpen && (
                         <ModalCertificatesByOrganizacionAndUser

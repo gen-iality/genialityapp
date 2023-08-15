@@ -902,9 +902,9 @@ export const OrganizationApi = {
     });
     return data;
   },
-  getEventsWithUserOrg: async (organizationId, organizarionUserId) => {
+  getEventsWithUserOrg: async (organizationId, organizarionUserId, event_user = false) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.get(`/api/organizations/${organizationId}/user/${organizarionUserId}/events?token=${token}`, true);
+    return await Actions.get(`/api/organizations/${organizationId}/user/${organizarionUserId}/events?event_user=${event_user}&token=${token}`, true);
   },
   getOne: async (id) => {
     return await Actions.getOne('/api/organizations/', id);
