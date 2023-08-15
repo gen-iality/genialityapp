@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { UserAnswersPair } from '../types'
-import convertAnswer from '../utils/convert-answer'
+import convertAnswer from '../utils/make-printable-question-answer'
 
 export default function usePrepareDataSource(
   userAnswersPairs: UserAnswersPair[],

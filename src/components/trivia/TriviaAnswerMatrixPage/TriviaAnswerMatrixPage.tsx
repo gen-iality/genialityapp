@@ -5,7 +5,7 @@ import { ColumnType } from 'antd/es/table'
 import useRequestAnswers from './hooks/useRequestAnswers'
 import usePrepareDataSource from './hooks/usePrepareDataSource'
 import useExportAsXLSX from './hooks/useExportAsXLSX'
-import convertAnswer from './utils/convert-answer'
+import convertAnswer from './utils/make-printable-question-answer'
 
 type Props = {
   surveyId: string
