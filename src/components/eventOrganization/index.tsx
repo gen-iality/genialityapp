@@ -227,7 +227,8 @@ function EventOrganization({ match }: OrganizationProps) {
                         <ModalCertificatesByOrganizacionAndUser
                           visible={isModalCertificatesOpen}
                           onClose={() => setIsModalCertificatesOpen(false)}
-                          eventsWithEventUser={eventsWithEventUser}
+                          eventUserId={cUser.value?._id}
+                          organizationId={match.params.id}
                         />
                       )}
                       <Row gutter={[16, 16]}>

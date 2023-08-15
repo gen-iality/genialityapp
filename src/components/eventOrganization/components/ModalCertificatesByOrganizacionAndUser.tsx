@@ -6,11 +6,15 @@ import CertificateOutlineIcon from '@2fd/ant-design-icons/lib/CertificateOutline
 import { CloseOutlined } from '@ant-design/icons';
 
 interface Props extends DrawerProps {
-  eventsWithEventUser: { [key: string]: any }[];
+  organizationId: string;
+  eventUserId: string;
 }
 
-export const ModalCertificatesByOrganizacionAndUser = ({ eventsWithEventUser, ...modalProps }: Props) => {
-  const { certificatesByEvents, isLoading } = useGetCertificatesByEvents(eventsWithEventUser);
+export const ModalCertificatesByOrganizacionAndUser = ({ eventUserId, organizationId, ...modalProps }: Props) => {
+  const { certificatesByEvents, eventsWithEventUser, eventUsers, isLoading } = useGetCertificatesByEvents(
+    organizationId,
+    eventUserId
+  );
   //toDo: Validar el mobile para el width del drawer
   return (
     <Drawer 
@@ -33,6 +37,7 @@ export const ModalCertificatesByOrganizacionAndUser = ({ eventsWithEventUser, ..
       }
     >
         <CertificatesByEventsAndUserList
+          eventUsers={eventUsers}
           itemLayout="vertical"
           eventsWithEventUser={eventsWithEventUser}
           loading={isLoading}
