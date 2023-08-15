@@ -77,6 +77,7 @@ export const useGetCertificatesByEvents = (organizationId:string, eventUserId:st
       setIsLoading(false)
       setCertificatesByEvents([])
 
+
     }
    
   }
