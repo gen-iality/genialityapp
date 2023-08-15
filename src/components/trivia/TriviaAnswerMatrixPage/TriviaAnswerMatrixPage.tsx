@@ -5,7 +5,7 @@ import { ColumnType } from 'antd/es/table'
 import useRequestAnswers from './hooks/useRequestAnswers'
 import usePrepareDataSource from './hooks/usePrepareDataSource'
 import useExportAsXLSX from './hooks/useExportAsXLSX'
-import convertAnswer from './utils/convert-answer'
+import makePrintableQuestionAnswer from './utils/make-printable-question-answer'
 
 type Props = {
   surveyId: string
@@ -88,7 +88,8 @@ const TriviaAnswerMatrixPage: FunctionComponent<Props> = (props) => {
                 return item
               }
               const isOk =
-                convertAnswer(currentQuestion.correctAnswer) == convertAnswer(item)
+                makePrintableQuestionAnswer(currentQuestion.correctAnswer) ==
+                makePrintableQuestionAnswer(item)
               return {
                 props: {
                   style: isOk ? styles.goodAnswer : styles.badAnswer,

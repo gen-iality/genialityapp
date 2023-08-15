@@ -40,7 +40,7 @@ import {
 
 import { createOrUpdateSurvey, getSurveyConfiguration, deleteSurvey } from './services'
 import RequiredStar from '@components/agenda/components/RequiredStar'
-import makePrintableQuestionAnswer from './TriviaAnswerMatrixPage/utils/convert-answer'
+import makePrintableQuestionAnswer from './TriviaAnswerMatrixPage/utils/make-printable-question-answer'
 
 export interface ITriviaEditorProps {
   surveyId?: string
