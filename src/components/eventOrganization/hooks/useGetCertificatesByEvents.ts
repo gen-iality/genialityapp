@@ -38,22 +38,24 @@ export const useGetCertificatesByEvents = (organizationId:string, eventUserId:st
   const getData= async ()=>{
     const newCertificates:Promise<Certificates[]>[]=[]
 
-    eventUsers.forEach( (eventUser, index) => {
+    eventUsers.forEach( (eventUser) => {
       newCertificates.push(getCertificateByEventId(eventUser));
     });
     try {
       const certificatesByEvent = await Promise.all(newCertificates)
 
-      const resultado = ([] as Certificates[]).concat.apply([], certificatesByEvent);
-  
-      setCertificatesByEvents(resultado)
+      const newCertificatesLit:any[]=[]
+
+      certificatesByEvent.forEach(certificatesByEvent=> newCertificatesLit.push(...certificatesByEvent))
+
+      setCertificatesByEvents(newCertificatesLit)
     
       setIsLoading(false)
     } catch (error) {
 
       setIsLoading(false)
       setCertificatesByEvents([])
-      
+
     }
    
   }
