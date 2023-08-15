@@ -1,14 +1,23 @@
-import { FunctionComponent, useEffect, useMemo, useState } from 'react'
+import { CSSProperties, FunctionComponent, useEffect, useMemo, useState } from 'react'
 import useFetchSurvey from './hooks/useFetchSurvey'
-import { Spin, Typography, Table, Space, Button } from 'antd'
+import { Spin, Typography, Table, Space, Button, Badge } from 'antd'
 import { ColumnType } from 'antd/es/table'
 import useRequestAnswers from './hooks/useRequestAnswers'
 import usePrepareDataSource from './hooks/usePrepareDataSource'
 import useExportAsXLSX from './hooks/useExportAsXLSX'
+import convertAnswer from './utils/convert-answer'
 
 type Props = {
   surveyId: string
   event: any
+}
+
+const styles: {
+  goodAnswer: CSSProperties
+  badAnswer: CSSProperties
+} = {
+  goodAnswer: { backgroundColor: '#c5e2c7' },
+  badAnswer: { backgroundColor: '#ead2d9' },
 }
 
 const TriviaAnswerMatrixPage: FunctionComponent<Props> = (props) => {
@@ -32,10 +41,31 @@ const TriviaAnswerMatrixPage: FunctionComponent<Props> = (props) => {
   useEffect(() => {
     setColumns([
       { title: 'Usuario', dataIndex: 'names' },
-      ...questions.map((question: any) => ({
-        title: question.title,
-        dataIndex: question.id,
-      })),
+      { title: 'Correctas', dataIndex: 'right' },
+      { title: 'Intentos', dataIndex: 'tried' },
+      ...questions.map(
+        (question: any) =>
+          ({
+            title: question.title,
+            dataIndex: question.id,
+            render: (item, record) => {
+              const currentQuestion = questions.find(
+                (_question) => _question.id == question.id,
+              )
+              if (!currentQuestion) {
+                return item
+              }
+              const isOk =
+                convertAnswer(currentQuestion.correctAnswer) == convertAnswer(item)
+              return {
+                props: {
+                  style: isOk ? styles.goodAnswer : styles.badAnswer,
+                },
+                children: item,
+              }
+            },
+          }) as (typeof columns)[number],
+      ),
     ])
   }, [questions])
 

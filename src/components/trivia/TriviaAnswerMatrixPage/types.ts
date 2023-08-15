@@ -8,4 +8,6 @@ export type UserAnswersPair = {
   questionId: string
   username: string
   answer: string
+  right: number
+  tried: number
 }
