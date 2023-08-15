@@ -10,7 +10,7 @@ interface Props extends ListProps<Certificates> {
 const CertificatesByEventsAndUserList = ({ grid, eventsWithEventUser, ...listProps }: Props) => {
   return (
     <List
-      style={{ backgroundColor: 'red' }}
+      /* style={{ backgroundColor: 'red' }} */
       renderItem={(certificate) => (
         <CertificateItemList
           key={'certi' + certificate._id}

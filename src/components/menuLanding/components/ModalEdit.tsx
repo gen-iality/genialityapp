@@ -29,8 +29,8 @@ export default function ModalEdit({ item, handleCancel, handleOk, visibility, se
             <Typography.Text strong>{item.name}</Typography.Text>
           </Space>
         }
-        bodyStyle={{ padding: 10}}
-        headerStyle={{ border: 'none', padding: 10 }}
+        bodyStyle={{ padding: 15}}
+        headerStyle={{ border: 'none', padding: 15 }}
         footerStyle={{ border: 'none' }}
         visible={visibility}
         width={450}
