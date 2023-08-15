@@ -44,10 +44,14 @@ const TriviaAnswerMatrixPage: FunctionComponent<Props> = (props) => {
       <Typography.Title>
         Cuestionario: {!survey ? <Spin /> : survey.survey}
       </Typography.Title>
-      <Space align="end" size="large">
-        <Button onClick={onExportAsXLXS}>Exportar como XLXS</Button>
+      <Space style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Space data-testid="info-panel-exam-report">
+          <Typography.Paragraph>Hay {questions.length} preguntas.</Typography.Paragraph>
+        </Space>
+        <Space data-testid="btn-export-xlsx-for-exam-report">
+          <Button onClick={onExportAsXLXS}>Exportar como XLXS</Button>
+        </Space>
       </Space>
-      <Typography.Paragraph>Hay {questions.length} preguntas.</Typography.Paragraph>
       <Table dataSource={dataSource} columns={columns} scroll={{ x: true }} />
     </>
   )
