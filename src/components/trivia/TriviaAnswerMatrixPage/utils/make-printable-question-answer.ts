@@ -1,4 +1,4 @@
-export default function convertAnswer(answer: string | string[]) {
+export default function makePrintableQuestionAnswer(answer: string | string[]) {
   let finalAnswer = ''
 
   if (typeof answer === 'string') {
