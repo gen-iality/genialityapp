@@ -5,10 +5,10 @@ import { CertificateItemList } from './CertificateItemList';
 
 interface Props extends ListProps<Certificates> {
   eventsWithEventUser: any[];
-  eventUsers: any[];
+  eventUser: any;
 }
 
-const CertificatesByEventsAndUserList = ({ grid, eventsWithEventUser, eventUsers, ...listProps }: Props) => {
+const CertificatesByEventsAndUserList = ({ grid, eventsWithEventUser, eventUser, ...listProps }: Props) => {
   return (
     <List
       /* style={{ backgroundColor: 'red' }} */
@@ -16,7 +16,7 @@ const CertificatesByEventsAndUserList = ({ grid, eventsWithEventUser, eventUsers
         <CertificateItemList
           key={'certi' + certificate._id}
           certificate={certificate}
-          eventUserValue={eventUsers.find((eventUser) => eventUser.event_id === certificate.event_id)}
+          eventUserValue={eventUser}
           eventValue={eventsWithEventUser.find((event) => event._id === certificate.event_id)}
           isMobile={isMobile}
         />
