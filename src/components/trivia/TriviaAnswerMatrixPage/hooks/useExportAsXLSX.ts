@@ -16,8 +16,6 @@ export default function useExportAsXLSX(
     ...Object.fromEntries(questionInfoIdList),
   }
   return () => {
-    const rows: string[][] = []
-
     // The right order of the question IDs
     const orderedQuestionId = questionInfoIdList.map(
       (questionInfoId) => questionInfoId[0],
@@ -37,7 +35,7 @@ export default function useExportAsXLSX(
 
     // This lines has burnt header: "names"
     const tableAsArray = [
-      ['Nombre de usuario', 'Correctas', 'Intentos', ...headerTableAsArray],
+      ['Nombre de usuario', 'Puntos', 'Intentos', ...headerTableAsArray],
       ...bodyTableAsArray,
     ]
 

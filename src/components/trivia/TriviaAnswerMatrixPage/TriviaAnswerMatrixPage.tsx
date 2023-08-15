@@ -12,12 +12,25 @@ type Props = {
   event: any
 }
 
+const tonalities = {
+  autumn: {
+    good: '#d7e2d3',
+    bad: '#edb18a',
+  },
+  pastel: {
+    good: '#c5e2c7',
+    bad: '#ead2d9',
+  },
+}
+
+const tonality: keyof typeof tonalities = 'autumn'
+
 const styles: {
   goodAnswer: CSSProperties
   badAnswer: CSSProperties
 } = {
-  goodAnswer: { backgroundColor: '#c5e2c7' },
-  badAnswer: { backgroundColor: '#ead2d9' },
+  goodAnswer: { backgroundColor: tonalities[tonality].good },
+  badAnswer: { backgroundColor: tonalities[tonality].bad },
 }
 
 const TriviaAnswerMatrixPage: FunctionComponent<Props> = (props) => {
@@ -39,9 +52,25 @@ const TriviaAnswerMatrixPage: FunctionComponent<Props> = (props) => {
   const onExportAsXLXS = useExportAsXLSX(dataSource, survey, questions)
 
   useEffect(() => {
+    // : min. N
+    const extraScoreTitle =
+      typeof survey?.points === 'number' ? `(min. ${survey?.points})` : ''
+
+    // Set the columns
     setColumns([
       { title: 'Usuario', dataIndex: 'names' },
-      { title: 'Correctas', dataIndex: 'right' },
+      {
+        title: `Puntos ${extraScoreTitle}`.trim(),
+        dataIndex: 'right',
+        render: (item) => {
+          return {
+            props: {
+              style: (survey?.points ?? 0) <= item ? styles.goodAnswer : styles.badAnswer,
+            },
+            children: item,
+          }
+        },
+      },
       { title: 'Intentos', dataIndex: 'tried' },
       ...questions.map(
         (question: any) =>
@@ -82,7 +111,7 @@ const TriviaAnswerMatrixPage: FunctionComponent<Props> = (props) => {
           <Button onClick={onExportAsXLXS}>Exportar como XLXS</Button>
         </Space>
       </Space>
-      <Table dataSource={dataSource} columns={columns} scroll={{ x: true }} />
+      <Table dataSource={dataSource} columns={columns} scroll={{ x: 'max-content' }} />
     </>
   )
 }
