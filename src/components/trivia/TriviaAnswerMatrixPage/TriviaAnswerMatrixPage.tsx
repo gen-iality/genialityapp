@@ -12,6 +12,14 @@ type Props = {
   event: any
 }
 
+const styles: {
+  goodAnswer: CSSProperties
+  badAnswer: CSSProperties
+} = {
+  goodAnswer: { backgroundColor: '#3ab540' },
+  badAnswer: { backgroundColor: '#ff6354' },
+}
+
 const TriviaAnswerMatrixPage: FunctionComponent<Props> = (props) => {
   const { surveyId, event } = props
 
@@ -29,14 +37,6 @@ const TriviaAnswerMatrixPage: FunctionComponent<Props> = (props) => {
   const dataSource = usePrepareDataSource(userAnswersPairs)
 
   const onExportAsXLXS = useExportAsXLSX(dataSource, survey, questions)
-
-  const styles: {
-    goodAnswer: CSSProperties
-    badAnswer: CSSProperties
-  } = {
-    goodAnswer: { backgroundColor: '#3ab540' },
-    badAnswer: { backgroundColor: '#ff6354' },
-  }
 
   useEffect(() => {
     setColumns([
