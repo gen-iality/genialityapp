@@ -41,14 +41,21 @@ export const useGetCertificatesByEvents = (organizationId:string, eventUserId:st
     eventUsers.forEach( (eventUser, index) => {
       newCertificates.push(getCertificateByEventId(eventUser));
     });
-    
-    const certificatesByEvent = await Promise.all(newCertificates)
+    try {
+      const certificatesByEvent = await Promise.all(newCertificates)
 
-    const resultado = ([] as Certificates[]).concat.apply([], certificatesByEvent);
-
-    setCertificatesByEvents(resultado)
+      const resultado = ([] as Certificates[]).concat.apply([], certificatesByEvent);
   
-    setIsLoading(false)
+      setCertificatesByEvents(resultado)
+    
+      setIsLoading(false)
+    } catch (error) {
+
+      setIsLoading(false)
+      setCertificatesByEvents([])
+      
+    }
+   
   }
 
   useEffect(() => {

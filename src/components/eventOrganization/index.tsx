@@ -225,8 +225,9 @@ function EventOrganization({ match }: OrganizationProps) {
                       </Row>
                       {isModalCertificatesOpen && (
                         <ModalCertificatesByOrganizacionAndUser
+                          destroyOnClose
                           visible={isModalCertificatesOpen}
-                          onClose={() => setIsModalCertificatesOpen(false)}
+                          onCloseDrawer={() => setIsModalCertificatesOpen(false)}
                           eventUserId={cUser.value?._id}
                           organizationId={match.params.id}
                         />
