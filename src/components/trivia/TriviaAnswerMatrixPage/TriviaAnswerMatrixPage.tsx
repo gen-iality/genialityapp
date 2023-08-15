@@ -1,9 +1,10 @@
 import { FunctionComponent, useEffect, useMemo, useState } from 'react'
 import useFetchSurvey from './hooks/useFetchSurvey'
-import { Spin, Typography, Table } from 'antd'
+import { Spin, Typography, Table, Space, Button } from 'antd'
 import { ColumnType } from 'antd/es/table'
 import useRequestAnswers from './hooks/useRequestAnswers'
 import usePrepareDataSource from './hooks/usePrepareDataSource'
+import useExportAsXLSX from './hooks/useExportAsXLSX'
 
 type Props = {
   surveyId: string
@@ -26,6 +27,8 @@ const TriviaAnswerMatrixPage: FunctionComponent<Props> = (props) => {
 
   const dataSource = usePrepareDataSource(userAnswersPairs)
 
+  const onExportAsXLXS = useExportAsXLSX(dataSource, survey, questions)
+
   useEffect(() => {
     setColumns([
       { title: 'Usuario', dataIndex: 'names' },
@@ -41,6 +44,9 @@ const TriviaAnswerMatrixPage: FunctionComponent<Props> = (props) => {
       <Typography.Title>
         Cuestionario: {!survey ? <Spin /> : survey.survey}
       </Typography.Title>
+      <Space align="end" size="large">
+        <Button onClick={onExportAsXLXS}>Exportar como XLXS</Button>
+      </Space>
       <Typography.Paragraph>Hay {questions.length} preguntas.</Typography.Paragraph>
       <Table dataSource={dataSource} columns={columns} scroll={{ x: true }} />
     </>
