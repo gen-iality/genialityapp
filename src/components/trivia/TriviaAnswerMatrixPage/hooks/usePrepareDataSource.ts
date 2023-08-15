@@ -24,6 +24,9 @@ export default function usePrepareDataSource(userAnswersPairs: UserAnswersPair[]
 
       itsData.map((row) => {
         newData.names = row.username
+        // Status new data
+        newData.right = row.right
+        newData.tried = row.tried
 
         newData[row.questionId] = convertAnswer(row.answer)
       })

@@ -41,6 +41,8 @@ const TriviaAnswerMatrixPage: FunctionComponent<Props> = (props) => {
   useEffect(() => {
     setColumns([
       { title: 'Usuario', dataIndex: 'names' },
+      { title: 'Correctas', dataIndex: 'right' },
+      { title: 'Intentos', dataIndex: 'tried' },
       ...questions.map(
         (question: any) =>
           ({
