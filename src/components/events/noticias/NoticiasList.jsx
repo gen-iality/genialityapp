@@ -104,10 +104,8 @@ const NoticiasList = (props) => {
                       }
                       actions={[
                         <Link
-                          to={{
-                            pathname: `/landing/${eventId}/noticias/${news._id}/detailsNoticia`,
-                            state: { id: news._id },
-                          }}
+                          to={`/landing/${eventId}/noticias/${news._id}/detailsNoticia`}
+                          state={{ id: news._id }}
                           key="viewMore"
                         >
                           Ver más
@@ -155,10 +153,8 @@ const NoticiasList = (props) => {
                     }
                     actions={[
                       <Link
-                        to={{
-                          pathname: `/landing/${eventId}/noticias/${news._id}/detailsNoticia`,
-                          state: { id: news._id },
-                        }}
+                        to={`/landing/${eventId}/noticias/${news._id}/detailsNoticia`}
+                        state={{ id: news._id }}
                         key="viewMore"
                       >
                         Ver más

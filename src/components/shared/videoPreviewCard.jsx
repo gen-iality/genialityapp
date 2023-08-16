@@ -31,7 +31,7 @@ class EventCard extends Component {
             </span>
           }
         >
-          <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
+          <Link to={`/landing/${event._id}`} state={{ event: event }}>
             <Card
               bordered={bordered}
               loading={loading}

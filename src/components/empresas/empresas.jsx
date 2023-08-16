@@ -175,10 +175,8 @@ function Empresas({ event, match }) {
                 <Link
                   key={`editAction${value.index}`}
                   id={`editAction${value.index}`}
-                  to={{
-                    pathname: `${match.url}/crear`,
-                    state: { edit: value },
-                  }}
+                  to={`${match.url}/crear`}
+                  state={{ edit: value }}
                 >
                   <Button icon={<EditOutlined />} type="primary" size="small" />
                 </Link>
