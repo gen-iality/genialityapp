@@ -51,7 +51,7 @@ export const CertificateItemList = ({ certificate, isMobile, eventValue, eventUs
   };
   //toDo: corregir tema de mobile
   return (
-    <Card bodyStyle={{padding: '0px 10px', backgroundColor: eventValue.styles.toolbarDefaultBg + '95', borderRadius: 10}}>
+    <Card bodyStyle={{padding: '0px 10px', backgroundColor: eventValue.styles.toolbarDefaultBg + '95', borderRadius: 10}} bordered={false} style={{paddingBottom: 5}}>
       <List.Item
         key={certificate.name} 
         extra={
