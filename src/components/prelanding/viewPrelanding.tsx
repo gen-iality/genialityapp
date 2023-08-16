@@ -31,7 +31,7 @@ import { Agenda, ApiGeneric, DataSource, Description, Speaker, Sponsor } from '.
 import { style } from './constants';
 import { Helmet } from 'react-helmet';
 import ModalPayment from '../authentication/ModalPayment';
-import moment, { now } from 'moment';
+import moment from 'moment';
 
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -213,7 +213,7 @@ const ViewPrelanding = ({ preview }: PropsPreLanding) => {
   } else if (cEventContext?.value?.datetime_from !== undefined && cEventContext?.value?.datetime_from !== null) {
     date = cEventContext?.value?.datetime_from;
   } else {
-     date = moment(now()).format('YYYY-MM-DD HH:mm:ss'); // En caso de que ninguna de las condiciones anteriores se cumpla.
+     date = moment(moment.now()).format('YYYY-MM-DD HH:mm:ss'); // En caso de que ninguna de las condiciones anteriores se cumpla.
   }
  
   return (
