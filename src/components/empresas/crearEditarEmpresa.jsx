@@ -135,6 +135,7 @@ function CrearEditarEmpresa(props) {
   const { event } = props
   const params = useParams()
   const location = useLocation()
+
   const { companyId } = params
   const [standTypesOptions, loadingStandTypes] = useGetEventCompaniesStandTypesOptions(
     event._id,
@@ -143,7 +144,7 @@ function CrearEditarEmpresa(props) {
     useGetEventCompaniesSocialNetworksOptions(event._id)
   const [initialValues, loadingInitialValues] = useGetCompanyInitialValues(
     event._id,
-    props.location.state.edit,
+    location.state?.edit,
   )
   const [tamanio, setTamanio] = useState(0)
   const navigate = useNavigate()
@@ -163,11 +164,11 @@ function CrearEditarEmpresa(props) {
     (values, { setSubmitting }) => {
       StateMessage.show('loading', 'loading', 'Espere mientras se guarda la información')
       if (values.stand_image && values.list_image) {
-        const isNewRecord = !props.location.state.edit
+        const isNewRecord = !location.state?.edit
         const createOrEdit = isNewRecord ? createEventCompany : updateEventCompany
         const paramsArray = isNewRecord
           ? [event._id, values, tamanio]
-          : [event._id, props.location.state.edit, values]
+          : [event._id, location.state?.edit, values]
         const errorObject = {
           message: 'Error',
           description: isNewRecord
@@ -192,7 +193,7 @@ function CrearEditarEmpresa(props) {
         StateMessage.show(null, 'error', 'Favor de llenar los campos requeridos')
       }
     },
-    [navigate, event._id, props.location.state.edit, tamanio],
+    [navigate, event._id, location.state?.edit, tamanio],
   )
 
   const remove = () => {
@@ -201,7 +202,7 @@ function CrearEditarEmpresa(props) {
       'loading',
       'Por favor espere mientras borra la información...',
     )
-    if (props.location.state.edit) {
+    if (location.state?.edit) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
         icon: <ExclamationCircleOutlined />,
@@ -216,7 +217,7 @@ function CrearEditarEmpresa(props) {
                 .collection('event_companies')
                 .doc(event._id)
                 .collection('companies')
-                .doc(props.location.state.edit)
+                .doc(location.state?.edit)
                 .delete()
               StateMessage.destroy('loading')
               StateMessage.show(
@@ -256,7 +257,7 @@ function CrearEditarEmpresa(props) {
               back
               save
               remove={remove}
-              edit={props.location.state.edit}
+              edit={location.state?.edit}
               extra={
                 <Field name="visible" component={SwitchField} label="Visible" labelCol />
               }

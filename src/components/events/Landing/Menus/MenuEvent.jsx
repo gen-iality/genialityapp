@@ -1,5 +1,5 @@
 import { Badge, Menu } from 'antd'
-import { Link, useLocation, useMatch } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import * as iconComponents from '@ant-design/icons'
 import { stylesMenuItems } from '../helpers/csshelpers'
 import { useEventContext } from '@context/eventContext'
@@ -8,7 +8,6 @@ import { setSectionPermissions } from '../../../../redux/sectionPermissions/acti
 import { connect } from 'react-redux'
 
 const MenuEvent = ({ isMobile }) => {
-  const { url } = useMatch().pathname
   const location = useLocation()
   const cEvent = useEventContext()
   const { totalsolicitudes, eventPrivate } = useHelper()
@@ -57,7 +56,7 @@ const MenuEvent = ({ isMobile }) => {
                     <Link
                       className="menuEvent_section-text"
                       style={{ color: event.styles.textMenu }}
-                      to={`${url}/${event.itemsMenu[key].section}`}
+                      to={`./${event.itemsMenu[key].section}`}
                     >
                       <IconoComponente
                         style={{

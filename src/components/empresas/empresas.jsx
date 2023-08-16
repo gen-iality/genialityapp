@@ -27,7 +27,7 @@ const tableLocale = {
   emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No hay datos" />,
 }
 
-function Empresas({ event, match }) {
+function Empresas({ event }) {
   const [companies, loadingCompanies] = useGetEventCompanies(event._id)
   const [companyList, setCompanyList] = useState([])
   const { eventIsActive } = useHelper()
@@ -141,7 +141,7 @@ function Empresas({ event, match }) {
       sorter: (a, b) => a.name.localeCompare(b.name),
       render(companyName, record) {
         return (
-          <Link to={`${match.url}/editar/${record.id}`} title="Editar">
+          <Link to={`editar/${record.id}`} title="Editar">
             {companyName}
           </Link>
         )
@@ -175,7 +175,7 @@ function Empresas({ event, match }) {
                 <Link
                   key={`editAction${value.index}`}
                   id={`editAction${value.index}`}
-                  to={`${match.url}/crear`}
+                  to={`crear`}
                   state={{ edit: value }}
                 >
                   <Button icon={<EditOutlined />} type="primary" size="small" />
@@ -242,7 +242,7 @@ function Empresas({ event, match }) {
         back
         titleTooltip="Agregue o edite las Empresas que se muestran en la aplicación"
         addUrl={{
-          pathname: `${match.url}/crear`,
+          pathname: `crear`,
           state: { new: true },
         }}
         extra={
@@ -260,7 +260,7 @@ function Empresas({ event, match }) {
               </Button>
             </Col>
             <Col>
-              <Link to={`${match.url}/configuration`}>
+              <Link to={`configuration`}>
                 <Button type="primary" icon={<SettingOutlined />} id="configuration">
                   Configuración
                 </Button>
