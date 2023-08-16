@@ -1,10 +1,12 @@
 import React from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, useParams } from 'react-router-dom'
 
-interface WithRouterProps {
+type RouterContextProps = {
   navigate: ReturnType<typeof useNavigate>
   location: ReturnType<typeof useLocation>
+  params: ReturnType<typeof useParams<any>>
 }
+export type WithRouterProps<T = any> = T & RouterContextProps
 
 export const withRouter = <P extends object>(
   WrappedComponent: React.ComponentType<P & WithRouterProps>,
@@ -12,7 +14,15 @@ export const withRouter = <P extends object>(
   return (props: P) => {
     const navigate = useNavigate()
     const location = useLocation()
+    const params = useParams()
 
-    return <WrappedComponent {...props} navigate={navigate} location={location} />
+    return (
+      <WrappedComponent
+        {...props}
+        navigate={navigate}
+        location={location}
+        params={params}
+      />
+    )
   }
 }
