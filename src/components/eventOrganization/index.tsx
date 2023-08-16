@@ -15,6 +15,7 @@ import { DataOrganizations, Organization, OrganizationProps } from './types';
 import { UseCurrentUser } from '@/context/userContext';
 import { useGetEventsWithUser } from './hooks/useGetEventsWithUser';
 import { ModalCertificatesByOrganizacionAndUser } from './components/ModalCertificatesByOrganizacionAndUser';
+import { SocialNetworks } from './components/SocialNetworks';
 
 function EventOrganization({ match }: OrganizationProps) {
   const { Title, Text, Paragraph } = Typography;
@@ -35,21 +36,18 @@ function EventOrganization({ match }: OrganizationProps) {
   );
 
   useEffect(() => {
-
     let orgId = match.params.id;
     if (orgId) {
-      
       fetchItem(orgId).then((respuesta) =>
         setstate({
           ...state,
           orgId,
         })
       );
-      getMyOrganizations()
+      getMyOrganizations();
       setLoading(false);
     }
   }, []);
-
   useEffect(() => {
     if (cUser.value) {
       getMyOrganizations();
@@ -124,6 +122,7 @@ function EventOrganization({ match }: OrganizationProps) {
         backgroundImage: `url(${organization?.styles?.BackgroundImage})`,
         backgroundColor: `${organization?.styles?.containerBgColor || '#FFFFFF'}`,
       }}>
+      <SocialNetworks organization={organization}/>
       <ModalLoginHelpers />
       {!loading && state.orgId ? (
         <>
@@ -219,9 +218,11 @@ function EventOrganization({ match }: OrganizationProps) {
                         <Badge offset={[60, 22]} count={`${eventsWithEventUser.length} Eventos`}>
                           <Title level={2}>Mis eventos</Title>
                         </Badge>
-                        <Button type='primary' onClick={() => setIsModalCertificatesOpen(true)}>
-                          Ver mis certificados
-                        </Button>
+                        {organization?.show_my_certificates && (
+                          <Button type='primary' onClick={() => setIsModalCertificatesOpen(true)}>
+                            Ver mis certificados
+                          </Button>
+                        )}
                       </Row>
                       {isModalCertificatesOpen && (
                         <ModalCertificatesByOrganizacionAndUser
@@ -310,8 +311,8 @@ function EventOrganization({ match }: OrganizationProps) {
                     <Row gutter={[16, 16]}>
                       {eventsOld && eventsOld.length > 0 ? (
                         eventsOld.map((event, index) => {
-                          if(event.hide_event_in_passed){
-                            return null
+                          if (event.hide_event_in_passed) {
+                            return null;
                           }
                           return (
                             <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
@@ -324,7 +325,7 @@ function EventOrganization({ match }: OrganizationProps) {
                                 textButtonBuyOrRegistered={getTextButtonBuyOrRegistered(event)}
                               />
                             </Col>
-                          )
+                          );
                         })
                       ) : (
                         <div
