@@ -172,7 +172,7 @@ const ContentContainer = () => {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/policies" element={<Policies />} />
           <Route path="/about" element={<About />} />
-          <Route path="/faqs" element={<Faqs />} />
+          <Route path="/faqs/*" element={<Faqs />} />
 
           <Route path="/api/generatorQr/:id" element={<QRedirect />} />
           <Route path="/transition/:event" element={<Transition />} />

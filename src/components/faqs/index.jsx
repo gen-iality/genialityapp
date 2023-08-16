@@ -8,15 +8,10 @@ function FaqsRoutes(props) {
   return (
     <Fragment>
       <Routes>
+        <Route path="/" element={<Faqs event={event} parentUrl={matchUrl} />} />
         <Route
-          exact
-          path={`${matchUrl}/`}
-          render={() => <Faqs event={event} parentUrl={matchUrl} />}
-        />
-        <Route
-          exact
-          path={`${matchUrl}/faq`}
-          render={() => <Faq event={event} parentUrl={matchUrl} {...props} />}
+          path="faq"
+          element={<Faq event={event} parentUrl={matchUrl} {...props} />}
         />
       </Routes>
     </Fragment>
