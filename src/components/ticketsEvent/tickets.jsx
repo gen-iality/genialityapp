@@ -49,11 +49,11 @@ const Tickets = (props) => {
         eventId={props.event._id}
         title="Tickets"
         titleTooltip="Agregue o edite los Tickets que se muestran en la aplicación"
-        addUrl="../ticket"
+        addUrl="ticket"
         addUrlState={{ new: true }}
         columns={columns}
         key="_id"
-        editPath="../ticket"
+        editPath="ticket"
         pagination={false}
         actions
         search

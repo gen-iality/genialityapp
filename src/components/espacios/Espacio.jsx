@@ -49,7 +49,7 @@ const Espacio = (props) => {
         }
         StateMessage.destroy('loading')
         StateMessage.show(null, 'success', 'Información guardada correctamente!')
-        navigate('../espacios')
+        navigate('..')
       } catch (e) {
         StateMessage.destroy('loading')
         StateMessage.show(null, 'error', handleRequestError(e).message)
@@ -87,7 +87,7 @@ const Espacio = (props) => {
                 'success',
                 'Se eliminó la información correctamente!',
               )
-              navigate('../espacios')
+              navigate('..')
             } catch (e) {
               StateMessage.destroy('loading')
               StateMessage.show(null, 'error', handleRequestError(e).message)

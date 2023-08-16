@@ -34,13 +34,11 @@ const Espacios = (props) => {
       eventId={props.event._id}
       title="Espacios"
       titleTooltip="Agregue o edite los Espacios que se muestran en la aplicación"
-      addUrl={{
-        pathname: `../espacio`,
-        state: { new: true },
-      }}
+      addUrl="espacio"
+      addUrlStage={{ new: true }}
       columns={columns}
       key="_id"
-      editPath="../espacio"
+      editPath="espacio"
       pagination={false}
       actions
       search
