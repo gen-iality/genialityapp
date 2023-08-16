@@ -3,7 +3,8 @@ import dayjs from 'dayjs'
 import { EventsApi } from '@helpers/request'
 import { Button, notification } from 'antd'
 
-import DayPicker, { DateUtils } from 'react-day-picker'
+import { DayPicker } from 'react-day-picker'
+import { compareAsc } from 'date-fns'
 // import 'react-day-picker/lib/style.css'
 import 'react-day-picker/dist/style.css'
 
@@ -52,8 +53,8 @@ class DateEvent extends Component {
   async handleDayClick(day, { selected }) {
     const { dates } = this.state
     if (selected) {
-      const selectedIndex = dates.findIndex((selectedDay) =>
-        DateUtils.isSameDay(selectedDay, day),
+      const selectedIndex = dates.findIndex(
+        (selectedDay) => compareAsc(selectedDay, day) == 0,
       )
       dates.splice(selectedIndex, 1)
     } else {

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { NavLink, useParams, useMatch } from 'react-router-dom'
+import { NavLink, useParams, useMatch, useLocation } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Button, Col, Divider, Menu, Row } from 'antd'
 import { EventsApi } from '@helpers/request'
@@ -26,7 +26,7 @@ const MenuConfig = (props) => {
   })
 
   const params = useParams()
-  const match = useMatch()
+  const location = useLocation()
 
   const eventId = params.event
 
@@ -100,7 +100,7 @@ const MenuConfig = (props) => {
         </Col>
         <Divider style={{ background: 'gray' }} />
       </Row>
-      {renderMenuItems(controller, { ...props, matchUrl: match.url })}
+      {renderMenuItems(controller, { ...props, matchUrl: location.pathname })}
 
       <SubMenu
         key="sub9"
