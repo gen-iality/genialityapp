@@ -57,7 +57,7 @@ const Faq = (props) => {
         }
         StateMessage.destroy('loading')
         StateMessage.show(null, 'success', 'Información guardada correctamente!')
-        navigate(`${props.parentUrl}/faqs`)
+        navigate(`../faqs`)
       } catch (e) {
         StateMessage.destroy('loading')
         StateMessage.show(null, 'error', handleRequestError(e).message)
@@ -95,7 +95,7 @@ const Faq = (props) => {
                 'success',
                 'Se eliminó la información correctamente!',
               )
-              navigate(`${props.parentUrl}/faqs`)
+              navigate(`../faqs`)
             } catch (e) {
               StateMessage.destroy('loading')
               StateMessage.show(null, 'error', handleRequestError(e).message)

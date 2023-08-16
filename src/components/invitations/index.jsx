@@ -6,12 +6,12 @@ import ImportUsers from '../import-users/importUser'
 import { EventsApi } from '@helpers/request'
 
 function ListaInvitados(props) {
-  const { eventId, event, parentUrl } = props
+  const { eventId, event } = props
 
   const location = useLocation()
 
   useEffect(() => {
-    if (parentUrl === `/eventadmin/${eventId}`) {
+    if (location.pathname.startsWith(`/eventadmin/${eventId}`)) {
       obtenerEvento()
     }
 
@@ -25,47 +25,38 @@ function ListaInvitados(props) {
   const [userProperties, setUserProperties] = useState([])
 
   return (
-    <>
-      <Routes>
-        <Route
-          exact
-          path={`${parentUrl}/invitados`}
-          render={() => (
-            <InvitedUsers
-              event={event}
-              eventID={eventId}
-              setGuestSelected={setGuestSelected}
-            />
-          )}
-        />
-        <Route
-          exact
-          path={`${parentUrl}/invitados/createmessage`}
-          render={() => (
-            <CreateMessage
-              event={event}
-              eventID={eventId}
-              selection={guestSelected}
-              parentUrl={parentUrl}
-            />
-          )}
-        />
+    <Routes>
+      <Route
+        path={`/invitados`}
+        element={
+          <InvitedUsers
+            event={event}
+            eventID={eventId}
+            setGuestSelected={setGuestSelected}
+          />
+        }
+      />
+      <Route
+        exact
+        path={`/invitados/createmessage`}
+        element={
+          <CreateMessage event={event} eventID={eventId} selection={guestSelected} />
+        }
+      />
 
-        <Route
-          exact
-          path={`${parentUrl}/invitados/importar-excel`}
-          render={() => (
-            <ImportUsers
-              extraFields={userProperties}
-              eventId={eventId}
-              event={event}
-              parentUrl={parentUrl}
-              locationParams={location}
-            />
-          )}
-        />
-      </Routes>
-    </>
+      <Route
+        exact
+        path={`/invitados/importar-excel`}
+        element={
+          <ImportUsers
+            extraFields={userProperties}
+            eventId={eventId}
+            event={event}
+            locationParams={location}
+          />
+        }
+      />
+    </Routes>
   )
 }
 

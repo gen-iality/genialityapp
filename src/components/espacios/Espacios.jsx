@@ -35,12 +35,12 @@ const Espacios = (props) => {
       title="Espacios"
       titleTooltip="Agregue o edite los Espacios que se muestran en la aplicación"
       addUrl={{
-        pathname: `${props.parentUrl}/espacio`,
+        pathname: `../espacio`,
         state: { new: true },
       }}
       columns={columns}
       key="_id"
-      editPath={`${props.parentUrl}/espacio`}
+      editPath={`../espacio`}
       pagination={false}
       actions
       search

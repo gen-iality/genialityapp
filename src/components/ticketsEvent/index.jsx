@@ -3,23 +3,13 @@ import Tickets from './tickets'
 import Ticket from './ticket'
 
 function TicketsRoutes(props) {
-  const { event, matchUrl } = props
+  const { event } = props
 
   return (
-    <>
-      <Routes>
-        <Route
-          exact
-          path={`${matchUrl}/`}
-          render={() => <Tickets event={event} parentUrl={matchUrl} />}
-        />
-        <Route
-          exact
-          path={`${matchUrl}/ticket`}
-          render={() => <Ticket event={event} parentUrl={matchUrl} {...props} />}
-        />
-      </Routes>
-    </>
+    <Routes>
+      <Route path={`/`} element={<Tickets event={event} parentUrl={matchUrl} />} />
+      <Route path={`/ticket`} element={<Ticket event={event} {...props} />} />
+    </Routes>
   )
 }
 

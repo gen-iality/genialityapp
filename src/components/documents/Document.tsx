@@ -24,7 +24,6 @@ interface IDocumentProps {
   event: any
   simpleMode?: boolean
   fromPDFDocumentURL?: string | null
-  parentUrl?: string
   notRecordFileInDocuments?: boolean
   /** To check if the document was uploaded */
   cbUploaded?: () => void
@@ -45,7 +44,7 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
   const [loadPercentage, setLoadPercentage] = useState(0)
   const [fromEditing, setFromEditing] = useState(false)
 
-  const location = useLocation<any>()
+  const location = useLocation()
 
   useEffect(() => {
     if (location.state.edit && !props.simpleMode) {
@@ -163,7 +162,7 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
           StateMessage.show(null, 'success', 'Información guardada correctamente!')
         }
 
-        if (!props.simpleMode && props.parentUrl) navigate(`${props.parentUrl}`)
+        if (!props.simpleMode) navigate(`..`)
         setIsLoading(false)
       } catch (e) {
         StateMessage.destroy('loading')
@@ -217,7 +216,7 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
                   'Se eliminó la información correctamente!',
                 )
               }
-              if (!props.simpleMode) navigate(`${props.parentUrl}`)
+              if (!props.simpleMode) navigate(`..`)
               if (typeof props.onRemoveDocumentContent === 'function') {
                 props.onRemoveDocumentContent()
               }

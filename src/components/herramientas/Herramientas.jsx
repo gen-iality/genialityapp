@@ -35,12 +35,12 @@ const Herramientas = (props) => {
       title="Herramientas"
       titleTooltip="Agregue o edite las herramientas que se muestran en la aplicación"
       addUrl={{
-        pathname: `${props.parentUrl}/herramienta`,
+        pathname: `/herramienta`,
         state: { new: true },
       }}
       columns={columns}
       key="_id"
-      editPath={`${props.parentUrl}/herramienta`}
+      editPath={`/herramienta`}
       pagination={false}
       actions
       search

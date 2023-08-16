@@ -23,12 +23,12 @@ const Documents = (props) => {
       back
       titleTooltip="Agregue o edite los Documentos que se muestran en la aplicación"
       addUrl={{
-        pathname: `${props.parentUrl}/document`,
+        pathname: `document`,
         state: { new: true },
       }}
       columns={columns}
       key="_id"
-      editPath={`${props.parentUrl}/document`}
+      editPath={`document`}
       pagination={false}
       actions
       downloadFile

@@ -107,8 +107,8 @@ const ContentContainer = () => {
                 </NewEventProvider>
               }
             />
-            <Route path="/eventadmin/:event" element={<EventAdminRoutes />} />
-            <Route path="/orgadmin/:event" element={<EventAdminRoutes />} />
+            <Route path="/eventadmin/:event/*" element={<EventAdminRoutes />} />
+            <Route path="/orgadmin/:event/*" element={<EventAdminRoutes />} />
             <Route
               path="/create-event"
               element={

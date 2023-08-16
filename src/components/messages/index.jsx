@@ -4,27 +4,17 @@ import InvitationDetail from './invitationDetail'
 import InvitationsList from './list'
 
 function Messages(props) {
-  const match = useMatch()
-
   return (
     <Fragment>
       <Routes>
         <Route
-          exact
-          path={`${match.url}/`}
-          render={() => (
-            <InvitationsList eventId={props.event._id} matchUrl={match.url} />
-          )}
-          event={props.event}
-          matchUrl={match.url}
+          path={`/`}
+          element={<InvitationsList eventId={props.event._id} />}
           {...props}
         />
         <Route
-          exact
-          path={`${match.url}/detail/:id`}
-          render={() => (
-            <InvitationDetail event={props.event} matchUrl={match.url} {...props} />
-          )}
+          path={`/detail/:id`}
+          element={<InvitationDetail event={props.event} {...props} />}
         />
       </Routes>
     </Fragment>

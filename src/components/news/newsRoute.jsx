@@ -8,16 +8,10 @@ import News from './news'
 import NewCE from './newCE'
 
 const NewsSectionRoutes = (props) => {
-  const { matchUrl } = props
-
   return (
     <Routes>
-      <Route exact path={`${matchUrl}/`}>
-        <News {...props} />
-      </Route>
-      <Route path={`${matchUrl}/new`}>
-        <NewCE {...props} />
-      </Route>
+      <Route path={`/`} element={<News {...props} />} />
+      <Route path={`/new`} element={<NewCE {...props} />} />
     </Routes>
   )
 }

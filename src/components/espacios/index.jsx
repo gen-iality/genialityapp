@@ -4,21 +4,13 @@ import Espacios from './Espacios'
 import Espacio from './Espacio'
 
 function EspacioRoutes(props) {
-  const { event, matchUrl } = props
+  const { event } = props
 
   return (
     <Fragment>
       <Routes>
-        <Route
-          exact
-          path={`${matchUrl}/`}
-          render={() => <Espacios event={event} parentUrl={matchUrl} />}
-        />
-        <Route
-          exact
-          path={`${matchUrl}/espacio`}
-          render={() => <Espacio event={event} parentUrl={matchUrl} {...props} />}
-        />
+        <Route path={`/`} element={<Espacios event={event} />} />
+        <Route path={`/espacio`} element={<Espacio event={event} {...props} />} />
       </Routes>
     </Fragment>
   )

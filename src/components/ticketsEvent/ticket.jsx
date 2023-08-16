@@ -59,7 +59,7 @@ const Ticket = (props) => {
         }
         StateMessage.destroy('loading')
         StateMessage.show(null, 'success', 'Información guardada correctamente!')
-        navigate(`${props.parentUrl}/ticketsEvent`)
+        navigate(`../ticketsEvent`)
       } catch (e) {
         StateMessage.destroy('loading')
         StateMessage.show(null, 'error', handleRequestError(e).message)
@@ -93,7 +93,7 @@ const Ticket = (props) => {
                 'success',
                 'Se eliminó la información correctamente!',
               )
-              navigate(`${props.parentUrl}/ticketsEvent`)
+              navigate(`../ticketsEvent`)
             } catch (e) {
               StateMessage.destroy('loading')
               StateMessage.show(null, 'error', handleRequestError(e).message)

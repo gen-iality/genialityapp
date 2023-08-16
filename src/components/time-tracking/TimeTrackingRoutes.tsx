@@ -5,21 +5,14 @@ import { FunctionComponent } from 'react'
 
 interface ITimeTrackingRoutesProps {
   event: any
-  matchUrl: any
 }
 
 const TimeTrackingRoutes: FunctionComponent<ITimeTrackingRoutesProps> = (props) => {
-  const { event, matchUrl } = props
+  const { event } = props
   return (
-    <>
-      <Routes>
-        <Route
-          exact
-          path={`${matchUrl}/`}
-          render={() => <TimeTracking event={event} />}
-        />
-      </Routes>
-    </>
+    <Routes>
+      <Route path={`/`} element={<TimeTracking event={event} />} />
+    </Routes>
   )
 }
 

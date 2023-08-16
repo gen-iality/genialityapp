@@ -5,25 +5,16 @@ import Document from './Document'
 
 interface IDocumentsRoutesProps {
   event: any
-  matchUrl: string
 }
 
 const DocumentsRoutes: FunctionComponent<IDocumentsRoutesProps> = (props) => {
-  const { event, matchUrl } = props
+  const { event } = props
 
   return (
     <Fragment>
       <Routes>
-        <Route
-          exact
-          path={`${matchUrl}/`}
-          render={() => <Documents event={event} parentUrl={matchUrl} />}
-        />
-        <Route
-          exact
-          path={`${matchUrl}/document`}
-          render={() => <Document event={event} parentUrl={matchUrl} />}
-        />
+        <Route path={`/`} element={<Documents event={event} />} />
+        <Route path={`/document`} element={<Document event={event} />} />
       </Routes>
     </Fragment>
   )

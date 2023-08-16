@@ -17,7 +17,6 @@ const { confirm } = Modal
 
 interface ISpeakersListPageProps {
   eventID: any
-  parentUrl: string
 }
 
 const SpeakersListPage: FunctionComponent<ISpeakersListPageProps> = (props) => {
@@ -207,7 +206,7 @@ const SpeakersListPage: FunctionComponent<ISpeakersListPageProps> = (props) => {
   const columnsData = {
     data: {
       ...props,
-      matchUrl: props.parentUrl,
+      matchUrl: '..',
     },
     searchedColumn: searchedColumn,
     handleSearch,
@@ -224,7 +223,7 @@ const SpeakersListPage: FunctionComponent<ISpeakersListPageProps> = (props) => {
         title="Conferencistas"
         titleTooltip="Agregue o edite las personas que son conferencistas"
         addUrl={{
-          pathname: `${props.parentUrl}/speaker`,
+          pathname: `/speaker`,
           state: { new: true },
         }}
         /* listLenght={sortAndIndexSpeakers()} */

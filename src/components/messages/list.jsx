@@ -12,7 +12,7 @@ import CMS from '../newComponent/CMS'
 const { Text } = Typography
 
 function InvitationsList(props) {
-  const { match, eventId, matchUrl } = props
+  const { eventId } = props
 
   const navigate = useNavigate()
 
@@ -80,7 +80,7 @@ function InvitationsList(props) {
         columns={columns}
         actions
         noRemove
-        extraPath={`${matchUrl}/detail`}
+        extraPath={`/detail`}
         extraPathIcon={<BarsOutlined />}
         extraPathTitle="Detalle"
         extraPathUpdate={<ReloadOutlined />}
