@@ -46,12 +46,12 @@ const CertificateListPage: FunctionComponent<any> = (props) => {
       back
       titleTooltip="Agregue o edite los Certificados que se muestran en la aplicación"
       addUrl={{
-        pathname: `${props.parentUrl}/certificate`,
+        pathname: `/certificate`,
         state: { new: true },
       }}
       columns={columns}
       key="_id"
-      editPath={`${props.parentUrl}/certificate`}
+      editPath={`/certificate`}
       pagination={false}
       actions
       search

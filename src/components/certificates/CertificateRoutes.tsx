@@ -4,21 +4,14 @@ import CertificateListPage from './CertificateListPage'
 import CertificateEditorPage from './CertificateEditorPage'
 
 function CertificateRoutes(props: any) {
-  const { event, matchUrl } = props
+  const { event } = props
   return (
     <Fragment>
       <Routes>
+        <Route path={`/`} element={<CertificateListPage event={event} />} />
         <Route
-          exact
-          path={`${matchUrl}/`}
-          render={() => <CertificateListPage event={event} parentUrl={matchUrl} />}
-        />
-        <Route
-          exact
-          path={`${matchUrl}/certificate`}
-          render={() => (
-            <CertificateEditorPage event={event} parentUrl={matchUrl} {...props} />
-          )}
+          path={`/certificate`}
+          element={<CertificateEditorPage event={event} {...props} />}
         />
       </Routes>
     </Fragment>

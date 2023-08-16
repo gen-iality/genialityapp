@@ -119,11 +119,10 @@ const RequirementConfigField: FunctionComponent<{
 
 interface ICertificateEditorPageProps {
   event: any
-  parentUrl: string
 }
 
 const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (props) => {
-  const location = useLocation<{ edit?: string }>()
+  const location = useLocation()
   const locationState = location?.state || {} //si viene new o edit en el state, si es edit es un id
   const navigate = useNavigate()
   const [certificateData, setCertificateData] = useState<CertificateType>({
@@ -209,7 +208,7 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
 
       StateMessage.show(null, 'success', 'Información guardada correctamente!')
 
-      navigate(`${props.parentUrl}`)
+      navigate(`..`)
     } catch (e) {
       StateMessage.destroy('loading')
 
@@ -236,7 +235,7 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
             await CertsApi.deleteOne(locationState.edit)
             StateMessage.destroy('loading')
             StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
-            navigate(`${props.parentUrl}`)
+            navigate(`..`)
           } catch (e) {
             StateMessage.destroy('loading')
             StateMessage.show(null, 'error', handleRequestError(e).message)
