@@ -32,6 +32,7 @@
     "chartjs-plugin-datalabels": "^2.0.0",
     "classnames": "^2.3.2",
     "cypress-file-upload": "^5.0.8",
+    "date-fns": "^2.30.0",
     "dayjs": "^1.11.4",
     "dayjs-plugin-utc": "^0.1.2",
     "firebase": "^9.6.8",
