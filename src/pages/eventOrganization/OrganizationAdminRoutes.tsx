@@ -1,19 +1,6 @@
 /** React's libraries */
 import { useState, useEffect, FunctionComponent, PropsWithChildren } from 'react'
-import {
-  Route,
-  NavLink,
-  redirect,
-  Routes,
-  useParams,
-  useLocation,
-  RouteProps,
-  useMatch,
-  useMatches,
-  useResolvedPath,
-  Outlet,
-  Router,
-} from 'react-router-dom'
+import { Route, NavLink, Routes, useParams, useLocation, Outlet } from 'react-router-dom'
 
 /** Antd imports */
 import { Tag, Menu, Button, Layout } from 'antd'
