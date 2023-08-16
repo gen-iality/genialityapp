@@ -1,5 +1,5 @@
 import { FunctionComponent, useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import dayjs from 'dayjs'
 import { utils, writeFileXLSX } from 'xlsx'
 import { getAnswersByQuestion } from './services'
@@ -10,10 +10,6 @@ import { Button } from 'antd'
 import { VerticalAlignBottomOutlined } from '@ant-design/icons'
 
 type UserResponseType = any // TODO: define this, and move to Utilities/types
-
-export interface IReportQuestionPageProps {
-  surveyId: string
-}
 
 const UserNameRendered = (name?: string) =>
   !name ? <span>Usuario invitado</span> : <span>{name}</span>
@@ -37,13 +33,13 @@ const columns: ColumnsType<UserResponseType> = [
   },
 ]
 
-const ReportQuestionPage: FunctionComponent<IReportQuestionPageProps> = (props) => {
-  const { surveyId } = props
+const ReportQuestionPage: FunctionComponent = () => {
+  const { surveyId } = useParams<{ surveyId: string }>()
 
   const [questionText, setQuestionText] = useState<string>('')
   const [listOfUserResponse, setListOfUserResponse] = useState<UserResponseType[]>([])
 
-  const location = useLocation<any>()
+  const location = useLocation()
 
   const loadData = async () => {
     setQuestionText(location.state.titleQuestion)

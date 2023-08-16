@@ -9,6 +9,7 @@ import Table from '@antdComponents/Table'
 import { ColumnsType } from 'antd/lib/table'
 import { Button } from 'antd'
 import { VerticalAlignBottomOutlined } from '@ant-design/icons'
+import { useParams } from 'react-router'
 
 type UserResponseType = any // TODO: define this, and move to Utilities/types
 
@@ -50,12 +51,8 @@ const columns: ColumnsType<UserResponseType> = [
   },
 ]
 
-export interface ITriviaRankingPageProps {
-  surveyId: string
-}
-
-const TriviaRankingPage: FunctionComponent<ITriviaRankingPageProps> = (props) => {
-  const { surveyId } = props
+const TriviaRankingPage: FunctionComponent = () => {
+  const { surveyId } = useParams<{ surveyId: string }>()
 
   const [listOfUserResponse, setListOfUserResponse] = useState<any[]>([])
 

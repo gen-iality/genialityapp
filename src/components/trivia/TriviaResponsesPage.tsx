@@ -6,6 +6,7 @@ import { Table, Typography, Spin, Space, Button } from 'antd'
 import { ColumnType } from 'antd/lib/table'
 import { utils, writeFileXLSX } from 'xlsx'
 import { FB } from '@helpers/firestore-request'
+import { useParams } from 'react-router'
 
 type UserResponse = {
   username: string
@@ -14,14 +15,14 @@ type UserResponse = {
 }
 
 interface ITriviaResponsesPageProps {
-  surveyId: string
   event: any
 }
 
 const TriviaResponsesPage: React.FunctionComponent<ITriviaResponsesPageProps> = (
   props,
 ) => {
-  const { surveyId, event } = props
+  const { event } = props
+  const { surveyId } = useParams<{ surveyId: string }>()
 
   const [isLoading, setIsLoading] = useState(false)
   const [survey, setSurvey] = useState<any | undefined>()
@@ -72,7 +73,7 @@ const TriviaResponsesPage: React.FunctionComponent<ITriviaResponsesPageProps> = 
     const promiseAllQuestionAndResponses = questions.map(async (question) => {
       const questionId = question.id
 
-      const responsesRef = FB.Surveys.Answers.Responses.collection(surveyId, questionId)
+      const responsesRef = FB.Surveys.Answers.Responses.collection(surveyId!, questionId)
 
       const responsesSnapshot = await responsesRef.get()
 

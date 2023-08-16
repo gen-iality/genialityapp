@@ -12,7 +12,6 @@ type SurveyType = any // TODO: define this, and move to Utilities/types I guess
 
 export interface ITriviaListPageProps {
   event: any
-  matchUrl: string
 }
 
 const TriviaListPage: FunctionComponent<ITriviaListPageProps> = (props) => {
@@ -36,16 +35,14 @@ const TriviaListPage: FunctionComponent<ITriviaListPageProps> = (props) => {
       title: 'Respuestas',
       width: 200,
       ellipsis: true,
-      render: (survey: SurveyType) => (
-        <Link to={`${props.matchUrl}/${survey._id}`}>Ver respuestas</Link>
-      ),
+      render: (survey: SurveyType) => <Link to={`${survey._id}`}>Ver respuestas</Link>,
     },
     {
       title: 'Informe global',
       width: 200,
       ellipsis: true,
       render: (survey: SurveyType) => (
-        <Link to={`${props.matchUrl}/all-answers/${survey._id}`}>Ver informe</Link>
+        <Link to={`all-answers/${survey._id}`}>Ver informe</Link>
       ),
     },
     {
@@ -75,22 +72,22 @@ const TriviaListPage: FunctionComponent<ITriviaListPageProps> = (props) => {
           back
           titleTooltip={'Agregue o edite las Agendas que se muestran en la aplicación'}
           addUrl={{
-            pathname: `${props.matchUrl}/edit`,
+            pathname: `edit`,
             state: { new: true },
           }}
           columns={columns}
           key="_id"
-          editPath={`${props.matchUrl}/edit`}
+          editPath={`edit`}
           editByParam
           pagination={false}
           actions
           search
           setColumnsData={setColumnsData}
-          extraPath={`${props.matchUrl}/report`}
+          extraPath={`report`}
           extraPathIcon={<UnorderedListOutlined />}
           extraPathTitle="Detalle"
           extraPathId
-          extraPathStateName={`${props.matchUrl}/ranking`}
+          extraPathStateName={`ranking`}
           widthAction={160}
           deleteCallback={(surveyId: string) => deleteCallback(surveyId)}
         />
