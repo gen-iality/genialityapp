@@ -36,6 +36,7 @@ import { UseCurrentUser } from '../../../context/userContext';
 import { app } from '../../../helpers/firebase';
 import { DispatchMessageService } from '../../../context/MessageService';
 import { countryApi } from '@/helpers/request';
+import { ROLS_USER } from '@/constants/rols.constants';
 /**TODO::ocaciona error en ios */
 
 const { Option } = Select;
@@ -1210,7 +1211,7 @@ const FormRegister = ({
             )}
             {eventUser !== undefined &&
               eventUser !== null &&
-              eventUser.rol_id == '60e8a7e74f9fb74ccd00dc22' &&
+              eventUser.rol_id == ROLS_USER.ATTENDEE_ID/* '60e8a7e74f9fb74ccd00dc22' */ &&
               cEvent.value?._id &&
               cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && (
                 <Row style={{ textAlign: 'center' }} justify={'center'} align={'center'}>
@@ -1228,7 +1229,7 @@ const FormRegister = ({
               )}
             {eventUser !== undefined &&
               eventUser !== null &&
-              eventUser.rol_id == '60e8a7e74f9fb74ccd00dc22' &&
+              eventUser.rol_id == ROLS_USER.ATTENDEE_ID/* '60e8a7e74f9fb74ccd00dc22' */ &&
               cEvent.value?._id &&
               cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && <ButtonPayment />}
 
