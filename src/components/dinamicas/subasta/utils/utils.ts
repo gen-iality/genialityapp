@@ -1,5 +1,5 @@
 import { uploadImageData } from '@/Utilities/uploadImageData';
-import { Auction, IBids, Products } from '../interfaces/auction.interface';
+import { Auction, AuctionConfig, IBids, Products } from '../interfaces/auction.interface';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { deleteFireStorageData } from '@/Utilities/deleteFireStorageData';
 import { DispatchMessageService } from '@/context/MessageService';
@@ -32,7 +32,11 @@ export enum TabsDrawerAuction {
   Bids = 'Bids',
   History = 'History',
 }
-
+export const defaultConfigAuction : AuctionConfig= {
+currency: 'COP',
+name : 'example',
+timerBids: 10,
+}
 export const InitialModalState : Products = {
   description: '',
   images: [],
@@ -44,33 +48,7 @@ export const InitialModalState : Products = {
   type : 'just-auction',
 };
 
-export const AuctionExample : Required<Auction> = {
-  _id: '1',
-  created_at: '2021-08-10T17:00:00.000Z',
-  currency: 'COP',
-  event_id: '1',
-  name: 'Subasta de prueba',
-  updated_at: '2021-08-10T17:00:00.000Z',
-  styles: {
-  },
-  currentProduct: {
-    _id: '1',
-    description: 'Producto de prueba',
-    name  : 'Producto de prueba',
-    price : 10000,
-    start_price : 10000,
-    type : 'just-auction',
-    state: 'waiting',
-    images : [{
-      name: 'imagen',
-      url: 'https://firebasestorage.googleapis.com/v0/b/eviusauthdev.appspot.com/o/ilustracion-moderna-concepto-computadora-escritorio_114360-11616.avif?alt=media&token=9b89201d-9ad9-486a-95b4-a976277ef97b',
-      uid: '1'
-    }]
-  },
-  opened  : false,
-  playing : false,
-  published : false
-}
+
 
 export const orgOfferds = (Bids : IBids[]) => {
   const labels : string[] = []

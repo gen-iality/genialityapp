@@ -1,10 +1,16 @@
-import { CloseCircleOutlined, DeleteOutlined, InfoCircleOutlined, SaveOutlined, TagOutlined, WarningOutlined } from '@ant-design/icons';
-import { Alert, Button, Card, Col, Form, Input, Modal, Result, Row, Select, Space, Switch, Typography } from 'antd';
+import {
+  CloseCircleOutlined,
+  DeleteOutlined,
+  InfoCircleOutlined,
+  SaveOutlined,
+  TagOutlined,
+  WarningOutlined,
+} from '@ant-design/icons';
+import { Alert, Button, Card, Col, Form, Input, InputNumber, Modal, Result, Row, Select, Space, Switch, Typography } from 'antd';
 import React, { useContext, useState } from 'react';
 import { AuctionContext } from '../../context/AuctionContext';
 import { AuctionConfig, CreateProps } from '../../interfaces/auction.interface';
 import { saveAuctioFirebase } from '../../services/Execute.service';
-import { UseEventContext } from '@/context/eventContext';
 
 export default function CreateAuction({ active, auction, event }: CreateProps) {
   const [modal, setModal] = useState<boolean>(false);
@@ -102,8 +108,15 @@ export default function CreateAuction({ active, auction, event }: CreateProps) {
             </Col>
           )}
         </Row>
-        <Row justify={active ? 'start' : 'center'} style={{ padding: 10}}>
-        {isAnonymously && (  <Alert type='error' icon={<WarningOutlined />} showIcon  message={'Los eventos con "registro sin autenticacion" no son validos para una subasta'} />)}
+        <Row justify={active ? 'start' : 'center'}>
+          {isAnonymously && (
+            <Alert
+              type='error'
+              icon={<WarningOutlined />}
+              showIcon
+              message={'Los eventos con "registro sin autenticacion" no son validos para una subasta'}
+            />
+          )}
         </Row>
         <Row justify='center' gutter={[16, 16]}>
           <Col span={16}>
@@ -173,6 +186,34 @@ export default function CreateAuction({ active, auction, event }: CreateProps) {
               </Card>
             </Col>
           )}
+          <Col span={24}>
+            {auction && (
+              <Col span={12}>
+                <Card hoverable style={{ borderRadius: 20 }}>
+                  <Form.Item label={'Tiempo de espera entre pujas'} initialValue={auction.timerBids ?? 10} name={'timerBids'}>
+                    <Select>
+                        <Select.Option value={10}>10 SEGUNDOS</Select.Option>
+                        <Select.Option value={15}>15 SEGUNDOS</Select.Option>
+                        <Select.Option value={20}>20 SEGUNDOS</Select.Option>
+                        <Select.Option value={25}>25 SEGUNDOS</Select.Option>
+                    </Select>
+                  </Form.Item>
+                  <Form.Item label={'Monto entre pujas'}
+                  name={'amount'}
+                  initialValue={auction.amount}
+                  help={
+                    <Typography.Text type='secondary'>
+                          <InfoCircleOutlined /> Si este campo esta vacio entonces la puja sera libre para el usuario
+                        </Typography.Text>}>
+                    <InputNumber
+                      style={{ width: '100%' }}
+                      formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    />
+                  </Form.Item>
+                </Card>
+              </Col>
+            )}
+          </Col>
         </Row>
       </Form>
     </>

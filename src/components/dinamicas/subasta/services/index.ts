@@ -26,7 +26,7 @@ export const createAuction =  async  (eventId : string, params : AuctionConfig) 
 }
 
 
-export const updateAuction =  async  (eventId : string, auctionId: string ,params : AuctionConfig) => {
+export const  updateAuction =  async  (eventId : string, auctionId: string ,params : AuctionConfig) => {
   try {
       const response = await api.editOne<Auction>(eventId,auctionId,params);
       return response;

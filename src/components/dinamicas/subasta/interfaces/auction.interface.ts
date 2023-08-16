@@ -7,7 +7,8 @@ export interface AcutionProps {
 export interface AuctionConfig {
     name:     string,
 	currency: string,
-
+    amount?:  number,
+    timerBids: number,
 }
 
 export interface DrawerAuctionProps {
@@ -57,6 +58,8 @@ export interface Auction {
     published?:         boolean
     opened?:            boolean
     playing?:           boolean
+    amount:            number | null
+    timerBids:         number
 }
 export interface AuctionStyles {
     general?: {
