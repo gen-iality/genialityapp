@@ -86,7 +86,7 @@ const Protected: FunctionComponent<PropsWithChildren<IProtected>> = ({
   event?.user_properties && event?.user_properties?.length > 0 ? (
     <ValidateAccessRouteCms isForEvent>{children}</ValidateAccessRouteCms>
   ) : (
-    <>{redirect('agenda')}</>
+    <Navigate to="agenda" />
   )
 
 type EventAdminRoutesProps = {}

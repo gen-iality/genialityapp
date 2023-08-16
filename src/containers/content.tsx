@@ -9,6 +9,7 @@ import {
   Outlet,
   useMatch,
   useParams,
+  Navigate,
 } from 'react-router-dom'
 import EventAdminRoutes from '@components/events/EventAdminRoutes'
 import { ApiUrl } from '@helpers/constants'
@@ -187,7 +188,7 @@ const ContentContainer = () => {
           {screens.xs ? (
             <Route
               path="/myprofile"
-              element={<>{redirect('/myprofile/organization')}</>}
+              element={<Navigate to="/myprofile/organization" />}
             />
           ) : (
             <Route

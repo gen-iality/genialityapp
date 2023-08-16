@@ -1,5 +1,12 @@
 import { FunctionComponent, useEffect, useMemo, useState } from 'react'
-import { redirect, Route, Routes, useLocation, useResolvedPath } from 'react-router-dom'
+import {
+  Navigate,
+  redirect,
+  Route,
+  Routes,
+  useLocation,
+  useResolvedPath,
+} from 'react-router-dom'
 import { connect } from 'react-redux'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
 import { setSpaceNetworking } from '../../../redux/networking/actions'
@@ -246,8 +253,8 @@ const EventSectionRoutes: FunctionComponent<
       )}
 
       <Routes>
-        <Route exact path={`${path}/`}>
-          {props.cEvent.value?.itemsMenu && redirect(validateTypeUrl())}
+        <Route path={`${path}/`}>
+          {props.cEvent.value?.itemsMenu && <Navigate to={validateTypeUrl()} />}
         </Route>
 
         <Route path={`${path}/certificate`}>
