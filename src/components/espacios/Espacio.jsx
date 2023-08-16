@@ -22,14 +22,14 @@ const Espacio = (props) => {
   const [espacio, setEspacio] = useState({})
 
   useEffect(() => {
-    if (locationState.edit) {
+    if (locationState?.edit) {
       getOne()
     }
   }, [])
 
   const getOne = async () => {
-    const response = await SpacesApi.getOne(locationState.edit, eventID)
-    const data = response.data.find((espacios) => espacios._id === locationState.edit)
+    const response = await SpacesApi.getOne(locationState?.edit, eventID)
+    const data = response.data.find((espacios) => espacios._id === locationState?.edit)
     setEspacio(data)
   }
 
@@ -42,8 +42,8 @@ const Espacio = (props) => {
       )
 
       try {
-        if (locationState.edit) {
-          await SpacesApi.editOne(espacio, locationState.edit, eventID)
+        if (locationState?.edit) {
+          await SpacesApi.editOne(espacio, locationState?.edit, eventID)
         } else {
           await SpacesApi.create(espacio, eventID)
         }
@@ -69,7 +69,7 @@ const Espacio = (props) => {
       'loading',
       'Por favor espere mientras se borra la información...',
     )
-    if (locationState.edit) {
+    if (locationState?.edit) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
         icon: <ExclamationCircleOutlined />,
@@ -80,7 +80,7 @@ const Espacio = (props) => {
         onOk() {
           const onHandlerRemove = async () => {
             try {
-              await SpacesApi.deleteOne(locationState.edit, eventID)
+              await SpacesApi.deleteOne(locationState?.edit, eventID)
               StateMessage.destroy('loading')
               StateMessage.show(
                 null,
@@ -107,7 +107,7 @@ const Espacio = (props) => {
         save
         form
         remove={onRemoveId}
-        edit={locationState.edit}
+        edit={locationState?.edit}
       />
 
       <Row justify="center" wrap gutter={12}>
