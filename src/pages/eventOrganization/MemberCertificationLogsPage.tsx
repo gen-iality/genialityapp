@@ -30,17 +30,10 @@ import {
 
 /** Components */
 import Header from '@antdComponents/Header'
+import { useLocation, useParams } from 'react-router'
 
 export interface MemberCertificationLogsPageProps {
   org: any
-  match: {
-    params: {
-      positionId: string
-      userId: string
-      certificationId: string
-    }
-    url: string
-  }
 }
 
 function MemberCertificationLogsPage(props: MemberCertificationLogsPageProps) {
@@ -58,15 +51,21 @@ function MemberCertificationLogsPage(props: MemberCertificationLogsPageProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [certificationLog, setCertificationLog] = useState<any | null>({})
 
+  const params = useParams<{
+    positionId: string
+    userId: string
+    certificationId: string
+  }>()
+
   const [form] = Form.useForm()
 
   const openModal = () => setIsModalOpened(true)
   const closeModal = () => setIsModalOpened(false)
 
   // const organizationId: string = props.org._id
-  const positionId = props.match.params.positionId
-  const userId = props.match.params.userId
-  const certificationId = props.match.params.certificationId
+  const positionId = params.positionId
+  const userId = params.userId
+  const certificationId = params.certificationId
 
   const loadData = async () => {
     const user = await UsersApi.getProfile(userId)

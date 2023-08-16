@@ -140,7 +140,7 @@ export const columns = (
               type="primary"
               size="small"
               onClick={() => {
-                navigate(`./members/timetracking/${item._id}`)
+                navigate(`timetracking/${item._id}`)
               }}
               icon={<ClockCircleOutlined />}
             ></Button>

@@ -17,12 +17,13 @@ import { OrganizationApi } from '@helpers/request'
 interface IValidateAccessRouteCmsProps {
   isForEvent?: boolean
   isForOrganization?: boolean
+  orgId?: string
 }
 
 const ValidateAccessRouteCms: FunctionComponent<
   PropsWithChildren<IValidateAccessRouteCmsProps>
 > = (props) => {
-  const { children: realChildren, isForEvent, isForOrganization } = props
+  const { children: realChildren, isForEvent, isForOrganization, orgId } = props
 
   const children = realChildren as ReactElement
 
@@ -61,7 +62,7 @@ const ValidateAccessRouteCms: FunctionComponent<
   }
 
   const showOrgCmsComponent = async () => {
-    const organizationId = children.props.org._id
+    const organizationId = orgId!
     const organizationUser = await getOrganizationUser(organizationId)
     const userRol = organizationUser[0]?.rol_id
 
@@ -94,8 +95,10 @@ const ValidateAccessRouteCms: FunctionComponent<
   }, [cEventUser.value, children])
 
   /** No se permite acceso al cms si el usuario no tiene eventUser */
-  if (!cEventUser.value && cEventUser.status === 'LOADED')
-    return redirect(`/noaccesstocms/${eventId}/true`)
+  if (!cEventUser.value && cEventUser.status === 'LOADED') {
+    redirect(`/noaccesstocms/${eventId}/true`)
+    return null
+  }
 
   return (
     <Spin tip="Cargando..." size="large" spinning={thisComponentIsLoading}>

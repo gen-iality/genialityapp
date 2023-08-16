@@ -117,7 +117,10 @@ const ContentContainer = () => {
                 </NewEventProvider>
               }
             />
-            <Route path="/admin/organization/:id" element={<OrganizationAdminRoutes />} />
+            <Route
+              path="/admin/organization/:id/*"
+              element={<OrganizationAdminRoutes />}
+            />
             <Route
               path="/noaccesstocms/:id/:withoutPermissions"
               element={<NoMatchPage />}

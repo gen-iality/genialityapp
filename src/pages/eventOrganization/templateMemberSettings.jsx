@@ -1,9 +1,12 @@
 import Datos from '@components/events/datos'
 import { OrganizationApi } from '@helpers/request'
+import { useLocation } from 'react-router'
 
 function TemplateMemberSettings(props) {
   const organizationId = props.org._id
   const organization = props.org
+
+  const { pathname } = useLocation()
 
   async function updateTemplate(template, fields) {
     const newTemplate = {
@@ -30,7 +33,7 @@ function TemplateMemberSettings(props) {
           type="organization"
           eventId={organizationId}
           org={organization}
-          url={props.match.url}
+          url={pathname}
           edittemplate
           createNewField={async (fields, template, updateTable) => {
             const fieldsNew = Array.from(template.datafields || [])

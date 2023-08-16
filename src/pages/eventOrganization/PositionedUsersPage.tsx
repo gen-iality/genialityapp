@@ -1,6 +1,6 @@
 /** React's libraries */
-import { useState, useEffect, FunctionComponent, useMemo } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect, FunctionComponent, useMemo, PropsWithChildren } from 'react'
+import { Link, useLocation, useParams } from 'react-router-dom'
 
 /** Antd imports */
 import {
@@ -26,15 +26,11 @@ import { PositionsApi, EventsApi, OrganizationApi } from '@helpers/request'
 import Header from '@antdComponents/Header'
 export interface PositionedUsersPageProps {
   org: any
-  match: {
-    params: {
-      positionId: string
-    }
-    url: string
-  }
 }
 
-const CertificationTag: FunctionComponent<{ value: number; total: number }> = (props) => {
+const CertificationTag: FunctionComponent<
+  PropsWithChildren<{ value: number; total: number }>
+> = (props) => {
   const color = useMemo(() => {
     if (props.total === 0) return 'gray'
     if (props.value == props.total) return 'green'
@@ -48,7 +44,10 @@ const CertificationTag: FunctionComponent<{ value: number; total: number }> = (p
 
 function PositionedUsersPage(props: PositionedUsersPageProps) {
   const organizationId: string = props.org._id
-  const positionId = props.match.params.positionId
+
+  const { pathname } = useLocation()
+  const params = useParams<{ positionId: string }>()
+  const positionId = params.positionId
 
   const [dataSource, setDataSource] = useState<any[]>([])
   const [columns, setColumns] = useState<ColumnsType<any>>([])
@@ -139,7 +138,7 @@ function PositionedUsersPage(props: PositionedUsersPageProps) {
         title: 'Certificaciones',
         width: 100,
         render: (orgUser: any) => (
-          <Link to={`${props.match.url}/user/${orgUser.account_id}`}>
+          <Link to={`${pathname}/user/${orgUser.account_id}`}>
             <CertificationTag
               value={orgUser.user.certifications.length}
               total={allPositionEvents.length}
