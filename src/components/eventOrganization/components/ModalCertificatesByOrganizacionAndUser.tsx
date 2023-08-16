@@ -37,7 +37,7 @@ export const ModalCertificatesByOrganizacionAndUser = ({
         <Space wrap size={5} style={{ marginTop: 4 }}>
           <CertificateOutlineIcon style={{ fontSize: '24px' }} />
           <Typography.Title level={5} style={{ marginTop: 4 }}>
-            Lista de usuarios de la organización
+            Lista de certificados por evento
           </Typography.Title>
         </Space>
       }

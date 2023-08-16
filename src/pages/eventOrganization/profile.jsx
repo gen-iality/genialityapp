@@ -179,7 +179,7 @@ function OrganizationInformation(props) {
             </Form.Item>
             <Form.Item
               name={['social_networks', 'yourSite']}
-              label='Tu sitio web'
+              label='Sitio web'
               initialValue={social_networks.yourSite}>
               <Input placeholder='https:yourSite.com/' />
             </Form.Item>
