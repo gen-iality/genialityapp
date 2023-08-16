@@ -1,3 +1,4 @@
+import { ROLS_USER } from '@/constants/rols.constants';
 import { EyeOutlined, SettingOutlined } from '@ant-design/icons';
 import { Avatar, Card, Space, Typography, Grid, Skeleton } from 'antd';
 import { truncate } from 'lodash-es';
@@ -28,10 +29,9 @@ const OrganizationCard = (props) => {
       Visitar
     </span>
   );
-
   return (
     <Card
-      actions={[actionAdmin, actionview]}
+      actions={props.data?.rolInOrganization?._id === ROLS_USER.ADMINISTRATOR_ID ? [actionAdmin, actionview]:[ actionview]}
       style={{ borderRadius: '10px' }}
       bodyStyle={{ minHeight: '200px', textAlign: 'center' }}>
       <Space size={8} direction='vertical' style={{ textAlign: 'center', width: '100%' }}>

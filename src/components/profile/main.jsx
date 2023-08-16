@@ -13,6 +13,7 @@ import {
   Divider,
   Skeleton,
   Menu,
+  Empty,
 } from 'antd';
 import {
   AppstoreFilled,
@@ -34,8 +35,6 @@ import Loading from './loading';
 import ChangePassword from './components/changePassword';
 import EditInformation from './components/EditInformation';
 import MyPlan from './components/myPlan';
-import { imageUtils } from '../../Utilities/ImageUtils';
-import CashCheckIcon from '@2fd/ant-design-icons/lib/CashCheck';
 import { useHelper } from '@/context/helperContext/hooks/useHelper';
 import { featureBlockingListener } from '@/services/featureBlocking/featureBlocking';
 import eventCard from '../shared/eventCard';
@@ -60,6 +59,7 @@ const MainProfile = (props) => {
   const screens = useBreakpoint();
   const selectedTab = props.match.params.tab;
   const { helperDispatch } = useHelper();
+  const IS_USER_ADMIN = props.cUser?.value?.is_admin 
 
   const showSider = () => {
     if (!collapsed) {
@@ -114,18 +114,12 @@ const MainProfile = (props) => {
   };
 
   const myOrganizations = async () => {
-    if(props.cUser?.value?.is_admin){
       const organizations = await OrganizationApi.mine();
       const organizationsFilter = organizations.filter((orgData) => orgData.id);
       const organizationDataSorted = organizationsFilter.sort((a, b) => moment(b.created_at) - moment(a.created_at));
       setorganizations(organizationDataSorted);
       setorganizationsLimited(organizationDataSorted.slice(0, 5));
       setOrganizationsIsLoading(false);
-    }else{
-      setorganizations([]);
-      setorganizationsLimited([]);
-      setOrganizationsIsLoading(false);
-    }
   };
 
   const fetchItem = async () => {
@@ -145,7 +139,7 @@ const MainProfile = (props) => {
   }, []);
 
   useEffect(() => {
-    if(props.cUser?.value?.is_admin){
+    if(IS_USER_ADMIN){
       switch (selectedTab) {
         case 'organization':
           setActiveTab('2');
@@ -160,13 +154,13 @@ const MainProfile = (props) => {
           setActiveTab('1');
       }
     }else{
-      setActiveTab('4');
+      setActiveTab('2');
     }
-  }, [props.cUser?.value?.is_admin])
+  }, [IS_USER_ADMIN])
   
   useEffect(() => {
     fetchItem();
-  }, [props.cUser?.value?.is_admin])
+  }, [IS_USER_ADMIN])
   
   useEffect(() => {
     if (activeTab !== '2') return;
@@ -280,7 +274,7 @@ const MainProfile = (props) => {
               onTabClick={(key) => {
                 setActiveTab(key);
               }}>
-              {!screens.xs && props.cUser?.value?.is_admin && (
+              {!screens.xs && IS_USER_ADMIN && (
                 <TabPane
                   tab={
                     <Space size={0}>
@@ -453,26 +447,33 @@ const MainProfile = (props) => {
                   </Row>
                 </TabPane>
               )}
-              {props.cUser?.value?.is_admin && <TabPane tab='Organizaciones' key='2'>
+               <TabPane tab='Organizaciones' key='2'>
                 {organizationsIsLoading ? (
                   <Loading />
                 ) : (
                   <Row gutter={[16, 16]}>
+                    {IS_USER_ADMIN && 
                     <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
                       <NewCard entityType='organization' cUser={props.cUser} fetchItem={fetchItem} />
                     </Col>
-                    {organizations.length > 0 && 
+                    }
+                    {organizations.length > 0 ?
                       organizations.map((organization, index) => {
                         return (
                           <Col key={index} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
-                            <OrganizationCard data={organization} />
+                            <OrganizationCard data={organization} IS_USER_ADMIN={IS_USER_ADMIN}/>
                           </Col>
                         );
-                      })}
+                      })
+                      :
+                        <Col xs={12} >
+                          <Empty description="No se encuentra ninguna organizacion"/>
+                        </Col>
+                      }
                   </Row>
                 )}
-              </TabPane>}
-              {props.cUser?.value?.is_admin && <TabPane tab='Eventos creados' key='3'>
+              </TabPane>
+              {IS_USER_ADMIN && <TabPane tab='Eventos creados' key='3'>
                 {eventsIHaveCreatedIsLoading ? (
                   <Loading />
                 ) : (

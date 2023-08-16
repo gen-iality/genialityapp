@@ -6,6 +6,7 @@ import Moment from 'moment';
 import { GetTokenUserFirebase } from './HelperAuth';
 import { DispatchMessageService } from '../context/MessageService';
 import { async } from 'ramda-adjunct';
+import { ROLS_USER } from '@/constants/rols.constants';
 
 const publicInstance = axios.create({
   url: ApiUrl,
@@ -898,6 +899,7 @@ export const OrganizationApi = {
         styles: item.organization?.styles,
         created_at: item.organization?.created_at,
         itemsMenu: item.organization?.itemsMenu,
+        rolInOrganization:{_id: item.rol._id, name: item.rol.name}
       };
     });
     return data;
@@ -1133,7 +1135,7 @@ export const RolAttApi = {
     /** Se discriminan estos dos rol id debido a que no se deben editar ni eliminar y aunque el back tiene dicha validacion en el componente CMS es dificil validar dicha accion ya que es un componente que se reutiliza varias veces y puede alterar la logica de otras funcionalidades, este arreglo es temporal mientras se estructura la logica para roles */
 
     const rollsByEventFiltered = rollsByEvent.filter(
-      (rol) => rol._id !== '5c1a59b2f33bd40bb67f2322' && rol._id !== '60e8a7e74f9fb74ccd00dc22'
+      (rol) => rol._id !== ROLS_USER.ADMINISTRATOR_ID/* '5c1a59b2f33bd40bb67f2322' */ && rol._id !== ROLS_USER.ATTENDEE_ID/* '60e8a7e74f9fb74ccd00dc22' */
     );
     return rollsByEventFiltered;
   },
