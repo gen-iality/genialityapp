@@ -1,4 +1,4 @@
-import { List, ListProps } from 'antd';
+import { List, ListProps, Space } from 'antd';
 import { Certificates } from '@/components/agenda/types';
 import { isMobile } from 'react-device-detect';
 import { CertificateItemList } from './CertificateItemList';
@@ -11,7 +11,7 @@ interface Props extends ListProps<Certificates> {
 const CertificatesByEventsAndUserList = ({ grid, eventsWithEventUser, eventUser, ...listProps }: Props) => {
   return (
     <List
-      /* style={{ backgroundColor: 'red' }} */
+      bordered={false}
       renderItem={(certificate) => (
         <CertificateItemList
           key={'certi' + certificate._id}

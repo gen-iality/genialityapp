@@ -230,6 +230,8 @@ function EventOrganization({ match }: OrganizationProps) {
                           onCloseDrawer={() => setIsModalCertificatesOpen(false)}
                           eventUserId={cUser.value?._id}
                           organizationId={match.params.id}
+                          orgContainerBg={organization?.styles?.containerBgColor}
+                          orgTextColor={organization?.styles?.textMenu}
                         />
                       )}
                       <Row gutter={[16, 16]}>
