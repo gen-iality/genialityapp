@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, Col, Image, List, Modal, Result, Space, Spin, Typography } from 'antd';
+import { Avatar, Button, Card, Col, Image, List, Modal, Result, Space, Spin, Typography, Grid } from 'antd';
 import { CertsApi, RolAttApi } from '@/helpers/request';
 import Moment from 'moment';
 import { DownloadOutlined } from '@ant-design/icons';
@@ -6,7 +6,9 @@ import { CertifiRow, Certificates, UserData } from '@/components/agenda/types';
 import { ArrayToStringCerti, replaceAllTagValues } from '@/components/certificados/utils';
 import { imgBackground } from '@/components/agenda/utils/constants';
 import CertificateOutlineIcon from '@2fd/ant-design-icons/lib/CertificateOutline';
+import { getCorrectColor } from '@/helpers/utils';
 
+const { useBreakpoint } = Grid;
 interface Props {
   certificate: Certificates;
   isMobile: boolean;
@@ -14,6 +16,8 @@ interface Props {
   eventUserValue: any;
 }
 export const CertificateItemList = ({ certificate, isMobile, eventValue, eventUserValue }: Props) => {
+  const screens = useBreakpoint();
+  
   const generateCert = async (dataUser: UserData, cert: Certificates) => {
     const modal = Modal.success({
       title: 'Generando certificado',
@@ -47,27 +51,32 @@ export const CertificateItemList = ({ certificate, isMobile, eventValue, eventUs
   };
   //toDo: corregir tema de mobile
   return (
-    <List.Item 
-      key={certificate.name} 
-      extra={
-        <Button
-          size={isMobile ? 'small' : 'large'}
-          onClick={() => generateCert(eventUserValue, certificate)}
-          style={{
-            border: 'none',
-            boxShadow: 'none',
-            backgroundColor: eventValue.styles.toolbarDefaultBg,
-          }}
-          key={'download' + certificate._id}
-          icon={<DownloadOutlined style={{ color: eventValue.styles.textMenu/* , fontSize: '60px'  */}} />}>
-          {!isMobile && <Typography.Text style={{ color: eventValue.styles.textMenu }}>Descargar</Typography.Text>}
-        </Button>
-      }
-    >
-      <List.Item.Meta
-        avatar={<Avatar shape='square' style={{ fontSize: '70px', width: 60, height: 60 }}><CertificateOutlineIcon /></Avatar>}
-        title={certificate.name}
-      />
-    </List.Item>
+    <Card bodyStyle={{padding: '0px 10px', backgroundColor: eventValue.styles.toolbarDefaultBg + '95', borderRadius: 10}} bordered={false} style={{paddingBottom: 5}}>
+      <List.Item
+        key={certificate.name} 
+        extra={
+          <Button
+            size={screens.xs ? 'small' : 'large'}
+            onClick={() => generateCert(eventUserValue, certificate)}
+            type='default'
+            style={{
+              boxShadow: 'none',
+              backgroundColor: eventValue.styles.toolbarDefaultBg + '90',
+            }}
+            key={'download' + certificate._id}
+            icon={screens.xs && <DownloadOutlined style={{ color: eventValue.styles.textMenu}} />}>
+            {!screens.xs && <Typography.Text style={{ color: eventValue.styles.textMenu }}>Descargar</Typography.Text>}
+          </Button>
+        }
+        style={{paddingBottom: 0, borderRadius: 10}}
+      >
+        <List.Item.Meta
+          avatar={<Avatar shape='square' style={{ width: 60, height: 60, backgroundColor: eventValue.styles.toolbarDefaultBg, border: '1px solid #C4C4C4' }}>
+              <CertificateOutlineIcon style={{fontSize: 40, marginTop: 10, color: eventValue.styles.textMenu}} />
+            </Avatar>}
+          title={<Typography.Text strong style={{ color: eventValue.styles.textMenu }}>{certificate.name}</Typography.Text>}
+        />
+      </List.Item>
+    </Card>
   );
 };
