@@ -28,7 +28,7 @@ const Documents = (props) => {
       }}
       columns={columns}
       key="_id"
-      editPath={`document`}
+      editPath="document"
       pagination={false}
       actions
       downloadFile

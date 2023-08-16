@@ -143,7 +143,7 @@ const renderMenuItems = (controller, props) => {
           >
             {item.items.map((subItem) => (
               <Menu.Item key={subItem.key}>
-                <NavLink to={props.matchUrl + subItem.path}>{subItem.name}</NavLink>
+                <NavLink to={'.' + subItem.path}>{subItem.name}</NavLink>
               </Menu.Item>
             ))}
           </SubMenu>

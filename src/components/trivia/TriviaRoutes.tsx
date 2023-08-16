@@ -19,20 +19,20 @@ const TriviaRoutes: FunctionComponent<ITriviaRoutesProps> = (props) => {
   return (
     <>
       <Routes>
-        <Route path={`/`} element={<TriviaListPage event={event} />} />
-        <Route path={`/edit`} element={<ImprovedTriviaEditPage event={event} />} />
+        <Route path="/" element={<TriviaListPage event={event} />} />
+        <Route path="/edit" element={<ImprovedTriviaEditPage event={event} />} />
         <Route
-          path={`/edit/:surveyId`}
+          path="/edit/:surveyId"
           element={<ImprovedTriviaEditPage event={event} />}
         />
-        <Route path={`/report`} element={<TriviaReportPage event={event} />} />
-        <Route path={`/report/:surveyId`} element={<ReportQuestionPage />} />
-        <Route path={`/ranking/:surveyId`} element={<TriviaRankingPage />} />
+        <Route path="/report" element={<TriviaReportPage event={event} />} />
+        <Route path="/report/:surveyId" element={<ReportQuestionPage />} />
+        <Route path="/ranking/:surveyId" element={<TriviaRankingPage />} />
         <Route
-          path={`/all-answers/:surveyId`}
+          path="/all-answers/:surveyId"
           element={<TriviaAnswerMatrixPage event={event} />}
         />
-        <Route path={`/:surveyId`} element={<TriviaResponsesPage event={event} />} />
+        <Route path="/:surveyId" element={<TriviaResponsesPage event={event} />} />
       </Routes>
     </>
   )

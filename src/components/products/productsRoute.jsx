@@ -11,10 +11,10 @@ import OfertProduts from './oferts'
 const ProductSectionRoutes = (props) => {
   return (
     <Routes>
-      <Route exact path={``} element={<Product {...props} />} />
-      <Route path={`addproduct/:id?`} element={<AddProduct {...props} />} />
-      <Route exact path={`configuration`} element={<Configuration {...props} />} />
-      <Route exact path={`:id/oferts`} element={<OfertProduts {...props} />} />
+      <Route exact path="" element={<Product {...props} />} />
+      <Route path="addproduct/:id?" element={<AddProduct {...props} />} />
+      <Route exact path="configuration" element={<Configuration {...props} />} />
+      <Route exact path=":id/oferts" element={<OfertProduts {...props} />} />
     </Routes>
   )
 }

@@ -52,7 +52,7 @@ const NoMatchPage: FunctionComponent<INoMatchPageProps> = (props) => {
             </Link>
           ) : (
             <>
-              <Link to={`/`}>
+              <Link to="/">
                 <Button type="primary" key="eventData">
                   Ver más cursos
                 </Button>
@@ -63,7 +63,7 @@ const NoMatchPage: FunctionComponent<INoMatchPageProps> = (props) => {
             </>
           )),
         params.id === 'withoutPermissions' && (
-          <Link to={`/`}>
+          <Link to="/">
             <Button type="primary" key="eventData">
               Ver más cursos
             </Button>

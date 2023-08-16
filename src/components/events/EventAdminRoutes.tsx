@@ -207,7 +207,7 @@ class EventAdminRoutes extends Component<
             handleRequestError(error).message
           }`}
           extra={[
-            <Link key={0} to={`/`}>
+            <Link key={0} to="/">
               <Button type="primary" key="eventData">
                 Ver más cursos
               </Button>
@@ -261,7 +261,7 @@ class EventAdminRoutes extends Component<
                 }
               >
                 <Route
-                  path={`main`}
+                  path="main"
                   element={
                     <General
                       eventId={event._id}
@@ -270,13 +270,10 @@ class EventAdminRoutes extends Component<
                     />
                   }
                 />
-                <Route
-                  path={`wall`}
-                  element={<Wall eventId={event._id} event={event} />}
-                />
+                <Route path="wall" element={<Wall eventId={event._id} event={event} />} />
                 {/* En esta ruta se pueden crear y ver los post de la seccion muro que hay en la landing */}
                 <Route
-                  path={`datos`}
+                  path="datos"
                   element={<Datos eventId={event._id} event={event} />}
                 />
                 <Route
@@ -295,26 +292,26 @@ class EventAdminRoutes extends Component<
                 <Route path="empresas/*" element={<EmpresasRoutes event={event} />} />
               </Route>
               <Route path="trivia/*" element={<TriviaRoutes event={event} />} />
-              <Route path={`documents/*`} element={<DocumentsRoutes event={event} />} />
+              <Route path="documents/*" element={<DocumentsRoutes event={event} />} />
               {/* esta ruta carga en blanco */}
-              <Route path={`conference`} element={<ConferenceRoute event={event} />} />
-              <Route path={`menuLanding`} element={<MenuLanding event={event} />} />
+              <Route path="conference" element={<ConferenceRoute event={event} />} />
+              <Route path="menuLanding" element={<MenuLanding event={event} />} />
               <Route
-                path={`reportNetworking`}
+                path="reportNetworking"
                 element={<ReportNetworking event={event} />}
               />
               <Route
-                path={`assistants.old`}
+                path="assistants.old"
                 element={<ListEventUser_Old shownAll eventId={event._id} event={event} />}
               />
-              <Route path={`assistants`} element={<ListEventUserPage event={event} />} />
+              <Route path="assistants" element={<ListEventUserPage event={event} />} />
 
               <Route
-                path={`chatexport`}
+                path="chatexport"
                 element={<ChatExport eventId={event._id} event={event} />}
               />
               <Route
-                path={`checkin.old/:id`}
+                path="checkin.old/:id"
                 element={
                   <ListEventUser_Old
                     eventId={event._id}
@@ -325,79 +322,76 @@ class EventAdminRoutes extends Component<
                 }
               />
               <Route
-                path={`checkin/:activityId`}
+                path="checkin/:activityId"
                 element={<ListEventUserPage event={event} />}
               />
               <Route
-                path={`checkin-actividad`}
+                path="checkin-actividad"
                 element={<ReportList eventId={event._id} event={event} />}
               />
               <Route
-                path={`informativesection`}
+                path="informativesection"
                 element={<Informativesection eventId={event._id} event={event} />}
               />
               {/** AÚN NO TIENEN PERMISOS */}
               <Route
-                path={`invitados/*`}
+                path="invitados/*"
                 element={<InvitedUsers eventId={event._id} event={event} />}
               />
               <Route
-                path={`certificate-email`}
+                path="certificate-email"
                 element={<CertificateEmailEditPage event={event} />}
               />
-              <Route path={`messages/*`} element={<Messages event={event} />} />
+              <Route path="messages/*" element={<Messages event={event} />} />
               <Route
-                path={`confirmacion-registro`}
+                path="confirmacion-registro"
                 element={<ConfirmacionRegistro event={event} />}
               />
               <Route
-                path={`tipo-asistentes/*`}
+                path="tipo-asistentes/*"
                 element={<TipoAsistentes event={event} />}
               />
               <Route
-                path={`dashboard`}
+                path="dashboard"
                 element={<DashboardEvent eventId={event._id} event={event} />}
               />
               <Route
-                path={`badge`}
+                path="badge"
                 element={<BadgeEvent eventId={event._id} event={event} />}
               />
-              <Route path={`orders`} element={<OrdersEvent event={event} />} />
+              <Route path="orders" element={<OrdersEvent event={event} />} />
               <Route
-                path={`certificates/*`}
+                path="certificates/*"
                 element={<CertificateRoutes event={event} />}
               />
-              <Route path={`espacios/*`} element={<Espacios event={event} />} />
-              <Route path={`herramientas/*`} element={<Herramientas event={event} />} />
+              <Route path="espacios/*" element={<Espacios event={event} />} />
+              <Route path="herramientas/*" element={<Herramientas event={event} />} />
+              <Route path="speakers/*" element={<SpeakersRoutes eventID={event._id} />} />
               <Route
-                path={`speakers/*`}
-                element={<SpeakersRoutes eventID={event._id} />}
-              />
-              <Route
-                path={`styles`}
+                path="styles"
                 element={<Styles eventId={event._id} event={event} />}
               />
               {/* Ruta no usada posiblemente es la version 1 de la ruta /menuLanding */}
               <Route
-                path={`notificationsApp`}
+                path="notificationsApp"
                 element={<NotificationsApp event={event} />}
               />
               <Route
-                path={`news/*`}
+                path="news/*"
                 element={<NewsSectionRoutes eventId={event._id} event={event} />}
               />
               <Route
-                path={`product/*`}
+                path="product/*"
                 element={<ProductSectionRoutes eventId={event._id} event={event} />}
               />
-              <Route path={`faqs/*`} element={<FAQS event={event} />} />
+              <Route path="faqs/*" element={<FAQS event={event} />} />
               <Route
-                path={`ticketsEvent/*`}
+                path="ticketsEvent/*"
                 element={<EventsTicket eventId={event._id} event={event} />}
               />
 
               <Route
-                path={`timetracking/*`}
+                path="timetracking/*"
                 element={<TimeTrackingRoutes event={this.state.event} />}
               />
               {/* Este componente se muestra si una ruta no coincide */}

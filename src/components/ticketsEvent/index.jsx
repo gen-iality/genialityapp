@@ -7,8 +7,8 @@ function TicketsRoutes(props) {
 
   return (
     <Routes>
-      <Route path={`/`} element={<Tickets event={event} parentUrl={matchUrl} />} />
-      <Route path={`/ticket`} element={<Ticket event={event} {...props} />} />
+      <Route path="/" element={<Tickets event={event} parentUrl={matchUrl} />} />
+      <Route path="/ticket" element={<Ticket event={event} {...props} />} />
     </Routes>
   )
 }

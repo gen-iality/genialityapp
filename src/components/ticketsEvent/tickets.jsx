@@ -55,7 +55,7 @@ const Tickets = (props) => {
         }}
         columns={columns}
         key="_id"
-        editPath={`../ticket`}
+        editPath="../ticket"
         pagination={false}
         actions
         search

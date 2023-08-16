@@ -118,7 +118,7 @@ const DirectLoginPage: FunctionComponent = () => {
       >
         <Result
           icon={<LoadingOutlined />}
-          status={'info'}
+          status="info"
           title="Procesando..."
           subTitle={state.text}
         />

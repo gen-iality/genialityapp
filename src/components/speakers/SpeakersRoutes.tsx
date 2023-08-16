@@ -12,8 +12,8 @@ const SpeakersRoutes: FunctionComponent<ISpeakersRoutesProps> = (props) => {
 
   return (
     <Routes>
-      <Route path={`/`} element={<SpeakersListPage eventID={eventID} />} />
-      <Route path={`/speaker`} element={<SpeakerEditPage eventID={eventID} />} />
+      <Route path="/" element={<SpeakersListPage eventID={eventID} />} />
+      <Route path="/speaker" element={<SpeakerEditPage eventID={eventID} />} />
     </Routes>
   )
 }

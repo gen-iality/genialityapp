@@ -224,7 +224,7 @@ const Agenda = (props) => {
       }}
       columns={columns}
       // key="_id"
-      editPath={`../activity`}
+      editPath="../activity"
       pagination={false}
       actions
       search

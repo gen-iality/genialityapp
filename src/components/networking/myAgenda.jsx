@@ -348,7 +348,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
             </Col>
           </Row>
         ) : (
-          <Row>{`Cita cancelada.`}</Row>
+          <Row>Cita cancelada.</Row>
         )}
       </Card>
     </Row>

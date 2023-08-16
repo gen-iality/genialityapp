@@ -11,7 +11,7 @@ const TimeTrackingRoutes: FunctionComponent<ITimeTrackingRoutesProps> = (props) 
   const { event } = props
   return (
     <Routes>
-      <Route path={`/`} element={<TimeTracking event={event} />} />
+      <Route path="/" element={<TimeTracking event={event} />} />
     </Routes>
   )
 }

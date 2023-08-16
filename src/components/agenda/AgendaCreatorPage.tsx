@@ -110,7 +110,7 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
         save
         form
         saveNameIcon
-        customBack={'..'}
+        customBack=".."
         title="Crea actividad"
         saveName="Crear"
       />

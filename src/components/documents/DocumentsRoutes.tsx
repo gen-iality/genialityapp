@@ -13,8 +13,8 @@ const DocumentsRoutes: FunctionComponent<IDocumentsRoutesProps> = (props) => {
   return (
     <Fragment>
       <Routes>
-        <Route path={`/`} element={<Documents event={event} />} />
-        <Route path={`/document`} element={<Document event={event} />} />
+        <Route path="/" element={<Documents event={event} />} />
+        <Route path="/document" element={<Document event={event} />} />
       </Routes>
     </Fragment>
   )

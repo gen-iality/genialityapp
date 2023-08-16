@@ -51,7 +51,7 @@ const CertificateListPage: FunctionComponent<any> = (props) => {
       }}
       columns={columns}
       key="_id"
-      editPath={`/certificate`}
+      editPath="/certificate"
       pagination={false}
       actions
       search

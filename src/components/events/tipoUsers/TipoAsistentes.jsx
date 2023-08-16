@@ -32,7 +32,7 @@ const TipoAsistentes = (props) => {
           state: { new: true },
         }}
         columns={columns}
-        editPath={`tipoAsistente`}
+        editPath="tipoAsistente"
         pagination={false}
         actions
       />

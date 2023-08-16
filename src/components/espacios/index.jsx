@@ -9,8 +9,8 @@ function EspacioRoutes(props) {
   return (
     <Fragment>
       <Routes>
-        <Route path={`/`} element={<Espacios event={event} />} />
-        <Route path={`/espacio`} element={<Espacio event={event} {...props} />} />
+        <Route path="/" element={<Espacios event={event} />} />
+        <Route path="/espacio" element={<Espacio event={event} {...props} />} />
       </Routes>
     </Fragment>
   )

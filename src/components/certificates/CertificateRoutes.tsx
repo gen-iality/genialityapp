@@ -8,9 +8,9 @@ function CertificateRoutes(props: any) {
   return (
     <Fragment>
       <Routes>
-        <Route path={`/`} element={<CertificateListPage event={event} />} />
+        <Route path="/" element={<CertificateListPage event={event} />} />
         <Route
-          path={`/certificate`}
+          path="/certificate"
           element={<CertificateEditorPage event={event} {...props} />}
         />
       </Routes>

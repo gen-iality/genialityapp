@@ -8,8 +8,8 @@ function HerramientaRoutes(props) {
   return (
     <>
       <Routes>
-        <Route path={`/`} element={<Herramientas event={event} />} />
-        <Route path={`/herramienta`} element={<Herramienta event={event} {...props} />} />
+        <Route path="/" element={<Herramientas event={event} />} />
+        <Route path="/herramienta" element={<Herramienta event={event} {...props} />} />
       </Routes>
     </>
   )

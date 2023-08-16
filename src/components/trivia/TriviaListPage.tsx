@@ -68,26 +68,26 @@ const TriviaListPage: FunctionComponent<ITriviaListPageProps> = (props) => {
         <CMS
           API={SurveysApi}
           eventId={props.event._id}
-          title={'Evaluaciones'}
+          title="Evaluaciones"
           back
-          titleTooltip={'Agregue o edite las Agendas que se muestran en la aplicación'}
+          titleTooltip="Agregue o edite las Agendas que se muestran en la aplicación"
           addUrl={{
             pathname: `edit`,
             state: { new: true },
           }}
           columns={columns}
           key="_id"
-          editPath={`edit`}
+          editPath="edit"
           editByParam
           pagination={false}
           actions
           search
           setColumnsData={setColumnsData}
-          extraPath={`report`}
+          extraPath="report"
           extraPathIcon={<UnorderedListOutlined />}
           extraPathTitle="Detalle"
           extraPathId
-          extraPathStateName={`ranking`}
+          extraPathStateName="ranking"
           widthAction={160}
           deleteCallback={(surveyId: string) => deleteCallback(surveyId)}
         />

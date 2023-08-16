@@ -27,7 +27,7 @@ function ListaInvitados(props) {
   return (
     <Routes>
       <Route
-        path={`/invitados`}
+        path="/invitados"
         element={
           <InvitedUsers
             event={event}
@@ -38,7 +38,7 @@ function ListaInvitados(props) {
       />
       <Route
         exact
-        path={`/invitados/createmessage`}
+        path="/invitados/createmessage"
         element={
           <CreateMessage event={event} eventID={eventId} selection={guestSelected} />
         }
@@ -46,7 +46,7 @@ function ListaInvitados(props) {
 
       <Route
         exact
-        path={`/invitados/importar-excel`}
+        path="/invitados/importar-excel"
         element={
           <ImportUsers
             extraFields={userProperties}

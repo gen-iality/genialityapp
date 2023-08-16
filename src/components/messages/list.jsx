@@ -80,7 +80,7 @@ function InvitationsList(props) {
         columns={columns}
         actions
         noRemove
-        extraPath={`/detail`}
+        extraPath="/detail"
         extraPathIcon={<BarsOutlined />}
         extraPathTitle="Detalle"
         extraPathUpdate={<ReloadOutlined />}

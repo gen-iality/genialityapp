@@ -282,7 +282,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
         form
         saveNameIcon
         remove={onRemove}
-        customBack={'..'}
+        customBack=".."
         title={cAgenda.activityName ? `Actividad - ${cAgenda.activityName}` : 'Actividad'}
         saveName={location.state.edit || cAgenda.activityEdit || isEditing ? '' : 'Crear'}
         edit={location.state.edit || cAgenda.activityEdit || isEditing}

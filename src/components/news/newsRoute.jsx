@@ -10,8 +10,8 @@ import NewCE from './newCE'
 const NewsSectionRoutes = (props) => {
   return (
     <Routes>
-      <Route path={`/`} element={<News {...props} />} />
-      <Route path={`/new`} element={<NewCE {...props} />} />
+      <Route path="/" element={<News {...props} />} />
+      <Route path="/new" element={<NewCE {...props} />} />
     </Routes>
   )
 }

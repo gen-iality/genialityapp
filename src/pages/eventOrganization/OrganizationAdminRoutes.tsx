@@ -114,43 +114,43 @@ const OrganizationAdminRoutes: FunctionComponent = () => {
         >
           <Menu.Item key="1" icon={<BarsOutlined />}>
             Información
-            <NavLink to={`information`} />
+            <NavLink to="information" />
           </Menu.Item>
           <Menu.Item key="2" icon={<ScheduleOutlined />}>
             Cursos
-            <NavLink to={`events`} />
+            <NavLink to="events" />
           </Menu.Item>
           <Menu.Item key="3" icon={<SketchOutlined />}>
             Apariencia
-            <NavLink to={`appearance`} />
+            <NavLink to="appearance" />
           </Menu.Item>
           <Menu.Item key="4" icon={<TeamOutlined />}>
             Miembros
-            <NavLink to={`members`} />
+            <NavLink to="members" />
           </Menu.Item>
           {/* <Menu.Item key="4.1" icon={<DeleteOutlined />}>
                 Organization Properties
-                <NavLink to={`organization-properties`} />
+                <NavLink to="organization-properties" />
               </Menu.Item> */}
           <Menu.Item key="5" icon={<TeamOutlined />}>
             Cargos
-            <NavLink to={`positions`} />
+            <NavLink to="positions" />
           </Menu.Item>
           <Menu.Item key="6" icon={<TeamOutlined />}>
             Inscritos
-            <NavLink to={`registered`} />
+            <NavLink to="registered" />
           </Menu.Item>
           <Menu.Item key="7" icon={<UserSwitchOutlined />}>
             <small>Configuración de Miembros</small>
-            <NavLink to={`membersettings`} />
+            <NavLink to="membersettings" />
           </Menu.Item>
           <Menu.Item key="8" icon={<ProjectOutlined />}>
             <small>Configuración de Plantillas</small>
-            <NavLink to={`templatesettings`} />
+            <NavLink to="templatesettings" />
           </Menu.Item>
           <Menu.Item key="9" icon={<MenuOutlined />}>
-            {'Menú Items'}
-            <NavLink to={`menuItems`} />
+            Menú Items
+            <NavLink to="menuItems" />
           </Menu.Item>
         </Menu>
       </Layout.Sider>

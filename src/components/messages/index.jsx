@@ -8,12 +8,12 @@ function Messages(props) {
     <Fragment>
       <Routes>
         <Route
-          path={`/`}
+          path="/"
           element={<InvitationsList eventId={props.event._id} />}
           {...props}
         />
         <Route
-          path={`/detail/:id`}
+          path="/detail/:id"
           element={<InvitationDetail event={props.event} {...props} />}
         />
       </Routes>
