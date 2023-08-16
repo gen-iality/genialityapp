@@ -154,8 +154,8 @@ const ContentContainer = () => {
               }
             />
             <Route path="/blockedEvent/:event_id" element={<BlockedEvent />} />
-            <Route path="/event/:event_name" element={<LandingRoutes />} />
-            <Route path="/landing/:event_id'" element={<LandingRoutes />} />
+            <Route path="/event/:event_name/*" element={<LandingRoutes />} />
+            <Route path="/landing/:event_id/*" element={<LandingRoutes />} />
           </Route>
 
           {/** The rest of the routes */}

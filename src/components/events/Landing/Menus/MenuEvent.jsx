@@ -95,7 +95,7 @@ const MenuEvent = ({ isMobile }) => {
                       <Link
                         className="menuEvent_section-text"
                         style={{ color: event.styles.textMenu }}
-                        to={`${url}/${event.itemsMenu[key].section}`}
+                        to={`./${event.itemsMenu[key].section}`}
                       >
                         <span
                           style={{
@@ -151,7 +151,7 @@ const MenuEvent = ({ isMobile }) => {
                     <Link
                       className="menuEvent_section-text"
                       style={{ color: event.styles.textMenu }}
-                      to={`${url}/${event.itemsMenu[key].section}`}
+                      to={`./${event.itemsMenu[key].section}`}
                     >
                       {` ${event.itemsMenu[key].name}`}
                     </Link>
