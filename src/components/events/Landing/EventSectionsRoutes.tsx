@@ -1,13 +1,5 @@
-import { FunctionComponent, useEffect, useMemo, useState } from 'react'
-import {
-  Navigate,
-  Outlet,
-  redirect,
-  Route,
-  Routes,
-  useLocation,
-  useResolvedPath,
-} from 'react-router-dom'
+import { FunctionComponent, useEffect } from 'react'
+import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
 import { setSpaceNetworking } from '../../../redux/networking/actions'
@@ -87,7 +79,6 @@ interface IEventSectionRoutesProps extends MapStateToProps, MapDispatchToProps {
 const EventSectionRoutes: FunctionComponent<
   WithEviusContextProps<IEventSectionRoutesProps>
 > = (props) => {
-  const { pathname: path } = useLocation()
   const { event_id, event_name } = useParams<{ event_id?: string; event_name?: string }>()
   const { GetPermissionsEvent } = useHelper()
   const cEventUser = useUserEvent()
@@ -273,30 +264,24 @@ const EventSectionRoutes: FunctionComponent<
           }
         >
           <Route
-            path={`${path}/certificate`}
+            path={`/certificate`}
             element={<CertificateLandingPage key="certificate" />}
           />
-          <Route path={`${path}/documents`} element={<DocumentsForm key="documents" />} />
+          <Route path={`/documents`} element={<DocumentsForm key="documents" />} />
+          <Route path={`/interviews`} element={<MyAgendaIndepend key="interviews" />} />
+          <Route path={`/networking`} element={<NetworkingForm key="networking" />} />
           <Route
-            path={`${path}/interviews`}
-            element={<MyAgendaIndepend key="interviews" />}
-          />
-          <Route
-            path={`${path}/networking`}
-            element={<NetworkingForm key="networking" />}
-          />
-          <Route
-            path={`${path}/informativeSection1`}
+            path={`/informativeSection1`}
             element={<InformativeSection2 key="informativeSection1" />}
           />
           <Route
-            path={`${path}/informativeSection`}
+            path={`/informativeSection`}
             element={<InformativeSection key="informativeSection" />}
           />
-          <Route path={`${path}/my_section`} element={<MySection key="my_section" />} />
+          <Route path={`/my_section`} element={<MySection key="my_section" />} />
           {/* TODO: socialzonetabs is no used */}
           <Route
-            path={`${path}/activity/:activity_id`}
+            path={`/activity/:activity_id`}
             element={
               <ActivityDisplayerPage
                 socialzonetabs={{
@@ -306,21 +291,21 @@ const EventSectionRoutes: FunctionComponent<
               />
             }
           />
-          <Route path={`${path}/speakers`} element={<SpeakersForm key="speakers" />} />
-          <Route path={`${path}/survey`} element={<SurveyForm key="survey" />} />
-          <Route path={`${path}/partners`} element={<Partners key="partners" />} />
-          <Route path={`${path}/faqs`} element={<FaqsForm key="faqs" />} />
-          <Route path={`${path}/evento`} element={<EventHome key="evento" />} />
-          <Route path={`${path}/wall`} element={<WallForm key="wall" />} />
-          <Route path={`${path}/videos`} element={<Videos key="videos" />} />
-          <Route path={`${path}/ferias`} element={<Ferias key="ferias" />} />
-          <Route path={`${path}/noticias`} element={<Noticias key="noticias" />} />
-          {/* <Route path={`${path}/certs`}>
+          <Route path={`/speakers`} element={<SpeakersForm key="speakers" />} />
+          <Route path={`/survey`} element={<SurveyForm key="survey" />} />
+          <Route path={`/partners`} element={<Partners key="partners" />} />
+          <Route path={`/faqs`} element={<FaqsForm key="faqs" />} />
+          <Route path={`/evento`} element={<EventHome key="evento" />} />
+          <Route path={`/wall`} element={<WallForm key="wall" />} />
+          <Route path={`/videos`} element={<Videos key="videos" />} />
+          <Route path={`/ferias`} element={<Ferias key="ferias" />} />
+          <Route path={`/noticias`} element={<Noticias key="noticias" />} />
+          {/* <Route path={`/certs`}>
             <CertificadoLanding key="certs" />
         </Route> */}
-          <Route path={`${path}/producto`} element={<Productos key="producto" />} />
+          <Route path={`/producto`} element={<Productos key="producto" />} />
           <Route
-            path={`${path}/agenda`}
+            path={`/agenda`}
             element={
               <AgendaLandingSection
                 key="agenda"
@@ -332,8 +317,8 @@ const EventSectionRoutes: FunctionComponent<
           />
         </Route>
 
-        <Route path={`${path}/success/:type?`} element={<MessageRegister />} />
-        <Route path={`${path}/responsePayu`} element={<ResponsePayu />} />
+        <Route path={`/success/:type?`} element={<MessageRegister />} />
+        <Route path={`/responsePayu`} element={<ResponsePayu />} />
       </Routes>
     </>
   )
