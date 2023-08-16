@@ -1,4 +1,4 @@
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { IntlProvider } from 'react-intl'
 import { QueryClient, QueryClientProvider } from 'react-query'
@@ -22,7 +22,9 @@ const messages =
 
 /* A helper function that will send errors to Sentry.io. */
 sentry()
-ReactDOM.render(
+
+const root = createRoot(document.getElementById('root')!)
+root.render(
   <IntlProvider locale={languageWithoutRegionCode} messages={messages} defaultLocale="es">
     <QueryClientProvider client={queryClient}>
       <CurrentUserProvider>
@@ -32,7 +34,6 @@ ReactDOM.render(
       </CurrentUserProvider>
     </QueryClientProvider>
   </IntlProvider>,
-  document.getElementById('root'),
 )
 
 unregisterServiceWorker()
