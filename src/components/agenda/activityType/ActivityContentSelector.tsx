@@ -16,7 +16,6 @@ export interface SubActivityContentSelectorProps {
   eventId: string
   activityName: string
   shouldLoad: boolean
-  matchUrl: string
 }
 
 function ActivityContentSelector(props: SubActivityContentSelectorProps) {
@@ -89,7 +88,7 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
         </Button>
        
         */}
-        <ActivityContentManager activityName={activityName} matchUrl={props.matchUrl} />
+        <ActivityContentManager activityName={activityName} />
       </>
     )
   }

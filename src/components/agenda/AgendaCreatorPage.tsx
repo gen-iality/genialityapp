@@ -30,7 +30,6 @@ const formLayout = {
 
 interface IAgendaCreatorPageProps {
   event: any
-  parentUrl: string
 }
 
 const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) => {
@@ -97,7 +96,7 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
     }
 
     console.debug('redirecting to /activity')
-    navigate(`${props.parentUrl}/activity`, { edit: currentAgenda._id })
+    navigate(`../activity`, { state: { edit: currentAgenda._id } })
   }, [shouldRedirect, currentAgenda, cAgenda?.activityEdit])
 
   useEffect(() => {
@@ -111,7 +110,7 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
         save
         form
         saveNameIcon
-        customBack={props.parentUrl}
+        customBack={'..'}
         title="Crea actividad"
         saveName="Crear"
       />

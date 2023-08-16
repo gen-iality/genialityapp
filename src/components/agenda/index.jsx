@@ -1,4 +1,3 @@
-import { Fragment } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Agenda from './agenda'
 import AgendaTypeCat from './typecat'
@@ -8,61 +7,31 @@ import AgendaEditPage from './AgendaEditPage'
 import AgendaCreatorPage from './AgendaCreatorPage'
 
 function AgendaRoutes(props) {
-  const { event, matchUrl } = props
+  const { event } = props
 
   return (
-    <Fragment>
-      <Routes>
-        <Route
-          exact
-          path={`${matchUrl}/`}
-          render={() => <Agenda event={event} parentUrl={matchUrl} />}
-        />
-        <Route
-          exact
-          path={`${matchUrl}/activity`}
-          render={(routeProps) => (
-            <ActivityTypeProvider>
-              <AgendaEditPage
-                event={event}
-                parentUrl={matchUrl}
-                matchUrl={routeProps.match.url}
-              />
-            </ActivityTypeProvider>
-          )}
-        />
-        <Route
-          exact
-          path={`${matchUrl}/create-activity`}
-          render={() => (
-            <ActivityTypeProvider>
-              <AgendaCreatorPage event={event} parentUrl={matchUrl} />
-            </ActivityTypeProvider>
-          )}
-        />
-        <Route
-          exact
-          path={`${matchUrl}/tipos`}
-          render={(routeProps) => (
-            <AgendaTypeCat event={event} matchUrl={routeProps.match.url} />
-          )}
-        />
-        <Route
-          exact
-          path={`${matchUrl}/categorias`}
-          render={(routeProps) => (
-            <AgendaTypeCat event={event} matchUrl={routeProps.match.url} />
-          )}
-        />
-        <Route
-          exact
-          path={`${matchUrl}/:subject`}
-          render={(routeProps) => (
-            <AgendaTypeCatCE event={event} matchUrl={routeProps.match.url} />
-          )}
-        />
-      </Routes>
-    </Fragment>
+    <Routes>
+      <Route path="" element={<Agenda event={event} />} />
+      <Route
+        path="activity"
+        element={
+          <ActivityTypeProvider>
+            <AgendaEditPage event={event} />
+          </ActivityTypeProvider>
+        }
+      />
+      <Route
+        path="create-activity"
+        element={
+          <ActivityTypeProvider>
+            <AgendaCreatorPage event={event} />
+          </ActivityTypeProvider>
+        }
+      />
+      <Route path="tipos" element={<AgendaTypeCat event={event} />} />
+      <Route path="categorias" element={<AgendaTypeCat event={event} />} />
+      <Route path=":subject" element={<AgendaTypeCatCE event={event} />} />
+    </Routes>
   )
 }
 

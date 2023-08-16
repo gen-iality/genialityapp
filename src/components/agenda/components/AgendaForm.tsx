@@ -65,7 +65,6 @@ export interface FormValues {
 
 interface IAgendaFormProps {
   form: FormInstance<FormValues>
-  matchUrl?: string
   activityId?: string
   event?: any
   agenda?: AgendaType | null
@@ -283,11 +282,9 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
               </Form.Item>
             </Col>
             <Col span={1}>
-              {props.matchUrl && (
-                <Link to={props.matchUrl.replace('agenda', 'herramientas')}>
-                  <Button icon={<SettingOutlined />} />
-                </Link>
-              )}
+              <Link to={'..'}>
+                <Button icon={<SettingOutlined />} />
+              </Link>
             </Col>
           </Row>
         </Form.Item>
@@ -307,10 +304,7 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
             </Col>
             <Col span={1}>
               <Button
-                onClick={() =>
-                  props.matchUrl &&
-                  goSection(props.matchUrl.replace('agenda', 'speakers'), { child: true })
-                }
+                onClick={() => goSection('..', { child: true })}
                 icon={<SettingOutlined />}
                 title="Configurar en otra página"
               />
@@ -323,7 +317,6 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
             >
               <SpeakerEditPage
                 eventID={props.event._id}
-                parentUrl={props.matchUrl}
                 onCreated={() => {
                   const loading = async () => {
                     const incommingHosts = await SpeakersApi.byEvent(props.event._id)
@@ -351,11 +344,11 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
               </Form.Item>
             </Col>
             <Col span={1}>
-              {props.matchUrl && (
-                <Link to={props.matchUrl.replace('agenda', 'espacios')}>
+              {
+                <Link to={'..'}>
                   <Button icon={<SettingOutlined />} />
                 </Link>
-              )}
+              }
             </Col>
           </Row>
         </Form.Item>
@@ -369,7 +362,7 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
             </Col>
             <Col span={1}>
               <Button
-                onClick={() => goSection(`${props.matchUrl}/categorias`)}
+                onClick={() => goSection(`../categorias`)}
                 icon={<SettingOutlined />}
               />
             </Col>

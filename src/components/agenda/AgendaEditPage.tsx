@@ -36,8 +36,6 @@ interface LocationStateType {
 
 interface IAgendaEditPageProps {
   event: any
-  matchUrl: string
-  parentUrl: string
 }
 
 /**
@@ -137,8 +135,8 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
         setIsEditing(true)
         // cAgenda.setIsPublished(true)
       } else if (changePathWithoutSaving) {
-        console.log('go to', props.parentUrl)
-        navigate(`${props.parentUrl}`)
+        console.log('go to', '..')
+        navigate(`..`)
       }
 
       StateMessage.show(null, 'success', 'Información guardada correctamente!')
@@ -217,7 +215,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
           deleteActivity(props.event._id, currentAgenda._id!, currentAgenda.name).then(
             () => {
               setShouldRedirect(true)
-              navigate(`${props.parentUrl}`)
+              navigate(`..`)
             },
           )
         },
@@ -238,7 +236,10 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
     cAgenda.saveConfig()
   }, [cAgenda.isPublished])
 
-  if (!location.state || shouldRedirect) return redirect(props.parentUrl)
+  if (!location.state || shouldRedirect) {
+    redirect('..')
+    return
+  }
 
   return (
     <Form
@@ -281,7 +282,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
         form
         saveNameIcon
         remove={onRemove}
-        customBack={props.parentUrl}
+        customBack={'..'}
         title={cAgenda.activityName ? `Actividad - ${cAgenda.activityName}` : 'Actividad'}
         saveName={location.state.edit || cAgenda.activityEdit || isEditing ? '' : 'Crear'}
         edit={location.state.edit || cAgenda.activityEdit || isEditing}
@@ -311,7 +312,6 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
               activityId={cAgenda.activityEdit}
               event={props.event}
               agenda={currentAgenda}
-              matchUrl={props.parentUrl}
             />
           </Tabs.TabPane>
           {isEditing && (
@@ -325,7 +325,6 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
                         activityName={currentAgenda.name}
                         eventId={props.event._id}
                         shouldLoad={currentTab === '2'}
-                        matchUrl={props.parentUrl}
                       />
                     )}
                     <BackTop />

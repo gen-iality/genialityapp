@@ -44,12 +44,12 @@ const AgendaTypeCat = (props) => {
       //back
       titleTooltip="Agregue o edite las Preguntas frecuentes que se muestran en la aplicación"
       addUrl={{
-        pathname: `${props.matchUrl}/add${subject}`,
+        pathname: `add${subject}`,
         state: { new: true },
       }}
       columns={columns}
       key="_id"
-      editPath={`${props.matchUrl}/edit${subject}`}
+      editPath={`/edit${subject}`}
       pagination={false}
       actions
     />
