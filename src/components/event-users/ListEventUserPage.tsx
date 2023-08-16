@@ -687,7 +687,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       .finally(() => setIsLoading(false))
 
     return () => {
-      if (typeof unsubscribe !== 'function') {
+      if (typeof unsubscribe === 'function') {
         unsubscribe()
       }
     }
