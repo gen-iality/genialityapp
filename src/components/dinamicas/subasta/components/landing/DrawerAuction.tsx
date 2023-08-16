@@ -253,7 +253,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                   <Input
                     size='large'
                     type='number'
-                    disabled={auction.amount !== null && auction.amount !== undefined}
+                    //disabled={auction.amount !== null && auction.amount !== undefined}
                     prefix='$'
                     suffix={auction.currency}
                   />
