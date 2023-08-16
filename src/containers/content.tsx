@@ -3,11 +3,8 @@ import { Grid, Spin, Layout } from 'antd'
 import {
   BrowserRouter as Router,
   Route,
-  redirect,
   Routes,
-  RouteProps,
   Outlet,
-  useMatch,
   useParams,
   Navigate,
 } from 'react-router-dom'
@@ -188,7 +185,11 @@ const ContentContainer = () => {
           {screens.xs ? (
             <Route
               path="/myprofile"
-              element={<Navigate to="/myprofile/organization" />}
+              element={
+                <>
+                  <Navigate to="/myprofile/organization" />
+                </>
+              }
             />
           ) : (
             <Route

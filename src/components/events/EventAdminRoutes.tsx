@@ -251,7 +251,14 @@ class EventAdminRoutes extends Component<
           </Row>
           <section className="section event-wrapper">
             <Routes>
-              <Route path="/" element={<Navigate to="main" />} />
+              <Route
+                path="/"
+                element={
+                  <>
+                    <Navigate to="main" />
+                  </>
+                }
+              />
 
               <Route
                 element={
