@@ -103,7 +103,7 @@ const GetAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
       let labelPosition = field.labelPosition;
       let target = name;
 
-      let value = attendeeProperties.email || attendeeProperties.names ? attendeeProperties[target] : null;
+      let value = attendeeProperties.email || attendeeProperties.names ? attendeeProperties[target] ?? attendee[target]: null;
 
       //esogemos el tipo de validación para email
       rule = type === 'email' ? { ...rule, type: 'email' } : rule;

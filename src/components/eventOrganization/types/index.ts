@@ -42,8 +42,18 @@ export interface Organization {
     styles:         Styles;
     created_at:     string;
     itemsMenu?:     any[] | ItemsMenuClass;
+    show_my_certificates?:boolean
+    social_networks?:SocialNetworksOrg
 }
 
+export interface SocialNetworksOrg {
+    facebook:string;
+    twitter:string;
+    instagram:string;
+    linkedln:string;
+    youtube:string;
+    yourSite:string;
+}
 export interface ItemsMenuClass {
     evento: Agenda;
     agenda: Agenda;

@@ -126,7 +126,7 @@ class documentsDetail extends Component {
               )}
             </Col>
           </TabPane>
-          {this.props.cEventUser?.value && (
+          {this.props.cEventUser?.value && this.props.cEventUser?.value?.properties?.documents_user !== undefined && (
             <TabPane
               tab={
                 <Typography.Text
