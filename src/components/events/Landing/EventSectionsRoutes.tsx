@@ -254,9 +254,16 @@ const EventSectionRoutes: FunctionComponent<
       )}
 
       <Routes>
-        <Route path={`${path}/`}>
-          {props.cEvent.value?.itemsMenu && <Navigate to={validateTypeUrl()} />}
-        </Route>
+        <Route
+          path={`/`}
+          element={
+            props.cEvent.value?.itemsMenu && (
+              <>
+                <Navigate to={validateTypeUrl()} />
+              </>
+            )
+          }
+        />
 
         <Route
           element={
