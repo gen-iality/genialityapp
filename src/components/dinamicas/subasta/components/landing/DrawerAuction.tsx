@@ -62,11 +62,11 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
     const timeAwait = setTimeout(() => {
       setcanOffer(true);
       clearTimeout(timeAwait);
-    }, 3000);
+    }, auction.timerBids * 1000);
 
     const isValid = validOffer(data.offerValue);
 
-    if (isValid && auction?.currentProduct?._id && data.offerValue) {
+    if (auction.playing && isValid && auction?.currentProduct?._id && data.offerValue) {
       saveOffer(
         eventId,
         {
@@ -246,14 +246,14 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                 <Form.Item
                   name={'offerValue'}
                   label='Valor de la puja'
-                  initialValue={auction.currentProduct?.price || 0}
+                  initialValue={(auction.currentProduct?.price ?? 0) + (auction.amount ?? 0)}
                   rules={[
                     { required: true, message: `Se requiere un valor mínimo de  ${auction.currentProduct?.price}` },
                   ]}>
                   <Input
-                    defaultValue={auction.currentProduct?.price}
                     size='large'
                     type='number'
+                    disabled={auction.amount !== null && auction.amount !== undefined}
                     prefix='$'
                     suffix={auction.currency}
                   />

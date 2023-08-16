@@ -4,8 +4,6 @@ import { orderByOfferdAndDate } from '../utils/utils';
 
 export const saveAuctioFirebase = async (eventId: string, createAuction: Auction) => {
   try {
-    console.log(createAuction);
-    
     await firestore
       .collection(`auctionByEventId`)
       .doc(eventId)

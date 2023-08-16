@@ -62,8 +62,6 @@ export default function AuctionProvider(props: Props) {
     if (!auctionId) return;
     setLoadingConfig(true);
     const response = await service.updateAuction(eventId, auctionId, params);
-    console.log('pa firebase', response);
-
     if (response && auction)
       await saveAuctioFirebase(eventId, {
         ...response,
