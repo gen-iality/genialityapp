@@ -1,16 +1,14 @@
-import { Drawer, Input, PageHeader, Typography } from 'antd';
+import { Drawer, Grid, Input, PageHeader, Typography } from 'antd';
 import { FileProtectOutlined } from '@ant-design/icons';
-import { UseEventContext } from '@/context/eventContext';
 import { DrawerRulesProps } from '../../interfaces/auction.interface';
-
+const { useBreakpoint } = Grid;
 const { Title } = Typography;
 
-const DrawerRules = ({ showDrawerRules, setshowDrawerRules, }: DrawerRulesProps) => {
-  let cEvent = UseEventContext();
-  
+const DrawerRules = ({ showDrawerRules, setshowDrawerRules, cEvent }: DrawerRulesProps) => {
+  const screens = useBreakpoint();
   return (
     <Drawer
-      width={'30vw'}
+    width={screens.xs ? '100vw' : '30vw'}
       headerStyle={{ border: 'none' }}
       bodyStyle={{ paddingRight: '10px' }}
       title={

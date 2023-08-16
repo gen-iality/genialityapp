@@ -28,16 +28,15 @@ import { saveOffer } from '../../services';
 import useProducts from '../../hooks/useProducts';
 import { TabsDrawerAuction } from '../../utils/utils';
 import DrawerRules from './DrawerRules';
-import DrawerChat from '@/components/games/whereIs/auxiliarDrawers/DrawerChat';
+import DrawerChat from '@/components/games/bingo/components/auxiliarDrawers/DrawerChat';
 import ButtonsContainer from './ButtonsContainer';
-import { UseUserEvent } from '@/context/eventUserContext';
 import { getCorrectColor } from '@/helpers/utils';
 
 const { useBreakpoint } = Grid;
 
-export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, eventId }: DrawerAuctionProps) {
+export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, eventId, cEventUser , cEvent}: DrawerAuctionProps) {
   const screens = useBreakpoint();
-  let cEventUser = UseUserEvent();
+
 
   const { products, getProducts, loading: ProductsLoading } = useProducts(eventId);
 
@@ -63,11 +62,11 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
     const timeAwait = setTimeout(() => {
       setcanOffer(true);
       clearTimeout(timeAwait);
-    }, 3000);
+    }, auction.timerBids * 1000);
 
     const isValid = validOffer(data.offerValue);
 
-    if (isValid && auction?.currentProduct?._id && data.offerValue) {
+    if (auction.playing && isValid && auction?.currentProduct?._id && data.offerValue) {
       saveOffer(
         eventId,
         {
@@ -247,14 +246,14 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                 <Form.Item
                   name={'offerValue'}
                   label='Valor de la puja'
-                  initialValue={auction.currentProduct?.price || 0}
+                  initialValue={(auction.currentProduct?.price ?? 0) + (auction.amount ?? 0)}
                   rules={[
                     { required: true, message: `Se requiere un valor mínimo de  ${auction.currentProduct?.price}` },
                   ]}>
                   <Input
-                    defaultValue={auction.currentProduct?.price}
                     size='large'
                     type='number'
+                    //disabled={auction.amount !== null && auction.amount !== undefined}
                     prefix='$'
                     suffix={auction.currency}
                   />
@@ -284,7 +283,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
             closedrawer={setOpenOrClose}
           />
 
-          <DrawerRules showDrawerRules={showDrawerRules} setshowDrawerRules={setshowDrawerRules}  auctionRules={{rules: ''}}/>
+          <DrawerRules cEvent={cEvent} showDrawerRules={showDrawerRules} setshowDrawerRules={setshowDrawerRules}  auctionRules={{rules: ''}}/>
           <DrawerChat showDrawerChat={showDrawerChat} setshowDrawerChat={setshowDrawerChat} />
         </Col>
       </Row>

@@ -8,9 +8,11 @@ export const saveAuctioFirebase = async (eventId: string, createAuction: Auction
       .collection(`auctionByEventId`)
       .doc(eventId)
       .set(createAuction);
-
+      
     return true;
   } catch (error) {
+    console.log(error);
+    
     return false;
   }
 };

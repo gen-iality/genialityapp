@@ -1,0 +1,4 @@
+export const ROLS_USER ={
+    ATTENDEE_ID:'60e8a7e74f9fb74ccd00dc22',
+    ADMINISTRATOR_ID:'5c1a59b2f33bd40bb67f2322'
+}

@@ -15,6 +15,7 @@ import { UnchangeableUserData } from './form-edit/UnchangeableUserData';
 import { useResultsUserOrganizations } from '../hooks/useResultsUserOrganizations';
 import { useSteps } from '../hooks/useSteps';
 import { DispatchMessageService } from '@/context/MessageService';
+import { ROLS_USER } from '@/constants/rols.constants';
 
 const initialForm: FormUserOrganization = {
   email: '',
@@ -209,12 +210,12 @@ export const ModalAddAndEditUsers = ({
                             type: 'list',
                             options: [
                               {
-                                value: '60e8a7e74f9fb74ccd00dc22',
+                                value: ROLS_USER.ATTENDEE_ID/* '60e8a7e74f9fb74ccd00dc22' */,
                                 label: 'Attendee',
                                 type: 'attendee',
                               },
                               {
-                                value: '5c1a59b2f33bd40bb67f2322',
+                                value: ROLS_USER.ADMINISTRATOR_ID/* '5c1a59b2f33bd40bb67f2322' */,
                                 label: 'Administrator',
                                 type: 'admin',
                               },

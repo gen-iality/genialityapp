@@ -1,21 +1,27 @@
 import { UploadFile } from 'antd/lib/upload/interface';
-import event from '@/components/events/event';
+
+export interface AcutionProps {
+    event :  any
+}
 
 export interface AuctionConfig {
     name:     string,
 	currency: string,
-
+    amount?:  number,
+    timerBids: number,
 }
 
 export interface DrawerAuctionProps {
     auction:        Auction
     openOrClose :   boolean
     eventId:        string
+    cEventUser?:     any
+    cEvent?:        any
     setOpenOrClose: ()=> void
 }
-export interface ConfigStyleProps {
+export interface GeneralAuctionProps {
     auction: Auction
-    eventId?: string
+    eventId: string
 }
 export interface ApiInterface  {
     getOne:    <T>(event: string) => Promise<T | null>, 
@@ -27,6 +33,7 @@ export interface ApiInterface  {
 export interface CreateProps {
     active:   boolean
     auction?: Auction
+    event?:    any
 }
 export interface ProductsProps {
     products: Products[]
@@ -51,6 +58,8 @@ export interface Auction {
     published?:         boolean
     opened?:            boolean
     playing?:           boolean
+    amount:            number | null
+    timerBids:         number
 }
 export interface AuctionStyles {
     general?: {
@@ -98,6 +107,7 @@ export interface ReportProps {
 export interface DrawerRulesProps {
     showDrawerRules: boolean
     setshowDrawerRules: (value : boolean) => void
+    cEvent: any
     auctionRules: {
         rules : any
     }

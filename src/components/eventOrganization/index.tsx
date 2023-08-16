@@ -14,6 +14,8 @@ import Loading from '../profile/loading';
 import { DataOrganizations, Organization, OrganizationProps } from './types';
 import { UseCurrentUser } from '@/context/userContext';
 import { useGetEventsWithUser } from './hooks/useGetEventsWithUser';
+import { ModalCertificatesByOrganizacionAndUser } from './components/ModalCertificatesByOrganizacionAndUser';
+import { SocialNetworks } from './components/SocialNetworks';
 
 function EventOrganization({ match }: OrganizationProps) {
   const { Title, Text, Paragraph } = Typography;
@@ -27,27 +29,25 @@ function EventOrganization({ match }: OrganizationProps) {
   const [eventsOld, setEventsOld] = useState<any[]>([]);
   const [myOrganizations, setMyorganizations] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isModalCertificatesOpen, setIsModalCertificatesOpen] = useState(false);
   const { eventsWithEventUser, isLoading: isLoadingOtherEvents } = useGetEventsWithUser(
     match.params.id,
     cUser.value?._id
   );
 
   useEffect(() => {
-
     let orgId = match.params.id;
     if (orgId) {
-      
       fetchItem(orgId).then((respuesta) =>
         setstate({
           ...state,
           orgId,
         })
       );
-      getMyOrganizations()
+      getMyOrganizations();
       setLoading(false);
     }
   }, []);
-
   useEffect(() => {
     if (cUser.value) {
       getMyOrganizations();
@@ -122,6 +122,7 @@ function EventOrganization({ match }: OrganizationProps) {
         backgroundImage: `url(${organization?.styles?.BackgroundImage})`,
         backgroundColor: `${organization?.styles?.containerBgColor || '#FFFFFF'}`,
       }}>
+      <SocialNetworks organization={organization}/>
       <ModalLoginHelpers />
       {!loading && state.orgId ? (
         <>
@@ -213,9 +214,27 @@ function EventOrganization({ match }: OrganizationProps) {
                   <Col style={{ width: '100%' }}>
                     {/* Lista otros eventos en los que esta inscrito el usuario*/}
                     <Card style={{ width: '100%', borderRadius: 20 }}>
-                      <Badge offset={[60, 22]} count={`${eventsWithEventUser.length} Eventos`}>
-                        <Title level={2}>Mis eventos</Title>
-                      </Badge>
+                      <Row justify='space-between'>
+                        <Badge offset={[60, 22]} count={`${eventsWithEventUser.length} Eventos`}>
+                          <Title level={2}>Mis eventos</Title>
+                        </Badge>
+                        {organization?.show_my_certificates && (
+                          <Button type='primary' onClick={() => setIsModalCertificatesOpen(true)}>
+                            Ver mis certificados
+                          </Button>
+                        )}
+                      </Row>
+                      {isModalCertificatesOpen && (
+                        <ModalCertificatesByOrganizacionAndUser
+                          destroyOnClose
+                          visible={isModalCertificatesOpen}
+                          onCloseDrawer={() => setIsModalCertificatesOpen(false)}
+                          eventUserId={cUser.value?._id}
+                          organizationId={match.params.id}
+                          orgContainerBg={organization?.styles?.containerBgColor}
+                          orgTextColor={organization?.styles?.textMenu}
+                        />
+                      )}
                       <Row gutter={[16, 16]}>
                         {isLoadingOtherEvents && (
                           <div style={{ width: '100vw', height: '100vh', textAlign: 'center' }}>
@@ -292,8 +311,8 @@ function EventOrganization({ match }: OrganizationProps) {
                     <Row gutter={[16, 16]}>
                       {eventsOld && eventsOld.length > 0 ? (
                         eventsOld.map((event, index) => {
-                          if(event.hide_event_in_passed){
-                            return null
+                          if (event.hide_event_in_passed) {
+                            return null;
                           }
                           return (
                             <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
@@ -306,7 +325,7 @@ function EventOrganization({ match }: OrganizationProps) {
                                 textButtonBuyOrRegistered={getTextButtonBuyOrRegistered(event)}
                               />
                             </Col>
-                          )
+                          );
                         })
                       ) : (
                         <div

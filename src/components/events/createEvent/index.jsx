@@ -52,11 +52,18 @@ class NewEvent extends Component {
     };
   }
 
+   linkToTheMenuRouteS(menuRoute) {
+		window.location.href = `${window.location.origin}${menuRoute}`;
+	}
+
   async componentDidMount() {
     // eslint-disable-next-line react/prop-types
     if (this.props.match?.params?.user) {
       // eslint-disable-next-line react/prop-types
       let profileUser = await UsersApi.getProfile(this.props.match?.params?.user);
+      if(!profileUser?.is_admin){
+        this.linkToTheMenuRouteS(`/myprofile`)
+      }
       this.setState({ currentUser: profileUser });
     }
     const valores = window.location.search;

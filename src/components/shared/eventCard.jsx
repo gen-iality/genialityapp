@@ -21,6 +21,43 @@ class EventCard extends Component {
       width: '250px',
     };
 
+    const getDateEvent = () => {
+      if (!event) return <></>;
+      const MIN_DATES = 1
+      const EVENT_WITH_ONE_DATE = 1
+      const FIRST_DATE = 0
+      if (event.dates?.length >= MIN_DATES) {
+        const LAST_DATE = event.dates?.length - 1
+        if (event.dates?.length === EVENT_WITH_ONE_DATE) {
+          return <time dateTime={event.dates[FIRST_DATE].start}>{Moment(event.dates[FIRST_DATE].start).format('DD MMM YYYY')}</time>;
+        }else{
+          return (
+            <>
+              <time dateTime={event.dates[FIRST_DATE].start}>{Moment(event.dates[FIRST_DATE].start).format('DD MMM YYYY')}</time>
+              {'-'}
+              <time dateTime={event.dates[LAST_DATE].end}>
+                {Moment(event.dates[LAST_DATE].end).format('DD MMM YYYY')}
+              </time>
+            </>
+          );
+        }
+      }
+      if(Moment(event.datetime_from).format('DD MMM YYYY') === Moment(event.datetime_to).format('DD MMM YYYY')) {
+        return (
+          <>
+            <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
+          </>
+        );
+      }
+      return (
+        <>
+          <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
+          {'-'}
+          <time dateTime={event.datetime_to}>{Moment(event.datetime_to).format('DD MMM YYYY')}</time>
+        </>
+      );
+    };
+
     //Esto sólo va a aplicar para cuando el usuario tiene un plan
     //Se esta validando la fecha en la que se va a bloquear el evento, osea hasta la fecha que tiene acceso
     // let actualDate = new Date(event.datetime_to);
@@ -101,9 +138,7 @@ class EventCard extends Component {
                   <span style={{ fontSize: '12px' }}>
                     <Space>
                       <i className='fas fa-calendar-alt' />
-                      <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
-                      {'-'}
-                      <time dateTime={event.datetime_to}>{Moment(event.datetime_to).format('DD MMM YYYY')}</time>
+                     {getDateEvent()}
                     </Space>
                   </span>
                   <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>

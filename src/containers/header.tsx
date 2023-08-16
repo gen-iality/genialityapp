@@ -234,7 +234,12 @@ const Headers = (props: Props) => {
 	window.location.href = `${window.location.origin}/organization/${cEvent.value.organizer_id}/events`;
 	};
 
-	
+	const isLandingOrPreLanding = (): boolean => {
+		if(!window.location.href.includes('landing') ){
+			return window.location.pathname.replace('/','') === cEvent?.value?._id
+		}
+		return true 
+	}
 
 
 	return (
@@ -254,7 +259,7 @@ const Headers = (props: Props) => {
 				}}>
 				<Menu theme='light' mode='horizontal' style={{ backgroundColor: bgcolorContainer, border: 'none' }}>
 					<Row justify='space-between' align='middle'>
-						{window.location.href.includes('landing') && !screens.xs &&
+						{isLandingOrPreLanding() && !screens.xs &&
 							<Button type='link' onClick={landingOrganization} icon={<ApartmentOutlined style={{color: getCorrectColor(bgcolorContainer)}}/>} size='large' >
 								<Typography.Text style={{color: getCorrectColor(bgcolorContainer)}}>Ver más contenido de <Typography.Text strong style={{color: getCorrectColor(bgcolorContainer)}}>{cEvent.value?.organizer?.name}</Typography.Text></Typography.Text>
 							</Button>

@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Col, Row, Form, Button } from 'antd';
-import { AuctionStyles, ConfigStyleProps } from '../../interfaces/auction.interface';
+import { AuctionStyles, GeneralAuctionProps } from '../../interfaces/auction.interface';
 import { saveAuctioFirebase } from '../../services/Execute.service';
 import InputColor from '@/components/games/bingo/components/InputColor';
 import ImageUploaderDragAndDrop from '@/components/imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import { DispatchMessageService } from '@/context/MessageService';
 
-export default function ConfigAppearance({ auction, eventId }: ConfigStyleProps) {
+export default function ConfigAppearance({ auction, eventId }: GeneralAuctionProps) {
   const [configStyle, setConfigStyle] = useState<AuctionStyles>({
-    general: auction.styles?.general,
-    cards: auction.styles?.cards,
+    general: auction.styles?.general || {},
+    cards: auction.styles?.cards || {},
   });
 
   const onOk = async () => {

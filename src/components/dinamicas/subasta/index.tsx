@@ -3,7 +3,7 @@ import Header from '../../../antdComponents/Header';
 import AuctionProvider from './context/AuctionContext';
 import Initial from './views/Initial';
 import './styles/index.css'
-export default function auctionModule() {
+export default function auctionModule(props: any) {
   return (
     <AuctionProvider>
       <Header 
@@ -12,7 +12,7 @@ export default function auctionModule() {
       back 
       form 
       />
-      <Initial />
+      <Initial event={props.event} />
     </AuctionProvider>
   );
 }
