@@ -208,7 +208,7 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
 
       StateMessage.show(null, 'success', 'Información guardada correctamente!')
 
-      navigate(`..`)
+      navigate('..')
     } catch (e) {
       StateMessage.destroy('loading')
 
@@ -235,7 +235,7 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
             await CertsApi.deleteOne(locationState.edit)
             StateMessage.destroy('loading')
             StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
-            navigate(`..`)
+            navigate('..')
           } catch (e) {
             StateMessage.destroy('loading')
             StateMessage.show(null, 'error', handleRequestError(e).message)

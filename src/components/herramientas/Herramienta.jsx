@@ -53,7 +53,7 @@ const Herramienta = (props) => {
         }
         StateMessage.destroy('loading')
         StateMessage.show(null, 'success', 'Información guardada correctamente!')
-        navigate(`../herramientas`)
+        navigate('../herramientas')
       } catch (e) {
         StateMessage.destroy('loading')
         StateMessage.show(null, 'error', handleRequestError(e).message)
@@ -96,7 +96,7 @@ const Herramienta = (props) => {
                 'success',
                 'Se eliminó la información correctamente!',
               )
-              navigate(`../herramientas`)
+              navigate('../herramientas')
             } catch (e) {
               StateMessage.destroy('loading')
               StateMessage.show(null, 'error', handleRequestError(e).message)

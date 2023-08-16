@@ -162,7 +162,7 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
           StateMessage.show(null, 'success', 'Información guardada correctamente!')
         }
 
-        if (!props.simpleMode) navigate(`..`)
+        if (!props.simpleMode) navigate('..')
         setIsLoading(false)
       } catch (e) {
         StateMessage.destroy('loading')
@@ -216,7 +216,7 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
                   'Se eliminó la información correctamente!',
                 )
               }
-              if (!props.simpleMode) navigate(`..`)
+              if (!props.simpleMode) navigate('..')
               if (typeof props.onRemoveDocumentContent === 'function') {
                 props.onRemoveDocumentContent()
               }

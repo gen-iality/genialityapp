@@ -136,7 +136,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
         // cAgenda.setIsPublished(true)
       } else if (changePathWithoutSaving) {
         console.log('go to', '..')
-        navigate(`..`)
+        navigate('..')
       }
 
       StateMessage.show(null, 'success', 'Información guardada correctamente!')
@@ -215,7 +215,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
           deleteActivity(props.event._id, currentAgenda._id!, currentAgenda.name).then(
             () => {
               setShouldRedirect(true)
-              navigate(`..`)
+              navigate('..')
             },
           )
         },
