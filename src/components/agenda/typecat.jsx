@@ -43,10 +43,8 @@ const AgendaTypeCat = (props) => {
       title={`${subject === 'categorias' ? 'Categorías' : 'Tipos'} de Lección`}
       //back
       titleTooltip="Agregue o edite las Preguntas frecuentes que se muestran en la aplicación"
-      addUrl={{
-        pathname: `add${subject}`,
-        state: { new: true },
-      }}
+      addUrl={`add${subject}`}
+      addUrlState={{ new: true }}
       columns={columns}
       key="_id"
       editPath={`/edit${subject}`}

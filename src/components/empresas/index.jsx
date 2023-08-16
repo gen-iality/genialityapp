@@ -5,19 +5,12 @@ import Empresas from './empresas'
 import Stands from './gestionStands'
 
 function EmpresasRoutes({ event }) {
-  const routeProps = {}
   return (
     <Routes>
-      <Route path="/" element={<Empresas {...routeProps} event={event} />} />
-      <Route
-        path="/crear"
-        element={<CrearEditarEmpresa {...routeProps} event={event} />}
-      />
-      <Route path="/configuration" element={<Stands {...routeProps} event={event} />} />{' '}
-      <Route
-        path="/editar/:companyId"
-        element={<CrearEditarEmpresa {...routeProps} event={event} />}
-      />
+      <Route path="/" element={<Empresas event={event} />} />
+      <Route path="/crear" element={<CrearEditarEmpresa event={event} />} />
+      <Route path="/configuration" element={<Stands event={event} />} />{' '}
+      <Route path="/editar/:companyId" element={<CrearEditarEmpresa event={event} />} />
     </Routes>
   )
 }

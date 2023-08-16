@@ -218,10 +218,8 @@ const Agenda = (props) => {
       title="Temas"
       back
       titleTooltip="Agregue o edite las Agendas que se muestran en la aplicación"
-      addUrl={{
-        pathname: `../create-activity`,
-        state: { new: true },
-      }}
+      addUrl="../create-activity"
+      addUrlState={{ new: true }}
       columns={columns}
       // key="_id"
       editPath="../activity"

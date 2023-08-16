@@ -34,10 +34,8 @@ const Herramientas = (props) => {
       eventId={props.event._id}
       title="Herramientas"
       titleTooltip="Agregue o edite las herramientas que se muestran en la aplicación"
-      addUrl={{
-        pathname: '/herramienta',
-        state: { new: true },
-      }}
+      addUrl="/herramienta"
+      addUrlState={{ new: true }}
       columns={columns}
       key="_id"
       editPath="/herramienta"

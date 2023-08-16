@@ -71,10 +71,8 @@ const TriviaListPage: FunctionComponent<ITriviaListPageProps> = (props) => {
           title="Evaluaciones"
           back
           titleTooltip="Agregue o edite las Agendas que se muestran en la aplicación"
-          addUrl={{
-            pathname: `edit`,
-            state: { new: true },
-          }}
+          addUrl="edit"
+          addUrlState={{ new: true }}
           columns={columns}
           key="_id"
           editPath="edit"

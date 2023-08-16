@@ -241,10 +241,8 @@ function Empresas({ event }) {
         title="Empresas"
         back
         titleTooltip="Agregue o edite las Empresas que se muestran en la aplicación"
-        addUrl={{
-          pathname: `crear`,
-          state: { new: true },
-        }}
+        addUrl="crear"
+        addUrlState={{ new: true }}
         extra={
           <Row wrap gutter={[8, 8]}>
             <Col>

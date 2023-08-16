@@ -15,6 +15,7 @@ interface HeaderProps {
   title: string | ReactElement
   titleTooltip?: string
   addUrl?: string
+  addUrlState?: any
   addFn?: MouseEventHandler<HTMLElement>
   edit?: boolean
   remove?: MouseEventHandler<HTMLElement>
@@ -37,6 +38,7 @@ const Header: FunctionComponent<HeaderProps> = (props) => {
     title, //titulo del encabezado
     titleTooltip, //tooltip para el encabezado
     addUrl, //link para ir a la vista de agregar
+    addUrlState,
     addFn, //link para ir a la vista de agregar
     edit, //id del elemento a editar
     remove, //método para eliminar
@@ -89,7 +91,7 @@ const Header: FunctionComponent<HeaderProps> = (props) => {
         {(addUrl || addFn) && (
           <Col>
             {addUrl && (
-              <Link to={addUrl}>
+              <Link to={addUrl} state={addUrlState}>
                 <Button
                   type="primary"
                   icon={<PlusCircleOutlined />}
