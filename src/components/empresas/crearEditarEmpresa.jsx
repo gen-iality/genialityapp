@@ -25,7 +25,7 @@ import Header from '@antdComponents/Header'
 import BackTop from '@antdComponents/BackTop'
 import { StateMessage } from '@context/MessageService'
 import { handleRequestError } from '@helpers/utils'
-import { useMatch, useNavigate } from 'react-router'
+import { useLocation, useNavigate, useParams } from 'react-router'
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -133,8 +133,9 @@ export const companyFormKeys = keys(defaultInitialValues)
 
 function CrearEditarEmpresa(props) {
   const { event } = props
-  const match = useMatch()
-  const { companyId } = match.params
+  const params = useParams()
+  const location = useLocation()
+  const { companyId } = params
   const [standTypesOptions, loadingStandTypes] = useGetEventCompaniesStandTypesOptions(
     event._id,
   )
