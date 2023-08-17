@@ -224,7 +224,7 @@ const OrganizationAdminRoutes: FunctionComponent = () => {
 
                 <Route
                   path=""
-                  element={<NoMatchPage parentUrl={pathname} org={organization} />}
+                  element={<NoMatchPage urlFrom={pathname} org={organization} />}
                 />
               </Route>
             </Routes>

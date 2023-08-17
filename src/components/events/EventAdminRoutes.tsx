@@ -410,7 +410,7 @@ class EventAdminRoutes extends Component<
               {/* Este componente se muestra si una ruta no coincide */}
               <Route
                 path="/"
-                element={<NoMatchPage eventId={event._id} parentUrl=".." />}
+                element={<NoMatchPage eventId={event._id} urlFrom=".." />}
               />
             </Routes>
           </section>
