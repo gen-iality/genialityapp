@@ -404,7 +404,7 @@ class SendRsvp extends Component {
                     )}
                   </Row>
                   <Row justify="center" gutter={8} wrap>
-                    <Link to="/invitados">
+                    <Link to="..">
                       <Button type="primary">Editar seleccionados</Button>
                     </Link>
                   </Row>

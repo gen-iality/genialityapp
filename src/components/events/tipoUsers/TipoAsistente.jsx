@@ -60,7 +60,7 @@ const TipoAsistente = (props) => {
 
         StateMessage.destroy('loading')
         StateMessage.show(null, 'success', 'Información guardada correctamente!')
-        navigate(`${props.parentUrl}`)
+        navigate('..')
       } catch (e) {
         StateMessage.destroy('loading')
         StateMessage.show(null, 'error', handleRequestError(e).message)
@@ -94,7 +94,7 @@ const TipoAsistente = (props) => {
                 'success',
                 'Se eliminó la información correctamente!',
               )
-              navigate(`${props.parentUrl}`)
+              navigate('..')
             } catch (e) {
               StateMessage.destroy('loading')
               StateMessage.show(null, 'error', handleRequestError(e).message)
