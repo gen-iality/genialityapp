@@ -3,6 +3,7 @@ import { Organization } from '../types';
 import FacebookIcon from '@2fd/ant-design-icons/lib/Facebook';
 import TwitterIcon from '@2fd/ant-design-icons/lib/Twitter';
 import InstagramIcon from '@2fd/ant-design-icons/lib/Instagram';
+import YoutubeIcon from '@2fd/ant-design-icons/lib/Youtube';
 import LinkedinIcon from '@2fd/ant-design-icons/lib/Linkedin';
 import WebIcon from '@2fd/ant-design-icons/lib/Web';
 import { Avatar, Row, Space } from 'antd';
@@ -13,9 +14,11 @@ interface Props {
 }
 
 export const SocialNetworks = ({ organization }: Props) => {
+  const validate = organization?.social_networks?.facebook || organization?.social_networks?.twitter || organization?.social_networks?.instagram
+  || organization?.social_networks?.linkedln || organization?.social_networks?.yourSite || organization?.social_networks?.youtube;
   return (
     <div
-      style={{
+      style={validate ? { 
         position: 'fixed',
         left: '6px',
         top: '70px',
@@ -26,7 +29,7 @@ export const SocialNetworks = ({ organization }: Props) => {
         paddingTop: 8, 
         paddingBottom: 8,
         boxShadow: `5px 5px 2px #C4C4C490`
-      }}
+      }: {}}
     >
       <Space size={8} direction='vertical' align='center' style={{paddingLeft: 4}}>
           {organization?.social_networks?.facebook && (
@@ -58,6 +61,17 @@ export const SocialNetworks = ({ organization }: Props) => {
                 style={{backgroundColor: getCorrectColor(organization?.styles?.containerBgColor)}}
               >
                 <InstagramIcon style={{ fontSize: 30, color: organization?.styles?.containerBgColor }} />
+              </Avatar>
+            </a>
+          )}
+          
+          {organization?.social_networks?.youtube && (
+            <a href={organization?.social_networks?.youtube} target='_blank'>
+              <Avatar 
+                shape='square'
+                style={{backgroundColor: getCorrectColor(organization?.styles?.containerBgColor)}}
+              >
+                <YoutubeIcon style={{ fontSize: 30, color: organization?.styles?.containerBgColor }} />
               </Avatar>
             </a>
           )}
