@@ -1,6 +1,7 @@
 import { Component } from 'react'
 import Select from 'react-select'
 import { FormattedMessage } from 'react-intl'
+import classNames from 'classnames'
 
 class SelectInput extends Component {
   constructor(props) {
@@ -44,7 +45,7 @@ class SelectInput extends Component {
     const { name, isMulti, required } = this.props
     return (
       <div className="field">
-        <label className={`label ${required ? 'required' : ''}`}>{name}</label>
+        <label className={classNames('label', { required })}>{name}</label>
         <div className="control">
           <Select
             id="selectOrganization"

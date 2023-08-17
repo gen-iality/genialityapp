@@ -7,6 +7,7 @@ import TriviaReportPage from './TriviaReportPage'
 import ReportQuestionPage from './ReportQuestionPage'
 import TriviaRankingPage from './TriviaRankingPage'
 import TriviaResponsesPage from './TriviaResponsesPage'
+import TriviaAnswerMatrixPage from './TriviaAnswerMatrixPage'
 
 export interface ITriviaRoutesProps {
   event: any
@@ -57,6 +58,16 @@ const TriviaRoutes: FunctionComponent<ITriviaRoutesProps> = (props) => {
           path={`${matchUrl}/ranking/:id`}
           render={(routeProps) => (
             <TriviaRankingPage surveyId={routeProps.match.params.id} />
+          )}
+        />
+        <Route
+          exact
+          path={`${matchUrl}/all-answers/:surveyId`}
+          render={(subprops) => (
+            <TriviaAnswerMatrixPage
+              surveyId={subprops.match.params.surveyId}
+              event={event}
+            />
           )}
         />
         <Route

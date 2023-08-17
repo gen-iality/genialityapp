@@ -40,6 +40,7 @@ import {
 
 import { createOrUpdateSurvey, getSurveyConfiguration, deleteSurvey } from './services'
 import RequiredStar from '@components/agenda/components/RequiredStar'
+import makePrintableQuestionAnswer from './TriviaAnswerMatrixPage/utils/make-printable-question-answer'
 
 export interface ITriviaEditorProps {
   surveyId?: string
@@ -646,6 +647,11 @@ const TriviaEditor: FunctionComponent<ITriviaEditorProps> = (props) => {
         key: 'choices',
         align: 'center',
         render: (item) => <div>{item.choices?.length}</div>,
+      },
+      {
+        title: 'Respuesta asignada',
+        align: 'center',
+        render: (record) => <>{makePrintableQuestionAnswer(record.correctAnswer)}</>,
       },
       {
         title: 'Opciones',

@@ -2,7 +2,7 @@
   "files.watcherExclude": {
     "**/.git/*/**": true,
     "**/node_modules/*/**": true,
-    "**/dist/*/**": true,
+    "**/dist/*/**": true
   },
   "//Comment": "Prettier configuration goes to .prettierrc.json",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -40,5 +40,8 @@
     "commandCenter.border": "#e7e7e799"
   },
   "peacock.color": "#16284A",
-  "dotenv.enableAutocloaking": true
+  "dotenv.enableAutocloaking": true,
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  }
 }
