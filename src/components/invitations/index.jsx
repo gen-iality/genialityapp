@@ -19,7 +19,7 @@ function ListaInvitados(props) {
       const respEvento = await EventsApi.getOne(eventId)
       setUserProperties(respEvento.user_properties)
     }
-  }, [parentUrl])
+  }, [location.pathname])
 
   const [guestSelected, setGuestSelected] = useState([])
   const [userProperties, setUserProperties] = useState([])
@@ -27,7 +27,7 @@ function ListaInvitados(props) {
   return (
     <Routes>
       <Route
-        path="/invitados"
+        path="/"
         element={
           <InvitedUsers
             event={event}
@@ -38,7 +38,7 @@ function ListaInvitados(props) {
       />
       <Route
         exact
-        path="/invitados/createmessage"
+        path="/createmessage"
         element={
           <CreateMessage event={event} eventID={eventId} selection={guestSelected} />
         }
@@ -46,7 +46,7 @@ function ListaInvitados(props) {
 
       <Route
         exact
-        path="/invitados/importar-excel"
+        path="/importar-excel"
         element={
           <ImportUsers
             extraFields={userProperties}

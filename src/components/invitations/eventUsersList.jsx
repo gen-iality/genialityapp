@@ -285,7 +285,7 @@ class EventUsersList extends Component {
         <Menu.Item key="1" icon={<UserOutlined />} onClick={this.modalUser}>
           Crear usuario
         </Menu.Item>
-        <Link className="dropdown-item" to="/importar-excel">
+        <Link className="dropdown-item" to="importar-excel">
           <Menu.Item key="2" icon={<UserOutlined />}>
             Importar usuarios de Excel
           </Menu.Item>
@@ -357,7 +357,7 @@ class EventUsersList extends Component {
                   to={
                     !eventIsActive && window.location.toString().includes('eventadmin')
                       ? ''
-                      : `/importar-excel`
+                      : `importar-excel`
                   }
                   icon={<UploadOutlined />}
                 >
