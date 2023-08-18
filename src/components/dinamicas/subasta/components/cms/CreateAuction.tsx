@@ -11,7 +11,7 @@ import React, { useContext, useState } from 'react';
 import { AuctionContext } from '../../context/AuctionContext';
 import { AuctionConfig, CreateProps } from '../../interfaces/auction.interface';
 import { saveAuctioFirebase } from '../../services/Execute.service';
-
+const { TextArea } = Input;
 export default function CreateAuction({ active, auction, event }: CreateProps) {
   const [modal, setModal] = useState<boolean>(false);
   const [permit, setPermit] = useState<boolean>(true);
@@ -186,9 +186,9 @@ export default function CreateAuction({ active, auction, event }: CreateProps) {
               </Card>
             </Col>
           )}
-          <Col span={24}>
+          <Col span={12}>
             {auction && (
-              <Col span={12}>
+              <Col span={24}>
                 <Card hoverable style={{ borderRadius: 20 }}>
                   <Form.Item label={'Tiempo de espera entre pujas'} initialValue={auction.timerBids ?? 10} name={'timerBids'}>
                     <Select>
@@ -209,6 +209,17 @@ export default function CreateAuction({ active, auction, event }: CreateProps) {
                       style={{ width: '100%' }}
                       formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                     />
+                  </Form.Item>
+                </Card>
+              </Col>
+            )}
+          </Col>
+          <Col span={12}>
+            {auction && (
+              <Col span={24}>
+                <Card hoverable style={{ borderRadius: 20 }}>
+                  <Form.Item label={'Reglamento de la subasta'}  initialValue={auction.rules  ?? ''} name={'rules'}>
+                    <TextArea rows={6} placeholder='Escriba el reglamento para la subasta'/>
                   </Form.Item>
                 </Card>
               </Col>

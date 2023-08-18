@@ -283,7 +283,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
             closedrawer={setOpenOrClose}
           />
 
-          <DrawerRules cEvent={cEvent} showDrawerRules={showDrawerRules} setshowDrawerRules={setshowDrawerRules}  auctionRules={{rules: ''}}/>
+          <DrawerRules cEvent={cEvent} showDrawerRules={showDrawerRules} setshowDrawerRules={setshowDrawerRules}  auctionRules={auction.rules ?? ''}/>
           <DrawerChat showDrawerChat={showDrawerChat} setshowDrawerChat={setshowDrawerChat} />
         </Col>
       </Row>

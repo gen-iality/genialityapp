@@ -72,6 +72,7 @@ export default function AuctionProvider(props: Props) {
         styles: auction.styles ?? {},
         amount: params.amount ?? null,
         timerBids: params.timerBids,
+        rules: params.rules ?? null,
       });
 
     setLoadingConfig(false);

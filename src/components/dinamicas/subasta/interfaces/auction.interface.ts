@@ -1,4 +1,5 @@
 import { UploadFile } from 'antd/lib/upload/interface';
+import rules from '../../../agenda/activityType/utils/formValidatorRules';
 
 export interface AcutionProps {
     event :  any
@@ -9,6 +10,7 @@ export interface AuctionConfig {
 	currency: string,
     amount?:  number,
     timerBids: number,
+    rules:    string | null
 }
 
 export interface DrawerAuctionProps {
@@ -60,6 +62,7 @@ export interface Auction {
     playing?:           boolean
     amount:            number | null
     timerBids:         number
+    rules:             string | null
 }
 export interface AuctionStyles {
     general?: {
@@ -108,9 +111,7 @@ export interface DrawerRulesProps {
     showDrawerRules: boolean
     setshowDrawerRules: (value : boolean) => void
     cEvent: any
-    auctionRules: {
-        rules : any
-    }
+    auctionRules: string
 }
 
 export interface ButtonsContainerProps {
