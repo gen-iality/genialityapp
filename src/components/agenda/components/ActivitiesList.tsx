@@ -20,6 +20,7 @@ import { useHelper } from '@context/helperContext/hooks/useHelper'
 import ModuledActivityDisplayer from './ModuledActivityDisplayer'
 import { FB } from '@helpers/firestore-request'
 import useIsDevOrStage from '@/hooks/useIsDevOrStage'
+import orderActivities from '@components/admin/ActivityListPage/utils/order-activities'
 
 interface ActivitiesListProps {
   eventId: string
@@ -72,7 +73,17 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
       console.warn('activitiesEvent is not an array')
       setLoadedActivities([])
     } else {
-      setLoadedActivities(activitiesEvent)
+      Promise.all(
+        activitiesEvent.map(async (activity) => {
+          const data = await FB.Activities.get(eventId, activity._id)
+          const activityData = { ...data }
+          const order = activityData.order
+          return {
+            order,
+            ...activity,
+          }
+        }),
+      ).then((_activitiesEvent) => setLoadedActivities(_activitiesEvent))
     }
   }, [activitiesEvent])
 
@@ -120,85 +131,89 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
 
   useEffect(() => {
     setTruncatedAgendaList([
-      ...loadedActivities.map((agenda) => {
-        // Logic here
-        let diff = Math.floor(Math.random() * 60 * 60)
+      ...(orderActivities(
+        loadedActivities.map((agenda) => {
+          // Logic here
+          let diff = Math.floor(Math.random() * 60 * 60)
 
-        try {
-          diff = dayjs(agenda.datetime_end).diff(dayjs(agenda.datetime_start))
-        } catch (err) {
-          console.error(err)
-        }
+          try {
+            diff = dayjs(agenda.datetime_end).diff(dayjs(agenda.datetime_start))
+          } catch (err) {
+            console.error(err)
+          }
 
-        const result: TruncatedAgenda = {
-          _id: agenda._id,
-          title: agenda.name,
-          datetime_start: agenda.datetime_start,
-          isInfoOnly: agenda.is_info_only,
-          require_completion: agenda.require_completion,
-          module_name: agenda.module?.module_name,
-          module_order: agenda.module?.order || 0,
-          type: agenda.type?.name as ActivityType.ContentValue,
-          timeString: dayjs(diff).format('h:mm').concat(' min'),
-          link: `/landing/${eventId}/activity/${agenda._id}`,
-          host_picture: agenda.hosts[0]?.image,
-          name_host: agenda.hosts[0]?.name,
-          short_description: agenda.short_description,
-          isPublished: !nonPublishedActivities.includes(agenda._id!),
-          //categories: agenda.activity_categories.map((category: any) => category.name),
-          categories: (agenda.activity_categories || []).map(({ name, color }) => ({
-            name,
-            color,
-          })),
-          endComponents: [
-            () => (
-              <TakenActivityBadge activityId={agenda._id!} eventUserId={eventUserId} />
-            ),
-            () =>
-              ![activityContentValues.quizing, activityContentValues.survey].includes(
-                agenda.type?.name as any,
-              ) ? (
-                <></>
-              ) : (
-                <QuizProgressFromActivity
-                  activityId={agenda._id!}
-                  eventId={eventId}
-                  userId={currentUser.value._id}
-                  isAnswersDeleted={isAnswersDeleted}
-                />
+          const result: TruncatedAgenda = {
+            _id: agenda._id,
+            title: agenda.name,
+            created_at: agenda.created_at,
+            order: agenda.order,
+            datetime_start: agenda.datetime_start,
+            isInfoOnly: agenda.is_info_only,
+            require_completion: agenda.require_completion,
+            module_name: agenda.module?.module_name,
+            module_order: agenda.module?.order || 0,
+            type: agenda.type?.name as ActivityType.ContentValue,
+            timeString: dayjs(diff).format('h:mm').concat(' min'),
+            link: `/landing/${eventId}/activity/${agenda._id}`,
+            host_picture: agenda.hosts[0]?.image,
+            name_host: agenda.hosts[0]?.name,
+            short_description: agenda.short_description,
+            isPublished: !nonPublishedActivities.includes(agenda._id!),
+            //categories: agenda.activity_categories.map((category: any) => category.name),
+            categories: (agenda.activity_categories || []).map(({ name, color }) => ({
+              name,
+              color,
+            })),
+            endComponents: [
+              () => (
+                <TakenActivityBadge activityId={agenda._id!} eventUserId={eventUserId} />
               ),
-            () =>
-              [activityContentValues.quizing, activityContentValues.survey].includes(
-                agenda.type?.name as any,
-              ) ? (
-                isDev || isStage ? (
-                  <ButtonToDeleteSurveyAnswers
-                    userId={currentUser.value._id}
-                    eventId={eventId}
-                    activityId={agenda._id!}
-                    onDelete={() => setAnswersIsDeleted(true)}
-                  />
+              () =>
+                ![activityContentValues.quizing, activityContentValues.survey].includes(
+                  agenda.type?.name as any,
+                ) ? (
+                  <></>
                 ) : (
-                  (null as any)
-                )
-              ) : (
-                <></>
-              ),
-          ],
-          ItemWrapper: ({ children }) => (
-            <OnLiveRibbon
-              requestLiving={async () => {
-                const config = await service.getConfiguration(eventId, agenda._id)
-                const is = config?.habilitar_ingreso === 'open_meeting_room'
-                return is
-              }}
-            >
-              {children}
-            </OnLiveRibbon>
-          ),
-        }
-        return result
-      }),
+                  <QuizProgressFromActivity
+                    activityId={agenda._id!}
+                    eventId={eventId}
+                    userId={currentUser.value._id}
+                    isAnswersDeleted={isAnswersDeleted}
+                  />
+                ),
+              () =>
+                [activityContentValues.quizing, activityContentValues.survey].includes(
+                  agenda.type?.name as any,
+                ) ? (
+                  isDev || isStage ? (
+                    <ButtonToDeleteSurveyAnswers
+                      userId={currentUser.value._id}
+                      eventId={eventId}
+                      activityId={agenda._id!}
+                      onDelete={() => setAnswersIsDeleted(true)}
+                    />
+                  ) : (
+                    (null as any)
+                  )
+                ) : (
+                  <></>
+                ),
+            ],
+            ItemWrapper: ({ children }) => (
+              <OnLiveRibbon
+                requestLiving={async () => {
+                  const config = await service.getConfiguration(eventId, agenda._id)
+                  const is = config?.habilitar_ingreso === 'open_meeting_room'
+                  return is
+                }}
+              >
+                {children}
+              </OnLiveRibbon>
+            ),
+          }
+          return result
+        }) as any[],
+      ) as TruncatedAgenda[]),
     ])
   }, [
     eventUserId,
