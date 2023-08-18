@@ -9,6 +9,7 @@ export const useGetEventsWithUser = (organizationId: string, eventUserId: string
     const getEventFromOrganizationByUser = async () => {
         try {
             if (!eventUserId) {
+                setEventsWithEventUser([])
                 setIsLoading(false)
                 return
             }
