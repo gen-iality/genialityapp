@@ -2,6 +2,7 @@ import  { useEffect, useState } from 'react'
 import { Certificates } from '@/components/agenda/types'
 import { CertsApi } from '@/helpers/request';
 import { useGetEventsWithUser } from './useGetEventsWithUser';
+import { haveUserCertificate } from '../utils/certificates.utils';
 
 export interface CertificatesByEvent {
   event:{ [key:string] :any };
@@ -30,11 +31,7 @@ export const useGetCertificatesByEvents = (organizationId:string, eventUserId:st
         const eventUserCurrent = eventUsers.find((eventUser)=>eventUser.event_id === event._id)
 
         const newCertificates: Certificates[] = certs.filter( cert=>{
-          if(!cert.userTypes || cert.userTypes.length === 0){
-            return true
-          }
-          return cert.userTypes?.includes(eventUserCurrent.properties.list_type_user)
-  
+          return haveUserCertificate(cert, eventUserCurrent.properties.list_type_user)
         })
 
         return {
