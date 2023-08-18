@@ -314,6 +314,7 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
           }}
         />
         <CourseProgressBar
+          event={cEventContext.value}
           eventId={cEventContext.value._id}
           activities={activities}
           eventUser={cEventUser.value}

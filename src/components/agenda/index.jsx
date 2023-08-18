@@ -5,13 +5,15 @@ import AgendaTypeCatCE from './AgendaTypeCatCE'
 import ActivityTypeProvider from '@context/activityType/activityTypeProvider'
 import AgendaEditPage from './AgendaEditPage'
 import AgendaCreatorPage from './AgendaCreatorPage'
+import ActivityListPage from '@components/admin/ActivityListPage'
 
 function AgendaRoutes(props) {
   const { event } = props
 
   return (
     <Routes>
-      <Route path="" element={<Agenda event={event} />} />
+      <Route path="" element={<ActivityListPage event={event} />} />
+      <Route path="old" element={<Agenda event={event} />} />
       <Route
         path="activity"
         element={

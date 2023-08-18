@@ -215,7 +215,7 @@ const Agenda = (props) => {
     <CMS
       API={AgendaApi}
       eventId={props.event._id}
-      title="Temas"
+      title="Lecciones"
       back
       titleTooltip="Agregue o edite las Agendas que se muestran en la aplicación"
       addUrl="create-activity"

@@ -34,6 +34,7 @@ const EventProgress: FunctionComponent<IEventProgressProps> = (props) => {
 
     const nonQuizingAttendees = cEventProgress.getAttendeesForActivities(
       nonQuizingActivities.map((activity) => activity._id! as string),
+      true,
     )
 
     report = report.concat(
