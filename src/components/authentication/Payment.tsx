@@ -164,7 +164,7 @@ export default function Payment({ event, userInfo, updateUser, money }: PropsPay
               })
             : intl.formatMessage({
                 id: 'register.button.payment',
-                defaultMessage: 'Comprar entrada',
+                defaultMessage: 'Comprar',
               })}
         </Button>
        { current === 0 && <Button danger loading={loading || !userInfo} type='primary' size='large' onClick={()=> handleChangeTypeModal(null) }>
