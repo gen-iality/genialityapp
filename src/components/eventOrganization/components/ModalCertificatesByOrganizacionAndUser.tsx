@@ -29,7 +29,6 @@ export const ModalCertificatesByOrganizacionAndUser = ({
   );
   const screens = useBreakpoint();
 
-  //toDo: Validar el mobile para el width del drawer
 
   return (
     <Drawer

@@ -135,7 +135,7 @@ export const assignStatusAccordingToAction = ({
 			setButtonsActions(buttonsAction);
 			break;
 		case 'ACTION_LOG_IN_OR_REGISTER_FOR_THE_EVENT_PAYMENT':
-			buttonsAction = [{ label: 'Comprar entrada', action: () => {
+			buttonsAction = [{ label: 'Comprar', action: () => {
 				if(cEvent.payment?.externalPayment){
 					window.open(cEvent.payment?.urlExternalPayment,'_blank')
 					return
@@ -153,7 +153,7 @@ export const assignStatusAccordingToAction = ({
 			setButtonsActions(buttonsAction);
 			break;
 		case 'ACTION_REGISTER_FOR_THE_EVENT_PAYMENT':
-			buttonsAction = [{ label: 'Comprar entrada', action: () => {
+			buttonsAction = [{ label: 'Comprar', action: () => {
 				if(cEvent.payment?.externalPayment){
 					window.open(cEvent.payment?.urlExternalPayment,'_blank')
 					return

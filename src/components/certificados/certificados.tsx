@@ -4,12 +4,15 @@ import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
 import moment from 'moment';
 import { Event } from './types';
+import { EyeOutlined } from '@ant-design/icons';
+import { UsersByCertificates } from './components/UsersByCertificates';
 
 const Certificados: FC<{
   event: Event;
   matchUrl: string;
 }> = (props) => {
   let [columnsData, setColumnsData] = useState({});
+  const [isOpenDrawer, setIsOpenDrawer] = useState(false);
 
   const columns = [
     {
@@ -42,24 +45,37 @@ const Certificados: FC<{
     },
   ];
 
+  const openDrawer = (epa: any) => {
+    setIsOpenDrawer(true);
+  };
+  const onCloseDrawer = () => {
+    setIsOpenDrawer(false);
+  };
+
   return (
-    <CMS
-      API={CertsApi}
-      eventId={props.event._id}
-      title={'Certificados'}
-      titleTooltip={'Agregue o edite los Certificados que se muestran en la aplicación'}
-      addUrl={{
-        pathname: `${props.matchUrl}/certificado`,
-        state: { new: true },
-      }}
-      columns={columns}
-      key='_id'
-      editPath={`${props.matchUrl}/certificado`}
-      pagination={false}
-      actions
-      search
-      setColumnsData={setColumnsData}
-    />
+    <>
+      <CMS
+        API={CertsApi}
+        eventId={props.event._id}
+        title={'Certificados'}
+        titleTooltip={'Agregue o edite los Certificados que se muestran en la aplicación'}
+        addUrl={{
+          pathname: `${props.matchUrl}/certificado`,
+          state: { new: true },
+        }}
+        columns={columns}
+        key='_id'
+        editPath={`${props.matchUrl}/certificado`}
+        pagination={false}
+        actions
+        search
+        extraFn={openDrawer}
+        extraFnTitle={'Ver usuarios'}
+        extraFnIcon={<EyeOutlined />}
+        setColumnsData={setColumnsData}
+      />
+      {isOpenDrawer && <UsersByCertificates onCloseDrawer={onCloseDrawer} visible={isOpenDrawer}/>}
+    </>
   );
 };
 
