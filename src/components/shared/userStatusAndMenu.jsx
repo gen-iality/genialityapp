@@ -26,6 +26,7 @@ import {
   ArrowLeftOutlined,
   DownOutlined,
   ExclamationCircleOutlined,
+  SettingOutlined,
 } from '@ant-design/icons'
 import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfirmationOutline'
 import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline'
@@ -395,6 +396,19 @@ const UserStatusAndMenu = (props) => {
                     icon={<ArrowLeftOutlined />}
                   >
                     Todos los cursos
+                  </Button>
+                </Link>
+                <Link
+                  title="Ir al CMS del curso"
+                  to={`/eventadmin/${cEvent.value?._id}`}
+                  target="_blank"
+                >
+                  <Button
+                    style={{ borderRadius: '10px' }}
+                    size="middle"
+                    icon={<SettingOutlined />}
+                  >
+                    Editar curso
                   </Button>
                 </Link>
                 {loggedInuser}

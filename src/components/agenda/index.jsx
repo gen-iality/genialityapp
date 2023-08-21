@@ -6,6 +6,7 @@ import AgendaTypeCatCE from './AgendaTypeCatCE'
 import ActivityTypeProvider from '@context/activityType/activityTypeProvider'
 import AgendaEditPage from './AgendaEditPage'
 import AgendaCreatorPage from './AgendaCreatorPage'
+import ActivityListPage from '@components/admin/ActivityListPage'
 
 function AgendaRoutes(props) {
   const { event, matchUrl } = props
@@ -16,6 +17,11 @@ function AgendaRoutes(props) {
         <Route
           exact
           path={`${matchUrl}/`}
+          render={() => <ActivityListPage event={event} parentUrl={matchUrl} />}
+        />
+        <Route
+          exact
+          path={`${matchUrl}/old`}
           render={() => <Agenda event={event} parentUrl={matchUrl} />}
         />
         <Route
