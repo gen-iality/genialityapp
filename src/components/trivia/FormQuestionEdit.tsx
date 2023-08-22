@@ -534,7 +534,7 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
                       ]}
                       initialValue={field.defaultValue}
                     >
-                      <Input defaultValue={field.defaultValue} />
+                      <TextArea defaultValue={field.defaultValue} />
                     </Form.Item>
                   ) : (
                     field.selectOptions && (
@@ -724,12 +724,12 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
                     `}
                     </style>
                     <Space
-                      direction="horizontal"
+                      direction="vertical"
                       className={classNames({
                         'abc-ranking':
                           questionType === 'ranking' || questionType === 'rating',
                       })}
-                      style={questionType === 'ranking' ? { width: '100%' } : undefined}
+                      style={{ width: '100%' }}
                     >
                       {questionType === 'radiogroup' ? (
                         <Radio.Group
@@ -749,28 +749,6 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
                               key={field.key}
                             >
                               <Radio value={index} style={{ width: '100%' }}>
-                                <Form.Item
-                                  {...field}
-                                  validateTrigger={['onChange', 'onBlur']}
-                                  rules={[
-                                    {
-                                      required: true,
-                                      whitespace: true,
-                                      message: `Por favor ingresa un valor a la respuesta ${
-                                        index + 1
-                                      }`,
-                                    },
-                                    {
-                                      validator: fieldValidation,
-                                    },
-                                  ]}
-                                  noStyle
-                                >
-                                  <Input
-                                    placeholder="Asingar respuesta"
-                                    style={{ width: '100%' }}
-                                  />
-                                </Form.Item>
                                 {fields.length > 2 ? (
                                   <MinusCircleOutlined
                                     onClick={() => {
@@ -779,6 +757,29 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
                                   />
                                 ) : null}
                               </Radio>
+
+                              <Form.Item
+                                style={{ width: '100%' }}
+                                {...field}
+                                validateTrigger={['onChange', 'onBlur']}
+                                rules={[
+                                  {
+                                    required: true,
+                                    whitespace: true,
+                                    message: `Por favor ingresa un valor a la respuesta ${
+                                      index + 1
+                                    }`,
+                                  },
+                                  {
+                                    validator: fieldValidation,
+                                  },
+                                ]}
+                              >
+                                <TextArea
+                                  placeholder="Asignar respuesta"
+                                  style={{ width: '100%' }}
+                                />
+                              </Form.Item>
                             </Form.Item>
                           ))}
                         </Radio.Group>
