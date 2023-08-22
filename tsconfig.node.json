@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
     "composite": true,
-    "module": "esnext",
-    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "baseUrl": "src",
     "paths": {
       "@assets/*": ["./Assets/*"],

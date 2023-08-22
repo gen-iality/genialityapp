@@ -4,13 +4,15 @@
     "es2021": true,
     "cypress/globals": true
   },
+  "ignorePatterns": ["dist", ".eslintrc.cjs"],
   "extends": [
     "plugin:react/recommended",
     "plugin:react/jsx-runtime",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:cypress/recommended",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "plugin:react-hooks/recommended"
   ],
   "globals": {
     "JSX": true,
@@ -36,16 +38,16 @@
     },
     "react": {
       "createClass": "createReactClass", // Regex for Component Factory to use,
-                                         // default to "createReactClass"
-      "pragma": "React",  // Pragma to use, default to "React"
-      "fragment": "Fragment",  // Fragment to use (may be a property of <pragma>), default to "Fragment"
+      // default to "createReactClass"
+      "pragma": "React", // Pragma to use, default to "React"
+      "fragment": "Fragment", // Fragment to use (may be a property of <pragma>), default to "Fragment"
       "version": "17.0.2", // React version. "detect" automatically picks the version you have installed.
-                           // You can also use `16.0`, `16.3`, etc, if you want to override the detected value.
-                           // It will default to "latest" and warn if missing, and to "detect" in the future
+      // You can also use `16.0`, `16.3`, etc, if you want to override the detected value.
+      // It will default to "latest" and warn if missing, and to "detect" in the future
       "flowVersion": "0.53" // Flow version
     }
   },
-  "plugins": ["react", "@typescript-eslint", "cypress", "prettier"],
+  "plugins": ["react", "react-refresh", "@typescript-eslint", "cypress", "prettier"],
   // "internal-rules"
   "rules": {
     "no-undef": "error",
@@ -58,7 +60,8 @@
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/ban-ts-comment": "off",
-    "cypress/no-unnecessary-waiting": "off"
+    "cypress/no-unnecessary-waiting": "off",
     // "internal-rules/nice-state-setter-name": [1]
+    "react-refresh/only-export-components": ["warn", { "allowConstantExport": true }]
   }
 }
