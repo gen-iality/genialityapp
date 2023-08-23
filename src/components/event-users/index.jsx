@@ -27,7 +27,7 @@ import {
   Select,
   Dropdown,
   Menu,
-  message,
+  message
 } from 'antd';
 
 import updateAttendees from './eventUserRealTime';
@@ -168,13 +168,13 @@ class ListEventUser extends Component {
     // const { recoveryMessage, status } = this.state;
     return (
       <Space>
-        <Tooltip placement='topLeft' title='Editar'>
+        <Tooltip placement='topLeft' title={this.props.event?.visibility === 'ANONYMOUS' ? 'No se pueden editar usuarios anónimos' : 'Editar'}>
           <Button
             type={'primary'}
             icon={<EditOutlined />}
             size='small'
             onClick={() => this.openEditModalUser(item)}
-            disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+            disabled={(this.props.event?.visibility === 'ANONYMOUS' || !eventIsActive) && window.location.toString().includes('eventadmin')}
           />
         </Tooltip>
         <PasswordAssistant onOk={() => this.handleRecoveryPass(item.email)}>
@@ -380,6 +380,14 @@ class ListEventUser extends Component {
 
                 case 'avatar':
                   return <Image width={40} height={40} src={key?.user?.picture} />;
+
+                case 'email':
+                  return self.props.event?.visibility === 'ANONYMOUS' ? 
+                    <Space direction='vertical' size={0}>
+                      <>{key[item.name]}</>
+                      <Tag color='volcano'><small>{self.props.event?.visibility}</small></Tag>
+                    </Space>
+                  : <>{key[item.name]}</>
 
                 default:
                   return key[item.name];
@@ -900,6 +908,7 @@ class ListEventUser extends Component {
               ? 'Check-in actividad: ' + nameActivity
               : `Check-in evento: ${this.props.event?.name}`
           }
+          description={this.props?.event?.visibility === 'ANONYMOUS' && <Typography.Text type='secondary'>Este evento es anónimo por lo tanto tiene sus limitaciones</Typography.Text>}
         />
 
         {modalUserOrganization && (
