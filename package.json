@@ -45,7 +45,7 @@
     "formik": "^2.1.5",
     "gender-detection-from-name": "^1.6.0",
     "html-react-parser": "^4.2.0",
-    "html2pdf-certs": "David256/html2pdf-certs.git#1.0.5",
+    "html2pdf-certs": "^1.0.5",
     "less": "^4.1.2",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",

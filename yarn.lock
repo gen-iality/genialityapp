@@ -7458,9 +7458,10 @@ html2canvas@^1.0.0, html2canvas@^1.0.0-rc.5:
     css-line-break "^2.1.0"
     text-segmentation "^1.0.3"
 
-html2pdf-certs@David256/html2pdf-certs.git#1.0.5:
+html2pdf-certs@^1.0.5:
   version "1.0.5"
-  resolved "git+ssh://git@github.com/David256/html2pdf-certs.git#769d29ab8f4df2f48689f56d06bd2e226b85e1b6"
+  resolved "https://registry.yarnpkg.com/html2pdf-certs/-/html2pdf-certs-1.0.5.tgz#3da8c2406d58a987b02fd1e61d29d5ff71b8ab4c"
+  integrity sha512-jT8QafCEUZDptM9UcyQ1imr9VbyltltOXeatdkz0XG4caSQPUWsC7Ruafsm62qz3cbBRLxGTVlD9DReOX7cP6w==
   dependencies:
     html2pdf.js "^0.10.1"
 
