@@ -219,7 +219,7 @@ function EventOrganization({ match }: OrganizationProps) {
                           <Title level={2}>Mis eventos</Title>
                         </Badge>
                         {organization?.show_my_certificates && (
-                          <Button type='primary' onClick={() => setIsModalCertificatesOpen(true)}>
+                          <Button type='default' onClick={() => setIsModalCertificatesOpen(true)}>
                             Ver mis certificados
                           </Button>
                         )}
