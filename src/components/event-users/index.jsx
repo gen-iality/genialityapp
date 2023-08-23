@@ -5,7 +5,7 @@
 import { Component, Fragment } from 'react';
 import { FormattedDate, FormattedTime } from 'react-intl';
 import { firestore } from '../../helpers/firebase';
-import { BadgeApi, EventsApi, RolAttApi } from '../../helpers/request';
+import { AttendeeApi, BadgeApi, EventsApi, RolAttApi, UsersApi } from '../../helpers/request';
 import UserModal from '../modal/modalUser';
 import ErrorServe from '../modal/serverError';
 import { utils, writeFileXLSX } from 'xlsx';
@@ -27,7 +27,8 @@ import {
   Select,
   Dropdown,
   Menu,
-  message
+  message,
+  Modal
 } from 'antd';
 
 import updateAttendees from './eventUserRealTime';
@@ -42,6 +43,9 @@ import {
   UsergroupAddOutlined,
   StarOutlined,
   DownOutlined,
+  InfoCircleOutlined,
+  DeleteOutlined,
+  ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import QrModal from './qrModal';
 
@@ -162,6 +166,60 @@ class ListEventUser extends Component {
     // Lógica a ejecutar cuando se cancele el modal
     this.setState({ showConfirm: false });
   };
+
+  deleteUser = async (user) => {
+    const activityId = this.props.activityId;
+    const self = this;
+
+    Modal.confirm({
+      title: `¿Está seguro de eliminar la información?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        DispatchMessageService({
+          type: 'loading',
+          key: 'loading',
+          msj: ' Por favor espere mientras se borra la información...',
+          action: 'show',
+        });
+
+        const onHandlerRemove = async () => {
+          try {
+            const selectedEventUserId = user._id;
+
+            if (activityId) {await UsersApi.deleteAttendeeInActivity(activityId, selectedEventUserId);}
+            if (!activityId) {await AttendeeApi.delete(self.props.event?._id, selectedEventUserId);}
+
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'success',
+              msj: 'Se eliminó la información correctamente!',
+              action: 'show',
+            });
+            /* self.getAttendes(); */
+          } catch (e) {
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'error',
+              msj: 'Error eliminando el usuario',
+              action: 'show',
+            });
+          }
+        };
+        onHandlerRemove();
+      },
+    });
+  };
+
   // eslint-disable-next-line no-unused-vars
   editcomponent = (text, item, index) => {
     const { eventIsActive } = this.context;
@@ -177,9 +235,20 @@ class ListEventUser extends Component {
             disabled={(this.props.event?.visibility === 'ANONYMOUS' || !eventIsActive) && window.location.toString().includes('eventadmin')}
           />
         </Tooltip>
-        <PasswordAssistant onOk={() => this.handleRecoveryPass(item.email)}>
-          <p>¿Estás seguro de que deseas enviar el correo para cambiar la contraseña?</p>
-        </PasswordAssistant>
+        {this.props.event?.visibility !== 'ANONYMOUS' &&
+          <PasswordAssistant onOk={() => this.handleRecoveryPass(item.email)}>
+            <p>¿Estás seguro de que deseas enviar el correo para cambiar la contraseña?</p>
+          </PasswordAssistant>
+        }
+        <Tooltip placement='topLeft' title={'Eliminar'}>
+          <Button
+            type={'primary'}
+            icon={<DeleteOutlined />}
+            size='small'
+            danger
+            onClick={() => this.deleteUser(item)}
+          />
+        </Tooltip>
       </Space>
     );
   };
@@ -339,7 +408,7 @@ class ListEventUser extends Component {
       };
 
       let editColumn = {
-        title: 'Editar',
+        title: 'Acciones',
         key: 'edit',
         fixed: 'right',
         width: 60,
@@ -383,9 +452,12 @@ class ListEventUser extends Component {
 
                 case 'email':
                   return self.props.event?.visibility === 'ANONYMOUS' ? 
-                    <Space direction='vertical' size={0}>
+                    <Space /* size={0} */>
+                      <Tooltip title='Usuario anónimo'>
+                        <InfoCircleOutlined />
+                      </Tooltip>
                       <>{key[item.name]}</>
-                      <Tag color='volcano'><small>{self.props.event?.visibility}</small></Tag>
+                      {/* <Tag color='volcano'><small>{self.props.event?.visibility}</small></Tag> */}
                     </Space>
                   : <>{key[item.name]}</>
 
@@ -908,7 +980,13 @@ class ListEventUser extends Component {
               ? 'Check-in actividad: ' + nameActivity
               : `Check-in evento: ${this.props.event?.name}`
           }
-          description={this.props?.event?.visibility === 'ANONYMOUS' && <Typography.Text type='secondary'>Este evento es anónimo por lo tanto tiene sus limitaciones</Typography.Text>}
+          description={this.props?.event?.visibility === 'ANONYMOUS' && 
+            <Space direction='vertical' size={0}>
+              <Typography.Paragraph>¡Evento sin autenticación (anónimo)! 
+                La información recolectada dentro del evento no está enlazada a un usuario específico dentro de la plataforma,
+                por lo tanto NO se pueden modificar.</Typography.Paragraph>
+            </Space>
+          }
         />
 
         {modalUserOrganization && (
