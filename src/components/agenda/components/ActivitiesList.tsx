@@ -21,6 +21,7 @@ import ModuledActivityDisplayer from './ModuledActivityDisplayer'
 import { FB } from '@helpers/firestore-request'
 import useIsDevOrStage from '@/hooks/useIsDevOrStage'
 import orderActivities from '@components/admin/ActivityListPage/utils/order-activities'
+import MarkAsViewedButton from './MarkAsViewedButton'
 
 interface ActivitiesListProps {
   eventId: string
@@ -198,6 +199,15 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
                 ) : (
                   <></>
                 ),
+              (itemProps) =>
+                isDev || isStage ? (
+                  <MarkAsViewedButton
+                    eventUser={currentEventUser.value}
+                    activity={itemProps.activity}
+                  >
+                    Marcar como visto
+                  </MarkAsViewedButton>
+                ) : null,
             ],
             ItemWrapper: ({ children }) => (
               <OnLiveRibbon
