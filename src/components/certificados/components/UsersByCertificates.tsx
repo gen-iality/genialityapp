@@ -3,6 +3,7 @@ import { CloseOutlined } from '@ant-design/icons';
 import { Button, Drawer, DrawerProps, Grid, Space, Tooltip, Typography } from 'antd';
 import { useGetEventUserWithCertificate } from '../hooks/useGetEventUserWithCertificate';
 import { UsersByCertificatesList } from './UsersByCertificatesList';
+import { generateCerts } from '../helpers/certificados.helper';
 
 interface Props extends DrawerProps {
   onCloseDrawer: () => void;
@@ -11,17 +12,20 @@ interface Props extends DrawerProps {
 }
 const { useBreakpoint } = Grid;
 
-export const UsersByCertificates = ({
-  onCloseDrawer,
-  certificate: certificates,
-  eventValue,
-  ...drawerProps
-}: Props) => {
+export const UsersByCertificates = ({ onCloseDrawer, certificate, eventValue, ...drawerProps }: Props) => {
   const screens = useBreakpoint();
   const { userEventUserWithCertificate, isLoading } = useGetEventUserWithCertificate(
-    certificates,
-    certificates?.event_id ?? ''
+    certificate,
+    certificate?.event_id ?? ''
   );
+
+  const onGenerateCertificates = () => {
+    const MAX_NUMBER_CERTIFICATES = 100;
+    if (userEventUserWithCertificate.length < MAX_NUMBER_CERTIFICATES)
+      return generateCerts(userEventUserWithCertificate, certificate, eventValue);
+    
+  };
+
   return (
     <Drawer
       title={
@@ -31,7 +35,11 @@ export const UsersByCertificates = ({
           </Typography.Title>
         </Space>
       }
-      footer={false}
+      footer={
+        <Button type='primary' onClick={onGenerateCertificates}>
+          Descargar Certificados
+        </Button>
+      }
       width={screens.xs ? '100%' : '450px'}
       closable={false}
       onClose={onCloseDrawer}
@@ -46,7 +54,7 @@ export const UsersByCertificates = ({
       <UsersByCertificatesList
         dataSource={userEventUserWithCertificate}
         loading={isLoading}
-        certificate={certificates}
+        certificate={certificate}
         eventValue={eventValue}
       />
     </Drawer>

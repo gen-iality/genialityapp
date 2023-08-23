@@ -15,11 +15,13 @@ export const generateCert = async (dataUser: UserData, cert: Certificates, event
   eventValue.datetime_from = Moment(eventValue.datetime_from).format('DD/MM/YYYY');
   eventValue.datetime_to = Moment(eventValue.datetime_to).format('DD/MM/YYYY');
 
-  let content: string | CertifiRow[] = cert.content;
+  /* let content: string | CertifiRow[] = cert.content;
   if (Array.isArray(content)) {
     const rowsWithData = replaceAllTagValues(eventValue, dataUser, roles, content);
     content = ArrayToStringCerti(rowsWithData);
-  }
+  } */
+
+  const content = generateContent(cert, dataUser, eventValue, roles);
 
   const body = { content, image: cert.background ? cert.background : imgBackground };
   const file = await CertsApi.generateCert(body);
@@ -35,4 +37,48 @@ export const generateCert = async (dataUser: UserData, cert: Certificates, event
     window.URL.revokeObjectURL(data);
     modal.destroy();
   }, 60);
+};
+
+export const generateCerts = async (dataUsers: UserData[], cert: Certificates, eventValue: any) => {
+  const modal = Modal.success({
+    title: 'Generando certificado',
+    content: <Spin>Espera</Spin>,
+  });
+
+  const roles = await RolAttApi.byEvent(eventValue._id);
+  eventValue.datetime_from = Moment(eventValue.datetime_from).format('DD/MM/YYYY');
+  eventValue.datetime_to = Moment(eventValue.datetime_to).format('DD/MM/YYYY');
+
+  
+  const certificates = dataUsers.map((user) => {
+    const content = generateContent(cert, user, eventValue, roles);
+    return {
+      content,
+    };
+  });
+  
+  const body = { certificates, image: cert.background ? cert.background : imgBackground };
+  const file = await CertsApi.generateCertList(body);
+  const blob = new Blob([file.blob], { type: file.type });
+
+  const data = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.type = 'json';
+  link.href = data;
+  link.download = 'certificado.pdf';
+  link.dispatchEvent(new MouseEvent('click'));
+  setTimeout(() => {
+    window.URL.revokeObjectURL(data);
+    modal.destroy();
+  }, 60);
+};
+
+export const generateContent = (cert: Certificates, dataUser: UserData, eventValue: any, roles: any) => {
+  let content: string | CertifiRow[] = cert.content;
+  if (Array.isArray(content)) {
+    const rowsWithData = replaceAllTagValues(eventValue, dataUser, roles, content);
+    content = ArrayToStringCerti(rowsWithData);
+  }
+
+  return content;
 };
