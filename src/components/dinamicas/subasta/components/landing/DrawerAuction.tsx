@@ -35,9 +35,15 @@ import { getCorrectColor } from '@/helpers/utils';
 
 const { useBreakpoint } = Grid;
 
-export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, eventId, cEventUser , cEvent}: DrawerAuctionProps) {
+export default function DrawerAuction({
+  openOrClose,
+  setOpenOrClose,
+  auction,
+  eventId,
+  cEventUser,
+  cEvent,
+}: DrawerAuctionProps) {
   const screens = useBreakpoint();
-
 
   const { products, getProducts, loading: ProductsLoading } = useProducts(eventId);
 
@@ -59,23 +65,23 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
   };
 
   const onBid = async (data: { offerValue: string }) => {
-    setcanOffer(false);
-    const timeAwait = setTimeout(() => {
-      setcanOffer(true);
-      clearTimeout(timeAwait);
-    }, auction.timerBids * 1000);
-
     const isValid = validOffer(data.offerValue);
 
     if (auction.playing && isValid && auction?.currentProduct?._id && data.offerValue) {
+      setcanOffer(false);
+      const timeAwait = setTimeout(() => {
+        setcanOffer(true);
+        clearTimeout(timeAwait);
+      }, auction.timerBids * 1000);
+
       saveOffer(
         eventId,
         {
           productName: auction?.currentProduct?.name,
-          productId : auction?.currentProduct?._id,
+          productId: auction?.currentProduct?._id,
           date: new Date().toLocaleString(),
           name: userName || 'Anónimo',
-          userId : cEventUser.value?.user?._id,
+          userId: cEventUser.value?.user?._id,
           offered: Number(data.offerValue),
         },
         auction
@@ -139,10 +145,15 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                 </Affix>
               </Card>
             </Col>
-            {!screens.xs &&
+            {!screens.xs && (
               <Col span={24}>
                 <Card
-                  style={{ borderRadius: '20px', backgroundColor: auction.styles?.cards?.backgroundColor || '', maxHeight: '450px', overflowY: 'auto' }}
+                  style={{
+                    borderRadius: '20px',
+                    backgroundColor: auction.styles?.cards?.backgroundColor || '',
+                    maxHeight: '450px',
+                    overflowY: 'auto',
+                  }}
                   bordered={false}
                   className='desplazar'
                   bodyStyle={{ padding: '0px 20px' }}>
@@ -157,7 +168,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                         <Col span={24}>
                           {Bids.length > 0 ? (
                             <List
-                              style={{height: '100%'}}
+                              style={{ height: '100%' }}
                               loading={loading}
                               dataSource={Bids}
                               renderItem={(item) => (
@@ -190,7 +201,12 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                             />
                           ) : (
                             <Empty
-                              style={{ height: '250px', display: 'grid', justifyContent: 'center', alignItems: 'center' }}
+                              style={{
+                                height: '250px',
+                                display: 'grid',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}
                               description={'Sin puja'}
                             />
                           )}
@@ -228,7 +244,12 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                             />
                           ) : (
                             <Empty
-                              style={{ height: '250px', display: 'grid', justifyContent: 'center', alignItems: 'center' }}
+                              style={{
+                                height: '250px',
+                                display: 'grid',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}
                               description={'Sin artículos'}
                             />
                           )}
@@ -238,7 +259,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                   </Tabs>
                 </Card>
               </Col>
-            }
+            )}
           </Row>
         </Col>
         <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
@@ -289,13 +310,23 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
             timer={auction.timerBids}
           />
 
-          <DrawerRules cEvent={cEvent} showDrawerRules={showDrawerRules} setshowDrawerRules={setshowDrawerRules}  auctionRules={auction.rules ?? ''}/>
+          <DrawerRules
+            cEvent={cEvent}
+            showDrawerRules={showDrawerRules}
+            setshowDrawerRules={setshowDrawerRules}
+            auctionRules={auction.rules ?? ''}
+          />
           <DrawerChat showDrawerChat={showDrawerChat} setshowDrawerChat={setshowDrawerChat} />
         </Col>
-        {screens.xs &&
+        {screens.xs && (
           <Col span={24}>
             <Card
-              style={{ borderRadius: '20px', backgroundColor: auction.styles?.cards?.backgroundColor || '', maxHeight: '450px', overflowY: 'auto' }}
+              style={{
+                borderRadius: '20px',
+                backgroundColor: auction.styles?.cards?.backgroundColor || '',
+                maxHeight: '450px',
+                overflowY: 'auto',
+              }}
               bordered={false}
               className='desplazar'
               bodyStyle={{ padding: '0px 20px' }}>
@@ -310,7 +341,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
                     <Col span={24}>
                       {Bids.length > 0 ? (
                         <List
-                          style={{height: '100%'}}
+                          style={{ height: '100%' }}
                           loading={loading}
                           dataSource={Bids}
                           renderItem={(item) => (
@@ -391,7 +422,7 @@ export default function DrawerAuction({ openOrClose, setOpenOrClose, auction, ev
               </Tabs>
             </Card>
           </Col>
-        }
+        )}
       </Row>
     </Drawer>
   );

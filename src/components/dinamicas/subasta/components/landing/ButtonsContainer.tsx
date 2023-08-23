@@ -38,7 +38,7 @@ export default function ButtonsContainer({
                     type='default'>
                     <Space direction='vertical'>
                       { !validate ? <Typography.Text strong={true} style={{ color : getCorrectColor(styles.backgroundColor)}}>¡PUJAR!</Typography.Text>
-                      : (<Countdown value={Date.now() + 1000 * timer} onFinish={()=>{}} format="s" /> )
+                      : (<Countdown value={Date.now() + 1000 * timer}  format="s" /> )
                     }
                     </Space>
                 </Button>
