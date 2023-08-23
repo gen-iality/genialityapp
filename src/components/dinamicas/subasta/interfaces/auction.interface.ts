@@ -113,7 +113,14 @@ export interface DrawerRulesProps {
     cEvent: any
     auctionRules: string
 }
-
+export interface FormatData { 
+    productos : string[]
+    pujas : number[]
+    participants: number[]
+    productsName: string[]
+    productsPrice: number[]
+    productsIncreases: number[]
+}
 export interface ButtonsContainerProps {
     validate: boolean
     onClick: () => void
@@ -121,6 +128,7 @@ export interface ButtonsContainerProps {
 	setshowDrawerRules: React.Dispatch<React.SetStateAction<boolean>>
 	closedrawer: () => void
     styles?: React.CSSProperties
+    timer: number
 }
 export interface ImagesData { 
     file :  UploadFile;

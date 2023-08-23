@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, Input, Modal, Result, Row, Space, Statistic, Typography } from 'antd';
 import { Bar } from 'react-chartjs-2';
 import { useSatistic } from '../../hooks/useStatistic';
-import { ReportProps } from '../../interfaces/auction.interface';
+import { FormatData, ReportProps } from '../../interfaces/auction.interface';
 import { filterUserID, orgOfferds, priceChartValues } from '../../utils/utils';
 
 import useProducts from '../../hooks/useProducts';
-import { CloseCircleOutlined, DeleteOutlined, ReloadOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined, DeleteOutlined, FileExcelOutlined, ReloadOutlined } from '@ant-design/icons';
 import { resetProducts } from '../../services';
 import { DispatchMessageService } from '@/context/MessageService';
+import { utils, writeFileXLSX } from 'xlsx';
+import moment from 'moment';
 
 export default function Report({ eventId, reload }: ReportProps) {
   const { offers,callOffers } = useSatistic(eventId, reload);
@@ -22,7 +24,7 @@ export default function Report({ eventId, reload }: ReportProps) {
 
   const { labels, values, participants } = orgOfferds(offers);
   const { labelsProducts, increases, startPrices } = priceChartValues(products);
-  const data = {
+  const dataBids = {
     labels: labels,
     datasets: [
       {
@@ -41,7 +43,7 @@ export default function Report({ eventId, reload }: ReportProps) {
       },
     ],
   };
-  const dataCre = {
+  const dataPrice = {
     labels: labelsProducts,
     datasets: [
       {
@@ -60,7 +62,7 @@ export default function Report({ eventId, reload }: ReportProps) {
       },
     ],
   };
-  const options = {
+  const optionsBids = {
     indexAxis: 'y',
     scales: {
       x: {
@@ -69,7 +71,7 @@ export default function Report({ eventId, reload }: ReportProps) {
       },
     },
   };
-  const optionsCar = {
+  const optionsPrice = {
     scales: {
       x: {
         stacked: true,
@@ -79,6 +81,47 @@ export default function Report({ eventId, reload }: ReportProps) {
       },
     },
   };
+  const formatDataExcel = ( {productos,participants, pujas, productsName, productsIncreases, productsPrice} : FormatData) => {
+
+    const dataProducts : any[] = []
+    const dataIncreases : any[] = []
+    productos.forEach((label, index) => {
+      dataProducts.push({
+        producto: label,
+        pujas: pujas[index],
+        participantes: participants[index],
+      });
+    });
+    productsName.forEach((label, index) => {
+      dataIncreases.push({
+        producto: label,
+        'precio inicial': productsPrice[index],
+        'precio final': productsPrice[index] + productsIncreases[index],
+        ganancias: productsIncreases[index],
+      });
+    });
+    return {
+      productos: dataProducts,
+      increases: dataIncreases
+    };
+  }
+  const exportData = () => {  
+    const data = formatDataExcel({productos: labels, participants, pujas: values, productsName: labelsProducts, productsIncreases: increases, productsPrice: startPrices})    
+    if (data) {
+      const workSheetProducts = utils.json_to_sheet(data.productos);
+      const workSheetIncreases = utils.json_to_sheet(data.increases);
+      const wb = utils.book_new();
+      utils.book_append_sheet(wb, workSheetProducts, `${'Pujas y participantes'}`);
+      utils.book_append_sheet(wb, workSheetIncreases, `${'Ganancias por producto'}`);
+      writeFileXLSX(wb, `${''}_${eventId}_${moment().format('DDMMYY')}.xls`);
+    } else {
+      DispatchMessageService({
+        type: 'error',
+        msj: 'No existen datos que exportar',
+        action: 'show',
+      });
+    }
+  }
   const reset = async () => {
   const response =  await resetProducts(eventId)
   if(response){
@@ -89,7 +132,7 @@ export default function Report({ eventId, reload }: ReportProps) {
   }
   return (
     <>
-      <Row justify='end' style={{paddingBottom: '10px'}}>
+      <Row justify='space-between' style={{paddingBottom: '10px'}}>
         <Modal
           visible={modal}
           onCancel={() => setModal(false)}
@@ -146,11 +189,15 @@ export default function Report({ eventId, reload }: ReportProps) {
             }
           />
         </Modal>
-      {true && (
+      
+        <Button icon={<FileExcelOutlined />}  type='primary' onClick={exportData}>
+          Generar Excel
+        </Button>
+      
         <Button icon={<ReloadOutlined />} danger type='primary' onClick={() => setModal(true)}>
           Reiniciar subasta
         </Button>
-      )}
+      
       </Row>
       <Row gutter={[32, 32]}>
         <Col span={12}>
@@ -162,7 +209,7 @@ export default function Report({ eventId, reload }: ReportProps) {
           >
             <Space direction='vertical' size={16}>
               {/*@ts-ignore */}
-              <Bar data={data} options={options} /> 
+              <Bar data={dataBids} options={optionsBids} /> 
 
               <Row gutter={[8, 8]} wrap>
                 <Col span={8}>
@@ -200,7 +247,7 @@ export default function Report({ eventId, reload }: ReportProps) {
             headStyle={{border: 'none'}}
           >
             <Space direction='vertical' size={16} style={{width: '100%'}}>
-              <Bar data={dataCre} options={optionsCar} />
+              <Bar data={dataPrice} options={optionsPrice} />
 
               <Result title='Próximamente'></Result>
             </Space>

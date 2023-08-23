@@ -219,7 +219,7 @@ export default function CreateAuction({ active, auction, event }: CreateProps) {
               <Col span={24}>
                 <Card hoverable style={{ borderRadius: 20 }}>
                   <Form.Item label={'Reglamento de la subasta'}  initialValue={auction.rules  ?? ''} name={'rules'}>
-                    <TextArea rows={6} placeholder='Escriba el reglamento para la subasta'/>
+                    <TextArea rows={6} maxLength={500} placeholder='Escriba el reglamento para la subasta'/>
                   </Form.Item>
                 </Card>
               </Col>
