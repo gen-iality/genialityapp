@@ -19,6 +19,7 @@ import Online from '@components/online/Online'
 import { AgendaApi, OrganizationApi } from '@helpers/request'
 import { LoadingOutlined, UnorderedListOutlined, UserOutlined } from '@ant-design/icons'
 import { type SessionPayload } from '@components/presence/types'
+import { useParams } from 'react-router'
 
 const { LOG, ERROR, WARN } = Logger('time-tracking-page')
 
@@ -44,7 +45,6 @@ type RowDataByActivity = {
 }
 
 export interface OrganizationTimeTrackingPageProps {
-  match: any
   org: any
 }
 
@@ -58,8 +58,9 @@ const OrganizationTimeTrackingPage: FunctionComponent<
   OrganizationTimeTrackingPageProps
 > = (props) => {
   const { org: organization } = props
+  const params = useParams<{ memberIdParam: string }>()
   // From URI we take the member ID.
-  const [memberId] = useState(props.match.params.memberIdParam)
+  const [memberId] = useState(params.memberIdParam)
   // Then, we ask for the User ID
   const [userId, setUserId] = useState<string | undefined>()
   // And build a user info

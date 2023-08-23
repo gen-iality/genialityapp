@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { withRouter } from 'react-router-dom'
+import { withRouter } from '@/withRouter'
 
 class InvitedUsers extends Component {
   constructor(props) {

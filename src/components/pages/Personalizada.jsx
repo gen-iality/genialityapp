@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { withRouter } from 'react-router-dom'
+import { withRouter } from '@/withRouter'
 import EditarHtml from '../shared/crud/components/editorHtml'
 
 class PagePersonalizada extends Component {
@@ -10,7 +10,7 @@ class PagePersonalizada extends Component {
 
   render() {
     const pageInfo = this.props.location.state.info
-    if (!pageInfo) return this.props.history.goBack()
+    if (!pageInfo) return this.props.navigate(-1)
     return (
       <div>
         <h2 className="title">{pageInfo.name}</h2>

@@ -1,26 +1,19 @@
 import { Fragment } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import CertificateListPage from './CertificateListPage'
 import CertificateEditorPage from './CertificateEditorPage'
 
 function CertificateRoutes(props: any) {
-  const { event, matchUrl } = props
+  const { event } = props
   return (
     <Fragment>
-      <Switch>
+      <Routes>
+        <Route path="/" element={<CertificateListPage event={event} />} />
         <Route
-          exact
-          path={`${matchUrl}/`}
-          render={() => <CertificateListPage event={event} parentUrl={matchUrl} />}
+          path="/certificate"
+          element={<CertificateEditorPage event={event} {...props} />}
         />
-        <Route
-          exact
-          path={`${matchUrl}/certificate`}
-          render={() => (
-            <CertificateEditorPage event={event} parentUrl={matchUrl} {...props} />
-          )}
-        />
-      </Switch>
+      </Routes>
     </Fragment>
   )
 }

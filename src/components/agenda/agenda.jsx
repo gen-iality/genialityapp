@@ -218,13 +218,11 @@ const Agenda = (props) => {
       title="Lecciones"
       back
       titleTooltip="Agregue o edite las Agendas que se muestran en la aplicación"
-      addUrl={{
-        pathname: `${props.parentUrl}/create-activity`,
-        state: { new: true },
-      }}
+      addUrl="create-activity"
+      addUrlState={{ new: true }}
       columns={columns}
       // key="_id"
-      editPath={`${props.parentUrl}/activity`}
+      editPath="activity"
       pagination={false}
       actions
       search

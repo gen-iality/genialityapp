@@ -1,6 +1,6 @@
 /** React's libraries */
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import dayjs from 'dayjs'
 
 /** Antd imports */
@@ -42,19 +42,18 @@ const { TextArea } = Input
 
 export interface MembersCertificationPageProps {
   org: any
-  match: {
-    params: {
-      positionId: string
-      userId: string
-    }
-    url: string
-  }
 }
 
 function MembersCertificationPage(props: MembersCertificationPageProps) {
   const organizationId: string = props.org._id
-  const positionId = props.match.params.positionId
-  const userId = props.match.params.userId
+
+  const { pathname } = useLocation()
+  const params = useParams<{
+    positionId: string
+    userId: string
+  }>()
+  const positionId = params.positionId
+  const userId = params.userId
 
   const [columns, setColumns] = useState<ColumnsType<any>>([])
   const [allPositionEvents, setAllPositionEvents] = useState<any[]>([])
@@ -153,6 +152,12 @@ function MembersCertificationPage(props: MembersCertificationPageProps) {
 
   const editUserCertification = (values: any) => {
     const certification = values.certification
+    if (!certification) {
+      console.error(
+        'You are trying to edit a certification, but you passed an event without certification',
+      )
+      return
+    }
     setCertification(certification)
     openModal()
 
@@ -171,6 +176,12 @@ function MembersCertificationPage(props: MembersCertificationPageProps) {
   }
 
   const onDeleteCertification = (certification: any) => {
+    if (!certification) {
+      console.error(
+        'You are trying to delete a certification, but you passed a undefined value',
+      )
+      return
+    }
     CerticationsApi.deleteOne(certification._id).then((result) => {
       if (result.success) {
         // Now remove the file in FireStorage
@@ -229,7 +240,7 @@ function MembersCertificationPage(props: MembersCertificationPageProps) {
             {(certification?.certification_logs || []).length === 0 ? (
               <em>Sin registros</em>
             ) : (
-              <Link to={`${props.match.url}/logs/${certification._id}`}>
+              <Link to={`logs/${certification._id}`}>
                 <Tag color="#88f">
                   {(certification?.certification_logs || []).length} registros
                 </Tag>
@@ -306,6 +317,7 @@ function MembersCertificationPage(props: MembersCertificationPageProps) {
             <Col>
               <Tooltip title="Editar">
                 <Button
+                  disabled={!event.certification}
                   id={`editAction${event._id}`}
                   type="primary"
                   size="small"
@@ -320,6 +332,7 @@ function MembersCertificationPage(props: MembersCertificationPageProps) {
             <Col>
               <Tooltip title="Borrar">
                 <Button
+                  disabled={!event.certification}
                   id={`deleteAction${event._id}`}
                   type="primary"
                   size="small"

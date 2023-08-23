@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, type FunctionComponent } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Moment from 'moment-timezone'
 import { FormattedMessage } from 'react-intl'
@@ -47,7 +47,7 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
   const cEventUser = useUserEvent()
   const cEvent = useEventContext()
   // const cSurveys = useSurveysContext()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const params = useParams<any>()
 
@@ -146,7 +146,7 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
   }, [currentActivity, cEventUser.status])
 
   const goToActivityIdPage = async (activityId: string) => {
-    history.push(`/landing/${cEvent?.value._id}/activity/${activityId}`)
+    navigate(`/landing/${cEvent?.value._id}/activity/${activityId}`)
   }
 
   const thisActivityRequiresCompletion = useMemo(() => {

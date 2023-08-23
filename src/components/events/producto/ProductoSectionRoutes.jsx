@@ -1,4 +1,4 @@
-import { Route, Switch, useRouteMatch } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 /** --------------------
  *  secciones del curso
  * ---------------------*/
@@ -7,19 +7,19 @@ import DetailsProduct from './productDetails'
 import ProductList from './productList'
 
 const ProductoSectionRoutes = () => {
-  const { path } = useRouteMatch()
+  const { pathname: path } = useLocation()
   const cEvent = useEventContext()
 
   if (!cEvent.value) return <h1>Cargando...</h1>
   return (
-    <Switch>
+    <Routes>
       <Route exact path={`${path}`}>
         <ProductList />
       </Route>
       <Route path={`${path}/:id/detailsproducts`}>
         <DetailsProduct />
       </Route>
-    </Switch>
+    </Routes>
   )
 }
 export default ProductoSectionRoutes

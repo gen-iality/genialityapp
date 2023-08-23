@@ -1,5 +1,5 @@
 import { Component, Fragment } from 'react'
-import { withRouter } from 'react-router-dom'
+import { withRouter } from '@/withRouter'
 import MyAgenda from './myAgenda'
 import { userRequest } from './services'
 import { Spin } from 'antd'

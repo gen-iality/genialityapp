@@ -91,7 +91,7 @@ const ModalAuth = (props) => {
 
   /*Cargando la información de la organización esto debería estar en un contexto*/
   useEffect(() => {
-    if (!orgId) return null
+    if (!orgId) return
     let _organization = null
     let asyncfunc = async () => {
       _organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId)

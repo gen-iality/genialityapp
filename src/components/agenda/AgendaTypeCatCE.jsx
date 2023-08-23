@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { ChromePicker } from 'react-color'
 import { CategoriesAgendaApi, TypesAgendaApi } from '@helpers/request'
 import { handleRequestError } from '@helpers/utils'
@@ -16,19 +16,18 @@ const formLayout = {
 const { confirm } = Modal
 
 const AgendaTypeCatCE = (props) => {
-  const matchUrl = props.matchUrl
   const eventID = props.event._id
-  const subject = matchUrl.split('/').slice(-1)[0]
+  const location = useLocation()
+  const subject = location.pathname.split('/').slice(-1)[0]
   const apiURL =
     subject === 'addcategorias' || subject === 'editcategorias'
       ? CategoriesAgendaApi
       : TypesAgendaApi
-  const history = useHistory()
+  const navigate = useNavigate()
   const [categoryValues, setCategoryValues] = useState({})
   const [name, setName] = useState('')
   const [color, setColor] = useState('#000000')
 
-  const location = useLocation()
   const locationState = location.state // If is coming from "new" or "edit" in the state, if "edit", then it is an ID
 
   useEffect(() => {
@@ -68,8 +67,8 @@ const AgendaTypeCatCE = (props) => {
 
         StateMessage.destroy('loading')
         StateMessage.show(null, 'success', 'Información guardada correctamente!')
-        history.push(
-          `${props.matchUrl}/${
+        navigate(
+          `/${
             subject === 'addcategorias' || subject === 'editcategorias'
               ? 'categorias'
               : 'tipos'
@@ -114,8 +113,8 @@ const AgendaTypeCatCE = (props) => {
                 'success',
                 'Se eliminó la información correctamente!',
               )
-              history.push(
-                `${props.matchUrl}/${
+              navigate(
+                `/${
                   subject === 'addcategorias' || subject === 'editcategorias'
                     ? 'categorias'
                     : 'tipos'

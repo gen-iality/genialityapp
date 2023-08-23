@@ -35,7 +35,8 @@ import {
 } from 'antd'
 
 import updateAttendees from './eventUserRealTime'
-import { Link, withRouter } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { withRouter } from '@/withRouter'
 import {
   EditOutlined,
   FullscreenOutlined,
@@ -1337,13 +1338,12 @@ and displays an error message using the `message` component from the antd librar
               </Col>
               <Col>
                 <Link
-                  to={{
-                    pathname:
-                      !eventIsActive && window.location.toString().includes('eventadmin')
-                        ? ''
-                        : `/eventadmin/${this.props.event._id}/invitados/importar-excel`,
-                    state: { activityId },
-                  }}
+                  to={
+                    !eventIsActive && window.location.toString().includes('eventadmin')
+                      ? ''
+                      : `/eventadmin/${this.props.event._id}/invitados/importar-excel`
+                  }
+                  state={{ activityId }}
                 >
                   <Button
                     type="primary"

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { SpacesApi } from '@helpers/request'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { handleRequestError } from '@helpers/utils'
 import { Row, Col, Form, Input, Modal } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
@@ -18,18 +18,18 @@ const Espacio = (props) => {
   const eventID = props.event._id
   const location = useLocation()
   const locationState = location.state //si viene new o edit en el state, si es edit es un id
-  const history = useHistory()
+  const navigate = useNavigate()
   const [espacio, setEspacio] = useState({})
 
   useEffect(() => {
-    if (locationState.edit) {
+    if (locationState?.edit) {
       getOne()
     }
   }, [])
 
   const getOne = async () => {
-    const response = await SpacesApi.getOne(locationState.edit, eventID)
-    const data = response.data.find((espacios) => espacios._id === locationState.edit)
+    const response = await SpacesApi.getOne(locationState?.edit, eventID)
+    const data = response.data.find((espacios) => espacios._id === locationState?.edit)
     setEspacio(data)
   }
 
@@ -42,14 +42,14 @@ const Espacio = (props) => {
       )
 
       try {
-        if (locationState.edit) {
-          await SpacesApi.editOne(espacio, locationState.edit, eventID)
+        if (locationState?.edit) {
+          await SpacesApi.editOne(espacio, locationState?.edit, eventID)
         } else {
           await SpacesApi.create(espacio, eventID)
         }
         StateMessage.destroy('loading')
         StateMessage.show(null, 'success', 'Información guardada correctamente!')
-        history.push(`${props.parentUrl}/espacios`)
+        navigate('..')
       } catch (e) {
         StateMessage.destroy('loading')
         StateMessage.show(null, 'error', handleRequestError(e).message)
@@ -69,7 +69,7 @@ const Espacio = (props) => {
       'loading',
       'Por favor espere mientras se borra la información...',
     )
-    if (locationState.edit) {
+    if (locationState?.edit) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
         icon: <ExclamationCircleOutlined />,
@@ -80,14 +80,14 @@ const Espacio = (props) => {
         onOk() {
           const onHandlerRemove = async () => {
             try {
-              await SpacesApi.deleteOne(locationState.edit, eventID)
+              await SpacesApi.deleteOne(locationState?.edit, eventID)
               StateMessage.destroy('loading')
               StateMessage.show(
                 null,
                 'success',
                 'Se eliminó la información correctamente!',
               )
-              history.push(`${props.parentUrl}/espacios`)
+              navigate('..')
             } catch (e) {
               StateMessage.destroy('loading')
               StateMessage.show(null, 'error', handleRequestError(e).message)
@@ -107,7 +107,7 @@ const Espacio = (props) => {
         save
         form
         remove={onRemoveId}
-        edit={locationState.edit}
+        edit={locationState?.edit}
       />
 
       <Row justify="center" wrap gutter={12}>

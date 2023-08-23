@@ -48,7 +48,7 @@ export default function positionsTableColumns(
       title: 'Asignados',
       width: 120,
       render: (_, position) => (
-        <Link key={position._id} to={`${currentUrl}/${position._id}`}>
+        <Link key={position._id} to={`${position._id}`}>
           {`${position.users.length} usuarios`}
         </Link>
       ),

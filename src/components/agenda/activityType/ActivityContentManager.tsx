@@ -29,7 +29,6 @@ import EviusReactQuill from '@components/shared/eviusReactQuill'
 
 export interface ActivityContentManagerProps {
   activityName: string
-  matchUrl: string
 }
 
 function ActivityContentManager(props: ActivityContentManagerProps) {
@@ -111,7 +110,6 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
           simpleMode
           notRecordFileInDocuments
           event={eventContext.value} // Awful, but who are we
-          parentUrl={props.matchUrl}
           // activityId={activityEdit}
           fromPDFDocumentURL={contentSource}
           onSave={(pdfUrl: string) => {

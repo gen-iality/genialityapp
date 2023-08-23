@@ -11,16 +11,15 @@ type SurveyQuestionType = any // TODO: define ths type, and move to Utilities/ty
 
 export interface ITriviaReportPageProps {
   event: any
-  matchUrl: string
 }
 
 const TriviaReportPage: FunctionComponent<ITriviaReportPageProps> = (props) => {
-  const { event, matchUrl } = props
+  const { event } = props
 
   const [surveyQuestions, setSurveyQuestions] = useState<SurveyQuestionType[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
-  const location = useLocation<any>()
+  const location = useLocation()
 
   const loadData = async () => {
     console.log('report:', { report: location.state.report })
@@ -73,12 +72,10 @@ const TriviaReportPage: FunctionComponent<ITriviaReportPageProps> = (props) => {
           renderItem={(item) => (
             <List.Item>
               <Link
-                to={{
-                  pathname: `${matchUrl}/${item.id}`,
-                  state: {
-                    titleQuestion: item.title,
-                    surveyId: location.state.report,
-                  },
+                to={`/${item.id}`}
+                state={{
+                  titleQuestion: item.title,
+                  surveyId: location.state.report,
                 }}
               >
                 <Card title={item.title ? item.title : 'Pregunta sin Titulo'} hoverable>

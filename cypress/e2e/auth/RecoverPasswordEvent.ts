@@ -55,7 +55,7 @@ describe('Recover Password in Event', () => {
   it('it should change the password and log in with the new password', () => {
     cy.request({
       method: 'PUT',
-      url: `https://devapi.evius.co/api/changeuserpassword`,
+      url: 'https://devapi.evius.co/api/changeuserpassword',
       body: {
         email: email,
         event_id: event_id,

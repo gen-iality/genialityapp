@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { EventsApi } from '@helpers/request'
 import withContext from '@context/withContext'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Card, Col, Row } from 'antd'
 import { useEffect } from 'react'
 import ProductCard from './productCard'
 
 const ProductList = (props) => {
   const [products, setProducts] = useState([])
-  const history = useHistory()
+  const navigate = useNavigate()
 
   useEffect(() => {
     obtenerGaleria()
@@ -32,7 +32,7 @@ const ProductList = (props) => {
           {products.map((galery) => (
             <Col xs={24} sm={24} md={12} lg={12} xl={8} xxl={8} key={galery.id}>
               <ProductCard
-                history={history}
+                navigate={navigate}
                 eventId={props.cEvent.value._id}
                 galery={galery}
               />

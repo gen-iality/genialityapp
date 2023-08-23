@@ -1,5 +1,5 @@
 import { useState, useEffect, FunctionComponent } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { DocumentsApi } from '@helpers/request'
 import { handleRequestError } from '@helpers/utils'
 import { Form, Row, Col, Input, Modal, Upload, Button, Spin, Progress } from 'antd'
@@ -24,7 +24,6 @@ interface IDocumentProps {
   event: any
   simpleMode?: boolean
   fromPDFDocumentURL?: string | null
-  parentUrl?: string
   notRecordFileInDocuments?: boolean
   /** To check if the document was uploaded */
   cbUploaded?: () => void
@@ -34,7 +33,7 @@ interface IDocumentProps {
 }
 
 const Document: FunctionComponent<IDocumentProps> = (props) => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const [document, setDocument] = useState<any>({})
   const [documentList, setDocumentList] = useState<any[]>([])
   const [files, setFiles] = useState('')
@@ -45,7 +44,7 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
   const [loadPercentage, setLoadPercentage] = useState(0)
   const [fromEditing, setFromEditing] = useState(false)
 
-  const location = useLocation<any>()
+  const location = useLocation()
 
   useEffect(() => {
     if (location.state.edit && !props.simpleMode) {
@@ -163,7 +162,7 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
           StateMessage.show(null, 'success', 'Información guardada correctamente!')
         }
 
-        if (!props.simpleMode && props.parentUrl) history.push(`${props.parentUrl}`)
+        if (!props.simpleMode) navigate('..')
         setIsLoading(false)
       } catch (e) {
         StateMessage.destroy('loading')
@@ -217,7 +216,7 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
                   'Se eliminó la información correctamente!',
                 )
               }
-              if (!props.simpleMode) history.push(`${props.parentUrl}`)
+              if (!props.simpleMode) navigate('..')
               if (typeof props.onRemoveDocumentContent === 'function') {
                 props.onRemoveDocumentContent()
               }
@@ -331,7 +330,8 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
   }
 
   const reload = () => {
-    history.go(0)
+    // his tory.go(0)
+    window.location.reload()
   }
 
   return (
@@ -348,7 +348,7 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
           if (props.notRecordFileInDocuments) {
             remove()
           } else if (props.simpleMode) {
-            history.push(
+            navigate(
               `${location.pathname
                 .replace('agenda/activity', 'documents')
                 .replace('agenda', 'documents')}`,

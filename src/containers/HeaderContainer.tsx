@@ -1,6 +1,6 @@
 /** React's libraries */
 import { useEffect, useState, createElement, FunctionComponent } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
 import { useIntl } from 'react-intl'
 
@@ -92,7 +92,7 @@ const HeaderContainer: FunctionComponent<IHeaderContainerProps> = (props) => {
   })
   const [fixed, setFixed] = useState(false)
   const screens = useBreakpoint()
-  const history = useHistory()
+  const navigate = useNavigate()
   const intl = useIntl()
 
   // We use this to know the default position
@@ -163,7 +163,7 @@ const HeaderContainer: FunctionComponent<IHeaderContainerProps> = (props) => {
       resetEventUser: cEventUser.resetEventUser,
       formatMessage: intl.formatMessage,
       handleChangeTypeModal: cHelper.handleChangeTypeModal,
-      history,
+      history: navigate,
     }
 
     helperDispatch({

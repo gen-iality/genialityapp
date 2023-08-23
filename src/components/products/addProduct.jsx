@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { Row, Input, Form, Col, Modal } from 'antd'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { EventsApi } from '@helpers/request'
 import Header from '@antdComponents/Header'
 import BackTop from '@antdComponents/BackTop'
@@ -46,7 +46,7 @@ function AddProduct(props) {
   const [isLoading, setIsLoading] = useState(true)
 
   const params = useParams()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (params.id) {
@@ -68,7 +68,7 @@ function AddProduct(props) {
     }
   }, [params.id])
 
-  const goBack = () => history.goBack()
+  const goBack = () => navigate(-1)
 
   const changeInput = (e, key) => {
     if (key === 'name') {
@@ -166,7 +166,7 @@ function AddProduct(props) {
             product._id,
           )
           if (resp) {
-            history.push(`/eventadmin/${props.eventId}/product`)
+            navigate(`/eventadmin/${props.eventId}/product`)
           }
         } else {
           const newProduct = await EventsApi.createProducts(
@@ -183,7 +183,7 @@ function AddProduct(props) {
             props.eventId,
           )
           if (newProduct) {
-            history.push(`/eventadmin/${props.eventId}/product`)
+            navigate(`/eventadmin/${props.eventId}/product`)
           }
         }
         StateMessage.destroy('loading')

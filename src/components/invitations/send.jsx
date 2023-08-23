@@ -1,5 +1,6 @@
 import { Component } from 'react'
-import { Redirect, Link, withRouter } from 'react-router-dom'
+import { redirect, Link, Navigate } from 'react-router-dom'
+import { withRouter } from '@/withRouter'
 import dayjs from 'dayjs'
 import 'dayjs/locale/es-us'
 import { EventsApi } from '@helpers/request'
@@ -202,8 +203,7 @@ class SendRsvp extends Component {
 
   render() {
     const { disabled, include_date, isLoading } = this.state
-    if (this.state.redirect)
-      return <Redirect to={{ pathname: this.state.url_redirect }} />
+    if (this.state.redirect) return <Navigate to={this.state.url_redirect} />
     return (
       <>
         <Form {...formLayout}>
@@ -404,7 +404,7 @@ class SendRsvp extends Component {
                     )}
                   </Row>
                   <Row justify="center" gutter={8} wrap>
-                    <Link to={{ pathname: `${this.props.parentUrl}/invitados` }}>
+                    <Link to="..">
                       <Button type="primary">Editar seleccionados</Button>
                     </Link>
                   </Row>

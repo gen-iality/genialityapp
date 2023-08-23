@@ -1,7 +1,7 @@
 import { ArrowLeftOutlined, MenuOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { Tooltip, Typography, Row, Col, Button, Table } from 'antd'
 import { FunctionComponent, useEffect, useState } from 'react'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import { Link } from 'react-router-dom'
 import useRequestActivities from './hooks/useRequestActivities'
 import useDefineColumns from './hooks/useDefineColumns'
@@ -17,7 +17,6 @@ import './styles.css'
 import useOrderUpdater from './hooks/useOrderUpdater'
 
 interface IActivityListPageProps {
-  parentUrl: string
   event: any
 }
 
@@ -33,8 +32,8 @@ const SortableBody = SortableContainer(
 )
 
 const ActivityListPage: FunctionComponent<IActivityListPageProps> = (props) => {
-  const { parentUrl, event } = props
-  const history = useHistory()
+  const { event } = props
+  const navigate = useNavigate()
 
   const [dataSource, setDataSource] = useState<any[]>([])
 
@@ -48,7 +47,7 @@ const ActivityListPage: FunctionComponent<IActivityListPageProps> = (props) => {
   const { updateOrder } = useOrderUpdater()
 
   const columns = useDefineColumns(event._id, {
-    editUrl: `${parentUrl}/activity`,
+    editUrl: `activity`,
     removeMethod: (id) => {
       deleteActivityById(id, {
         useConfirmation: true,
@@ -140,7 +139,7 @@ const ActivityListPage: FunctionComponent<IActivityListPageProps> = (props) => {
           <Tooltip placement="bottomLeft" title="Atrás">
             <ArrowLeftOutlined
               id="goBack"
-              onClick={() => history.goBack()}
+              onClick={() => navigate('..')}
               style={{ marginRight: '10px' }}
             />
           </Tooltip>
@@ -154,12 +153,7 @@ const ActivityListPage: FunctionComponent<IActivityListPageProps> = (props) => {
 
         <Row wrap justify="end" gutter={[8, 8]}>
           <Col>
-            <Link
-              to={{
-                pathname: `${props.parentUrl}/create-activity`,
-                state: { new: true },
-              }}
-            >
+            <Link to="create-activity" state={{ new: true }}>
               <Button type="primary" icon={<PlusCircleOutlined />} size="middle">
                 Agregar
               </Button>

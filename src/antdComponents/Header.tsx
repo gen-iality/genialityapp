@@ -1,4 +1,4 @@
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Tooltip, Typography, Row, Col, Button } from 'antd'
 import {
   PlusCircleOutlined,
@@ -15,6 +15,7 @@ interface HeaderProps {
   title: string | ReactElement
   titleTooltip?: string
   addUrl?: string
+  addUrlState?: any
   addFn?: MouseEventHandler<HTMLElement>
   edit?: boolean
   remove?: MouseEventHandler<HTMLElement>
@@ -31,12 +32,13 @@ interface HeaderProps {
 }
 
 const Header: FunctionComponent<HeaderProps> = (props) => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const { eventIsActive } = useHelper()
   const {
     title, //titulo del encabezado
     titleTooltip, //tooltip para el encabezado
     addUrl, //link para ir a la vista de agregar
+    addUrlState,
     addFn, //link para ir a la vista de agregar
     edit, //id del elemento a editar
     remove, //método para eliminar
@@ -61,7 +63,7 @@ const Header: FunctionComponent<HeaderProps> = (props) => {
           <Tooltip placement="bottomLeft" title="Atrás">
             <ArrowLeftOutlined
               id="goBack"
-              onClick={() => (customBack ? history.push(customBack) : history.goBack())}
+              onClick={() => (customBack ? navigate(customBack) : navigate(-1))}
               style={{ marginRight: '10px' }}
             />
           </Tooltip>
@@ -89,7 +91,7 @@ const Header: FunctionComponent<HeaderProps> = (props) => {
         {(addUrl || addFn) && (
           <Col>
             {addUrl && (
-              <Link to={addUrl}>
+              <Link to={addUrl} state={addUrlState}>
                 <Button
                   type="primary"
                   icon={<PlusCircleOutlined />}

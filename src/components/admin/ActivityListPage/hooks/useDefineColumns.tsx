@@ -140,7 +140,8 @@ export default function useDefineColumns<T extends object = any>(
                 <Link
                   key={`editAction${item.index}`}
                   id={`editAction${item.index}`}
-                  to={{ pathname: config?.editUrl, state: { edit: item._id } }}
+                  to={config?.editUrl || ''}
+                  state={{ edit: item._id }}
                 >
                   <Button icon={<EditOutlined />} type="primary" size="small" />
                 </Link>

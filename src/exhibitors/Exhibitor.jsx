@@ -337,7 +337,7 @@ class Exhibitor extends Component {
           })}
         >
           <div className="main-stand-modal-overlay" onClick={this.handleHideInfo} />
-          <div className={`main-stand-modal-container`}>
+          <div className="main-stand-modal-container">
             <div className="main-stand-modal-header">
               <div className="main-stand-modal-header-title">Información de contacto</div>
               <div

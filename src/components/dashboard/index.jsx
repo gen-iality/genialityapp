@@ -11,7 +11,7 @@ import {
   NotificationOutlined,
   UserOutlined,
 } from '@ant-design/icons'
-import { withRouter } from 'react-router-dom'
+import { withRouter } from '@/withRouter'
 import {
   totalsMetricasEventsDetails,
   totalsMetricasMail,
@@ -729,9 +729,7 @@ class DashboardEvent extends Component {
                       shape="round"
                       icon={<NotificationOutlined />}
                       onClick={() =>
-                        this.props.history.push(
-                          `/eventadmin/${this.props.eventId}/messages`,
-                        )
+                        this.props.navigate(`/eventadmin/${this.props.eventId}/messages`)
                       }
                     >
                       Ver correos

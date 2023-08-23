@@ -23,7 +23,7 @@ const OrganizationPaymentConfirmationModal: FunctionComponent<
     <Modal
       title="Confirmación Pago"
       open={paymentStep === 'REQUIRING_PAYMENT'}
-      okText={'Pagar'}
+      okText="Pagar"
       onOk={() => dispatch({ type: 'DISPLAY_PAYMENT' })}
       onCancel={() => dispatch({ type: 'ABORT' })}
     >

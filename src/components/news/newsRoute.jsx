@@ -1,4 +1,4 @@
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 
 /** --------------------
  *  secciones del curso
@@ -8,17 +8,11 @@ import News from './news'
 import NewCE from './newCE'
 
 const NewsSectionRoutes = (props) => {
-  const { matchUrl } = props
-
   return (
-    <Switch>
-      <Route exact path={`${matchUrl}/`}>
-        <News {...props} />
-      </Route>
-      <Route path={`${matchUrl}/new`}>
-        <NewCE {...props} />
-      </Route>
-    </Switch>
+    <Routes>
+      <Route path="/" element={<News {...props} />} />
+      <Route path="/new" element={<NewCE {...props} />} />
+    </Routes>
   )
 }
 export default NewsSectionRoutes

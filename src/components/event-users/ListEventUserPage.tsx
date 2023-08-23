@@ -44,7 +44,7 @@ import {
   UsergroupAddOutlined,
 } from '@ant-design/icons'
 import UserModal from '../modal/modalUser'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { StateMessage } from '@context/MessageService'
 import { useIntl } from 'react-intl'
 import LessonsInfoModal from './LessonsInfoModal'
@@ -91,12 +91,11 @@ const TimeTrackingStats: FunctionComponent<ITimeTrackingStatsProps> = ({ user })
 
 interface IListEventUserPageProps {
   event: any
-  activityId?: string
-  parentUrl: string
 }
 
 const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) => {
-  const { event, activityId, parentUrl } = props
+  const { event } = props
+  const { activityId } = useParams<{ activityId: string }>()
 
   const [isLoading, setIsLoading] = useState(false)
   const [extraFields, setExtraFields] = useState<IDynamicFieldData[]>([])
@@ -688,7 +687,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       .finally(() => setIsLoading(false))
 
     return () => {
-      if (typeof unsubscribe !== 'function') {
+      if (typeof unsubscribe === 'function') {
         unsubscribe()
       }
     }
@@ -789,12 +788,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
             </Col>
 
             <Col>
-              <Link
-                to={{
-                  pathname: `${parentUrl}/invitados/importar-excel`,
-                  state: { activityId },
-                }}
-              >
+              <Link to="../invitados/importar-excel" state={activityId}>
                 <Button
                   type="primary"
                   icon={<UploadOutlined />}

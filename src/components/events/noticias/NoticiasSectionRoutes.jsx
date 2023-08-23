@@ -1,4 +1,4 @@
-import { Route, Switch, useRouteMatch } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 /** --------------------
  *  secciones del curso
  * ---------------------*/
@@ -8,19 +8,19 @@ import { useEventContext } from '@context/eventContext'
 import NoticiasDetailsConnect from './NoticiasDetails'
 
 const NoticiasSectionRoutes = () => {
-  const { path } = useRouteMatch()
+  const { pathname: path } = useLocation()
   const cEvent = useEventContext()
 
   if (!cEvent.value) return <h1>Cargando...</h1>
   return (
-    <Switch>
+    <Routes>
       <Route exact path={`${path}`}>
         <NoticiasList />
       </Route>
       <Route path={`${path}/:id/detailsNoticia`}>
         <NoticiasDetailsConnect />
       </Route>
-    </Switch>
+    </Routes>
   )
 }
 export default NoticiasSectionRoutes

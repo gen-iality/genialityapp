@@ -21,7 +21,7 @@ dayjs.extend(weekOfYear)
 dayjs.extend(weekYear)
 import Header from '@antdComponents/Header'
 import BackTop from '@antdComponents/BackTop'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import EviusReactQuill from '../shared/eviusReactQuill'
 import { StateMessage } from '@context/MessageService'
@@ -36,7 +36,7 @@ const formLayout = {
 }
 
 const NewCE = (props) => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const locationState = props.location.state
   const [notice, setNotice] = useState({})
   const [isLoading, setIsLoading] = useState(true)
@@ -146,7 +146,7 @@ const NewCE = (props) => {
 
         StateMessage.destroy('loading')
         StateMessage.show(null, 'success', 'Información guardada correctamente!')
-        history.push(`${props.match.url}`)
+        navigate(`${props.match.url}`)
       } catch (e) {
         StateMessage.destroy('loading')
         StateMessage.show(null, 'error', handleRequestError(e).message)
@@ -178,7 +178,7 @@ const NewCE = (props) => {
                 'success',
                 'Se eliminó la información correctamente!',
               )
-              history.push(`${props.match.url}`)
+              navigate(`${props.match.url}`)
             } catch (e) {
               StateMessage.destroy('loading')
               StateMessage.show(null, 'error', handleRequestError(e).message)

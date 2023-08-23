@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react'
-import { Route, Switch, useLocation } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import InvitedUsers from './eventUsersList'
 import CreateMessage from './send'
 import ImportUsers from '../import-users/importUser'
 import { EventsApi } from '@helpers/request'
 
 function ListaInvitados(props) {
-  const { eventId, event, parentUrl } = props
+  const { eventId, event } = props
 
   const location = useLocation()
 
   useEffect(() => {
-    if (parentUrl === `/eventadmin/${eventId}`) {
+    if (location.pathname.startsWith(`/eventadmin/${eventId}`)) {
       obtenerEvento()
     }
 
@@ -19,53 +19,44 @@ function ListaInvitados(props) {
       const respEvento = await EventsApi.getOne(eventId)
       setUserProperties(respEvento.user_properties)
     }
-  }, [parentUrl])
+  }, [location.pathname])
 
   const [guestSelected, setGuestSelected] = useState([])
   const [userProperties, setUserProperties] = useState([])
 
   return (
-    <>
-      <Switch>
-        <Route
-          exact
-          path={`${parentUrl}/invitados`}
-          render={() => (
-            <InvitedUsers
-              event={event}
-              eventID={eventId}
-              setGuestSelected={setGuestSelected}
-            />
-          )}
-        />
-        <Route
-          exact
-          path={`${parentUrl}/invitados/createmessage`}
-          render={() => (
-            <CreateMessage
-              event={event}
-              eventID={eventId}
-              selection={guestSelected}
-              parentUrl={parentUrl}
-            />
-          )}
-        />
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <InvitedUsers
+            event={event}
+            eventID={eventId}
+            setGuestSelected={setGuestSelected}
+          />
+        }
+      />
+      <Route
+        exact
+        path="/createmessage"
+        element={
+          <CreateMessage event={event} eventID={eventId} selection={guestSelected} />
+        }
+      />
 
-        <Route
-          exact
-          path={`${parentUrl}/invitados/importar-excel`}
-          render={() => (
-            <ImportUsers
-              extraFields={userProperties}
-              eventId={eventId}
-              event={event}
-              parentUrl={parentUrl}
-              locationParams={location}
-            />
-          )}
-        />
-      </Switch>
-    </>
+      <Route
+        exact
+        path="/importar-excel"
+        element={
+          <ImportUsers
+            extraFields={userProperties}
+            eventId={eventId}
+            event={event}
+            locationParams={location}
+          />
+        }
+      />
+    </Routes>
   )
 }
 

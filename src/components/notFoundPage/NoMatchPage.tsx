@@ -5,7 +5,7 @@ import { Link, useLocation, useParams } from 'react-router-dom'
 interface INoMatchPageProps {
   eventId?: any
   org?: any
-  parentUrl?: string
+  urlFrom?: string
 }
 
 const error403 = '403'
@@ -13,7 +13,7 @@ const error404 = '404'
 
 const NoMatchPage: FunctionComponent<INoMatchPageProps> = (props) => {
   const params = useParams<any>()
-  const location = useLocation<any>()
+  const location = useLocation()
 
   return (
     <Result
@@ -44,15 +44,15 @@ const NoMatchPage: FunctionComponent<INoMatchPageProps> = (props) => {
         /** Si se recibe algun id de organización no se mostraran botones*/
         !props.org?._id &&
           params.id !== 'withoutPermissions' &&
-          (props.parentUrl ? (
-            <Link to={`${props.parentUrl}/main`}>
+          (props.urlFrom ? (
+            <Link to={`${props.urlFrom}`}>
               <Button type="primary" key="eventData">
                 Ir a datos del curso
               </Button>
             </Link>
           ) : (
             <>
-              <Link to={`/`}>
+              <Link to="/">
                 <Button type="primary" key="eventData">
                   Ver más cursos
                 </Button>
@@ -63,7 +63,7 @@ const NoMatchPage: FunctionComponent<INoMatchPageProps> = (props) => {
             </>
           )),
         params.id === 'withoutPermissions' && (
-          <Link to={`/`}>
+          <Link to="/">
             <Button type="primary" key="eventData">
               Ver más cursos
             </Button>
