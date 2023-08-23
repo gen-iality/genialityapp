@@ -3,7 +3,7 @@
 // NOTE: where is real the agenda schema?
 
 import { ActivityType } from '@context/activityType/types/activityType'
-import { FunctionComponent, ReactElement } from 'react'
+import { FunctionComponent, ReactElement, ReactNode } from 'react'
 
 export default interface AgendaType {
   _id?: string
@@ -66,7 +66,7 @@ export interface TruncatedAgenda {
   link: string
   host_picture?: string
   name_host: string
-  endComponents: (() => ReactElement)[]
+  endComponents: ((props: { activity: TruncatedAgenda }) => ReactNode)[]
   ItemWrapper: FunctionComponent<{ children: any }>
   short_description?: string
   categories?: {

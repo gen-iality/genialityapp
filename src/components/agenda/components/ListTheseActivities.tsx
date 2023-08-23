@@ -143,7 +143,9 @@ const ListTheseActivities: FunctionComponent<IListTheseActivitiesProps> = (props
               </div>
               <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <span style={{ marginRight: '.5em' }}>
-                  {(item.endComponents || []).map((render) => render())}
+                  {(item.endComponents || []).map((Component) => (
+                    <Component activity={item} />
+                  ))}
                   {item.isInfoOnly && (
                     <Badge style={{ backgroundColor: '#999' }} count="Info" />
                   )}
