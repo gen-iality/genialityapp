@@ -31,12 +31,13 @@ function StudentGeneralCourseProgress(props: StudentGeneralCourseProgressProps) 
     if (!cUser.value) return
 
     const { _id: accountId } = cUser.value
-    FB.ActivityProgresses.get(eventId, accountId).then((data) => {
-      if (data) {
-        setActivityProgress(data)
-        setIsLoading(false)
-      }
-    })
+    FB.ActivityProgresses.get(eventId, accountId)
+      .then((data) => {
+        if (data) {
+          setActivityProgress(data)
+        }
+      })
+      .finally(() => setIsLoading(false))
   }, [cUser.value])
 
   // News
