@@ -1,4 +1,4 @@
-import { Button, Collapse, Drawer, DrawerProps, Space, Tooltip, Typography, Grid, Card, Row, Col, Spin } from 'antd';
+import { Button, Collapse, Drawer, DrawerProps, Space, Tooltip, Typography, Grid, Card, Row, Col, Spin, Result } from 'antd';
 import { useGetCertificatesByEvents } from '../hooks/useGetCertificatesByEvents';
 import CertificatesByEventsAndUserList from './CertificatesByEventsAndUserList';
 import CertificateOutlineIcon from '@2fd/ant-design-icons/lib/CertificateOutline';
@@ -60,7 +60,7 @@ export const ModalCertificatesByOrganizacionAndUser = ({
               tip={<Typography.Text strong>Cargando...</Typography.Text>}/>
           </Col>
         </Row>}
-      {!isLoading && (
+      {certificatesByEvents.length > 0 ? (
         <Space 
           direction='vertical' 
           style={{width: '100%', overflowY: 'auto', height: '90%'}}
@@ -94,8 +94,15 @@ export const ModalCertificatesByOrganizacionAndUser = ({
             ))}
           </Collapse>
         </Space>
-      )}
-      {/* */}
+      ) :
+      <Row align='middle' justify='center' style={{height: '100%'}} >
+        <Col>
+          <Result 
+            title={<Typography.Text strong>¡No tienes certificados actualmente!</Typography.Text>}
+          />
+        </Col>
+      </Row>
+      }
     </Drawer>
   );
 };

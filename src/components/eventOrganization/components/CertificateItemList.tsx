@@ -53,28 +53,37 @@ export const CertificateItemList = ({ certificate, isMobile, eventValue, eventUs
   return (
     <Card bodyStyle={{padding: '0px 10px', backgroundColor: eventValue.styles.toolbarDefaultBg + '95', borderRadius: 10}} bordered={false} style={{paddingBottom: 5}}>
       <List.Item
-        key={certificate.name} 
-        extra={
-          <Button
-            size={screens.xs ? 'small' : 'large'}
-            onClick={() => generateCert(eventUserValue, certificate)}
-            type='default'
-            style={{
-              boxShadow: 'none',
-              backgroundColor: eventValue.styles.toolbarDefaultBg + '90',
-            }}
-            key={'download' + certificate._id}
-            icon={screens.xs && <DownloadOutlined style={{ color: eventValue.styles.textMenu}} />}>
-            {!screens.xs && <Typography.Text style={{ color: eventValue.styles.textMenu }}>Descargar</Typography.Text>}
-          </Button>
-        }
+        key={certificate.name}
         style={{paddingBottom: 0, borderRadius: 10}}
       >
         <List.Item.Meta
-          avatar={<Avatar shape='square' style={{ width: 60, height: 60, backgroundColor: eventValue.styles.toolbarDefaultBg, border: '1px solid #C4C4C4' }}>
+          avatar={
+            <Avatar 
+              shape='square' 
+              style={{ 
+                width: 60, 
+                height: 60, 
+                backgroundColor: eventValue.styles.toolbarDefaultBg, 
+                border: '1px solid #C4C4C450',  
+              }}
+            >
               <CertificateOutlineIcon style={{fontSize: 40, marginTop: 10, color: eventValue.styles.textMenu}} />
-            </Avatar>}
+            </Avatar>
+          }
           title={<Typography.Text strong style={{ color: eventValue.styles.textMenu }}>{certificate.name}</Typography.Text>}
+          description={<Button
+            size={/* screens.xs ? 'large' :  */'middle'}
+            onClick={() => generateCert(eventUserValue, certificate)}
+            type='default'
+            style={{
+              /* boxShadow: 'none', */
+              backgroundColor: eventValue.styles.toolbarDefaultBg + '90',
+              /* border: '1px solid #C4C4C450' */
+            }}
+            key={'download' + certificate._id}
+            icon={/* screens.xs &&  */<DownloadOutlined style={{ color: eventValue.styles.textMenu}} />}>
+            {/* !screens.xs && */ <Typography.Text style={{ color: eventValue.styles.textMenu }}>Descargar</Typography.Text>}
+          </Button>}
         />
       </List.Item>
     </Card>

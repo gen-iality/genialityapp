@@ -1,5 +1,5 @@
-import { CloseCircleOutlined, PlayCircleOutlined, SaveOutlined, SelectOutlined } from '@ant-design/icons';
-import {  Button, Card, Col, Empty, Modal, Row, Skeleton, Table, Typography } from 'antd';
+import { CloseCircleOutlined, PlayCircleOutlined, SaveOutlined, SelectOutlined, WarningOutlined } from '@ant-design/icons';
+import {  Alert, Button, Card, Col, Empty, Modal, Row, Skeleton, Table, Typography } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import React, { useState } from 'react';
 
@@ -86,6 +86,16 @@ export default function ExecuteAuction( {auction, eventId} : GeneralAuctionProps
     <div style={{ padding: 10 }}>
       <Row justify='end' gutter={[8, 8]} style={{ paddingBottom: 20 }}>
         <Col>
+          { !auction.opened && (
+             <Alert
+             type='warning'
+             icon={<WarningOutlined />}
+             showIcon
+             message={`La subasta no se encuentra abierta,${auction?.currentProduct ? ' para continuar' : ' para iniciarla'} debe abrirla primero`}
+           />
+          )}
+        </Col>
+        <Col>
           {!auction?.playing && auction?.currentProduct && (
             <Button
               className='animate__animated animate__fadeInDown'
@@ -103,6 +113,7 @@ export default function ExecuteAuction( {auction, eventId} : GeneralAuctionProps
               className='animate__animated animate__fadeInDown'
               type='primary'
               icon={auction?.currentProduct ? <SelectOutlined /> : <PlayCircleOutlined />}
+              disabled={!auction?.opened}
               onClick={() => {
                 refresh();
                 setVisibility(true);
