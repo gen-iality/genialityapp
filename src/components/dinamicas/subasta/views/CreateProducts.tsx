@@ -16,7 +16,7 @@ export default function CreateProducts({reload, eventId}: {reload: boolean,event
   const [productSelect, setProductSelect] = useState<IProduct>(InitialModalState);
   const { products, createProduct, deleteProduct, updateProduct, loading, deleteImages, refresh } = useProducts(eventId);
   useEffect(() => {
-    refresh()
+    if(reload) refresh()
   }, [reload]);
   const onChange = async ({ file, fileList: newFileList }: ImagesData) => {
     const { status } = file;

@@ -46,7 +46,7 @@ export default function AuctionProvider(props: Props) {
   const saveAuction = async (params: AuctionConfig) => {
     setLoading(true);
     const response = await service.createAuction(eventId, params);
-    if (response) await saveAuctioFirebase(eventId, response);
+    if (response) await saveAuctioFirebase(eventId, {...response, timerBids: 10});
     setLoading(false);
   };
 
@@ -72,6 +72,7 @@ export default function AuctionProvider(props: Props) {
         styles: auction.styles ?? {},
         amount: params.amount ?? null,
         timerBids: params.timerBids,
+        rules: params.rules ?? null,
       });
 
     setLoadingConfig(false);

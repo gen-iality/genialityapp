@@ -4,7 +4,7 @@ import { DrawerRulesProps } from '../../interfaces/auction.interface';
 const { useBreakpoint } = Grid;
 const { Title } = Typography;
 
-const DrawerRules = ({ showDrawerRules, setshowDrawerRules, cEvent }: DrawerRulesProps) => {
+const DrawerRules = ({ showDrawerRules, setshowDrawerRules, cEvent ,auctionRules}: DrawerRulesProps) => {
   const screens = useBreakpoint();
   return (
     <Drawer
@@ -39,7 +39,7 @@ const DrawerRules = ({ showDrawerRules, setshowDrawerRules, cEvent }: DrawerRule
         wrap='hard'
         placeholder={'Reglamento de  la subasta'}
         readOnly={true}
-        value={''}
+        value={auctionRules}
       />
     </Drawer>
   );

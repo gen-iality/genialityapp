@@ -6,7 +6,7 @@ import InstagramIcon from '@2fd/ant-design-icons/lib/Instagram';
 import YoutubeIcon from '@2fd/ant-design-icons/lib/Youtube';
 import LinkedinIcon from '@2fd/ant-design-icons/lib/Linkedin';
 import WebIcon from '@2fd/ant-design-icons/lib/Web';
-import { Avatar, Row, Space } from 'antd';
+import { Avatar, Row, Space, Tooltip } from 'antd';
 import { getCorrectColor } from '@/helpers/utils';
 
 interface Props {
@@ -34,67 +34,79 @@ export const SocialNetworks = ({ organization }: Props) => {
       <Space size={8} direction='vertical' align='center' style={{paddingLeft: 4}}>
           {organization?.social_networks?.facebook && (
             <a href={organization?.social_networks?.facebook} target='_blank'>
-              <Avatar 
-                shape='square'
-                style={{backgroundColor: getCorrectColor(organization?.styles?.containerBgColor)}}
-              >
-                <FacebookIcon style={{ fontSize: 30, color: organization?.styles?.containerBgColor }} />
-              </Avatar>             
+              <Tooltip title="Facebook" placement='right'>
+                <Avatar 
+                  shape='square'
+                  style={{backgroundColor: getCorrectColor(organization?.styles?.containerBgColor)}}
+                >
+                  <FacebookIcon style={{ fontSize: 30, color: organization?.styles?.containerBgColor }} />
+                </Avatar>             
+              </Tooltip>
             </a>
           )}
 
           {organization?.social_networks?.twitter && (
             <a href={organization?.social_networks?.twitter} target='_blank'>
-              <Avatar 
-                shape='square'
-                style={{backgroundColor: getCorrectColor(organization?.styles?.containerBgColor)}}
-              >
-                <TwitterIcon style={{ fontSize: 30, color: organization?.styles?.containerBgColor }} />
-              </Avatar>
+              <Tooltip title="Twitter" placement='right'>
+                <Avatar 
+                  shape='square'
+                  style={{backgroundColor: getCorrectColor(organization?.styles?.containerBgColor)}}
+                >
+                  <TwitterIcon style={{ fontSize: 30, color: organization?.styles?.containerBgColor }} />
+                </Avatar>
+              </Tooltip>
             </a>
           )}
 
           {organization?.social_networks?.instagram && (
             <a href={organization?.social_networks?.instagram} target='_blank'>
-              <Avatar 
-                shape='square'
-                style={{backgroundColor: getCorrectColor(organization?.styles?.containerBgColor)}}
-              >
-                <InstagramIcon style={{ fontSize: 30, color: organization?.styles?.containerBgColor }} />
-              </Avatar>
+              <Tooltip title="Instagram" placement='right'>
+                <Avatar 
+                  shape='square'
+                  style={{backgroundColor: getCorrectColor(organization?.styles?.containerBgColor)}}
+                >
+                  <InstagramIcon style={{ fontSize: 30, color: organization?.styles?.containerBgColor }} />
+                </Avatar>
+              </Tooltip>
             </a>
           )}
           
           {organization?.social_networks?.youtube && (
             <a href={organization?.social_networks?.youtube} target='_blank'>
-              <Avatar 
-                shape='square'
-                style={{backgroundColor: getCorrectColor(organization?.styles?.containerBgColor)}}
-              >
-                <YoutubeIcon style={{ fontSize: 30, color: organization?.styles?.containerBgColor }} />
-              </Avatar>
+              <Tooltip title="Youtube" placement='right'>
+                <Avatar 
+                  shape='square'
+                  style={{backgroundColor: getCorrectColor(organization?.styles?.containerBgColor)}}
+                >
+                  <YoutubeIcon style={{ fontSize: 30, color: organization?.styles?.containerBgColor }} />
+                </Avatar>
+              </Tooltip>
             </a>
           )}
 
           {organization?.social_networks?.linkedln && (
             <a href={organization?.social_networks?.linkedln} target='_blank'>
-              <Avatar 
-                shape='square'
-                style={{backgroundColor: getCorrectColor(organization?.styles?.containerBgColor)}}
-              >
-                <LinkedinIcon style={{ fontSize: 30, color: organization?.styles?.containerBgColor }} />
-              </Avatar>
+              <Tooltip title="Linkedin" placement='right'>
+                <Avatar 
+                  shape='square'
+                  style={{backgroundColor: getCorrectColor(organization?.styles?.containerBgColor)}}
+                >
+                  <LinkedinIcon style={{ fontSize: 30, color: organization?.styles?.containerBgColor }} />
+                </Avatar>
+              </Tooltip>
             </a>
           )}
 
           {organization?.social_networks?.yourSite && (
             <a href={organization?.social_networks?.yourSite} target='_blank'>
-              <Avatar 
-                shape='square'
-                style={{backgroundColor: getCorrectColor(organization?.styles?.containerBgColor)}}
-              >
-                <WebIcon style={{ fontSize: 30, color: organization?.styles?.containerBgColor }} />
-              </Avatar>
+              <Tooltip title="Sitio web" placement='right'>
+                <Avatar 
+                  shape='square'
+                  style={{backgroundColor: getCorrectColor(organization?.styles?.containerBgColor)}}
+                >
+                  <WebIcon style={{ fontSize: 30, color: organization?.styles?.containerBgColor }} />
+                </Avatar>
+              </Tooltip>
             </a>
           )}
       </Space>
