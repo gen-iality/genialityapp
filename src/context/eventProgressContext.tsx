@@ -32,7 +32,10 @@ export interface EventProgressContextState {
   progressOfQuices: number
   updateRawActivities: () => Promise<ExtendedAgendaType[]>
   updateRawAttendees: () => Promise<void>
-  getAttendeesForActivities: (activityIds: string[]) => AttendeeType[]
+  getAttendeesForActivities: (
+    activityIds: string[],
+    filteredMode?: boolean,
+  ) => AttendeeType[]
   calcProgress: (current: number, total: number) => number
   /**
    * @deprecated this function will be removed in next iterations
@@ -147,19 +150,27 @@ export const EventProgressProvider: FunctionComponent<PropsWithChildren> = (prop
 
     const checkedInOnes = allAttendees.filter((attendee) => {
       if (attendee === undefined) return false
+      // const humanViewProgress = (attendee.viewProgress ?? 0) * 100
+      // if (
+      //   humanViewProgress > (cEventContext.value?.progress_settings?.lesson_percent_to_completed ?? 0)
+      // ) {
+      //   // The user view all the video
+      //   return true
+      // }
       return attendee.checked_in
     })
 
-    if (checkedInOnes.length > 0) {
-      setCheckedInRawActivities((previous) => {
-        return [
-          ...previous,
-          ...checkedInOnes.filter(
-            (one) => !previous.map((last) => last._id).includes(one._id),
-          ),
-        ]
-      })
-    }
+    // if (checkedInOnes.length > 0) {
+    //   setCheckedInRawActivities((previous) => {
+    //     return [
+    //       ...previous,
+    //       ...checkedInOnes.filter(
+    //         (one) => !previous.map((last) => last._id).includes(one._id),
+    //       ),
+    //     ]
+    //   })
+    // }
+    setCheckedInRawActivities(checkedInOnes)
     console.debug(`Got ${checkedInOnes.length} attendees`)
   }
 
@@ -180,6 +191,14 @@ export const EventProgressProvider: FunctionComponent<PropsWithChildren> = (prop
 
     const checkedInOnes = allAttendees.filter((attendee) => {
       if (attendee === undefined) return false
+      const humanViewProgress = (attendee.viewProgress ?? 0) * 100
+      if (
+        humanViewProgress >
+        (cEventContext.value?.progress_settings?.lesson_percent_to_completed ?? 0)
+      ) {
+        // The user view all the video
+        return true
+      }
       return attendee.checked_in
     })
 
@@ -191,12 +210,12 @@ export const EventProgressProvider: FunctionComponent<PropsWithChildren> = (prop
     [activityContentValues.quizing].includes(a.type?.name as any)
 
   const getAttendeesForActivities = useCallback(
-    (activityIds: string[]): AttendeeType[] => {
-      return checkedInRawActivities
+    (activityIds: string[], filteredMode?: boolean): AttendeeType[] => {
+      return (filteredMode ? checkedInFilteredActivities : checkedInRawActivities)
         .filter((activity) => !nonPublishedActivityIDs.includes(activity._id!))
         .filter((attendee) => activityIds.includes(attendee.activityId))
     },
-    [checkedInRawActivities],
+    [checkedInRawActivities, checkedInFilteredActivities],
   )
 
   const calcProgressApplyingFilter = (

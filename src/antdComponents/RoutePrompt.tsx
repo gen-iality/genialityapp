@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Modal, Button, Space, Typography } from 'antd'
 import Logout from '@2fd/ant-design-icons/lib/Logout'
 import ContentSave from '@2fd/ant-design-icons/lib/ContentSave'
@@ -62,7 +62,7 @@ export function RouterPrompt({
   save,
   form = false,
 }: RouterPromptPropsOptions): JSX.Element | null {
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const [showPrompt, setShowPrompt] = useState(false)
   const [loadingAndDisablingButtons, setLoadingAndDisablingButtons] = useState(false)
@@ -95,7 +95,7 @@ export function RouterPrompt({
         const canRoute = await Promise.resolve(onOK())
         if (canRoute) {
           history.block(() => {})
-          history.push(currentPath)
+          navigate(currentPath)
         }
       }
     },
@@ -107,7 +107,7 @@ export function RouterPrompt({
       const canRoute = await Promise.resolve(onCancel())
       if (canRoute) {
         history.block(() => {})
-        history.push(currentPath)
+        navigate(currentPath)
       }
     }
     setShowPrompt(false)

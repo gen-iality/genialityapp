@@ -1,6 +1,6 @@
 import { Card, Space, Typography } from 'antd'
 import Meta from 'antd/lib/card/Meta'
-const ProductCard = ({ galery, eventId, history }) => {
+const ProductCard = ({ galery, eventId, navigate }) => {
   const { Title } = Typography
   return (
     <Card
@@ -18,7 +18,7 @@ const ProductCard = ({ galery, eventId, history }) => {
       key={'Cardgallery' + galery.id}
       style={{ width: '100%', cursor: 'pointer' }}
       onClick={() =>
-        history.push(`/landing/${eventId}/producto/${galery._id}/detailsproducts`)
+        navigate(`/landing/${eventId}/producto/${galery._id}/detailsproducts`)
       }
       cover={
         <img

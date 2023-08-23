@@ -3,9 +3,10 @@ import { Grid, Spin, Layout } from 'antd'
 import {
   BrowserRouter as Router,
   Route,
-  Redirect,
-  Switch,
-  RouteProps,
+  Routes,
+  Outlet,
+  useParams,
+  Navigate,
 } from 'react-router-dom'
 import EventAdminRoutes from '@components/events/EventAdminRoutes'
 import { ApiUrl } from '@helpers/constants'
@@ -83,175 +84,167 @@ const ContentContainer = () => {
       }}
     >
       <main className="main" style={{ minHeight: '100vh' }}>
-        <Switch>
+        <Routes>
           {/** Private routes */}
-          <PrivateRoute
-            exact
-            path="/myprofile"
-            render={(routeProps) => <MainProfile {...routeProps} />}
-          />
-          {/*Ruta para ver resumen */}
-          <PrivateRoute
-            exact
-            path="/myprofile/:tab"
-            render={(routeProps) => <MainProfile {...routeProps} />}
-          />
-          <PrivateRoute
-            path="/create-event/:user?"
-            render={() => (
-              <NewEventProvider>
-                <NewEventPage />
-              </NewEventProvider>
-            )}
-          />
-          <PrivateRoute
-            path="/eventadmin/:event"
-            render={(routeProps) => <EventAdminRoutes {...routeProps} />}
-          />
-          <PrivateRoute
-            path="/orgadmin/:event"
-            render={(routeProps) => <EventAdminRoutes {...routeProps} />}
-          />
-          <PrivateRoute
-            path="/create-event"
-            render={(routeProps) => (
-              <NewEventProvider>
-                <NewEventPage />
-              </NewEventProvider>
-            )}
-          />
-          <PrivateRoute
-            path="/admin/organization/:id"
-            render={() => <OrganizationAdminRoutes />}
-          />
-          <PrivateRoute
-            path="/noaccesstocms/:id/:withoutPermissions"
-            render={() => <NoMatchPage />}
-          />
+          <Route
+            element={
+              <PrivateRoute>
+                <Outlet />
+              </PrivateRoute>
+            }
+          >
+            <Route path="/myprofile" element={<MainProfile />} />
+            {/*Ruta para ver resumen */}
+            <Route path="/myprofile/:tab" element={<MainProfile />} />
+
+            <Route
+              path="/create-event/:user?"
+              element={
+                <NewEventProvider>
+                  <NewEventPage />
+                </NewEventProvider>
+              }
+            />
+            <Route path="/eventadmin/:event/*" element={<EventAdminRoutes />} />
+            <Route path="/orgadmin/:event/*" element={<EventAdminRoutes />} />
+            <Route
+              path="/create-event"
+              element={
+                <NewEventProvider>
+                  <NewEventPage />
+                </NewEventProvider>
+              }
+            />
+            <Route
+              path="/admin/organization/:id/*"
+              element={<OrganizationAdminRoutes />}
+            />
+            <Route
+              path="/noaccesstocms/:id/:withoutPermissions"
+              element={<NoMatchPage />}
+            />
+          </Route>
 
           {/** Another routes with context */}
-          <RouteContext exact path="/" render={() => <PageWithFooter />} />
-          <RouteContext
-            exact
-            path="/organization/:id"
-            render={() => (
-              <OrganizationPaymentProvider>
-                <EventOrganization />
-              </OrganizationPaymentProvider>
-            )}
-          />
-          <RouteContext
-            exact
-            path="/organization/:id/events"
-            render={() => (
-              <OrganizationPaymentProvider>
-                <EventOrganization />
-              </OrganizationPaymentProvider>
-            )}
-          />
-          <RouteContext
-            path="/blockedEvent/:event_id"
-            render={(routeProps) => <BlockedEvent {...routeProps} />}
-          />
-          <RouteContext
-            path={['/landing/:event_id', '/event/:event_name']}
-            render={(routeProps) => <LandingRoutes {...routeProps} />}
-          />
+          <Route
+            element={
+              <RouteContext>
+                <Outlet />
+              </RouteContext>
+            }
+          >
+            <Route path="/" element={<PageWithFooter />} />
+            <Route
+              path="/organization/:id"
+              element={
+                <OrganizationPaymentProvider>
+                  <EventOrganization />
+                </OrganizationPaymentProvider>
+              }
+            />
+            <Route
+              path="/organization/:id/events"
+              element={
+                <OrganizationPaymentProvider>
+                  <EventOrganization />
+                </OrganizationPaymentProvider>
+              }
+            />
+            <Route path="/blockedEvent/:event_id" element={<BlockedEvent />} />
+            <Route path="/event/:event_name/*" element={<LandingRoutes />} />
+            <Route path="/landing/:event_id/*" element={<LandingRoutes />} />
+          </Route>
 
           {/** The rest of the routes */}
-          <Route component={NotFoundPage} />
+          <Route element={<NotFoundPage />} />
           <Route
-            exact
             path="/certificate-generator/:userId/:eventId/:activityId"
-            render={() => <CertificateGeneraterPage />}
+            element={<CertificateGeneraterPage />}
           />
           <Route
             path="/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver"
-            component={AppointmentAccept}
+            element={<AppointmentAccept />}
           />
 
-          <Route path="/terms" component={Terms} />
-          <Route path="/privacy" component={Privacy} />
-          <Route path="/policies" component={Policies} />
-          <Route path="/about" component={About} />
-          <Route path="/faqs" component={Faqs} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/policies" element={<Policies />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/faqs/*" element={<Faqs />} />
 
-          <Route path="/api/generatorQr/:id" component={QRedirect} />
-          <Route exact path="/transition/:event" component={Transition} />
-          <Route exact path="/eventfinished" component={EventFinished} />
+          <Route path="/api/generatorQr/:id" element={<QRedirect />} />
+          <Route path="/transition/:event" element={<Transition />} />
+          <Route path="/eventfinished" element={<EventFinished />} />
 
-          <Route path="/loginWithCode" component={LoginWithCode} />
+          <Route path="/loginWithCode" element={<LoginWithCode />} />
 
-          <Route path="/direct-login" component={DirectLoginPage} />
+          <Route path="/direct-login" element={<DirectLoginPage />} />
 
-          <Route path="/social/:event_id" component={socialZone} />
-          <Route path="/notfound" component={NotFoundPage} />
+          <Route path="/social/:event_id" element={<socialZone />} />
+          <Route path="/notfound" element={<NotFoundPage />} />
           {screens.xs ? (
             <Route
-              exact
               path="/myprofile"
-              render={() => <Redirect to="/myprofile/organization" />}
+              element={
+                <>
+                  <Navigate to="/myprofile/organization" />
+                </>
+              }
             />
           ) : (
-            <PrivateRoute
-              exact
+            <Route
               path="/myprofile"
-              render={(routeProps) => <MainProfile {...routeProps} />}
+              element={
+                <PrivateRoute>
+                  <MainProfile />
+                </PrivateRoute>
+              }
             />
           )}
-        </Switch>
+        </Routes>
       </main>
     </Router>
   )
 }
 
-function QRedirect({ match }) {
-  window.location.replace(`${ApiUrl}/api/generatorQr/${match.params.id}`)
+function QRedirect() {
+  const params = useParams()
+  window.location.replace(`${ApiUrl}/api/generatorQr/${params.id}`)
   return <p>Redirecting...</p>
 }
 
-const RouteContext: FunctionComponent<RouteProps> = ({ render, ...rest }) => (
-  <Route
-    {...rest}
-    render={(props) => (
-      <GeneralContextProviders>
-        <Layout style={{ minHeight: '100vh' }}>
-          <HeaderContainer />
-          {render && render(props)}
-          <ModalAuth />
-          <ModalAuthAnonymous />
-          <ModalNoRegister />
-          <ModalUpdate />
-        </Layout>
-      </GeneralContextProviders>
-    )}
-  />
+const RouteContext: FunctionComponent<PropsWithChildren> = ({ children }) => (
+  <GeneralContextProviders>
+    <Layout style={{ minHeight: '100vh' }}>
+      <HeaderContainer />
+      {children}
+      <ModalAuth />
+      <ModalAuthAnonymous />
+      <ModalNoRegister />
+      <ModalUpdate />
+    </Layout>
+  </GeneralContextProviders>
 )
 
-const PrivateRoute: FunctionComponent<RouteProps> = ({ render, ...rest }) => {
+const PrivateRoute: FunctionComponent<PropsWithChildren> = ({ children }) => {
   const cUser = useCurrentUser()
 
   return (
-    <Route
-      {...rest}
-      render={(props) => (
-        <GeneralContextProviders>
-          <Layout style={{ minHeight: '100vh' }}>
-            <HeaderContainer />
-            {cUser.value ? (
-              <>{render && render(props)}</>
-            ) : cUser.value == null && cUser.status == 'LOADED' ? (
-              <>
-                <ModalAuth isPrivateRoute />
-                <ForbiddenPage />
-              </>
-            ) : (
-              <Spin />
-            )}
-          </Layout>
-        </GeneralContextProviders>
-      )}
-    />
+    <GeneralContextProviders>
+      <Layout style={{ minHeight: '100vh' }}>
+        <HeaderContainer />
+        {cUser.value ? (
+          <>{children}</>
+        ) : cUser.value == null && cUser.status == 'LOADED' ? (
+          <>
+            <ModalAuth isPrivateRoute />
+            <ForbiddenPage />
+          </>
+        ) : (
+          <Spin />
+        )}
+      </Layout>
+    </GeneralContextProviders>
   )
 }
 

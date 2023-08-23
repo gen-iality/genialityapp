@@ -35,10 +35,8 @@ const News = (props) => {
       title="Noticias"
       back
       titleTooltip="Agregue o edite las Noticias que se muestran en la aplicación"
-      addUrl={{
-        pathname: `${props.matchUrl}/new`,
-        state: { new: true },
-      }}
+      addUrl={`${props.matchUrl}/new`}
+      addUrlState={{ new: true }}
       columns={columns}
       key="_id"
       editPath={`${props.matchUrl}/new`}

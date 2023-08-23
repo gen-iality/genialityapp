@@ -13,7 +13,7 @@ import { sortableContainer, sortableElement, sortableHandle } from 'react-sortab
 import arrayMove from 'array-move'
 import { EventsApi } from '@helpers/request'
 import Loading from '../loaders/loading'
-import { withRouter } from 'react-router-dom'
+import { withRouter } from '@/withRouter'
 import Header from '@antdComponents/Header'
 import { StateMessage } from '@context/MessageService'
 import { HelperContext } from '@context/helperContext/helperContext'
@@ -108,7 +108,7 @@ class Product extends Component {
   }
 
   editProduct = (cert) => {
-    this.props.history.push(
+    this.props.navigate(
       `/eventadmin/${this.props.eventId}/product/addproduct/${cert._id}`,
     )
   }
@@ -154,14 +154,14 @@ class Product extends Component {
   }
 
   newProduct = () => {
-    this.props.history.push(`/eventadmin/${this.props.eventId}/product/addproduct`)
+    this.props.navigate(`/eventadmin/${this.props.eventId}/product/addproduct`)
   }
 
   configuration = () => {
-    this.props.history.push(`/eventadmin/${this.props.eventId}/product/configuration`)
+    this.props.navigate(`/eventadmin/${this.props.eventId}/product/configuration`)
   }
 
-  goBack = () => this.props.history.goBack()
+  goBack = () => this.props.navigate(-1)
 
   render() {
     const { eventIsActive } = this.context
@@ -330,7 +330,7 @@ class Product extends Component {
                         key={index}
                         id={`shoppingAction${index.index}`}
                         onClick={() =>
-                          this.props.history.push(
+                          this.props.navigate(
                             `/eventadmin/${this.props.eventId}/product/${data._id}/oferts`,
                           )
                         }

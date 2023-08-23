@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { OrganizationApi } from '@helpers/request'
 import { Table, Button, Row, Col } from 'antd'
 import { PlusCircleOutlined } from '@ant-design/icons'
@@ -11,7 +11,7 @@ function OrgEvents(props) {
   const [eventData, setEventData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const { _id: organizationId } = props.org
-  const history = useHistory()
+  const navigate = useNavigate()
 
   async function getEventsStatisticsData() {
     const { data } = await OrganizationApi.getEventsStatistics(organizationId)
@@ -26,7 +26,7 @@ function OrgEvents(props) {
 
   function goToEvent(eventId) {
     const url = `/eventadmin/${eventId}/agenda`
-    history.replace({ pathname: url })
+    navigate(url)
   }
 
   function linkToTheMenuRouteS(menuRoute) {

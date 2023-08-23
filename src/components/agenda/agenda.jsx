@@ -215,16 +215,14 @@ const Agenda = (props) => {
     <CMS
       API={AgendaApi}
       eventId={props.event._id}
-      title="Temas"
+      title="Lecciones"
       back
       titleTooltip="Agregue o edite las Agendas que se muestran en la aplicación"
-      addUrl={{
-        pathname: `${props.parentUrl}/create-activity`,
-        state: { new: true },
-      }}
+      addUrl="create-activity"
+      addUrlState={{ new: true }}
       columns={columns}
       // key="_id"
-      editPath={`${props.parentUrl}/activity`}
+      editPath="activity"
       pagination={false}
       actions
       search

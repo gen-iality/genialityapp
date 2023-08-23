@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { FaqsApi } from '@helpers/request'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { toolbarEditor } from '@helpers/constants'
 import { handleRequestError } from '@helpers/utils'
 import { Row, Col, Form, Input, Modal } from 'antd'
@@ -17,22 +17,22 @@ const formLayout = {
 }
 
 const Faq = (props) => {
-  const eventID = props.event._id
+  const eventID = props.event?._id
 
   const location = useLocation()
   const locationState = location.state //si viene new o edit en el state, si es edit es un id
-  const history = useHistory()
+  const navigate = useNavigate()
   const [faq, setFaq] = useState({})
 
   useEffect(() => {
-    if (locationState.edit) {
+    if (locationState?.edit) {
       getOne()
     }
-  }, [locationState.edit])
+  }, [locationState?.edit])
 
   const getOne = async () => {
-    const response = await FaqsApi.getOne(locationState.edit, eventID)
-    const data = response.data.find((faqs) => faqs._id === locationState.edit)
+    const response = await FaqsApi.getOne(locationState?.edit, eventID)
+    const data = response.data.find((faqs) => faqs._id === locationState?.edit)
 
     setFaq(data)
     setFaq(data) //este esta repedito para poder cargar el titulo en caso de que tenga contenido, con uno solo no se porque no vuelve a cargar
@@ -50,14 +50,14 @@ const Faq = (props) => {
       )
 
       try {
-        if (locationState.edit) {
-          await FaqsApi.editOne(faq, locationState.edit, eventID)
+        if (locationState?.edit) {
+          await FaqsApi.editOne(faq, locationState?.edit, eventID)
         } else {
           await FaqsApi.create(faq, eventID)
         }
         StateMessage.destroy('loading')
         StateMessage.show(null, 'success', 'Información guardada correctamente!')
-        history.push(`${props.parentUrl}/faqs`)
+        navigate('../faqs')
       } catch (e) {
         StateMessage.destroy('loading')
         StateMessage.show(null, 'error', handleRequestError(e).message)
@@ -77,7 +77,7 @@ const Faq = (props) => {
       'loading',
       ' Por favor espere mientras se borra la información...',
     )
-    if (locationState.edit) {
+    if (locationState?.edit) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
         icon: <ExclamationCircleOutlined />,
@@ -88,14 +88,14 @@ const Faq = (props) => {
         onOk() {
           const onHandlerRemove = async () => {
             try {
-              await FaqsApi.deleteOne(locationState.edit, eventID)
+              await FaqsApi.deleteOne(locationState?.edit, eventID)
               StateMessage.destroy('loading')
               StateMessage.show(
                 null,
                 'success',
                 'Se eliminó la información correctamente!',
               )
-              history.push(`${props.parentUrl}/faqs`)
+              navigate('../faqs')
             } catch (e) {
               StateMessage.destroy('loading')
               StateMessage.show(null, 'error', handleRequestError(e).message)
@@ -125,7 +125,7 @@ const Faq = (props) => {
         save
         form
         remove={onRemoveId}
-        edit={locationState.edit}
+        edit={locationState?.edit}
       />
 
       <Row justify="center" wrap gutter={12}>

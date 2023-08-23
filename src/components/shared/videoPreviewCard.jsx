@@ -1,6 +1,7 @@
 import { Component } from 'react'
 import dayjs from 'dayjs'
-import { Link, withRouter } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { withRouter } from '@/withRouter'
 import { Badge, Card, Space } from 'antd'
 import { imageUtils } from '../../Utilities/ImageUtils'
 const EventImage = imageUtils.EventImage
@@ -30,7 +31,7 @@ class EventCard extends Component {
             </span>
           }
         >
-          <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
+          <Link to={`/landing/${event._id}`} state={{ event: event }}>
             <Card
               bordered={bordered}
               loading={loading}

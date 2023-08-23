@@ -1,7 +1,7 @@
 /** Hooks, CustomHooks  and react libraries*/
 import { useState, useEffect, FunctionComponent } from 'react'
 import * as Survey from 'survey-react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 /** Helpers and services */
 import { setCurrentPage } from './services/surveys'
@@ -62,7 +62,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
   console.log('encuestadatai', queryData)
   const cEvent = useEventContext()
   const currentUser = useCurrentUser()
-  const history = useHistory()
+  const navigate = useNavigate()
   const cSurvey = useSurveyContext()
 
   const [surveyModel, setSurveyModel] = useState<Survey.SurveyModel | undefined>()
@@ -329,9 +329,9 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
                 disabled={isSavingPoints}
                 onClick={() => {
                   // saveSurveyStatus().then(() =>
-                  //   history.push(`/landing/${eventId}/evento`),
+                  //   navigate(`/landing/${eventId}/evento`),
                   // )
-                  history.push(`/landing/${eventId}/evento`)
+                  navigate(`/landing/${eventId}/evento`)
                 }}
               >
                 {isSavingPoints ? (

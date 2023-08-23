@@ -1,11 +1,11 @@
 import { Row, Col, Modal, Button, Typography, Space, Tag, Badge, Card } from 'antd'
 import { PhoneOutlined, MailOutlined, GlobalOutlined } from '@ant-design/icons'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import { Link } from 'react-router-dom'
 
 function Companylist(props) {
   const { Text, Paragraph } = Typography
-  const history = useHistory()
+  const navigate = useNavigate()
 
   function stripHtml(html) {
     // Crea un nuevo elemento div
@@ -75,7 +75,7 @@ function Companylist(props) {
               xl={6}
               className="col"
               onClick={() => {
-                history.push(
+                navigate(
                   `/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`,
                 )
               }}

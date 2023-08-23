@@ -1,5 +1,5 @@
-import { Component, FunctionComponent } from 'react'
-import { Route, Redirect, Switch, Link, RouteProps } from 'react-router-dom'
+import { Component, FunctionComponent, PropsWithChildren } from 'react'
+import { Route, redirect, Routes, Link, Navigate, Outlet } from 'react-router-dom'
 import dayjs from 'dayjs'
 import momentLocalizer from 'react-widgets-moment'
 import Loading from '../loaders/loading'
@@ -29,7 +29,7 @@ import ConferenceRoute from '../zoom/index'
 import ReportNetworking from '../networking/report'
 import NewsSectionRoutes from '../news/newsRoute'
 import ProductSectionRoutes from '../products/productsRoute'
-import { withRouter } from 'react-router-dom'
+import { WithRouterProps, withRouter } from '@/withRouter'
 import withContext from '@context/withContext'
 import { Layout, Row, Col, Button, Result, Tag } from 'antd'
 import { AdminUsers } from '@components/AdminUsers/AdminUsers'
@@ -72,35 +72,34 @@ const Wall = loadable(() => import('../wall/index'))
 const FAQS = loadable(() => import('../faqs'))
 const EventsTicket = loadable(() => import('../ticketsEvent'))
 
+import StillInDeveloping from '@components/StillInDeveloping'
+
 dayjs.locale('es')
 momentLocalizer()
 
-interface IProtected extends RouteProps {
+interface IProtected {
   event?: any
-  url?: string
 }
 
-const Protected: FunctionComponent<IProtected> = (props) => {
-  const { render, event, url, ...rest } = props
-
-  return (
-    <Route
-      {...rest}
-      render={(routeProps) =>
-        event?.user_properties && event?.user_properties?.length > 0 ? (
-          <ValidateAccessRouteCms isForEvent>
-            {render && render(routeProps)}
-          </ValidateAccessRouteCms>
-        ) : (
-          <Redirect push to={`${url}/agenda`} />
-        )
-      }
-    />
+const Protected: FunctionComponent<PropsWithChildren<IProtected>> = ({
+  children,
+  event,
+}) =>
+  event?.user_properties && event?.user_properties?.length > 0 ? (
+    <ValidateAccessRouteCms isForEvent>{children}</ValidateAccessRouteCms>
+  ) : (
+    <Navigate to="agenda" />
   )
-}
 
-class EventAdminRoutes extends Component {
-  constructor(props) {
+type EventAdminRoutesProps = {}
+
+type EventAdminRoutesState = {}
+
+class EventAdminRoutes extends Component<
+  WithRouterProps<EventAdminRoutesProps>,
+  WithRouterProps<EventAdminRoutesState>
+> {
+  constructor(props: WithRouterProps<EventAdminRoutesProps>) {
     super(props)
     this.state = {
       loading: true,
@@ -115,7 +114,7 @@ class EventAdminRoutes extends Component {
 
     try {
       await this.props.dispatch(fetchRol())
-      const eventId = this.props.match.params.event
+      const eventId = this.props.params.event
       await this.props.dispatch(fetchPermissions(eventId))
       const event = await EventsApi.getOne(eventId)
       const eventWithExtraFields = this.addNewFieldsToEvent(event)
@@ -193,6 +192,7 @@ class EventAdminRoutes extends Component {
 
   render() {
     const { match, permissions } = this.props
+    const { id } = this.props.params
     const { error, collapsed, event } = this.state
     console.log('permissions', permissions)
 
@@ -209,7 +209,7 @@ class EventAdminRoutes extends Component {
             handleRequestError(error).message
           }`}
           extra={[
-            <Link key={0} to={`/`}>
+            <Link key={0} to="/">
               <Button type="primary" key="eventData">
                 Ver más cursos
               </Button>
@@ -252,319 +252,167 @@ class EventAdminRoutes extends Component {
             </Col>
           </Row>
           <section className="section event-wrapper">
-            <Switch>
+            <Routes>
               <Route
-                exact
-                path={`${match.url}/`}
-                render={() => (
-                  <Redirect
-                    to={`${match.url}${match.url.substr(-1) === '/' ? 'main' : '/main'}`}
-                  />
-                )}
-              />
-              <Protected
-                path={`${match.url}/main`}
-                event={event}
-                render={() => (
-                  <General
-                    eventId={event._id}
-                    event={event}
-                    updateEvent={this.updateEvent}
-                  />
-                )}
-              />
-              {/* En esta ruta se pueden crear y ver los post de la seccion muro que hay en la landing */}
-              <Protected
-                path={`${match.url}/wall`}
-                event={event}
-                render={() => <Wall eventId={event._id} event={event} />}
-              />
-              <Protected
-                path={`${match.url}/datos`}
-                event={event}
-                render={() => <Datos eventId={event._id} event={event} />}
-              />
-              <Protected
-                path={`${match.url}/agenda`}
-                event={event}
-                render={(routeProps) => (
-                  <AgendaRoutes
-                    event={event}
-                    eventId={event._id}
-                    matchUrl={routeProps.match.url}
-                  />
-                )}
-              />
-              <Protected
-                path={`${match.url}/module`}
-                event={event}
-                render={() => <ModulePage eventId={event._id} event={event} />}
-              />
-              <Protected
-                path={`${match.url}/adminUsers`}
-                event={event}
-                render={(routeProps) => (
-                  <AdminUsers
-                    eventId={event._id}
-                    event={event}
-                    matchUrl={routeProps.match.url}
-                  />
-                )}
-              />
-              <Protected
-                path={`${match.url}/empresas`}
-                event={event}
-                render={(routeProps) => (
-                  <EmpresasRoutes event={event} matchUrl={routeProps.match.url} />
-                )}
-              />
-              <Protected
-                path={`${match.url}/trivia`}
-                event={event}
-                render={(routeProps) => (
-                  <TriviaRoutes event={event} matchUrl={routeProps.match.url} />
-                )}
-              />
-              <Protected
-                path={`${match.url}/documents`}
-                event={event}
-                render={(routeProps) => (
-                  <DocumentsRoutes event={event} matchUrl={routeProps.match.url} />
-                )}
-              />
-              {/* esta ruta carga en blanco */}
-              <Protected
-                path={`${match.url}/conference`}
-                event={event}
-                render={() => <ConferenceRoute event={event} />}
-              />
-              <Protected
-                path={`${match.url}/menuLanding`}
-                event={event}
-                render={() => <MenuLanding event={event} />}
-              />
-              <Protected
-                path={`${match.url}/reportNetworking`}
-                event={event}
-                render={() => <ReportNetworking event={event} />}
-              />
-              <Protected
-                path={`${match.url}/assistants.old`}
-                event={event}
-                url={match.url}
-                render={() => (
-                  <ListEventUser_Old shownAll eventId={event._id} event={event} />
-                )}
-              />
-              <Protected
-                path={`${match.url}/assistants`}
-                event={event}
-                url={match.url}
-                render={() => <ListEventUserPage event={event} parentUrl={match.url} />}
+                path="/"
+                element={
+                  <>
+                    <Navigate to="main" />
+                  </>
+                }
               />
 
-              <Protected
-                path={`${match.url}/chatexport`}
-                url={match.url}
-                event={event}
-                render={() => <ChatExport eventId={event._id} event={event} />}
+              <Route
+                element={
+                  <Protected event={event}>
+                    <Outlet />
+                  </Protected>
+                }
+              >
+                <Route
+                  path="main"
+                  element={
+                    <General
+                      eventId={event._id}
+                      event={event}
+                      updateEvent={this.updateEvent}
+                    />
+                  }
+                />
+                <Route path="wall" element={<Wall eventId={event._id} event={event} />} />
+                {/* En esta ruta se pueden crear y ver los post de la seccion muro que hay en la landing */}
+                <Route
+                  path="datos"
+                  element={<Datos eventId={event._id} event={event} />}
+                />
+                <Route
+                  path="agenda/*"
+                  element={<AgendaRoutes event={event} eventId={event._id} />}
+                />
+                <Route
+                  path="module"
+                  element={<ModulePage eventId={event._id} event={event} />}
+                />
+                {/* Next routu is ununsed and undefined */}
+                <Route
+                  path="adminUsers"
+                  element={<AdminUsers eventId={event._id} event={event} />}
+                />
+                <Route path="empresas/*" element={<EmpresasRoutes event={event} />} />
+              </Route>
+              <Route path="trivia/*" element={<TriviaRoutes event={event} />} />
+              <Route path="documents/*" element={<DocumentsRoutes event={event} />} />
+              {/* esta ruta carga en blanco */}
+              <Route path="conference" element={<ConferenceRoute event={event} />} />
+              <Route path="menuLanding" element={<MenuLanding event={event} />} />
+              <Route
+                path="reportNetworking"
+                element={<ReportNetworking event={event} />}
               />
-              <Protected
-                path={`${match.url}/checkin.old/:id`}
-                url={match.url}
-                event={event}
-                render={() => (
+              <Route
+                path="assistants.old"
+                element={<ListEventUser_Old shownAll eventId={event._id} event={event} />}
+              />
+              <Route path="assistants" element={<ListEventUserPage event={event} />} />
+
+              <Route
+                path="chatexport"
+                element={<ChatExport eventId={event._id} event={event} />}
+              />
+              <Route
+                path="checkin.old/:id"
+                element={
                   <ListEventUser_Old
                     eventId={event._id}
                     event={event}
                     type="activity"
                     shownAll={false}
                   />
-                )}
+                }
               />
-              <Protected
-                path={`${match.url}/checkin/:id`}
-                url={match.url}
-                event={event}
-                render={(routeProps) => (
-                  <ListEventUserPage
-                    event={event}
-                    activityId={routeProps.match.params.id}
-                    parentUrl={match.url}
-                  />
-                )}
+              <Route
+                path="checkin/:activityId"
+                element={<ListEventUserPage event={event} />}
               />
-              <Protected
-                path={`${match.url}/checkin-actividad`}
-                url={match.url}
-                event={event}
-                render={() => (
-                  <ReportList eventId={event._id} event={event} matchUrl={match.url} />
-                )}
+              <Route
+                path="checkin-actividad"
+                element={<ReportList eventId={event._id} event={event} />}
               />
-              <Protected
-                path={`${match.url}/informativesection`}
-                event={event}
-                url={match.url}
-                render={() => <Informativesection eventId={event._id} event={event} />}
+              <Route
+                path="informativesection"
+                element={<Informativesection eventId={event._id} event={event} />}
               />
               {/** AÚN NO TIENEN PERMISOS */}
-              <Protected
-                path={`${match.url}/invitados`}
-                event={event}
-                render={() => (
-                  <InvitedUsers eventId={event._id} event={event} parentUrl={match.url} />
-                )}
+              <Route
+                path="invitados/*"
+                element={<InvitedUsers eventId={event._id} event={event} />}
               />
-              <Protected
-                path={`${match.url}/certificate-email`}
-                event={event}
-                render={() => <CertificateEmailEditPage event={event} />}
+              <Route
+                path="certificate-email"
+                element={<CertificateEmailEditPage event={event} />}
               />
-              <Protected
-                path={`${match.url}/messages`}
-                event={event}
-                render={() => <Messages event={event} matchUrl={match.url} />}
+              <Route path="messages/*" element={<Messages event={event} />} />
+              <Route
+                path="confirmacion-registro"
+                element={<ConfirmacionRegistro event={event} />}
               />
-              <Protected
-                path={`${match.url}/confirmacion-registro`}
-                event={event}
-                render={() => <ConfirmacionRegistro event={event} />}
+              <Route
+                path="tipo-asistentes/*"
+                element={<TipoAsistentes event={event} />}
               />
-              <Protected
-                path={`${match.url}/tipo-asistentes`}
-                event={event}
-                render={(routeProps) => (
-                  <TipoAsistentes event={event} matchUrl={routeProps.match.url} />
-                )}
+              <Route
+                path="dashboard"
+                element={
+                  <StillInDeveloping disableTesting>
+                    <DashboardEvent eventId={event._id} event={event} />
+                  </StillInDeveloping>
+                }
               />
-              <Protected
-                path={`${match.url}/dashboard`}
-                event={event}
-                render={() => <DashboardEvent eventId={event._id} event={event} />}
+              <Route
+                path="badge"
+                element={<BadgeEvent eventId={event._id} event={event} />}
               />
-              <Protected
-                path={`${match.url}/badge`}
-                event={event}
-                render={() => <BadgeEvent eventId={event._id} event={event} />}
+              <Route path="orders" element={<OrdersEvent event={event} />} />
+              <Route
+                path="certificates/*"
+                element={<CertificateRoutes event={event} />}
               />
-              <Protected
-                path={`${match.url}/orders`}
-                event={event}
-                render={() => <OrdersEvent event={event} />}
-              />
-              <Protected
-                path={`${match.url}/certificates`}
-                event={event}
-                render={(routeProps) => (
-                  <CertificateRoutes event={event} matchUrl={routeProps.match.url} />
-                )}
-              />
-              <Protected
-                path={`${match.url}/espacios`}
-                event={event}
-                render={(routeProps) => (
-                  <Espacios event={event} matchUrl={routeProps.match.url} />
-                )}
-              />
-              <Protected
-                path={`${match.url}/herramientas`}
-                event={event}
-                render={(routeProps) => (
-                  <Herramientas event={event} matchUrl={routeProps.match.url} />
-                )}
-              />
-              <Protected
-                path={`${match.url}/speakers`}
-                event={event}
-                render={(routeProps) => (
-                  <SpeakersRoutes
-                    event={event}
-                    eventID={event._id}
-                    matchUrl={routeProps.match.url}
-                  />
-                )}
-              />
-              <Protected
-                path={`${match.url}/styles`}
-                event={event}
-                render={() => <Styles eventId={event._id} event={event} />}
+              <Route path="espacios/*" element={<Espacios event={event} />} />
+              <Route path="herramientas/*" element={<Herramientas event={event} />} />
+              <Route path="speakers/*" element={<SpeakersRoutes eventID={event._id} />} />
+              <Route
+                path="styles"
+                element={<Styles eventId={event._id} event={event} />}
               />
               {/* Ruta no usada posiblemente es la version 1 de la ruta /menuLanding */}
-              <Protected
-                path={`${match.url}/notificationsApp`}
-                event={event}
-                render={() => <NotificationsApp event={event} />}
+              <Route
+                path="notificationsApp"
+                element={<NotificationsApp event={event} />}
               />
-              <Protected
-                path={`${match.url}/news`}
-                event={event}
-                render={(routeProps) => (
-                  <NewsSectionRoutes
-                    eventId={event._id}
-                    event={event}
-                    matchUrl={routeProps.match.url}
-                  />
-                )}
+              <Route
+                path="news/*"
+                element={<NewsSectionRoutes eventId={event._id} event={event} />}
               />
-              <Protected
-                path={`${match.url}/product`}
-                event={event}
-                render={(routeProps) => (
-                  <ProductSectionRoutes
-                    eventId={event._id}
-                    event={event}
-                    matchUrl={routeProps.match.url}
-                  />
-                )}
+              <Route
+                path="product/*"
+                element={<ProductSectionRoutes eventId={event._id} event={event} />}
               />
-              <Protected
-                path={`${match.url}/faqs`}
-                event={event}
-                render={(routeProps) => (
-                  <FAQS event={event} matchUrl={routeProps.match.url} />
-                )}
+              <Route path="faqs/*" element={<FAQS event={event} />} />
+              <Route
+                path="ticketsEvent/*"
+                element={<EventsTicket eventId={event._id} event={event} />}
               />
-              <Protected
-                path={`${match.url}/ticketsEvent`}
-                event={event}
-                render={(routeProps) => (
-                  <EventsTicket
-                    eventId={event._id}
-                    event={event}
-                    matchUrl={routeProps.match.url}
-                  />
-                )}
-              />
-              <Protected
-                path={`${match.url}/isolated`}
-                event={this.state.event}
-                render={(routeProps) => (
-                  <IsolatedRoutes
-                    event={this.state.event}
-                    matchUrl={routeProps.match.url}
-                  />
-                )}
-              />
-              <Protected
-                path={`${match.url}/timetracking`}
-                event={this.state.event}
-                render={(routeProps) => (
-                  <TimeTrackingRoutes
-                    event={this.state.event}
-                    matchUrl={routeProps.match.url}
-                  />
-                )}
+
+              <Route
+                path="timetracking/*"
+                element={<TimeTrackingRoutes event={this.state.event} />}
               />
               {/* Este componente se muestra si una ruta no coincide */}
-              <Protected
-                path={`${match.url}`}
-                event={event}
-                render={() => (
-                  <NoMatchPage eventId={event._id} event={event} parentUrl={match.url} />
-                )}
+              <Route
+                path="/"
+                element={<NoMatchPage eventId={event._id} urlFrom=".." />}
               />
-            </Switch>
+            </Routes>
           </section>
         </Content>
       </Layout>

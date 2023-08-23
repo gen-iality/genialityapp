@@ -97,13 +97,8 @@ const Table = (props) => {
                   <Link
                     key={`extraPathAction${item.index}`}
                     id={`extraPathAction${item.index}`}
-                    to={
-                      /* !eventIsActive && window.location.toString().includes('eventadmin')
-                        ? {}
-                        : */ !extraPathStateName
-                        ? { pathname: `${extraPath}/${item._id}`, state: { item: item } }
-                        : { pathname: `${extraPath}`, state: { report: item._id } }
-                    }
+                    to={!extraPathStateName ? `${extraPath}/${item._id}` : `${extraPath}`}
+                    state={!extraPathStateName ? { item: item } : { report: item._id }}
                   >
                     <Button
                       icon={extraPathIcon ? extraPathIcon : <SettingOutlined />}
@@ -135,10 +130,8 @@ const Table = (props) => {
                   <Link
                     key={`extraPathAction${item.index}`}
                     id={`extraPathAction${item.index}`}
-                    to={{
-                      pathname: `${extraPathStateName}/${item._id}`,
-                      state: { report: item._id },
-                    }}
+                    to={`${extraPathStateName}/${item._id}`}
+                    state={{ report: item._id }}
                   >
                     <Button
                       icon={<CrownOutlined />}
@@ -170,13 +163,8 @@ const Table = (props) => {
                   <Link
                     key={`editAction${item.index}`}
                     id={`editAction${item.index}`}
-                    to={
-                      editByParam
-                        ? {
-                            pathname: `${editPath}/${item._id}`,
-                          }
-                        : { pathname: editPath, state: { edit: item._id } }
-                    }
+                    to={editByParam ? `${editPath}/${item._id}` : editPath}
+                    state={editByParam ? undefined : { edit: item._id }}
                   >
                     <Button icon={<EditOutlined />} type="primary" size="small" />
                   </Link>

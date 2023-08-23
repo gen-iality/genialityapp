@@ -1,31 +1,30 @@
 import { FunctionComponent, useState, useEffect } from 'react'
 
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { Col, Row } from 'antd'
 import TriviaEditor from './TriviaEditor'
 
 type ParamsType = {
-  survey_id?: string
+  surveyId: string
 }
 
 interface ITriviaEditPageProps {
   event: any
-  parentUrl: string
 }
 
 const TriviaEditPage: FunctionComponent<ITriviaEditPageProps> = (props) => {
-  const { event, parentUrl } = props
+  const { event } = props
   const params = useParams<ParamsType>()
-  const history = useHistory()
+  const navigate = useNavigate()
 
-  const goBack = () => history.push(`${parentUrl}`)
+  const goBack = () => navigate('..')
 
   return (
     <Row justify="center" wrap gutter={8}>
       <Col span={16}>
         <TriviaEditor
-          surveyId={params.survey_id}
+          surveyId={params.surveyId}
           eventId={event?._id}
           onDelete={(surveyId) => {
             console.log('delete survey', surveyId)

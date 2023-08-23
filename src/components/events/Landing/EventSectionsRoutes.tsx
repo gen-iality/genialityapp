@@ -1,5 +1,5 @@
-import { FunctionComponent, useEffect, useMemo, useState } from 'react'
-import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom'
+import { FunctionComponent, useEffect } from 'react'
+import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
 import { setSpaceNetworking } from '../../../redux/networking/actions'
@@ -79,7 +79,6 @@ interface IEventSectionRoutesProps extends MapStateToProps, MapDispatchToProps {
 const EventSectionRoutes: FunctionComponent<
   WithEviusContextProps<IEventSectionRoutesProps>
 > = (props) => {
-  const { path } = useRouteMatch()
   const { event_id, event_name } = useParams<{ event_id?: string; event_name?: string }>()
   const { GetPermissionsEvent } = useHelper()
   const cEventUser = useUserEvent()
@@ -245,141 +244,82 @@ const EventSectionRoutes: FunctionComponent<
         </>
       )}
 
-      <Switch>
-        <Route exact path={`${path}/`}>
-          {props.cEvent.value?.itemsMenu && <Redirect to={validateTypeUrl()} />}
-        </Route>
+      <Routes>
+        <Route
+          path={`/`}
+          element={
+            props.cEvent.value?.itemsMenu && (
+              <>
+                <Navigate to={validateTypeUrl()} />
+              </>
+            )
+          }
+        />
 
-        <Route path={`${path}/certificate`}>
-          <ThisRouteCanBeDisplayed>
-            <CertificateLandingPage key="certificate" />
-          </ThisRouteCanBeDisplayed>
-        </Route>
-
-        <Route path={`${path}/documents`}>
-          <ThisRouteCanBeDisplayed>
-            <DocumentsForm key="documents" />
-          </ThisRouteCanBeDisplayed>
-        </Route>
-
-        <Route path={`${path}/interviews`}>
-          <ThisRouteCanBeDisplayed>
-            <MyAgendaIndepend key="interviews" />
-          </ThisRouteCanBeDisplayed>
-        </Route>
-
-        <Route path={`${path}/networking`}>
-          <ThisRouteCanBeDisplayed>
-            <NetworkingForm key="networking" />
-          </ThisRouteCanBeDisplayed>
-        </Route>
-
-        <Route path={`${path}/informativeSection1`}>
-          <ThisRouteCanBeDisplayed>
-            <InformativeSection2 key="informativeSection1" />
-          </ThisRouteCanBeDisplayed>
-        </Route>
-
-        <Route path={`${path}/informativeSection`}>
-          <ThisRouteCanBeDisplayed>
-            <InformativeSection key="informativeSection" />
-          </ThisRouteCanBeDisplayed>
-        </Route>
-
-        <Route path={`${path}/my_section`}>
-          <ThisRouteCanBeDisplayed>
-            <MySection key="my_section" />
-          </ThisRouteCanBeDisplayed>
-        </Route>
-
-        <Route path={`${path}/activity/:activity_id`}>
-          <ThisRouteCanBeDisplayed>
-            {/* TODO: socialzonetabs is no used */}
-            <ActivityDisplayerPage
-              socialzonetabs={{
-                ...props?.generalTabs,
-              }}
-              key="activity"
-            />
-          </ThisRouteCanBeDisplayed>
-        </Route>
-
-        <Route path={`${path}/speakers`}>
-          <ThisRouteCanBeDisplayed>
-            <SpeakersForm key="speakers" />
-          </ThisRouteCanBeDisplayed>
-        </Route>
-        <Route path={`${path}/survey`}>
-          <ThisRouteCanBeDisplayed>
-            <SurveyForm key="survey" />
-          </ThisRouteCanBeDisplayed>
-        </Route>
-        <Route path={`${path}/partners`}>
-          <ThisRouteCanBeDisplayed>
-            <Partners key="partners" />
-          </ThisRouteCanBeDisplayed>
-        </Route>
-        <Route path={`${path}/faqs`}>
-          <ThisRouteCanBeDisplayed>
-            <FaqsForm key="faqs" />
-          </ThisRouteCanBeDisplayed>
-        </Route>
-
-        <Route path={`${path}/evento`}>
-          <ThisRouteCanBeDisplayed>
-            <EventHome key="evento" />
-          </ThisRouteCanBeDisplayed>
-        </Route>
-
-        <Route path={`${path}/wall`}>
-          <ThisRouteCanBeDisplayed>
-            <WallForm key="wall" />
-          </ThisRouteCanBeDisplayed>
-        </Route>
-        <Route path={`${path}/videos`}>
-          <ThisRouteCanBeDisplayed>
-            <Videos key="videos" />
-          </ThisRouteCanBeDisplayed>
-        </Route>
-
-        <Route path={`${path}/ferias`}>
-          <ThisRouteCanBeDisplayed>
-            <Ferias key="ferias" />
-          </ThisRouteCanBeDisplayed>
-        </Route>
-        <Route path={`${path}/noticias`}>
-          <ThisRouteCanBeDisplayed>
-            <Noticias key="noticias" />
-          </ThisRouteCanBeDisplayed>
-        </Route>
-
-        {/* <Route path={`${path}/certs`}>
-          <ThisRouteCanBeDisplayed>
+        <Route
+          element={
+            <ThisRouteCanBeDisplayed>
+              <Outlet />
+            </ThisRouteCanBeDisplayed>
+          }
+        >
+          <Route
+            path={`/certificate`}
+            element={<CertificateLandingPage key="certificate" />}
+          />
+          <Route path={`/documents`} element={<DocumentsForm key="documents" />} />
+          <Route path={`/interviews`} element={<MyAgendaIndepend key="interviews" />} />
+          <Route path={`/networking`} element={<NetworkingForm key="networking" />} />
+          <Route
+            path={`/informativeSection1`}
+            element={<InformativeSection2 key="informativeSection1" />}
+          />
+          <Route
+            path={`/informativeSection`}
+            element={<InformativeSection key="informativeSection" />}
+          />
+          <Route path={`/my_section`} element={<MySection key="my_section" />} />
+          {/* TODO: socialzonetabs is no used */}
+          <Route
+            path={`/activity/:activity_id`}
+            element={
+              <ActivityDisplayerPage
+                socialzonetabs={{
+                  ...props?.generalTabs,
+                }}
+                key="activity"
+              />
+            }
+          />
+          <Route path={`/speakers`} element={<SpeakersForm key="speakers" />} />
+          <Route path={`/survey`} element={<SurveyForm key="survey" />} />
+          <Route path={`/partners`} element={<Partners key="partners" />} />
+          <Route path={`/faqs`} element={<FaqsForm key="faqs" />} />
+          <Route path={`/evento`} element={<EventHome key="evento" />} />
+          <Route path={`/wall`} element={<WallForm key="wall" />} />
+          <Route path={`/videos`} element={<Videos key="videos" />} />
+          <Route path={`/ferias`} element={<Ferias key="ferias" />} />
+          <Route path={`/noticias`} element={<Noticias key="noticias" />} />
+          {/* <Route path={`/certs`}>
             <CertificadoLanding key="certs" />
-          </ThisRouteCanBeDisplayed>
         </Route> */}
-        <Route path={`${path}/producto`}>
-          <ThisRouteCanBeDisplayed>
-            <Productos key="producto" />
-          </ThisRouteCanBeDisplayed>
+          <Route path={`/producto`} element={<Productos key="producto" />} />
+          <Route
+            path={`/agenda`}
+            element={
+              <AgendaLandingSection
+                key="agenda"
+                activity={props.currentActivity}
+                generalTabs={props.generalTabs}
+                setVirtualConference={props.setVirtualConference}
+              />
+            }
+          />
         </Route>
-        <Route path={`${path}/agenda`}>
-          <ThisRouteCanBeDisplayed>
-            <AgendaLandingSection
-              key="agenda"
-              activity={props.currentActivity}
-              generalTabs={props.generalTabs}
-              setVirtualConference={props.setVirtualConference}
-            />
-          </ThisRouteCanBeDisplayed>
-        </Route>
-        <Route path={`${path}/success/:type?`}>
-          <MessageRegister />
-        </Route>
-        <Route path={`${path}/responsePayu`}>
-          <ResponsePayu />
-        </Route>
-      </Switch>
+
+        <Route path={`/success/:type?`} element={<MessageRegister />} />
+        <Route path={`/responsePayu`} element={<ResponsePayu />} />
+      </Routes>
     </>
   )
 }

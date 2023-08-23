@@ -1,4 +1,4 @@
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 
 /** --------------------
  *  secciones del curso
@@ -9,23 +9,13 @@ import Configuration from './configuration'
 import OfertProduts from './oferts'
 
 const ProductSectionRoutes = (props) => {
-  const { matchUrl } = props
-
   return (
-    <Switch>
-      <Route exact path={`${matchUrl}/`}>
-        <Product {...props} />
-      </Route>
-      <Route path={`${matchUrl}/addproduct/:id?`}>
-        <AddProduct {...props} />
-      </Route>
-      <Route exact path={`${matchUrl}/configuration`}>
-        <Configuration {...props} />
-      </Route>
-      <Route exact path={`${matchUrl}/:id/oferts`}>
-        <OfertProduts {...props} />
-      </Route>
-    </Switch>
+    <Routes>
+      <Route exact path="" element={<Product {...props} />} />
+      <Route path="addproduct/:id?" element={<AddProduct {...props} />} />
+      <Route exact path="configuration" element={<Configuration {...props} />} />
+      <Route exact path=":id/oferts" element={<OfertProduts {...props} />} />
+    </Routes>
   )
 }
 export default ProductSectionRoutes

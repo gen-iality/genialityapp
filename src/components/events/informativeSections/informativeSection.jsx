@@ -4,7 +4,7 @@ import withContext from '@context/withContext'
 import { EventsApi } from '@helpers/request'
 import { connect } from 'react-redux'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
-import { withRouter } from 'react-router-dom'
+import { withRouter } from '@/withRouter'
 import Parser from 'html-react-parser'
 
 class InformativeSection extends Component {
@@ -101,7 +101,7 @@ class InformativeSection extends Component {
   }
   //ir a registrar usuario
   registerUser = () => {
-    this.props.history.push(`/landing/${this.props.cEvent.value._id}/tickets`)
+    this.props.navigate(`/landing/${this.props.cEvent.value._id}/tickets`)
   }
   //Cerrar modal
   handleCancel = () => {

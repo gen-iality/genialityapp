@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { CategoriesAgendaApi, TypesAgendaApi } from '@helpers/request'
 import { Tag } from 'antd'
 import CMS from '../newComponent/CMS'
-import { useRouteMatch } from 'react-router'
+import { useLocation } from 'react-router'
 
 const AgendaTypeCat = (props) => {
   const columnsOriginal = [
@@ -11,11 +11,11 @@ const AgendaTypeCat = (props) => {
       dataIndex: 'name',
     },
   ]
-  const match = useRouteMatch()
+  const location = useLocation()
 
   const [columns, setColumns] = useState([])
   const eventID = props.event._id
-  const subject = match.url.split('/').slice(-1)[0]
+  const subject = location.pathname.split('/').slice(-1)[0]
   const apiURL = subject === 'categorias' ? CategoriesAgendaApi : TypesAgendaApi
 
   useEffect(() => {
@@ -43,13 +43,11 @@ const AgendaTypeCat = (props) => {
       title={`${subject === 'categorias' ? 'Categorías' : 'Tipos'} de Lección`}
       //back
       titleTooltip="Agregue o edite las Preguntas frecuentes que se muestran en la aplicación"
-      addUrl={{
-        pathname: `${props.matchUrl}/add${subject}`,
-        state: { new: true },
-      }}
+      addUrl={`add${subject}`}
+      addUrlState={{ new: true }}
       columns={columns}
       key="_id"
-      editPath={`${props.matchUrl}/edit${subject}`}
+      editPath={`/edit${subject}`}
       pagination={false}
       actions
     />

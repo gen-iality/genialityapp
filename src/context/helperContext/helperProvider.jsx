@@ -14,7 +14,7 @@ import {
   createChatRoom,
 } from '@components/networking/agendaHook'
 import { maleIcons, femaleicons, imageforDefaultProfile } from '@helpers/constants'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useIntl } from 'react-intl'
 import { helperReducer, helperInitialState } from './helperReducer'
 import { FB } from '@helpers/firestore-request'

@@ -1,5 +1,6 @@
 import { Component } from 'react'
-import { withRouter, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { withRouter } from '@/withRouter'
 import { EventsApi, UsersApi, eventTicketsApi } from '@helpers/request'
 import { Table, Input, Button, Space, Menu, Row, Col, Tag } from 'antd'
 import {
@@ -270,7 +271,7 @@ class EventUsersList extends Component {
 
     // if (attendeesForSendMessage && attendeesForSendMessage.length > 0) {
     this.props.setGuestSelected(attendeesForSendMessage)
-    this.props.history.push(`${this.props.match.url}/createmessage`)
+    this.props.navigate('/createmessage')
     // } else {
     //   this.setState({ modalVisible: modalVisible ? false : true });
     // }
@@ -284,7 +285,7 @@ class EventUsersList extends Component {
         <Menu.Item key="1" icon={<UserOutlined />} onClick={this.modalUser}>
           Crear usuario
         </Menu.Item>
-        <Link className="dropdown-item" to={`${this.props.match.url}/importar-excel`}>
+        <Link className="dropdown-item" to="importar-excel">
           <Menu.Item key="2" icon={<UserOutlined />}>
             Importar usuarios de Excel
           </Menu.Item>
@@ -356,7 +357,7 @@ class EventUsersList extends Component {
                   to={
                     !eventIsActive && window.location.toString().includes('eventadmin')
                       ? ''
-                      : `${this.props.match.url}/importar-excel`
+                      : `importar-excel`
                   }
                   icon={<UploadOutlined />}
                 >

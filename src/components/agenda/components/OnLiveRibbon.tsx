@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useState } from 'react'
+import { FunctionComponent, PropsWithChildren, useEffect, useState } from 'react'
 import { Badge, Space } from 'antd'
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint'
 
@@ -13,7 +13,9 @@ interface IOnLiveRibbonProps {
   requestLiving?: () => Promise<boolean> | boolean
 }
 
-const OnLiveRibbon: FunctionComponent<IOnLiveRibbonProps> = (props) => {
+const OnLiveRibbon: FunctionComponent<PropsWithChildren<IOnLiveRibbonProps>> = (
+  props,
+) => {
   const { children, isOnLive, requestLiving } = props
 
   const [isLive, setIsLive] = useState(false)

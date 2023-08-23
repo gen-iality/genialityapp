@@ -145,10 +145,8 @@ export const columns = (columnsData) => [
             <Tooltip placement="topLeft" title="Editar">
               <Link
                 key="edit"
-                to={{
-                  pathname: `${columnsData.data.matchUrl}/speaker`,
-                  state: { edit: item._id },
-                }}
+                to={`${columnsData.data.matchUrl}/speaker`}
+                state={{ edit: item._id }}
               >
                 <Button
                   icon={<EditOutlined />}

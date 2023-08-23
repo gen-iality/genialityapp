@@ -8,7 +8,7 @@ import {
 } from '@helpers/request'
 import { injectIntl } from 'react-intl'
 import QRCode from 'qrcode.react'
-import { Redirect } from 'react-router-dom'
+import { Navigate, redirect } from 'react-router-dom'
 import FormComponent from '../events/registrationForm/form'
 import { Alert, Button, Modal } from 'antd'
 import withContext from '@context/withContext'
@@ -307,8 +307,9 @@ class UserModal extends Component {
     const { user, checked_in, ticket_id, rol, rolesList, userId, tickets } = this.state
     const { modal, badgeEvent, componentKey, edit } = this.props
     const qrSize = badgeEvent?.BadgeFields?.find((bagde) => bagde.qr)
-    if (this.state.redirect)
-      return <Redirect to={{ pathname: this.state.url_redirect }} />
+    if (this.state.redirect) {
+      return <Navigate to={this.state.url_redirect} />
+    }
     return (
       <Modal closable footer={false} onCancel={() => this.props.handleModal()} visible>
         <div

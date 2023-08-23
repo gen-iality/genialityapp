@@ -1,6 +1,6 @@
 /** React's libraries */
 import { useEffect, useState } from 'react'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 
 /** Antd imports */
 import { Tooltip, Button, Row, Col, Popover, Image, Avatar, Empty, Spin } from 'antd'
@@ -21,7 +21,7 @@ export const columns = (
   togglePaymentPlan,
   organization,
 ) => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const [columns, setColumns] = useState([])
 
   if (!extraFields) return []
@@ -140,7 +140,7 @@ export const columns = (
               type="primary"
               size="small"
               onClick={() => {
-                history.push(`./members/timetracking/${item._id}`)
+                navigate(`timetracking/${item._id}`)
               }}
               icon={<ClockCircleOutlined />}
             ></Button>

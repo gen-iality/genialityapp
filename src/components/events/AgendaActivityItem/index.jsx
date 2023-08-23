@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { Row, Col, Avatar, Card, Space, Badge, Grid, Button, Typography } from 'antd'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import Moment from 'moment-timezone'
 import './style.scss'
 import { firestore } from '@helpers/firebase'
@@ -28,7 +28,7 @@ const { gotoActivity } = StageActions
 const { useBreakpoint } = Grid
 
 function AgendaActivityItem(props) {
-  const history = useHistory()
+  const navigate = useNavigate()
   const cEvent = useEventContext()
   const urlactivity =
     cEvent && !cEvent?.isByname
@@ -36,7 +36,7 @@ function AgendaActivityItem(props) {
       : `/event/${cEvent?.nameEvent}/activity/`
   const screens = useBreakpoint()
   function HandleGoActivity(activity_id) {
-    history.push(`${urlactivity}${activity_id}`)
+    navigate(`${urlactivity}${activity_id}`)
   }
   const currentUser = useCurrentUser()
 

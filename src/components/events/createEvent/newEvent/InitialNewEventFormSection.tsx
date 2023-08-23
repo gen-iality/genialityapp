@@ -14,7 +14,8 @@ import {
   Divider,
 } from 'antd'
 import { CalendarOutlined } from '@ant-design/icons'
-import 'react-day-picker/lib/style.css'
+// import 'react-day-picker/lib/style.css'
+import 'react-day-picker/dist/style.css'
 import { NewEventActionEnum, useNewEventContext } from '@context/newEventContext'
 import { PlansApi } from '@helpers/request'
 import ModalOrgListCreate from './ModalOrgListCreate'

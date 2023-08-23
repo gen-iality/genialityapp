@@ -1,30 +1,21 @@
 import { Fragment, FunctionComponent } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import Documents from './documents'
 import Document from './Document'
 
 interface IDocumentsRoutesProps {
   event: any
-  matchUrl: string
 }
 
 const DocumentsRoutes: FunctionComponent<IDocumentsRoutesProps> = (props) => {
-  const { event, matchUrl } = props
+  const { event } = props
 
   return (
     <Fragment>
-      <Switch>
-        <Route
-          exact
-          path={`${matchUrl}/`}
-          render={() => <Documents event={event} parentUrl={matchUrl} />}
-        />
-        <Route
-          exact
-          path={`${matchUrl}/document`}
-          render={() => <Document event={event} parentUrl={matchUrl} />}
-        />
-      </Switch>
+      <Routes>
+        <Route path="/" element={<Documents event={event} />} />
+        <Route path="/document" element={<Document event={event} />} />
+      </Routes>
     </Fragment>
   )
 }

@@ -18,7 +18,7 @@ export default function ModalPassword({ onOk }: IModalPasswordProps) {
   }
   return (
     <Tooltip placement="topLeft" title="Enviar correo de cambio de contraseña">
-      <Button type={'primary'} size="small" onClick={openModal} icon={<LockOutlined />} />
+      <Button type="primary" size="small" onClick={openModal} icon={<LockOutlined />} />
       {contextHolder}
     </Tooltip>
   )

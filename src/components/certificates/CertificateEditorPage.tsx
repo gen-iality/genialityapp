@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect, useState, useRef } from 'react'
 import { CertsApi, RolAttApi } from '@helpers/request'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { handleRequestError } from '@helpers/utils'
 import {
   Row,
@@ -119,13 +119,12 @@ const RequirementConfigField: FunctionComponent<{
 
 interface ICertificateEditorPageProps {
   event: any
-  parentUrl: string
 }
 
 const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (props) => {
-  const location = useLocation<{ edit?: string }>()
+  const location = useLocation()
   const locationState = location?.state || {} //si viene new o edit en el state, si es edit es un id
-  const history = useHistory()
+  const navigate = useNavigate()
   const [certificateData, setCertificateData] = useState<CertificateType>({
     content: initContent,
     background: defaultCertificateBackground,
@@ -209,7 +208,7 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
 
       StateMessage.show(null, 'success', 'Información guardada correctamente!')
 
-      history.push(`${props.parentUrl}`)
+      navigate('..')
     } catch (e) {
       StateMessage.destroy('loading')
 
@@ -236,7 +235,7 @@ const CertificateEditorPage: FunctionComponent<ICertificateEditorPageProps> = (p
             await CertsApi.deleteOne(locationState.edit)
             StateMessage.destroy('loading')
             StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
-            history.push(`${props.parentUrl}`)
+            navigate('..')
           } catch (e) {
             StateMessage.destroy('loading')
             StateMessage.show(null, 'error', handleRequestError(e).message)

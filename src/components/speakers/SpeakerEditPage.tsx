@@ -1,5 +1,5 @@
 import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react'
-import { Redirect, useHistory, useLocation } from 'react-router-dom'
+import { redirect as redirectRouter, useNavigate, useLocation } from 'react-router-dom'
 import EviusReactQuill from '../shared/eviusReactQuill'
 import { fieldsSelect, handleRequestError, handleSelect } from '@helpers/utils'
 import { CategoriesAgendaApi, EventsApi, SpeakersApi } from '@helpers/request'
@@ -41,13 +41,12 @@ type SpeakerDataType = {
 
 interface ISpeakerEditPageProps {
   eventID: string
-  parentUrl: string
   justCreate?: boolean
   onCreated?: () => void
 }
 
 const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
-  const { eventID, parentUrl, justCreate } = props
+  const { eventID, justCreate } = props
 
   const [data, setData] = useState<SpeakerDataType>({
     name: '',
@@ -73,8 +72,8 @@ const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
   const [areacodeselected, setAreacodeselected] = useState(57)
   const [editDataIsLoading, setEditDataIsLoading] = useState(true)
 
-  const { state } = useLocation<any>()
-  const history = useHistory()
+  const { state } = useLocation()
+  const navigate = useNavigate()
 
   useEffect(() => {
     dataTheLoaded()
@@ -160,7 +159,7 @@ const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
         else await SpeakersApi.create(eventID, body)
         StateMessage.destroy('loading')
         StateMessage.show(null, 'success', 'Conferencista guardado correctamente!')
-        if (!justCreate) history.push(parentUrl)
+        if (!justCreate) navigate('..')
         else if (props.onCreated) props.onCreated()
       } catch (e) {
         StateMessage.destroy('loading')
@@ -216,7 +215,7 @@ const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
 
   //FN para ir a una ruta específica (ruedas en los select)
   function goSection(path: string, state: any) {
-    history.push(path, state)
+    navigate(path, state)
   }
 
   const prefixSelector = (
@@ -241,7 +240,7 @@ const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
     </Select>
   )
 
-  if (!state || redirect) return <Redirect to={parentUrl} />
+  if (!state || redirect) return redirectRouter('..')
 
   return (
     <Form onFinish={() => submit(data)} {...formLayout}>

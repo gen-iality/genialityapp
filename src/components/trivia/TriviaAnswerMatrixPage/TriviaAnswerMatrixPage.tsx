@@ -6,9 +6,9 @@ import useRequestAnswers from './hooks/useRequestAnswers'
 import usePrepareDataSource from './hooks/usePrepareDataSource'
 import useExportAsXLSX from './hooks/useExportAsXLSX'
 import makePrintableQuestionAnswer from './utils/make-printable-question-answer'
+import { useParams } from 'react-router'
 
 type Props = {
-  surveyId: string
   event: any
 }
 
@@ -34,7 +34,8 @@ const styles: {
 }
 
 const TriviaAnswerMatrixPage: FunctionComponent<Props> = (props) => {
-  const { surveyId, event } = props
+  const { event } = props
+  const { surveyId } = useParams<{ surveyId: string }>()
 
   const [isLoading, setIsLoading] = useState(true)
   const [columns, setColumns] = useState<ColumnType<any>[]>([])

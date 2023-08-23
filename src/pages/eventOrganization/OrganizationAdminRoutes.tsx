@@ -1,15 +1,6 @@
 /** React's libraries */
-import { useState, useEffect, FunctionComponent } from 'react'
-import {
-  Route,
-  NavLink,
-  Redirect,
-  Switch,
-  useParams,
-  useLocation,
-  useRouteMatch,
-  RouteProps,
-} from 'react-router-dom'
+import { useState, useEffect, FunctionComponent, PropsWithChildren } from 'react'
+import { Route, NavLink, Routes, useParams, useLocation, Outlet } from 'react-router-dom'
 
 /** Antd imports */
 import { Tag, Menu, Button, Layout } from 'antd'
@@ -48,30 +39,23 @@ import NoMatchPage from '@components/notFoundPage/NoMatchPage'
 import ValidateAccessRouteCms from '@components/roles/hooks/ValidateAccessRouteCms'
 import OrganizationTimeTrackingPage from './timetracking/OrganizationTimeTrackingPage'
 
-interface IProtected extends RouteProps {
-  org: any
+interface IProtectedProps {
+  orgId: string
 }
 
-const Protected: FunctionComponent<IProtected> = ({ render, org, ...rest }) => (
-  <Route
-    {...rest}
-    render={(routeProps) =>
-      org?._id ? (
-        <ValidateAccessRouteCms isForOrganization>
-          {render && render(routeProps)}
-        </ValidateAccessRouteCms>
-      ) : (
-        // <Redirect push to={`${url}/agenda`} />
-        <>{console.log('debug no hay orgId')}</>
-      )
-    }
-  />
+const Protected: FunctionComponent<PropsWithChildren<IProtectedProps>> = ({
+  children,
+  orgId,
+}) => (
+  <ValidateAccessRouteCms isForOrganization orgId={orgId}>
+    {children}
+  </ValidateAccessRouteCms>
 )
 
 const OrganizationAdminRoutes: FunctionComponent = () => {
   const params = useParams<{ id?: string }>()
   const location = useLocation()
-  const match = useRouteMatch()
+  const { pathname } = useLocation()
   const organizationId = params.id
 
   const [organization, setOrganization] = useState<any>({})
@@ -117,43 +101,43 @@ const OrganizationAdminRoutes: FunctionComponent = () => {
         >
           <Menu.Item key="1" icon={<BarsOutlined />}>
             Información
-            <NavLink to={`${match.url}/information`} />
+            <NavLink to="information" />
           </Menu.Item>
           <Menu.Item key="2" icon={<ScheduleOutlined />}>
             Cursos
-            <NavLink to={`${match.url}/events`} />
+            <NavLink to="events" />
           </Menu.Item>
           <Menu.Item key="3" icon={<SketchOutlined />}>
             Apariencia
-            <NavLink to={`${match.url}/appearance`} />
+            <NavLink to="appearance" />
           </Menu.Item>
           <Menu.Item key="4" icon={<TeamOutlined />}>
             Miembros
-            <NavLink to={`${match.url}/members`} />
+            <NavLink to="members" />
           </Menu.Item>
           {/* <Menu.Item key="4.1" icon={<DeleteOutlined />}>
                 Organization Properties
-                <NavLink to={`${match.url}/organization-properties`} />
+                <NavLink to="organization-properties" />
               </Menu.Item> */}
           <Menu.Item key="5" icon={<TeamOutlined />}>
             Cargos
-            <NavLink to={`${match.url}/positions`} />
+            <NavLink to="positions" />
           </Menu.Item>
           <Menu.Item key="6" icon={<TeamOutlined />}>
             Inscritos
-            <NavLink to={`${match.url}/registered`} />
+            <NavLink to="registered" />
           </Menu.Item>
           <Menu.Item key="7" icon={<UserSwitchOutlined />}>
             <small>Configuración de Miembros</small>
-            <NavLink to={`${match.url}/membersettings`} />
+            <NavLink to="membersettings" />
           </Menu.Item>
           <Menu.Item key="8" icon={<ProjectOutlined />}>
             <small>Configuración de Plantillas</small>
-            <NavLink to={`${match.url}/templatesettings`} />
+            <NavLink to="templatesettings" />
           </Menu.Item>
           <Menu.Item key="9" icon={<MenuOutlined />}>
-            {'Menú Items'}
-            <NavLink to={`${match.url}/menuItems`} />
+            Menú Items
+            <NavLink to="menuItems" />
           </Menu.Item>
         </Menu>
       </Layout.Sider>
@@ -175,133 +159,75 @@ const OrganizationAdminRoutes: FunctionComponent = () => {
               </a>
             </Tag>
 
-            <Switch>
-              <Route
-                exact
-                path={`${match.url}/`}
-                render={() => <Redirect to={`${match.url}/events`} />}
-              />
-              <Protected
-                exact
-                path={`${match.url}/events`}
-                org={organization}
-                render={() => <OrgEvents org={organization} />}
-              />
-              <Protected
-                exact
-                path={`${match.url}/information`}
-                org={organization}
-                render={() => <OrganizationProfile org={organization} />}
-              />
-              <Protected
-                exact
-                path={`${match.url}/appearance`}
-                org={organization}
-                render={() => <Styles org={organization} />}
-              />
-              <Protected
-                exact
-                path={`${match.url}/members`}
-                org={organization}
-                render={() => <OrganizationMembersPage org={organization} />}
-              />
-              <Protected
-                exact
-                path={`${match.url}/organization-properties`}
-                org={organization}
-                render={() => <OrganizationPropertiesIsolatedPage org={organization} />}
-              />
-              <Protected
-                exact
-                path={`${match.url}/positions`}
-                org={organization}
-                render={(routeProps) => (
-                  <OrganizationPositionsPage
-                    path={routeProps.match.path}
-                    org={organization}
-                  />
-                )}
-              />
-              <Protected
-                exact
-                path={`${match.url}/positions/:positionId`}
-                org={organization}
-                render={(routeProps) => (
-                  <PositionedUsersPage
-                    match={routeProps.match as any}
-                    org={organization}
-                  />
-                )}
-              />
-              <Protected
-                exact
-                path={`${match.url}/positions/:positionId/user/:userId`}
-                component={MembersCertificationPage}
-                org={organization}
-                render={(routeProps) => (
-                  <MembersCertificationPage
-                    match={routeProps.match as any}
-                    org={organization}
-                  />
-                )}
-              />
-              <Protected
-                exact
-                path={`${match.url}/positions/:positionId/user/:userId/logs/:certificationId`}
-                org={organization}
-                render={(routeProps) => (
-                  <MemberCertificationLogsPage
-                    match={routeProps.match as any}
-                    org={organization}
-                  />
-                )}
-              />
-              <Protected
-                exact
-                path={`${match.url}/registered/`}
-                org={organization}
-                render={() => <OrgRegisteredUsers org={organization} />}
-              />
-              <Protected
-                exact
-                path={`${match.url}/members/timetracking/:memberIdParam`}
-                org={organization}
-                render={(routeProps) => (
-                  <OrganizationTimeTrackingPage
-                    match={routeProps.match}
-                    org={organization}
-                  />
-                )}
-              />
-              <Protected
-                exact
-                path={`${match.url}/membersettings`}
-                org={organization}
-                render={() => <MemberSettings org={organization} />}
-              />
-              <Protected
-                exact
-                path={`${match.url}/templatesettings`}
-                org={organization}
-                render={(routeProps) => (
-                  <TemplateMemberSettings match={routeProps.match} org={organization} />
-                )}
-              />
-              <Protected
-                exact
-                path={`${match.url}/menuItems`}
-                org={organization}
-                render={() => <MenuLanding org={organization} />}
-              />
+            <Routes>
+              <Route path="/" element={<OrgEvents org={organization} />} />
 
-              <Protected
-                path={`${match.url}`}
-                org={organization}
-                render={(routeProps) => (
-                  <NoMatchPage parentUrl={routeProps.match.path} org={organization} />
-                )}
-              />
-            </Switch>
+              <Route
+                element={
+                  <Protected orgId={organizationId!}>
+                    <Outlet />
+                  </Protected>
+                }
+              >
+                <Route path="events" element={<OrgEvents org={organization} />} />
+                <Route
+                  path="information"
+                  element={<OrganizationProfile org={organization} />}
+                />
+                <Route path="appearance" element={<Styles org={organization} />} />
+                <Route
+                  path="members"
+                  element={<OrganizationMembersPage org={organization} />}
+                />
+                <Route
+                  path="organization-properties"
+                  element={<OrganizationPropertiesIsolatedPage org={organization} />}
+                />
+                <Route
+                  path="positions"
+                  element={
+                    <OrganizationPositionsPage
+                      path={`${pathname}/positions`}
+                      org={organization}
+                    />
+                  }
+                />
+                <Route
+                  path="positions/:positionId"
+                  element={<PositionedUsersPage org={organization} />}
+                />
+                <Route
+                  path="positions/:positionId/user/:userId"
+                  element={<MembersCertificationPage org={organization} />}
+                />
+                <Route
+                  path="positions/:positionId/user/:userId/logs/:certificationId"
+                  element={<MemberCertificationLogsPage org={organization} />}
+                />
+                <Route
+                  path="registered"
+                  element={<OrgRegisteredUsers org={organization} />}
+                />
+                <Route
+                  path="members/timetracking/:memberIdParam"
+                  element={<OrganizationTimeTrackingPage org={organization} />}
+                />
+                <Route
+                  path="membersettings"
+                  element={<MemberSettings org={organization} />}
+                />
+                <Route
+                  path="templatesettings"
+                  element={<TemplateMemberSettings org={organization} />}
+                />
+                <Route path="menuItems" element={<MenuLanding org={organization} />} />
+
+                <Route
+                  path=""
+                  element={<NoMatchPage urlFrom={pathname} org={organization} />}
+                />
+              </Route>
+            </Routes>
           </div>
         )}
       </Layout.Content>

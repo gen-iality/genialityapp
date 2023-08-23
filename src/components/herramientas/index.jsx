@@ -1,24 +1,16 @@
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import Herramientas from './Herramientas'
 import Herramienta from './Herramienta'
 
 function HerramientaRoutes(props) {
-  const { event, matchUrl } = props
+  const { event } = props
 
   return (
     <>
-      <Switch>
-        <Route
-          exact
-          path={`${matchUrl}/`}
-          render={() => <Herramientas event={event} parentUrl={matchUrl} />}
-        />
-        <Route
-          exact
-          path={`${matchUrl}/herramienta`}
-          render={() => <Herramienta event={event} parentUrl={matchUrl} {...props} />}
-        />
-      </Switch>
+      <Routes>
+        <Route path="/" element={<Herramientas event={event} />} />
+        <Route path="/herramienta" element={<Herramienta event={event} {...props} />} />
+      </Routes>
     </>
   )
 }

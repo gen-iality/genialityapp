@@ -16,7 +16,7 @@ export const logout = async ({ showNotification, params }: logoutInterface) => {
     handleChangeTypeModal,
     resetEventUser,
     setCurrentUser,
-    history,
+    history: navigate,
   } = params
 
   const currentUser = app.auth()?.currentUser
@@ -46,7 +46,7 @@ export const logout = async ({ showNotification, params }: logoutInterface) => {
       if (showNotification)
         remoteLogoutNotification({ type: 'info', names: user.names, formatMessage })
       if (!weAreOnTheLanding && !weAreOnTheOrganizationLanding) {
-        history.push('/')
+        navigate('/')
       }
     })
     .catch(function (error) {

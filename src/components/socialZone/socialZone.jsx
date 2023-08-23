@@ -13,7 +13,7 @@ import { useRef } from 'react'
 import { useEventContext } from '@context/eventContext'
 import { useCurrentUser } from '@context/userContext'
 import { FormattedMessage } from 'react-intl'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import ThisRouteCanBeDisplayed, {
   recordTypeForThisEvent,
@@ -48,7 +48,7 @@ const SocialZone = (props) => {
   const [stringAttende, setStringAttende] = useState()
   const [isFiltered, setIsFiltered] = useState(false)
   const busquedaRef = useRef()
-  const history = useHistory()
+  const navigate = useNavigate()
   const [typeEvent, setTypeEvent] = useState()
   const [countAttendeesOnline, setCountAttendeesOnline] = useState(0)
 
@@ -77,7 +77,7 @@ const SocialZone = (props) => {
   }, [chatAttendeChats])
 
   function redirectRegister() {
-    history.push(`/landing/${cEvent.value._id}/tickets`)
+    navigate(`/landing/${cEvent.value._id}/tickets`)
   }
 
   useEffect(() => {
