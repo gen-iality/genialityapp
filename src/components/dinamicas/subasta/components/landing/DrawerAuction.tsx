@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Card,
   Col,
@@ -21,7 +21,7 @@ import {
   Affix,
 } from 'antd';
 import HCOActividad from '@/components/events/AgendaActividadDetalle/HOC_Actividad';
-import { CloseOutlined } from '@ant-design/icons';
+import { CloseOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { DrawerAuctionProps } from '../../interfaces/auction.interface';
 import CardProduct from './CardProduct';
 import { useBids } from '../../hooks/useBids';
@@ -53,6 +53,8 @@ export default function DrawerAuction({
   const [showDrawerRules, setshowDrawerRules] = useState<boolean>(false);
   const [modalOffer, setmodalOffer] = useState<boolean>(false);
   const userName = cEventUser.value?.properties?.names || cEventUser.value?.user?.names;
+  const inputRef = useRef();
+  const [valueInput, setvalueInput] = useState(0)
 
   const validOffer = (value: string): boolean => {
     const offer = Number(value);
@@ -63,7 +65,12 @@ export default function DrawerAuction({
       getProducts();
     }
   };
-
+  const changeValue = (value : number) => {
+    const input = inputRef.current as any;
+    if (input.input) {
+      input.input.value = (Number(input.input.value) + value).toString();
+    }
+  }
   const onBid = async (data: { offerValue: string }) => {
     const isValid = validOffer(data.offerValue);
 
@@ -268,22 +275,19 @@ export default function DrawerAuction({
               <CardProduct auction={auction} />
             </Col>
             <Modal visible={modalOffer} footer={null} closable destroyOnClose onCancel={() => setmodalOffer(false)}>
-              <Form onFinish={onBid} layout='vertical' style={{ margin: 15 }}>
-                <Form.Item
-                  name={'offerValue'}
-                  label='Valor de la puja'
-                  initialValue={(auction.currentProduct?.price ?? 0) + (auction.amount ?? 0)}
-                  rules={[
-                    { required: true, message: `Se requiere un valor mínimo de  ${auction.currentProduct?.price}` },
-                  ]}>
-                  <Input
-                    size='large'
-                    type='number'
-                    //disabled={auction.amount !== null && auction.amount !== undefined}
-                    prefix='$'
-                    suffix={auction.currency}
-                  />
-                </Form.Item>
+              <Form onFinish={onBid} layout='vertical' style={{ margin: 10 }}>
+
+                  <Form.Item
+                    name={'offerValue'}
+                    label='Valor de la puja'
+                    initialValue={(auction.currentProduct?.price ?? 0) + (auction.amount ?? 0)}
+                    rules={[
+                      { required: true, message: `Se requiere un valor mayor que  ${auction.currentProduct?.price}` },
+                    ]}>
+                    {//@ts-ignore
+                    }<Input  value={valueInput} min={(auction.currentProduct?.price ?? 0) + (auction.amount ?? 0)} step={auction.amount ?? 1} size='large' type='number' prefix='$' suffix={auction.currency}  />
+                  </Form.Item>
+
                 <Button
                   style={{ width: '100%' }}
                   htmlType='submit'
@@ -302,7 +306,7 @@ export default function DrawerAuction({
               backgroundColor: auction.styles?.cards?.backgroundColor || '#FFFFFF',
               color: auction.styles?.cards?.color || '#000000',
             }}
-            validate={!auction.playing || !canOffer}
+            validate={!canOffer}
             onClick={() => setmodalOffer(true)}
             setshowDrawerChat={setshowDrawerChat}
             setshowDrawerRules={setshowDrawerRules}
