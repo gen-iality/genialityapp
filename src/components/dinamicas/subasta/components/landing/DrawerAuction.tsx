@@ -53,6 +53,7 @@ export default function DrawerAuction({
   const [showDrawerChat, setshowDrawerChat] = useState<boolean>(false);
   const [showDrawerRules, setshowDrawerRules] = useState<boolean>(false);
   const [modalOffer, setmodalOffer] = useState<boolean>(false);
+  const [time, setTime] = useState(0)
   const userName = cEventUser.value?.properties?.names || cEventUser.value?.user?.names;
   const inputRef = useRef();
 
@@ -76,6 +77,7 @@ export default function DrawerAuction({
 
     if (auction.playing && isValid && auction?.currentProduct?._id && data.offerValue) {
       setcanOffer(false);
+      setTime(Date.now() + auction.timerBids * 1000)
       const timeAwait = setTimeout(() => {
         setcanOffer(true);
         clearTimeout(timeAwait);
@@ -320,7 +322,7 @@ export default function DrawerAuction({
             setshowDrawerChat={setshowDrawerChat}
             setshowDrawerRules={setshowDrawerRules}
             closedrawer={setOpenOrClose}
-            timer={auction.timerBids}
+            timer={time}
           />
 
           <DrawerRules
