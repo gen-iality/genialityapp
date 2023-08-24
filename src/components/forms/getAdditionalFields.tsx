@@ -368,7 +368,7 @@ const GetAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
         input = (
           <Form.Item initialValue={value} name={name} noStyle={name !== 'rol_id' && attendee?.anonymous} 
             help={name === 'rol_id' && attendee?.anonymous && 
-            <Typography.Text strong type='secondary'>Los roles no se pueden modificar cuando el evento es con autenticación sin registro (anónimo)</Typography.Text>}
+            <Typography.Text strong type='secondary'>El rol no se pueden modificar cuando el usuario es de tipo anónimo</Typography.Text>}
           >
             <Select style={{ width: '100%' }} disabled={name === 'rol_id' && attendee?.anonymous}>
               <Option value={''}>Seleccione...</Option>

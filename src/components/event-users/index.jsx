@@ -235,7 +235,7 @@ class ListEventUser extends Component {
             disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
           />
         </Tooltip>
-        {this.props.event?.visibility !== 'ANONYMOUS' &&
+        {!item.anonymous &&
           <PasswordAssistant onOk={() => this.handleRecoveryPass(item.email)}>
             <p>¿Estás seguro de que deseas enviar el correo para cambiar la contraseña?</p>
           </PasswordAssistant>
@@ -455,7 +455,7 @@ class ListEventUser extends Component {
                     <Space>
                       {key.anonymous &&
                         <Tooltip title='Usuario anónimo'>
-                          <InfoCircleOutlined />
+                          <InfoCircleOutlined style={{color: 'orangered'}} />
                         </Tooltip>
                       }
                       <>{key[item.name]}</>
