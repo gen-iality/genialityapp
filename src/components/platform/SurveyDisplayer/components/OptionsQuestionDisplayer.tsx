@@ -1,6 +1,6 @@
 import { FunctionComponent, useState } from 'react'
 import { IQuestionDisplayer } from '../types'
-import { Checkbox, Col, Form, Radio, RadioChangeEvent, Space } from 'antd'
+import { Alert, Checkbox, Col, Form, Radio, RadioChangeEvent, Space } from 'antd'
 import { CheckboxValueType } from 'antd/lib/checkbox/Group'
 
 interface IOptionsQuestionDisplayerProps extends IQuestionDisplayer {
@@ -11,6 +11,10 @@ const OptionsQuestionDisplayer: FunctionComponent<IOptionsQuestionDisplayerProps
   props,
 ) => {
   const { onAnswer, question, multiple } = props
+
+  if (question.type !== 'checkbox' && question.type !== 'radiogroup')
+    return <Alert type="warning" message="Encuesta malformada" />
+
   const [isCorrect, setIsCorrect] = useState<boolean | undefined>()
 
   const onSelect = (checked: CheckboxValueType[]) => {
@@ -25,7 +29,7 @@ const OptionsQuestionDisplayer: FunctionComponent<IOptionsQuestionDisplayerProps
         question.correctAnswerIndex.length > 0
       ) {
         correctAnswers = question.correctAnswerIndex.map(
-          (index) => (question.choices as string[])[index],
+          (index) => question.choices[index],
         )
       } else {
         console.error(`the question ${question} has no correct value`)
@@ -35,14 +39,14 @@ const OptionsQuestionDisplayer: FunctionComponent<IOptionsQuestionDisplayerProps
       if (typeof question.correctAnswer === 'string') {
         correctAnswers = [question.correctAnswer]
       } else if (typeof question.correctAnswerIndex === 'number') {
-        correctAnswers = [(question.choices as string[])[question.correctAnswerIndex]]
+        correctAnswers = [question.choices[question.correctAnswerIndex]]
       } else if (
         Array.isArray(question.correctAnswerIndex) &&
         question.correctAnswerIndex.length > 0
       ) {
-        correctAnswers = [(question.choices as string[])[question.correctAnswerIndex[0]]]
+        correctAnswers = [question.choices[question.correctAnswerIndex[0]]]
       } else {
-        console.error(`the question ${question} has no correct value`)
+        console.error('the question has no correct value', { question })
       }
       //
     }

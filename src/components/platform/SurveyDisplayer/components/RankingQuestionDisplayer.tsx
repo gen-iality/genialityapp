@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect, useState } from 'react'
 import { IQuestionDisplayer } from '../types'
-import { Table } from 'antd'
+import { Alert, Table } from 'antd'
 
 import arrayMove from 'array-move'
 import type { SortableContainerProps, SortEnd } from 'react-sortable-hoc'
@@ -17,6 +17,7 @@ interface DataType {
 }
 
 interface IRankingQuestionDisplayerProps extends IQuestionDisplayer {}
+
 const DragHandle = SortableHandle(() => (
   <MenuOutlined value={'ss'} style={{ cursor: 'grab', color: '#999' }} title="s" />
 ))
@@ -47,8 +48,11 @@ const RankingQuestionDisplayer: FunctionComponent<IRankingQuestionDisplayerProps
   props,
 ) => {
   const { onAnswer, question } = props
+  if (question.type !== 'ranking')
+    return <Alert type="warning" message="Encuesta malformada" />
+
   const [dataSource, setDataSource] = useState<DataType[]>(
-    (question.choices as string[]).map((choice, index) => ({
+    question.choices.map((choice, index) => ({
       key: index.toString(),
       text: choice,
       index,
@@ -66,11 +70,9 @@ const RankingQuestionDisplayer: FunctionComponent<IRankingQuestionDisplayerProps
       Array.isArray(question.correctAnswerIndex) &&
       question.correctAnswerIndex.length > 0
     ) {
-      correctAnswers = question.correctAnswerIndex.map(
-        (index) => (question.choices as string[])[index],
-      )
+      correctAnswers = question.correctAnswerIndex.map((index) => question.choices[index])
     } else {
-      console.error(`the question ${question} has no correct value`)
+      console.error('the question has no correct value', { question })
     }
 
     // Eval if the answers is in the correct answers

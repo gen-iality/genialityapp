@@ -1,11 +1,15 @@
 import { FunctionComponent, useState } from 'react'
 import { IQuestionDisplayer } from '../types'
-import { Form, Input } from 'antd'
+import { Alert, Form, Input } from 'antd'
 
 interface ITextQuestionDisplayerProps extends IQuestionDisplayer {}
 
 const TextQuestionDisplayer: FunctionComponent<ITextQuestionDisplayerProps> = (props) => {
   const { onAnswer, question } = props
+
+  if (question.type !== 'text')
+    return <Alert type="warning" message="Encuesta malformada" />
+
   const [isCorrect, setIsCorrect] = useState<boolean | undefined>()
 
   const onChange = (text: string) => {
@@ -14,14 +18,14 @@ const TextQuestionDisplayer: FunctionComponent<ITextQuestionDisplayerProps> = (p
     if (typeof question.correctAnswer === 'string') {
       correctAnswer = question.correctAnswer
     } else if (typeof question.correctAnswerIndex === 'number') {
-      correctAnswer = (question.choices as string[])[question.correctAnswerIndex]
+      correctAnswer = question.choices[question.correctAnswerIndex]
     } else if (
       Array.isArray(question.correctAnswerIndex) &&
       question.correctAnswerIndex.length > 0
     ) {
-      correctAnswer = (question.choices as string[])[question.correctAnswerIndex[0]]
+      correctAnswer = question.choices[question.correctAnswerIndex[0]]
     } else {
-      console.error(`the question ${question} has no correct value`)
+      console.error('the question has no correct value', { question })
     }
 
     const _isCorrect = text === correctAnswer
