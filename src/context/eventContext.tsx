@@ -64,22 +64,42 @@ const EventProvider: FunctionComponent<PropsWithChildren> = (props) => {
 
     switch (type) {
       case 'id':
-        eventData = await EventsApi.getOne(event_id || event)
-        newEventContextState = {
-          status: 'LOADED',
-          value: eventData,
-          nameEvent: event_id || event,
-          isByname: false,
+        try {
+          eventData = await EventsApi.getOne(event_id || event)
+          newEventContextState = {
+            status: 'LOADED',
+            value: eventData,
+            nameEvent: event_id || event,
+            isByname: false,
+          }
+        } catch (err) {
+          console.error(err)
+          newEventContextState = {
+            status: 'LOADED',
+            value: null,
+            nameEvent: event_name,
+            isByname: true,
+          }
         }
         break
 
       case 'name':
-        eventData = await EventsApi.getOneByNameEvent(formatedEventName)
-        newEventContextState = {
-          status: 'LOADED',
-          value: eventData.data[0],
-          nameEvent: event_name,
-          isByname: true,
+        try {
+          eventData = await EventsApi.getOneByNameEvent(formatedEventName)
+          newEventContextState = {
+            status: 'LOADED',
+            value: eventData.data[0],
+            nameEvent: event_name,
+            isByname: true,
+          }
+        } catch (err) {
+          console.error(err)
+          newEventContextState = {
+            status: 'LOADED',
+            value: null,
+            nameEvent: event_name,
+            isByname: true,
+          }
         }
         break
 
