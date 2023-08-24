@@ -15,6 +15,11 @@ const TextQuestionDisplayer: FunctionComponent<ITextQuestionDisplayerProps> = (p
       correctAnswer = question.correctAnswer
     } else if (typeof question.correctAnswerIndex === 'number') {
       correctAnswer = (question.choices as string[])[question.correctAnswerIndex]
+    } else if (
+      Array.isArray(question.correctAnswerIndex) &&
+      question.correctAnswerIndex.length > 0
+    ) {
+      correctAnswer = (question.choices as string[])[question.correctAnswerIndex[0]]
     } else {
       console.error(`the question ${question} has no correct value`)
     }
