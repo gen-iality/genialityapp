@@ -58,8 +58,7 @@ export const useGetEventUserWithCertificate = (certificate: Certificates | undef
       onShowSizeChange: (page:number, pageSize:number) => {
         onChangeCurrnetPage(page);
         onChangePageSize(pageSize);
-      },
-      position:'both'
+      }
     }
   };
 };
