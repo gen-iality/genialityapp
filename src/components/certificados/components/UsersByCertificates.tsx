@@ -1,9 +1,10 @@
 import { Certificates } from '@/components/agenda/types';
-import { CloseOutlined } from '@ant-design/icons';
-import { Alert, Button, Drawer, DrawerProps, Grid, Space, Tooltip, Typography } from 'antd';
+import { CloseOutlined, DownloadOutlined } from '@ant-design/icons';
+import { Alert, Button, Drawer, DrawerProps, Grid, Row, Space, Tooltip, Typography } from 'antd';
 import { useGetEventUserWithCertificate } from '../hooks/useGetEventUserWithCertificate';
 import { UsersByCertificatesList } from './UsersByCertificatesList';
 import { generateCerts } from '../helpers/certificados.helper';
+import CertificateOutlineIcon from '@2fd/ant-design-icons/lib/CertificateOutline';
 
 interface Props extends DrawerProps {
   onCloseDrawer: () => void;
@@ -29,36 +30,43 @@ export const UsersByCertificates = ({ onCloseDrawer, certificate, eventValue, ..
     <Drawer
       title={
         <Space wrap size={5} style={{ marginTop: 4 }}>
+          <CertificateOutlineIcon style={{fontSize: '20px'}} />
           <Typography.Title level={5} style={{ marginTop: 4 }}>
             Listado de usuarios con este certificado
           </Typography.Title>
         </Space>
       }
       footer={
-        <Space>
-          <Button type='primary' onClick={onGenerateCertificates}>
-            Descargar pagina actual
+        <Row justify='end'>
+          <Button type='primary' onClick={onGenerateCertificates} icon={<DownloadOutlined />}>
+            Descargar página actual
           </Button>
-        </Space>
+        </Row>
       }
-      width={screens.xs ? '100%' : '450px'}
+      width={'450px'}
       closable={false}
       onClose={onCloseDrawer}
       headerStyle={{ border: 'none', padding: 10 }}
-      bodyStyle={{ padding: 5 }}
+      /* bodyStyle={{ padding: 5 }} */
       extra={
         <Tooltip placement='bottomLeft' title='Cerrar'>
           <Button icon={<CloseOutlined style={{ fontSize: 20 }} />} onClick={onCloseDrawer} type='text' />
         </Tooltip>
       }
       {...drawerProps}>
-      <UsersByCertificatesList
-        pagination={pagination}
-        dataSource={userEventUserWithCertificate}
-        loading={isLoading}
-        certificate={certificate}
-        eventValue={eventValue}
-      />
+        <Space 
+          direction='vertical' 
+          style={{width: '100%', overflowY: 'auto', height: '100%'}}
+          className='desplazar'
+        >
+          <UsersByCertificatesList
+            pagination={pagination}
+            dataSource={userEventUserWithCertificate}
+            loading={isLoading}
+            certificate={certificate}
+            eventValue={eventValue}
+          />
+        </Space>
     </Drawer>
   );
 };

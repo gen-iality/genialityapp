@@ -125,7 +125,7 @@ export const MenuItems = [
     ],
   },
   {
-    name: 'Dinamicas',
+    name: 'Dinámicas',
     icon: <RocketOutlined />,
     key: 'games',
     items: [

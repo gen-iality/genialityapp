@@ -9,7 +9,6 @@ export const useGetEventUserWithCertificate = (certificate: Certificates | undef
   const [isLoading, setisLoading] = useState(true);
   const [currentPage, setcurrentPage] = useState(1);
   const [pageSize, setpageSize] = useState(10);
-  
 
   const onChangeCurrnetPage = (page: number) => {
     setcurrentPage(page);
@@ -59,7 +58,7 @@ export const useGetEventUserWithCertificate = (certificate: Certificates | undef
       onShowSizeChange: (page:number, pageSize:number) => {
         onChangeCurrnetPage(page);
         onChangePageSize(pageSize);
-      },
-    } 
+      }
+    }
   };
 };
