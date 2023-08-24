@@ -18,7 +18,7 @@ const OrganizationAccessSettingsField: FunctionComponent<
 
   const [isFieldEnabled, setIsFieldEnabled] = useState<boolean>(value?.type === 'payment')
   const [priceValue, setPriceValue] = useState<number>(value?.price ?? 0)
-  const [availableDays, setAvailableDays] = useState<number>(value?.days)
+  const [availableDays, setAvailableDays] = useState<number>(value?.days ?? 30)
   const [customPasswordLabel, setCustomPasswordLabel] = useState<undefined | string>(
     value?.custom_password_label,
   )
@@ -68,6 +68,8 @@ const OrganizationAccessSettingsField: FunctionComponent<
                 message: 'Valor precio es requerido',
               },
             ]}
+            validateStatus={priceValue < 1500 ? 'error' : 'success'}
+            help={priceValue < 1500 ? 'Valor mínimo es 1500' : undefined}
           >
             <InputNumber
               value={priceValue}
@@ -79,7 +81,18 @@ const OrganizationAccessSettingsField: FunctionComponent<
               onChange={(value) => setPriceValue(value ?? 0)}
             />
           </Form.Item>
-          <Form.Item {...formLayout} label="Días de inscripción">
+          <Form.Item
+            {...formLayout}
+            label="Días de inscripción"
+            validateStatus={availableDays < 0 ? 'error' : 'validating'}
+            help={
+              !availableDays
+                ? 'Valor por defecto es 30 días'
+                : availableDays < 0
+                ? 'No se puede días negativos'
+                : undefined
+            }
+          >
             <InputNumber
               value={availableDays}
               placeholder="Días"
