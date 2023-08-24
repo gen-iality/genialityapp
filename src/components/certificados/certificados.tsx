@@ -6,6 +6,7 @@ import moment from 'moment';
 import { Event } from './types';
 import { EyeOutlined } from '@ant-design/icons';
 import { UsersByCertificates } from './components/UsersByCertificates';
+import { Certificates } from '../agenda/types';
 
 const Certificados: FC<{
   event: Event;
@@ -13,7 +14,7 @@ const Certificados: FC<{
 }> = (props) => {
   let [columnsData, setColumnsData] = useState({});
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
-
+  const [certificateSelected, setCertificateSelected] = useState<Certificates>();
   const columns = [
     {
       title: 'Nombre',
@@ -45,8 +46,9 @@ const Certificados: FC<{
     },
   ];
 
-  const openDrawer = (epa: any) => {
+  const openDrawer = (certificate: Certificates) => {
     setIsOpenDrawer(true);
+    setCertificateSelected(certificate);
   };
   const onCloseDrawer = () => {
     setIsOpenDrawer(false);
@@ -74,7 +76,14 @@ const Certificados: FC<{
         extraFnIcon={<EyeOutlined />}
         setColumnsData={setColumnsData}
       />
-      {isOpenDrawer && <UsersByCertificates onCloseDrawer={onCloseDrawer} visible={isOpenDrawer}/>}
+      {isOpenDrawer && certificateSelected && (
+        <UsersByCertificates
+          onCloseDrawer={onCloseDrawer}
+          visible={isOpenDrawer}
+          certificate={certificateSelected}
+          eventValue={props.event}
+        />
+      )}
     </>
   );
 };

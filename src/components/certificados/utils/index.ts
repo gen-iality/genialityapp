@@ -60,7 +60,7 @@ export function ArrayToStringCerti(rows: CertifiRow[]) {
     if (row.type === 'break' && row.times) {
       let index = 0;
       while (index < row.times) {
-        CertificateHtml += `<p class="ql-align-center"><br></p>`;
+        CertificateHtml += `<br>`;
         index++;
       }
     } else {
