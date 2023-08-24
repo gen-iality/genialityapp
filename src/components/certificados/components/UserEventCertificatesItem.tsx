@@ -1,5 +1,5 @@
-import { DownloadOutlined } from '@ant-design/icons';
-import { Button, Grid, List, Typography } from 'antd';
+import { DownloadOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Button, Grid, List, Typography } from 'antd';
 import { generateCert } from '../helpers/certificados.helper';
 import { Certificates } from '../types';
 
@@ -18,19 +18,22 @@ export const UserEventCertificatesItem = ({ eventUser, certificate, eventValue }
     <List.Item
       extra={
         <Button
-          size={screens.xs ? 'small' : 'large'}
+          size={'middle'}
           onClick={() => generateCert(eventUser, certificate, eventValue)}
           type='default'
           style={{
             boxShadow: 'none',
           }}
-          icon={screens.xs && <DownloadOutlined /* style={{ color: eventValue.styles.textMenu }}*/ />}>
-          {!screens.xs && (
-            <Typography.Text /*style={{ color: eventValue.styles.textMenu }} */>Descargar</Typography.Text>
-          )}
+          icon={<DownloadOutlined />}
+        >
+          {/* <Typography.Text >Descargar</Typography.Text> */}
         </Button>
       }>
-      <List.Item.Meta title={<Typography.Text strong>{eventUser.properties.names}</Typography.Text>} />
+      <List.Item.Meta 
+        avatar={<Avatar src={eventUser.user.picture} icon={!eventUser.user.picture && <UserOutlined style={{fontSize: '20px'}} />} />}
+        title={<Typography.Text strong>{eventUser.user.names}</Typography.Text>} 
+        description={<Typography.Text>{eventUser.user.email}</Typography.Text>} 
+      />
     </List.Item>
   );
 };

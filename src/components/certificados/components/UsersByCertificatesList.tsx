@@ -11,13 +11,9 @@ interface Props extends ListProps<EventUser> {
   dataSource: EventUser[];
 }
 
-export const UsersByCertificatesList = ({ certificate, eventValue, dataSource, ...listProps }: Props) => {
-  
-
- 
+export const UsersByCertificatesList = ({ certificate, eventValue, dataSource, ...listProps }: Props) => { 
   return (
     <List
-      style={{ height: '100%' }}
       bordered={false}
       dataSource={dataSource}
       renderItem={(eventUser) => (
