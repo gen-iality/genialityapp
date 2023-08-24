@@ -2,20 +2,43 @@ export type AvailableSurveyStatus = 'initial' | 'started' | 'finished'
 
 type FoolBoolean = boolean | 'true' | 'false'
 
-export interface SurveyQuestion {
+export interface BaseSurveyQuestion {
   title: string
-  type: 'radiogroup' | 'checkbox' | 'ranking' | 'ranking' | 'matrix' | 'comment' | 'text'
-  // | string
-  choices: string[] | { rows: any[]; columns: any[] }[]
   id: string
   image: string | null
   url: string | null
   video: string | null
   points: number
-  /** @deprecated it will be removed. Use `correctAnswerIndex` instead */
-  correctAnswer: string[]
-  correctAnswerIndex: number[]
 }
+
+export type SurveyQuestion = BaseSurveyQuestion &
+  (
+    | {
+        type: 'radiogroup' | 'checkbox' | 'ranking' | 'comment' | 'text'
+        // | string
+        choices: string[]
+        /** @deprecated it will be removed. Use `correctAnswerIndex` instead */
+        correctAnswer: string[]
+        correctAnswerIndex: number[]
+      }
+    | {
+        type: 'matrix'
+        // | string
+        choices: { rows: any[]; columns: any[] }[]
+        /** @deprecated it will be removed. Use `correctAnswerIndex` instead */
+        correctAnswer: string[]
+        correctAnswerIndex: number[]
+      }
+    | {
+        type: 'rating'
+        maxRateDescription: string
+        rateMax: number
+        minRateDescription: string
+        correctAnswer: number | string
+        correctAnswerIndex: string[]
+        rateMin: number
+      }
+  )
 
 export interface SurveyData {
   _id?: string
