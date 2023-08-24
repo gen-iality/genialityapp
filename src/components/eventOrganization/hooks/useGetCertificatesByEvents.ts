@@ -57,8 +57,8 @@ export const useGetCertificatesByEvents = (organizationId:string, eventUserId:st
 
   const getData= async ()=>{
     const newCertificates:Promise<CertificatesByEvent>[]=[]
-
-    eventsWithEventUser.forEach( (event) => {
+   const eventOrderDesc = eventsWithEventUser.reverse()
+   eventOrderDesc.forEach( (event) => {
       newCertificates.push(getCertificateByEventId(event));
     });
     try {
