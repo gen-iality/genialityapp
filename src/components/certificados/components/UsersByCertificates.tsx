@@ -1,6 +1,6 @@
 import { Certificates } from '@/components/agenda/types';
 import { CloseOutlined } from '@ant-design/icons';
-import { Button, Drawer, DrawerProps, Grid, Space, Tooltip, Typography } from 'antd';
+import { Alert, Button, Drawer, DrawerProps, Grid, Space, Tooltip, Typography } from 'antd';
 import { useGetEventUserWithCertificate } from '../hooks/useGetEventUserWithCertificate';
 import { UsersByCertificatesList } from './UsersByCertificatesList';
 import { generateCerts } from '../helpers/certificados.helper';
@@ -14,16 +14,15 @@ const { useBreakpoint } = Grid;
 
 export const UsersByCertificates = ({ onCloseDrawer, certificate, eventValue, ...drawerProps }: Props) => {
   const screens = useBreakpoint();
-  const { userEventUserWithCertificate, isLoading } = useGetEventUserWithCertificate(
+  const { userEventUserWithCertificate, isLoading, pagination } = useGetEventUserWithCertificate(
     certificate,
     certificate?.event_id ?? ''
   );
 
   const onGenerateCertificates = () => {
-    const MAX_NUMBER_CERTIFICATES = 100;
-    if (userEventUserWithCertificate.length < MAX_NUMBER_CERTIFICATES)
-      return generateCerts(userEventUserWithCertificate, certificate, eventValue);
-    
+    const startIndex = (pagination.current - 1) * pagination.pageSize;
+    const endIndex = startIndex + pagination.pageSize;
+    return generateCerts(userEventUserWithCertificate.slice(startIndex, endIndex), certificate, eventValue);
   };
 
   return (
@@ -36,9 +35,11 @@ export const UsersByCertificates = ({ onCloseDrawer, certificate, eventValue, ..
         </Space>
       }
       footer={
-        <Button type='primary' onClick={onGenerateCertificates}>
-          Descargar Certificados
-        </Button>
+        <Space>
+          <Button type='primary' onClick={onGenerateCertificates}>
+            Descargar pagina actual
+          </Button>
+        </Space>
       }
       width={screens.xs ? '100%' : '450px'}
       closable={false}
@@ -52,6 +53,7 @@ export const UsersByCertificates = ({ onCloseDrawer, certificate, eventValue, ..
       }
       {...drawerProps}>
       <UsersByCertificatesList
+        pagination={pagination}
         dataSource={userEventUserWithCertificate}
         loading={isLoading}
         certificate={certificate}
