@@ -47,18 +47,26 @@ const OptionsQuestionDisplayer: FunctionComponent<IOptionsQuestionDisplayerProps
       //
     }
 
-    // Eval if the answers is in the correct answers
+    const normalizedCorrectAnswers = correctAnswers.map((value) =>
+      value.toString().toLowerCase(),
+    )
+    const normalizeAnswers = checked.map((value) => value.toString().toLowerCase())
+    console.log({ normalizeAnswers, normalizedCorrectAnswers })
 
-    const _isCorrect = correctAnswers
-      .map((value) => value.toString().toLowerCase())
-      .every((correct) =>
-        checked.map((value) => value.toString().toLowerCase()).includes(correct),
-      )
+    // Eval if the answers is in the correct answers
+    const _isCorrect =
+      normalizedCorrectAnswers.length === normalizeAnswers.length &&
+      normalizedCorrectAnswers.every((correct) => normalizeAnswers.includes(correct))
 
     setIsCorrect(_isCorrect)
 
+    const points =
+      typeof question.points === 'number'
+        ? question.points
+        : parseInt(question.points ?? '0', 10)
+
     if (typeof onAnswer === 'function') {
-      onAnswer(checked, _isCorrect)
+      onAnswer(checked, _isCorrect, points)
     }
   }
 

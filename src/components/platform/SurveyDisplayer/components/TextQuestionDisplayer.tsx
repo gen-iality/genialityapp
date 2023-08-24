@@ -27,8 +27,13 @@ const TextQuestionDisplayer: FunctionComponent<ITextQuestionDisplayerProps> = (p
     const _isCorrect = text === correctAnswer
     setIsCorrect(_isCorrect)
 
+    const points =
+      typeof question.points === 'number'
+        ? question.points
+        : parseInt(question.points ?? '0', 10)
+
     if (typeof onAnswer === 'function') {
-      onAnswer(text, _isCorrect)
+      onAnswer(text, _isCorrect, points)
     }
   }
 

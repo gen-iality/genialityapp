@@ -88,5 +88,12 @@ export type SurveyStats = {
 
 export interface IQuestionDisplayer {
   question: SurveyQuestion
-  onAnswer?: (answer: any, isCorrect?: boolean) => void
+  /**
+   * Register the answer for a question.
+   * @param answer The current answer.
+   * @param isCorrect If the answer is correct.
+   * @param points the gained points.
+   * @returns undefined
+   */
+  onAnswer?: (answer: any, isCorrect: boolean, points: number) => void
 }
