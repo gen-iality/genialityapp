@@ -1061,6 +1061,22 @@ export const CertsApi = {
         });
     });
   },
+  generateCertList: async (body) => {
+    // eslint-disable-next-line no-unused-vars
+    return new Promise(async (resolve, reject) => {
+      let token = await GetTokenUserFirebase();
+      publicInstance
+        .post(`/api/generatecertificates?token=${token}&download=1`, body, {
+          responseType: 'blob',
+        })
+        .then((response) => {
+          resolve({
+            type: response.headers['content-type'],
+            blob: response.data,
+          });
+        });
+    });
+  },
 };
 
 export const NewsFeed = {
