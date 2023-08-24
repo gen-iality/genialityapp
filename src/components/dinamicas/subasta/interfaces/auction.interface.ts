@@ -43,6 +43,7 @@ export interface ProductsProps {
     onDelete: (id :string, images : UploadFile[]) => void
 }
 export interface ModalProps {
+    loading:   boolean
     product:    ModalProduct
     onChange:  (newList : any) => Promise<void>
     onSave:    (save : any) => Promise<void>

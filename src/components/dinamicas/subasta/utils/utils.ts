@@ -1,9 +1,9 @@
 import { uploadImageData } from '@/Utilities/uploadImageData';
-import { Auction, AuctionConfig, IBids, Products } from '../interfaces/auction.interface';
+import { AuctionConfig, IBids, Products } from '../interfaces/auction.interface';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { deleteFireStorageData } from '@/Utilities/deleteFireStorageData';
 import { DispatchMessageService } from '@/context/MessageService';
-import moment from 'moment';
+
 
 export const uploadImagedummyRequest = async ({ file, onSuccess, onError }: any) => {
   const imagenUrl = await uploadImageData(file);
@@ -36,6 +36,7 @@ export const defaultConfigAuction : AuctionConfig= {
 currency: 'COP',
 name : 'example',
 timerBids: 10,
+rules: null
 }
 export const InitialModalState : Products = {
   description: '',

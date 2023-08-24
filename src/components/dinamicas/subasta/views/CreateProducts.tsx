@@ -15,11 +15,15 @@ export default function CreateProducts({reload, eventId}: {reload: boolean,event
   const [modal, setmodal] = useState({ visibility: false, edit: false });
   const [productSelect, setProductSelect] = useState<IProduct>(InitialModalState);
   const { products, createProduct, deleteProduct, updateProduct, loading, deleteImages, refresh } = useProducts(eventId);
+  const [loadingModal, setLoadingModal] = useState(false);
+  
   useEffect(() => {
     if(reload) refresh()
   }, [reload]);
+
   const onChange = async ({ file, fileList: newFileList }: ImagesData) => {
     const { status } = file;
+    setLoadingModal(true)
     switch (status) {
       case 'removed':
         if (!modal.edit || newFileList.length !== 0) {
@@ -27,18 +31,22 @@ export default function CreateProducts({reload, eventId}: {reload: boolean,event
         } else {
           DispatchMessageService({ type: 'warning', msj: 'el producto debe tener mínimo una imagen', action: 'show' });
         }
+        setLoadingModal(false)
         break;
       case 'error':
         DispatchMessageService({ type: 'error', msj: 'No se logro subir una imagen', action: 'show' });
         setProductSelect({ ...productSelect, images: newFileList });
+        setLoadingModal(false)
         break;
 
       case 'done':
       case 'uploading':
         setProductSelect({ ...productSelect, images: newFileList });
+        setLoadingModal(false)
         break;
 
       default:
+        setLoadingModal(false)
         break;
     }
   };
@@ -54,11 +62,13 @@ export default function CreateProducts({reload, eventId}: {reload: boolean,event
   };
 
   const resetModal = () => {
+    setLoadingModal(false)
     setmodal({ visibility: false, edit: false });
     setProductSelect(InitialModalState);
   };
 
   const onCancel = async (images: UploadFile[], update?: boolean) => {
+    setLoadingModal(true)
     if (!modal.edit) {
       await deleteImages(images);
     } else {
@@ -75,12 +85,13 @@ export default function CreateProducts({reload, eventId}: {reload: boolean,event
         title={modal.edit ? 'Editar producto' : 'Agregar producto'}
         footer={false}
         closable
-        onCancel={resetModal}
+        onCancel={()=>onCancel(productSelect.images)}
         destroyOnClose
         style={{ top: 20 }}
         okText={'Guardar'}>
         <ModalProducts
           key={`${productSelect._id}`}
+          loading={loadingModal}
           onChange={onChange}
           product={productSelect}
           onCancel={onCancel}
