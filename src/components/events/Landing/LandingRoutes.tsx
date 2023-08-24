@@ -6,7 +6,7 @@ import { useUserEvent } from '@context/eventUserContext'
 import { useLocation } from 'react-router-dom'
 
 /** ant design */
-import { Layout, Spin, notification, Button } from 'antd'
+import { Layout, Spin, notification, Button, Result } from 'antd'
 
 const { Content } = Layout
 
@@ -288,7 +288,20 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
     [activityAttendees, countableActivities],
   )
 
-  if (cEventContext.status === 'LOADING') return <Spin />
+  if (cEventContext.status === 'LOADED' && !cEventContext.value) {
+    return (
+      <Result
+        status={'404'}
+        title="Error al cargar"
+        subTitle={`Asegúrese de haber escrito bien la URL: ${window.location.href}`}
+      />
+    )
+  }
+
+  if (cEventContext.status === 'LOADING') {
+    console.log('no event loaded yet', cEventContext)
+    return <Spin />
+  }
 
   return (
     <EventProgressProvider>
