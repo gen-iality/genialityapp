@@ -18,7 +18,7 @@ const OrganizationAccessSettingsField: FunctionComponent<
 
   const [isFieldEnabled, setIsFieldEnabled] = useState<boolean>(value?.type === 'payment')
   const [priceValue, setPriceValue] = useState<number>(value?.price ?? 0)
-  const [availableDays, setAvailableDays] = useState<number>(value?.days)
+  const [availableDays, setAvailableDays] = useState<number>(value?.days ?? 30)
   const [customPasswordLabel, setCustomPasswordLabel] = useState<undefined | string>(
     value?.custom_password_label,
   )

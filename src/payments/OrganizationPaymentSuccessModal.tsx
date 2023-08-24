@@ -43,7 +43,10 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
     const data = {
       payment_plan: {
         price: organization.access_settings?.price ?? 0,
-        date_until: dayjs(Date.now()).add(organization.access_settings?.days ?? 0, 'day'),
+        date_until: dayjs(Date.now()).add(
+          organization.access_settings?.days ?? 30,
+          'day',
+        ),
       },
     }
     console.log('payment initresult data', data)
