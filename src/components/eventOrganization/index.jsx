@@ -14,6 +14,7 @@ import OrganizationPaymentConfirmationModal from '../../payments/OrganizationPay
 import OrganizationPaymentSuccessModal from '../../payments/OrganizationPaymentSuccessModal'
 import OrganizationPaymentModal from '../../payments/OrganizationPaymentModal'
 import OrganizationPaymentContext from '@/payments/OrganizationPaymentContext'
+import useIsDevOrStage from '@/hooks/useIsDevOrStage'
 const { Title, Text, Paragraph } = Typography
 
 const EventOrganization = () => {
@@ -36,6 +37,8 @@ const EventOrganization = () => {
   const { dispatch: paymentDispatch, ...paymentState } = useContext(
     OrganizationPaymentContext,
   )
+
+  const { isDev, isStage } = useIsDevOrStage()
 
   useEffect(() => {
     if (orgId) {
@@ -117,6 +120,7 @@ const EventOrganization = () => {
 
   useEffect(() => {
     if (!organization || !organizationUser) return
+    console.log('member plan:', organizationUser.payment_plan)
     if (organization.access_settings?.type === 'payment') {
       console.log('organizationUser', organizationUser)
 
@@ -132,6 +136,10 @@ const EventOrganization = () => {
             memberHadPaid = true
           }
         }
+      }
+      if (!!organizationUser.payment_plan && !memberHadPaid) {
+        console.log('assume user is premium ⭐️⭐️⭐️', organizationUser.payment_plan)
+        memberHadPaid = true
       }
 
       //
@@ -164,7 +172,7 @@ const EventOrganization = () => {
         organizationUser={organizationUser}
         organization={organization}
       />
-      {(import.meta.env.MODE || '').includes('staging') && (
+      {(isDev || isStage) && (
         <div>
           <Button onClick={() => paymentDispatch({ type: 'REQUIRE_PAYMENT' })}>
             REQUIRE_PAYMENT
