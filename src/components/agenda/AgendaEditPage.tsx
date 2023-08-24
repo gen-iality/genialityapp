@@ -258,7 +258,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
       }}
       {...formLayout}
     >
-      <RouterPrompt
+      {/* <RouterPrompt
         save
         form={false}
         when={isNeededConfirmRedirection}
@@ -273,7 +273,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
           onFinish(form.getFieldsValue(), false)
         }}
         onCancel={() => false}
-      />
+      /> */}
 
       <Header
         back
