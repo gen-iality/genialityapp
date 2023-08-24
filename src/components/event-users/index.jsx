@@ -226,13 +226,13 @@ class ListEventUser extends Component {
     // const { recoveryMessage, status } = this.state;
     return (
       <Space>
-        <Tooltip placement='topLeft' title={this.props.event?.visibility === 'ANONYMOUS' ? 'No se pueden editar usuarios anónimos' : 'Editar'}>
+        <Tooltip placement='topLeft' title={'Editar'}>
           <Button
             type={'primary'}
             icon={<EditOutlined />}
             size='small'
             onClick={() => this.openEditModalUser(item)}
-            disabled={(this.props.event?.visibility === 'ANONYMOUS' || !eventIsActive) && window.location.toString().includes('eventadmin')}
+            disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
           />
         </Tooltip>
         {this.props.event?.visibility !== 'ANONYMOUS' &&
@@ -451,13 +451,14 @@ class ListEventUser extends Component {
                   return <Image width={40} height={40} src={key?.user?.picture} />;
 
                 case 'email':
-                  return self.props.event?.visibility === 'ANONYMOUS' ? 
-                    <Space /* size={0} */>
-                      <Tooltip title='Usuario anónimo'>
-                        <InfoCircleOutlined />
-                      </Tooltip>
+                  return key.anonymous ? 
+                    <Space>
+                      {key.anonymous &&
+                        <Tooltip title='Usuario anónimo'>
+                          <InfoCircleOutlined />
+                        </Tooltip>
+                      }
                       <>{key[item.name]}</>
-                      {/* <Tag color='volcano'><small>{self.props.event?.visibility}</small></Tag> */}
                     </Space>
                   : <>{key[item.name]}</>
 
@@ -984,7 +985,7 @@ class ListEventUser extends Component {
             <Space direction='vertical' size={0}>
               <Typography.Paragraph>¡Evento sin autenticación (anónimo)! 
                 La información recolectada dentro del evento no está enlazada a un usuario específico dentro de la plataforma,
-                por lo tanto NO se pueden modificar.</Typography.Paragraph>
+                por lo tanto NO se pueden modificar los roles.</Typography.Paragraph>
             </Space>
           }
         />
@@ -1030,7 +1031,6 @@ class ListEventUser extends Component {
             activityId={activityId}
           />
         )}
-
         {/* {users.length > 0 && this.state.columns ? ( */}
         <TableA
           list={users.length > 0 && users}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Checkbox, Collapse, Divider, Form, Input, Select, Upload, DatePicker } from 'antd';
+import { Button, Checkbox, Collapse, Divider, Form, Input, Select, Upload, DatePicker, Typography } from 'antd';
 import { InboxOutlined, UploadOutlined } from '@ant-design/icons';
 import ImgCrop from 'antd-img-crop';
 import { useIntl } from 'react-intl';
@@ -10,7 +10,6 @@ import { deleteFireStorageData } from '@/Utilities/deleteFireStorageData';
 import { countryApi } from '@/helpers/request';
 /**TODO::ocaciona error en ios */
 
-import { async } from 'ramda-adjunct';
 const { Option } = Select;
 const { Panel } = Collapse;
 const { TextArea } = Input;
@@ -367,8 +366,11 @@ const GetAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
             })
           : [];
         input = (
-          <Form.Item initialValue={value} name={name} noStyle>
-            <Select style={{ width: '100%' }}>
+          <Form.Item initialValue={value} name={name} noStyle={name !== 'rol_id' && attendee?.anonymous} 
+            help={name === 'rol_id' && attendee?.anonymous && 
+            <Typography.Text strong type='secondary'>Los roles no se pueden modificar cuando el evento es con autenticación sin registro (anónimo)</Typography.Text>}
+          >
+            <Select style={{ width: '100%' }} disabled={name === 'rol_id' && attendee?.anonymous}>
               <Option value={''}>Seleccione...</Option>
               {input}
             </Select>
