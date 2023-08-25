@@ -32,7 +32,7 @@ const OptionsQuestionDisplayer: FunctionComponent<IOptionsQuestionDisplayerProps
           (index) => question.choices[index],
         )
       } else {
-        console.error(`the question ${question} has no correct value`)
+        console.error('the question has no correct value', { question })
       }
     } else {
       //

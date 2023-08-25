@@ -15,7 +15,7 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const RankingQuestion: Story = {
+export const RatingQuestion: Story = {
   args: {
     question: surveyData.questions[3] as any,
   },
