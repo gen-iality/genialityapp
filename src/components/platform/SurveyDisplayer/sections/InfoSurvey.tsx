@@ -5,27 +5,30 @@ import ReactQuill from 'react-quill'
 
 interface IWelcomeSurveyProps {
   extraMessage?: string
-  onStart?: () => void
+  onClick?: () => void
+  btnText: string
+  infoText: string
+  /**
+   * default "Encuesta"
+   */
+  title?: string
 }
 
-const WelcomeSurvey: FunctionComponent<IWelcomeSurveyProps> = (props) => {
-  const { extraMessage, onStart } = props
-
-  const onClick = () => {
-    if (typeof onStart === 'function') {
-      onStart()
-    }
-  }
+const InfoSurvey: FunctionComponent<IWelcomeSurveyProps> = (props) => {
+  const { title, extraMessage, onClick, infoText, btnText } = props
 
   return (
     <Result
       status={'info'}
-      title="Encuesta"
+      title={title ?? 'Encuesta'}
       extra={
         <Space direction="vertical" align="center">
-          Click en INICIAR para comenzar
-          <Button onClick={onClick} type="primary">
-            Empezar
+          {infoText}
+          <Button
+            onClick={() => typeof onClick === 'function' && onClick()}
+            type="primary"
+          >
+            {btnText}
           </Button>
         </Space>
       }
@@ -45,4 +48,4 @@ const WelcomeSurvey: FunctionComponent<IWelcomeSurveyProps> = (props) => {
   )
 }
 
-export default WelcomeSurvey
+export default InfoSurvey
