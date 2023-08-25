@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useState } from 'react'
+import { FunctionComponent, useEffect, useMemo, useState } from 'react'
 import { IQuestionDisplayer } from '../types'
 import { Alert, Table } from 'antd'
 
@@ -60,6 +60,14 @@ const RankingQuestionDisplayer: FunctionComponent<IRankingQuestionDisplayerProps
   )
   const [isCorrect, setIsCorrect] = useState<boolean | undefined>()
 
+  const points = useMemo(
+    () =>
+      typeof question.points === 'number'
+        ? question.points
+        : parseInt(question.points ?? '0', 10),
+    [question],
+  )
+
   const onChange = (orderedAnswers: string[]) => {
     console.debug('ranking options:', orderedAnswers)
     let correctAnswers: string[] = []
@@ -90,11 +98,6 @@ const RankingQuestionDisplayer: FunctionComponent<IRankingQuestionDisplayerProps
       )
 
     setIsCorrect(_isCorrect)
-
-    const points =
-      typeof question.points === 'number'
-        ? question.points
-        : parseInt(question.points ?? '0', 10)
 
     if (typeof onAnswer === 'function') {
       onAnswer(orderedAnswers, _isCorrect, points)

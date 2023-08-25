@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react'
+import { FunctionComponent, useMemo, useState } from 'react'
 import { IQuestionDisplayer } from '../types'
 import { Alert, Checkbox, Col, Form, Radio, RadioChangeEvent, Space } from 'antd'
 import { CheckboxValueType } from 'antd/lib/checkbox/Group'
@@ -16,6 +16,14 @@ const OptionsQuestionDisplayer: FunctionComponent<IOptionsQuestionDisplayerProps
     return <Alert type="warning" message="Encuesta malformada" />
 
   const [isCorrect, setIsCorrect] = useState<boolean | undefined>()
+
+  const points = useMemo(
+    () =>
+      typeof question.points === 'number'
+        ? question.points
+        : parseInt(question.points ?? '0', 10),
+    [question],
+  )
 
   const onSelect = (checked: CheckboxValueType[]) => {
     console.debug('multiple options:', checked)
@@ -63,11 +71,6 @@ const OptionsQuestionDisplayer: FunctionComponent<IOptionsQuestionDisplayerProps
       normalizedCorrectAnswers.every((correct) => normalizeAnswers.includes(correct))
 
     setIsCorrect(_isCorrect)
-
-    const points =
-      typeof question.points === 'number'
-        ? question.points
-        : parseInt(question.points ?? '0', 10)
 
     if (typeof onAnswer === 'function') {
       onAnswer(checked, _isCorrect, points)

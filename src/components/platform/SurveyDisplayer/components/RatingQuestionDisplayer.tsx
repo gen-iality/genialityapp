@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react'
+import { FunctionComponent, useMemo, useState } from 'react'
 import { IQuestionDisplayer } from '../types'
 import { Alert, Col, Row, Slider } from 'antd'
 
@@ -8,10 +8,19 @@ const RatingQuestionDisplayer: FunctionComponent<IRatingQuestionDisplayerProps> 
   props,
 ) => {
   const { onAnswer, question } = props
-  const [isCorrect, setIsCorrect] = useState<boolean | undefined>()
 
   if (question.type !== 'rating')
     return <Alert type="warning" message="Encuesta malformada" />
+
+  const [isCorrect, setIsCorrect] = useState<boolean | undefined>()
+
+  const points = useMemo(
+    () =>
+      typeof question.points === 'number'
+        ? question.points
+        : parseInt(question.points ?? '0', 10),
+    [question],
+  )
 
   const onChange = (value: number) => {
     let correctAnswer: undefined | number
@@ -43,11 +52,6 @@ const RatingQuestionDisplayer: FunctionComponent<IRatingQuestionDisplayerProps> 
         : false
 
     setIsCorrect(_isCorrect)
-
-    const points =
-      typeof question.points === 'number'
-        ? question.points
-        : parseInt(question.points ?? '0', 10)
 
     if (typeof onAnswer === 'function') {
       onAnswer(value, _isCorrect, points)

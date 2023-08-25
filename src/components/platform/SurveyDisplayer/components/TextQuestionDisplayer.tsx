@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react'
+import { FunctionComponent, useMemo, useState } from 'react'
 import { IQuestionDisplayer } from '../types'
 import { Alert, Form, Input } from 'antd'
 
@@ -11,6 +11,14 @@ const TextQuestionDisplayer: FunctionComponent<ITextQuestionDisplayerProps> = (p
     return <Alert type="warning" message="Encuesta malformada" />
 
   const [isCorrect, setIsCorrect] = useState<boolean | undefined>()
+
+  const points = useMemo(
+    () =>
+      typeof question.points === 'number'
+        ? question.points
+        : parseInt(question.points ?? '0', 10),
+    [question],
+  )
 
   const onChange = (text: string) => {
     let correctAnswer: undefined | string
@@ -30,11 +38,6 @@ const TextQuestionDisplayer: FunctionComponent<ITextQuestionDisplayerProps> = (p
 
     const _isCorrect = text === correctAnswer
     setIsCorrect(_isCorrect)
-
-    const points =
-      typeof question.points === 'number'
-        ? question.points
-        : parseInt(question.points ?? '0', 10)
 
     if (typeof onAnswer === 'function') {
       onAnswer(text, _isCorrect, points)

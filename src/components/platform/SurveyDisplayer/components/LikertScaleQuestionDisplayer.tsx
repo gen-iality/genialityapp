@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useState } from 'react'
+import { FunctionComponent, useEffect, useMemo, useState } from 'react'
 import { IQuestionDisplayer } from '../types'
 import { Alert, Radio, Table } from 'antd'
 import { ColumnType } from 'antd/lib/table'
@@ -17,6 +17,14 @@ const LikertScaleQuestionDisplayer: FunctionComponent<
   const [dataSource, setDataSource] = useState<any[]>([])
   const [columns, setColumns] = useState<ColumnType<any>[]>([])
   const [map, setMap] = useState<{ [x: string]: number }>({})
+
+  const points = useMemo(
+    () =>
+      typeof question.points === 'number'
+        ? question.points
+        : parseInt(question.points ?? '0', 10),
+    [question],
+  )
 
   useEffect(() => {
     const newColumns: typeof columns = [
@@ -113,11 +121,6 @@ const LikertScaleQuestionDisplayer: FunctionComponent<
     }
 
     setIsCorrect(_isCorrect)
-
-    const points =
-      typeof question.points === 'number'
-        ? question.points
-        : parseInt(question.points ?? '0', 10)
 
     if (typeof onAnswer === 'function') {
       if (question.isRequired && Object.values(map).length === 0) {
