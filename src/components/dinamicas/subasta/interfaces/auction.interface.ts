@@ -21,6 +21,10 @@ export interface DrawerAuctionProps {
     cEvent?:        any
     setOpenOrClose: ()=> void
 }
+export interface CardProductProps {
+    auction:        Auction
+    currentPrice:         number | null
+}
 export interface GeneralAuctionProps {
     auction: Auction
     eventId: string

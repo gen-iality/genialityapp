@@ -2,10 +2,20 @@
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     transition: all 0.5s ease-out;
 }
-.cardsConfigStyle {
+.cardLanding {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     transition: all 0.5s ease-out;
 }
+.winner {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.winner::before {
+    border: 10px solid red;
+  /*   background-size: 200% 200%;
+    background-origin: border-box; */
+    filter: blur(5px); /* Efecto de desenfoque para un aspecto más brillante */
+}
+
 
 .container {
     width: 100%;

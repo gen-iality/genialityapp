@@ -59,19 +59,14 @@ export default function DrawerAuction({
 
   const validOffer = (value: string): boolean => {
     const offer = Number(value);
-    return auction?.currentProduct?.price !== undefined && offer > auction?.currentProduct?.price;
+    return auction?.currentProduct?.price !== undefined && offer > (Bids[0]?.offered ?? auction?.currentProduct?.price);
   };
   const reloadProducts = (tab: string) => {
     if (tab === TabsDrawerAuction.History) {
       getProducts();
     }
   };
-  const changeValue = (value: number) => {
-    const input = inputRef.current as any;
-    if (input.input) {
-      input.input.value = (Number(input.input.value) + value).toString();
-    }
-  };
+
   const onBid = async (data: { offerValue: string }) => {
     const isValid = validOffer(data.offerValue);
 
@@ -274,16 +269,16 @@ export default function DrawerAuction({
         <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
           <Row gutter={[16, 16]} justify='center'>
             <Col span={20}>
-              <CardProduct auction={auction} />
+              <CardProduct auction={auction} currentPrice={Bids[0]?.offered}/>
             </Col>
             <Modal visible={modalOffer} footer={null} closable destroyOnClose onCancel={() => setmodalOffer(false)}>
               <Form onFinish={onBid} layout='vertical' style={{ margin: 10 }}>
                 <Form.Item
                   name={'offerValue'}
                   label='Valor de la puja'
-                  initialValue={(auction.currentProduct?.price ?? 0) + (auction.amount ?? 0)}
+                  initialValue={(Bids[0]?.offered ??  auction.currentProduct?.start_price) + (auction.amount ?? 0)}
                   rules={[
-                    { required: true, message: `Se requiere un valor mayor que  ${auction.currentProduct?.price}` },
+                    { required: true, message: `Se requiere un valor mayor que  ${Bids[0]?.offered ?? auction.currentProduct?.start_price}` },
                   ]}>
                   {
                     //@ts-ignore
