@@ -24,9 +24,12 @@ export type SurveyQuestion = BaseSurveyQuestion &
     | {
         type: 'matrix'
         // | string
-        choices: { rows: any[]; columns: any[] }[]
+        choices: {
+          columns: { value: number; text: string }[]
+          rows: string[]
+        }
+        correctAnswer: { [x: string]: number }
         /** @deprecated it will be removed. Use `correctAnswerIndex` instead */
-        correctAnswer: string[]
         correctAnswerIndex: number[]
       }
     | {
