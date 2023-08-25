@@ -23,9 +23,10 @@ export const generateCert = async (dataUser: UserData, cert: Certificates, event
 
   const data = window.URL.createObjectURL(blob);
   const link = document.createElement('a');
+  const cleanedName = dataUser.properties.names.replace(/\s+/g, '');
   link.type = 'json';
   link.href = data;
-  link.download = 'certificado.pdf';
+  link.download = 'certificado' + 'de' + cleanedName + '.pdf';
   link.dispatchEvent(new MouseEvent('click'));
   setTimeout(() => {
     window.URL.revokeObjectURL(data);
@@ -58,7 +59,7 @@ export const generateCerts = async (dataUsers: UserData[], cert: Certificates, e
   const link = document.createElement('a');
   link.type = 'json';
   link.href = data;
-  link.download = 'certificado.pdf';
+  link.download = 'certificados.pdf';
   link.dispatchEvent(new MouseEvent('click'));
   setTimeout(() => {
     window.URL.revokeObjectURL(data);
