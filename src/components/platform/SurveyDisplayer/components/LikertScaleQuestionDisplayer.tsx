@@ -120,7 +120,11 @@ const LikertScaleQuestionDisplayer: FunctionComponent<
         : parseInt(question.points ?? '0', 10)
 
     if (typeof onAnswer === 'function') {
-      onAnswer(map, _isCorrect, points)
+      if (question.isRequired && Object.values(map).length === 0) {
+        console.warn('no answer to send')
+      } else {
+        onAnswer(map, _isCorrect, points)
+      }
     }
   }, [map])
 
