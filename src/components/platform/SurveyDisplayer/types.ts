@@ -5,6 +5,7 @@ type FoolBoolean = boolean | 'true' | 'false'
 export interface BaseSurveyQuestion {
   title: string
   id: string
+  isRequired?: boolean
   image: string | null
   url: string | null
   video: string | null
@@ -35,6 +36,7 @@ export type SurveyQuestion = BaseSurveyQuestion &
     | {
         type: 'rating'
         maxRateDescription: string
+        choices: never[]
         rateMax: number
         minRateDescription: string
         correctAnswer: number | string

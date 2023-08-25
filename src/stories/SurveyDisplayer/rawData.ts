@@ -35,6 +35,7 @@ export const surveyData = {
       title: 'Preguntas de selecci\u00f3n \u00fanica. Elige',
       type: 'radiogroup',
       points: 1,
+      isRequired: true,
       choices: ['Opci\u00f3n 111', 'Otra opci\u00f3n que no es'],
       id: '4d7c08c95914420fa275c05c8b096417',
       image: [
@@ -71,6 +72,7 @@ export const surveyData = {
       title: 'Nueva, pero de selecci\u00f3n m\u00faltiple',
       type: 'checkbox',
       points: '2',
+      isRequired: true,
       choices: ['\u00c9sta me gusta', '\u00c9sta no', '\u00c9sta s\u00ed de nuevo'],
       id: '6aed7c2a293a48cfa75b20411d218d63',
       image: null,
@@ -81,6 +83,7 @@ export const surveyData = {
     {
       title: 'Esta pregunta es un ranking',
       type: 'ranking',
+      isRequired: true,
       points: '2',
       choices: ['Primera', '\u00daltima', 'Marlon el del medio'],
       id: '7b0b60c7a60b47b8bff725ac751977e4',
@@ -95,7 +98,7 @@ export const surveyData = {
       points: 1,
       id: '86bd45c626da4d89863a46f52259b8f8',
       image: null,
-      video: null,
+      video: ['https://www.youtube.com/watch?v=fJka-jJDI9U'],
       isRequired: true,
       correctAnswer: 7,
       correctAnswerIndex: [],
