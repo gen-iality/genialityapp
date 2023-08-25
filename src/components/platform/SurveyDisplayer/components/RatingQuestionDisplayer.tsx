@@ -1,4 +1,4 @@
-import { FunctionComponent, useMemo, useState } from 'react'
+import { FunctionComponent, useEffect, useMemo, useState } from 'react'
 import { IQuestionDisplayer } from '../types'
 import { Alert, Col, Row, Slider } from 'antd'
 
@@ -57,6 +57,16 @@ const RatingQuestionDisplayer: FunctionComponent<IRatingQuestionDisplayerProps> 
       onAnswer(value, _isCorrect, points)
     }
   }
+
+  /**
+   * The answer can be 0, then set this value as default (as answered) to avoid
+   * take the user to have to move the slider and set 0 again
+   */
+  useEffect(() => {
+    if (typeof onAnswer === 'function') {
+      onAnswer(0, false, points)
+    }
+  }, [])
 
   return (
     <Row>
