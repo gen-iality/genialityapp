@@ -39,6 +39,10 @@ const QuestionDisplayer: FunctionComponent<IQuestionDisplayerProps> = (props) =>
     }
 
     onReply(answer, isCorrect, points)
+
+    setAnswer(undefined)
+    setIsCorrect(false)
+    setPoints(0)
   }
 
   const onAnswer = (answer: any, isCorrect: boolean, points: number) => {
