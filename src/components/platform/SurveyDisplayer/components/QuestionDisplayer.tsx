@@ -6,6 +6,7 @@ import OptionsQuestionDisplayer from './OptionsQuestionDisplayer'
 import RankingQuestionDisplayer from './RankingQuestionDisplayer'
 import RatingQuestionDisplayer from './RatingQuestionDisplayer'
 import LikertScaleQuestionDisplayer from './LikertScaleQuestionDisplayer'
+import ReactPlayer from 'react-player'
 
 interface IQuestionDisplayerProps {
   question: SurveyQuestion
@@ -20,6 +21,7 @@ const QuestionDisplayer: FunctionComponent<IQuestionDisplayerProps> = (props) =>
   const [points, setPoints] = useState(0)
 
   const images = (question.image as unknown as any[]) ?? []
+  const videos = (question.video as unknown as any[]) ?? []
 
   const onClickNext = () => {
     console.log('sent the answer', { answer, isCorrect, points })
@@ -61,6 +63,17 @@ const QuestionDisplayer: FunctionComponent<IQuestionDisplayerProps> = (props) =>
             src={image.imageLink}
             width={400}
           />
+        ))}
+        {videos.map((video, index) => (
+          <div key={index}>
+            <ReactPlayer
+              // style={{ objectFit: 'cover' }}
+              width="100%"
+              height="100%"
+              url={video}
+              controls
+            />
+          </div>
         ))}
       </aside>
       <Typography.Title level={5}>{question.title}</Typography.Title>
