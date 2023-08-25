@@ -5,6 +5,7 @@ import TextQuestionDisplayer from './TextQuestionDisplayer'
 import OptionsQuestionDisplayer from './OptionsQuestionDisplayer'
 import RankingQuestionDisplayer from './RankingQuestionDisplayer'
 import RatingQuestionDisplayer from './RatingQuestionDisplayer'
+import LikertScaleQuestionDisplayer from './LikertScaleQuestionDisplayer'
 
 interface IQuestionDisplayerProps {
   question: SurveyQuestion
@@ -74,6 +75,8 @@ const QuestionDisplayer: FunctionComponent<IQuestionDisplayerProps> = (props) =>
         <RankingQuestionDisplayer question={question} onAnswer={onAnswer} />
       ) : question.type === 'rating' ? (
         <RatingQuestionDisplayer question={question} onAnswer={onAnswer} />
+      ) : question.type === 'matrix' ? (
+        <LikertScaleQuestionDisplayer question={question} onAnswer={onAnswer} />
       ) : null}
 
       <br />
