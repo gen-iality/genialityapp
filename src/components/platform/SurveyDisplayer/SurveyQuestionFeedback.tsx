@@ -3,12 +3,14 @@ import { SurveyQuestion } from './types'
 import useResultProps from './hooks/useResultProps'
 import { Badge, Button, Result, Typography } from 'antd'
 import useIsDevOrStage from '@/hooks/useIsDevOrStage'
+import ReactQuill from 'react-quill'
 
 interface ISurveyQuestionFeedbackProps {
   question: SurveyQuestion
   answer: any
   isCorrect: boolean
   points: number
+  extraMessage?: string
   showAsFinished?: boolean
   onClose?: () => void
   forceDevMode?: boolean
@@ -17,8 +19,16 @@ interface ISurveyQuestionFeedbackProps {
 const SurveyQuestionFeedback: FunctionComponent<ISurveyQuestionFeedbackProps> = (
   props,
 ) => {
-  const { isCorrect, question, answer, points, onClose, showAsFinished, forceDevMode } =
-    props
+  const {
+    isCorrect,
+    question,
+    answer,
+    points,
+    extraMessage,
+    onClose,
+    showAsFinished,
+    forceDevMode,
+  } = props
 
   const { isDev, isStage } = useIsDevOrStage()
   const resultProps = useResultProps(isCorrect ? 'success' : 'error')
@@ -56,15 +66,26 @@ const SurveyQuestionFeedback: FunctionComponent<ISurveyQuestionFeedbackProps> = 
         </Badge>,
       ]}
       subTitle={
-        (isDev || isStage || forceDevMode) && (
-          <Typography.Text type="secondary">
-            <small>
+        <>
+          {extraMessage && (
+            <ReactQuill
+              style={{ color: '#212121' }}
+              value={extraMessage}
+              readOnly
+              className="hide-toolbar ql-toolbar"
+              theme="bubble"
+            />
+          )}
+          {(isDev || isStage || forceDevMode) && (
+            <Typography.Text type="secondary">
               <small>
-                <code>{JSON.stringify(debugQuestionData)}</code>
+                <small>
+                  <code>{JSON.stringify(debugQuestionData)}</code>
+                </small>
               </small>
-            </small>
-          </Typography.Text>
-        )
+            </Typography.Text>
+          )}
+        </>
       }
     />
   )
