@@ -125,3 +125,28 @@ export interface IQuestionDisplayer {
    */
   onAnswer?: (answer: any, isCorrect: boolean, points: number) => void
 }
+
+export interface ISurveyDisplayerUIProps {
+  title: string
+  isGradable?: boolean
+  questions: SurveyQuestion[]
+  status?: AvailableSurveyStatus
+  questionIndex: number
+  // Status messages
+  welcomeMessage?: string
+  winMessage?: string
+  loseMessage?: string
+  finishMessage?: string
+  /**
+   * If defined, the questions will be randomize in a custom question pool
+   */
+  randomizedPoolAmount?: number
+  /**
+   * Minimum score value to mark the survey as won
+   */
+  minimumScore: number
+  // Some functions
+  onFinish?: () => void
+  onChangeQuestionIndex?: (questionIndex: number) => void
+  onAnswer?: (question: any, answer: any, isCorrect: boolean, points: number) => void
+}
