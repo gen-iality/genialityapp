@@ -12,16 +12,10 @@ export const generateCert = async (dataUser: UserData, cert: Certificates, event
   });
 
   const roles = await RolAttApi.byEvent(eventValue._id);
-  eventValue.datetime_from = Moment(eventValue.datetime_from).format('DD/MM/YYYY');
-  eventValue.datetime_to = Moment(eventValue.datetime_to).format('DD/MM/YYYY');
+  const datetime_from = Moment(eventValue.datetime_from).format('DD/MM/YYYY');
+  const datetime_to = Moment(eventValue.datetime_to).format('DD/MM/YYYY');
 
-  /* let content: string | CertifiRow[] = cert.content;
-  if (Array.isArray(content)) {
-    const rowsWithData = replaceAllTagValues(eventValue, dataUser, roles, content);
-    content = ArrayToStringCerti(rowsWithData);
-  } */
-
-  const content = generateContent(cert, dataUser, eventValue, roles);
+  const content = generateContent(cert, dataUser, { ...eventValue, datetime_from, datetime_to }, roles);
 
   const body = { content, image: cert.background ? cert.background : imgBackground };
   const file = await CertsApi.generateCert(body);
@@ -46,12 +40,11 @@ export const generateCerts = async (dataUsers: UserData[], cert: Certificates, e
   });
 
   const roles = await RolAttApi.byEvent(eventValue._id);
-  eventValue.datetime_from = Moment(eventValue.datetime_from).format('DD/MM/YYYY');
-  eventValue.datetime_to = Moment(eventValue.datetime_to).format('DD/MM/YYYY');
+  const datetime_from = Moment(eventValue.datetime_from).format('DD/MM/YYYY');
+  const datetime_to = Moment(eventValue.datetime_to).format('DD/MM/YYYY');
 
-  
   const certificates = dataUsers.map((user) => {
-    const content = generateContent(cert, user, eventValue, roles);
+    const content = generateContent(cert, user, { ...eventValue, datetime_from, datetime_to }, roles);
     return {
       content,
     };
