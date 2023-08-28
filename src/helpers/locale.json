@@ -371,7 +371,7 @@
     "header.home": "Inicio",
     "header.wait": "Espera...",
     "header.confirm.title": "¿Estás seguro de que quieres cerrar la sesión?",
-    "header.confirm.content": "Si cierra la sesión, algunas de las funciones del sitio web quedarán desactivadas.",
+    "header.confirm.content": "Estás a punto de cerrar la sesión. No podrás visualizar tu contenido hasta que vuelvas a iniciar la sesión nuevamente.",
     "header.confirm.okText": "Si, cerrar la sesión",
     "header.confirm.cancelText": "Cancelar",
     "header.new": "Nuevo",
