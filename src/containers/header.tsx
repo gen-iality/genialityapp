@@ -1,13 +1,13 @@
 import { createElement, Fragment, useEffect, useState } from 'react';
-import { Redirect, useHistory } from 'react-router-dom';
+import { Redirect, useHistory, useParams, Link } from 'react-router-dom';
 import ErrorServe from '../components/modal/serverError';
 import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
 import { connect } from 'react-redux';
 import * as userActions from '../redux/user/actions';
 import * as eventActions from '../redux/event/actions';
 import MenuOld from '../components/events/shared/menu';
-import { Menu, Drawer, Button, Col, Row, Layout, Space, Grid, Dropdown, Typography } from 'antd';
-import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined, LoadingOutlined, ApartmentOutlined } from '@ant-design/icons';
+import { Menu, Drawer, Button, Col, Row, Layout, Space, Grid, Dropdown, Typography, Image, Avatar } from 'antd';
+import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined, LoadingOutlined, ApartmentOutlined, UserOutlined, EditOutlined } from '@ant-design/icons';
 import withContext from '../context/withContext';
 import ModalLoginHelpers from '../components/authentication/ModalLoginHelpers';
 import { recordTypeForThisEvent } from '../components/events/Landing/helpers/thisRouteCanBeDisplayed';
@@ -16,6 +16,8 @@ import AccountCircleIcon from '@2fd/ant-design-icons/lib/AccountCircle';
 import { useIntl } from 'react-intl';
 import { getCorrectColor } from '@/helpers/utils';
 import { isOrganizationCETA } from '@/components/user-organization-to-event/helpers/helper';
+import { Organization } from '@/components/eventOrganization/types';
+import { OrganizationApi, OrganizationFuction } from '@/helpers/request';
 
 const { useBreakpoint } = Grid;
 
@@ -63,17 +65,26 @@ const Headers = (props: Props) => {
 	const { helperDispatch } = cHelper;
 	const [headerIsLoading, setHeaderIsLoading] = useState(true);
 	const [dataGeneral, setdataGeneral] = useState(initialDataGeneral);
+	const [currentOrganization, setCurrentOrganization] = useState<Organization | null>(null);
+    const [myOrganizations, setMyorganizations] = useState<any[]>([]);
+    const { id: paramsId }= useParams< {id:string} >();
 	const [showButtons, setshowButtons] = useState({
 		buttonregister: true,
 		buttonlogin: true,
 	});
 	const containerBgColor = cEvent?.value?.styles?.containerBgColor || null;
 	const validatorCms = window.location.pathname.includes('/eventadmin');
-	const validatorOrg = window.location.pathname.includes('/organization');
+	const validatorOrg = window.location.pathname.includes('/organization') && !window.location.pathname.includes('/admin');
 	const bgcolorContainer = !validatorCms && !validatorOrg && containerBgColor ? containerBgColor : '#FFFFFF';
 	const [fixed, setFixed] = useState(false);
 	const screens = useBreakpoint();
 	let history = useHistory();
+	console.log('currentOrganization',{
+		currentOrganization,
+		paramsId,
+		myOrganizations,
+		validatorOrg
+	})
 	// TODO: Here there is an error
 	const intl = useIntl();
 	const openMenu = () => {
@@ -126,6 +137,17 @@ const Headers = (props: Props) => {
 		return containtorganization ? 'organization' : 'landing';
 	};
 
+	const getOrganization = async() => {
+		const orga = await OrganizationFuction.obtenerDatosOrganizacion(paramsId);
+		if(orga)setCurrentOrganization(orga)
+	}
+
+	useEffect(() => {
+	  if(validatorOrg && paramsId){
+		getOrganization()
+	  }
+	}, [validatorOrg, paramsId])
+	
 	
 	const userLogOut = (callBack: any) => {
 		const params = {
@@ -241,6 +263,24 @@ const Headers = (props: Props) => {
 		return true 
 	}
 
+	const getMyOrganizations = async () => {
+		try {
+		  const organizations: Organization[] = await OrganizationApi.mine();
+		  if (organizations?.length > 0) {
+			setMyorganizations(organizations.map((item) => item.id));
+		  }
+		} catch (error) {
+		  console.log('[debug] organization not found');
+		}
+	  };
+
+	  useEffect(() => {
+		if (cUser.value && validatorOrg) {
+		  getMyOrganizations();
+		} else {
+		  setMyorganizations([]);
+		}
+	  }, [cUser.value, validatorOrg]);
 
 	return (
 		<Fragment>
@@ -257,6 +297,7 @@ const Headers = (props: Props) => {
 					backgroundColor: bgcolorContainer,
 					boxShadow: '0px 0px 4px rgba(0, 0, 0, 0.25)',
 				}}>
+					{/* {validatorOrg && <>Nuevo viosualizacion de bienvenidos</>} */}
 				<Menu theme='light' mode='horizontal' style={{ backgroundColor: bgcolorContainer, border: 'none' }}>
 					<Row justify='space-between' align='middle'>
 						{isLandingOrPreLanding() && !screens.xs &&
