@@ -118,7 +118,7 @@ export default function DrawerAuction({
       title={
         <Row justify='end' align='middle'>
           <Typography.Title style={{ display: 'fex', margin: '1px' }} level={5}>
-            Evento: {auction?.name || 'Subasta'}
+            {auction.name ? `Subasta: ${auction.name}` : 'Subasta'}
           </Typography.Title>
         </Row>
       }
@@ -130,7 +130,23 @@ export default function DrawerAuction({
       }
       onClose={setOpenOrClose}
       width={'100vw'}
-      destroyOnClose={true}>
+      destroyOnClose={true}
+      footer={
+        screens.xs && <ButtonsContainer
+          styles={{
+            backgroundColor: auction.styles?.cards?.backgroundColor || '#FFFFFF',
+            color: auction.styles?.cards?.color || '#000000',
+          }}
+          validate={!canOffer}
+          onClick={() => setmodalOffer(true)}
+          setshowDrawerChat={setshowDrawerChat}
+          setshowDrawerRules={setshowDrawerRules}
+          closedrawer={setOpenOrClose}
+          timer={time}
+        />
+      }
+      footerStyle={{backgroundColor: auction?.styles?.cards?.backgroundColor}}
+    >
       <Row gutter={[32, 32]} wrap justify='space-between'>
         <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12} /* style={{ height: '100%' }} */>
           <Row gutter={[16, 16]}>
@@ -307,18 +323,20 @@ export default function DrawerAuction({
           </Row>
         </Col>
         <Col xs={24} sm={24} md={4} lg={4} xl={4} xxl={4}>
-          <ButtonsContainer
-            styles={{
-              backgroundColor: auction.styles?.cards?.backgroundColor || '#FFFFFF',
-              color: auction.styles?.cards?.color || '#000000',
-            }}
-            validate={!canOffer}
-            onClick={() => setmodalOffer(true)}
-            setshowDrawerChat={setshowDrawerChat}
-            setshowDrawerRules={setshowDrawerRules}
-            closedrawer={setOpenOrClose}
-            timer={time}
-          />
+          {!screens.xs &&
+            <ButtonsContainer
+              styles={{
+                backgroundColor: auction.styles?.cards?.backgroundColor || '#FFFFFF',
+                color: auction.styles?.cards?.color || '#000000',
+              }}
+              validate={true}/* !canOffer */
+              onClick={() => setmodalOffer(true)}
+              setshowDrawerChat={setshowDrawerChat}
+              setshowDrawerRules={setshowDrawerRules}
+              closedrawer={setOpenOrClose}
+              timer={time}
+            />
+          }
 
           <DrawerRules
             cEvent={cEvent}
