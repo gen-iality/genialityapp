@@ -65,9 +65,10 @@ class ImportUsers extends Component {
       Async.waterfall(
         [
           function (cb) {
-            const newUsers = users.filter((user) => {
-              return user.used
-            })
+            const newUsers = users
+            // const newUsers = users.filter((user) => {
+            //   return user.used
+            // })
             cb(null, newUsers)
           },
           function (newUsers, cb) {
