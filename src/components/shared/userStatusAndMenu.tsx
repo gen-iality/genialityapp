@@ -227,7 +227,6 @@ const UserStatusAndMenu = (props: any) => {
   );
 
   async function showPropsConfirm() {
-    
     confirm({
       centered: true,
       title: intl.formatMessage({
@@ -237,7 +236,8 @@ const UserStatusAndMenu = (props: any) => {
       icon: <ExclamationCircleOutlined />,
       content: intl.formatMessage({
         id: 'header.confirm.content',
-        defaultMessage: 'Estás a punto de cerrar la sesión. No podrás visualizar tu contenido hasta que vuelvas a iniciar la sesión nuevamente.',
+        defaultMessage:
+          'Estás a punto de cerrar la sesión. No podrás visualizar tu contenido hasta que vuelvas a iniciar la sesión nuevamente.',
       }),
       okText: intl.formatMessage({
         id: 'header.confirm.okText',
@@ -249,21 +249,21 @@ const UserStatusAndMenu = (props: any) => {
         defaultMessage: 'Cancelar',
       }),
       onOk() {
-          if (props.cEvent.value.redirect_landing) {
-            logout(false);
-            destroyAll();
-            window.sessionStorage.removeItem('session');
-            history.replace(`/landing/${props?.cEvent?.value?._id}`);
-          }
+        logout(false);
+        destroyAll();
+        window.sessionStorage.removeItem('session');
+        if (props.cEvent.value.redirect_landing) {
+          history.replace(`/landing/${props?.cEvent?.value?._id}`);
+        }
       },
       onCancel() {
         console.log('Cancel');
       },
     });
     if (props.cEvent.value.redirect_landing) {
-      logout(false)
+      logout(false);
       history.replace(`/landing/${props?.cEvent?.value?._id}`);
-    } 
+    }
   }
   return <>{user ? loggedInuser : loggedOutUser}</>;
 };
