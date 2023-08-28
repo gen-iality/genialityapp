@@ -6,6 +6,8 @@ import moment from 'moment';
 import { Event } from './types';
 import { EyeOutlined } from '@ant-design/icons';
 import { UsersByCertificates } from './components/UsersByCertificates';
+import { Certificates } from '../agenda/types';
+import { Space, Tag } from 'antd';
 
 const Certificados: FC<{
   event: Event;
@@ -13,7 +15,7 @@ const Certificados: FC<{
 }> = (props) => {
   let [columnsData, setColumnsData] = useState({});
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
-
+  const [certificateSelected, setCertificateSelected] = useState<Certificates>();
   const columns = [
     {
       title: 'Nombre',
@@ -23,13 +25,13 @@ const Certificados: FC<{
       ...getColumnSearchProps('name', columnsData),
     },
     {
-      title: 'Rol',
-      dataIndex: 'rol',
+      title: 'Tipo de usuario',
+      dataIndex: 'userTypes',
       ellipsis: true,
-      sorter: (a: any, b: any) => a.rol.name.localeCompare(b.rol.name),
-      ...getColumnSearchProps('rol', columnsData),
+      sorter: (a: any, b: any) => a.userTypes.localeCompare(b.userTypes),
+      ...getColumnSearchProps('userTypes', columnsData),
       render(_val: any, item: any) {
-        return <div>{item.rol?.name ? item.rol.name : 'Sin Rol'}</div>;
+        return <Space>{item.userTypes ? item.userTypes : 'Sin tipo de usuario'}</Space>;
       },
     },
     {
@@ -45,8 +47,9 @@ const Certificados: FC<{
     },
   ];
 
-  const openDrawer = (epa: any) => {
+  const openDrawer = (certificate: Certificates) => {
     setIsOpenDrawer(true);
+    setCertificateSelected(certificate);
   };
   const onCloseDrawer = () => {
     setIsOpenDrawer(false);
@@ -74,7 +77,14 @@ const Certificados: FC<{
         extraFnIcon={<EyeOutlined />}
         setColumnsData={setColumnsData}
       />
-      {isOpenDrawer && <UsersByCertificates onCloseDrawer={onCloseDrawer} visible={isOpenDrawer}/>}
+      {isOpenDrawer && certificateSelected && (
+        <UsersByCertificates
+          onCloseDrawer={onCloseDrawer}
+          visible={isOpenDrawer}
+          certificate={certificateSelected}
+          eventValue={props.event}
+        />
+      )}
     </>
   );
 };
