@@ -102,7 +102,8 @@ class ImportUsers extends Component {
       StateMessage.show(null, 'success', 'Información cargada correctamente!')
     } catch (e) {
       StateMessage.destroy('loading')
-      StateMessage.show(null, 'error', 'Error cargando la información')
+      StateMessage.show(null, 'error', 'Error procesando la información')
+      console.error(e)
     }
   }
 

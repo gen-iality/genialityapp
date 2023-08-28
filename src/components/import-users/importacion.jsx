@@ -73,7 +73,8 @@ const Importacion = (props) => {
       StateMessage.destroy('loading')
     } catch (e) {
       StateMessage.destroy('loading')
-      StateMessage.show(null, 'error', 'Error cargando la información')
+      StateMessage.show(null, 'error', 'Error cargando la información del archivo')
+      console.error(e)
     }
   }
 
