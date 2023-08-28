@@ -248,8 +248,6 @@ export default function Report({ eventId, reload }: ReportProps) {
           >
             <Space direction='vertical' size={16} style={{width: '100%'}}>
               <Bar data={dataPrice} options={optionsPrice} />
-
-              <Result title='Próximamente'></Result>
             </Space>
           </Card>
         </Col>
