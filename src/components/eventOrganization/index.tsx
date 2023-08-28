@@ -142,7 +142,7 @@ function EventOrganization({ match }: OrganizationProps) {
           <Row justify='center' style={{ paddingTop: '32px', paddingBottom: '32px' }}>
             <Col span={23}>
               <Row gutter={[0, 32]}>
-                {organization && (
+                {/* {organization && (
                   <Col style={{ width: '100%' }}>
                     <Card style={{ width: '100%', borderRadius: 20 }}>
                       <Row gutter={[10, 10]} style={{ width: '100%' }}>
@@ -209,7 +209,7 @@ function EventOrganization({ match }: OrganizationProps) {
                       </Row>
                     </Card>
                   </Col>
-                )}
+                )} */}
                 {cUser.value && (
                   <Col style={{ width: '100%' }}>
                     {/* Lista otros eventos en los que esta inscrito el usuario*/}
