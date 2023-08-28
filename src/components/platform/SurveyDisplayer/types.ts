@@ -138,15 +138,16 @@ export interface ISurveyDisplayerUIProps {
   loseMessage?: string
   finishMessage?: string
   /**
-   * If defined, the questions will be randomize in a custom question pool
-   */
-  randomizedPoolAmount?: number
-  /**
    * Minimum score value to mark the survey as won
    */
   minimumScore: number
   // Some functions
   onFinish?: () => void
-  onChangeQuestionIndex?: (questionIndex: number) => void
-  onAnswer?: (question: any, answer: any, isCorrect: boolean, points: number) => void
+  onChangeQuestionIndex?: (questionIndex: number, nextPageIsTheEnd: boolean) => void
+  onAnswer?: (
+    question: SurveyQuestion,
+    answer: any,
+    isCorrect: boolean,
+    points: number,
+  ) => void
 }
