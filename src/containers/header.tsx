@@ -97,7 +97,7 @@ const Headers = (props: Props) => {
 	const containerBgColor = cEvent?.value?.styles?.containerBgColor || null;
 	const validatorCms = window.location.pathname.includes('/eventadmin');
 	const validatorOrg =
-		window.location.pathname.includes('/organization') && !window.location.pathname.includes('/admin');
+		window.location.pathname.includes('/organization') && !window.location.pathname.includes('/admin') && paramsId !== undefined;
 	const bgcolorContainer = !validatorCms && !validatorOrg && containerBgColor ? containerBgColor : '#FFFFFF';
 	const [fixed, setFixed] = useState(false);
 	const screens = useBreakpoint();
@@ -295,7 +295,6 @@ const Headers = (props: Props) => {
 			setMyorganizations([]);
 		}
 	}, [cUser.value, validatorOrg]);
-
 	return (
 		<Fragment>
 			<Header
