@@ -1,12 +1,11 @@
 import { CloseCircleOutlined, SaveOutlined } from '@ant-design/icons';
-import { Button, Form, Input, InputNumber, Row, Select, Upload } from 'antd';
-import React, { Fragment, useState } from 'react';
+import { Button, Form, Input, InputNumber, Row, Upload } from 'antd';
+import React, { Fragment } from 'react';
 import { uploadImagedummyRequest } from '../../utils/utils';
 import { ModalProps } from '../../interfaces/auction.interface';
 import TextArea from 'antd/lib/input/TextArea';
 
-export default function ModalProducts({ product, onChange, onCancel, onSave }: ModalProps) {
-  const [loading, setloading] = useState(false)
+export default function ModalProducts({ product, onChange, onCancel, onSave, loading }: ModalProps) {
   const onPreview = async (file: any) => {
     let src = file.url;
     if (!src) {
@@ -22,11 +21,6 @@ export default function ModalProducts({ product, onChange, onCancel, onSave }: M
     imgWindow?.document.write(image.outerHTML);
   };
 
-  const change = async ( imgList: any ) =>{
-    setloading(true)
-   await onChange(imgList)
-   setloading(false)
-  }
 
   return (
     <Fragment>
@@ -52,7 +46,7 @@ export default function ModalProducts({ product, onChange, onCancel, onSave }: M
             formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
           />
         </Form.Item>
-        <Form.Item  rules={[{ required: true, message: 'Es necesaria la descripción del producto' }]} label={'Descripción'} name={'description'} initialValue={product.description || ''}>
+        <Form.Item  label={'Descripción'} name={'description'} initialValue={product.description || ''}>
           <TextArea maxLength={100}  rows={2} placeholder={'Ej: Hecha por el artista..'} />
         </Form.Item>
 
@@ -64,7 +58,7 @@ export default function ModalProducts({ product, onChange, onCancel, onSave }: M
             disabled={loading}
             listType='picture-card'
             fileList={product.images}
-            onChange={change}
+            onChange={onChange}
             onPreview={onPreview}
             multiple
             customRequest={uploadImagedummyRequest}

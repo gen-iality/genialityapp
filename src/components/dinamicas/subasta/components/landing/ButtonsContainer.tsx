@@ -1,6 +1,6 @@
 import { CommentOutlined, FileProtectOutlined } from '@ant-design/icons'
 import { Button, Card, Col, Row, Space, Statistic, Typography } from 'antd'
-import React from 'react'
+import React, { useState } from 'react'
 import { ButtonsContainerProps } from '../../interfaces/auction.interface'
 import { getCorrectColor } from '@/helpers/utils'
 const { Countdown } = Statistic;
@@ -16,6 +16,7 @@ export default function ButtonsContainer({
     },
     timer = 10,
 }: ButtonsContainerProps) {
+    
  const btnPujar = {
     width: '150px',
     height: '150px',
@@ -38,7 +39,7 @@ export default function ButtonsContainer({
                     type='default'>
                     <Space direction='vertical'>
                       { !validate ? <Typography.Text strong={true} style={{ color : getCorrectColor(styles.backgroundColor)}}>¡PUJAR!</Typography.Text>
-                      : (<Countdown value={Date.now() + 1000 * timer}  format="s" /> )
+                      : (<Countdown value={timer}  format="s" /> )
                     }
                     </Space>
                 </Button>
