@@ -63,7 +63,7 @@ const ResultsPanel: FunctionComponent<IResultsPanelProps> = (props) => {
             ...basicAnswerReport,
             exists: true,
             answer: userAnswer.response,
-            isCorrectAnswer: userAnswer.correctAnswer,
+            isCorrectAnswer: userAnswer.isCorrect, //userAnswer.correctAnswer,
           }
         } else {
           console.debug('no answer found for question.id:', question.id, question)
