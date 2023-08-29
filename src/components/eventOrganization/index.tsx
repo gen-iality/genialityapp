@@ -48,7 +48,7 @@ function EventOrganization({ match }: OrganizationProps) {
   }, []);
 
   const fetchItem = async (orgId: string) => {
-    const events = await OrganizationFuction.getEventsNextByOrg(orgId);
+    const events = await OrganizationFuction.getEventsNextByOrg(orgId, 'latest');
     let proximos: any = [];
     let pasados: any = [];
     let fechaActual = moment();

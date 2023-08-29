@@ -1,9 +1,8 @@
-import { Button, Collapse, Drawer, DrawerProps, Space, Tooltip, Typography, Grid, Card, Row, Col, Spin, Result } from 'antd';
+import { Button, Collapse, Drawer, DrawerProps, Space, Tooltip, Typography, Grid, Row, Col, Spin, Result } from 'antd';
 import { useGetCertificatesByEvents } from '../hooks/useGetCertificatesByEvents';
 import CertificatesByEventsAndUserList from './CertificatesByEventsAndUserList';
 import CertificateOutlineIcon from '@2fd/ant-design-icons/lib/CertificateOutline';
 import { CaretRightOutlined, CloseOutlined } from '@ant-design/icons';
-import { getCorrectColor } from '@/helpers/utils';
 
 const { useBreakpoint } = Grid;
 
@@ -11,8 +10,8 @@ interface Props extends DrawerProps {
   organizationId: string;
   eventUserId: string;
   onCloseDrawer: () => void;
-  orgContainerBg?: string; 
-  orgTextColor?: string; 
+  orgContainerBg?: string;
+  orgTextColor?: string;
 }
 
 export const ModalCertificatesByOrganizacionAndUser = ({
@@ -23,12 +22,11 @@ export const ModalCertificatesByOrganizacionAndUser = ({
   orgTextColor,
   ...modalProps
 }: Props) => {
-  const { certificatesByEvents, eventsWithEventUser, eventUsers, isLoading } = useGetCertificatesByEvents(
+  const { certificatesByEvents, eventsWithEventUser, isLoading } = useGetCertificatesByEvents(
     organizationId,
     eventUserId
   );
   const screens = useBreakpoint();
-
 
   return (
     <Drawer
@@ -45,44 +43,35 @@ export const ModalCertificatesByOrganizacionAndUser = ({
       closable={false}
       onClose={onCloseDrawer}
       headerStyle={{ border: 'none', padding: 10 }}
-      bodyStyle={{ padding: 5}}
+      bodyStyle={{ padding: 5 }}
       extra={
         <Tooltip placement='bottomLeft' title='Cerrar'>
           <Button icon={<CloseOutlined style={{ fontSize: 20 }} />} onClick={onCloseDrawer} type='text' />
         </Tooltip>
       }
       {...modalProps}>
-      {isLoading && 
-        <Row align='middle' justify='center' style={{height: '100%'}} >
+      {isLoading && (
+        <Row align='middle' justify='center' style={{ height: '100%' }}>
           <Col>
-            <Spin 
-              size='large'
-              tip={<Typography.Text strong>Cargando...</Typography.Text>}/>
+            <Spin size='large' tip={<Typography.Text strong>Cargando...</Typography.Text>} />
           </Col>
-        </Row>}
+        </Row>
+      )}
       {certificatesByEvents.length > 0 ? (
-        <Space 
-          direction='vertical' 
-          style={{width: '100%', overflowY: 'auto', height: '90%'}}
-          className='desplazar'
-        >
-          <Collapse 
+        <Space direction='vertical' style={{ width: '100%', overflowY: 'auto', height: '90%' }} className='desplazar'>
+          <Collapse
             ghost
-            defaultActiveKey={['0']} 
+            defaultActiveKey={['0']}
             bordered={false}
-            expandIcon={({ isActive }) => 
-            <CaretRightOutlined 
-              rotate={isActive ? 90 : 0} 
-            />}
-          >
+            expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
             {certificatesByEvents.map((certificateByEvent, index) => (
               <Collapse.Panel
                 header={
                   <Typography.Text strong /* style={{color: orgTextColor}} */>
                     {certificateByEvent?.event?.name ?? 'Evento sin nombre'}
-                  </Typography.Text>} 
-                key={index}
-              >
+                  </Typography.Text>
+                }
+                key={index}>
                 <CertificatesByEventsAndUserList
                   eventUser={certificateByEvent.eventUser}
                   itemLayout='vertical'
@@ -94,15 +83,13 @@ export const ModalCertificatesByOrganizacionAndUser = ({
             ))}
           </Collapse>
         </Space>
-      ) :
-      <Row align='middle' justify='center' style={{height: '100%'}} >
-        <Col>
-          <Result 
-            title={<Typography.Text strong>¡No tienes certificados actualmente!</Typography.Text>}
-          />
-        </Col>
-      </Row>
-      }
+      ) : (
+        <Row align='middle' justify='center' style={{ height: '100%' }}>
+          <Col>
+            <Result title={<Typography.Text strong>¡No tienes certificados actualmente!</Typography.Text>} />
+          </Col>
+        </Row>
+      )}
     </Drawer>
   );
 };
