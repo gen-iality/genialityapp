@@ -7,15 +7,17 @@ import RankingQuestionDisplayer from './RankingQuestionDisplayer'
 import RatingQuestionDisplayer from './RatingQuestionDisplayer'
 import LikertScaleQuestionDisplayer from './LikertScaleQuestionDisplayer'
 import ReactPlayer from 'react-player'
+import { LoadingOutlined } from '@ant-design/icons'
 
 interface IQuestionDisplayerProps {
   question: SurveyQuestion
-  onAnswer: (answer: any, isCorrect: boolean, points: number) => void
+  onAnswer: (answer: any, isCorrect: boolean, points: number) => Promise<void> | void
 }
 
 const QuestionDisplayer: FunctionComponent<IQuestionDisplayerProps> = (props) => {
   const { question, onAnswer: onReply } = props
 
+  const [isSaving, setIsSaving] = useState(false)
   const [answer, setAnswer] = useState<any | undefined>()
   const [isCorrect, setIsCorrect] = useState<boolean>(false)
   const [points, setPoints] = useState(0)
@@ -23,7 +25,7 @@ const QuestionDisplayer: FunctionComponent<IQuestionDisplayerProps> = (props) =>
   const images = (question.image as unknown as any[]) ?? []
   const videos = (question.video as unknown as any[]) ?? []
 
-  const onClickNext = () => {
+  const onClickNext = async () => {
     console.log('sent the answer', { answer, isCorrect, points })
 
     if (
@@ -38,7 +40,9 @@ const QuestionDisplayer: FunctionComponent<IQuestionDisplayerProps> = (props) =>
       return
     }
 
-    onReply(answer, isCorrect, points)
+    setIsSaving(true)
+    await onReply(answer, isCorrect, points)
+    setIsSaving(false)
 
     setAnswer(undefined)
     setIsCorrect(false)
@@ -70,13 +74,17 @@ const QuestionDisplayer: FunctionComponent<IQuestionDisplayerProps> = (props) =>
         ))}
         {videos.map((video, index) => (
           <div key={index}>
-            <ReactPlayer
-              // style={{ objectFit: 'cover' }}
-              width="100%"
-              height="100%"
-              url={video}
-              controls
-            />
+            {video?.html ? (
+              <div dangerouslySetInnerHTML={{ __html: video.html }}></div>
+            ) : (
+              <ReactPlayer
+                // style={{ objectFit: 'cover' }}
+                width="100%"
+                height="100%"
+                url={video}
+                controls
+              />
+            )}
           </div>
         ))}
       </aside>
@@ -105,9 +113,13 @@ const QuestionDisplayer: FunctionComponent<IQuestionDisplayerProps> = (props) =>
           type="primary"
           onClick={onClickNext}
           shape="round"
-          disabled={question !== undefined && question.isRequired && answer === undefined}
+          icon={isSaving ? <LoadingOutlined /> : undefined}
+          disabled={
+            (question !== undefined && question.isRequired && answer === undefined) ||
+            isSaving
+          }
         >
-          Contestar
+          {isSaving ? 'Guardando...' : 'Contestar'}
         </Button>
       </footer>
     </Space.Compact>

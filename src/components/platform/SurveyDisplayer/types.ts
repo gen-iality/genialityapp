@@ -149,5 +149,6 @@ export interface ISurveyDisplayerUIProps {
     answer: any,
     isCorrect: boolean,
     points: number,
-  ) => void
+    noMoreQuestion: boolean,
+  ) => Promise<void> | void
 }
