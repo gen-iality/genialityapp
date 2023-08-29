@@ -3,8 +3,7 @@ import { Button, Card, Col, Row, Space, Statistic, Typography, Grid } from 'antd
 import React, { useState } from 'react'
 import { ButtonsContainerProps } from '../../interfaces/auction.interface'
 import { getCorrectColor } from '@/helpers/utils'
-import Cash100Icon from '@2fd/ant-design-icons/lib/Cash100'
-import { FaGavel } from 'react-icons/fa'
+import { FaHandHoldingUsd } from 'react-icons/fa'
 
 const { Countdown } = Statistic;
 const { useBreakpoint } = Grid;
@@ -76,10 +75,14 @@ export default function ButtonsContainer({
                             }}
                             type='ghost'
                             size='large'
-                            icon={<FaGavel className={'animate__animated animate__heartBeat'} style={{fontSize: '32px', transform: 'rotate(270deg)', color : getCorrectColor(styles.backgroundColor)}} />}
+                            icon={<FaHandHoldingUsd className={'animate__animated animate__heartBeat'} style={{fontSize: '32px', /* transform: 'rotate(270deg)', */ color : getCorrectColor(styles.backgroundColor)}} />}
                         />
                         :
-                        <Countdown value={timer} valueStyle={{color : getCorrectColor(styles.backgroundColor)}}  format="s" />
+                        <Countdown 
+                            value={timer} 
+                            valueStyle={{color : getCorrectColor(styles.backgroundColor)}}
+                            format="s" 
+                        />
                     }
                 </Col>
             </Row>

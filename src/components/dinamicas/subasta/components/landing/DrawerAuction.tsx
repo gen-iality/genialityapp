@@ -23,7 +23,7 @@ import {
   Tooltip,
 } from 'antd';
 import HCOActividad from '@/components/events/AgendaActividadDetalle/HOC_Actividad';
-import { CloseOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import { CloseOutlined, InfoCircleOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { DrawerAuctionProps } from '../../interfaces/auction.interface';
 import CardProduct from './CardProduct';
 import { useBids } from '../../hooks/useBids';
@@ -34,6 +34,7 @@ import DrawerRules from './DrawerRules';
 import DrawerChat from '@/components/games/bingo/components/auxiliarDrawers/DrawerChat';
 import ButtonsContainer from './ButtonsContainer';
 import { getCorrectColor } from '@/helpers/utils';
+import { FaGavel } from 'react-icons/fa'
 
 const { useBreakpoint } = Grid;
 
@@ -104,11 +105,31 @@ export default function DrawerAuction({
     <Drawer
       headerStyle={{
         backgroundColor: auction?.styles?.cards?.backgroundColor,
+        border: 'none',
+        height: screens.xs ? '60px' : '',
+        
       }}
       title={
-        <Typography.Text strong style={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor) }}>
-          {auction.name ? `Subasta: ${auction.name}` : 'Subasta'}
-        </Typography.Text>
+        <Space align='center'>
+          <FaGavel style={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor)}} />
+          <Typography.Text 
+            strong 
+            style={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor), width: screens.xs ? '290px' : '',}} ellipsis
+          >
+            {auction?.name}
+          </Typography.Text>
+          {screens.xs && auction?.name.length > 29 && 
+            <Tooltip 
+              title={
+                <Space>
+                  <FaGavel style={{color: getCorrectColor(auction?.styles?.cards?.backgroundColor)}} />
+                  <Typography.Text strong style={{color: getCorrectColor(auction?.styles?.cards?.backgroundColor)}}>{auction?.name}</Typography.Text>
+                </Space>
+              } placement='bottomRight' color={auction?.styles?.cards?.backgroundColor}>
+              <InfoCircleOutlined style={{cursor: 'pointer'}}/>
+            </Tooltip>
+          }
+        </Space>
       }
       bodyStyle={{
         backgroundImage: `url(${auction.styles?.general?.backgroundImage})`,
@@ -120,13 +141,9 @@ export default function DrawerAuction({
         paddingBottom: '5px',
         paddingLeft: screens.xs ? '5px' : '24px',
         paddingRight: screens.xs ? '5px' : '24px',
+        overflowX: 'hidden',
       }}
       visible={openOrClose}
-      /* closeIcon={
-        <Space align='center' style={{ width: '100%' }} wrap>
-          <CloseOutlined /> Cerrar
-        </Space>
-      } */
       closable={false}
       onClose={setOpenOrClose}
       extra={ !screens.xs &&
@@ -150,7 +167,7 @@ export default function DrawerAuction({
           timer={time}
         />
       }
-      footerStyle={{backgroundColor: auction?.styles?.cards?.backgroundColor}}
+      footerStyle={{backgroundColor: auction?.styles?.cards?.backgroundColor, border: 'none'}}
     >
       <Row gutter={screens.xs ? [0, 16] : [32, 32]} wrap justify='space-between'>
         <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
