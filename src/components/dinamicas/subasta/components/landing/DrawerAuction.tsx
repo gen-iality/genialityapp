@@ -20,6 +20,7 @@ import {
   Button,
   Affix,
   InputNumber,
+  Tooltip,
 } from 'antd';
 import HCOActividad from '@/components/events/AgendaActividadDetalle/HOC_Actividad';
 import { CloseOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
@@ -102,8 +103,13 @@ export default function DrawerAuction({
   return (
     <Drawer
       headerStyle={{
-        padding: '1px 24px',
+        backgroundColor: auction?.styles?.cards?.backgroundColor,
       }}
+      title={
+        <Typography.Text strong style={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor) }}>
+          {auction.name ? `Subasta: ${auction.name}` : 'Subasta'}
+        </Typography.Text>
+      }
       bodyStyle={{
         backgroundImage: `url(${auction.styles?.general?.backgroundImage})`,
         backgroundColor: auction.styles?.general?.backgroundColor,
@@ -115,20 +121,19 @@ export default function DrawerAuction({
         paddingLeft: screens.xs ? '5px' : '24px',
         paddingRight: screens.xs ? '5px' : '24px',
       }}
-      title={
-        <Row justify='end' align='middle'>
-          <Typography.Title style={{ display: 'fex', margin: '1px' }} level={5}>
-            {auction.name ? `Subasta: ${auction.name}` : 'Subasta'}
-          </Typography.Title>
-        </Row>
-      }
       visible={openOrClose}
-      closeIcon={
+      /* closeIcon={
         <Space align='center' style={{ width: '100%' }} wrap>
           <CloseOutlined /> Cerrar
         </Space>
-      }
+      } */
+      closable={false}
       onClose={setOpenOrClose}
+      extra={ !screens.xs &&
+        <Tooltip placement='bottomLeft' title='Cerrar'>
+          <Button icon={<CloseOutlined style={{ fontSize: 20, color: getCorrectColor(auction?.styles?.cards?.backgroundColor) }} />} onClick={setOpenOrClose} type='text' />
+        </Tooltip>
+      }
       width={'100vw'}
       destroyOnClose={true}
       footer={
@@ -148,7 +153,7 @@ export default function DrawerAuction({
       footerStyle={{backgroundColor: auction?.styles?.cards?.backgroundColor}}
     >
       <Row gutter={[32, 32]} wrap justify='space-between'>
-        <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12} /* style={{ height: '100%' }} */>
+        <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
           <Row gutter={[16, 16]}>
             <Col span={24}>
               <Card
@@ -329,7 +334,7 @@ export default function DrawerAuction({
                 backgroundColor: auction.styles?.cards?.backgroundColor || '#FFFFFF',
                 color: auction.styles?.cards?.color || '#000000',
               }}
-              validate={true}/* !canOffer */
+              validate={!canOffer}
               onClick={() => setmodalOffer(true)}
               setshowDrawerChat={setshowDrawerChat}
               setshowDrawerRules={setshowDrawerRules}

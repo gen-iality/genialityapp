@@ -33,19 +33,15 @@ export default function ButtonsContainer({
         {screens.xs ? 
             <Row justify={'space-around'} gutter={[16, 16]} align='middle'>
                 <Col>
-                    <Button 
-                        onClick={onClick}
+                    <Button
                         style={{ 
-                            border: 'none',
+                            border: 'none', 
                         }}
-                        type='ghost'
-                        disabled={validate}
+                        onClick={() => closedrawer()}
                         size='large'
-                        icon={!validate && <FaGavel className={'animate__animated animate__heartBeat'} style={{fontSize: '32px', transform: 'rotate(270deg)', color : getCorrectColor(styles.backgroundColor)}} />}
-                    >
-                        {/* {validate && <Countdown value={timer} valueStyle={{color : getCorrectColor(styles.backgroundColor)}}  format="s" />} */}
+                        type='ghost'
+                        icon={<CloseOutlined style={{fontSize: '28px', color : getCorrectColor(styles.backgroundColor)}}/>}>
                     </Button>
-                    {validate && <Countdown value={timer} valueStyle={{color : getCorrectColor(styles.backgroundColor)}}  format="s" />}
                 </Col>
                 <Col>
                     <Button
@@ -72,15 +68,19 @@ export default function ButtonsContainer({
                     </Button>
                 </Col>
                 <Col>
-                    <Button
-                        style={{ 
-                            border: 'none', 
-                        }}
-                        onClick={() => closedrawer()}
-                        size='large'
-                        type='ghost'
-                        icon={<CloseOutlined style={{fontSize: '28px', color : getCorrectColor(styles.backgroundColor)}}/>}>
-                    </Button>
+                    {!validate ? 
+                        <Button 
+                            onClick={onClick}
+                            style={{ 
+                                border: 'none',
+                            }}
+                            type='ghost'
+                            size='large'
+                            icon={<FaGavel className={'animate__animated animate__heartBeat'} style={{fontSize: '32px', transform: 'rotate(270deg)', color : getCorrectColor(styles.backgroundColor)}} />}
+                        />
+                        :
+                        <Countdown value={timer} valueStyle={{color : getCorrectColor(styles.backgroundColor)}}  format="s" />
+                    }
                 </Col>
             </Row>
             :
@@ -93,11 +93,10 @@ export default function ButtonsContainer({
                                 shape='circle'
                                 onClick={onClick}
                                 style={validate ? {...btnPujar} : {...btnPujar,...styles}}
-                                icon={!validate && <Cash100Icon />}
                                 disabled={validate}
                                 type='default'>
                                 <Space direction='vertical'>
-                                { !validate ? <Typography.Text strong={true} style={{ color : getCorrectColor(styles.backgroundColor)}}>¡PUJAR!</Typography.Text>
+                                { !validate ? <Typography.Text strong style={{ color : getCorrectColor(styles.backgroundColor)}}>¡PUJAR!</Typography.Text>
                                 : (<Countdown value={timer}  format="s" /> )
                                 }
                                 </Space>
