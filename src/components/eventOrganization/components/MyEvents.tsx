@@ -46,16 +46,31 @@ export const MyEvents = ({
             </div>
           )}
           {!isLoadingOtherEvents && eventsWithEventUser && eventsWithEventUser.length > 0 ? (
-            filteredList.map((event, index) => (
-              <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
-                <EventCard
-                  bordered={false}
-                  key={event._id}
-                  event={event}
-                  action={{ name: 'Ver', url: `landing/${event._id}` }}
-                />
-              </Col>
-            ))
+            <>
+              {filteredList.length > 0 ? (
+                filteredList.map((event, index) => (
+                  <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
+                    <EventCard
+                      bordered={false}
+                      key={event._id}
+                      event={event}
+                      action={{ name: 'Ver', url: `landing/${event._id}` }}
+                    />
+                  </Col>
+                ))
+              ) : (
+                <div
+                  style={{
+                    height: '250px',
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Empty description='No se encontraron tus eventos con ese nombre' />
+                </div>
+              )}
+            </>
           ) : (
             <div
               style={{

@@ -22,16 +22,31 @@ export const NextEvents = ({ events }: Props) => {
       </Space>
       <Row gutter={[16, 16]}>
         {events && events.length > 0 ? (
-          filteredList.map((event, index) => (
-            <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
-              <EventCard
-                bordered={false}
-                key={event._id}
-                event={event}
-                action={{ name: 'Ver', url: `landing/${event._id}` }}
-              />
-            </Col>
-          ))
+          <>
+            {filteredList.length > 0 ? (
+              filteredList.map((event, index) => (
+                <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
+                  <EventCard
+                    bordered={false}
+                    key={event._id}
+                    event={event}
+                    action={{ name: 'Ver', url: `landing/${event._id}` }}
+                  />
+                </Col>
+              ))
+            ) : (
+              <div
+                style={{
+                  height: '250px',
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Empty description='No hay eventos próximos agendados con ese nombre' />
+              </div>
+            )}
+          </>
         ) : (
           <div
             style={{
