@@ -61,7 +61,7 @@ const SurveyQuestionFeedback: FunctionComponent<ISurveyQuestionFeedbackProps> = 
           style={{ backgroundColor: '#52c41a' }}
         >
           <Button key="0" type="primary" danger={showAsFinished} onClick={onCloseClick}>
-            {showAsFinished ? 'Finalizar' : 'Siguiente'}
+            {showAsFinished ? 'Siguiente y finalizar' : 'Siguiente pregunta'}
           </Button>
         </Badge>,
       ]}
