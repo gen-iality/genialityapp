@@ -1,36 +1,36 @@
 import { Certificates } from '@/components/agenda/types';
 import { CloseOutlined, DownloadOutlined } from '@ant-design/icons';
-import { Alert, Button, Drawer, DrawerProps, Grid, Row, Space, Tooltip, Typography } from 'antd';
+import { Button, Drawer, DrawerProps, Grid, Row, Space, Tooltip, Typography } from 'antd';
 import { useGetEventUserWithCertificate } from '../hooks/useGetEventUserWithCertificate';
 import { UsersByCertificatesList } from './UsersByCertificatesList';
 import { generateCerts } from '../helpers/certificados.helper';
 import CertificateOutlineIcon from '@2fd/ant-design-icons/lib/CertificateOutline';
+import { UseEventContext } from '@/context/eventContext';
 
 interface Props extends DrawerProps {
   onCloseDrawer: () => void;
   certificate: Certificates;
-  eventValue: any;
 }
 const { useBreakpoint } = Grid;
 
-export const UsersByCertificates = ({ onCloseDrawer, certificate, eventValue, ...drawerProps }: Props) => {
-  const screens = useBreakpoint();
+export const UsersByCertificates = ({ onCloseDrawer, certificate, ...drawerProps }: Props) => {
   const { userEventUserWithCertificate, isLoading, pagination } = useGetEventUserWithCertificate(
     certificate,
     certificate?.event_id ?? ''
   );
+  const cEvent = UseEventContext();
 
   const onGenerateCertificates = () => {
     const startIndex = (pagination.current - 1) * pagination.pageSize;
     const endIndex = startIndex + pagination.pageSize;
-    return generateCerts(userEventUserWithCertificate.slice(startIndex, endIndex), certificate, eventValue);
+    return generateCerts(userEventUserWithCertificate.slice(startIndex, endIndex), certificate, cEvent.value);
   };
 
   return (
     <Drawer
       title={
         <Space wrap size={5} style={{ marginTop: 4 }}>
-          <CertificateOutlineIcon style={{fontSize: '20px'}} />
+          <CertificateOutlineIcon style={{ fontSize: '20px' }} />
           <Typography.Title level={5} style={{ marginTop: 4 }}>
             Listado de usuarios con este certificado
           </Typography.Title>
@@ -54,19 +54,15 @@ export const UsersByCertificates = ({ onCloseDrawer, certificate, eventValue, ..
         </Tooltip>
       }
       {...drawerProps}>
-        <Space 
-          direction='vertical' 
-          style={{width: '100%', overflowY: 'auto', height: '100%'}}
-          className='desplazar'
-        >
-          <UsersByCertificatesList
-            pagination={pagination}
-            dataSource={userEventUserWithCertificate}
-            loading={isLoading}
-            certificate={certificate}
-            eventValue={eventValue}
-          />
-        </Space>
+      <Space direction='vertical' style={{ width: '100%', overflowY: 'auto', height: '100%' }} className='desplazar'>
+        <UsersByCertificatesList
+          pagination={pagination}
+          dataSource={userEventUserWithCertificate}
+          loading={isLoading}
+          certificate={certificate}
+          eventValue={cEvent.value}
+        />
+      </Space>
     </Drawer>
   );
 };

@@ -21,6 +21,10 @@ export interface DrawerAuctionProps {
     cEvent?:        any
     setOpenOrClose: ()=> void
 }
+export interface CardProductProps {
+    auction:        Auction
+    currentPrice:         number | null
+}
 export interface GeneralAuctionProps {
     auction: Auction
     eventId: string
@@ -43,6 +47,7 @@ export interface ProductsProps {
     onDelete: (id :string, images : UploadFile[]) => void
 }
 export interface ModalProps {
+    loading:   boolean
     product:    ModalProduct
     onChange:  (newList : any) => Promise<void>
     onSave:    (save : any) => Promise<void>

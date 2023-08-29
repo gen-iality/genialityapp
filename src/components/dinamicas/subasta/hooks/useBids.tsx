@@ -13,6 +13,8 @@ export const useBids = (eventId: string, productId?: string, playing?: boolean) 
       return () => {
         unsuscribe();
       };
+    }else {
+      setBids([])
     }
   }, [productId]);
 

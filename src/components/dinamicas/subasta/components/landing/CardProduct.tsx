@@ -1,10 +1,10 @@
 import { Card, Empty, Skeleton, Statistic, Typography } from 'antd'
 import React from 'react'
-import { DrawerAuctionProps } from '../../interfaces/auction.interface'
+import { CardProductProps } from '../../interfaces/auction.interface'
 import Meta from 'antd/lib/card/Meta'
 import { getCorrectColor } from '@/helpers/utils';
 
-export default function CardProduct({auction} : Partial<DrawerAuctionProps>) {
+export default function CardProduct({auction, currentPrice} : Partial<CardProductProps>) {
   return (
     <Card
     bordered={false}
@@ -36,7 +36,7 @@ export default function CardProduct({auction} : Partial<DrawerAuctionProps>) {
             title={<Typography.Text style={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor)}} >Valor del artículo</Typography.Text>}
             className='animate__animated animate__flipInX' 
             prefix='$' 
-            value={auction?.currentProduct?.price|| 0} 
+            value={currentPrice ?? auction?.currentProduct?.price} 
             suffix={auction?.currency}
           />
         } 

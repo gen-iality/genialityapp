@@ -82,7 +82,6 @@ const Certificados: FC<{
           onCloseDrawer={onCloseDrawer}
           visible={isOpenDrawer}
           certificate={certificateSelected}
-          eventValue={props.event}
         />
       )}
     </>

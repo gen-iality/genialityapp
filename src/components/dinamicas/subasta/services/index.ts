@@ -107,15 +107,12 @@ export const getProducts =  async  (eventId : string) => {
 
 export const saveOffer =  async  (eventId: string, offer: IBids, auction: Auction ) => {
   try {
-    const response = await firestore
+     await firestore
     .collection(`auctionByEventId`)
     .doc(eventId)
     .collection('Bids')
     .add(offer)
-      
-      if(response && auction.currentProduct) {
-        await saveAuctioFirebase(eventId, { ...auction, currentProduct:{ ...auction.currentProduct, price: offer.offered }});
-      }
+
     } catch (error) {
       DispatchMessageService({ type: 'error', msj: 'Error al enviar oferta', action: 'show' });
       return false;

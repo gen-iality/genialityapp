@@ -1,5 +1,5 @@
-import { CloseCircleOutlined, PlayCircleOutlined, SaveOutlined, SelectOutlined, WarningOutlined } from '@ant-design/icons';
-import {  Alert, Button, Card, Col, Empty, Modal, Row, Skeleton, Table, Typography } from 'antd';
+import { CloseCircleOutlined, PlayCircleOutlined, SaveOutlined, SelectOutlined, StarOutlined, WarningOutlined } from '@ant-design/icons';
+import {  Alert, Button, Card, Col, Empty, Modal, Row, Skeleton, Space, Table, Typography } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import React, { useState } from 'react';
 
@@ -11,28 +11,11 @@ import { DispatchMessageService } from '@/context/MessageService';
 import { saveAuctioFirebase } from '../services/Execute.service';
 import { useBids } from '../hooks/useBids';
 import { deleteOffersByProduct, updateProduct } from '../services';
+import index from '../../../games/bingo/index';
 
 
 
-const columns: ColumnsType<IBids> = [
-  {
-    key: 'date',
-    title: 'Fecha',
-    dataIndex: 'date',
-    width: '30%',
-  },
-  {
-    key: 'name',
-    title: 'Nombre',
-    dataIndex: 'name',
-    width: '30%',
-  },
-  {
-    key: 'offered',
-    title: 'Puja',
-    dataIndex: 'offered',
-  },
-];
+
 
 export default function ExecuteAuction( {auction, eventId} : GeneralAuctionProps) {
   const [currentPage, setcurrentPage] = useState(1);
@@ -40,7 +23,28 @@ export default function ExecuteAuction( {auction, eventId} : GeneralAuctionProps
   const { products, loading, refresh } = useProducts(eventId);
   const { Bids, setBids, loading: Loadbids } = useBids(eventId, auction?.currentProduct?._id, auction?.playing);
   const [selectedProduct, setselectedProduct] = useState<Products | null>(null);
-
+  const columns: ColumnsType<IBids> = [
+    {
+      key: 'date',
+      title: 'Fecha',
+      dataIndex: 'date',
+      width: '30%',
+    },
+    {
+      key: 'name',
+      title: 'Nombre',
+      dataIndex: 'name',
+      width: '30%',
+    },
+    {
+      key: 'offered',
+      title: 'Puja',
+      dataIndex: 'offered',
+      render(value, record, index) {
+        return <Typography.Text strong>{`$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</Typography.Text>;
+      }
+    }
+  ];
   const startAuction = async () => {
     if (selectedProduct && auction) {
       setVisibility(false);
@@ -64,7 +68,7 @@ export default function ExecuteAuction( {auction, eventId} : GeneralAuctionProps
     if (auction){ 
      const save = await saveAuctioFirebase(eventId, { ...auction, playing: false });
         if(save && auction.currentProduct){
-          updateProduct(eventId, {...auction.currentProduct, state: 'auctioned'})
+          updateProduct(eventId, {...auction.currentProduct,price : Bids[0]?.offered ?? auction.currentProduct?.price , state: 'auctioned'})
         }
     }
   };
@@ -79,7 +83,6 @@ export default function ExecuteAuction( {auction, eventId} : GeneralAuctionProps
   const auctionFinish = async () => {
     if (auction) {
       await saveAuctioFirebase(eventId, { ...auction, currentProduct: null, playing: false });
-      setBids([]);
     }
   };
   return (
@@ -189,11 +192,13 @@ export default function ExecuteAuction( {auction, eventId} : GeneralAuctionProps
         <Col span={16}>
           <Card hoverable style={{ height: 450, borderRadius: 20 }}>
             <Table
+              bordered={false}
               loading={Loadbids}
               columns={columns}
+              rowClassName={(item,index)=> index === 0 ? 'animate__animated animate__pulse animate__infinite winner' : ''}
               dataSource={Bids}
               pagination={{
-                pageSize: 5,
+                pageSize: 4,
                 current: currentPage,
                 onChange: (page) => setcurrentPage(page),
                 total: Bids.length,

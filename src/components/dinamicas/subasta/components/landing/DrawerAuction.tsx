@@ -19,6 +19,7 @@ import {
   Form,
   Button,
   Affix,
+  InputNumber,
 } from 'antd';
 import HCOActividad from '@/components/events/AgendaActividadDetalle/HOC_Actividad';
 import { CloseOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
@@ -52,30 +53,26 @@ export default function DrawerAuction({
   const [showDrawerChat, setshowDrawerChat] = useState<boolean>(false);
   const [showDrawerRules, setshowDrawerRules] = useState<boolean>(false);
   const [modalOffer, setmodalOffer] = useState<boolean>(false);
+  const [time, setTime] = useState(0)
   const userName = cEventUser.value?.properties?.names || cEventUser.value?.user?.names;
   const inputRef = useRef();
-  const [valueInput, setvalueInput] = useState(0)
 
   const validOffer = (value: string): boolean => {
     const offer = Number(value);
-    return auction?.currentProduct?.price !== undefined && offer > auction?.currentProduct?.price;
+    return auction?.currentProduct?.price !== undefined && offer > (Bids[0]?.offered ?? auction?.currentProduct?.price);
   };
   const reloadProducts = (tab: string) => {
     if (tab === TabsDrawerAuction.History) {
       getProducts();
     }
   };
-  const changeValue = (value : number) => {
-    const input = inputRef.current as any;
-    if (input.input) {
-      input.input.value = (Number(input.input.value) + value).toString();
-    }
-  }
+
   const onBid = async (data: { offerValue: string }) => {
     const isValid = validOffer(data.offerValue);
 
     if (auction.playing && isValid && auction?.currentProduct?._id && data.offerValue) {
       setcanOffer(false);
+      setTime(Date.now() + auction.timerBids * 1000)
       const timeAwait = setTimeout(() => {
         setcanOffer(true);
         clearTimeout(timeAwait);
@@ -272,21 +269,30 @@ export default function DrawerAuction({
         <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
           <Row gutter={[16, 16]} justify='center'>
             <Col span={20}>
-              <CardProduct auction={auction} />
+              <CardProduct auction={auction} currentPrice={Bids[0]?.offered}/>
             </Col>
             <Modal visible={modalOffer} footer={null} closable destroyOnClose onCancel={() => setmodalOffer(false)}>
               <Form onFinish={onBid} layout='vertical' style={{ margin: 10 }}>
-
-                  <Form.Item
-                    name={'offerValue'}
-                    label='Valor de la puja'
-                    initialValue={(auction.currentProduct?.price ?? 0) + (auction.amount ?? 0)}
-                    rules={[
-                      { required: true, message: `Se requiere un valor mayor que  ${auction.currentProduct?.price}` },
-                    ]}>
-                    {//@ts-ignore
-                    }<Input  value={valueInput} min={(auction.currentProduct?.price ?? 0) + (auction.amount ?? 0)} step={auction.amount ?? 1} size='large' type='number' prefix='$' suffix={auction.currency}  />
-                  </Form.Item>
+                <Form.Item
+                  name={'offerValue'}
+                  label='Valor de la puja'
+                  initialValue={(Bids[0]?.offered ??  auction.currentProduct?.start_price) + (auction.amount ?? 0)}
+                  rules={[
+                    { required: true, message: `Se requiere un valor mayor que  ${Bids[0]?.offered ?? auction.currentProduct?.start_price}` },
+                  ]}>
+                  {
+                    //@ts-ignore
+                  }
+                  <InputNumber
+                    style={{ width: '100%' }} 
+                    controls={{ upIcon: <PlusOutlined />, downIcon: <MinusOutlined /> }}
+                    min={(auction.currentProduct?.price ?? 0) + (auction.amount ?? 0)}
+                    step={auction.amount ?? 1}
+                    size='large'
+                    type='number'
+                    prefix='$'
+                  />
+                </Form.Item>
 
                 <Button
                   style={{ width: '100%' }}
@@ -311,7 +317,7 @@ export default function DrawerAuction({
             setshowDrawerChat={setshowDrawerChat}
             setshowDrawerRules={setshowDrawerRules}
             closedrawer={setOpenOrClose}
-            timer={auction.timerBids}
+            timer={time}
           />
 
           <DrawerRules
