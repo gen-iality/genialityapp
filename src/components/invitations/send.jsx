@@ -248,10 +248,14 @@ class SendRsvp extends Component {
                 </Form.Item>
 
                 <Form.Item label="Cabecera del correo">
-                  <EviusReactQuill
+                  {/* <EviusReactQuill
                     name="content_header"
                     data={this.state.rsvp.content_header}
                     handleChange={(e) => this.QuillComplement1(e)}
+                  /> */}
+                  <RichTextEditor
+                    value={this.state.rsvp.content_header}
+                    onChange={(e) => this.QuillComplement1(e)}
                   />
                 </Form.Item>
 
@@ -350,13 +354,13 @@ class SendRsvp extends Component {
                 <Form.Item label="Cuerpo de la invitación (Por defecto será la descripción del curso)">
                   {/* Dont work */}
                   {/* <EviusReactQuill
-                    name="content_header"
-                    data={this.state.rsvp.content_header}
-                    handleChange={(e) => this.QuillComplement1(e)}
+                    name="message"
+                    data={this.state.rsvp.message}
+                    handleChange={(e) => this.QuillComplement2(e)}
                   /> */}
                   <RichTextEditor
-                    value={this.state.rsvp.content_header}
-                    onChange={(e) => this.QuillComplement1(e)}
+                    value={this.state.rsvp.message}
+                    onChange={(e) => this.QuillComplement2(e)}
                   />
                 </Form.Item>
 
