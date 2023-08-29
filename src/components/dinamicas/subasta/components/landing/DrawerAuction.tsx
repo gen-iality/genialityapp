@@ -152,23 +152,24 @@ export default function DrawerAuction({
       }
       footerStyle={{backgroundColor: auction?.styles?.cards?.backgroundColor}}
     >
-      <Row gutter={[32, 32]} wrap justify='space-between'>
+      <Row gutter={screens.xs ? [0, 16] : [32, 32]} wrap justify='space-between'>
         <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
           <Row gutter={[16, 16]}>
             <Col span={24}>
-              <Card
-                style={{ backgroundColor: 'transparent' }}
-                bordered={false}
-                bodyStyle={{
-                  padding: '0px',
-                  overflow: 'hidden',
-                  borderRadius: '20px',
-                }}>
-                {/* @ts-ignore */}
-                <Affix offsetTop={screens.xs ? 35 : 0}>
+              <Affix offsetTop={screens.xs ? 65 : 0}>
+                <Card
+                  /* style={{ backgroundColor: auction?.styles?.cards?.backgroundColor }} */
+                  bordered={false}
+                  bodyStyle={{
+                    padding: '0px',
+                    overflow: 'hidden',
+                    borderRadius: '20px',
+                  }}
+                  style={{borderRadius: '20px',}}>
+                  {/* @ts-ignore */}
                   <HCOActividad isBingo={true} />
-                </Affix>
-              </Card>
+                </Card>
+              </Affix>
             </Col>
             {!screens.xs && (
               <Col span={24}>
@@ -288,8 +289,8 @@ export default function DrawerAuction({
           </Row>
         </Col>
         <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
-          <Row gutter={[16, 16]} justify='center'>
-            <Col span={20}>
+          <Row justify='center'>
+            <Col span={24}>
               <CardProduct auction={auction} currentPrice={Bids[0]?.offered}/>
             </Col>
             <Modal visible={modalOffer} footer={null} closable destroyOnClose onCancel={() => setmodalOffer(false)}>
@@ -327,8 +328,8 @@ export default function DrawerAuction({
             </Modal>
           </Row>
         </Col>
-        <Col xs={24} sm={24} md={4} lg={4} xl={4} xxl={4}>
-          {!screens.xs &&
+        {!screens.xs &&
+          <Col xs={24} sm={24} md={4} lg={4} xl={4} xxl={4}>
             <ButtonsContainer
               styles={{
                 backgroundColor: auction.styles?.cards?.backgroundColor || '#FFFFFF',
@@ -341,16 +342,16 @@ export default function DrawerAuction({
               closedrawer={setOpenOrClose}
               timer={time}
             />
-          }
 
-          <DrawerRules
-            cEvent={cEvent}
-            showDrawerRules={showDrawerRules}
-            setshowDrawerRules={setshowDrawerRules}
-            auctionRules={auction.rules ?? ''}
-          />
-          <DrawerChat showDrawerChat={showDrawerChat} setshowDrawerChat={setshowDrawerChat} />
-        </Col>
+            <DrawerRules
+              cEvent={cEvent}
+              showDrawerRules={showDrawerRules}
+              setshowDrawerRules={setshowDrawerRules}
+              auctionRules={auction.rules ?? ''}
+              />
+            <DrawerChat showDrawerChat={showDrawerChat} setshowDrawerChat={setshowDrawerChat} />
+          </Col>
+        }
         {screens.xs && (
           <Col span={24}>
             <Card
