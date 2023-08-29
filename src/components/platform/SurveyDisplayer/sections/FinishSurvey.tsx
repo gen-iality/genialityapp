@@ -11,7 +11,7 @@ const FinishSurvey: FunctionComponent<IWelcomeSurveyProps> = ({
   onFinish: onStart,
 }) => (
   <InfoSurvey
-    btnText="Finalizar"
+    btnText="Finalizar y volver"
     infoText="Click en Finalizar"
     extraMessage={extraMessage}
     onClick={onStart}
