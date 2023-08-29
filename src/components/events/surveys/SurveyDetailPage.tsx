@@ -20,6 +20,7 @@ import SurveyComponent from './SurveyComponent'
 import ResultsPanel from './ResultsPanel'
 import QuizProgress from '@components/quiz/QuizProgress'
 import { LoadingOutlined } from '@ant-design/icons'
+import SurveyDisplayer, { SurveyDisplayerUI } from '@components/platform/SurveyDisplayer'
 
 interface SurveyDetailPageProps {
   surveyId: string
@@ -243,7 +244,21 @@ const SurveyDetailPage: FunctionComponent<
   return (
     <>
       <Card className="surveyCard">
-        <SurveyComponent eventId={cEvent.value?._id} queryData={query.data} />
+        {/* <SurveyComponent eventId={cEvent.value?._id} queryData={query.data} /> */}
+        {currentUser.value && cEvent.value?._id && query.data ? (
+          <SurveyDisplayer
+            user={currentUser.value}
+            eventId={cEvent.value._id}
+            survey={query.data}
+            surveyStatus={cSurvey.surveyStatus}
+            render={(subprops) => <SurveyDisplayerUI {...subprops} />}
+            onFinish={() => {
+              navigate(`/landing/${cEvent.value._id}/evento`)
+            }}
+          />
+        ) : (
+          <Spin />
+        )}
       </Card>
       <Row>
         <Col span={24}>Llevas {cSurvey.surveyStatsString}</Col>

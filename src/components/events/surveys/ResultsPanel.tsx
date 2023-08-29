@@ -63,7 +63,7 @@ const ResultsPanel: FunctionComponent<IResultsPanelProps> = (props) => {
             ...basicAnswerReport,
             exists: true,
             answer: userAnswer.response,
-            isCorrectAnswer: userAnswer.correctAnswer,
+            isCorrectAnswer: userAnswer.isCorrect, //userAnswer.correctAnswer,
           }
         } else {
           console.debug('no answer found for question.id:', question.id, question)
@@ -103,16 +103,22 @@ const ResultsPanel: FunctionComponent<IResultsPanelProps> = (props) => {
                 </Typography.Paragraph>
                 <Typography.Paragraph>
                   {'Respuesta correcta: '}
-                  <Typography.Text strong>{answer.correctAnswer}</Typography.Text>
+                  <Typography.Text strong>
+                    {JSON.stringify(answer.correctAnswer)}
+                  </Typography.Text>
                 </Typography.Paragraph>
                 {answer.exists ? (
                   <Alert
                     type={
-                      answer.isCorrectAnswer || answer.correctAnswer === answer.answer
+                      (query?.data as any)?.allow_gradable_survey === false
+                        ? 'info'
+                        : answer.isCorrectAnswer || answer.correctAnswer === answer.answer
                         ? 'success'
                         : 'error'
                     }
-                    message={`Tu respuesta: ${answer.answer || '<vacío>'}`}
+                    message={`Tu respuesta: ${
+                      answer.answer ? JSON.stringify(answer.answer) : '<vacío>'
+                    }`}
                   />
                 ) : (
                   <Alert type="warning" message="La pregunta no fue respondida" />
