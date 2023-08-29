@@ -37,7 +37,10 @@ export const columns = (goToEvent) => [
     /* ellipsis: 'true',
     sorter: (a, b) => a.name.localeCompare(b.name), */
     render(val, item) {
-      let dateStart = item.dates[0]?.start;
+      let dateStart;
+      if (item?.dates && Array.isArray(item?.dates) && item?.dates?.length > 0) {
+        dateStart = item.dates[0].start;
+      }
       if (!dateStart) {
         dateStart = item.datetime_from;
       }
