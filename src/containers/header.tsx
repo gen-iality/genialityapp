@@ -1,13 +1,35 @@
 import { createElement, Fragment, useEffect, useState } from 'react';
-import { Redirect, useHistory } from 'react-router-dom';
+import { Redirect, useHistory, useParams, Link } from 'react-router-dom';
 import ErrorServe from '../components/modal/serverError';
 import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
 import { connect } from 'react-redux';
 import * as userActions from '../redux/user/actions';
 import * as eventActions from '../redux/event/actions';
 import MenuOld from '../components/events/shared/menu';
-import { Menu, Drawer, Button, Col, Row, Layout, Space, Grid, Dropdown, Typography } from 'antd';
-import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined, LoadingOutlined, ApartmentOutlined } from '@ant-design/icons';
+import {
+	Menu,
+	Drawer,
+	Button,
+	Col,
+	Row,
+	Layout,
+	Space,
+	Grid,
+	Dropdown,
+	Typography,
+	Image,
+	Avatar,
+	Comment,
+} from 'antd';
+import {
+	MenuUnfoldOutlined,
+	MenuFoldOutlined,
+	LockOutlined,
+	LoadingOutlined,
+	ApartmentOutlined,
+	UserOutlined,
+	EditOutlined,
+} from '@ant-design/icons';
 import withContext from '../context/withContext';
 import ModalLoginHelpers from '../components/authentication/ModalLoginHelpers';
 import { recordTypeForThisEvent } from '../components/events/Landing/helpers/thisRouteCanBeDisplayed';
@@ -16,6 +38,8 @@ import AccountCircleIcon from '@2fd/ant-design-icons/lib/AccountCircle';
 import { useIntl } from 'react-intl';
 import { getCorrectColor } from '@/helpers/utils';
 import { isOrganizationCETA } from '@/components/user-organization-to-event/helpers/helper';
+import { Organization } from '@/components/eventOrganization/types';
+import { OrganizationApi, OrganizationFuction } from '@/helpers/request';
 
 const { useBreakpoint } = Grid;
 
@@ -63,17 +87,24 @@ const Headers = (props: Props) => {
 	const { helperDispatch } = cHelper;
 	const [headerIsLoading, setHeaderIsLoading] = useState(true);
 	const [dataGeneral, setdataGeneral] = useState(initialDataGeneral);
+	const [currentOrganization, setCurrentOrganization] = useState<Organization | null>(null);
+	const [myOrganizations, setMyorganizations] = useState<any[]>([]);
+	const { id: paramsId } = useParams<{ id: string }>();
 	const [showButtons, setshowButtons] = useState({
 		buttonregister: true,
 		buttonlogin: true,
 	});
 	const containerBgColor = cEvent?.value?.styles?.containerBgColor || null;
 	const validatorCms = window.location.pathname.includes('/eventadmin');
-	const validatorOrg = window.location.pathname.includes('/organization');
+	const validatorOrg =
+		window.location.pathname.includes('/organization') && !window.location.pathname.includes('/admin') && paramsId !== undefined;
 	const bgcolorContainer = !validatorCms && !validatorOrg && containerBgColor ? containerBgColor : '#FFFFFF';
 	const [fixed, setFixed] = useState(false);
 	const screens = useBreakpoint();
 	let history = useHistory();
+	
+	const organizationLogo = currentOrganization?.styles.event_image;
+	const organizationName = currentOrganization?.name;
 	// TODO: Here there is an error
 	const intl = useIntl();
 	const openMenu = () => {
@@ -106,7 +137,7 @@ const Headers = (props: Props) => {
 		if (!value && status === 'LOADED') return setHeaderIsLoading(false), setdataGeneral(initialDataGeneral);
 		if (!value) return;
 
-		setdataGeneral(prev => ({
+		setdataGeneral((prev) => ({
 			...prev,
 			name: value?.names || value?.name,
 			userEvent: { ...value, properties: { names: value.names || value.name } },
@@ -126,7 +157,17 @@ const Headers = (props: Props) => {
 		return containtorganization ? 'organization' : 'landing';
 	};
 
-	
+	const getOrganization = async () => {
+		const orga = await OrganizationFuction.obtenerDatosOrganizacion(paramsId);
+		if (orga) setCurrentOrganization(orga);
+	};
+
+	useEffect(() => {
+		if (validatorOrg && paramsId) {
+			getOrganization();
+		}
+	}, [validatorOrg, paramsId]);
+
 	const userLogOut = (callBack: any) => {
 		const params = {
 			user: cUser.value,
@@ -144,14 +185,14 @@ const Headers = (props: Props) => {
 		});
 	};
 
-	const isEventWithPayment =(cEvent:any) => {
-		if(!cEvent)return true
+	const isEventWithPayment = (cEvent: any) => {
+		if (!cEvent) return true;
 
-		if(cEvent?.value?.payment?.active){
-			return true
+		if (cEvent?.value?.payment?.active) {
+			return true;
 		}
-		return false
-	}
+		return false;
+	};
 
 	const MenuMobile = (
 		<Menu>
@@ -162,20 +203,15 @@ const Headers = (props: Props) => {
 				}}>
 				<FormattedMessage id='header.expired_signin' defaultMessage='Sign In' />
 			</Menu.Item>
-		{
-			!isOrganizationCETA() 
-			&& 
-			!isEventWithPayment(cEvent)
-			&&
-			 <Menu.Item
-				key='menu-item-menu-mobile-2'
-				onClick={() => {
-					helperDispatch({ type: 'showRegister', visible: true, organization: WhereHerePath() });
-				}}>
-				<FormattedMessage id='registration.button.create' defaultMessage='Sign Up' />
-			</Menu.Item>
-		}
-			
+			{!isOrganizationCETA() && !isEventWithPayment(cEvent) && (
+				<Menu.Item
+					key='menu-item-menu-mobile-2'
+					onClick={() => {
+						helperDispatch({ type: 'showRegister', visible: true, organization: WhereHerePath() });
+					}}>
+					<FormattedMessage id='registration.button.create' defaultMessage='Sign Up' />
+				</Menu.Item>
+			)}
 		</Menu>
 	);
 
@@ -231,17 +267,34 @@ const Headers = (props: Props) => {
 	}, [fixed]);
 
 	const landingOrganization = () => {
-	window.location.href = `${window.location.origin}/organization/${cEvent.value.organizer_id}/events`;
+		window.location.href = `${window.location.origin}/organization/${cEvent.value.organizer_id}/events`;
 	};
 
 	const isLandingOrPreLanding = (): boolean => {
-		if(!window.location.href.includes('landing') ){
-			return window.location.pathname.replace('/','') === cEvent?.value?._id
+		if (!window.location.href.includes('landing')) {
+			return window.location.pathname.replace('/', '') === cEvent?.value?._id;
 		}
-		return true 
-	}
+		return true;
+	};
 
+	const getMyOrganizations = async () => {
+		try {
+			const organizations: Organization[] = await OrganizationApi.mine();
+			if (organizations?.length > 0) {
+				setMyorganizations(organizations.map((item) => item.id));
+			}
+		} catch (error) {
+			console.log('[debug] organization not found');
+		}
+	};
 
+	useEffect(() => {
+		if (cUser.value && validatorOrg) {
+			getMyOrganizations();
+		} else {
+			setMyorganizations([]);
+		}
+	}, [cUser.value, validatorOrg]);
 	return (
 		<Fragment>
 			<Header
@@ -256,15 +309,53 @@ const Headers = (props: Props) => {
 					opacity: fixed ? '0.9' : '1',
 					backgroundColor: bgcolorContainer,
 					boxShadow: '0px 0px 4px rgba(0, 0, 0, 0.25)',
+					padding:screens.xs ?'0 20px' : '0 50px'
 				}}>
 				<Menu theme='light' mode='horizontal' style={{ backgroundColor: bgcolorContainer, border: 'none' }}>
 					<Row justify='space-between' align='middle'>
-						{isLandingOrPreLanding() && !screens.xs &&
-							<Button type='link' onClick={landingOrganization} icon={<ApartmentOutlined style={{color: getCorrectColor(bgcolorContainer)}}/>} size='large' >
-								<Typography.Text style={{color: getCorrectColor(bgcolorContainer)}}>Ver más contenido de <Typography.Text strong style={{color: getCorrectColor(bgcolorContainer)}}>{cEvent.value?.organizer?.name}</Typography.Text></Typography.Text>
+						{isLandingOrPreLanding() && !screens.xs && (
+							<Button
+								type='link'
+								onClick={landingOrganization}
+								icon={<ApartmentOutlined style={{ color: getCorrectColor(bgcolorContainer) }} />}
+								size='large'>
+								<Typography.Text style={{ color: getCorrectColor(bgcolorContainer) }}>
+									Ver más contenido de{' '}
+									<Typography.Text strong style={{ color: getCorrectColor(bgcolorContainer) }}>
+										{cEvent.value?.organizer?.name}
+									</Typography.Text>
+								</Typography.Text>
 							</Button>
-						}
-						
+						)}
+						{validatorOrg && (
+							<Space align='center'>
+								<Image
+									width={50}
+									height={50}
+									preview={false}
+									src={organizationLogo}
+									fallback='http://via.placeholder.com/500/F5F5F7/CCCCCC?text=No%20Image'
+									style={{
+										borderRadius: '5px',
+										objectFit: 'cover',
+										border: '4px solid #FFFFFF',
+										//boxShadow: '2px 2px 10px 1px rgba(0,0,0,0.25)',
+										backgroundColor: '#FFFFFF;',
+									}}
+								/>
+								<Typography.Title level={5}>{organizationName}</Typography.Title>
+								{cUser?.value && myOrganizations.includes(paramsId) && (
+									<Link
+										to={`/admin/organization/${paramsId}`}
+										>
+										<Button type='text'  icon={<EditOutlined />}>
+											Administrar
+										</Button>
+									</Link>
+								)}
+							</Space>
+						)}
+
 						<Row className='logo-header' justify='space-between' align='middle'>
 							{/* Menú de administrar un evento (esto debería aparecer en un evento no en todo lado) */}
 							{dataGeneral?.showAdmin && (
@@ -291,7 +382,7 @@ const Headers = (props: Props) => {
 							/>
 						) : !dataGeneral.userEvent ? (
 							screens.xs ? (
-								<div style={{position:'absolute', right:15, top:6}}>
+								<div style={{ position: 'absolute', right: 15, top: 6 }}>
 									<Space>
 										<Dropdown overlay={MenuMobile}>
 											<Button
@@ -309,9 +400,9 @@ const Headers = (props: Props) => {
 								</div>
 							) : (
 								<Space>
-									{showButtons.buttonlogin  ? (
+									{showButtons.buttonlogin ? (
 										<>
-											{recordTypeForThisEvent(cEvent) !== 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS'  &&(
+											{recordTypeForThisEvent(cEvent) !== 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS' && (
 												<Button
 													icon={<LockOutlined />}
 													style={{
@@ -367,7 +458,7 @@ const Headers = (props: Props) => {
 								</Space>
 							)
 						) : dataGeneral.userEvent != null && !dataGeneral.anonimususer ? (
-							<div style={screens.xs ? {position:'absolute', right:20, top:0}:undefined}>
+							<div style={screens.xs ? { position: 'absolute', right: 20, top: 0 } : undefined}>
 								<UserStatusAndMenu
 									user={dataGeneral.user}
 									menuOpen={dataGeneral.menuOpen}

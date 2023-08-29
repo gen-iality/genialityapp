@@ -6,24 +6,12 @@ import { PlusCircleOutlined } from '@ant-design/icons';
 import { columns } from './tableColums/eventTableColumns';
 import withContext from '../../context/withContext';
 import Header from '../../antdComponents/Header';
-// import ExportExcel from '../newComponent/ExportExcel';
+import { useGetEventWithStatistics } from './hooks/useGetEventWithStatistics';
 
 function OrgEvents(props) {
-  const [eventData, setEventData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   let { _id: organizationId } = props.org;
   const history = useHistory();
-
-  async function getEventsStatisticsData() {
-    const { data } = await OrganizationApi.getEventsStatistics(organizationId);
-
-    setEventData(data);
-    setIsLoading(false);
-  }
-
-  useEffect(() => {
-    getEventsStatisticsData();
-  }, []);
+  const { eventData, isLoading, pagination } = useGetEventWithStatistics(organizationId);
 
   function goToEvent(eventId) {
     const url = `/eventadmin/${eventId}/agenda`;
@@ -43,7 +31,7 @@ function OrgEvents(props) {
         loading={isLoading}
         size='small'
         rowKey='index'
-        pagination={false}
+        pagination={pagination}
         title={() => (
           <Row wrap justify='end' gutter={[8, 8]}>
             <Col>{/* <ExportExcel columns={columns(goToEvent)} list={eventData} fileName={'eventReport'} /> */}</Col>

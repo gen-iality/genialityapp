@@ -904,9 +904,9 @@ export const OrganizationApi = {
     });
     return data;
   },
-  getEventsWithUserOrg: async (organizationId, organizarionUserId, event_user = false) => {
+  getEventsWithUserOrg: async (organizationId, organizarionUserId, event_user = false, order='oldest') => {
     let token = await GetTokenUserFirebase();
-    return await Actions.get(`/api/organizations/${organizationId}/user/${organizarionUserId}/events?event_user=${event_user}&token=${token}`, true);
+    return await Actions.get(`/api/organizations/${organizationId}/user/${organizarionUserId}/events?event_user=${event_user}&order=${order}&token=${token}`, true);
   },
   getOne: async (id) => {
     return await Actions.getOne('/api/organizations/', id);
@@ -949,8 +949,8 @@ export const OrganizationApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.delete(`/api/organizations/${org}/organizationusers`, `/${member}?token=${token}`, true);
   },
-  getEventsStatistics: async (org) => {
-    return await Actions.get(`/api/organizations/${org}/eventsstadistics`);
+  getEventsStatistics: async (org, order='oldest') => {
+    return await Actions.get(`/api/organizations/${org}/eventsstadistics?order=${order}`);
   },
   editAllUserProperties: async (org, data) => {
     let token = await GetTokenUserFirebase();
@@ -1518,8 +1518,8 @@ export const ActivityBySpeaker = {
 
 export const OrganizationFuction = {
   // OBTENER EVENTOS PROXIMOS POR ORGANIZACION
-  getEventsNextByOrg: async (orgId) => {
-    const events = await Actions.getAll(`api/organizations/${orgId}/events`);
+  getEventsNextByOrg: async (orgId, order='oldest') => {
+    const events = await Actions.getAll(`api/organizations/${orgId}/events?&order=${order}`);
     return events.data;
   },
 

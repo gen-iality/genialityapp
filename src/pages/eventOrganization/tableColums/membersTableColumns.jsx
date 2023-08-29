@@ -1,8 +1,10 @@
-import { Tooltip, Button, Row, Col, Popover, Image, Avatar, Empty } from 'antd';
-import { EditOutlined, UserOutlined } from '@ant-design/icons';
+import { Tooltip, Button, Row, Col, Popover, Image, Avatar, Empty, Space } from 'antd';
+import { DeleteOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
 import { membersGetColumnSearchProps } from '../searchFunctions/membersGetColumnSearchProps';
+import SendChangePassword from '@/components/event-users/ChangePassword';
+import { deleteUserConfirmation } from './utils/deleteMembers';
 
-export const columns = (columnsData, editModalUser) => [
+export const columns = (columnsData, editModalUser, organizationId) => [
   {
     title: 'Avatar',
     dataIndex: 'picture',
@@ -86,23 +88,38 @@ export const columns = (columnsData, editModalUser) => [
     fixed: 'right',
     width: 80,
     render(val, item, index) {
+      console.log(organizationId, item._id);
       return (
         <>
-        {item.isAuthor
-          ?
-          <></>
-          :
-          <Tooltip title='Editar'>
-            <Button
-              id={`editAction${index}`}
-              type='primary'
-              size='small'
-              onClick={(e) => {
-                editModalUser(item);
-              }}
-              icon={<EditOutlined />}>
-            </Button>
-        </Tooltip>}
+          {item.isAuthor ? (
+            <>
+
+            <SendChangePassword email={item.email} />
+            
+            </>
+          ) : (
+            <Space>
+              <Tooltip title='Editar'>
+                <Button
+                  id={`editAction${index}`}
+                  type='primary'
+                  size='small'
+                  onClick={(e) => {
+                    editModalUser(item);
+                  }}
+                  icon={<EditOutlined />}></Button>
+              </Tooltip>
+              {!item.anonymous && <SendChangePassword email={item.email} />}
+              <Tooltip title='Eliminar'>
+                <Button
+                  id={`deleteAction${index}`}
+                  type='danger'
+                  size='small'
+                  onClick={() => deleteUserConfirmation(organizationId, item._id)}
+                  icon={<DeleteOutlined />}></Button>
+              </Tooltip>
+            </Space>
+          )}
         </>
       );
     },

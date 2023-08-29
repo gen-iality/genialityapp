@@ -28,7 +28,7 @@ import {
   Dropdown,
   Menu,
   message,
-  Modal
+  Modal,
 } from 'antd';
 
 import updateAttendees from './eventUserRealTime';
@@ -59,7 +59,8 @@ import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton';
 import { UsersPerEventOrActivity } from './utils/utils';
 import printBagdeUser from '../badge/utils/printBagdeUser';
 import ModalUsersOrganization from '../user-organization-to-event/components/ModalUsersOrganization';
-import PasswordAssistant from './PasswordAssistant';
+import SendChangePassword from './ChangePassword';
+import deleteUserConfirmation from '@/App/deleteUserConfirmation';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -130,100 +131,11 @@ class ListEventUser extends Component {
     this.setState({ modalUserOrganization: false });
   };
 
-  handleRecoveryPass = async (email) => {
-    try {
-      let resp = await EventsApi.changePasswordUser(email, window.location.href);
-      if (resp) {
-        this.setState({
-          recoveryMessage: `Se ha enviado correo nueva contraseña a: ${email}`,
-          resul: 'OK',
-          status: 'success',
-          showConfirm: false,
-        });
-        message.success(`Se ha enviado el correo de recuperación de contraseña a: ${email}`);
-      }
-    } catch (error) {
-      this.setState({
-        recoveryMessage: 'Ocurrió un error al enviar el correo de recuperación de contraseña',
-        resul: 'Error', 
-        status: 'error', 
-        showConfirm: false,
-      });
-      message.error('Ocurrió un error al enviar el correo de recuperación de contraseña');
-    }
-  }
-  openModal = () => {
-    // Lógica a ejecutar cuando se abre el modal
-    this.setState({ showConfirm: true });
-  };
-
-  handleOk = () => {
-    // Lógica a ejecutar cuando se confirme el modal
-    this.setState({ showConfirm: false });
-  };
-
-  handleCancel = () => {
-    // Lógica a ejecutar cuando se cancele el modal
-    this.setState({ showConfirm: false });
-  };
-
-  deleteUser = async (user) => {
-    const activityId = this.props.activityId;
-    const self = this;
-
-    Modal.confirm({
-      title: `¿Está seguro de eliminar la información?`,
-      icon: <ExclamationCircleOutlined />,
-      content: 'Una vez eliminado, no lo podrá recuperar',
-      okText: 'Borrar',
-      okType: 'danger',
-      cancelText: 'Cancelar',
-      onOk() {
-        DispatchMessageService({
-          type: 'loading',
-          key: 'loading',
-          msj: ' Por favor espere mientras se borra la información...',
-          action: 'show',
-        });
-
-        const onHandlerRemove = async () => {
-          try {
-            const selectedEventUserId = user._id;
-
-            if (activityId) {await UsersApi.deleteAttendeeInActivity(activityId, selectedEventUserId);}
-            if (!activityId) {await AttendeeApi.delete(self.props.event?._id, selectedEventUserId);}
-
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'success',
-              msj: 'Se eliminó la información correctamente!',
-              action: 'show',
-            });
-            /* self.getAttendes(); */
-          } catch (e) {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'error',
-              msj: 'Error eliminando el usuario',
-              action: 'show',
-            });
-          }
-        };
-        onHandlerRemove();
-      },
-    });
-  };
-
   // eslint-disable-next-line no-unused-vars
   editcomponent = (text, item, index) => {
     const { eventIsActive } = this.context;
-    // const { recoveryMessage, status } = this.state;
+    const activityId = this.props.activityId;
+    const self = this;
     return (
       <Space>
         <Tooltip placement='topLeft' title={'Editar'}>
@@ -235,18 +147,14 @@ class ListEventUser extends Component {
             disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
           />
         </Tooltip>
-        {!item.anonymous &&
-          <PasswordAssistant onOk={() => this.handleRecoveryPass(item.email)}>
-            <p>¿Estás seguro de que deseas enviar el correo para cambiar la contraseña?</p>
-          </PasswordAssistant>
-        }
+        {!item.anonymous && <SendChangePassword email={item.email} />}
         <Tooltip placement='topLeft' title={'Eliminar'}>
           <Button
             type={'primary'}
             icon={<DeleteOutlined />}
             size='small'
             danger
-            onClick={() => this.deleteUser(item)}
+            onClick={() => deleteUserConfirmation(item._id, activityId, self.props.event?._id )}
           />
         </Tooltip>
       </Space>
@@ -451,16 +359,18 @@ class ListEventUser extends Component {
                   return <Image width={40} height={40} src={key?.user?.picture} />;
 
                 case 'email':
-                  return key.anonymous ? 
+                  return key.anonymous ? (
                     <Space>
-                      {key.anonymous &&
+                      {key.anonymous && (
                         <Tooltip title='Usuario anónimo'>
-                          <InfoCircleOutlined style={{color: 'orangered'}} />
+                          <InfoCircleOutlined style={{ color: 'orangered' }} />
                         </Tooltip>
-                      }
+                      )}
                       <>{key[item.name]}</>
                     </Space>
-                  : <>{key[item.name]}</>
+                  ) : (
+                    <>{key[item.name]}</>
+                  );
 
                 default:
                   return key[item.name];
@@ -981,12 +891,15 @@ class ListEventUser extends Component {
               ? 'Check-in actividad: ' + nameActivity
               : `Check-in evento: ${this.props.event?.name}`
           }
-          description={this.props?.event?.visibility === 'ANONYMOUS' && 
-            <Space direction='vertical' size={0}>
-              <Typography.Paragraph>¡Evento sin autenticación (anónimo)! 
-                La información recolectada dentro del evento no está enlazada a un usuario específico dentro de la plataforma,
-                por lo tanto NO se pueden modificar los roles.</Typography.Paragraph>
-            </Space>
+          description={
+            this.props?.event?.visibility === 'ANONYMOUS' && (
+              <Space direction='vertical' size={0}>
+                <Typography.Paragraph>
+                  ¡Evento sin autenticación (anónimo)! La información recolectada dentro del evento no está enlazada a
+                  un usuario específico dentro de la plataforma, por lo tanto NO se pueden modificar los roles.
+                </Typography.Paragraph>
+              </Space>
+            )
           }
         />
 
