@@ -1,5 +1,4 @@
 import { UploadFile } from 'antd/lib/upload/interface';
-import rules from '../../../agenda/activityType/utils/formValidatorRules';
 
 export interface AcutionProps {
     event :  any

@@ -28,11 +28,12 @@ import CardProduct from './CardProduct';
 import { useBids } from '../../hooks/useBids';
 import { saveOffer } from '../../services';
 import useProducts from '../../hooks/useProducts';
-import { TabsDrawerAuction } from '../../utils/utils';
+import { DATE_FORMAT, TabsDrawerAuction } from '../../utils/utils';
 import DrawerRules from './DrawerRules';
 import DrawerChat from '@/components/games/bingo/components/auxiliarDrawers/DrawerChat';
 import ButtonsContainer from './ButtonsContainer';
 import { getCorrectColor } from '@/helpers/utils';
+import moment from 'moment';
 
 const { useBreakpoint } = Grid;
 
@@ -83,7 +84,7 @@ export default function DrawerAuction({
         {
           productName: auction?.currentProduct?.name,
           productId: auction?.currentProduct?._id,
-          date: new Date().toLocaleString(),
+          date: moment(new Date().toLocaleString()).format(DATE_FORMAT),
           name: userName || 'Anónimo',
           userId: cEventUser.value?.user?._id,
           offered: Number(data.offerValue),

@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-import { listenAuction } from '../services/Execute.service';
-import { Auction } from '../interfaces/auction.interface';
 import { getOffers } from '../services';
 
 export const useSatistic = (eventId: string,reload: boolean) => {
