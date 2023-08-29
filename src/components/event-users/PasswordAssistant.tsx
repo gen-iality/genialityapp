@@ -1,5 +1,5 @@
 import { LockOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import { Button, Tooltip } from 'antd';
 import useModal from 'antd/lib/modal/useModal';
 interface ModalPasswordProps {
   onOk: () => void;
@@ -16,7 +16,9 @@ export default function PasswordAssistant({ onOk }: ModalPasswordProps) {
   };
   return (
     <div>
-      <Button type={'primary'} size='small' onClick={openModal} icon={<LockOutlined />}/>
+      <Tooltip title='Cambiar contraseña'>
+        <Button type={'primary'} size='small' onClick={openModal} icon={<LockOutlined />} />
+      </Tooltip>
       {contextHolder}
     </div>
   );

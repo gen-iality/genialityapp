@@ -113,7 +113,7 @@ function OrgMembers(props) {
         <Tag>Inscritos: {membersData.length || 0}</Tag>
       </p>
       <Table
-        columns={columns(columnsData, editModalUser)}
+        columns={columns(columnsData, editModalUser, organizationId)}
         dataSource={membersData}
         size='small'
         rowKey='index'
