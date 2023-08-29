@@ -15,8 +15,7 @@ function OrgEvents(props) {
   const history = useHistory();
 
   async function getEventsStatisticsData() {
-    const { data } = await OrganizationApi.getEventsStatistics(organizationId);
-
+    const { data } = await OrganizationApi.getEventsStatistics(organizationId, 'latest');
     setEventData(data);
     setIsLoading(false);
   }

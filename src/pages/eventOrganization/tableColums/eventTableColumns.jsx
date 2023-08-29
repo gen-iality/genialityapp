@@ -1,7 +1,7 @@
-import { Button, Typography } from 'antd';
-import { CheckCircleOutlined, ExclamationCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { DATE_FORMAT } from '@/constants/datesformat.constants';
+import { Button } from 'antd';
+import moment from 'moment';
 
-const { Paragraph } = Typography;
 export const columns = (goToEvent) => [
   {
     title: 'Nombre del evento',
@@ -27,6 +27,23 @@ export const columns = (goToEvent) => [
       return (
         <Button type='link' onClick={() => goToEvent(item._id)}>
           <span style={{ color: '#2E9AFE' }}>{item.name}</span>
+        </Button>
+      );
+    },
+  },
+  {
+    title: 'Fecha de inicio',
+    dataIndex: 'startDate',
+    /* ellipsis: 'true',
+    sorter: (a, b) => a.name.localeCompare(b.name), */
+    render(val, item) {
+      let dateStart = item.dates[0]?.start;
+      if (!dateStart) {
+        dateStart = item.datetime_from;
+      }
+      return (
+        <Button type='link' onClick={() => goToEvent(item._id)}>
+          <span>{moment(dateStart).format(DATE_FORMAT.DateFull)}</span>
         </Button>
       );
     },

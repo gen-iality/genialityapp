@@ -949,8 +949,8 @@ export const OrganizationApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.delete(`/api/organizations/${org}/organizationusers`, `/${member}?token=${token}`, true);
   },
-  getEventsStatistics: async (org) => {
-    return await Actions.get(`/api/organizations/${org}/eventsstadistics`);
+  getEventsStatistics: async (org, order='oldest') => {
+    return await Actions.get(`/api/organizations/${org}/eventsstadistics?order=${order}`);
   },
   editAllUserProperties: async (org, data) => {
     let token = await GetTokenUserFirebase();
