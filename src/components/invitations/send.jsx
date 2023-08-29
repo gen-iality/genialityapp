@@ -19,6 +19,7 @@ import {
 import { StateMessage } from '@context/MessageService'
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop'
 import Loading from '../profile/loading'
+import RichTextEditor from '@components/trivia/RichTextEditor'
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -347,10 +348,15 @@ class SendRsvp extends Component {
                 </Form.Item>
 
                 <Form.Item label="Cuerpo de la invitación (Por defecto será la descripción del curso)">
-                  <EviusReactQuill
-                    name="message"
-                    data={this.state.rsvp.message}
-                    handleChange={(e) => this.QuillComplement2(e)}
+                  {/* Dont work */}
+                  {/* <EviusReactQuill
+                    name="content_header"
+                    data={this.state.rsvp.content_header}
+                    handleChange={(e) => this.QuillComplement1(e)}
+                  /> */}
+                  <RichTextEditor
+                    value={this.state.rsvp.content_header}
+                    onChange={(e) => this.QuillComplement1(e)}
                   />
                 </Form.Item>
 
