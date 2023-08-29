@@ -141,7 +141,19 @@ const EventCard = ({
                     }
                     alt="geniality.com.co"
                   />
-                  {moreDetails && event._id && (
+                  <Link to={`/landing/${event._id}/evento`}>
+                    <Badge
+                      style={{ background: '#E86710', color: '#fff' }}
+                      count={`Ver progreso »`}
+                    />
+                  </Link>
+                  <Link to={`/landing/${event._id}/certificate`}>
+                    <Badge
+                      style={{ background: '#356785', color: '#fff' }}
+                      count={`Consultar certificado »`}
+                    />
+                  </Link>
+                  {/* {moreDetails && event._id && (
                     <StudentGeneralCourseProgress eventId={event._id} />
                   )}
                   {moreDetails && (
@@ -149,7 +161,7 @@ const EventCard = ({
                       eventId={event._id}
                       approvedLink={`/landing/${event._id}/certificate`}
                     />
-                  )}
+                  )} */}
                 </a>
               )}
             </>
