@@ -9,16 +9,16 @@ import { OrganizationApi, OrganizationFuction } from '../../helpers/request';
 import EventCard from '../shared/eventCard';
 import moment from 'moment';
 import ModalLoginHelpers from '../authentication/ModalLoginHelpers';
-import { EditOutlined } from '@ant-design/icons';
 import Loading from '../profile/loading';
 import { DataOrganizations, Organization, OrganizationProps } from './types';
 import { UseCurrentUser } from '@/context/userContext';
 import { useGetEventsWithUser } from './hooks/useGetEventsWithUser';
 import { ModalCertificatesByOrganizacionAndUser } from './components/ModalCertificatesByOrganizacionAndUser';
 import { SocialNetworks } from './components/SocialNetworks';
+import { InputSearchEvent } from './components/InputSearchEvent';
 
 function EventOrganization({ match }: OrganizationProps) {
-  const { Title, Text, Paragraph } = Typography;
+  const { Title } = Typography;
   const cUser = UseCurrentUser();
   const [state, setstate] = useState<DataOrganizations>({
     orgId: '',
@@ -27,14 +27,16 @@ function EventOrganization({ match }: OrganizationProps) {
   const [organization, setOrganization] = useState<Organization | null>(null);
   const [events, setEvents] = useState<any[]>([]);
   const [eventsOld, setEventsOld] = useState<any[]>([]);
-  const [myOrganizations, setMyorganizations] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [isModalCertificatesOpen, setIsModalCertificatesOpen] = useState(false);
+  const [textSearchMyEvent, setTextSearchMyEvent] = useState('');
+  const [textSearchNextEvents, setTextSearchNextEvents] = useState('');
+  const [textSearchPassEvents, setTextSearchPassEvents] = useState('');
+
   const { eventsWithEventUser, isLoading: isLoadingOtherEvents } = useGetEventsWithUser(
     match.params.id,
     cUser.value?._id
   );
-
   useEffect(() => {
     let orgId = match.params.id;
     if (orgId) {
@@ -44,11 +46,10 @@ function EventOrganization({ match }: OrganizationProps) {
           orgId,
         })
       );
-      getMyOrganizations();
       setLoading(false);
     }
   }, []);
-  useEffect(() => {
+  /*  useEffect(() => {
     if (cUser.value) {
       getMyOrganizations();
     } else {
@@ -65,7 +66,7 @@ function EventOrganization({ match }: OrganizationProps) {
     } catch (error) {
       console.log('[debug] organization not found');
     }
-  };
+  }; */
 
   const fetchItem = async (orgId: string) => {
     const events = await OrganizationFuction.getEventsNextByOrg(orgId);
@@ -116,13 +117,22 @@ function EventOrganization({ match }: OrganizationProps) {
     return event.payment ? (event.payment.active as boolean) : false;
   };
 
+  const onHandledInputSearchMyEvents = (text: string) => {
+    setTextSearchMyEvent(text);
+  };
+  const onHandledInputSearchNextEvents = (text: string) => {
+    setTextSearchNextEvents(text);
+  };
+  const onHandledInputSearchPassEvents = (text: string) => {
+    setTextSearchPassEvents(text);
+  };
   return (
     <div
       style={{
         backgroundImage: `url(${organization?.styles?.BackgroundImage})`,
         backgroundColor: `${organization?.styles?.containerBgColor || '#FFFFFF'}`,
       }}>
-      <SocialNetworks organization={organization}/>
+      <SocialNetworks organization={organization} />
       <ModalLoginHelpers />
       {!loading && state.orgId ? (
         <>
@@ -215,9 +225,14 @@ function EventOrganization({ match }: OrganizationProps) {
                     {/* Lista otros eventos en los que esta inscrito el usuario*/}
                     <Card style={{ width: '100%', borderRadius: 20 }}>
                       <Row justify='space-between'>
-                        <Badge offset={[60, 22]} count={`${eventsWithEventUser.length} Eventos`}>
-                          <Title level={2}>Mis eventos</Title>
-                        </Badge>
+                        <Space>
+                          <Badge offset={[60, 22]} count={`${eventsWithEventUser.length} Eventos`}>
+                            <Title level={2}>Mis eventos</Title>
+                          </Badge>
+                          {eventsWithEventUser.length > 0 && (
+                            <InputSearchEvent onHandled={onHandledInputSearchMyEvents} />
+                          )}
+                        </Space>
                         {organization?.show_my_certificates && (
                           <Button type='default' onClick={() => setIsModalCertificatesOpen(true)}>
                             Ver mis certificados
@@ -242,16 +257,27 @@ function EventOrganization({ match }: OrganizationProps) {
                           </div>
                         )}
                         {!isLoadingOtherEvents && eventsWithEventUser && eventsWithEventUser.length > 0 ? (
-                          eventsWithEventUser.map((event, index) => (
-                            <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
-                              <EventCard
-                                bordered={false}
-                                key={event._id}
-                                event={event}
-                                action={{ name: 'Ver', url: `landing/${event._id}` }}
-                              />
-                            </Col>
-                          ))
+                          eventsWithEventUser.map((event, index) => {
+                            const eventNameLowerCase = event.name.toLowerCase();
+                            const textSearchMyEventLowerCase = textSearchMyEvent.toLowerCase();
+
+                            if (
+                              textSearchMyEventLowerCase.length > 0 &&
+                              !eventNameLowerCase.includes(textSearchMyEventLowerCase)
+                            )
+                              return null;
+
+                            return (
+                              <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
+                                <EventCard
+                                  bordered={false}
+                                  key={event._id}
+                                  event={event}
+                                  action={{ name: 'Ver', url: `landing/${event._id}` }}
+                                />
+                              </Col>
+                            );
+                          })
                         ) : (
                           <div
                             style={{
@@ -272,21 +298,31 @@ function EventOrganization({ match }: OrganizationProps) {
                 <Col style={{ width: '100%' }}>
                   {/* Lista de eventos próximos */}
                   <Card style={{ width: '100%', borderRadius: 20 }}>
-                    <Badge offset={[60, 22]} count={`${events.length} Eventos`}>
-                      <Title level={2}>Eventos próximos</Title>
-                    </Badge>
+                    <Space>
+                      <Badge offset={[60, 22]} count={`${events.length} Eventos`}>
+                        <Title level={2}>Eventos próximos</Title>
+                      </Badge>
+                      {events.length > 0 && <InputSearchEvent onHandled={onHandledInputSearchNextEvents} />}
+                    </Space>
                     <Row gutter={[16, 16]}>
                       {events && events.length > 0 ? (
-                        events.map((event, index) => (
-                          <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
-                            <EventCard
-                              bordered={false}
-                              key={event._id}
-                              event={event}
-                              action={{ name: 'Ver', url: `landing/${event._id}` }}
-                            />
-                          </Col>
-                        ))
+                        events.map((event, index) => {
+                          const eventNameLowerCase = event.name.toLowerCase();
+                          const textSearchLowerCase = textSearchNextEvents.toLowerCase();
+
+                          if (textSearchLowerCase.length > 0 && !eventNameLowerCase.includes(textSearchLowerCase))
+                            return null;
+                          return (
+                            <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
+                              <EventCard
+                                bordered={false}
+                                key={event._id}
+                                event={event}
+                                action={{ name: 'Ver', url: `landing/${event._id}` }}
+                              />
+                            </Col>
+                          );
+                        })
                       ) : (
                         <div
                           style={{
@@ -305,15 +341,24 @@ function EventOrganization({ match }: OrganizationProps) {
                 <Col style={{ width: '100%' }}>
                   <Card style={{ width: '100%', borderRadius: 20 }}>
                     {/* Lista de eventos pasados */}
-                    <Badge offset={[60, 22]} count={`${eventsOld.length} Eventos`}>
-                      <Title level={2}>Eventos pasados</Title>
-                    </Badge>
+                    <Space>
+                      <Badge offset={[60, 22]} count={`${eventsOld.length} Eventos`}>
+                        <Title level={2}>Eventos pasados</Title>
+                      </Badge>
+                      {eventsOld.length > 0 && <InputSearchEvent onHandled={onHandledInputSearchPassEvents} />}
+                    </Space>
                     <Row gutter={[16, 16]}>
                       {eventsOld && eventsOld.length > 0 ? (
                         eventsOld.map((event, index) => {
                           if (event.hide_event_in_passed) {
                             return null;
                           }
+                          const eventNameLowerCase = event.name.toLowerCase();
+                          const textSearchLowerCase = textSearchPassEvents.toLowerCase();
+
+                          if (textSearchLowerCase.length > 0 && !eventNameLowerCase.includes(textSearchLowerCase))
+                            return null;
+
                           return (
                             <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
                               <EventCard
