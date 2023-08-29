@@ -9,7 +9,7 @@ const RatingQuestionDisplayer: FunctionComponent<IRatingQuestionDisplayerProps> 
 ) => {
   const { onAnswer, question } = props
 
-  if (question.type !== 'rating')
+  if (question.type?.toLowerCase() !== 'rating')
     return <Alert type="warning" message="Encuesta malformada" />
 
   const [isCorrect, setIsCorrect] = useState<boolean | undefined>()

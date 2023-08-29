@@ -98,7 +98,7 @@ const QuestionDisplayer: FunctionComponent<IQuestionDisplayerProps> = (props) =>
         <OptionsQuestionDisplayer question={question} onAnswer={onAnswer} multiple />
       ) : question.type === 'ranking' ? (
         <RankingQuestionDisplayer question={question} onAnswer={onAnswer} />
-      ) : question.type === 'rating' ? (
+      ) : question.type.toLowerCase() === 'rating' ? (
         <RatingQuestionDisplayer question={question} onAnswer={onAnswer} />
       ) : question.type === 'matrix' ? (
         <LikertScaleQuestionDisplayer question={question} onAnswer={onAnswer} />
