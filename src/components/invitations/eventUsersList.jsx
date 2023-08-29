@@ -271,7 +271,7 @@ class EventUsersList extends Component {
 
     // if (attendeesForSendMessage && attendeesForSendMessage.length > 0) {
     this.props.setGuestSelected(attendeesForSendMessage)
-    this.props.navigate('/createmessage')
+    this.props.navigate('createmessage')
     // } else {
     //   this.setState({ modalVisible: modalVisible ? false : true });
     // }
