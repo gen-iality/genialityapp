@@ -89,10 +89,21 @@ const QuestionDisplayer: FunctionComponent<IQuestionDisplayerProps> = (props) =>
           </div>
         ))}
         {question.url && (
-          <iframe
-            style={{ width: '100%', height: '100%', minHeight: '50vh', minWidth: '50vw' }}
-            src={question.url}
-          />
+          <div>
+            <a href={question.url} target="_blank">
+              Si no se ve, abrir enlace en otra pestaña
+            </a>
+            <iframe
+              style={{
+                marginBottom: '1em',
+                width: '100%',
+                height: '100%',
+                minHeight: '50vh',
+                minWidth: '50vw',
+              }}
+              src={question.url}
+            />
+          </div>
         )}
       </aside>
       <Typography.Title level={5}>{question.title}</Typography.Title>
