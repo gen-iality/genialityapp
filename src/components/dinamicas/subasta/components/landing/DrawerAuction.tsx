@@ -189,17 +189,18 @@ export default function DrawerAuction({
                 </Card>
               </Affix>
             </Col>
+            {console.log(Bids, 'Bids')}
             {!screens.xs && (
               <Col span={24}>
                 <Card
                   style={{
                     borderRadius: '20px',
                     backgroundColor: auction.styles?.cards?.backgroundColor || '',
-                    maxHeight: '450px',
-                    overflowY: 'auto',
+                    maxHeight: '230px',
+                   /*  overflowY: 'auto', */
                   }}
                   bordered={false}
-                  className='desplazar'
+                  /* className='desplazar' */
                   bodyStyle={{ padding: '0px 20px' }}>
                   <Tabs
                     defaultActiveKey={TabsDrawerAuction.Bids}
@@ -208,97 +209,104 @@ export default function DrawerAuction({
                     onChange={reloadProducts}
                     tabBarStyle={{ margin: '0px' }}>
                     <Tabs.TabPane key={TabsDrawerAuction.Bids} tab='Pujas'>
-                      <Row justify='center'>
-                        <Col span={24}>
-                          {Bids.length > 0 ? (
-                            <List
-                              style={{ height: '100%' }}
-                              loading={loading}
-                              dataSource={Bids}
-                              renderItem={(item) => (
-                                <List.Item>
-                                  <Skeleton avatar title={false} loading={loading}>
-                                    <List.Item.Meta
-                                      avatar={<Avatar>{item.name[0] || 'A'}</Avatar>}
-                                      title={
-                                        <Typography.Text
-                                          style={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor) }}>
-                                          {item.name}
-                                        </Typography.Text>
-                                      }
-                                      description={
-                                        <Typography.Text
-                                          style={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor) }}>
-                                          {item.date}
-                                        </Typography.Text>
-                                      }
-                                    />
-                                    <Statistic
-                                      valueStyle={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor) }}
-                                      value={item.offered}
-                                      prefix='$'
-                                      suffix={auction.currency}
-                                    />
-                                  </Skeleton>
-                                </List.Item>
-                              )}
-                            />
-                          ) : (
-                            <Empty
-                              style={{
-                                height: '250px',
-                                display: 'grid',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                              }}
-                              description={'Sin puja'}
-                            />
-                          )}
-                        </Col>
-                      </Row>
+                      {Bids.length > 0 ? (
+                        <div style={{ 
+                              height: '180px' ,
+                              overflowY: 'auto'
+                            }}
+                            className='desplazar'>
+                          <List
+                            style={{ 
+                              height: '100%'
+                            }}
+                            className='desplazar'
+                            loading={loading}
+                            dataSource={Bids}
+                            renderItem={(item) => (
+                              <List.Item>
+                                <Skeleton avatar title={false} loading={loading}>
+                                  <List.Item.Meta
+                                    avatar={<Avatar>{item.name[0] || 'A'}</Avatar>}
+                                    title={
+                                      <Typography.Text
+                                        style={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor) }}>
+                                        {item.name}
+                                      </Typography.Text>
+                                    }
+                                    description={
+                                      <Typography.Text
+                                        style={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor) }}>
+                                        {item.date}
+                                      </Typography.Text>
+                                    }
+                                  />
+                                  <Statistic
+                                    valueStyle={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor) }}
+                                    value={item.offered}
+                                    prefix='$'
+                                    suffix={auction.currency}
+                                  />
+                                </Skeleton>
+                              </List.Item>
+                            )}
+                          />
+                        </div>
+                      ) : (
+                        <Empty
+                          style={{
+                            height: '180px',
+                            display: 'grid',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}
+                          description={'Sin puja'}
+                        />
+                      )}
                     </Tabs.TabPane>
                     <Tabs.TabPane key={TabsDrawerAuction.History} tab='Historial de artículos' closable>
-                      <Row>
-                        <Col span={24}>
-                          {products.filter((product) => product.state === 'auctioned').length > 0 ? (
-                            <List
-                              loading={ProductsLoading}
-                              dataSource={products.filter((product) => product.state === 'auctioned')}
-                              renderItem={(item) => (
-                                <List.Item>
-                                  <Skeleton avatar title={false} loading={ProductsLoading}>
-                                    <List.Item.Meta
-                                      avatar={<Avatar src={item.images[0].url}></Avatar>}
-                                      title={
-                                        <Typography.Text
-                                          style={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor) }}>
-                                          {item.name}
-                                        </Typography.Text>
-                                      }
-                                    />
-                                    <Statistic
-                                      valueStyle={{ color: getCorrectColor(auction.styles?.cards?.backgroundColor) }}
-                                      value={item.end_price ?? item.price}
-                                      prefix='OLD $'
-                                      suffix={auction.currency}
-                                    />
-                                  </Skeleton>
-                                </List.Item>
-                              )}
-                            />
-                          ) : (
-                            <Empty
-                              style={{
-                                height: '250px',
-                                display: 'grid',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                              }}
-                              description={'Sin artículos'}
-                            />
-                          )}
-                        </Col>
-                      </Row>
+                      <div style={{ 
+                          height: '180px' ,
+                          overflowY: 'auto'
+                        }}
+                        className='desplazar'>
+                        {products.filter((product) => product.state === 'auctioned').length > 0 ? (
+                          <List
+                            loading={ProductsLoading}
+                            dataSource={products.filter((product) => product.state === 'auctioned')}
+                            renderItem={(item) => (
+                              <List.Item>
+                                <Skeleton avatar title={false} loading={ProductsLoading}>
+                                  <List.Item.Meta
+                                    avatar={<Avatar src={item.images[0].url}></Avatar>}
+                                    title={
+                                      <Typography.Text
+                                        style={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor) }}>
+                                        {item.name}
+                                      </Typography.Text>
+                                    }
+                                  />
+                                  <Statistic
+                                    valueStyle={{ color: getCorrectColor(auction.styles?.cards?.backgroundColor) }}
+                                    value={item.end_price ?? item.price}
+                                    prefix='OLD $'
+                                    suffix={auction.currency}
+                                  />
+                                </Skeleton>
+                              </List.Item>
+                            )}
+                          />
+                        ) : (
+                          <Empty
+                            style={{
+                              height: '180px',
+                              display: 'grid',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}
+                            description={'Sin artículos'}
+                          />
+                        )}
+                      </div>
                     </Tabs.TabPane>
                   </Tabs>
                 </Card>
