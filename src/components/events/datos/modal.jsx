@@ -387,7 +387,7 @@ class DatosModal extends Component {
               disabled={info.type === 'checkInField' || info.type === 'voteWeight'}
             />
           </Form.Item>
-          <Form.Item label={'Visible para Contactos'} htmlFor={`visibleByContactsModal`} name='visibleByContacts'>
+          {/* <Form.Item label={'Visible para Contactos'} htmlFor={`visibleByContactsModal`} name='visibleByContacts'>
             <Checkbox
               id={`visibleByContactsModal`}
               name={`visibleByContacts`}
@@ -409,7 +409,7 @@ class DatosModal extends Component {
               checked={info.visibleByAdmin}
               onChange={this.changeFieldCheckVisibleByAdmin}
             />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item label={'Descripción'} name='description'>
             <TextArea
               placeholder={'Descripción corta'}
