@@ -86,7 +86,7 @@ export default function DrawerAuction({
         {
           productName: auction?.currentProduct?.name,
           productId: auction?.currentProduct?._id,
-          date: moment(new Date().toLocaleString()).format(DATE_FORMAT),
+          date: moment(new Date()).format(DATE_FORMAT),
           name: userName || 'Anónimo',
           userId: cEventUser.value?.user?._id,
           offered: Number(data.offerValue),
