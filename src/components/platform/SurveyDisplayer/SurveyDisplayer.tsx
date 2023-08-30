@@ -25,7 +25,7 @@ const SurveyDisplayer: FunctionComponent<ISurveyDisplayerProps> = (props) => {
     surveyStatus,
     eventId,
     user,
-    render: Render,
+    render,
     onFinish: onHereFinish,
     onReset,
   } = props
@@ -115,24 +115,22 @@ const SurveyDisplayer: FunctionComponent<ISurveyDisplayerProps> = (props) => {
     return <Result icon={<LoadingOutlined />} title="Esperando datos de la encuesta" />
   }
 
-  return (
-    <Render
-      questions={survey.questions}
-      title={survey.survey}
-      questionIndex={0}
-      minimumScore={survey.minimumScore ?? 0}
-      finishMessage={survey.neutral_Message}
-      welcomeMessage={survey.initialMessage}
-      welcomeAction={onReset}
-      winMessage={survey.win_Message}
-      loseMessage={survey.lose_Message}
-      isGradable={isGradable}
-      onAnswer={onAnswer}
-      onChangeQuestionIndex={onChangeQuestionIndex}
-      onFinish={onFinish}
-      status="initial"
-    />
-  )
+  return render({
+    questions: survey.questions,
+    title: survey.survey,
+    questionIndex: 0,
+    minimumScore: survey.minimumScore ?? 0,
+    finishMessage: survey.neutral_Message,
+    welcomeMessage: survey.initialMessage,
+    welcomeAction: onReset,
+    winMessage: survey.win_Message,
+    loseMessage: survey.lose_Message,
+    isGradable: isGradable,
+    onAnswer: onAnswer,
+    onChangeQuestionIndex: onChangeQuestionIndex,
+    onFinish: onFinish,
+    // status="initial"
+  })
 }
 
 export default SurveyDisplayer
