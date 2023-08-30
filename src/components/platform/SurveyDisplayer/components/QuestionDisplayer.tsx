@@ -12,10 +12,11 @@ import { LoadingOutlined } from '@ant-design/icons'
 interface IQuestionDisplayerProps {
   question: SurveyQuestion
   onAnswer: (answer: any, isCorrect: boolean, points: number) => Promise<void> | void
+  isGradable?: boolean
 }
 
 const QuestionDisplayer: FunctionComponent<IQuestionDisplayerProps> = (props) => {
-  const { question, onAnswer: onReply } = props
+  const { question, onAnswer: onReply, isGradable } = props
 
   const [isSaving, setIsSaving] = useState(false)
   const [answer, setAnswer] = useState<any | undefined>()
@@ -30,7 +31,7 @@ const QuestionDisplayer: FunctionComponent<IQuestionDisplayerProps> = (props) =>
 
     if (
       typeof question !== 'undefined' &&
-      question.isRequired &&
+      (question.isRequired || isGradable) &&
       (typeof answer === 'undefined' || answer === null)
     ) {
       Modal.error({
@@ -118,7 +119,9 @@ const QuestionDisplayer: FunctionComponent<IQuestionDisplayerProps> = (props) =>
           shape="round"
           icon={isSaving ? <LoadingOutlined /> : undefined}
           disabled={
-            (question !== undefined && question.isRequired && answer === undefined) ||
+            (question !== undefined &&
+              (question.isRequired || isGradable) &&
+              answer === undefined) ||
             isSaving
           }
         >

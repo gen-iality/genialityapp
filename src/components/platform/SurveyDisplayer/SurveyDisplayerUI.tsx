@@ -201,7 +201,11 @@ const SurveyDisplayerUI: FunctionComponent<ISurveyDisplayerUIProps> = (props) =>
                   onClose={onFeedbackClose}
                 />
               ) : (
-                <QuestionDisplayer question={question} onAnswer={onEachAnswer} />
+                <QuestionDisplayer
+                  question={question}
+                  onAnswer={onEachAnswer}
+                  isGradable={isGradable}
+                />
               )}
               {(isDev || isStage) && question && (
                 <Alert
