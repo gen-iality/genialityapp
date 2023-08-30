@@ -98,6 +98,7 @@ export const surveyData = {
       points: 1,
       id: '86bd45c626da4d89863a46f52259b8f8',
       image: null,
+      url: 'https://app.geniality.com',
       video: ['https://www.youtube.com/watch?v=fJka-jJDI9U'],
       isRequired: true,
       correctAnswer: 7,
