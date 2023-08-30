@@ -8,7 +8,7 @@ const DrawerRules = ({ showDrawerRules, setshowDrawerRules, cEvent ,auctionRules
   const screens = useBreakpoint();
   return (
     <Drawer
-    width={screens.xs || (screens.sm && screens.md) ? '100vw' : '30vw'}
+      width={screens.xs /* || (screens.sm && screens.md) */ ? '100vw' : '30vw'}
       headerStyle={{ border: 'none' }}
       bodyStyle={{ paddingRight: '10px' }}
       title={

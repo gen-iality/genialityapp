@@ -156,7 +156,7 @@ export default function DrawerAuction({
       width={'100vw'}
       destroyOnClose={true}
       footer={
-        screens.xs || (screens.sm && screens.md) && <ButtonsContainer
+        screens.xs /* && (screens.sm && screens.md) */ && <ButtonsContainer
           styles={{
             backgroundColor: auction.styles?.cards?.backgroundColor || '#FFFFFF',
             color: auction.styles?.cards?.color || '#000000',
@@ -171,7 +171,7 @@ export default function DrawerAuction({
       }
       footerStyle={{backgroundColor: auction?.styles?.cards?.backgroundColor,}}
     >
-      <Row gutter={screens.xs ? [0, 16] : (screens.sm && screens.md) ? [8, 8] : [32, 32]} wrap justify='space-between'>
+      <Row gutter={screens.xs ? [0, 16] /* : (screens.sm && screens.md) ? [8, 8] */ : [32, 32]} wrap justify='space-between'>
         <Col xs={24} sm={24} md={(screens.sm && screens.md) ? 24 : 12} lg={12} xl={12} xxl={12}>
           <Row gutter={[16, 16]}>
             <Col span={24}>
@@ -190,7 +190,7 @@ export default function DrawerAuction({
                 </Card>
               </Affix>
             </Col>
-            {!screens.xs || (!screens.sm && !screens.md) && (
+            {!screens.xs /* || !(screens.sm && screens.md) */ && (
               <Col span={24}>
                 <Card
                   style={{
@@ -310,7 +310,7 @@ export default function DrawerAuction({
             )}
           </Row>
         </Col>
-        <Col xs={24} sm={24} md={(screens.sm && screens.md) ? 12 : 8} lg={8} xl={8} xxl={8}>
+        <Col xs={24} sm={24} md={/* (screens.sm && screens.md) ? 12 : */ 8} lg={8} xl={8} xxl={8}>
           <Row justify='center'>
             <Col span={24}>
               <CardProduct auction={auction} currentPrice={Bids[0]?.offered}/>
@@ -351,7 +351,7 @@ export default function DrawerAuction({
           </Row>
         </Col>
         {!screens.xs &&
-          <Col xs={24} sm={24} md={(screens.sm && screens.md) ? 0 : 4} lg={4} xl={4} xxl={4}>
+          <Col xs={24} sm={24} md={/* (screens.sm && screens.md) ? 0 : */ 4} lg={4} xl={4} xxl={4}>
             <ButtonsContainer
               styles={{
                 backgroundColor: auction.styles?.cards?.backgroundColor || '#FFFFFF',
@@ -374,8 +374,8 @@ export default function DrawerAuction({
             <DrawerChat showDrawerChat={showDrawerChat} setshowDrawerChat={setshowDrawerChat} />
           </Col>
         }
-        {screens.xs || (screens.sm && screens.md) && (
-          <Col span={(screens.sm && screens.md)? 12 : 24}>
+        {screens.xs /* || (screens.sm && screens.md) */ && (
+          <Col span={/* (screens.sm && screens.md)? 12 : */ 24}>
             <Card
               style={{
                 borderRadius: '20px',

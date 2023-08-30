@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { ButtonsContainerProps } from '../../interfaces/auction.interface'
 import { getCorrectColor } from '@/helpers/utils'
 import { FaHandHoldingUsd } from 'react-icons/fa'
+import { deviceType, isMobile, isTablet } from 'react-device-detect'
 
 const { Countdown } = Statistic;
 const { useBreakpoint } = Grid;
@@ -26,10 +27,10 @@ export default function ButtonsContainer({
         border: `10px solid #CECECE`,
         boxShadow: ' 0px 4px 4px rgba(0, 0, 0, 0.25)',
     }
-
+    console.log((screens.sm && !screens.md), isTablet, isMobile, deviceType)
     return (
     <>
-        {screens.xs || (screens.sm && screens.md) ? 
+        {screens.xs /* || (isTablet) */ ? 
             <Row justify={'space-around'} gutter={[16, 16]} align='middle'>
                 <Col>
                     <Button
