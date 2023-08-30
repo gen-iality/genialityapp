@@ -89,7 +89,10 @@ const QuestionDisplayer: FunctionComponent<IQuestionDisplayerProps> = (props) =>
           </div>
         ))}
         {question.url && (
-          <iframe style={{ width: '100%', height: '100%' }} src={question.url} />
+          <iframe
+            style={{ width: '100%', height: '100%', minHeight: '50vh', minWidth: '50vw' }}
+            src={question.url}
+          />
         )}
       </aside>
       <Typography.Title level={5}>{question.title}</Typography.Title>
