@@ -1,4 +1,4 @@
-import { FunctionComponent, ReactNode, useMemo } from 'react'
+import { FunctionComponent, ReactNode, useEffect, useMemo } from 'react'
 import { ISurveyDisplayerUIProps, SurveyPreModel } from './types'
 import { Result } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
@@ -16,6 +16,7 @@ interface ISurveyDisplayerProps {
   surveyStatus?: any
   onFinish?: () => void
   render: (props: ISurveyDisplayerUIProps) => ReactNode
+  onLoad: () => void
 }
 
 const SurveyDisplayer: FunctionComponent<ISurveyDisplayerProps> = (props) => {
@@ -26,6 +27,7 @@ const SurveyDisplayer: FunctionComponent<ISurveyDisplayerProps> = (props) => {
     user,
     render: Render,
     onFinish: onHereFinish,
+    onLoad,
   } = props
 
   const isGradable = useMemo(
@@ -112,6 +114,12 @@ const SurveyDisplayer: FunctionComponent<ISurveyDisplayerProps> = (props) => {
   if (!survey) {
     return <Result icon={<LoadingOutlined />} title="Esperando datos de la encuesta" />
   }
+
+  useEffect(() => {
+    if (survey && user?._id) {
+      onLoad()
+    }
+  }, [survey])
 
   return (
     <Render

@@ -41,7 +41,9 @@ const reducerDL = (state: DLState, action: DLAction): DLState => {
     case 'REDIRECT':
       const redirect = params.get('redirect')
       if (redirect) {
-        window.location.href = redirect
+        setTimeout(() => {
+          window.location.href = redirect
+        }, 5000)
         return { ...state, text: 'Rediridiendo...' }
       } else {
         return { ...state, text: 'No se ha podido hacer la redirección' }

@@ -54,6 +54,14 @@ const SurveyDetailPage: FunctionComponent<
     setShowingResultsPanel(true)
   }
 
+  const resetSurvey = (show?: boolean, quietMode?: boolean) => {
+    if (show) setIsResetingSurvey(true)
+    cSurvey.resetSurveyStatus(currentUser.value._id, quietMode).then(() => {
+      cSurvey.startAnswering()
+      if (show) setIsResetingSurvey(false)
+    })
+  }
+
   useEffect(() => {
     cSurvey.stopAnswering()
   }, [])
@@ -197,13 +205,7 @@ const SurveyDetailPage: FunctionComponent<
           ) : (
             cSurvey.isThereAnotherTry && (
               <Button
-                onClick={() => {
-                  setIsResetingSurvey(true)
-                  cSurvey.resetSurveyStatus(currentUser.value._id).then(() => {
-                    cSurvey.startAnswering()
-                    setIsResetingSurvey(false)
-                  })
-                }}
+                onClick={() => resetSurvey(true)}
                 type="primary"
                 key="console"
                 disabled={isResetingSurvey}
@@ -255,6 +257,7 @@ const SurveyDetailPage: FunctionComponent<
             onFinish={() => {
               navigate(`/landing/${cEvent.value._id}/evento`)
             }}
+            onLoad={() => resetSurvey(false, true)}
           />
         ) : (
           <Spin />

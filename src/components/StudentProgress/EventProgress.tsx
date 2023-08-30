@@ -1,5 +1,5 @@
 import { FunctionComponent, ReactNode, useEffect, useMemo, useState } from 'react'
-import { Badge, Progress, Tooltip } from 'antd'
+import { Badge, Progress, Spin, Tooltip } from 'antd'
 import { useEventProgress } from '@context/eventProgressContext'
 import { activityContentValues } from '@context/activityType/constants/ui'
 
@@ -67,6 +67,7 @@ const EventProgress: FunctionComponent<IEventProgressProps> = (props) => {
       title={`Curso en ${cEventProgress.progressFilteredActivities}%, quices en ${cEventProgress.progressOfQuices}%`}
     >
       <p style={{ color: 'black', fontWeight: 'bold', lineHeight: 0 }}>{title}</p>
+      {cEventProgress.isLoading && <Spin />}
       <Progress
         strokeColor={{
           from: '#f7981d', //'#108ee9',
