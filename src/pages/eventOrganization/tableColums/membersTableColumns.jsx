@@ -4,7 +4,7 @@ import { membersGetColumnSearchProps } from '../searchFunctions/membersGetColumn
 import SendChangePassword from '@/components/event-users/ChangePassword';
 import { deleteUserConfirmation } from './utils/deleteMembers';
 
-export const columns = (columnsData, editModalUser, organizationId) => [
+export const columns = (columnsData, editModalUser, organizationId, fetchEventsStatisticsData) => [
   {
     title: 'Avatar',
     dataIndex: 'picture',
@@ -114,7 +114,7 @@ export const columns = (columnsData, editModalUser, organizationId) => [
                   id={`deleteAction${index}`}
                   type='danger'
                   size='small'
-                  onClick={() => deleteUserConfirmation(organizationId, item._id)}
+                  onClick={() => deleteUserConfirmation(organizationId, item._id, fetchEventsStatisticsData)}
                   icon={<DeleteOutlined />}></Button>
               </Tooltip>
             </Space>
