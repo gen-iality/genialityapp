@@ -29,7 +29,7 @@ export default function ButtonsContainer({
 
     return (
     <>
-        {screens.xs ? 
+        {screens.xs || (screens.sm && screens.md) ? 
             <Row justify={'space-around'} gutter={[16, 16]} align='middle'>
                 <Col>
                     <Button

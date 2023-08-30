@@ -21,7 +21,7 @@ const DrawerChat = ({ showDrawerChat, setshowDrawerChat }: DrawerChatInterface) 
   return (
     <Drawer
       bodyStyle={{ padding: '0px' }}
-      width={screens.xs ? '100vw' : '30vw'}
+      width={screens.xs || (screens.sm && screens.md) ? '100vw' : '30vw'}
       headerStyle={{ border: 'none' }}
       title={
         <PageHeader
