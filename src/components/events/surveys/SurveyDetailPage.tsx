@@ -54,12 +54,19 @@ const SurveyDetailPage: FunctionComponent<
     setShowingResultsPanel(true)
   }
 
-  const resetSurvey = (show?: boolean, quietMode?: boolean) => {
-    if (show) setIsResetingSurvey(true)
-    cSurvey.resetSurveyStatus(currentUser.value._id, quietMode).then(() => {
-      cSurvey.startAnswering()
-      if (show) setIsResetingSurvey(false)
-    })
+  const resetSurvey = async (config?: {
+    show?: boolean
+    quietMode?: boolean
+    noCallDispatcher?: boolean
+  }) => {
+    if (config?.show) setIsResetingSurvey(true)
+    try {
+      await cSurvey.resetSurveyStatus(currentUser.value._id, config?.quietMode)
+    } catch (err) {
+      console.error(err)
+    }
+    if (!config?.noCallDispatcher) cSurvey.startAnswering()
+    if (config?.show) setIsResetingSurvey(false)
   }
 
   useEffect(() => {
@@ -205,7 +212,7 @@ const SurveyDetailPage: FunctionComponent<
           ) : (
             cSurvey.isThereAnotherTry && (
               <Button
-                onClick={() => resetSurvey(true)}
+                onClick={() => resetSurvey({ show: true })}
                 type="primary"
                 key="console"
                 disabled={isResetingSurvey}
@@ -257,7 +264,13 @@ const SurveyDetailPage: FunctionComponent<
             onFinish={() => {
               navigate(`/landing/${cEvent.value._id}/evento`)
             }}
-            onLoad={() => resetSurvey(false, true)}
+            onReset={async () => {
+              await resetSurvey({
+                show: false,
+                quietMode: true,
+                noCallDispatcher: true,
+              })
+            }}
           />
         ) : (
           <Spin />

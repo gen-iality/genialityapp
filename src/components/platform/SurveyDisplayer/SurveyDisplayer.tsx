@@ -16,7 +16,7 @@ interface ISurveyDisplayerProps {
   surveyStatus?: any
   onFinish?: () => void
   render: (props: ISurveyDisplayerUIProps) => ReactNode
-  onLoad: () => void
+  onReset: ISurveyDisplayerUIProps['welcomeAction']
 }
 
 const SurveyDisplayer: FunctionComponent<ISurveyDisplayerProps> = (props) => {
@@ -27,7 +27,7 @@ const SurveyDisplayer: FunctionComponent<ISurveyDisplayerProps> = (props) => {
     user,
     render: Render,
     onFinish: onHereFinish,
-    onLoad,
+    onReset,
   } = props
 
   const isGradable = useMemo(
@@ -115,12 +115,6 @@ const SurveyDisplayer: FunctionComponent<ISurveyDisplayerProps> = (props) => {
     return <Result icon={<LoadingOutlined />} title="Esperando datos de la encuesta" />
   }
 
-  useEffect(() => {
-    if (survey && user?._id) {
-      onLoad()
-    }
-  }, [survey])
-
   return (
     <Render
       questions={survey.questions}
@@ -129,6 +123,7 @@ const SurveyDisplayer: FunctionComponent<ISurveyDisplayerProps> = (props) => {
       minimumScore={survey.minimumScore ?? 0}
       finishMessage={survey.neutral_Message}
       welcomeMessage={survey.initialMessage}
+      welcomeAction={onReset}
       winMessage={survey.win_Message}
       loseMessage={survey.lose_Message}
       isGradable={isGradable}
