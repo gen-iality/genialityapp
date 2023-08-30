@@ -2,8 +2,9 @@ import { DispatchMessageService } from '@/context/MessageService';
 import { OrganizationApi } from '@/helpers/request';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
-
-async function handleDeleteUser(org, user) {
+// import { useGetEventsStatisticsData } from './useGetOrganizations';
+// const { fetchEventsStatisticsData} = useGetEventsStatisticsData()
+export async function handleDeleteUser(org, user, fetchEventsStatisticsData) {
   try {
     DispatchMessageService({
       type: 'loading',
@@ -12,8 +13,9 @@ async function handleDeleteUser(org, user) {
       action: 'show',
     });
     await OrganizationApi.deleteUser(org, user);
+    fetchEventsStatisticsData()
 
-    window.location.reload();
+    // window.location.reload();
 
     DispatchMessageService({
       key: 'loading',
@@ -37,7 +39,7 @@ async function handleDeleteUser(org, user) {
   }
 }
 
-export const deleteUserConfirmation = (org, user) => {
+export const deleteUserConfirmation = (org, user, fetchEventsStatisticsData) => {
   Modal.confirm({
     title: '¿Está seguro de eliminar la información?',
     icon: <ExclamationCircleOutlined />,
@@ -46,7 +48,7 @@ export const deleteUserConfirmation = (org, user) => {
     okType: 'danger',
     cancelText: 'Cancelar',
     onOk() {
-      handleDeleteUser(org, user);
+      handleDeleteUser(org, user, fetchEventsStatisticsData);
     },
   });
 };

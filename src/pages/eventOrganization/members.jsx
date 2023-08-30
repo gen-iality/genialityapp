@@ -1,58 +1,40 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
-import { OrganizationApi, RolAttApi } from '../../helpers/request';
+import { RolAttApi } from '../../helpers/request';
 import { FormattedDate, FormattedTime } from 'react-intl';
 /** export Excel */
 import { useHistory } from 'react-router-dom';
 import { Table, Button, Row, Col, Tag } from 'antd';
 import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { columns } from './tableColums/membersTableColumns';
-import ModalMembers from '@/components/modal/modalMembers';
 import moment from 'moment';
 import withContext from '../../context/withContext';
 import { utils, writeFileXLSX } from 'xlsx';
 import Header from '../../antdComponents/Header';
 import { ModalAddAndEditUsers } from './components/ModalAddAndEditUsersOrganization';
-import { convertUTC } from '@/hooks/useConvertUTC';
+import { useGetEventsStatisticsData } from './tableColums/utils/useGetOrganizations';
 
 function OrgMembers(props) {
-  const [membersData, setMembersData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState();
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [addOrEditUser, setAddOrEditUser] = useState(false);
-  const [extraFields, setExtraFields] = useState([]);
-  const [roleList, setRoleList] = useState([]);
+  const [, setExtraFields] = useState([]);
+  const [, setRoleList] = useState([]);
   const [selectedUser, setSelectedUser] = useState();
-  const [editMember, setEditMember] = useState(false);
+  const [, setEditMember] = useState(false);
   let { _id: organizationId } = props.org;
   const history = useHistory();
-  async function getEventsStatisticsData() {
-    const { data } = await OrganizationApi.getUsers(organizationId);
-    const fieldsMembersData = [];
-    data.map((membersData,index) => {
-      const properties = {
-        ...membersData.properties,
-        _id: membersData._id,
-        created_at: convertUTC(new Date(membersData.created_at)).newDateWithMoment,
-        updated_at: convertUTC(new Date(membersData.updated_at)).newDateWithMoment,
-        position: membersData.rol?.name ?? 'NaN', //Si no viene Rol validar que deba traerlo
-        rol_id:membersData.rol_id,
-        isAuthor:membersData.account_id === membersData.organization.author
-      };
-      fieldsMembersData.push(properties);
-    });
-    setMembersData(fieldsMembersData);
-    setIsLoading(false);
-  }
 
+  const { membersDat, isLoading, fetchEventsStatisticsData} = useGetEventsStatisticsData(organizationId)
   async function getRoleList() {
     const roleListData = await RolAttApi.byEventRolsGeneral();
     setRoleList(roleListData);
   }
 
   function startingComponent() {
-    getEventsStatisticsData();
+    fetchEventsStatisticsData();
     setLastUpdate(new Date());
     getRoleList();
     setExtraFields(props.org.user_properties);
@@ -70,7 +52,7 @@ function OrgMembers(props) {
     e.preventDefault();
     e.stopPropagation();
 
-    const ws = utils.json_to_sheet(membersData);
+    const ws = utils.json_to_sheet(membersDat);
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, 'Members');
     writeFileXLSX(wb, `Miembros_${moment().format('l')}.xlsx`);
@@ -110,11 +92,11 @@ function OrgMembers(props) {
       </p>
 
       <p>
-        <Tag>Inscritos: {membersData.length || 0}</Tag>
+        <Tag>Inscritos: {membersDat.length || 0}</Tag>
       </p>
       <Table
-        columns={columns(columnsData, editModalUser, organizationId)}
-        dataSource={membersData}
+        columns={columns(columnsData, editModalUser, organizationId, fetchEventsStatisticsData)}
+        dataSource={membersDat}
         size='small'
         rowKey='index'
         pagination={false}
@@ -123,7 +105,7 @@ function OrgMembers(props) {
         title={() => (
           <Row wrap justify='end' gutter={[8, 8]}>
             <Col>
-              {membersData.length > 0 && (
+              {membersDat.length > 0 && (
                 <Button type='primary' icon={<DownloadOutlined />} onClick={exportFile}>
                   Exportar
                 </Button>
@@ -151,7 +133,7 @@ function OrgMembers(props) {
           }}
           organizationId={organizationId}
           selectedUser={selectedUser}
-          getEventsStatisticsData={getEventsStatisticsData}
+          getEventsStatisticsData={fetchEventsStatisticsData}
         />
       )}
     </>
