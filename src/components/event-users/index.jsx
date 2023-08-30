@@ -338,7 +338,17 @@ class ListEventUser extends Component {
             dataIndex: item.name,
             key: item.name,
             ellipsis: true,
-            sorter: (a, b) => a[item.name]?.length - b[item.name]?.length,
+            sorter: (a, b) => {
+              const nameA = a[item.name]?.toLowerCase();
+              const nameB = b[item.name]?.toLowerCase();
+              if (nameA < nameB) {
+                  return -1;
+              }
+              if (nameA > nameB) {
+                  return 1;
+              }
+              return 0;
+          },
             ...self.getColumnSearchProps(item.name),
             render: (record, key) => {
               switch (item.type) {
