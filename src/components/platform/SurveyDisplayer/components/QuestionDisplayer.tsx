@@ -89,21 +89,18 @@ const QuestionDisplayer: FunctionComponent<IQuestionDisplayerProps> = (props) =>
           </div>
         ))}
         {question.url && (
-          <div>
-            <a href={question.url} target="_blank">
-              Si no se ve, abrir enlace en otra pestaña
-            </a>
-            <iframe
-              style={{
-                marginBottom: '1em',
-                width: '100%',
-                height: '100%',
-                minHeight: '50vh',
-                minWidth: '50vw',
-              }}
-              src={question.url}
-            />
-          </div>
+          <a href={question.url} target="_blank">
+            Si no se ve, abrir enlace en otra pestaña
+          </a>
+        )}
+        {question.url && (
+          <ReactPlayer
+            style={{ objectFit: 'cover' }}
+            width="100%"
+            height="100%"
+            url={question.url}
+            controls
+          />
         )}
       </aside>
       <Typography.Title level={5}>{question.title}</Typography.Title>
