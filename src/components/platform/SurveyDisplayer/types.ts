@@ -134,6 +134,7 @@ export interface ISurveyDisplayerUIProps {
   questionIndex: number
   // Status messages
   welcomeMessage?: string
+  welcomeAction?: () => Promise<void> | void
   winMessage?: string
   loseMessage?: string
   finishMessage?: string

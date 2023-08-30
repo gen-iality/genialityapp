@@ -22,6 +22,7 @@ const SurveyDisplayerUI: FunctionComponent<ISurveyDisplayerUIProps> = (props) =>
     winMessage,
     loseMessage,
     isGradable,
+    welcomeAction,
   } = props
 
   const { isDev, isStage } = useIsDevOrStage()
@@ -55,7 +56,23 @@ const SurveyDisplayerUI: FunctionComponent<ISurveyDisplayerUIProps> = (props) =>
   }, [questionIndex, questions])
 
   const onStartSurvey = () => {
-    setStatus('started')
+    if (typeof welcomeAction !== 'function') {
+      console.debug('no welcomeAction set')
+      setStatus('started')
+      return
+    }
+    console.debug('welcomeAction can be called')
+    const p = welcomeAction()
+    if (p instanceof Promise) {
+      console.debug('welcomeAction returning is a promise')
+      p.finally(() => {
+        console.debug('status set to started')
+        setStatus('started')
+      })
+    } else {
+      console.debug('welcomeAction returning is void')
+      setStatus('started')
+    }
   }
 
   const onEachAnswer = async (answer: any, isCorrect: boolean, points: number) => {
