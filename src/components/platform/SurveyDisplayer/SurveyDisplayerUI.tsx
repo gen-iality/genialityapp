@@ -30,7 +30,7 @@ const SurveyDisplayerUI: FunctionComponent<ISurveyDisplayerUIProps> = (props) =>
    * It is used to hides the welcome message and shows the questions
    */
   const [status, setStatus] = useState<AvailableSurveyStatus>(incomingStatus ?? 'initial')
-  const [questionIndex, setQuestionIndex] = useState<typeof incomingQuestionIndex>(0)
+  const [questionIndex, setQuestionIndex] = useState<number>(incomingQuestionIndex ?? 0)
   const [isFeedbackShown, setIsFeedbackShown] = useState(false)
   const [lastAnswerReport, setLastAnswerReport] = useState<
     | {
@@ -139,7 +139,10 @@ const SurveyDisplayerUI: FunctionComponent<ISurveyDisplayerUIProps> = (props) =>
    * If the parent updates the questionIndex, we update the local questionIndex
    */
   useEffect(() => {
-    if (incomingQuestionIndex !== questionIndex) {
+    if (
+      typeof incomingQuestionIndex === 'number' &&
+      incomingQuestionIndex !== questionIndex
+    ) {
       setQuestionIndex(incomingQuestionIndex)
     }
   }, [incomingQuestionIndex])

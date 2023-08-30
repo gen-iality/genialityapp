@@ -118,7 +118,7 @@ const SurveyDisplayer: FunctionComponent<ISurveyDisplayerProps> = (props) => {
   return render({
     questions: survey.questions,
     title: survey.survey,
-    questionIndex: 0,
+    // questionIndex: 0,
     minimumScore: survey.minimumScore ?? 0,
     finishMessage: survey.neutral_Message,
     welcomeMessage: survey.initialMessage,

@@ -131,7 +131,7 @@ export interface ISurveyDisplayerUIProps {
   isGradable?: boolean
   questions: SurveyQuestion[]
   status?: AvailableSurveyStatus
-  questionIndex: number
+  questionIndex?: number
   // Status messages
   welcomeMessage?: string
   welcomeAction?: () => Promise<void> | void
