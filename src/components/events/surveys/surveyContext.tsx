@@ -46,7 +46,7 @@ export type CustomContextMethodType = {
   loadSurvey: (survey: any) => void
   startAnswering: () => void
   stopAnswering: () => void
-  resetSurveyStatus: (userId: string) => Promise<void>
+  resetSurveyStatus: (userId: string, quietMode?: boolean) => Promise<void>
 }
 
 const initialContextState: SurveyContextType = {
@@ -195,13 +195,15 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({
     return state.survey.rankingVisible
   }, [state])
 
-  const resetSurveyStatus = async (userId: string) => {
+  const resetSurveyStatus = async (userId: string, quietMode?: boolean) => {
     await resetStatusByRestartAnswering(state.survey._id, userId)
     await getUserProgressRef(state.survey._id, userId).delete()
     await getAnswersRef(state.survey._id, userId).delete()
     await getQuestionsRef(state.survey._id, userId).delete()
 
-    Modal.info({ title: 'Cuestionario', content: 'Se ha hacer nuevamente...' })
+    if (!quietMode) {
+      Modal.info({ title: 'Cuestionario', content: 'Se ha hacer nuevamente...' })
+    }
   }
 
   const surveyStatsString = useMemo(() => {
