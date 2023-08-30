@@ -88,7 +88,6 @@ export const columns = (columnsData, editModalUser, organizationId) => [
     fixed: 'right',
     width: 80,
     render(val, item, index) {
-      console.log(organizationId, item._id);
       return (
         <>
           {item.isAuthor ? (
