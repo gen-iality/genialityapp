@@ -21,7 +21,7 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
   console.log('organizationUser', organizationUser)
 
   const money = useMemo(
-    () => organization?.access_settings?.price || 5000,
+    () => organization?.access_settings?.price || 50000,
     [organization],
   )
 

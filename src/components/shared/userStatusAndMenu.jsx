@@ -226,9 +226,11 @@ const UserStatusAndMenu = (props) => {
               )
             }
           >
-            <Button block type="primary" size="medium">
-              <FormattedMessage id="header.create_event" defaultMessage="Crear curso" />
-            </Button>
+            {isSomeAdminUser && (
+              <Button block type="primary" size="medium">
+                <FormattedMessage id="header.create_event" defaultMessage="Crear curso" />
+              </Button>
+            )}
           </Menu.Item>
         )}
       </Menu.ItemGroup>
