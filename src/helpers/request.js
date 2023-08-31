@@ -896,6 +896,7 @@ export const OrganizationApi = {
         _id: item._id,
         id: item.organization?._id,
         name: item.organization?.name,
+        user_properties:item.organization?.user_properties,
         styles: item.organization?.styles,
         created_at: item.organization?.created_at,
         itemsMenu: item.organization?.itemsMenu,
