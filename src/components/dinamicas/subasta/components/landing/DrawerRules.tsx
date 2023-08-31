@@ -1,14 +1,19 @@
 import { Drawer, Grid, Input, PageHeader, Typography } from 'antd';
 import { FileProtectOutlined } from '@ant-design/icons';
 import { DrawerRulesProps } from '../../interfaces/auction.interface';
-const { useBreakpoint } = Grid;
+import useBreakpoint from 'use-breakpoint'
+
+/* const { useBreakpoint } = Grid; */
+const BREAKPOINTS = { mobile: 0, tablet: 768, desktop: 1280 }
 const { Title } = Typography;
 
 const DrawerRules = ({ showDrawerRules, setshowDrawerRules, cEvent ,auctionRules}: DrawerRulesProps) => {
-  const screens = useBreakpoint();
+  /* const screens = useBreakpoint(); */
+  const { breakpoint } = useBreakpoint(BREAKPOINTS, 'desktop')
+
   return (
     <Drawer
-      width={screens.xs /* || (screens.sm && screens.md) */ ? '100vw' : '30vw'}
+      width={breakpoint === 'desktop' ? '30vw' : '100vw'}
       headerStyle={{ border: 'none' }}
       bodyStyle={{ paddingRight: '10px' }}
       title={

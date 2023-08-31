@@ -36,9 +36,10 @@ import ButtonsContainer from './ButtonsContainer';
 import { getCorrectColor } from '@/helpers/utils';
 import { FaGavel } from 'react-icons/fa'
 import moment from 'moment';
-import { isTablet } from 'react-device-detect';
+import useBreakpoint from 'use-breakpoint'
 
-const { useBreakpoint } = Grid;
+/* const { useBreakpoint } = Grid; */
+const BREAKPOINTS = { mobile: 0, tablet: 768, desktop: 1280 }
 
 export default function DrawerAuction({
   openOrClose,
@@ -48,7 +49,8 @@ export default function DrawerAuction({
   cEventUser,
   cEvent,
 }: DrawerAuctionProps) {
-  const screens = useBreakpoint();
+  /* const screens = useBreakpoint(); */
+  const { breakpoint } = useBreakpoint(BREAKPOINTS, 'desktop')
 
   const { products, getProducts, loading: ProductsLoading } = useProducts(eventId);
 
@@ -108,19 +110,18 @@ export default function DrawerAuction({
       headerStyle={{
         backgroundColor: auction?.styles?.cards?.backgroundColor,
         border: 'none',
-        height: screens.xs ? '60px' : '',
-        
+        height: breakpoint === 'mobile' ? '60px' : '',
       }}
       title={
         <Space align='center'>
           <FaGavel style={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor)}} />
           <Typography.Text 
             strong 
-            style={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor), width: screens.xs ? '290px' : '',}} ellipsis
+            style={{ color: getCorrectColor(auction?.styles?.cards?.backgroundColor), width: breakpoint === 'mobile' ? '290px' : '',}} ellipsis
           >
             {auction?.name}
           </Typography.Text>
-          {screens.xs && auction?.name.length > 29 && 
+          {breakpoint === 'mobile' && auction?.name.length > 29 && 
             <Tooltip 
               title={
                 <Space>
@@ -141,14 +142,14 @@ export default function DrawerAuction({
         backgroundSize: 'cover',
         paddingTop: '5px',
         paddingBottom: '5px',
-        paddingLeft: screens.xs ? '5px' : '24px',
-        paddingRight: screens.xs ? '5px' : '24px',
+        paddingLeft: breakpoint === 'mobile' ? '5px' : '24px',
+        paddingRight: breakpoint === 'mobile' ? '5px' : '24px',
         overflowX: 'hidden',
       }}
       visible={openOrClose}
       closable={false}
       onClose={setOpenOrClose}
-      extra={ !screens.xs &&
+      extra={ breakpoint !== 'mobile' &&
         <Tooltip placement='bottomLeft' title='Cerrar'>
           <Button icon={<CloseOutlined style={{ fontSize: 20, color: getCorrectColor(auction?.styles?.cards?.backgroundColor) }} />} onClick={setOpenOrClose} type='text' />
         </Tooltip>
@@ -156,7 +157,7 @@ export default function DrawerAuction({
       width={'100vw'}
       destroyOnClose={true}
       footer={
-        screens.xs /* && (screens.sm && screens.md) */ && <ButtonsContainer
+        breakpoint !== 'desktop' && <ButtonsContainer
           styles={{
             backgroundColor: auction.styles?.cards?.backgroundColor || '#FFFFFF',
             color: auction.styles?.cards?.color || '#000000',
@@ -171,11 +172,12 @@ export default function DrawerAuction({
       }
       footerStyle={{backgroundColor: auction?.styles?.cards?.backgroundColor,}}
     >
-      <Row gutter={screens.xs ? [0, 16] /* : (screens.sm && screens.md) ? [8, 8] */ : [32, 32]} wrap justify='space-between'>
-        <Col xs={24} sm={24} md={(screens.sm && screens.md) ? 24 : 12} lg={12} xl={12} xxl={12}>
+      {console.log(window.screen.orientation.type)}
+      <Row gutter={breakpoint === 'mobile' ? [0, 16] : breakpoint === 'tablet' ? [8, 8] : [32, 32]} wrap justify='space-between'>
+        <Col xs={24} sm={24} md={breakpoint === 'tablet' ? 24 : 12} lg={12} xl={12} xxl={12}>
           <Row gutter={[16, 16]}>
             <Col span={24}>
-              <Affix offsetTop={screens.xs ? 65 : 0}>
+              <Affix offsetTop={breakpoint === 'mobile' ? 65 : 0}>
                 <Card
                   /* style={{ backgroundColor: auction?.styles?.cards?.backgroundColor }} */
                   bordered={false}
@@ -190,7 +192,7 @@ export default function DrawerAuction({
                 </Card>
               </Affix>
             </Col>
-            {!screens.xs /* || !(screens.sm && screens.md) */ && (
+            {breakpoint !== 'mobile' && breakpoint !== 'tablet' && (
               <Col span={24}>
                 <Card
                   style={{
@@ -310,7 +312,7 @@ export default function DrawerAuction({
             )}
           </Row>
         </Col>
-        <Col xs={24} sm={24} md={/* (screens.sm && screens.md) ? 12 : */ 8} lg={8} xl={8} xxl={8}>
+        <Col xs={24} sm={24} md={breakpoint === 'tablet' ? 12 : 8} lg={8} xl={8} xxl={8}>
           <Row justify='center'>
             <Col span={24}>
               <CardProduct auction={auction} currentPrice={Bids[0]?.offered}/>
@@ -350,8 +352,8 @@ export default function DrawerAuction({
             </Modal>
           </Row>
         </Col>
-        {!screens.xs &&
-          <Col xs={24} sm={24} md={/* (screens.sm && screens.md) ? 0 : */ 4} lg={4} xl={4} xxl={4}>
+        {breakpoint !== 'mobile' && breakpoint !== 'tablet' &&
+          <Col xs={24} sm={24} md={4} lg={4} xl={4} xxl={4}>
             <ButtonsContainer
               styles={{
                 backgroundColor: auction.styles?.cards?.backgroundColor || '#FFFFFF',
@@ -365,17 +367,10 @@ export default function DrawerAuction({
               timer={time}
             />
 
-            <DrawerRules
-              cEvent={cEvent}
-              showDrawerRules={showDrawerRules}
-              setshowDrawerRules={setshowDrawerRules}
-              auctionRules={auction.rules ?? ''}
-              />
-            <DrawerChat showDrawerChat={showDrawerChat} setshowDrawerChat={setshowDrawerChat} />
           </Col>
         }
-        {screens.xs /* || (screens.sm && screens.md) */ && (
-          <Col span={/* (screens.sm && screens.md)? 12 : */ 24}>
+        {breakpoint !== 'desktop' && (
+          <Col span={breakpoint === 'tablet' ? 12 : breakpoint === 'mobile' ? 24 : 24}>
             <Card
               style={{
                 borderRadius: '20px',
@@ -486,6 +481,13 @@ export default function DrawerAuction({
           </Col>
         )}
       </Row>
+      <DrawerRules
+        cEvent={cEvent}
+        showDrawerRules={showDrawerRules}
+        setshowDrawerRules={setshowDrawerRules}
+        auctionRules={auction.rules ?? ''}
+        />
+      <DrawerChat showDrawerChat={showDrawerChat} setshowDrawerChat={setshowDrawerChat} />
     </Drawer>
   );
 }

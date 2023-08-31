@@ -5,15 +5,18 @@ import { isStagingOrProduccion } from '@/Utilities/isStagingOrProduccion';
 import { CommentOutlined } from '@ant-design/icons';
 import { Drawer, PageHeader, Typography, Grid } from 'antd';
 import { DrawerChatInterface } from '../../interfaces/bingo';
+import useBreakpoint from 'use-breakpoint'
 
-const { useBreakpoint } = Grid;
+/* const { useBreakpoint } = Grid; */
+const BREAKPOINTS = { mobile: 0, tablet: 768, desktop: 1280 }
 const { Title } = Typography;
 
 const DrawerChat = ({ showDrawerChat, setshowDrawerChat }: DrawerChatInterface) => {
   let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
   let cEventUser = UseUserEvent();
-  const screens = useBreakpoint();
+  /* const screens = useBreakpoint(); */
+  const { breakpoint } = useBreakpoint(BREAKPOINTS, 'desktop')
 
   let userNameActive = cUser.value?.name ? cUser.value?.name : cUser.value?.names;
   let anonymous = cUser.value?.isAnonymous ? cUser.value?.isAnonymous : 'false';
@@ -21,7 +24,7 @@ const DrawerChat = ({ showDrawerChat, setshowDrawerChat }: DrawerChatInterface) 
   return (
     <Drawer
       bodyStyle={{ padding: '0px' }}
-      width={screens.xs /* || (screens.sm && screens.md) */ ? '100vw' : '30vw'}
+      width={breakpoint === 'desktop' ? '30vw' : '100vw'}
       headerStyle={{ border: 'none' }}
       title={
         <PageHeader
