@@ -173,9 +173,8 @@ export default function DrawerAuction({
       }
       footerStyle={{backgroundColor: auction?.styles?.cards?.backgroundColor,}}
     >
-      {console.log(/* window.screen.orientation.type, */ deviceType, isTablet, window.matchMedia('(orientation: landscape)').matches)}
       <Row gutter={breakpoint === 'mobile' ? [0, 16] : breakpoint === 'tablet' ? [8, 8] : [32, 32]} wrap justify='space-between'>
-        <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+        <Col xs={24} sm={24} md={breakpoint === 'tablet' && !window.matchMedia('(orientation: landscape)').matches ? 24: 12} lg={12} xl={12} xxl={12}>
           <Row gutter={[16, 16]}>
             <Col span={24}>
               <Affix offsetTop={breakpoint === 'mobile' ? 65 : 0}>
@@ -193,7 +192,7 @@ export default function DrawerAuction({
                 </Card>
               </Affix>
             </Col>
-            {breakpoint !== 'mobile' && (
+            {breakpoint !== 'mobile' && window.matchMedia('(orientation: landscape)').matches && (
               <Col span={24}>
                 <Card
                   style={{
@@ -353,7 +352,7 @@ export default function DrawerAuction({
             </Modal>
           </Row>
         </Col>
-        {breakpoint === 'desktop' &&
+        {breakpoint !== 'mobile' && window.matchMedia('(orientation: landscape)').matches &&
           <Col xs={24} sm={24} md={4} lg={4} xl={4} xxl={4}>
             <ButtonsContainer
               styles={{
@@ -370,25 +369,8 @@ export default function DrawerAuction({
 
           </Col>
         }
-        {breakpoint === 'tablet' && window.matchMedia('(orientation: landscape)').matches &&
-          <Col xs={24} sm={24} md={4} lg={4} xl={4} xxl={4}>
-            <ButtonsContainer
-              styles={{
-                backgroundColor: auction.styles?.cards?.backgroundColor || '#FFFFFF',
-                color: auction.styles?.cards?.color || '#000000',
-              }}
-              validate={!canOffer}
-              onClick={() => setmodalOffer(true)}
-              setshowDrawerChat={setshowDrawerChat}
-              setshowDrawerRules={setshowDrawerRules}
-              closedrawer={setOpenOrClose}
-              timer={time}
-            />
-
-          </Col>
-        }
-        {(breakpoint === 'mobile' /* || (breakpoint === 'tablet' && !window.matchMedia('(orientation: landscape)').matches) */) && (
-          <Col span={24}>
+        {(breakpoint === 'mobile' || (breakpoint === 'tablet' && !window.matchMedia('(orientation: landscape)').matches)) && (
+          <Col span={breakpoint === 'mobile' ? 24 : 12}>
             <Card
               style={{
                 borderRadius: '20px',
