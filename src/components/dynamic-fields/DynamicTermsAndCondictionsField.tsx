@@ -57,7 +57,7 @@ const DynamicTermsAndCondictionsField: React.FunctionComponent<
     <Typography.Text>
       Acepto que he leído y entendido{' '}
       <Typography.Link target="_blank" href={link || '#'}>
-        los Términos y condiciones.
+        los términos y condiciones.
       </Typography.Link>
     </Typography.Text>
   )
