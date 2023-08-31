@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Form, Input, Button, Space, Upload, Alert } from 'antd';
 import ImgCrop from 'antd-img-crop';
-import createNewUser from './ModalsFunctions/createNewUser';
+import createNewUser from './services/createNewUser';
 import { app } from '../../helpers/firebase';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
@@ -29,7 +29,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop , isPay
       }),
     },
   ];
-
+  
   const rulePassword = [
     {
       required: true,
