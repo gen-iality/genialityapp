@@ -16,7 +16,7 @@ const DynamicFormDescription: React.FunctionComponent<
     <>
       {description.length < 500 && (
         <Col style={{ marginBottom: '24px' }}>
-          <Typography.Text>{description}</Typography.Text>
+          <Typography.Text><div  dangerouslySetInnerHTML={{__html: description}}></div></Typography.Text>
         </Col>
       )}
 
@@ -28,7 +28,7 @@ const DynamicFormDescription: React.FunctionComponent<
               id: 'registration.message.policy',
             })}
           >
-            <pre style={{ whiteSpace: 'normal' }}>{description}</pre>
+            <pre style={{ whiteSpace: 'normal' }}><div  dangerouslySetInnerHTML={{__html: description}}></div></pre>
           </Collapse.Panel>
         </Collapse>
       )}
