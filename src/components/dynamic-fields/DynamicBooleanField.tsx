@@ -53,18 +53,14 @@ const DynamicBooleanField: React.FunctionComponent<IDynamicBooleanFieldProps> = 
       valuePropName="checked"
       initialValue={allInitialValues[name]}
     >
+      {' '}
       <Checkbox
         {...secondProps}
         name={name}
         defaultChecked={!!allInitialValues[name]} // Removable because `initialValue`
       >
-        {mandatory ? (
-          <span>
-            <span style={{ color: 'red' }}>*</span> <strong>{label}</strong>
-          </span>
-        ) : (
-          label
-        )}
+        {mandatory && <span style={{ color: 'red' }}>*</span>}
+        <span dangerouslySetInnerHTML={{ __html: label }}></span>
       </Checkbox>
     </DynamicFormItem>
   )

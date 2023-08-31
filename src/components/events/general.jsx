@@ -154,14 +154,15 @@ class General extends Component {
     }
 
     const validate = await this.validateTabs()
+    console.log('validate', validate)
     if (validate) {
       if (validate.tabs !== undefined) {
         this.setState({ tabs: { ...validate.tabs } })
       } else {
-        await this.upsertTabs()
+        //await this.upsertTabs()
       }
     } else {
-      await this.upsertTabs()
+      //await this.upsertTabs()
     }
 
     const info = this.props.event
@@ -345,11 +346,12 @@ class General extends Component {
 
   /* ZONA SOCIAL */
 
-  validateTabs = () => {
+  validateTabs = async () => {
     const { event } = this.props
-    return new Promise(function (resolve, reject) {
+    return new Promise(async function (resolve, reject) {
       FB.Events.get(event._id)
         .then((result) => {
+          console.log('validate 3', result.exists)
           if (result?.exists) {
             const data = result.data()
             data ? resolve(data) : resolve(false)

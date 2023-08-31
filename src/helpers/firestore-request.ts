@@ -107,7 +107,7 @@ const Events = {
     return documentRef
   },
   get: async (eventId: string) => {
-    return await firestore.collection('events').doc(eventId)
+    return await firestore.collection('events').doc(eventId).get()
   },
   update: async (eventId: string, data: any) => {
     return await firestore.collection('events').doc(eventId).update(data)
