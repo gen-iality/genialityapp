@@ -23,10 +23,10 @@ export const EventExcelColums:ExcelEventColumn[] =[
     },
     {
         title:'Documentos',
-        dataIndex:'documents',
+        dataIndex:'documentsUrls',
     },
     {
         title:'Url de videos',
-        dataIndex:'urlsVideos',
+        dataIndex:'videoUrls',
     },
 ]
