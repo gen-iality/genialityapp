@@ -60,8 +60,14 @@ function reducer(state, action) {
         case 2:
           return { ...state, type: action.payload.type, allow_register: false, visibility: 'PRIVATE' };
         case 3:
-          return { ...state, type: action.payload.type, allow_register: true, visibility: 'PUBLIC', payment : { active : true, price : minValueEvent} };
-        }
+          return {
+            ...state,
+            type: action.payload.type,
+            allow_register: true,
+            visibility: 'PUBLIC',
+            payment: { active: true, price: minValueEvent },
+          };
+      }
       break;
     case 'TYPE_AUTHENTICATION':
       return { ...state, type: 0, allow_register: true, visibility: 'ANONYMOUS' };
@@ -281,7 +287,17 @@ export const NewEventProvider = ({ children }) => {
   const saveEvent = async () => {
     const minValueEvent = 2000;
     dispatch({ type: 'LOADING' });
+    let userProperties = [];
 
+    if (Array.isArray(state.selectOrganization?.user_properties)) {
+      userProperties = state.selectOrganization?.user_properties.map((user_propertie) => {
+        delete user_propertie.updated_at;
+        delete user_propertie.created_at;
+        delete user_propertie._id;
+        return user_propertie;
+      });
+    }
+    
     if (state.selectOrganization) {
       const data = {
         name: valueInputs.name,
@@ -296,8 +312,8 @@ export const NewEventProvider = ({ children }) => {
         category_ids: [],
         organizer_id: state.selectOrganization.id || state.selectOrganization._id,
         event_type_id: '5bf47203754e2317e4300b68',
-        user_properties: [],
-        payment : state.payment || {active : false, price : minValueEvent},
+        user_properties: userProperties,
+        payment: state.payment || { active: false, price: minValueEvent },
         allow_register: state.allow_register,
         type_event: typeEvent,
         where_it_run: whereItRun,
@@ -406,8 +422,8 @@ export const NewEventProvider = ({ children }) => {
               datetime_start: selectedDateEvent?.from + ':00',
             };
             const agenda = await AgendaApi.create(result._id, activity);
-            //Se actualiza el evento para enviar la propiedad redirect_activity: agenda._id despues de crear la actividad con el id de la misma 
-            await Actions.put(`api/events/${result._id}?token=${token}`, {redirect_activity: agenda._id });
+            //Se actualiza el evento para enviar la propiedad redirect_activity: agenda._id despues de crear la actividad con el id de la misma
+            await Actions.put(`api/events/${result._id}?token=${token}`, { redirect_activity: agenda._id });
             if (agenda._id) {
               //CREAR TEMPLATE PARA EL EVENTO
               let template = !templateId && true;
