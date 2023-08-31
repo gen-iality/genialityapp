@@ -4,9 +4,11 @@ import React, { useState } from 'react'
 import { ButtonsContainerProps } from '../../interfaces/auction.interface'
 import { getCorrectColor } from '@/helpers/utils'
 import { FaHandHoldingUsd } from 'react-icons/fa'
+import useBreakpoint from 'use-breakpoint'
 
 const { Countdown } = Statistic;
-const { useBreakpoint } = Grid;
+/* const { useBreakpoint } = Grid; */
+const BREAKPOINTS = { mobile: 0, tablet: 768, desktop: 1280 }
 
 export default function ButtonsContainer({
     validate,
@@ -19,17 +21,19 @@ export default function ButtonsContainer({
     },
     timer = 10,
 }: ButtonsContainerProps) {
-    const screens = useBreakpoint();
+    /* const screens = useBreakpoint(); */
     const btnPujar = {
         width: '150px',
         height: '150px',
         border: `10px solid #CECECE`,
         boxShadow: ' 0px 4px 4px rgba(0, 0, 0, 0.25)',
     }
-
+    const { breakpoint } = useBreakpoint(BREAKPOINTS, 'desktop')
+    
+    console.log(breakpoint)
     return (
     <>
-        {screens.xs ? 
+        {breakpoint === 'mobile' || breakpoint === 'tablet' ? 
             <Row justify={'space-around'} gutter={[16, 16]} align='middle'>
                 <Col>
                     <Button

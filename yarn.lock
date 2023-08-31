@@ -18295,6 +18295,11 @@ url@^0.11.0:
     punycode "1.3.2"
     querystring "0.2.0"
 
+use-breakpoint@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/use-breakpoint/-/use-breakpoint-3.1.1.tgz#2750f36b77e3032d70b902ecdfac4b02cc4f5768"
+  integrity sha512-zJ2a9sqdiOnsYwjZryOuq+SIDRP2vWsl7iWDUJ7Xid9t29zF1oLZjkEE+uRooPB/98YT+784rCFIvmKhV6VqLg==
+
 use-memo-one@^1.1.1:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/use-memo-one/-/use-memo-one-1.1.3.tgz#2fd2e43a2169eabc7496960ace8c79efef975e99"
