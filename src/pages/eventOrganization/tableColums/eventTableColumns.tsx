@@ -1,28 +1,14 @@
-import { DATE_FORMAT } from '@/constants/datesformat.constants';
 import { Button } from 'antd';
+import { ColumnsType } from 'antd/lib/table';
 import moment from 'moment';
+import { DATE_FORMAT } from '@/constants/datesformat.constants';
 
-export const columns = (goToEvent) => [
+export const columns = (goToEvent: (eventId: string) => void): ColumnsType<any> => [
   {
     title: 'Nombre del evento',
     dataIndex: 'name',
-    ellipsis: 'true',
+    ellipsis: true,
     sorter: (a, b) => a.name.localeCompare(b.name),
-    /* align: 'center', */
-    /* render(val, item) {
-         return (
-            <Paragraph
-               onClick={() => goToEvent(item._id)}
-               style={{ width: 250, color: '#2E9AFE', textDecorationLine: 'underline', cursor: 'pointer' }}
-               ellipsis={{
-                  rows: 1,
-                  tooltip: `${item.name}`,
-               }}>
-               {item.name}
-            </Paragraph>
-         );
-      }, */
-    /* fixed: 'left', */
     render(val, item) {
       return (
         <Button type='link' onClick={() => goToEvent(item._id)}>
@@ -34,8 +20,7 @@ export const columns = (goToEvent) => [
   {
     title: 'Fecha de inicio',
     dataIndex: 'startDate',
-    /* ellipsis: 'true',
-    sorter: (a, b) => a.name.localeCompare(b.name), */
+
     render(val, item) {
       let dateStart;
       if (item?.dates && Array.isArray(item?.dates) && item?.dates?.length > 0) {
@@ -55,27 +40,21 @@ export const columns = (goToEvent) => [
     title: 'Total usuarios',
     dataIndex: 'count',
     align: 'center',
-    ellipsis: 'true',
+    ellipsis: true,
     sorter: (a, b) => a.count - b.count,
   },
   {
     title: 'Usuarios sin checkIn',
     dataIndex: 'checked_in_not',
     align: 'center',
-    ellipsis: 'true',
+    ellipsis: true,
     sorter: (a, b) => a.checked_in_not - b.checked_in_not,
-    /* render(val, item) {
-         return item.checked_in_not;
-      }, */
   },
   {
     title: 'Usuarios con checkIn',
     dataIndex: 'checked_in',
     align: 'center',
-    ellipsis: 'true',
+    ellipsis: true,
     sorter: (a, b) => a.checked_in - b.checked_in,
-    /* render(val, item) {
-         return item.checked_in;
-      }, */
   },
 ];

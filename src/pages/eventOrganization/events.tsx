@@ -1,26 +1,43 @@
-import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { OrganizationApi } from '../../helpers/request';
 import { Table, Button, Row, Col } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { columns } from './tableColums/eventTableColumns';
 import withContext from '../../context/withContext';
 import Header from '../../antdComponents/Header';
 import { useGetEventWithStatistics } from './hooks/useGetEventWithStatistics';
+import { ExportExcel } from '@/components/newComponent/ExportExcel';
+import { EventExcelColums } from './tableColums/utils/excelEventColums.utils';
+import { parseDataToExcel } from './tableColums/utils/parseData.utils';
 
-function OrgEvents(props) {
+function OrgEvents(props: any) {
   let { _id: organizationId } = props.org;
   const history = useHistory();
   const { eventData, isLoading, pagination } = useGetEventWithStatistics(organizationId);
 
-  function goToEvent(eventId) {
+  const goToEvent = (eventId: string) => {
     const url = `/eventadmin/${eventId}/agenda`;
     history.replace({ pathname: url });
-  }
+  };
 
-  function linkToTheMenuRouteS(menuRoute) {
+  const linkToTheMenuRouteS = (menuRoute: string) => {
     window.open(`${window.location.origin}${menuRoute}`, '_blank', 'noopener,noreferrer');
-  }
+  };
+
+  const renderTitle = () => (
+    <Row wrap justify='end' gutter={[8, 8]}>
+      <Col>
+        <ExportExcel columns={EventExcelColums} list={parseDataToExcel(eventData)} fileName={'eventReport'} />
+      </Col>
+      <Col>
+        <Button
+          type='primary'
+          icon={<PlusCircleOutlined />}
+          onClick={() => linkToTheMenuRouteS(`/create-event/${props.cUser?.value?._id}?orgId=${organizationId}`)}>
+          {'Agregar'}
+        </Button>
+      </Col>
+    </Row>
+  );
 
   return (
     <>
@@ -32,19 +49,7 @@ function OrgEvents(props) {
         size='small'
         rowKey='index'
         pagination={pagination}
-        title={() => (
-          <Row wrap justify='end' gutter={[8, 8]}>
-            <Col>{/* <ExportExcel columns={columns(goToEvent)} list={eventData} fileName={'eventReport'} /> */}</Col>
-            <Col>
-              <Button
-                type='primary'
-                icon={<PlusCircleOutlined />}
-                onClick={() => linkToTheMenuRouteS(`/create-event/${props.cUser?.value?._id}?orgId=${organizationId}`)}>
-                {'Agregar'}
-              </Button>
-            </Col>
-          </Row>
-        )}
+        title={renderTitle}
       />
     </>
   );
