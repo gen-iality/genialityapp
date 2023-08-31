@@ -30,10 +30,61 @@ export default function ButtonsContainer({
     }
     const { breakpoint } = useBreakpoint(BREAKPOINTS, 'desktop')
     
-    console.log(breakpoint)
     return (
     <>
-        {breakpoint === 'mobile' || breakpoint === 'tablet' ? 
+        {breakpoint === 'desktop' || (breakpoint === 'tablet' && window.matchMedia('(orientation: landscape)').matches) ? 
+            <Card bordered={false} style={{ height: '100%', backgroundColor: 'transparent' }}>
+                <Row gutter={[16, 16]}>
+                    <Col span={24}>
+                        <Row justify='center'>
+                            <Button
+                                className={'animate__animated animate__heartBeat'}
+                                shape='circle'
+                                onClick={onClick}
+                                style={validate ? {...btnPujar} : {...btnPujar,...styles}}
+                                disabled={validate}
+                                type='default'>
+                                <Space direction='vertical'>
+                                { !validate ? <Typography.Text strong style={{ color : getCorrectColor(styles.backgroundColor)}}>¡PUJAR!</Typography.Text>
+                                : (<Countdown value={timer}  format="s" /> )
+                                }
+                                </Space>
+                            </Button>
+                        </Row>
+                    </Col>
+                    <Col span={24}>
+                        <Button
+                            style={{ boxShadow: ' 0px 4px 4px rgba(0, 0, 0, 0.25)', border: 'none' ,color: getCorrectColor(styles.backgroundColor), backgroundColor: styles.backgroundColor}}
+                            onClick={() => setshowDrawerRules(true)}
+                            icon={<FileProtectOutlined />}
+                            size='large'
+                            block>
+                            Reglas
+                        </Button>
+                    </Col>
+                    <Col span={24}>
+                        <Button
+                            style={{ boxShadow: ' 0px 4px 4px rgba(0, 0, 0, 0.25)', border: 'none' ,color: getCorrectColor(styles.backgroundColor),backgroundColor: styles.backgroundColor}}
+                            onClick={() => setshowDrawerChat(true)}
+                            icon={<CommentOutlined />}
+                            size='large'
+                            block>
+                            Chat
+                        </Button>
+                    </Col>
+                    <Col span={24}>
+                        <Button
+                            style={{ boxShadow: ' 0px 4px 4px rgba(0, 0, 0, 0.25)', border: 'none' , color: getCorrectColor(styles.backgroundColor),backgroundColor: styles.backgroundColor }}
+                            onClick={() => closedrawer()}
+                            size='large'
+                            icon={<CloseOutlined />}
+                            block>
+                            Cerrar
+                        </Button>
+                    </Col>
+                </Row>
+            </Card>
+            :
             <Row justify={'space-around'} gutter={[16, 16]} align='middle'>
                 <Col>
                     <Button
@@ -90,58 +141,6 @@ export default function ButtonsContainer({
                     }
                 </Col>
             </Row>
-            :
-            <Card bordered={false} style={{ height: '100%', backgroundColor: 'transparent' }}>
-                <Row gutter={[16, 16]}>
-                    <Col span={24}>
-                        <Row justify='center'>
-                            <Button
-                                className={'animate__animated animate__heartBeat'}
-                                shape='circle'
-                                onClick={onClick}
-                                style={validate ? {...btnPujar} : {...btnPujar,...styles}}
-                                disabled={validate}
-                                type='default'>
-                                <Space direction='vertical'>
-                                { !validate ? <Typography.Text strong style={{ color : getCorrectColor(styles.backgroundColor)}}>¡PUJAR!</Typography.Text>
-                                : (<Countdown value={timer}  format="s" /> )
-                                }
-                                </Space>
-                            </Button>
-                        </Row>
-                    </Col>
-                    <Col span={24}>
-                        <Button
-                            style={{ boxShadow: ' 0px 4px 4px rgba(0, 0, 0, 0.25)', border: 'none' ,color: getCorrectColor(styles.backgroundColor), backgroundColor: styles.backgroundColor}}
-                            onClick={() => setshowDrawerRules(true)}
-                            icon={<FileProtectOutlined />}
-                            size='large'
-                            block>
-                            Reglas
-                        </Button>
-                    </Col>
-                    <Col span={24}>
-                        <Button
-                            style={{ boxShadow: ' 0px 4px 4px rgba(0, 0, 0, 0.25)', border: 'none' ,color: getCorrectColor(styles.backgroundColor),backgroundColor: styles.backgroundColor}}
-                            onClick={() => setshowDrawerChat(true)}
-                            icon={<CommentOutlined />}
-                            size='large'
-                            block>
-                            Chat
-                        </Button>
-                    </Col>
-                    <Col span={24}>
-                        <Button
-                            style={{ boxShadow: ' 0px 4px 4px rgba(0, 0, 0, 0.25)', border: 'none' , color: getCorrectColor(styles.backgroundColor),backgroundColor: styles.backgroundColor }}
-                            onClick={() => closedrawer()}
-                            size='large'
-                            icon={<CloseOutlined />}
-                            block>
-                            Cerrar
-                        </Button>
-                    </Col>
-                </Row>
-            </Card>
         }
     </>
   )
