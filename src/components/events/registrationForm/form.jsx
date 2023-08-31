@@ -116,7 +116,7 @@ function fieldsAditional(extraFields) {
   if (extraFields) {
     const countFields = extraFields.filter(
       (field) =>
-        field.name !== 'names' && field.name !== 'email' && (field.type !== 'password' || field.name === 'contrasena')
+      !field.visibleByAdmin && field.name !== 'names' && field.name !== 'email' && (field.type !== 'password' || field.name === 'contrasena')
     );
     return countFields.length;
   }
@@ -1298,6 +1298,7 @@ deberia ser solo la url de la imagen
                       paddingRight: '0px',
                       borderRadius: '8px',
                     }}>
+                    {console.log(extraFields, 'extraFields')}
                     {fieldsAditional(extraFields) > 0 && (
                       <Typography.Title level={5}>
                         {intl.formatMessage({

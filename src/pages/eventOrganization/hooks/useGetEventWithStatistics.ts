@@ -1,23 +1,11 @@
 import { useEffect, useState } from 'react'
 import { OrganizationApi } from '@/helpers/request';
+import { usePaginationListLocal } from '@/hooks/usePaginationListLocal';
 
 export const useGetEventWithStatistics = (organizationId:string) => {
     const [eventData, setEventData] = useState([]);
     const [isLoading, setisLoading] = useState(true);
-    const [currentPage, setcurrentPage] = useState(1);
-    const [pageSize, setpageSize] = useState(10);
-  
-    const onChangeCurrnetPage = (page: number) => {
-      setcurrentPage(page);
-    };
-  
-    const onChangePageSize = (pageSize: number) => {
-      setpageSize(pageSize);
-    };
-  
-  
-  
-  
+    const {pagination}=  usePaginationListLocal(eventData)
   
     const getData = async () => {
       try {
@@ -35,17 +23,8 @@ export const useGetEventWithStatistics = (organizationId:string) => {
     }, [organizationId]);
   
     return {
-        eventData,
+      eventData,
       isLoading,
-      pagination:{
-        pageSize,
-        current: currentPage,
-        onChange: onChangeCurrnetPage,
-        total: eventData.length,
-        onShowSizeChange: (page:number, pageSize:number) => {
-          onChangeCurrnetPage(page);
-          onChangePageSize(pageSize);
-        }
-      }
+      pagination
     };
 }
