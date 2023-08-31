@@ -12,22 +12,15 @@ import {
   TimePicker,
   DatePicker,
   Checkbox,
-  Form,
-  Popover,
   Tooltip,
 } from 'antd';
-import { CalendarOutlined, EditOutlined, QuestionCircleOutlined } from '@ant-design/icons';
-import DayPicker from 'react-day-picker';
+import { CalendarOutlined, EditOutlined } from '@ant-design/icons';
 import 'react-day-picker/lib/style.css';
 import { useContextNewEvent } from '../../../../context/newEventContext';
 import { OrganizationApi, PlansApi } from '../../../../helpers/request';
 import ModalOrgListCreate from './modalOrgListCreate';
 import moment from 'moment';
-import {
-  disabledEndDateTime,
-  disabledStartDate,
-  disabledStartDateTime,
-} from '@/Utilities/disableTimeAndDatePickerInEventDate';
+import {} from '@/Utilities/disableTimeAndDatePickerInEventDate';
 import TypeEvent from '@/components/shared/typeEvent/TypeEvent';
 
 const { Text, Title, Paragraph } = Typography;
@@ -55,8 +48,6 @@ const Informacion = (props) => {
     handleFormDataOfEventType,
   } = useContextNewEvent();
   const cUser = props?.currentUser;
-  const eventDateStart = { date_start: selectedDay };
-  const eventHourStart = { hour_start: selectedHours.from };
 
   const [userConsumption, setUserConsumption] = useState({});
   const [showText, setShowText] = useState(false);
@@ -75,22 +66,15 @@ const Informacion = (props) => {
     getCurrentConsumptionPlanByUsers();
   }, [cUser]);
 
-  {
-    useEffect(() => {
-      if (state.selectOrganization) {
-        selectTemplate(
-          state.selectOrganization.template_properties
-            ? state.selectOrganization?.template_properties[0]._id['$oid']
-            : undefined
-        );
-      }
-    }, [state.selectOrganization, selectTemplate]);
-  }
-
-  const obtainTemplates = async () => {
-    const resp = await OrganizationApi.getTemplateOrganization(selectOrganization?.id);
-    return resp;
-  };
+  useEffect(() => {
+    if (state.selectOrganization) {
+      selectTemplate(
+        state.selectOrganization.template_properties
+          ? state.selectOrganization?.template_properties[0]._id['$oid']
+          : undefined
+      );
+    }
+  }, [state.selectOrganization, selectTemplate]);
 
   return (
     <div className='step-information'>
@@ -143,8 +127,8 @@ const Informacion = (props) => {
           <ModalOrgListCreate orgId={props.orgId} />
         </div>
         {/* esta en display none para que no se muestre por una prueba con CETA, estara asi hasta que se autorice volver a modificar */}
-        <div style={{display:'none'}}>
-          <Checkbox >Utilizar plantilla de la organización</Checkbox>
+        <div style={{ display: 'none' }}>
+          <Checkbox>Utilizar plantilla de la organización</Checkbox>
         </div>
         <div>
           <TypeEvent handleFormDataOfEventType={(values) => handleFormDataOfEventType(values)} />
