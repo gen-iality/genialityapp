@@ -41,7 +41,7 @@ export default function ResultLogin({ status, user, eventId, close, bgColor }: {
         {status === 'success' && (
           <Card>
             <Result 
-              style={{ padding: '30px 0', borderRadius: 20, backgroundColor: '#FFFFFF50' }}
+              style={{ padding: '30px 0', borderRadius: 20, backgroundColor: '#FFFFFF50', border: 'none' }}
               status='success' 
               title={<Typography.Title level={5}>¡Felicidades!</Typography.Title>} 
               subTitle={<Typography.Text strong>Pronto entraras al evento</Typography.Text>}
@@ -50,7 +50,7 @@ export default function ResultLogin({ status, user, eventId, close, bgColor }: {
         )}
         {status === 'error' && (
           <Result  
-            style={{ padding: '30px 0', borderRadius: 20, backgroundColor: '#FFFFFF50' }}
+            style={{ padding: '30px 0', borderRadius: 20, backgroundColor: '#FFFFFF50', border: 'none' }}
             status='error' 
             title={<Typography.Title level={5}>¡Ups!</Typography.Title>} 
             subTitle={<Typography.Text strong>Algo salio mal</Typography.Text>}
