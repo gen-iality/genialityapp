@@ -9,8 +9,8 @@ import withContext from '../../context/withContext';
 import Header from '../../antdComponents/Header';
 import { ModalAddAndEditUsers } from './components/ModalAddAndEditUsersOrganization';
 import { useGetEventsStatisticsData } from './tableColums/utils/useGetOrganizations';
-import { ExportExcel } from '@/components/export-excel/ExportExcel';
 import { parseMembersColumsExcel, parseDataMembersToExcel } from './tableColums/utils/parseData.utils';
+import { ExportExcel } from '@/components/export-excel/ExportExcel';
 
 const OrgMembers = (props) => {
   const [lastUpdate, setLastUpdate] = useState();
