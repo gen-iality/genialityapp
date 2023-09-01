@@ -3,7 +3,7 @@ import { Button, Card, Col, Row, Space, Statistic, Typography, Grid } from 'antd
 import React, { useState } from 'react'
 import { ButtonsContainerProps } from '../../interfaces/auction.interface'
 import { getCorrectColor } from '@/helpers/utils'
-import { FaHandHoldingUsd } from 'react-icons/fa'
+import { FaHandHoldingUsd, FaGavel } from 'react-icons/fa'
 import useBreakpoint from 'use-breakpoint'
 
 const { Countdown } = Statistic;
@@ -130,7 +130,7 @@ export default function ButtonsContainer({
                             }}
                             type='ghost'
                             size='large'
-                            icon={<FaHandHoldingUsd className={'animate__animated animate__heartBeat'} style={{fontSize: '32px', /* transform: 'rotate(270deg)', */ color : getCorrectColor(styles.backgroundColor)}} />}
+                            icon={<FaGavel className={'animate__animated animate__heartBeat'} style={{fontSize: '32px', transform: 'rotate(270deg)', color : getCorrectColor(styles.backgroundColor)}} />}
                         />
                         :
                         <Countdown 
