@@ -11,15 +11,16 @@ export function useGetEventsStatisticsData(organizationId) {
   async function fetchEventsStatisticsData() {
     const { data } = await OrganizationApi.getUsers(organizationId);
     const fieldsMembersData = [];
-    data.map((membersData,index) => {
+    data.map((membersData, index) => {
       const properties = {
         ...membersData.properties,
         _id: membersData._id,
         created_at: convertUTC(new Date(membersData.created_at)).newDateWithMoment,
         updated_at: convertUTC(new Date(membersData.updated_at)).newDateWithMoment,
         position: membersData.rol?.name ?? 'NaN', //Si no viene Rol validar que deba traerlo
-        rol_id:membersData.rol_id,
-        isAuthor:membersData.account_id === membersData.organization.author
+        rol_id: membersData.rol_id,
+        isAuthor: membersData.account_id === membersData.organization.author,
+        user_properties: membersData.organization.user_properties,
       };
       fieldsMembersData.push(properties);
     });
