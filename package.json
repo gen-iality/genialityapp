@@ -133,6 +133,7 @@
     "swiper": "^9.3.2",
     "trm-api": "^1.4.14",
     "url-loader": "^4.1.1",
+    "use-breakpoint": "^3.1.1",
     "vite-tsconfig-paths": "^3.4.1",
     "xlsx": "^0.18.4",
     "yarnpkg": "^0.15.1",

@@ -46,11 +46,12 @@ const createNewUser = async (props) => {
         return 1;
       }
     } catch (e) {
+      console.log(e);
       //PERMITE VALIDAR CUANDO EL EMAIL ES INCORRECTO
-      if (e.response.status == 422 && e.response.data.errors.email[0] !== 'email ya ha sido registrado.') {
+      if (e.response.status == 422 && e.response.data?.errors?.email[0] !== 'email ya ha sido registrado.') {
         return 2;
       }
-      const registeredEmail = e.response.data.errors.email[0];
+      const registeredEmail = e.response.data.errors?.email[0];
       if (registeredEmail === 'email ya ha sido registrado.') {
         return 0;
       }

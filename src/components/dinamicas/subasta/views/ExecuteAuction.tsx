@@ -1,5 +1,5 @@
-import { CloseCircleOutlined, PlayCircleOutlined, SaveOutlined, SelectOutlined, StarOutlined, WarningOutlined } from '@ant-design/icons';
-import {  Alert, Button, Card, Col, Empty, Modal, Row, Skeleton, Space, Table, Typography } from 'antd';
+import { CloseCircleOutlined, PlayCircleOutlined, SaveOutlined, SelectOutlined, WarningOutlined } from '@ant-design/icons';
+import {  Alert, Button, Card, Col, Empty, Modal, Row, Skeleton, Table, Typography } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import React, { useState } from 'react';
 
@@ -11,7 +11,7 @@ import { DispatchMessageService } from '@/context/MessageService';
 import { saveAuctioFirebase } from '../services/Execute.service';
 import { useBids } from '../hooks/useBids';
 import { deleteOffersByProduct, updateProduct } from '../services';
-import index from '../../../games/bingo/index';
+
 
 
 
@@ -21,7 +21,7 @@ export default function ExecuteAuction( {auction, eventId} : GeneralAuctionProps
   const [currentPage, setcurrentPage] = useState(1);
   const [visibility, setVisibility] = useState(false);
   const { products, loading, refresh } = useProducts(eventId);
-  const { Bids, setBids, loading: Loadbids } = useBids(eventId, auction?.currentProduct?._id, auction?.playing);
+  const { Bids, loading: Loadbids } = useBids(eventId, auction?.currentProduct?._id, auction?.playing);
   const [selectedProduct, setselectedProduct] = useState<Products | null>(null);
   const columns: ColumnsType<IBids> = [
     {

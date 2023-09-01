@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Products from '../components/cms/Products';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Modal, Row } from 'antd';
@@ -6,7 +6,6 @@ import useProducts from '../hooks/useProducts';
 import ModalProducts from '../components/cms/ModalProducts';
 import { ImagesData, ModalProduct, Products as IProduct } from '../interfaces/auction.interface';
 import { InitialModalState, deleteImage } from '../utils/utils';
-import { AuctionContext } from '../context/AuctionContext';
 import Loading from '@/components/profile/loading';
 import { DispatchMessageService } from '@/context/MessageService';
 import { UploadFile } from 'antd/lib/upload/interface';

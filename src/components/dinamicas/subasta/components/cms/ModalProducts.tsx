@@ -53,6 +53,7 @@ export default function ModalProducts({ product, onChange, onCancel, onSave, loa
         <Form.Item
           label={'Imagenes'}
           name='imgs'
+          rules={[{ required: true, message: 'Es necesario cargar una imagen para el producto' }]}
           initialValue={''}>
           <Upload
             disabled={loading}

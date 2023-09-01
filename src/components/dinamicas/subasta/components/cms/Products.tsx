@@ -1,4 +1,4 @@
-import { Badge, Card, Col, Popconfirm, Result, Row, Tag, Typography } from 'antd';
+import { Card, Col, Popconfirm, Result, Row, Tag, Typography } from 'antd';
 import React from 'react';
 import { ProductsProps } from '../../interfaces/auction.interface';
 import { AntCloudOutlined, DeleteOutlined } from '@ant-design/icons';

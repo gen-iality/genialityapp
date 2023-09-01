@@ -96,7 +96,7 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
 
   const Fields = useMemo(() => {
     return dynamicFields.map((field, index) => {
-      if (field.visibleByAdmin) return;
+      // if (field.visibleByAdmin) return;
       if (['contrasena', 'password', 'email', 'names'].includes(field.name)) return;
 
       const { type = 'text', label, mandatory, dependency, name } = field;
