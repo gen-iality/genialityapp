@@ -7,27 +7,27 @@ import { useSearchList } from '@/hooks/useSearchList';
 const { Title } = Typography;
 
 interface Props {
-	eventsOld: any[];
-	isUserRegisterInEvent: (id: string) => boolean;
-	havePaymentEvent: (event: any) => boolean;
+  eventsOld: any[];
+  isUserRegisterInEvent: (id: string) => boolean;
+  havePaymentEvent: (event: any) => boolean;
 }
 export const PassEvents = ({ eventsOld, isUserRegisterInEvent, havePaymentEvent }: Props) => {
-	const { filteredList, setSearchTerm } = useSearchList(eventsOld, 'name');
+  const { filteredList, setSearchTerm } = useSearchList(eventsOld, 'name');
 
-	const getTextButtonBuyOrRegistered = (event: any): string => {
-		if (isUserRegisterInEvent(event._id)) {
-			return 'Ingresar';
-		}
-		if (havePaymentEvent(event)) {
-			if (event.payment.externalPayment) {
-				return 'Comprar';
-			} else {
-				return `Comprar por $ ${event.payment.price} ${event?.payment?.currency}`;
-			}
-		}
+  const getTextButtonBuyOrRegistered = (event: any): string => {
+    if (isUserRegisterInEvent(event._id)) {
+      return 'Ingresar';
+    }
+    if (havePaymentEvent(event)) {
+      if (event.payment.externalPayment) {
+        return 'Comprar';
+      } else {
+        return `Comprar por $ ${event.payment.price} ${event?.payment?.currency}`;
+      }
+    }
 
-		return 'Inscribirse';
-	};
+    return 'Inscribirse';
+  };
 
 	return (
 		<Card

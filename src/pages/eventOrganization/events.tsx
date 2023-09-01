@@ -5,24 +5,14 @@ import { columns } from './tableColums/eventTableColumns';
 import withContext from '../../context/withContext';
 import Header from '../../antdComponents/Header';
 import { useGetEventWithStatistics } from './hooks/useGetEventWithStatistics';
+import { ExportExcel } from '@/components/newComponent/ExportExcel';
 import { EventExcelColums } from './tableColums/utils/excelEventColums.utils';
 import { parseDataToExcel } from './tableColums/utils/parseData.utils';
-import { ExportExcelAsync } from '@/components/export-excel/ExportExcelAsync';
-import { OrganizationApi } from '@/helpers/request';
 
 function OrgEvents(props: any) {
   let { _id: organizationId } = props.org;
   const history = useHistory();
   const { eventData, isLoading, pagination } = useGetEventWithStatistics(organizationId);
-
-  const onAsyncList = async () => {
-    try {
-      const { data } = await OrganizationApi.getEventsStatistics(organizationId, 'latest');
-      return parseDataToExcel(data);
-    } catch (error) {
-      return [];
-    }
-  };
 
   const goToEvent = (eventId: string) => {
     const url = `/eventadmin/${eventId}/agenda`;
@@ -36,7 +26,7 @@ function OrgEvents(props: any) {
   const renderTitle = () => (
     <Row wrap justify='end' gutter={[8, 8]}>
       <Col>
-        <ExportExcelAsync columns={EventExcelColums} fileName={'eventReport'} onAsyncList={onAsyncList} />
+        <ExportExcel columns={EventExcelColums} list={parseDataToExcel(eventData)} fileName={'eventReport'} />
       </Col>
       <Col>
         <Button

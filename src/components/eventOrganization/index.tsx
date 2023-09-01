@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 /* eslint-disable array-callback-return */
 /* eslint-disable jsx-a11y/alt-text */
-import { Col, Row, Grid } from 'antd';
+import { Col, Row } from 'antd';
 import { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { OrganizationFuction } from '../../helpers/request';
@@ -18,10 +18,7 @@ import { MyEvents } from './components/MyEvents';
 import { NextEvents } from './components/NextEvents';
 import { PassEvents } from './components/PassEvents';
 
-const {useBreakpoint} = Grid
-
 function EventOrganization({ match }: OrganizationProps) {
-  const screens = useBreakpoint()
   const cUser = UseCurrentUser();
   const [state, setstate] = useState<DataOrganizations>({
     orgId: '',
@@ -98,7 +95,7 @@ function EventOrganization({ match }: OrganizationProps) {
             <div style={{ width: '100%' }}>
               {organization.styles?.banner_image !== null || '' ? (
                 <img
-                  style={{ objectFit: screens.xxl ? 'fill' : 'cover', width: '100%', maxHeight: '400px' }}
+                  style={{ objectFit: 'cover', width: '100%', maxHeight: '400px' }}
                   src={organization.styles?.banner_image}
                 />
               ) : (

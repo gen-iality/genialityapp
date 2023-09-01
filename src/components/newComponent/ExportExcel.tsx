@@ -5,12 +5,12 @@ import { DispatchMessageService } from '../../context/MessageService';
 import { ExcelEventColumn } from '@/pages/eventOrganization/tableColums/interfaces/ExcelEvent.interface';
 
 interface Props {
-  list?: { [key: string]: any }[];
+  list: { [key: string]: any }[];
   columns?: ExcelEventColumn[];
   fileName: string;
 }
 export const ExportExcel = ({ list, columns, fileName }: Props) => {
-  const exportData = async () => {
+  const exportData = () => {
     if (list) {
       const newlist = list.map((obj) => {
         let newObj: { [key: string]: any } = {};
@@ -37,7 +37,6 @@ export const ExportExcel = ({ list, columns, fileName }: Props) => {
       });
     }
   };
-
   return (
     <div>
       <Button onClick={exportData}>

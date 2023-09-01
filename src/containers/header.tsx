@@ -1,20 +1,34 @@
 import { createElement, Fragment, useEffect, useState } from 'react';
-import { useHistory, useParams, Link } from 'react-router-dom';
+import { Redirect, useHistory, useParams, Link } from 'react-router-dom';
 import ErrorServe from '../components/modal/serverError';
 import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
 import { connect } from 'react-redux';
 import * as userActions from '../redux/user/actions';
 import * as eventActions from '../redux/event/actions';
 import MenuOld from '../components/events/shared/menu';
-import { Menu, Drawer, Button, Col, Row, Layout, Space, Grid, Dropdown, Typography, Image } from 'antd';
+import {
+	Menu,
+	Drawer,
+	Button,
+	Col,
+	Row,
+	Layout,
+	Space,
+	Grid,
+	Dropdown,
+	Typography,
+	Image,
+	Avatar,
+	Comment,
+} from 'antd';
 import {
 	MenuUnfoldOutlined,
 	MenuFoldOutlined,
 	LockOutlined,
 	LoadingOutlined,
 	ApartmentOutlined,
+	UserOutlined,
 	EditOutlined,
-	DownOutlined,
 } from '@ant-design/icons';
 import withContext from '../context/withContext';
 import ModalLoginHelpers from '../components/authentication/ModalLoginHelpers';
@@ -26,7 +40,6 @@ import { getCorrectColor } from '@/helpers/utils';
 import { isOrganizationCETA } from '@/components/user-organization-to-event/helpers/helper';
 import { Organization } from '@/components/eventOrganization/types';
 import { OrganizationApi, OrganizationFuction } from '@/helpers/request';
-import MenuItem from 'antd/lib/menu/MenuItem';
 
 const { useBreakpoint } = Grid;
 
@@ -84,27 +97,16 @@ const Headers = (props: Props) => {
 	const containerBgColor = cEvent?.value?.styles?.containerBgColor || null;
 	const validatorCms = window.location.pathname.includes('/eventadmin');
 	const validatorOrg =
-		window.location.pathname.includes('/organization') &&
-		!window.location.pathname.includes('/admin') &&
-		paramsId !== undefined;
+		window.location.pathname.includes('/organization') && !window.location.pathname.includes('/admin') && paramsId !== undefined;
 	const bgcolorContainer = !validatorCms && !validatorOrg && containerBgColor ? containerBgColor : '#FFFFFF';
 	const [fixed, setFixed] = useState(false);
 	const screens = useBreakpoint();
 	let history = useHistory();
-
+	
 	const organizationLogo = currentOrganization?.styles.event_image;
 	const organizationName = currentOrganization?.name;
 	// TODO: Here there is an error
 	const intl = useIntl();
-	const organizationMenu = (
-		<Menu>
-			<Menu.Item icon={<EditOutlined />}>
-				<Link to={`/admin/organization/${paramsId}`}>
-					<Button type='text'>Administrar</Button>
-				</Link>
-			</Menu.Item>
-		</Menu>
-	);
 	const openMenu = () => {
 		setdataGeneral({
 			...dataGeneral,
@@ -307,7 +309,7 @@ const Headers = (props: Props) => {
 					opacity: fixed ? '0.9' : '1',
 					backgroundColor: bgcolorContainer,
 					boxShadow: '0px 0px 4px rgba(0, 0, 0, 0.25)',
-					padding: screens.xs ? '0 20px' : '0 50px',
+					padding:screens.xs ?'0 20px' : '0 50px'
 				}}>
 				<Menu theme='light' mode='horizontal' style={{ backgroundColor: bgcolorContainer, border: 'none' }}>
 					<Row justify='space-between' align='middle'>
@@ -328,8 +330,8 @@ const Headers = (props: Props) => {
 						{validatorOrg && (
 							<Space align='center'>
 								<Image
-									width={100}
-									height={60}
+									width={50}
+									height={50}
 									preview={false}
 									src={organizationLogo}
 									fallback='http://via.placeholder.com/500/F5F5F7/CCCCCC?text=No%20Image'
@@ -341,16 +343,15 @@ const Headers = (props: Props) => {
 										backgroundColor: '#FFFFFF;',
 									}}
 								/>
-								{cUser?.value && myOrganizations.includes(paramsId) ? (
-									<Dropdown overlay={organizationMenu} trigger={['click']}>
-										<Typography.Title style={{ cursor: 'pointer' }} level={5}>
-											{`${!screens.xs ? 'Bienvenidos a ' : ''}  ${organizationName}`} <DownOutlined />
-										</Typography.Title>
-									</Dropdown>
-								) : (
-									<Typography.Title level={5}>{`${
-										!screens.xs ? 'Bienvenidos a ' : ''
-									}  ${organizationName}`}</Typography.Title>
+								<Typography.Title level={5}>{organizationName}</Typography.Title>
+								{cUser?.value && myOrganizations.includes(paramsId) && (
+									<Link
+										to={`/admin/organization/${paramsId}`}
+										>
+										<Button type='text'  icon={<EditOutlined />}>
+											Administrar
+										</Button>
+									</Link>
 								)}
 							</Space>
 						)}

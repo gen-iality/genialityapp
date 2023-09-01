@@ -37,6 +37,7 @@ import { getCorrectColor } from '@/helpers/utils';
 import { FaGavel } from 'react-icons/fa'
 import moment from 'moment';
 import useBreakpoint from 'use-breakpoint'
+import { deviceDetect, deviceType, isTablet } from 'react-device-detect';
 
 /* const { useBreakpoint } = Grid; */
 const BREAKPOINTS = { mobile: 0, tablet: 768, desktop: 1280 }
@@ -157,7 +158,7 @@ export default function DrawerAuction({
       width={'100vw'}
       destroyOnClose={true}
       footer={
-        breakpoint !== 'desktop' && <ButtonsContainer
+        breakpoint === 'desktop' || (breakpoint === 'tablet' && window.matchMedia('(orientation: landscape)').matches) ? null : <ButtonsContainer
           styles={{
             backgroundColor: auction.styles?.cards?.backgroundColor || '#FFFFFF',
             color: auction.styles?.cards?.color || '#000000',
@@ -172,9 +173,8 @@ export default function DrawerAuction({
       }
       footerStyle={{backgroundColor: auction?.styles?.cards?.backgroundColor,}}
     >
-      {console.log(window.screen.orientation.type)}
       <Row gutter={breakpoint === 'mobile' ? [0, 16] : breakpoint === 'tablet' ? [8, 8] : [32, 32]} wrap justify='space-between'>
-        <Col xs={24} sm={24} md={breakpoint === 'tablet' ? 24 : 12} lg={12} xl={12} xxl={12}>
+        <Col xs={24} sm={24} md={breakpoint === 'tablet' && !window.matchMedia('(orientation: landscape)').matches ? 24: 12} lg={12} xl={12} xxl={12}>
           <Row gutter={[16, 16]}>
             <Col span={24}>
               <Affix offsetTop={breakpoint === 'mobile' ? 65 : 0}>
@@ -192,7 +192,7 @@ export default function DrawerAuction({
                 </Card>
               </Affix>
             </Col>
-            {breakpoint !== 'mobile' && breakpoint !== 'tablet' && (
+            {breakpoint !== 'mobile' && window.matchMedia('(orientation: landscape)').matches && (
               <Col span={24}>
                 <Card
                   style={{
@@ -312,7 +312,7 @@ export default function DrawerAuction({
             )}
           </Row>
         </Col>
-        <Col xs={24} sm={24} md={breakpoint === 'tablet' ? 12 : 8} lg={8} xl={8} xxl={8}>
+        <Col xs={24} sm={24} md={breakpoint === 'tablet' && !window.matchMedia('(orientation: landscape)').matches ? 12 : 8} lg={8} xl={8} xxl={8}>
           <Row justify='center'>
             <Col span={24}>
               <CardProduct auction={auction} currentPrice={Bids[0]?.offered}/>
@@ -352,7 +352,7 @@ export default function DrawerAuction({
             </Modal>
           </Row>
         </Col>
-        {breakpoint !== 'mobile' && breakpoint !== 'tablet' &&
+        {breakpoint !== 'mobile' && window.matchMedia('(orientation: landscape)').matches &&
           <Col xs={24} sm={24} md={4} lg={4} xl={4} xxl={4}>
             <ButtonsContainer
               styles={{
@@ -369,8 +369,8 @@ export default function DrawerAuction({
 
           </Col>
         }
-        {breakpoint !== 'desktop' && (
-          <Col span={breakpoint === 'tablet' ? 12 : breakpoint === 'mobile' ? 24 : 24}>
+        {(breakpoint === 'mobile' || (breakpoint === 'tablet' && !window.matchMedia('(orientation: landscape)').matches)) && (
+          <Col span={breakpoint === 'mobile' ? 24 : 12}>
             <Card
               style={{
                 borderRadius: '20px',

@@ -7,10 +7,10 @@ import EventCard from '@/components/shared/eventCard';
 const { Title } = Typography;
 
 interface Props {
-	events: any[];
+  events: any[];
 }
 export const NextEvents = ({ events }: Props) => {
-	const { filteredList, searchTerm, setSearchTerm } = useSearchList(events, 'name');
+  const { filteredList, searchTerm, setSearchTerm } = useSearchList(events, 'name');
 
 	return (
 		<Card

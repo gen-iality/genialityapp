@@ -15,8 +15,8 @@ import { sortableHandle } from 'react-sortable-hoc';
 // import ExportExcel from '../components/newComponent/ExportExcel';
 import moment from 'moment';
 import { Suspense } from 'react';
+import { ExportExcel } from '../components/newComponent/ExportExcel';
 import { useHelper } from '@/context/helperContext/hooks/useHelper';
-import { ExportExcel } from '@/components/export-excel/ExportExcel';
 //import { UseCurrentUser } from '../context/userContext';
 
 const SortableItem = sortableElement((props) => <tr {...props} />);
