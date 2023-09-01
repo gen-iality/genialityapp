@@ -1,4 +1,4 @@
-export interface ExcelEventColumn {
+export interface ExcelColumn {
     title: string;
     dataIndex: string;
 }

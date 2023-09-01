@@ -2,10 +2,10 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import * as XLSX from 'xlsx/xlsx.mjs';
 import { DispatchMessageService } from '../../context/MessageService';
-import { ExcelEventColumn } from '@/pages/eventOrganization/tableColums/interfaces/ExcelEvent.interface';
+import { ExcelColumn } from '@/pages/eventOrganization/tableColums/interfaces/ExcelEvent.interface';
 
 interface Props {
-  columns?: ExcelEventColumn[];
+  columns?: ExcelColumn[];
   fileName: string;
   onAsyncList: () => Promise<any[]>;
 }
