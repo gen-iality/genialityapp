@@ -83,12 +83,14 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 			setButtonsActions(initialButtonsState);
 		};
 	}, [eventAction, eventData]);
-	const EVENTS_WON =['64d68d421e2dfb1800054462'/* , '64230dc18611006a490d6022', '64cacb2d6014cebb340ef142' */]
+	
 	const ORIGINAL_EVENT_ID  : { [key : string] : string}= {
-		'64d68d421e2dfb1800054462': '64df6d1b37be028c4c064352'
+		'64f2159bf5076637df054592': '64cacb2d6014cebb340ef142',// demo wom
+		'64230dc18611006a490d6022' : '645536848fb7b0e0dd0eb262'//evento de pruebas para aleja
 	}
 	const handleFunction = (params: EventAccessActionButtonsInterface[]) : EventAccessActionButtonsInterface[] => {
-		if (EVENTS_WON.includes(cEvent.value._id)) {
+		const fakeEvents = Object.keys(ORIGINAL_EVENT_ID)
+		if (fakeEvents.includes(cEvent.value._id)) {
 			return [{
 				label: 'Ingresar al evento',
 				action: () => {
