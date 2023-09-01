@@ -15,7 +15,7 @@ import { sortableHandle } from 'react-sortable-hoc';
 // import ExportExcel from '../components/newComponent/ExportExcel';
 import moment from 'moment';
 import { Suspense } from 'react';
-import { ExportExcel } from '../components/newComponent/ExportExcel';
+// import { ExportExcel } from '../components/newComponent/ExportExcel';
 import { useHelper } from '@/context/helperContext/hooks/useHelper';
 //import { UseCurrentUser } from '../context/userContext';
 
@@ -321,7 +321,7 @@ const Table = (props) => {
           <Row wrap justify='end' gutter={[8, 8]}>
             {exportData && (
               <Col>
-                <ExportExcel list={list} fileName={`${fileName}${moment(new Date()).format('YYYY-DD-MM')}`} />
+                {/* <ExportExcel list={list} fileName={`${fileName}${moment(new Date()).format('YYYY-DD-MM')}`} /> */}
               </Col>
             )}
             {titleTable && <Col>{titleTable}</Col>}
