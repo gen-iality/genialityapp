@@ -8,7 +8,7 @@ const formLayout = {
   wrapperCol: { span: 24 },
 };
 
-export default function FormConditional({ handleChange, onCancel, onFinish, bgColor }: FormConditionalInterface) {
+export default function FormConditional({ handleChange, onCancel, onFinish, bgColor, textColor }: FormConditionalInterface) {
   const intl = useIntl();
   const [form] = Form.useForm();
   return (
@@ -106,7 +106,7 @@ export default function FormConditional({ handleChange, onCancel, onFinish, bgCo
           style={{ margin: '0 8px' }} icon={<CloseCircleOutlined />}>
           Cancelar
         </Button>
-        <Button type={'primary'} htmlType='submit'  size='large' style={{ margin: '0 8px', backgroundColor: bgColor }} icon={<CheckCircleOutlined />}>
+        <Button type={'primary'} htmlType='submit'  size='large' style={{ margin: '0 8px', backgroundColor: bgColor, color: textColor }} icon={<CheckCircleOutlined />}>
           Finalizar
         </Button>
       </div>

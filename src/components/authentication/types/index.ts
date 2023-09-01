@@ -7,6 +7,7 @@ export interface FormConditionalInterface {
   onCancel: ()=>void;
   onFinish: ()=>Promise<void>;
   bgColor: string;
+  textColor: string;
 }
 export interface ConditionalModalInterface {
   visible: boolean;

@@ -63,6 +63,7 @@ export default function ConditionalModal(Props: ConditionalModalInterface) {
           onCancel={closeModal}
           onFinish={handleSubmit}
           bgColor={Props.bgColor}
+          textColor={Props.textColor}
         />
       ),
       icon: <AccountOutlineIcon style={{ fontSize: '32px'/* , color: Props.textColor */ }} />,
