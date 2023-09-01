@@ -3,7 +3,7 @@ import { UseEventContext } from '@/context/eventContext';
 import { UseUserEvent } from '@/context/eventUserContext';
 import { useHelper } from '@/context/helperContext/hooks/useHelper';
 import { firestore } from '@/helpers/firebase';
-import { Alert, Button, Space, Grid } from 'antd';
+import { Alert, Button, Space, Grid , Modal} from 'antd';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import {
@@ -13,6 +13,7 @@ import {
 } from '../interfaces/interfaces';
 import { assignStatusAccordingToAction } from './utils/utils';
 import { useIntl } from 'react-intl';
+import ConditionalModal from '@/components/authentication/ConditionalModal';
 
 const { useBreakpoint } = Grid;
 
@@ -27,7 +28,7 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 	const textColor = cEvent?.value?.styles?.textMenu;
 	const [eventData, setEventData] = useState<any>({});
 	const screens = useBreakpoint();
-
+	const [modal, setModal] = useState(false)
 
 	//Validacion temporal para el evento audi
 	const idEvent = cEvent?.value?._id;
@@ -82,10 +83,25 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 			setButtonsActions(initialButtonsState);
 		};
 	}, [eventAction, eventData]);
-
+	const EVENTS_WON =['64d68d421e2dfb1800054462'/* , '64230dc18611006a490d6022', '64cacb2d6014cebb340ef142' */]
+	const ORIGINAL_EVENT_ID  : { [key : string] : string}= {
+		'64d68d421e2dfb1800054462': '64df6d1b37be028c4c064352'
+	}
+	const handleFunction = (params: EventAccessActionButtonsInterface[]) : EventAccessActionButtonsInterface[] => {
+		if (EVENTS_WON.includes(cEvent.value._id)) {
+			return [{
+				label: 'Ingresar al evento',
+				action: () => {
+					setModal(true)
+				}
+				}]
+		} else {
+			return buttonsActions
+		}
+	}
 	return (
 		<Space direction='vertical' style={{ width: '100%' }}>
-			{buttonsActions.map((button, index) => (
+			{handleFunction(buttonsActions).map((button, index) => (
 				<>
 					{button.label !== 'INITIAL_STATE' && (
 						<Button
@@ -112,7 +128,14 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 					)}
 				</>
 			))}
-			{/* {!!cUser?.value && <PrintBingoCartonButton isInLanding={true} textColor={textColor} bgColor={bgColor} />} */}
+			<ConditionalModal 
+				visible={modal} 
+				setVisible={setModal} 
+				realEvent={ORIGINAL_EVENT_ID[cEvent.value._id] ?? ''} 
+				key={'conditional-key'}
+				bgColor={bgColor}
+				textColor={textColor}
+			/>
 
 			{informativeMessages.map(message => (
 				<>{message.label !== 'INITIAL_STATE' && <Alert message={message.label} type='success' />}</>

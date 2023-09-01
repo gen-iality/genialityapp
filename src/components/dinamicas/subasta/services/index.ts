@@ -2,7 +2,7 @@ import { DispatchMessageService } from "@/context/MessageService";
 import { ApiInterface, Auction, AuctionConfig, IBids, Products } from "../interfaces/auction.interface";
 import { AuctionApi, AuctionProductApi } from '@/helpers/request';
 import { firestore } from "@/helpers/firebase";
-import { saveAuctioFirebase } from "./Execute.service";
+
 const api : ApiInterface = AuctionApi
 const apiProduct : Omit<ApiInterface,  'resetProducts'> = AuctionProductApi
 export const resetProducts =  async  (eventId : string) => {

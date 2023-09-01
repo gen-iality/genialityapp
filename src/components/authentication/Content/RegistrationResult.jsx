@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Result, Row, Space, Typography, Alert, Button } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
-import { FrasesInspiradoras } from '../ModalsFunctions/utils';
+import { FrasesInspiradoras } from '../services/utils';
 import { app } from '../../../helpers/firebase';
 import { UseUserEvent } from '../../../context/eventUserContext';
 import { useHelper } from '../../../context/helperContext/hooks/useHelper';

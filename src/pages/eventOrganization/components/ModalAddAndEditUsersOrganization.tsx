@@ -10,7 +10,7 @@ import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
 import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfirmationOutline';
 import { ScheduleOutlined } from '@ant-design/icons';
 import { saveImageStorage } from '@/helpers/helperSaveImage';
-import createNewUser from '@/components/authentication/ModalsFunctions/createNewUser';
+import createNewUser from '@/components/authentication/services/createNewUser';
 import { UnchangeableUserData } from './form-edit/UnchangeableUserData';
 import { useResultsUserOrganizations } from '../hooks/useResultsUserOrganizations';
 import { useSteps } from '../hooks/useSteps';

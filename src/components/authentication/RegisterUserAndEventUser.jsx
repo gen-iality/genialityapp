@@ -8,11 +8,12 @@ import { ScheduleOutlined } from '@ant-design/icons';
 import FormComponent from '../events/registrationForm/form';
 import { UsersApi } from '../../helpers/request';
 import { LoadingOutlined } from '@ant-design/icons';
-import createNewUser from './ModalsFunctions/createNewUser';
+import createNewUser from './services/createNewUser';
 import { useIntl } from 'react-intl';
 import { UseEventContext } from '../../context/eventContext';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { DispatchMessageService } from '../../context/MessageService';
+import createEventUser from './services/RegisterUserToEvent';
 
 const { Step } = Steps;
 
@@ -162,43 +163,23 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
       CreateAccount();
     });
 
-    async function createEventUser() {
-      let clonBasicDataUser = { ...basicDataUser };
-      delete clonBasicDataUser.password;
-      delete clonBasicDataUser.picture;
 
-      let datauser = {
-        ...clonBasicDataUser,
-        ...dataEventUser,
-      };
-
-      let propertiesuser = { properties: { ...datauser } };
-      try {
-        let respUser = await UsersApi.createOne(propertiesuser, cEvent.value?._id);
-        if (respUser && respUser._id) {
-          setValidationGeneral({
-            status: false,
-            loading: false,
-            textError: intl.formatMessage({
-              id: 'text_error.successfully_registered',
-              defaultMessage: 'Te has inscrito correctamente a este evento',
-            }),
-          });
-          setbasicDataUser({});
-          setdataEventUser({});
-        }
-      } catch (err) {
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Ha ocurrido un error',
-          action: 'show',
-        });
-      }
-    }
 
     SaveUserEvius.then((resp) => {
       if (resp) {
-        createEventUser();
+       const response = createEventUser(basicDataUser, dataEventUser, cEvent);
+       if(response){
+        setValidationGeneral({
+          status: false,
+          loading: false,
+          textError: intl.formatMessage({
+            id: 'text_error.successfully_registered',
+            defaultMessage: 'Te has inscrito correctamente a este evento',
+          }),
+        });
+        setbasicDataUser({});
+        setdataEventUser({});
+       }
       } else {
         setValidationGeneral({
           status: false,
