@@ -14,17 +14,16 @@ export const NextEvents = ({ events }: Props) => {
 
 	return (
 		<Card
+			bodyStyle={{ paddingTop: '0px' }}
 			headStyle={{ border: 'none' }}
 			title={
 				<Badge offset={[60, 22]} count={`${events.length} Eventos`}>
 					<Title level={2}>Eventos próximos</Title>
 				</Badge>
 			}
+			extra={<Space>{events.length > 0 && <InputSearchEvent onHandled={setSearchTerm} />}</Space>}
 			style={{ width: '100%', borderRadius: 20 }}>
 			<Row gutter={[0, 32]}>
-				<Col span={24}>
-					<Space>{events.length > 0 && <InputSearchEvent onHandled={setSearchTerm} />}</Space>
-				</Col>
 				<Col span={24}>
 					<Row gutter={[16, 16]}>
 						{events && events.length > 0 ? (
