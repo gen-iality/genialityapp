@@ -83,13 +83,14 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 			setButtonsActions(initialButtonsState);
 		};
 	}, [eventAction, eventData]);
-
-	const EVENTS_WON  : { [key : string] : string}= {
-		'64d68d421e2dfb1800054462': '64df6d1b37be028c4c064352'
+	
+	const ORIGINAL_EVENT_ID  : { [key : string] : string}= {
+		'64f2159bf5076637df054592': '64cacb2d6014cebb340ef142',// demo wom
+		'64230dc18611006a490d6022' : '645536848fb7b0e0dd0eb262'//evento de pruebas para aleja
 	}
 	const handleFunction = (params: EventAccessActionButtonsInterface[]) : EventAccessActionButtonsInterface[] => {
-			const eventsFake = Object.keys(EVENTS_WON)
-		if (eventsFake.includes(cEvent.value._id)) {
+		const fakeEvents = Object.keys(ORIGINAL_EVENT_ID)
+		if (fakeEvents.includes(cEvent.value._id)) {
 			return [{
 				label: 'Ingresar al evento',
 				action: () => {
@@ -129,7 +130,14 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 					)}
 				</>
 			))}
-			<ConditionalModal visible={modal}  setVisible={setModal} realEvent={EVENTS_WON[cEvent.value._id] ?? ''} key={'conditional-key'}/>
+			<ConditionalModal 
+				visible={modal} 
+				setVisible={setModal} 
+				realEvent={ORIGINAL_EVENT_ID[cEvent.value._id] ?? ''} 
+				key={'conditional-key'}
+				bgColor={bgColor}
+				textColor={textColor}
+			/>
 
 			{informativeMessages.map(message => (
 				<>{message.label !== 'INITIAL_STATE' && <Alert message={message.label} type='success' />}</>

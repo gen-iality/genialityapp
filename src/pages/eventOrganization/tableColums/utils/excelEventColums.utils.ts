@@ -1,6 +1,6 @@
-import { ExcelEventColumn } from "../interfaces/ExcelEvent.interface";
+import { ExcelColumn } from "../interfaces/ExcelEvent.interface";
 
-export const EventExcelColums:ExcelEventColumn[] =[
+export const EventExcelColums:ExcelColumn[] =[
     {
         title:'Codigo',
         dataIndex:'_id'
@@ -23,10 +23,10 @@ export const EventExcelColums:ExcelEventColumn[] =[
     },
     {
         title:'Documentos',
-        dataIndex:'documentsUrls',
+        dataIndex:'documents',
     },
     {
         title:'Url de videos',
-        dataIndex:'videoUrls',
+        dataIndex:'urlsVideos',
     },
 ]

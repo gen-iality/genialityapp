@@ -9,16 +9,16 @@ import { Organization } from '../types';
 const { Title } = Typography;
 
 interface Props {
-	eventsWithEventUser: any[];
-	isLoadingOtherEvents: boolean;
-	organization: Organization | null;
-	setIsModalCertificatesOpen: (item: boolean) => void;
+  eventsWithEventUser: any[];
+  isLoadingOtherEvents: boolean;
+  organization: Organization | null;
+  setIsModalCertificatesOpen: (item: boolean) => void;
 }
 export const MyEvents = ({
-	eventsWithEventUser,
-	isLoadingOtherEvents,
-	organization,
-	setIsModalCertificatesOpen,
+  eventsWithEventUser,
+  isLoadingOtherEvents,
+  organization,
+  setIsModalCertificatesOpen,
 }: Props) => {
 	const { filteredList, searchTerm, setSearchTerm } = useSearchList(eventsWithEventUser, 'name');
 	return (

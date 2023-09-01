@@ -1,9 +1,14 @@
-import { MailOutlined, ScheduleOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
+import { CheckCircleOutlined, CloseCircleOutlined, CloseOutlined, MailOutlined, ScheduleOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Typography } from 'antd';
 import { useIntl } from 'react-intl';
 import { FormConditionalInterface } from '../types';
 
-export default function FormConditional({ handleChange, onCancel, onFinish }: FormConditionalInterface) {
+const formLayout = {
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 },
+};
+
+export default function FormConditional({ handleChange, onCancel, onFinish, bgColor, textColor }: FormConditionalInterface) {
   const intl = useIntl();
   const [form] = Form.useForm();
   return (
@@ -16,7 +21,12 @@ export default function FormConditional({ handleChange, onCancel, onFinish }: Fo
       form={form}
       autoComplete='on'
       layout='vertical'
-      onFinish={onFinish}>
+      {...formLayout}
+      onFinish={onFinish}
+    >
+      <Typography.Text strong>
+        Por favor ingresa los siguientes datos para verificar tu información
+      </Typography.Text><br /><br />
       <Form.Item
         label={intl.formatMessage({
           id: 'modal.label.name',
@@ -93,10 +103,10 @@ export default function FormConditional({ handleChange, onCancel, onFinish }: Fo
         <Button
           onClick={onCancel}
           size='large'
-          style={{ margin: '0 8px' }}>
+          style={{ margin: '0 8px' }} icon={<CloseCircleOutlined />}>
           Cancelar
         </Button>
-        <Button type={'primary'} htmlType='submit'  size='large' style={{ margin: '0 8px' }}>
+        <Button type={'primary'} htmlType='submit'  size='large' style={{ margin: '0 8px', backgroundColor: bgColor, color: textColor }} icon={<CheckCircleOutlined />}>
           Finalizar
         </Button>
       </div>

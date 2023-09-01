@@ -1,78 +1,49 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
-import { RolAttApi } from '../../helpers/request';
 import { FormattedDate, FormattedTime } from 'react-intl';
-/** export Excel */
-import { useHistory } from 'react-router-dom';
 import { Table, Button, Row, Col, Tag } from 'antd';
-import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined } from '@ant-design/icons';
 import { columns } from './tableColums/membersTableColumns';
-import moment from 'moment';
 import withContext from '../../context/withContext';
-import { utils, writeFileXLSX } from 'xlsx';
 import Header from '../../antdComponents/Header';
 import { ModalAddAndEditUsers } from './components/ModalAddAndEditUsersOrganization';
 import { useGetEventsStatisticsData } from './tableColums/utils/useGetOrganizations';
+import { parseMembersColumsExcel, parseDataMembersToExcel } from './tableColums/utils/parseData.utils';
+// import { ExportExcel } from '@/components/export-excel/ExportExcel';
 
-function OrgMembers(props) {
+const OrgMembers = (props) => {
   const [lastUpdate, setLastUpdate] = useState();
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [addOrEditUser, setAddOrEditUser] = useState(false);
-  const [, setExtraFields] = useState([]);
-  const [, setRoleList] = useState([]);
   const [selectedUser, setSelectedUser] = useState();
-  const [, setEditMember] = useState(false);
-  let { _id: organizationId } = props.org;
-  const history = useHistory();
+  let { _id: organizationId, user_properties: userPropertiesOrg } = props.org;
 
-  const { membersDat, isLoading, fetchEventsStatisticsData} = useGetEventsStatisticsData(organizationId)
-  async function getRoleList() {
-    const roleListData = await RolAttApi.byEventRolsGeneral();
-    setRoleList(roleListData);
-  }
+  const { membersDat, isLoading, fetchEventsStatisticsData } = useGetEventsStatisticsData(organizationId);
 
   function startingComponent() {
     fetchEventsStatisticsData();
     setLastUpdate(new Date());
-    getRoleList();
-    setExtraFields(props.org.user_properties);
   }
   useEffect(() => {
     startingComponent();
   }, [props.org.user_properties]);
 
-  function goToEvent(eventId) {
-    const url = `/eventadmin/${eventId}/agenda`;
-    history.replace({ pathname: url });
-  }
-
-  async function exportFile(e) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    const ws = utils.json_to_sheet(membersDat);
-    const wb = utils.book_new();
-    utils.book_append_sheet(wb, ws, 'Members');
-    writeFileXLSX(wb, `Miembros_${moment().format('l')}.xlsx`);
-  }
-
-  function closeOrOpenModalMembers() {
+  const closeOrOpenModalMembers = () => {
     setAddOrEditUser((prevState) => {
       return !prevState;
     });
-  }
+  };
 
-  function addUser() {
+  const addUser = () => {
     setSelectedUser(undefined);
     closeOrOpenModalMembers();
-  }
-  function editModalUser(item) {
+  };
+  const editModalUser = (item) => {
     setSelectedUser(item);
     closeOrOpenModalMembers();
-    setEditMember(true);
-  }
+  };
 
   const columnsData = {
     searchedColumn,
@@ -80,6 +51,9 @@ function OrgMembers(props) {
     searchText,
     setSearchText,
   };
+
+  const columsMembersView = columns(columnsData, editModalUser, organizationId, fetchEventsStatisticsData);
+  const columsMembersExcel = parseMembersColumsExcel(userPropertiesOrg);
 
   return (
     <>
@@ -95,7 +69,7 @@ function OrgMembers(props) {
         <Tag>Inscritos: {membersDat.length || 0}</Tag>
       </p>
       <Table
-        columns={columns(columnsData, editModalUser, organizationId, fetchEventsStatisticsData)}
+        columns={columsMembersView}
         dataSource={membersDat}
         size='small'
         rowKey='index'
@@ -105,15 +79,15 @@ function OrgMembers(props) {
         title={() => (
           <Row wrap justify='end' gutter={[8, 8]}>
             <Col>
-              {membersDat.length > 0 && (
+              {/* {membersDat.length > 0 && (
                 <Button type='primary' icon={<DownloadOutlined />} onClick={exportFile}>
                   Exportar
                 </Button>
-              )}
-              {/* <ExportExcel 
-                columns={columns(columnsData, editModalUser)} 
-                list={membersData} 
-                fileName={'memberReport'} 
+              )} */}
+              {/* <ExportExcel
+                list={parseDataMembersToExcel(membersDat, columsMembersExcel)}
+                fileName={'memberReport'}
+                columns={columsMembersExcel}
               /> */}
             </Col>
             <Col>
@@ -127,9 +101,9 @@ function OrgMembers(props) {
       {addOrEditUser && (
         <ModalAddAndEditUsers
           visible={addOrEditUser}
-          onCancel={()=>{
-            setAddOrEditUser(false)
-            setSelectedUser(undefined)
+          onCancel={() => {
+            setAddOrEditUser(false);
+            setSelectedUser(undefined);
           }}
           organizationId={organizationId}
           selectedUser={selectedUser}
@@ -138,5 +112,5 @@ function OrgMembers(props) {
       )}
     </>
   );
-}
+};
 export default withContext(OrgMembers);
