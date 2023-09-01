@@ -1,6 +1,6 @@
 import { DownloadOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
-import * as XLSX from 'xlsx/xlsx.mjs';
+import { utils, writeFileXLSX } from 'xlsx';
 import { DispatchMessageService } from '../../context/MessageService';
 import { ExcelColumn } from '@/pages/eventOrganization/tableColums/interfaces/ExcelEvent.interface';
 
@@ -25,10 +25,10 @@ export const ExportExcel = ({ list, columns, fileName }: Props) => {
         return newObj;
       });
       // console.log({ newlist })
-      const wb = XLSX.utils.book_new();
-      const ws = XLSX.utils.json_to_sheet(newlist);
-      XLSX.utils.book_append_sheet(wb, ws, 'Datos');
-      XLSX.writeFile(wb, fileName + '.xlsx');
+      const wb = utils.book_new();
+      const ws = utils.json_to_sheet(newlist);
+      utils.book_append_sheet(wb, ws, 'Datos');
+      writeFileXLSX(wb, fileName + '.xlsx');
     } else {
       DispatchMessageService({
         type: 'error',
