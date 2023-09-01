@@ -25,6 +25,7 @@ export const MyEvents = ({
 		<>
 			{/* Lista otros eventos en los que esta inscrito el usuario*/}
 			<Card
+				bodyStyle={{paddingTop:'0px'}}
 				headStyle={{ border: 'none' }}
 				title={
 					<Badge offset={[60, 22]} count={`${eventsWithEventUser.length} Eventos`}>
@@ -32,16 +33,19 @@ export const MyEvents = ({
 					</Badge>
 				}
 				extra={
-					organization?.show_my_certificates && (
-						<Button type='default' onClick={() => setIsModalCertificatesOpen(true)}>
-							Ver mis certificados
-						</Button>
-					)
+					<Space>
+						{eventsWithEventUser.length > 0 && <InputSearchEvent onHandled={setSearchTerm} />}
+						
+					</Space>
 				}
 				style={{ width: '100%', borderRadius: 20 }}>
 				<Row gutter={[0, 32]}>
 					<Col span={24}>
-						<Space>{eventsWithEventUser.length > 0 && <InputSearchEvent onHandled={setSearchTerm} />}</Space>
+					{organization?.show_my_certificates && (
+						<Button size='large' type='default' onClick={() => setIsModalCertificatesOpen(true)}>
+							Mis certificados
+						</Button>
+						)}
 					</Col>
 					<Col span={24}>
 						<Row gutter={[16, 16]}>
@@ -88,7 +92,6 @@ export const MyEvents = ({
 									<Empty description='No estas inscritos en otros eventos' />
 								</div>
 							)}
-							C
 						</Row>
 					</Col>
 				</Row>
