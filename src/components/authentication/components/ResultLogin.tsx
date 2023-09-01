@@ -1,4 +1,4 @@
-import { Result } from 'antd';
+import { Card, Result, Typography } from 'antd';
 import React, { useEffect } from 'react';
 import { app } from '../../../helpers/firebase';
 import { UseUserEvent } from '../../../context/eventUserContext';
@@ -7,7 +7,7 @@ import { DataUserInterface } from '../types';
 import Loading from '@/components/profile/loading';
 import { useHistory } from 'react-router';
 
-export default function ResultLogin({ status, user, eventId, close }: { status: 'loading' | 'error' | 'success' , user : DataUserInterface, eventId: string, close: ()=> void}) {
+export default function ResultLogin({ status, user, eventId, close, bgColor }: { status: 'loading' | 'error' | 'success' , user : DataUserInterface, eventId: string, close: ()=> void, bgColor: string}) {
   const cEventUser = UseUserEvent();
   let { helperDispatch } = useHelper();
 
@@ -36,13 +36,26 @@ export default function ResultLogin({ status, user, eventId, close }: { status: 
   return (
     <div>
         {status === 'loading' && (
-           <Loading/>
+          <Loading/>
         )}
         {status === 'success' && (
-            <Result status='success' title='Felicidades !' subTitle='Pronto entraras al evento' />
+          <Card>
+            <Result 
+              style={{ padding: '30px 0', borderRadius: 20, backgroundColor: '#FFFFFF50' }}
+              status='success' 
+              title={<Typography.Title level={5}>¡Felicidades!</Typography.Title>} 
+              subTitle={<Typography.Text strong>Pronto entraras al evento</Typography.Text>}
+            />
+          </Card>
         )}
         {status === 'error' && (
-            <Result  status='error' title='Ups !' subTitle='Algo salio mal' />
+          <Result  
+            style={{ padding: '30px 0', borderRadius: 20, backgroundColor: '#FFFFFF50' }}
+            status='error' 
+            title={<Typography.Title level={5}>¡Ups!</Typography.Title>} 
+            subTitle={<Typography.Text strong>Algo salio mal</Typography.Text>}
+          />
+          
         )}
     </div>
   )

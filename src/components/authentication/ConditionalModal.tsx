@@ -1,4 +1,4 @@
-import { Button, Grid, Modal, Steps } from 'antd';
+import { Button, Grid, Modal, Space, Steps } from 'antd';
 import React, { useState } from 'react';
 
 import { ConditionalModalInterface, DataUserInterface } from './types';
@@ -9,8 +9,10 @@ import ResultLogin from './components/ResultLogin';
 import createNewUser from './services/createNewUser';
 import createEventUser from './services/RegisterUserToEvent';
 import { DispatchMessageService } from '@/context/MessageService';
+
 const { Step } = Steps;
 const { useBreakpoint } = Grid;
+
 export default function ConditionalModal(Props: ConditionalModalInterface) {
   const [current, setCurrent] = useState(0);
   const [status, setStatus] = useState<'loading' | 'error' | 'success'>('loading');
@@ -60,14 +62,15 @@ export default function ConditionalModal(Props: ConditionalModalInterface) {
           handleChange={handleChange}
           onCancel={closeModal}
           onFinish={handleSubmit}
+          bgColor={Props.bgColor}
         />
       ),
-      icon: <AccountOutlineIcon style={{ fontSize: '32px' }} />,
+      icon: <AccountOutlineIcon style={{ fontSize: '32px'/* , color: Props.textColor */ }} />,
     },
     {
       title: 'Second',
-      content: <ResultLogin status={status} user={userData} close={closeModal} eventId={Props.realEvent}/>,
-      icon: <TicketConfirmationOutlineIcon style={{ fontSize: '32px' }} />,
+      content: <ResultLogin status={status} user={userData} close={closeModal} eventId={Props.realEvent} bgColor={Props.bgColor} />,
+      icon: <TicketConfirmationOutlineIcon style={{ fontSize: '32px'/* , color: Props.textColor */ }} />,
     },
   ];
   const stylePaddingDesktop: React.CSSProperties = {
@@ -87,6 +90,7 @@ export default function ConditionalModal(Props: ConditionalModalInterface) {
       closable
       footer={null}
       onCancel={closeModal}
+      bodyStyle={{backgroundColor: Props.bgColor + '35', borderRadius: 10/* , color: Props.textColor */}}
       style={{
         height: 'auto',
         overflowY: 'hidden',
@@ -101,8 +105,8 @@ export default function ConditionalModal(Props: ConditionalModalInterface) {
             <Step key={item.title} icon={item.icon} />
           ))}
         </Steps>
-        <div style={{ marginTop: '30px' }}>{steps[current].content}</div>
-        <div style={{ marginTop: '30px' }}></div>
+          <div>{steps[current].content}</div>
+          {/* <div></div> */}
       </div>
     </Modal>
   );

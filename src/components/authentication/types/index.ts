@@ -6,11 +6,14 @@ export interface FormConditionalInterface {
   handleChange: (key: keyof DataUserInterface, value: string)=>void;
   onCancel: ()=>void;
   onFinish: ()=>Promise<void>;
+  bgColor: string;
 }
 export interface ConditionalModalInterface {
   visible: boolean;
   setVisible: any;
   realEvent : string
+  bgColor: string
+  textColor: string
 }
 export interface DataUserInterface {
   names: string;
