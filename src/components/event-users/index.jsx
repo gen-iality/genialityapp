@@ -1060,7 +1060,7 @@ class ListEventUser extends Component {
                 </Link>
               </Col>
               <Col>
-                <Dropdown overlay={menu} trigger={['click', 'hover']}>
+                <Dropdown overlay={menu} trigger={['click']}>
                   <Button
                     type='primary'
                     size='middle'

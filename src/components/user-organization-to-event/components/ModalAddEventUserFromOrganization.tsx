@@ -3,7 +3,7 @@ import { UseEventContext } from '@/context/eventContext';
 import { Modal, ModalProps } from 'antd';
 import { UserOrganizationToEvent } from '../interface/table-user-oranization-to-event';
 import { useEffect, useState } from 'react';
-import { RolAttApi, UsersApi } from '@/helpers/request';
+import { OrganizationApi, RolAttApi, UsersApi } from '@/helpers/request';
 import { handleRequestError } from '@/helpers/utils';
 import { DispatchMessageService } from '@/context/MessageService';
 
@@ -27,7 +27,7 @@ export const ModalAddEventUserFromOrganization = ({
   } = UseEventContext();
 
   const buildField = async () => {
-    if (event.value.user_properties) {
+    if (event.value.organizer.user_properties) {
       const rolesList = await RolAttApi.byEventRolsGeneral();
       let rolesOptions = rolesList.map((rol: any) => {
         return {
@@ -35,7 +35,7 @@ export const ModalAddEventUserFromOrganization = ({
           value: rol._id,
         };
       });
-      const fieldsForm: any[] = [...event.value.user_properties];
+      const fieldsForm: any[] = [...event.value.organizer.user_properties];
       fieldsForm.push({
         author: null,
         categories: [],
