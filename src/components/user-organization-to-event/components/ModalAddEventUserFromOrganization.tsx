@@ -28,6 +28,8 @@ export const ModalAddEventUserFromOrganization = ({
 
   const buildField = async () => {
     if (event.value.organizer.user_properties) {
+      console.log(event.value.organizer.user_properties);
+      
       const rolesList = await RolAttApi.byEventRolsGeneral();
       let rolesOptions = rolesList.map((rol: any) => {
         return {
@@ -59,7 +61,6 @@ export const ModalAddEventUserFromOrganization = ({
   useEffect(() => {
     buildField();
   }, []);
-
   const saveEventUser = async (values: any) => {
     setIsLoadingReques(true);
     let resp;
@@ -112,7 +113,7 @@ export const ModalAddEventUserFromOrganization = ({
         fields={fieldForm}
         conditionalFields={undefined}
         attendee={{
-          properties: { email: selectedUserOrg.email, names: selectedUserOrg.name },
+          properties: { names: selectedUserOrg.name, ...selectedUserOrg },
         }}
         isAddFromOrganization
         saveAttendee={saveEventUser}
