@@ -1,3 +1,4 @@
+import { SearchOutlined } from '@ant-design/icons';
 import { Input } from 'antd';
 import React from 'react';
 
@@ -6,6 +7,6 @@ interface Props {
 }
 export const InputSearchEvent = ({ onHandled }: Props) => {
   return (
-    <Input.Search placeholder='Ingrese el nombre de un evento' onChange={({ target: { value } }) => onHandled(value)} />
+    <Input size='large' prefix={<SearchOutlined />} placeholder='Ingrese el nombre de un evento' onChange={({ target: { value } }) => onHandled(value)} />
   );
 };
