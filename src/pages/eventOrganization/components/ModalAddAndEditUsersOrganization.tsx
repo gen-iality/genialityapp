@@ -153,7 +153,11 @@ export const ModalAddAndEditUsers = ({
     if (alreadyExistUser) return resultUserExistIntoOrganization(newUser.email);
 
     try {
-      const respUser = await OrganizationApi.saveUser(organizationId, { properties: userToOrganization }, addToUserEvents);
+      const respUser = await OrganizationApi.saveUser(
+        organizationId,
+        { properties: userToOrganization },
+        addToUserEvents
+      );
 
       if (respUser._id) {
         setLoadingRequest(false);
@@ -173,7 +177,7 @@ export const ModalAddAndEditUsers = ({
   const onEditUserToOrganization = async ({ rol_id, ...updateUser }: UserToOrganization) => {
     const { picture, password, ...userToOrganization } = updateUser;
     return await OrganizationApi.editUser(organizationId, selectedUser?._id, {
-      properties: userToOrganization,
+      properties: { ...userToOrganization, rol_id },
       rol_id,
     });
   };
@@ -210,12 +214,12 @@ export const ModalAddAndEditUsers = ({
                             type: 'list',
                             options: [
                               {
-                                value: ROLS_USER.ATTENDEE_ID/* '60e8a7e74f9fb74ccd00dc22' */,
+                                value: ROLS_USER.ATTENDEE_ID /* '60e8a7e74f9fb74ccd00dc22' */,
                                 label: 'Attendee',
                                 type: 'attendee',
                               },
                               {
-                                value: ROLS_USER.ADMINISTRATOR_ID/* '5c1a59b2f33bd40bb67f2322' */,
+                                value: ROLS_USER.ADMINISTRATOR_ID /* '5c1a59b2f33bd40bb67f2322' */,
                                 label: 'Administrator',
                                 type: 'admin',
                               },
