@@ -77,6 +77,7 @@ const UserStatusAndMenu = (props) => {
   const [isAtEventLanding, setIsAtEventLanding] = useState(false)
   const [isAtHome, setIsAtHome] = useState(false)
   const [organization, setOrganization] = useState({})
+  const [organizations, setOrganizations] = useState({})
 
   const cEvent = useEventContext()
   const intl = useIntl()
@@ -88,9 +89,10 @@ const UserStatusAndMenu = (props) => {
 
   useEffect(() => {
     OrganizationApi.mine().then((data) => {
-      const someAdmin = data.some((orgUser) => orgUser.rol?.type === 'admin')
-      console.log('organization user has some admin rol?', someAdmin)
-      setIsSomeAdminUser(someAdmin)
+      console.log('orga', data)
+      setOrganizations(data || [])
+      //console.log('organization user has some admin rol?', someAdmin)
+      //setIsSomeAdminUser(someAdmin)
     })
   }, [])
 
@@ -359,70 +361,102 @@ const UserStatusAndMenu = (props) => {
 
   return (
     <>
-      {user ? (
-        <>
-          {isAtOrganizationLanding && (
-            <>
-              <Col>
-                <Image
-                  style={{
-                    height: '50px',
-                    borderRadius: '10px',
-                    boxShadow: '2px 2px 10px 1px rgba(0,0,0,0.25)',
-                    backgroundColor: '#FFFFFF',
-                  }}
-                  src={organization?.styles?.event_image || 'error'}
-                  fallback="http://via.placeholder.com/500/F5F5F7/CCCCCC?text=No%20Image"
-                />
-              </Col>
-
-              {!screens.xs && (
-                <Col style={{ marginLeft: '2rem' }}>
-                  <Text style={{ fontWeight: '700' }}>{organization?.name}</Text>
-                </Col>
-              )}
-              {loggedInuser}
-            </>
-          )}
-
-          {isAtEventLanding && (
-            <>
-              <Space justify="end">
-                <Link
-                  title="Ir a la organización"
-                  to={`/organization/${cEvent.value?.organizer._id}/events`}
-                >
-                  <Button
-                    style={{ borderRadius: '10px' }}
-                    size="middle"
-                    icon={<ArrowLeftOutlined />}
-                  >
-                    Todos los cursos
-                  </Button>
-                </Link>
-                <Link
-                  title="Ir al CMS del curso"
-                  to={`/eventadmin/${cEvent.value?._id}`}
-                  target="_blank"
-                >
-                  <Button
-                    style={{ borderRadius: '10px' }}
-                    size="middle"
-                    icon={<SettingOutlined />}
-                  >
-                    Editar curso
-                  </Button>
-                </Link>
-                {loggedInuser}
-              </Space>
-            </>
-          )}
-
-          {isAtHome && loggedInuser}
-        </>
-      ) : (
-        loggedOutUser
+      {!isAtOrganizationLanding && !isAtEventLanding && (
+        <Space justify="end">
+          <Col style={{ marginLeft: '2rem' }}>
+            <Link
+              title="Ir a la organización"
+              to={`/organization/${
+                Array.isArray(organizations) && organizations[0]?.id
+              }/events`}
+            >
+              <Text style={{ fontWeight: '700' }}>
+                {' '}
+                {Array.isArray(organizations) && organizations[0]?.name}
+              </Text>
+            </Link>
+          </Col>
+        </Space>
       )}
+      {isAtOrganizationLanding && (
+        <>
+          <Col>
+            <Link
+              title="Ir a la organización"
+              to={`/organization/${organization._id}/events`}
+            >
+              <Image
+                style={{
+                  height: '50px',
+                  borderRadius: '10px',
+                  boxShadow: '2px 2px 10px 1px rgba(0,0,0,0.25)',
+                  backgroundColor: '#FFFFFF',
+                }}
+                src={organization?.styles?.event_image || 'error'}
+                fallback="http://via.placeholder.com/500/F5F5F7/CCCCCC?text=No%20Image"
+              />
+            </Link>
+          </Col>
+
+          {!screens.xs && (
+            <Col style={{ marginLeft: '2rem' }}>
+              <Link
+                title="Ir a la organización"
+                to={`/organization/${organization._id}/events`}
+              >
+                <Text style={{ fontWeight: '700' }}>{organization?.name}</Text>
+              </Link>
+            </Col>
+          )}
+          {loggedInuser}
+        </>
+      )}
+
+      <Space justify="end">
+        {isAtEventLanding && (
+          <Link
+            title="Ir a la organización"
+            to={`/organization/${cEvent.value?.organizer._id}/events`}
+          >
+            <Button
+              style={{ borderRadius: '10px' }}
+              size="middle"
+              icon={<ArrowLeftOutlined />}
+            >
+              {cEvent.value?.organizer.name}
+            </Button>
+          </Link>
+        )}
+
+        {user ? (
+          <>
+            <></>
+            {isAtEventLanding && (
+              <>
+                <Space justify="end">
+                  <Link
+                    title="Ir al CMS del curso"
+                    to={`/eventadmin/${cEvent.value?._id}`}
+                    target="_blank"
+                  >
+                    <Button
+                      style={{ borderRadius: '10px' }}
+                      size="middle"
+                      icon={<SettingOutlined />}
+                    >
+                      Editar curso
+                    </Button>
+                  </Link>
+                  {loggedInuser}
+                </Space>
+              </>
+            )}
+            {isAtHome && loggedInuser}
+          </>
+        ) : (
+          loggedOutUser
+        )}
+      </Space>
     </>
   )
 }

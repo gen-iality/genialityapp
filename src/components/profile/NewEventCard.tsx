@@ -99,7 +99,7 @@ const NewEventCard: FunctionComponent<INewEventCardProps> = (props) => {
               fontWeight: 'bold',
             }}
           >
-            {entity === 'event' ? 'Nuevo curso' : 'Nueva organizacion'}
+            {entity === 'event' ? 'Nuevo curso' : 'Nueva organización'}
           </Typography.Text>
         </Space>
       </Card>

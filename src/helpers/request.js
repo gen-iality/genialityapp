@@ -777,6 +777,7 @@ export const OrganizationApi = {
     const token = await GetTokenUserFirebase()
 
     const resp = await Actions.getAll(`api/me/organizations?token=${token}`)
+
     const data = resp.data.map((item) => {
       return {
         _id: item._id,
@@ -789,6 +790,9 @@ export const OrganizationApi = {
       }
     })
     return data
+  },
+  isAdminOfItsFirstOrganization: (organizations) => {
+    return organizations && organizations.some((orgUser) => orgUser.rol?.type !== 'admin')
   },
   getOne: async (id) => {
     return await Actions.getOne('/api/organizations/', id)
