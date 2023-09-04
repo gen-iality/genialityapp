@@ -35,7 +35,7 @@ export const PassEvents = ({ eventsOld, isUserRegisterInEvent, havePaymentEvent 
 			headStyle={{ border: 'none' }}
 			title={
 				<Badge offset={[60, 22]} count={`${eventsOld.length} Eventos`}>
-					<Title level={2}>Eventos pasados</Title>
+					<Title level={2}>Eventos disponibles</Title>
 				</Badge>
 			}
 			extra={<Space>{eventsOld.length > 0 && <InputSearchEvent onHandled={setSearchTerm} />}</Space>}

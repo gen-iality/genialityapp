@@ -131,18 +131,16 @@ function EventOrganization({ match }: OrganizationProps) {
                     )}
                   </Col>
                 )}
-
-                <Col style={{ width: '100%' }}>
-                  {/* Lista de eventos próximos */}
-                  <NextEvents events={events} />
-                </Col>
-
                 <Col style={{ width: '100%' }}>
                   <PassEvents
                     eventsOld={eventsOld}
                     havePaymentEvent={havePaymentEvent}
                     isUserRegisterInEvent={isUserRegisterInEvent}
                   />
+                </Col>
+                <Col style={{ width: '100%' }}>
+                  {/* Lista de eventos próximos */}
+                  <NextEvents events={events} />
                 </Col>
               </Row>
             </Col>
