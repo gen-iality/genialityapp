@@ -953,6 +953,10 @@ export const OrganizationApi = {
   getEventsStatistics: async (org, order='oldest') => {
     return await Actions.get(`/api/organizations/${org}/eventsstadistics?order=${order}`);
   },
+  getEventsStatisticsExport: async (org, order='oldest') => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`/api/organizations/${org}/eventsstadistics/export?order=${order}&token=${token}`);
+  },
   editAllUserProperties: async (org, data) => {
     let token = await GetTokenUserFirebase();
     return await Actions.put(`api/organizations/${org}?token=${token}`, data);
