@@ -20,7 +20,6 @@ export function useGetEventsStatisticsData(organizationId) {
         position: membersData.rol?.name ?? 'NaN', //Si no viene Rol validar que deba traerlo
         rol_id: membersData.rol_id,
         isAuthor: membersData.account_id === membersData.organization.author,
-        user_properties: membersData.organization.user_properties,
       };
       fieldsMembersData.push(properties);
     });
