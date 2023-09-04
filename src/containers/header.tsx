@@ -325,6 +325,7 @@ const Headers = (props: Props) => {
 								</Typography.Text>
 							</Button>
 						)}
+						{window.location.href.includes('eventadmin') && <Typography.Text strong style={{textTransform: 'uppercase'}}>Evento - {cEvent.value?.name}</Typography.Text>}
 						{validatorOrg && (
 							<Space align='center'>
 								<Image
