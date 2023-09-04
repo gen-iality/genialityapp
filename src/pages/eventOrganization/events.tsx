@@ -7,7 +7,7 @@ import Header from '../../antdComponents/Header';
 import { useGetEventWithStatistics } from './hooks/useGetEventWithStatistics';
 import { EventExcelColums } from './tableColums/utils/excelEventColums.utils';
 import { parseEventsDataToExcel } from './tableColums/utils/parseData.utils';
-// import { ExportExcelAsync } from '@/components/export-excel/ExportExcelAsync';
+import { ExportExcelAsync } from '@/components/export-excel/ExportExcelAsync';
 import { OrganizationApi } from '@/helpers/request';
 
 function OrgEvents(props: any) {
@@ -36,7 +36,7 @@ function OrgEvents(props: any) {
   const renderTitle = () => (
     <Row wrap justify='end' gutter={[8, 8]}>
       <Col>
-        {/* <ExportExcelAsync columns={EventExcelColums} fileName={'eventReport'} onAsyncList={onAsyncList} /> */}
+        <ExportExcelAsync columns={EventExcelColums} fileName={'eventReport'} onAsyncList={onAsyncList} />
       </Col>
       <Col>
         <Button

@@ -10,7 +10,7 @@ import Header from '../../antdComponents/Header';
 import { ModalAddAndEditUsers } from './components/ModalAddAndEditUsersOrganization';
 import { useGetEventsStatisticsData } from './tableColums/utils/useGetOrganizations';
 import { parseMembersColumsExcel, parseDataMembersToExcel } from './tableColums/utils/parseData.utils';
-// import { ExportExcel } from '@/components/export-excel/ExportExcel';
+import { ExportExcel } from '@/components/export-excel/ExportExcel';
 
 const OrgMembers = (props) => {
   const [lastUpdate, setLastUpdate] = useState();
@@ -84,11 +84,11 @@ const OrgMembers = (props) => {
                   Exportar
                 </Button>
               )} */}
-              {/* <ExportExcel
+              <ExportExcel
                 list={parseDataMembersToExcel(membersDat, columsMembersExcel)}
                 fileName={'memberReport'}
                 columns={columsMembersExcel}
-              /> */}
+              />
             </Col>
             <Col>
               <Button type='primary' icon={<PlusCircleOutlined />} onClick={addUser}>
