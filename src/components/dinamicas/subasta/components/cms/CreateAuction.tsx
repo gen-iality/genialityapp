@@ -122,9 +122,9 @@ export default function CreateAuction({ active, auction, event }: CreateProps) {
           <Col span={16}>
             <Card hoverable style={{ height: '100%', borderRadius: 20 }}>
               <Space direction='vertical' style={{ width: '100%' }}>
-                <Typography.Text strong style={{ fontSize: 16 }}>
+                {/* <Typography.Text strong style={{ fontSize: 16 }}>
                   Configuración general de la subasta
-                </Typography.Text>
+                </Typography.Text> */}
 
                 <Form.Item
                   name={'name'}
@@ -151,7 +151,7 @@ export default function CreateAuction({ active, auction, event }: CreateProps) {
                 
                 {auction &&
                   <Form.Item label={'Reglamento de la subasta'}  initialValue={auction.rules  ?? ''} name={'rules'}>
-                    <TextArea showCount autoSize={{minRows: 4, maxRows: 6}} maxLength={500} placeholder='Escriba el reglamento para la subasta'/>
+                    <TextArea showCount autoSize={{minRows: 5, maxRows: 6}} maxLength={500} placeholder='Escriba el reglamento para la subasta'/>
                   </Form.Item>
                 }
               </Space>
