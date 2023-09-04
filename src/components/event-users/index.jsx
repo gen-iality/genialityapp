@@ -5,7 +5,7 @@
 import { Component, Fragment } from 'react';
 import { FormattedDate, FormattedTime } from 'react-intl';
 import { firestore } from '../../helpers/firebase';
-import { AttendeeApi, BadgeApi, EventsApi, RolAttApi, UsersApi } from '../../helpers/request';
+import { BadgeApi, EventsApi, RolAttApi } from '../../helpers/request';
 import UserModal from '../modal/modalUser';
 import ErrorServe from '../modal/serverError';
 import { utils, writeFileXLSX } from 'xlsx';
@@ -27,8 +27,6 @@ import {
   Select,
   Dropdown,
   Menu,
-  message,
-  Modal,
 } from 'antd';
 
 import updateAttendees from './eventUserRealTime';
@@ -45,7 +43,6 @@ import {
   DownOutlined,
   InfoCircleOutlined,
   DeleteOutlined,
-  ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import QrModal from './qrModal';
 
@@ -119,6 +116,8 @@ class ListEventUser extends Component {
       unSusCribeConFigFast: () => {},
       unSuscribeAttendees: () => {},
       modalUserOrganization: false,
+      currentPage:1,
+      pageSize:10
     };
   }
   static contextType = HelperContext;
@@ -870,6 +869,14 @@ class ListEventUser extends Component {
     } = this.state;
     const activityId = this.props.match.params.id;
 
+    const onChangeCurrnetPage = (page) => {
+      this.setState({ currentPage: page });
+    };
+  
+    const onChangePageSize = (pageSize) => {
+      this.setState({ pageSize });
+    };
+
     const { loading, componentKey } = this.props;
     const { eventIsActive } = this.context;
 
@@ -956,6 +963,17 @@ class ListEventUser extends Component {
         )}
         {/* {users.length > 0 && this.state.columns ? ( */}
         <TableA
+          pagination={{
+            showSizeChanger:true,
+            pageSize:this.state.pageSize,
+            current: this.state.currentPage,
+            onChange: onChangeCurrnetPage,
+            total: users.length,
+            onShowSizeChange: (page, pageSize) => {
+              onChangeCurrnetPage(page);
+              onChangePageSize(pageSize);
+            }
+          }}
           list={users.length > 0 && users}
           header={columns}
           takeOriginalHeader
