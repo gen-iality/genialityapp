@@ -494,12 +494,12 @@ function AgendaActivityItem(props) {
                                               color: cEvent.value.styles.textMenu,
                                             }}
                                           >
-                                            {item?.description?.length > 150 ?
-                                                <p style={{color: cEvent.value.styles.textMenu}} dangerouslySetInnerHTML={{ __html: item?.description.slice(0, 150) + '...'}}></p>
+                                            {item?.description?.length > 120 ?
+                                                <p style={{color: cEvent.value.styles.textMenu}} dangerouslySetInnerHTML={{ __html: item?.description.slice(0, 120) + '...'}}></p>
                                           :
                                                 <p style={{color: cEvent.value.styles.textMenu}} dangerouslySetInnerHTML={{ __html: item?.description}}></p>
                                             }
-                                            {item?.description?.length > 150 && 
+                                            {item?.description?.length > 120 && 
                                             <>
                                               <Button onClick={(event) => {
                                                 event.stopPropagation();

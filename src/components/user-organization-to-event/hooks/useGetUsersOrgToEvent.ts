@@ -17,6 +17,7 @@ export const useGetUsersOrgToEvent = (organizationId: string, eventId: string, f
         .then(async ({ data }: { data: UserOrganizationStatusInEvent[] }) => {
           const fieldsMembersData: UserOrganizationToEvent[] = data.map((membersData, index) => {
             return {
+              ...membersData.properties,
               id: membersData._id,
               email: membersData.properties.email,
               name: membersData.properties.names,
