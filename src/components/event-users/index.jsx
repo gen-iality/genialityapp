@@ -339,8 +339,8 @@ class ListEventUser extends Component {
             key: item.name,
             ellipsis: true,
             sorter: (a, b) => {
-              const nameA = a[item.name]?.toLowerCase();
-              const nameB = b[item.name]?.toLowerCase();
+              const nameA = toString(a[item?.name])?.toLowerCase()
+              const nameB = toString(b[item?.name])?.toLowerCase();
               if (nameA < nameB) {
                   return -1;
               }
