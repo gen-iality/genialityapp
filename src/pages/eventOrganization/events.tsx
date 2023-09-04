@@ -17,7 +17,7 @@ function OrgEvents(props: any) {
 
   const onAsyncList = async () => {
     try {
-      const { data } = await OrganizationApi.getEventsStatistics(organizationId, 'latest');
+      const data = await OrganizationApi.getEventsStatisticsExport(organizationId, 'latest');
       return parseEventsDataToExcel(data);
     } catch (error) {
       return [];

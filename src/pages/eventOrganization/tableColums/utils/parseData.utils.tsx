@@ -8,9 +8,9 @@ export const parseEventsDataToExcel = (events: any[]): DataEvent[] => {
       name: event.name,
       startDate,
       count: event.count,
-      speaker: [],
-      documentsUrls: [],
-      videoUrls: [],
+      speaker: event.hosts.map((speaker: any) => speaker.name),
+      documentsUrls: event.documents.map((document: any) => document.file),
+      videoUrls: event.url_videos,
     };
   });
 };

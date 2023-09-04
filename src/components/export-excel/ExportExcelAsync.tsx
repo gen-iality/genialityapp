@@ -21,7 +21,7 @@ export const ExportExcelAsync = ({ columns, fileName, onAsyncList }: Props) => {
         Object.keys(obj).forEach((key) => {
           const nameColum = columns?.find((c) => c.dataIndex === key)?.title;
           if (Array.isArray(obj[key])) {
-            newObj[nameColum ?? key] = obj[key].join(',');
+            newObj[nameColum ?? key] = obj[key].join('\n');
           } else {
             newObj[nameColum ?? key] = obj[key];
           }
