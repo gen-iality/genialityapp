@@ -1,5 +1,5 @@
 import { CloseCircleOutlined, PlayCircleOutlined, SaveOutlined, SelectOutlined, WarningOutlined } from '@ant-design/icons';
-import {  Alert, Button, Card, Col, Empty, Modal, Result, Row, Skeleton, Table, Typography } from 'antd';
+import {  Alert, Avatar, Button, Card, Col, Empty, List, Modal, Popconfirm, Result, Row, Skeleton, Statistic, Table, Typography } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import React, { useState } from 'react';
 
@@ -12,18 +12,13 @@ import { saveAuctioFirebase } from '../services/Execute.service';
 import { useBids } from '../hooks/useBids';
 import { deleteOffersByProduct, updateProduct } from '../services';
 
-
-
-
-
-
 export default function ExecuteAuction( {auction, eventId} : GeneralAuctionProps) {
   const [currentPage, setcurrentPage] = useState(1);
   const [visibility, setVisibility] = useState(false);
   const { products, loading, refresh } = useProducts(eventId);
   const { Bids, loading: Loadbids } = useBids(eventId, auction?.currentProduct?._id, auction?.playing);
   const [selectedProduct, setselectedProduct] = useState<Products | null>(null);
-  const columns: ColumnsType<IBids> = [
+  /* const columns: ColumnsType<IBids> = [
     {
       key: 'date',
       title: 'Fecha',
@@ -44,7 +39,7 @@ export default function ExecuteAuction( {auction, eventId} : GeneralAuctionProps
         return <Typography.Text strong>{`$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</Typography.Text>;
       }
     }
-  ];
+  ]; */
   const startAuction = async () => {
     if (selectedProduct && auction) {
       setVisibility(false);
@@ -96,20 +91,24 @@ export default function ExecuteAuction( {auction, eventId} : GeneralAuctionProps
         <Row justify='end' gutter={[8, 8]} style={{ paddingBottom: 10 }}>
           {!auction?.playing && auction?.currentProduct && (
             <Col>
-              <Button
-                /* className='animate__animated animate__fadeInDown' */
-                type='primary'
-                danger
-                icon={<CloseCircleOutlined />}
-                onClick={auctionFinish}>
-                Finalizar subasta
-              </Button>
+              <Popconfirm
+                placement='top'
+                title={'¿Está seguro de finalizar la subasta?'}
+                onConfirm={auctionFinish}
+                okText='Sí'
+                cancelText='No'>
+                <Button
+                  type='primary'
+                  danger
+                  icon={<CloseCircleOutlined />}>
+                  Finalizar subasta
+                </Button>
+              </Popconfirm>
             </Col>
           )}
           {!auction?.playing && (
             <Col>
               <Button
-                /* className='animate__animated animate__fadeInDown' */
                 type='primary'
                 icon={auction?.currentProduct ? <SelectOutlined /> : <PlayCircleOutlined />}
                 disabled={!auction?.opened}
@@ -124,18 +123,22 @@ export default function ExecuteAuction( {auction, eventId} : GeneralAuctionProps
           {auction?.playing && (
             <>
             <Col>
-              <Button
-                /* className='animate__animated animate__flip' */
-                onClick={cancelBids}
-                icon={<CloseCircleOutlined />}
-                danger
-                type='primary'>
-                Cancelar Pujas
-              </Button>
+              <Popconfirm
+                placement='top'
+                title={'¿Está seguro de cancelar las pujas?'}
+                onConfirm={cancelBids}
+                okText='Sí'
+                cancelText='No'>
+                <Button
+                  icon={<CloseCircleOutlined />}
+                  danger
+                  type='primary'>
+                  Cancelar Pujas
+                </Button>
+              </Popconfirm>
             </Col>
             <Col>
               <Button
-                /* className='animate__animated animate__flip' */
                 onClick={closeBids}
                 icon={<SaveOutlined />}
                 
@@ -160,19 +163,18 @@ export default function ExecuteAuction( {auction, eventId} : GeneralAuctionProps
           <Col span={6}>
             <Card
               hoverable
-              style={{ /* height: 450, */ borderRadius: 20, cursor: 'auto' }}
+              style={{ borderRadius: 20, cursor: 'auto' }}
               headStyle={{ textAlign: 'center' }}
               cover={
                 auction?.currentProduct ? (
                   <img
-                    /* className='animate__animated animate__flipInX' */
                     alt='imagen del producto'
                     src={auction?.currentProduct.images[0].url}
                     style={{ height: '300px', objectFit: 'fill', backgroundColor: '#C4C4C440', borderRadius: '20px 20px 0 0px' }}
                   />
                 ) : (
                   <Empty
-                    image={<Skeleton.Image /* className='animate__animated animate__flipInX' */ />}
+                    image={<Skeleton.Image />}
                     style={{ height: '300px', display: 'grid', justifyContent: 'center', alignItems: 'center' }}
                     description={'Sin imagen'}
                   />
@@ -186,20 +188,50 @@ export default function ExecuteAuction( {auction, eventId} : GeneralAuctionProps
           </Col>
 
           <Col span={18}>
-            <Card hoverable style={{ height: 450, borderRadius: 20, cursor: 'auto' }}>
-              <Table
-                bordered={false}
-                loading={Loadbids}
-                columns={columns}
-                /* rowClassName={(item,index)=> index === 0 ? 'animate__animated animate__pulse animate__infinite winner' : ''} */
-                dataSource={Bids}
-                pagination={{
-                  pageSize: 4,
+            <Card hoverable style={{ height: 450, borderRadius: 20, cursor: 'auto', overflowY: 'auto' }} className='desplazar'>
+              {Bids.length > 0 ? (
+                <List
+                  style={{ height: '100%', paddingLeft: 30, paddingRight: 30 }}
+                  loading={loading}
+                  dataSource={Bids}
+                  pagination={{
+                  pageSize: 5,
                   current: currentPage,
                   onChange: (page) => setcurrentPage(page),
                   total: Bids.length,
                 }}
-              />
+                  renderItem={(bid) => (
+                    <List.Item>
+                      <Skeleton avatar title={false} loading={loading}>
+                        <List.Item.Meta
+                          avatar={<Avatar>{bid.name[0] || 'A'}</Avatar>}
+                          title={
+                            <Typography.Text>
+                              {bid.name}
+                            </Typography.Text>
+                          }
+                          description={
+                            <Typography.Text>
+                              {bid.date}
+                            </Typography.Text>
+                          }
+                        />
+                        <Statistic
+                          value={bid.offered}
+                          prefix='$'
+                          suffix={auction.currency}
+                        />
+                      </Skeleton>
+                    </List.Item>
+                  )}
+                />
+              ) : (
+                <Row justify='center' align='middle' style={{height: '100%'}}>
+                  <Empty
+                    description={'Sin información'}
+                  />
+                </Row>
+              )}
             </Card>
           </Col>
         </Row>
