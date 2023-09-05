@@ -24,7 +24,7 @@ const EventSectionsInnerMenu = () => {
           <Row justify='center' style={{ margin: 5 }}>
             {event.styles && event.styles.event_image && (
               <Image
-                preview={{ mask: <EyeOutlined /> }}
+                preview={false/* { mask: <EyeOutlined /> } */}
                 alt='Logo'
                 src={event.styles.event_image}
                 style={{ backgroundColor: event.styles.toolbarDefaultBg, objectFit: 'cover' }}

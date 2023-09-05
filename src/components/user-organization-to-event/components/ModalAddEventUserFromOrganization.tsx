@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import FormEnrollAttendeeToEvent from '@/components/forms/FormEnrollAttendeeToEvent';
 import { UseEventContext } from '@/context/eventContext';
 import { Modal, ModalProps } from 'antd';
@@ -59,7 +60,6 @@ export const ModalAddEventUserFromOrganization = ({
   useEffect(() => {
     buildField();
   }, []);
-
   const saveEventUser = async (values: any) => {
     setIsLoadingReques(true);
     let resp;
@@ -112,7 +112,7 @@ export const ModalAddEventUserFromOrganization = ({
         fields={fieldForm}
         conditionalFields={undefined}
         attendee={{
-          properties: { email: selectedUserOrg.email, names: selectedUserOrg.name },
+          properties: { names: selectedUserOrg.name, ...selectedUserOrg },
         }}
         isAddFromOrganization
         saveAttendee={saveEventUser}

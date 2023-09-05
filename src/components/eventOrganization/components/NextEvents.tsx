@@ -18,7 +18,7 @@ export const NextEvents = ({ events }: Props) => {
 			headStyle={{ border: 'none' }}
 			title={
 				<Badge offset={[60, 22]} count={`${events.length} Eventos`}>
-					<Title level={2}>Eventos próximos</Title>
+					<Title level={2}>Próximos eventos</Title>
 				</Badge>
 			}
 			extra={<Space>{events.length > 0 && <InputSearchEvent onHandled={setSearchTerm} />}</Space>}
