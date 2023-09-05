@@ -37,7 +37,7 @@ import { getCorrectColor } from '@/helpers/utils';
 import { FaGavel } from 'react-icons/fa'
 import moment from 'moment';
 import useBreakpoint from 'use-breakpoint'
-import { deviceDetect, deviceType, isTablet } from 'react-device-detect';
+
 
 /* const { useBreakpoint } = Grid; */
 const BREAKPOINTS = { mobile: 0, tablet: 768, desktop: 1280 }
@@ -330,13 +330,13 @@ export default function DrawerAuction({
                     //@ts-ignore
                   }
                   <InputNumber
+                    readOnly={auction.amount !== undefined && auction.amount !== 0 && auction.amount !== null}
                     style={{ width: '100%' }} 
                     controls={{ upIcon: <PlusOutlined />, downIcon: <MinusOutlined /> }}
-                    min={(auction.currentProduct?.price ?? 0) + (auction.amount ?? 0)}
-                    step={auction.amount ?? 1}
+                    min={(Bids[0]?.offered ??  auction.currentProduct?.start_price) + (auction.amount ?? 0)}
                     size='large'
-                    type='number'
                     prefix='$'
+                    formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                   />
                 </Form.Item>
 

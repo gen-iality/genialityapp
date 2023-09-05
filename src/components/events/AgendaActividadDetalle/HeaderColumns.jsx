@@ -70,6 +70,11 @@ const HeaderColumns = (props) => {
   }
 
   //SE EJECUTA CUANDO TIENE UNA ACTIVIDAD PARA ESTABLECER LA REFERENCIA Y OBTENER LOS REQUEST
+  
+  useEffect(() => {
+    if(auction?.opened !== undefined  &&  auction?.opened !== openModalAuction) setOpenModalAuction(auction.opened);
+  }, [auction?.opened]);
+
   useEffect(() => {
     if (currentActivity) {
       //SE SETEA EL CURRENTACTIVITY PARA DETECTAR SI LA TRANSMISION ES POR EVIUSMEET U OTRO
@@ -337,7 +342,7 @@ const HeaderColumns = (props) => {
               >
               Abrir Subasta
             </Button>
-            <DrawerAuction auction={auction} eventId={cEvent.value?._id} openOrClose={openModalAuction && auction?.opened}  cEventUser={cEventUSer} cEvent={cEvent} setOpenOrClose={() => {
+            <DrawerAuction auction={auction} eventId={cEvent.value?._id} openOrClose={openModalAuction}  cEventUser={cEventUSer} cEvent={cEvent} setOpenOrClose={() => {
                 setOpenModalAuction(false);
               }} />
           </Row>
