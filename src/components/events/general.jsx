@@ -1070,7 +1070,10 @@ class General extends Component {
                   </Form.Item>
 
                   <Form.Item>
-                    <SelectInput
+                  {/* Se cambia solo al select de antd y se ponen las props mode y show arroy, falta hacer que funcione y revisar esta parte */}
+                    <Select
+                      mode='multiple'
+                      showArrow
                       name={'Categorías:'}
                       isMulti={true}
                       max_options={2}
