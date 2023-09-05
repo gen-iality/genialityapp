@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Button, Drawer, Row, Image } from 'antd'
+import { Link } from 'react-router-dom'
 import { EyeOutlined, MenuOutlined } from '@ant-design/icons'
 import { drawerButton } from '../helpers/csshelpers'
 import { useEventContext } from '@context/eventContext'
@@ -36,15 +37,19 @@ const MenuTablets = () => {
       >
         <Row justify="center">
           {cEvent.value.styles && cEvent.value.styles.event_image && (
-            <Image
-              preview={{ mask: <EyeOutlined /> }}
-              alt="Logo"
-              src={cEvent.value.styles.event_image}
-              style={{
-                backgroundColor: cEvent.value.styles.toolbarDefaultBg,
-                objectFit: 'cover',
-              }}
-            />
+            <Link
+              title="Ir a la organización"
+              to={`/organization/${cEvent.value?.organizer._id}/events`}
+            >
+              <Image
+                alt="Logo"
+                src={cEvent.value.styles.event_image}
+                style={{
+                  backgroundColor: cEvent.value.styles.toolbarDefaultBg,
+                  objectFit: 'cover',
+                }}
+              />
+            </Link>
           )}
         </Row>
 

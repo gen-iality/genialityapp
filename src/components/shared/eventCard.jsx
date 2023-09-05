@@ -147,12 +147,12 @@ const EventCard = ({
                       count={`Ver progreso »`}
                     />
                   </Link>
-                  <Link to={`/landing/${event._id}/certificate`}>
+                  {/* <Link to={`/landing/${event._id}/certificate`}>
                     <Badge
                       style={{ background: '#356785', color: '#fff' }}
                       count={`Consultar certificado »`}
                     />
-                  </Link>
+                  </Link> */}
                   {/* {moreDetails && event._id && (
                     <StudentGeneralCourseProgress eventId={event._id} />
                   )}

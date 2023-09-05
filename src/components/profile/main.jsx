@@ -27,6 +27,7 @@ import NewEventCard from './NewEventCard'
 import ExploreEvents from './exploreEvents'
 import withContext from '@context/withContext'
 import { EventsApi, TicketsApi, OrganizationApi, SurveysApi } from '@helpers/request'
+
 import EventCard from '../shared/eventCard'
 import { Link, useParams } from 'react-router-dom'
 import dayjs from 'dayjs'
@@ -69,6 +70,14 @@ const MainProfile = () => {
   const { tab: selectedTab } = useParams()
   const { helperDispatch } = useHelper()
   const cUser = useCurrentUser()
+
+  // useEffect(() => {
+  //   OrganizationApi.mine().then((data) => {
+  //     const someAdmin = data.some((orgUser) => orgUser.rol?.type === 'admin')
+  //     console.log('organization user has some admin rol?', someAdmin)
+  //     setIsSomeAdminUser(someAdmin)
+  //   })
+  // }, [])
 
   const showSider = () => {
     if (!collapsed) {
@@ -397,19 +406,27 @@ const MainProfile = () => {
                           <Loading />
                         ) : (
                           <>
-                            <Col xs={24} sm={12} md={12} lg={8} xl={6}>
-                              <NewEventProvider>
-                                {organizationsLimited.length > 0 ? (
-                                  <NewEventCard
-                                    entityType="event"
-                                    user={cUser.value}
-                                    org={organizationsLimited}
-                                  />
-                                ) : (
-                                  <NewEventCard entityType="event" user={cUser.value} />
-                                )}
-                              </NewEventProvider>
-                            </Col>
+                            {organizations &&
+                              OrganizationApi.isAdminOfItsFirstOrganization(
+                                organizations,
+                              ) && (
+                                <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                                  <NewEventProvider>
+                                    {organizationsLimited.length > 0 ? (
+                                      <NewEventCard
+                                        entityType="event"
+                                        user={cUser.value}
+                                        org={organizationsLimited}
+                                      />
+                                    ) : (
+                                      <NewEventCard
+                                        entityType="event"
+                                        user={cUser.value}
+                                      />
+                                    )}
+                                  </NewEventProvider>
+                                </Col>
+                              )}
                             {/* aqui empieza el mapeo de eventCard.jsx maximo 4 */}
                             {eventsLimited.length > 0 &&
                               eventsLimited.map((event, index) => {
@@ -493,15 +510,20 @@ const MainProfile = () => {
                           <Loading />
                         ) : (
                           <>
-                            <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
-                              <NewEventProvider>
-                                <NewEventCard
-                                  entityType="organization"
-                                  user={cUser.value}
-                                  fetchItem={fetchItem}
-                                />
-                              </NewEventProvider>
-                            </Col>
+                            {organizations &&
+                              OrganizationApi.isAdminOfItsFirstOrganization(
+                                organizations,
+                              ) && (
+                                <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
+                                  <NewEventProvider>
+                                    <NewEventCard
+                                      entityType="organization"
+                                      user={cUser.value}
+                                      fetchItem={fetchItem}
+                                    />
+                                  </NewEventProvider>
+                                </Col>
+                              )}
                             {/* aqui empieza el mapeo maximo 6 */}
                             {organizationsLimited.length > 0 &&
                               organizationsLimited.map((organization, index) => {
@@ -532,15 +554,18 @@ const MainProfile = () => {
                   <Loading />
                 ) : (
                   <Row gutter={[16, 16]}>
-                    <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
-                      <NewEventProvider>
-                        <NewEventCard
-                          entityType="organization"
-                          user={cUser.value}
-                          fetchItem={fetchItem}
-                        />
-                      </NewEventProvider>
-                    </Col>
+                    {organizations &&
+                      OrganizationApi.isAdminOfItsFirstOrganization(organizations) && (
+                        <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
+                          <NewEventProvider>
+                            <NewEventCard
+                              entityType="organization"
+                              user={cUser.value}
+                              fetchItem={fetchItem}
+                            />
+                          </NewEventProvider>
+                        </Col>
+                      )}
                     {organizations.length > 0 &&
                       organizations.map((organization, index) => {
                         return (
@@ -557,19 +582,22 @@ const MainProfile = () => {
                   <Loading />
                 ) : (
                   <Row gutter={[16, 16]}>
-                    <Col xs={24} sm={12} md={12} lg={8} xl={6}>
-                      <NewEventProvider>
-                        {organizationsLimited.length > 0 ? (
-                          <NewEventCard
-                            entityType="event"
-                            user={cUser.value}
-                            org={organizationsLimited}
-                          />
-                        ) : (
-                          <NewEventCard entityType="event" user={cUser.value} />
-                        )}
-                      </NewEventProvider>
-                    </Col>
+                    {organizations &&
+                      OrganizationApi.isAdminOfItsFirstOrganization(organizations) && (
+                        <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                          <NewEventProvider>
+                            {organizationsLimited.length > 0 ? (
+                              <NewEventCard
+                                entityType="event"
+                                user={cUser.value}
+                                org={organizationsLimited}
+                              />
+                            ) : (
+                              <NewEventCard entityType="event" user={cUser.value} />
+                            )}
+                          </NewEventProvider>
+                        </Col>
+                      )}
                     {events.map((event, index) => {
                       return (
                         <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>

@@ -55,11 +55,10 @@ const DynamicTermsAndCondictionsField: React.FunctionComponent<
 
   const TTCC = () => (
     <Typography.Text>
-      Confirmo que he leído y acepto   {' '}
+      Acepto que he leído y entendido{' '}
       <Typography.Link target="_blank" href={link || '#'}>
-      los Términos y condiciones de uso
+        los términos y condiciones.
       </Typography.Link>
-      .
     </Typography.Text>
   )
 

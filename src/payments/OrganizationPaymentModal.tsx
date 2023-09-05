@@ -14,6 +14,21 @@ interface IOrganizationPaymentModalProps {
 const calcPrice = (money: number) => Math.round(money) * 100
 const lang = 'ES'
 
+const style = `
+
+.waybox-modal.waybox-display-block:before {
+  content: "Suscripción 1 año 50.000 COP o 15 USD";
+  /* background: blue; */
+  display: block;
+  /* height: 100px; */
+  padding: 0.7em;
+  /* position: absolute; */
+  font-size: 150%;
+  text-align: center;
+  font-weight:bold;
+}
+`
+
 const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps> = (
   props,
 ) => {
@@ -70,9 +85,12 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
 
     console.log('moreCustomData:', moreCustomData)
     /// @ts-ignore
+    /// WIDGET de WOMPI viene importado de forma global
     return new WidgetCheckout({
       currency: 'COP',
       amountInCents: calcPrice(money),
+      name: 'Monthly rent - Wompi Tower Apartments', // Payment link name
+      description: 'Pay here your apartment monthly rent',
       reference: `${new Date().getTime()}-${organization._id}-${
         organizationUser.account_id
       }`,
@@ -110,7 +128,11 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
     }
   }, [paymentStep, checkout])
 
-  return <></>
+  return (
+    <>
+      <style>{style}</style>
+    </>
+  )
 }
 
 export default OrganizationPaymentModal

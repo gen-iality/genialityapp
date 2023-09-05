@@ -1,4 +1,5 @@
 import { Layout, Spin, Row, Image } from 'antd'
+import { Link } from 'react-router-dom'
 import MenuEvent from './Menus/MenuEvent'
 // import { EyeOutlined } from '@ant-design/icons'
 import { useEventContext } from '@context/eventContext'
@@ -9,6 +10,7 @@ const { Sider } = Layout
 const EventSectionsInnerMenu: FunctionComponent = () => {
   const cEvent = useEventContext()
   const event = cEvent.value
+  console.log('event', event)
   // const { eventPrivate } = useHelper() // as MenuEvent doesn't use this...
 
   if (!event) return <Spin size="small" />
@@ -29,16 +31,20 @@ const EventSectionsInnerMenu: FunctionComponent = () => {
         >
           <Row justify="center" style={{ margin: 5 }}>
             {event.styles && event.styles.event_image && (
-              <Image
-                // preview={{ mask: <EyeOutlined /> }}
-                preview={false}
-                alt="Logo"
-                src={event.styles.event_image}
-                style={{
-                  backgroundColor: event.styles.toolbarDefaultBg,
-                  objectFit: 'cover',
-                }}
-              />
+              <Link
+                title="Ir a la organización"
+                to={`/organization/${cEvent.value?.organizer._id}/events`}
+              >
+                <Image
+                  preview={false}
+                  alt="Logo"
+                  src={event.styles.event_image}
+                  style={{
+                    backgroundColor: event.styles.toolbarDefaultBg,
+                    objectFit: 'cover',
+                  }}
+                />
+              </Link>
             )}
           </Row>
           <div className="items-menu_Landing">

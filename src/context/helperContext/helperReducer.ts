@@ -38,25 +38,30 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
         ...state,
         currentAuthScreen: 'login',
         controllerLoginVisible: {
+          ...state.controllerLoginVisible,
           visible: action?.visible,
           idOrganization: action.idOrganization,
           organization: action.organization,
           logo: action.logo,
-          defaultPositionId: action.defaultPositionId,
           customPasswordLabel: action.customPasswordLabel,
         },
       }
 
     case 'showRegister':
+      let defaultPositionIdMod = {}
+      if (typeof action.defaultPositionId !== 'undefined') {
+        defaultPositionIdMod = { defaultPositionId: action.defaultPositionId }
+      }
       return {
         ...state,
         currentAuthScreen: 'register',
         controllerLoginVisible: {
+          ...state.controllerLoginVisible,
           visible: action?.visible,
           idOrganization: action.idOrganization,
           organization: action.organization,
           logo: action.logo,
-          defaultPositionId: action.defaultPositionId,
+          ...defaultPositionIdMod,
         },
       }
 
