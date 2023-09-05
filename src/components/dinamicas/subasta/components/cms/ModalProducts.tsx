@@ -24,7 +24,7 @@ export default function ModalProducts({ product, onChange, onCancel, onSave, loa
 
   return (
     <Fragment>
-      <Form  layout='vertical' autoComplete='off' onFinish={onSave}>
+      <Form layout='vertical' autoComplete='off' onFinish={onSave}>
         <Form.Item hidden name={'_id'} initialValue={product._id || ''} key={'id'}>
           <Input name='id' type='text' />
         </Form.Item>
@@ -47,7 +47,7 @@ export default function ModalProducts({ product, onChange, onCancel, onSave, loa
           />
         </Form.Item>
         <Form.Item  label={'Descripción'} name={'description'} initialValue={product.description || ''}>
-          <TextArea maxLength={100}  rows={2} placeholder={'Ej: Hecha por el artista..'} />
+          <TextArea maxLength={100} showCount autoSize={{minRows: 2, maxRows: 4}} placeholder={'Ej: Hecha por el artista..'} />
         </Form.Item>
 
         <Form.Item

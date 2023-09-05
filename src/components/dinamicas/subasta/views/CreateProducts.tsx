@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Products from '../components/cms/Products';
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, Modal, Row } from 'antd';
+import { PlusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Card, Modal, Row } from 'antd';
 import useProducts from '../hooks/useProducts';
 import ModalProducts from '../components/cms/ModalProducts';
 import { ImagesData, ModalProduct, Products as IProduct } from '../interfaces/auction.interface';
@@ -97,10 +97,10 @@ export default function CreateProducts({reload, eventId}: {reload: boolean,event
           onSave={onSave}
         />
       </Modal>
-      <Row justify='end'>
+      <Row justify='end' style={{paddingBottom: 10}}>
         <Button
           type='primary'
-          icon={<PlusOutlined />}
+          icon={<PlusCircleOutlined />}
           onClick={() => {
             setProductSelect(InitialModalState);
             setmodal({ visibility: true, edit: false });
@@ -108,22 +108,20 @@ export default function CreateProducts({reload, eventId}: {reload: boolean,event
           Agregar
         </Button>
       </Row>
-      <Row justify='start'>
-        {!loading ? (
+      {!loading ? (
+        <Card style={{overflowY: 'auto', height: '65vh'}} bodyStyle={{padding: 5}} className='desplazar'>
           <Products
             products={products}
             onDelete={deleteProduct}
             onclick={(product) => {
-              
-                setProductSelect(product);
-                setmodal({ visibility: true, edit: true });
-            
+              setProductSelect(product);
+              setmodal({ visibility: true, edit: true });
             }}
           />
-        ) : (
-          <Loading />
-        )}
-      </Row>
+        </Card>
+      ) : (
+        <Loading />
+      )}
     </>
   );
 }
