@@ -35,7 +35,7 @@ export const ValidateEventStart = ({
 
   /** If I do not have an assigned plan, the dates of the event are not blocked. */
   if (!user?.plan) {
-    callBackTheEventIsActive(false)
+    callBackTheEventIsActive(true)
     return null
   }
 
