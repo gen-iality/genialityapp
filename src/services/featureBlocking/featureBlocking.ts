@@ -9,7 +9,7 @@ export const featureBlockingListener = (
 
   FB.Events.ref(eventId).onSnapshot((event) => {
     if (event.exists) {
-      const eventIsActive = event.data()?.eventIsActive
+      const eventIsActive = true //event.data()?.eventIsActive
       if (isMap === 'map') {
         helperDispatch({ type: 'eventIsActive', eventIsActive, eventId })
         return
@@ -24,7 +24,7 @@ export const featureBlockingStatusSave = (eventId: string, state: boolean) => {
   FB.Events.edit(
     eventId,
     {
-      eventIsActive: state,
+      eventIsActive: true, //state,
     },
     { merge: true },
   )

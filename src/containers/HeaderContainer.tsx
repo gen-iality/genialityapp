@@ -10,7 +10,19 @@ import * as userActions from '../redux/user/actions'
 import * as eventActions from '../redux/event/actions'
 
 /** Antd imports */
-import { Menu, Drawer, Button, Col, Row, Layout, Space, Grid, Dropdown } from 'antd'
+import {
+  Menu,
+  Drawer,
+  Button,
+  Col,
+  Row,
+  Layout,
+  Space,
+  Grid,
+  Dropdown,
+  Popover,
+} from 'antd'
+import { QuestionCircleOutlined } from '@ant-design/icons'
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -268,7 +280,7 @@ const HeaderContainer: FunctionComponent<IHeaderContainerProps> = (props) => {
         }}
       >
         <Menu style={{ border: '0px' }} theme="light" mode="horizontal">
-          <Row justify="space-between" align="middle">
+          <Row justify="end" align="middle">
             <Row className="logo-header" justify="space-between" align="middle">
               {/* Menú de administrar un curso (esto debería aparecer en un curso no en todo lado) */}
               {dataGeneral?.showAdmin && (
@@ -290,50 +302,18 @@ const HeaderContainer: FunctionComponent<IHeaderContainerProps> = (props) => {
               )}
             </Row>
 
-            {headerIsLoading ? (
+            {headerIsLoading && (
               <LoadingOutlined
                 style={{
                   fontSize: '30px',
                 }}
               />
-            ) : !dataGeneral.userEvent ? (
-              screens.xs ? (
-                <Space>
-                  <Dropdown overlay={MenuMobile}>
-                    <Button
-                      style={{
-                        backgroundColor: '#3681E3',
-                        color: '#FFFFFF',
-                        border: 'none',
-                      }}
-                      size="large"
-                      shape="circle"
-                      icon={<AccountCircleIcon style={{ fontSize: '28px' }} />}
-                    />
-                  </Dropdown>
-                </Space>
-              ) : (
-                <Space>
-                  {showButtons.buttonlogin ? (
-                    <Button
-                      data-testid="btn-login"
-                      icon={<LockOutlined />}
-                      style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-                      size="large"
-                      onClick={() => {
-                        helperDispatch({
-                          type: 'showLogin',
-                          visible: true,
-                          organization: WhereHerePath(),
-                        })
-                      }}
-                    >
-                      {intl.formatMessage({
-                        id: 'modal.title.login',
-                        defaultMessage: 'Iniciar sesión',
-                      })}
-                    </Button>
-                  ) : (
+            )}
+
+            {!headerIsLoading && (
+              <>
+                {!dataGeneral.userEvent ? (
+                  screens.xs ? (
                     <Space>
                       <Dropdown overlay={MenuMobile}>
                         <Button
@@ -348,62 +328,109 @@ const HeaderContainer: FunctionComponent<IHeaderContainerProps> = (props) => {
                         />
                       </Dropdown>
                     </Space>
-                  )}
+                  ) : (
+                    <Space>
+                      {showButtons.buttonlogin ? (
+                        <Button
+                          data-testid="btn-login"
+                          icon={<LockOutlined />}
+                          style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
+                          size="large"
+                          onClick={() => {
+                            helperDispatch({
+                              type: 'showLogin',
+                              visible: true,
+                              organization: WhereHerePath(),
+                            })
+                          }}
+                        >
+                          {intl.formatMessage({
+                            id: 'modal.title.login',
+                            defaultMessage: 'Iniciar sesión',
+                          })}
+                        </Button>
+                      ) : (
+                        <Space>
+                          <Dropdown overlay={MenuMobile}>
+                            <Button
+                              style={{
+                                backgroundColor: '#3681E3',
+                                color: '#FFFFFF',
+                                border: 'none',
+                              }}
+                              size="large"
+                              shape="circle"
+                              icon={<AccountCircleIcon style={{ fontSize: '28px' }} />}
+                            />
+                          </Dropdown>
+                        </Space>
+                      )}
 
-                  {showButtons.buttonregister && (
-                    <Button
-                      size="large"
-                      onClick={() => {
-                        helperDispatch({
-                          type: 'showRegister',
-                          visible: true,
-                          organization: WhereHerePath(),
-                          defaultPositionId: currentOrganization?.default_position_id,
-                        })
-                      }}
-                    >
-                      {intl.formatMessage({
-                        id: 'modal.title.register',
-                        defaultMessage: 'Registrarme',
-                      })}
-                    </Button>
-                  )}
-                </Space>
-              )
-            ) : dataGeneral.userEvent != null && !dataGeneral.anonimususer ? (
-              <UserStatusAndMenu
-                user={dataGeneral.user}
-                menuOpen={dataGeneral.menuOpen}
-                photo={
-                  dataGeneral.photo ??
-                  'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
-                }
-                name={dataGeneral.name ? dataGeneral.name : ''}
-                userEvent={dataGeneral.userEvent}
-                eventId={dataGeneral.eventId}
-                logout={(callBack: any) => userLogOut(callBack)}
-                openMenu={() => openMenu()}
-                loginInfo={loginInfo}
-              />
-            ) : (
-              dataGeneral.userEvent != null &&
-              dataGeneral.anonimususer && (
-                <UserStatusAndMenu
-                  user={dataGeneral.user}
-                  menuOpen={dataGeneral.menuOpen}
-                  photo="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
-                  name={cUser.value?.names}
-                  userEvent={dataGeneral.userEvent}
-                  eventId={dataGeneral.eventId}
-                  logout={(callBack: any) => userLogOut(callBack)}
-                  openMenu={() => console.log('openMenu')}
-                  loginInfo={loginInfo}
-                  anonimususer
-                />
-              )
+                      {showButtons.buttonregister && (
+                        <Button
+                          size="large"
+                          onClick={() => {
+                            helperDispatch({
+                              type: 'showRegister',
+                              visible: true,
+                              organization: WhereHerePath(),
+                              defaultPositionId: currentOrganization?.default_position_id,
+                            })
+                          }}
+                        >
+                          {intl.formatMessage({
+                            id: 'modal.title.register',
+                            defaultMessage: 'Registrarme',
+                          })}
+                        </Button>
+                      )}
+                    </Space>
+                  )
+                ) : dataGeneral.userEvent != null && !dataGeneral.anonimususer ? (
+                  <UserStatusAndMenu
+                    user={dataGeneral.user}
+                    menuOpen={dataGeneral.menuOpen}
+                    photo={
+                      dataGeneral.photo ??
+                      'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
+                    }
+                    name={dataGeneral.name ? dataGeneral.name : ''}
+                    userEvent={dataGeneral.userEvent}
+                    eventId={dataGeneral.eventId}
+                    logout={(callBack: any) => userLogOut(callBack)}
+                    openMenu={() => openMenu()}
+                    loginInfo={loginInfo}
+                  />
+                ) : (
+                  dataGeneral.userEvent != null &&
+                  dataGeneral.anonimususer && (
+                    <UserStatusAndMenu
+                      user={dataGeneral.user}
+                      menuOpen={dataGeneral.menuOpen}
+                      photo="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+                      name={cUser.value?.names}
+                      userEvent={dataGeneral.userEvent}
+                      eventId={dataGeneral.eventId}
+                      logout={(callBack: any) => userLogOut(callBack)}
+                      openMenu={() => console.log('openMenu')}
+                      loginInfo={loginInfo}
+                      anonimususer
+                    />
+                  )
+                )}
+                {<ModalLoginHelpers organization={1} />}
+                <a>
+                  <Popover
+                    content={
+                      'Para cualquier inquietud, duda, o ayudar sobre la aplicación, contenidos o material comunicarse al correo: soporteace@ark-med.com'
+                    }
+                    title="Ayuda"
+                  >
+                    <QuestionCircleOutlined />
+                  </Popover>
+                </a>
+              </>
             )}
-
-            {<ModalLoginHelpers organization={1} />}
           </Row>
         </Menu>
       </Header>
