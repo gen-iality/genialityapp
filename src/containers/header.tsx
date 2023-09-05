@@ -311,7 +311,7 @@ const Headers = (props: Props) => {
 				}}>
 				<Menu theme='light' mode='horizontal' style={{ backgroundColor: bgcolorContainer, border: 'none' }}>
 					<Row justify='space-between' align='middle'>
-						{isLandingOrPreLanding() && !screens.xs && (
+						{isLandingOrPreLanding() && !screens.xs && cEvent.value?.organizer?.name && (
 							<Button
 								type='link'
 								onClick={landingOrganization}
@@ -325,7 +325,7 @@ const Headers = (props: Props) => {
 								</Typography.Text>
 							</Button>
 						)}
-						{window.location.href.includes('eventadmin') && <Typography.Text strong style={{textTransform: 'uppercase'}}>Evento - {cEvent.value?.name}</Typography.Text>}
+						{window.location.href.includes('eventadmin') && <Typography.Text strong style={{textTransform: 'uppercase'}}>{cEvent.value?.name && 'Evento - ' + cEvent.value?.name}</Typography.Text>}
 						{validatorOrg && (
 							<Space align='center'>
 								<Image
