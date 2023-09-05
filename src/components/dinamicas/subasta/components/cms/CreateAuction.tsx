@@ -6,7 +6,7 @@ import {
   TagOutlined,
   WarningOutlined,
 } from '@ant-design/icons';
-import { Alert, Button, Card, Col, Form, Input, InputNumber, Modal, Result, Row, Select, Space, Switch, Typography } from 'antd';
+import { Alert, Button, Card, Col, Divider, Form, Input, InputNumber, Modal, Result, Row, Select, Space, Switch, Typography } from 'antd';
 import React, { useContext, useState } from 'react';
 import { AuctionContext } from '../../context/AuctionContext';
 import { AuctionConfig, CreateProps } from '../../interfaces/auction.interface';
@@ -36,7 +36,7 @@ export default function CreateAuction({ active, auction, event }: CreateProps) {
 
   return (
     <>
-      <Form onFinish={CreateOrUpdate} layout='vertical' style={{ padding: 20 }}>
+      <Form onFinish={CreateOrUpdate} layout='vertical' style={{ padding: 10 }}>
         <Modal
           visible={modal}
           onCancel={() => setModal(false)}
@@ -94,49 +94,43 @@ export default function CreateAuction({ active, auction, event }: CreateProps) {
             }
           />
         </Modal>
-        <Row justify='end' gutter={[8, 8]} style={{ paddingBottom: 15 }}>
-          <Col>
-            <Button type='primary' disabled={isAnonymously} icon={<SaveOutlined />} htmlType='submit'>
-              Guardar
-            </Button>
-          </Col>
-          {active && (
-            <Col>
-              <Button icon={<DeleteOutlined />} danger type='primary' onClick={() => setModal(true)}>
-                Eliminar
-              </Button>
-            </Col>
-          )}
-        </Row>
-        <Row justify={active ? 'start' : 'center'}>
-          {isAnonymously && (
-            <Alert
-              type='error'
-              icon={<WarningOutlined />}
-              showIcon
-              message={'Los eventos con "registro sin autenticacion" no son validos para una subasta'}
-            />
-          )}
-        </Row>
-        <Row justify='center' gutter={[16, 16]}>
-          <Col span={16}>
-            <Card hoverable style={{ height: '100%', borderRadius: 20 }}>
-              <Space direction='vertical' style={{ width: '100%' }}>
-                <Typography.Text strong style={{ fontSize: 16 }}>
-                  Configuración general de la subasta
-                </Typography.Text>
+        {isAnonymously ? (
+          <Result
+            status='warning'
+            title={'Los eventos con "registro sin autenticación" no son válidos para una subasta'}
+          />
+        ) : 
+          <>
+            <Row justify='end' gutter={[8, 8]} style={{ paddingBottom: 10 }}>
+              <Col>
+                <Button type='primary' disabled={isAnonymously} icon={<SaveOutlined />} htmlType='submit'>
+                  Guardar
+                </Button>
+              </Col>
+              {active && (
+                <Col>
+                  <Button icon={<DeleteOutlined />} danger type='primary' onClick={() => setModal(true)}>
+                    Eliminar
+                  </Button>
+                </Col>
+              )}
+              
+            </Row>
+            <Row justify='center' gutter={[16, 16]}>
+              <Col span={16}>
+                <Card hoverable style={{ height: '100%', borderRadius: 20, cursor: 'auto' }}>
+                  <Space direction='vertical' style={{ width: '100%' }}>
+                    {/* <Typography.Text strong style={{ fontSize: 16 }}>
+                      Configuración general de la subasta
+                    </Typography.Text> */}
 
-                <Row justify='center' gutter={[16, 16]} wrap>
-                  <Col span={24}>
                     <Form.Item
                       name={'name'}
                       label={'Nombre de la subasta'}
                       rules={[{ required: true, message: 'Debe configurar un nombre para la subasta' }]}
                       initialValue={auction?.name ?? ''}>
-                      <Input prefix={<TagOutlined style={{ fontSize: 20, color: 'rgba(0, 0, 0, 0.45)' }} />} />
+                      <Input prefix={<TagOutlined style={{ /* fontSize: 20, */ color: 'rgba(0, 0, 0, 0.45)' }} />} />
                     </Form.Item>
-                  </Col>
-                  <Col span={24}>
                     <Form.Item
                       name={'currency'}
                       label={'Moneda para la subasta'}
@@ -152,80 +146,108 @@ export default function CreateAuction({ active, auction, event }: CreateProps) {
                         <Select.Option value={'USD'}>USD</Select.Option>
                       </Select>
                     </Form.Item>
-                  </Col>
-                </Row>
-              </Space>
-            </Card>
-          </Col>
+                    
+                    {auction &&
+                      <Form.Item label={'Reglamento de la subasta'}  initialValue={auction.rules  ?? ''} name={'rules'}>
+                        <TextArea showCount autoSize={{minRows: 5, maxRows: 6}} maxLength={500} placeholder='Escriba el reglamento para la subasta'/>
+                      </Form.Item>
+                    }
+                  </Space>
+                </Card>
+              </Col>
 
-          {auction && (
-            <Col span={8}>
-              <Card hoverable style={{ /* height: '100%',  */ borderRadius: 20 }}>
-                <Form.Item label={'Publicar la subasta en landing'}>
-                  <Switch
-                    loading={loading}
-                    disabled={auction?.opened}
-                    style={{ marginLeft: 10 }}
-                    checked={auction?.published}
-                    checkedChildren='Si'
-                    unCheckedChildren='No'
-                    onChange={(value) => onChange(value, 'published')}
-                  />
-                </Form.Item>
-                <Form.Item label={'Abrir la subasta en landing'}>
-                  <Switch
-                    loading={loading}
-                    disabled={!auction?.published}
-                    style={{ marginLeft: 10 }}
-                    checked={auction?.opened}
-                    checkedChildren='Si'
-                    unCheckedChildren='No'
-                    onChange={(value) => onChange(value, 'opened')}
-                  />
-                </Form.Item>
-              </Card>
-            </Col>
-          )}
-          <Col span={12}>
-            {auction && (
-              <Col span={24}>
-                <Card hoverable style={{ borderRadius: 20 }}>
-                  <Form.Item label={'Tiempo de espera entre pujas'} initialValue={auction.timerBids ?? 10} name={'timerBids'}>
-                    <Select>
+              {auction && (
+                <Col span={8}>
+                  <Card hoverable style={{ height: '100%',  borderRadius: 20, cursor: 'auto' }}>
+                    <Form.Item label={'Publicar la subasta en landing'}>
+                      <Switch
+                        loading={loading}
+                        disabled={auction?.opened}
+                        style={{ marginLeft: 10 }}
+                        checked={auction?.published}
+                        checkedChildren='Si'
+                        unCheckedChildren='No'
+                        onChange={(value) => onChange(value, 'published')}
+                      />
+                    </Form.Item>
+                    <Form.Item label={'Abrir la subasta en landing'}>
+                      <Switch
+                        loading={loading}
+                        disabled={!auction?.published}
+                        style={{ marginLeft: 10 }}
+                        checked={auction?.opened}
+                        checkedChildren='Si'
+                        unCheckedChildren='No'
+                        onChange={(value) => onChange(value, 'opened')}
+                      />
+                    </Form.Item>
+                    <Divider />
+                    <Form.Item label={'Tiempo de espera entre pujas'} initialValue={auction.timerBids ?? 10} name={'timerBids'}>
+                      <Select>
                         <Select.Option value={10}>10 SEGUNDOS</Select.Option>
                         <Select.Option value={15}>15 SEGUNDOS</Select.Option>
                         <Select.Option value={20}>20 SEGUNDOS</Select.Option>
                         <Select.Option value={25}>25 SEGUNDOS</Select.Option>
-                    </Select>
-                  </Form.Item>
-                  <Form.Item label={'Monto entre pujas'}
-                  name={'amount'}
-                  initialValue={auction.amount}
-                  help={
-                    <Typography.Text type='secondary'>
+                      </Select>
+                    </Form.Item>
+                    <Form.Item label={'Monto entre pujas'}
+                      name={'amount'}
+                      initialValue={auction.amount}
+                      help={
+                        <Typography.Text type='secondary'>
                           <InfoCircleOutlined /> Si este campo esta vacio entonces la puja sera libre para el usuario
-                        </Typography.Text>}>
-                    <InputNumber
-                      style={{ width: '100%' }}
-                      formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                    />
-                  </Form.Item>
-                </Card>
+                        </Typography.Text>
+                      }>
+                        <InputNumber
+                          style={{ width: '100%' }}
+                          formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                        />
+                    </Form.Item>
+                  </Card>
+                </Col>
+              )}
+              {/* <Col span={12}>
+                {auction && (
+                  <Col span={24}>
+                    <Card hoverable style={{ borderRadius: 20 }}>
+                      <Form.Item label={'Tiempo de espera entre pujas'} initialValue={auction.timerBids ?? 10} name={'timerBids'}>
+                        <Select>
+                            <Select.Option value={10}>10 SEGUNDOS</Select.Option>
+                            <Select.Option value={15}>15 SEGUNDOS</Select.Option>
+                            <Select.Option value={20}>20 SEGUNDOS</Select.Option>
+                            <Select.Option value={25}>25 SEGUNDOS</Select.Option>
+                        </Select>
+                      </Form.Item>
+                      <Form.Item label={'Monto entre pujas'}
+                      name={'amount'}
+                      initialValue={auction.amount}
+                      help={
+                        <Typography.Text type='secondary'>
+                              <InfoCircleOutlined /> Si este campo esta vacio entonces la puja sera libre para el usuario
+                            </Typography.Text>}>
+                        <InputNumber
+                          style={{ width: '100%' }}
+                          formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                        />
+                      </Form.Item>
+                    </Card>
+                  </Col>
+                )}
               </Col>
-            )}
-          </Col>
-          <Col span={12}>
-            {auction && (
-              <Col span={24}>
-                <Card hoverable style={{ borderRadius: 20 }}>
-                  <Form.Item label={'Reglamento de la subasta'}  initialValue={auction.rules  ?? ''} name={'rules'}>
-                    <TextArea showCount rows={6} maxLength={500} placeholder='Escriba el reglamento para la subasta'/>
-                  </Form.Item>
-                </Card>
-              </Col>
-            )}
-          </Col>
-        </Row>
+              <Col span={12}>
+                {auction && (
+                  <Col span={24}>
+                    <Card hoverable style={{ borderRadius: 20 }}>
+                      <Form.Item label={'Reglamento de la subasta'}  initialValue={auction.rules  ?? ''} name={'rules'}>
+                        <TextArea showCount rows={6} maxLength={500} placeholder='Escriba el reglamento para la subasta'/>
+                      </Form.Item>
+                    </Card>
+                  </Col>
+                )}
+              </Col> */}
+            </Row>
+          </>
+        }
       </Form>
     </>
   );
