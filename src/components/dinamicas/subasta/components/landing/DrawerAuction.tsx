@@ -330,14 +330,13 @@ export default function DrawerAuction({
                     //@ts-ignore
                   }
                   <InputNumber
-                    readOnly={auction.amount !== undefined}
+                    readOnly={auction.amount !== undefined && auction.amount !== 0 && auction.amount !== null}
                     style={{ width: '100%' }} 
                     controls={{ upIcon: <PlusOutlined />, downIcon: <MinusOutlined /> }}
                     min={(auction.currentProduct?.price ?? 0) + (auction.amount ?? 0)}
-                    step={auction.amount ?? 1}
                     size='large'
-                    type='number'
                     prefix='$'
+                    formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                   />
                 </Form.Item>
 
