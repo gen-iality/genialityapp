@@ -18,10 +18,10 @@ import { MyEvents } from './components/MyEvents';
 import { NextEvents } from './components/NextEvents';
 import { PassEvents } from './components/PassEvents';
 
-const {useBreakpoint} = Grid
+const { useBreakpoint } = Grid;
 
 function EventOrganization({ match }: OrganizationProps) {
-  const screens = useBreakpoint()
+  const screens = useBreakpoint();
   const cUser = UseCurrentUser();
   const [state, setstate] = useState<DataOrganizations>({
     orgId: '',
@@ -55,8 +55,14 @@ function EventOrganization({ match }: OrganizationProps) {
     let proximos: any = [];
     let pasados: any = [];
     let fechaActual = moment();
-    events.map((event: any) => {
-      if (moment(event.datetime_from).isAfter(fechaActual)) {
+    events.forEach((event: any) => {
+      if (Array.isArray(event.dates) && event.dates.length > 0) {
+        if (moment(event.dates[0]?.start).isAfter(fechaActual)) {
+          proximos.push(event);
+        } else {
+          pasados.push(event);
+        }
+      } else if (moment(event.datetime_from).isAfter(fechaActual)) {
         proximos.push(event);
       } else {
         pasados.push(event);

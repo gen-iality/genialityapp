@@ -187,7 +187,7 @@ export default function CreateAuction({ active, auction, event }: CreateProps) {
                         <Select.Option value={10}>10 SEGUNDOS</Select.Option>
                         <Select.Option value={15}>15 SEGUNDOS</Select.Option>
                         <Select.Option value={20}>20 SEGUNDOS</Select.Option>
-                        <Select.Option value={25}>25 SEGUNDOS</Select.Option>
+                        <Select.Option value={30}>30 SEGUNDOS</Select.Option>
                       </Select>
                     </Form.Item>
                     <Form.Item label={'Monto entre pujas'}
