@@ -1,5 +1,5 @@
 import { CloseCircleOutlined, PlayCircleOutlined, SaveOutlined, SelectOutlined, WarningOutlined } from '@ant-design/icons';
-import {  Alert, Button, Card, Col, Empty, Modal, Row, Skeleton, Table, Typography } from 'antd';
+import {  Alert, Button, Card, Col, Empty, Modal, Result, Row, Skeleton, Table, Typography } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import React, { useState } from 'react';
 
@@ -86,127 +86,125 @@ export default function ExecuteAuction( {auction, eventId} : GeneralAuctionProps
     }
   };
   return (
-    <div style={{ padding: 10 }}>
-      <Row justify='end' gutter={[8, 8]} style={{ paddingBottom: 20 }}>
-        <Col>
-          { !auction.opened && (
-             <Alert
-             type='warning'
-             icon={<WarningOutlined />}
-             showIcon
-             message={`La subasta no se encuentra abierta,${auction?.currentProduct ? ' para continuar' : ' para iniciarla'} debe abrirla primero`}
-           />
-          )}
-        </Col>
-        <Col>
+    <div style={{ padding: 5 }}>
+      { !auction.opened ? (
+        <Row justify='center' align='middle' style={{width: '100%'}}>
+          <Result status='warning' title={`La subasta no se encuentra abierta,${auction?.currentProduct ? ' para continuar' : ' para iniciarla'} debe abrirla primero`} />
+        </Row>
+      ) :
+      <>
+        <Row justify='end' gutter={[8, 8]} style={{ paddingBottom: 10 }}>
           {!auction?.playing && auction?.currentProduct && (
-            <Button
-              className='animate__animated animate__fadeInDown'
-              type='primary'
-              danger
-              icon={<CloseCircleOutlined />}
-              onClick={auctionFinish}>
-              Finalizar subasta
-            </Button>
+            <Col>
+              <Button
+                /* className='animate__animated animate__fadeInDown' */
+                type='primary'
+                danger
+                icon={<CloseCircleOutlined />}
+                onClick={auctionFinish}>
+                Finalizar subasta
+              </Button>
+            </Col>
           )}
-        </Col>
-        <Col>
           {!auction?.playing && (
-            <Button
-              className='animate__animated animate__fadeInDown'
-              type='primary'
-              icon={auction?.currentProduct ? <SelectOutlined /> : <PlayCircleOutlined />}
-              disabled={!auction?.opened}
-              onClick={() => {
-                refresh();
-                setVisibility(true);
-              }}>
-              {auction?.currentProduct ? 'Seleccionar producto' : 'Iniciar subasta'}
-            </Button>
+            <Col>
+              <Button
+                /* className='animate__animated animate__fadeInDown' */
+                type='primary'
+                icon={auction?.currentProduct ? <SelectOutlined /> : <PlayCircleOutlined />}
+                disabled={!auction?.opened}
+                onClick={() => {
+                  refresh();
+                  setVisibility(true);
+                }}>
+                {auction?.currentProduct ? 'Seleccionar producto' : 'Iniciar subasta'}
+              </Button>
+            </Col>
           )}
-        </Col>
-        {auction?.playing && (
-          <>
-          <Col>
-            <Button
-              className='animate__animated animate__flip'
-              onClick={cancelBids}
-              icon={<CloseCircleOutlined />}
-              danger
-              type='primary'>
-              Cancelar Pujas
-            </Button>
-          </Col>
-          <Col>
-            <Button
-              className='animate__animated animate__flip'
-              onClick={closeBids}
-              icon={<SaveOutlined />}
-              
-              type='primary'>
-              Guardar Pujas
-            </Button>
-          </Col>
-          </>
-        )}
-        <Modal
-          width={'60%'}
-          title='Selecciona un producto'
-          visible={visibility}
-          onCancel={onCancel}
-          cancelText={'Cancelar'}
-          onOk={startAuction}
-          okText={'Aceptar'}>
-          {loading ? <Loading /> : <SelectProducts products={products} onclick={setselectedProduct} />}
-        </Modal>
-      </Row>
-      <Row justify='center' gutter={[16, 16]}>
-        <Col span={8}>
-          <Card
-            hoverable={true}
-            style={{ height: 450, borderRadius: 20 }}
-            headStyle={{ textAlign: 'center' }}
-            cover={
-              auction?.currentProduct ? (
-                <img
-                  className='animate__animated animate__flipInX'
-                  alt='imagen del producto'
-                  src={auction?.currentProduct.images[0].url}
-                  style={{ height: '370px', objectFit: 'fill', backgroundColor: '#C4C4C440', borderRadius: '20px 20px 0 0px' }}
+          {auction?.playing && (
+            <>
+            <Col>
+              <Button
+                /* className='animate__animated animate__flip' */
+                onClick={cancelBids}
+                icon={<CloseCircleOutlined />}
+                danger
+                type='primary'>
+                Cancelar Pujas
+              </Button>
+            </Col>
+            <Col>
+              <Button
+                /* className='animate__animated animate__flip' */
+                onClick={closeBids}
+                icon={<SaveOutlined />}
+                
+                type='primary'>
+                Guardar Pujas
+              </Button>
+            </Col>
+            </>
+          )}
+          <Modal
+            width={'60%'}
+            title='Selecciona un producto'
+            visible={visibility}
+            onCancel={onCancel}
+            cancelText={'Cancelar'}
+            onOk={startAuction}
+            okText={'Aceptar'}>
+            {loading ? <Loading /> : <SelectProducts products={products} onclick={setselectedProduct} />}
+          </Modal>
+        </Row>
+        <Row gutter={[16, 16]}>
+          <Col span={6}>
+            <Card
+              hoverable
+              style={{ /* height: 450, */ borderRadius: 20, cursor: 'auto' }}
+              headStyle={{ textAlign: 'center' }}
+              cover={
+                auction?.currentProduct ? (
+                  <img
+                    /* className='animate__animated animate__flipInX' */
+                    alt='imagen del producto'
+                    src={auction?.currentProduct.images[0].url}
+                    style={{ height: '300px', objectFit: 'fill', backgroundColor: '#C4C4C440', borderRadius: '20px 20px 0 0px' }}
+                  />
+                ) : (
+                  <Empty
+                    image={<Skeleton.Image /* className='animate__animated animate__flipInX' */ />}
+                    style={{ height: '300px', display: 'grid', justifyContent: 'center', alignItems: 'center' }}
+                    description={'Sin imagen'}
+                  />
+                )
+              }
+              >
+                <Card.Meta 
+                  description={<Typography.Text strong>{auction?.currentProduct ? auction?.currentProduct.name : 'Sin producto asignado'}</Typography.Text>}
                 />
-              ) : (
-                <Empty
-                  image={<Skeleton.Image className='animate__animated animate__flipInX' />}
-                  style={{ height: '370px', display: 'grid', justifyContent: 'center', alignItems: 'center' }}
-                  description={'Sin imagen'}
-                />
-              )
-            }
-            >
-              <Card.Meta 
-                title={<Typography.Text strong>{auction?.currentProduct ? auction?.currentProduct.name : 'Sin producto asignado'}</Typography.Text>}
-              />
-          </Card>
-        </Col>
+            </Card>
+          </Col>
 
-        <Col span={16}>
-          <Card hoverable style={{ height: 450, borderRadius: 20 }}>
-            <Table
-              bordered={false}
-              loading={Loadbids}
-              columns={columns}
-              rowClassName={(item,index)=> index === 0 ? 'animate__animated animate__pulse animate__infinite winner' : ''}
-              dataSource={Bids}
-              pagination={{
-                pageSize: 4,
-                current: currentPage,
-                onChange: (page) => setcurrentPage(page),
-                total: Bids.length,
-              }}
-            />
-          </Card>
-        </Col>
-      </Row>
+          <Col span={18}>
+            <Card hoverable style={{ height: 450, borderRadius: 20, cursor: 'auto' }}>
+              <Table
+                bordered={false}
+                loading={Loadbids}
+                columns={columns}
+                /* rowClassName={(item,index)=> index === 0 ? 'animate__animated animate__pulse animate__infinite winner' : ''} */
+                dataSource={Bids}
+                pagination={{
+                  pageSize: 4,
+                  current: currentPage,
+                  onChange: (page) => setcurrentPage(page),
+                  total: Bids.length,
+                }}
+              />
+            </Card>
+          </Col>
+        </Row>
+      </>
+      }
     </div>
   );
 }

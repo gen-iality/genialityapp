@@ -68,7 +68,7 @@ export default function Products({ products, onclick, onDelete }: ProductsProps)
           )}
         /> :
         <Row justify='center' align='middle' style={{width: '100%'}}>
-          <Result status='info' icon={<AntCloudOutlined />} title='No hay productos creados.' />
+          <Result status='info' /* icon={<AntCloudOutlined />} */ title='No hay productos creados.' />
         </Row>
       }
     </>
