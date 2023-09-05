@@ -42,6 +42,7 @@ export interface EventProgressContextState {
    */
   saveProgressReport: () => Promise<void>
   addViewedActivity: (activityId: string) => Promise<void>
+  refreshViewedActivities: (eventId: string, userId: string) => void
 }
 
 const initialContextState: EventProgressContextState = {
@@ -61,6 +62,7 @@ const initialContextState: EventProgressContextState = {
   calcProgress: () => 0,
   saveProgressReport: () => Promise.resolve(),
   addViewedActivity: () => Promise.resolve(),
+  refreshViewedActivities: () => {},
 }
 
 const EventProgressContext = createContext<EventProgressContextState>(initialContextState)
@@ -90,10 +92,14 @@ export const EventProgressProvider: FunctionComponent<PropsWithChildren> = (prop
     if (!cEventUser.value) return
 
     const { account_id, event_id } = cEventUser.value
-    FB.ActivityProgresses.get(event_id, account_id).then((data) => {
+    refreshViewedActivities(event_id, account_id)
+  }, [cEventUser])
+
+  const refreshViewedActivities = (eventId: string, userId: string) => {
+    FB.ActivityProgresses.get(eventId, userId).then((data) => {
       setViewedActivities(data?.viewed_activities ?? [])
     })
-  }, [cEventUser])
+  }
 
   const addViewedActivity = async (activityId: string) => {
     if (viewedActivities.includes(activityId)) return
@@ -337,6 +343,7 @@ export const EventProgressProvider: FunctionComponent<PropsWithChildren> = (prop
         calcProgress,
         saveProgressReport,
         addViewedActivity,
+        refreshViewedActivities,
       }}
     >
       {children}
