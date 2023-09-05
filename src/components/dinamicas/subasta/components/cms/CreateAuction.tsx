@@ -118,7 +118,7 @@ export default function CreateAuction({ active, auction, event }: CreateProps) {
             </Row>
             <Row justify='center' gutter={[16, 16]}>
               <Col span={16}>
-                <Card hoverable style={{ height: '100%', borderRadius: 20 }}>
+                <Card hoverable style={{ height: '100%', borderRadius: 20, cursor: 'auto' }}>
                   <Space direction='vertical' style={{ width: '100%' }}>
                     {/* <Typography.Text strong style={{ fontSize: 16 }}>
                       Configuración general de la subasta
@@ -158,7 +158,7 @@ export default function CreateAuction({ active, auction, event }: CreateProps) {
 
               {auction && (
                 <Col span={8}>
-                  <Card hoverable style={{ height: '100%',  borderRadius: 20 }}>
+                  <Card hoverable style={{ height: '100%',  borderRadius: 20, cursor: 'auto' }}>
                     <Form.Item label={'Publicar la subasta en landing'}>
                       <Switch
                         loading={loading}
