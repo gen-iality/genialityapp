@@ -333,7 +333,7 @@ export default function DrawerAuction({
                     readOnly={auction.amount !== undefined && auction.amount !== 0 && auction.amount !== null}
                     style={{ width: '100%' }} 
                     controls={{ upIcon: <PlusOutlined />, downIcon: <MinusOutlined /> }}
-                    min={(auction.currentProduct?.price ?? 0) + (auction.amount ?? 0)}
+                    min={(Bids[0]?.offered ??  auction.currentProduct?.start_price) + (auction.amount ?? 0)}
                     size='large'
                     prefix='$'
                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
