@@ -38,11 +38,11 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
         ...state,
         currentAuthScreen: 'login',
         controllerLoginVisible: {
+          ...state.controllerLoginVisible,
           visible: action?.visible,
           idOrganization: action.idOrganization,
           organization: action.organization,
           logo: action.logo,
-          defaultPositionId: action.defaultPositionId,
           customPasswordLabel: action.customPasswordLabel,
         },
       }
