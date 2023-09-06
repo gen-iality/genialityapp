@@ -72,41 +72,6 @@ export default function SelectProducts({ products, onclick }: Omit<ProductsProps
           <Result status='info' /* icon={<AntCloudOutlined />} */ title='No hay productos creados.' />
         </Row>
       }
-      <Row justify='start' gutter={[16, 16]} wrap>
-        {products?.length > 0 ? (
-          products?.map((product) => (
-            <Col xs={24} sm={16} md={12} lg={10} xl={8} xxl={6} style={selected === product._id ? {border: '2px solid #4A5052', padding: 0, borderRadius: 20 } : {}} key={product._id}>
-              <Card
-               onClick={() =>{
-                 if(product.state !== 'auctioned'){
-                  setselected(product._id)
-                  onclick(product)
-                 }
-                }}
-                key={product._id + 'card'}
-                bordered={true}
-                hoverable
-                onMouseEnter={() => {}}
-                style={{ aspectRatio: 'relative', height: 310, borderRadius: 20 }}
-                cover={
-                  <img
-                    alt='imagen del producto'
-                    src={product.images[0].url}
-                    style={{ height: '250px', objectFit: 'fill', backgroundColor: '#C4C4C440', 
-                    borderRadius: '20px 20px 0 0px', filter: product.state === 'auctioned' ? 'grayscale(100%)' : '' }}
-                    onClick={() => onclick(product)}
-                  />
-                }>
-                  <Card.Meta 
-                    title={<Typography.Text strong>{product.name}</Typography.Text>}
-                  />
-                </Card>
-            </Col>
-          ))
-        ) : (
-          <Result style={{margin: 'auto'}} status='info' icon={<AntCloudOutlined />} title='No hay productos creados.' />
-        )}
-      </Row>
     </Card>
   );
 }
