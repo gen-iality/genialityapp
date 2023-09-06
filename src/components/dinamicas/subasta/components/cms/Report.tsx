@@ -132,72 +132,73 @@ export default function Report({ eventId, reload }: ReportProps) {
   }
   return (
     <>
-      <Row justify='space-between' style={{paddingBottom: '10px'}}>
-        <Modal
-          visible={modal}
-          onCancel={() => setModal(false)}
-          destroyOnClose={true}
-          footer={[
-            <Button key={'btnCancelar'} type='default' onClick={() => setModal(false)} icon={<CloseCircleOutlined />}>
-              Cancelar
-            </Button>,
-            <Button
-              key={'btnEliminar'}
-              type='primary'
-              danger
-              onClick={() => {
-                setModal(false);
-                reset()
+      <Modal
+        visible={modal}
+        onCancel={() => setModal(false)}
+        destroyOnClose={true}
+        footer={[
+          <Button key={'btnCancelar'} type='default' onClick={() => setModal(false)} icon={<CloseCircleOutlined />}>
+            Cancelar
+          </Button>,
+          <Button
+            key={'btnEliminar'}
+            type='primary'
+            danger
+            onClick={() => {
+              setModal(false);
+              reset()
+            }}
+            disabled={permit}
+            icon={<DeleteOutlined />}>
+            Reiniciar
+          </Button>,
+        ]}>
+        <Result
+          status={'warning'}
+          title={
+            <Typography.Text strong type='warning' style={{ fontSize: 22 }}>
+              ¿Quieres reiniciar los datos?
+            </Typography.Text>
+          }
+          extra={
+            <Input
+              placeholder={'Reiniciar'}
+              onChange={(e) => {
+                if (e.target.value === 'Reiniciar') {
+                  setPermit(false);
+                } else {
+                  setPermit(true);
+                }
               }}
-              disabled={permit}
-              icon={<DeleteOutlined />}>
-              Reiniciar
-            </Button>,
-          ]}>
-          <Result
-            status={'warning'}
-            title={
-              <Typography.Text strong type='warning' style={{ fontSize: 22 }}>
-                ¿Quieres reiniciar los datos?
-              </Typography.Text>
-            }
-            extra={
-              <Input
-                placeholder={'Reiniciar'}
-                onChange={(e) => {
-                  if (e.target.value === 'Reiniciar') {
-                    setPermit(false);
-                  } else {
-                    setPermit(true);
-                  }
-                }}
-              />
-            }
-            subTitle={
-              <Space style={{ textAlign: 'justify' }} direction='vertical'>
-                <Typography.Paragraph>
-                  Esta acción borrará permanentemente los datos de las pujas así como el precio de los productos subastados.
-                </Typography.Paragraph>
+            />
+          }
+          subTitle={
+            <Space style={{ textAlign: 'justify' }} direction='vertical'>
+              <Typography.Paragraph>
+                Esta acción borrará permanentemente los datos de las pujas así como el precio de los productos subastados.
+              </Typography.Paragraph>
 
-                <Typography.Paragraph>
-                  Para confirmar que deseas eliminar los datos de la subasta, escribe la siguiente palabra: 
-                  <Typography.Text strong type='danger'>
-                   {' Reiniciar'}
-                  </Typography.Text>
-                </Typography.Paragraph>
-              </Space>
-            }
-          />
-        </Modal>
-      
-        <Button icon={<FileExcelOutlined />}  type='primary' onClick={exportData}>
-          Generar Excel
-        </Button>
-      
-        <Button icon={<ReloadOutlined />} danger type='primary' onClick={() => setModal(true)}>
-          Reiniciar subasta
-        </Button>
-      
+              <Typography.Paragraph>
+                Para confirmar que deseas eliminar los datos de la subasta, escribe la siguiente palabra: 
+                <Typography.Text strong type='danger'>
+                  {' Reiniciar'}
+                </Typography.Text>
+              </Typography.Paragraph>
+            </Space>
+          }
+        />
+      </Modal>
+      <Row justify='end' style={{paddingBottom: '10px'}} gutter={8}>
+        <Col>
+          <Button icon={<FileExcelOutlined />}  type='primary' onClick={exportData}>
+            Generar excel
+          </Button>
+        </Col>
+        <Col>
+          <Button icon={<ReloadOutlined />} danger type='primary' onClick={() => setModal(true)}>
+            Reiniciar subasta
+          </Button>
+        </Col>
       </Row>
       <Row gutter={[32, 32]}>
         <Col span={12}>
@@ -223,7 +224,8 @@ export default function Report({ eventId, reload }: ReportProps) {
                 </Col>
                 <Col span={8}>
                   <Card style={{ height: '100%', cursor: 'default', border: '1px solid #C4C4C480' }}>
-                    <Statistic valueStyle={{ textAlign: 'center', fontSize: 30 }} title='Total de pujas' value={offers.length} />
+                    <Statistic valueStyle={{ textAlign: 'center', fontSize: 30 }} 
+                      title={<Typography.Text type='secondary'>Total de pujas <br /><br /></Typography.Text>} value={offers.length} />
                   </Card>
                 </Col>
                 <Col span={8}>
