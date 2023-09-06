@@ -13,6 +13,7 @@ interface IWrappedProps {
 interface IEventProgressWrapperProps {
   event?: any
   eventUser?: any
+  onLoading?: (isLoading: boolean) => void
   render: (renderProps: IWrappedProps) => JSX.Element
 }
 
@@ -26,7 +27,7 @@ export const calcProgress = (current: number, total: number) => {
 }
 
 const EventProgressWrapper: FunctionComponent<IEventProgressWrapperProps> = (props) => {
-  const { event, eventUser, render } = props
+  const { event, eventUser, render, onLoading } = props
 
   const [isLoading, setIsLoading] = useState(false)
   const [activities, setActivities] = useState<string[]>([])
@@ -40,6 +41,12 @@ const EventProgressWrapper: FunctionComponent<IEventProgressWrapperProps> = (pro
       setViewedActivities(viewed_activities || [])
     }
   }
+
+  useEffect(() => {
+    if (typeof onLoading === 'function') {
+      onLoading(isLoading)
+    }
+  }, [isLoading])
 
   useEffect(() => {
     if (!event) return

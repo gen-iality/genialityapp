@@ -106,6 +106,8 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
   const [dataSource, setDataSource] = useState<undefined | any[]>(undefined) // We NEED the initial undefined value
   const [filteredDataSource, setFilteredDataSource] = useState<any[]>([])
 
+  const [isProgressLoading, setIsProgressLoading] = useState(false)
+
   const [progressMap, setProgressMap] = useState<any>({})
 
   const [isProgressingModalOpened, setIsProgressingModalOpened] = useState(false)
@@ -362,6 +364,9 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
           <EventProgressWrapper
             event={event}
             eventUser={item}
+            onLoading={(isLoading) => {
+              setIsProgressLoading(isLoading)
+            }}
             render={({ isLoading, activities, viewedActivities }) => {
               return (
                 <>
@@ -730,6 +735,11 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         }
         back
       />
+      {isProgressLoading && (
+        <>
+          <Spin /> Cargando el progreso aún...
+        </>
+      )}
       <Table
         size="small"
         loading={isLoading || dataSource === undefined}
