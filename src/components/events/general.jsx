@@ -167,7 +167,6 @@ class General extends Component {
         categories,
         event
       );
-      console.log(selectedCategories);
       this.setState({
         categories,
         organizers,
@@ -177,7 +176,6 @@ class General extends Component {
         selectedType,
         loading: false,
       });
-      console.log(selectedCategories);
       if (info.dates && info.dates.length > 0) {
         this.setState({ specificDates: true });
       } else {
@@ -309,8 +307,7 @@ class General extends Component {
   //Funciones para manejar el cambio en listas desplegables
   selectCategory = (selectedCategoryIds) => {
     this.setState({ selectedCategories: selectedCategoryIds }, () => {
-      // Realiza cualquier operación adicional que necesites aquí, ya que el estado se ha actualizado.
-      this.valid(); // Llama a validación u otras acciones aquí si es necesario.
+      this.valid(); 
     });
   };
   
@@ -859,7 +856,6 @@ class General extends Component {
       accessSelected,
       extraState,
     } = this.state;
-    console.log(selectedCategories);
     if (loading) return <Loading />;
     // const userContext = this.context;
     /** RESTRICIONES */
@@ -1076,7 +1072,6 @@ class General extends Component {
 
                   <Form.Item>
                     <Select
-                      mode='multiple'
                       showArrow
                       placeholder='Elegir una categoría'
                       value={selectedCategories}
@@ -1084,7 +1079,7 @@ class General extends Component {
                       maxTagCount={2}
                     >
                       {categories.map((category) => (
-                        <Select.Option key={category.value} value={category.value}>
+                        <Select.Option key={category.label} value={category.label}>
                           {category.label}
                         </Select.Option>
                       ))}
@@ -1296,10 +1291,12 @@ function handleFields(organizers, types, categories, event) {
   let selectedCategories = [];
   let selectedType = {};
   const { category_ids, organizer_id, event_type_id } = event;
-  if (!category_ids) {
-    categories.map((item) => {
+  if (category_ids) {
+    categories.forEach((item) => {
       let pos = category_ids.indexOf(item.value);
-      return pos >= 0 ? selectedCategories.push(item) : '';
+      if (pos >= 0) {
+        selectedCategories.push({ name: item.label });
+      }
     });
   }
   const pos = organizers
@@ -1316,7 +1313,6 @@ function handleFields(organizers, types, categories, event) {
       .indexOf(event_type_id);
     selectedType = types[pos];
   } else selectedType = undefined;
-  console.log(selectedCategories);
   return { selectedOrganizer, selectedCategories, selectedType };
 }
 

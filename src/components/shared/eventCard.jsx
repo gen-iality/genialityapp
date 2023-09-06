@@ -1,16 +1,23 @@
-import { Component } from 'react';
+import { Component, useEffect } from 'react';
 import Moment from 'moment';
 import { Link, withRouter } from 'react-router-dom';
-import { Badge, Button, Card, Space, Tooltip, Typography } from 'antd';
+import { Badge, Button, Card, Space, Tag, Tooltip, Typography } from 'antd';
 import { imageUtils } from '../../Utilities/ImageUtils';
 import { HelperContext } from '@/context/helperContext/helperContext';
+import { CategoriesApi } from '@/helpers/request';
 
 const EventImage = imageUtils.EventImage;
 const { Meta } = Card;
 class EventCard extends Component {
+  
   static contextType = HelperContext;
+  
+
+
   render() {
+
     const { event, bordered, right, loading, isAdmin, buttonBuyOrRegistered, textButtonBuyOrRegistered } = this.props;
+    
     // const { eventIsActive } = this.context;
     const styleNormal = {
       fontWeight: 'bold',
@@ -70,7 +77,30 @@ class EventCard extends Component {
     //aqui  tiene que venir ahora unos minutos en caso de tener plan
     /* let blockedDate = new Date(actualDate.setDate(actualDate.getDate() + blockedEvent));
     let formatDate = Moment(blockedDate).format('DD MMM YYYY'); */
-
+    const getEventInfo = () => {
+      if (event.category_ids && event.category_ids.length > 0) {
+        return (
+          <Space>
+            {event.category_ids.map((category, index) => (
+              <Tag key={index}>{category}</Tag>
+            ))}
+          </Space>
+        );
+      } else {
+        const possibleNames = [
+          event.organizer?.name
+            ? event.organizer?.name
+            : event.author?.displayName
+            ? event.author?.displayName
+            : event.author?.names
+        ];
+        const validNames = possibleNames.filter((name) => name);
+        return validNames.map((name, index) => (
+          <span key={index}>{name}</span>
+        ));
+      }
+    };
+    
     return (
       <div className='animate__animated animate__fadeIn'>
         <Badge.Ribbon
@@ -161,13 +191,7 @@ class EventCard extends Component {
                       {event.name}
                     </Typography.Text>
                   </Link>
-                  <span>
-                    {event.organizer?.name
-                      ? event.organizer?.name
-                      : event.author?.displayName
-                      ? event.author?.displayName
-                      : event.author?.names}
-                  </span>
+                  {getEventInfo()}
                   {buttonBuyOrRegistered && (
                     <Link
                       to={

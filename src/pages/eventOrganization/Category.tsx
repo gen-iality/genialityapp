@@ -27,7 +27,6 @@ const Category: React.FC = () => {
 
   // Función para agregar una nueva categoría
   const agregarCategoria = async () => {
-    // Validación de entrada aquí si es necesario
 
     // Agregar la nueva categoría al dataSource
     const nuevaCategoria: Categoria = {
@@ -96,7 +95,7 @@ const Category: React.FC = () => {
       <Table columns={columns} dataSource={dataSource} size='small' rowKey='key' title={renderTitle} />
 
       <Modal title='Agregar Categoría' visible={isModalVisible} onOk={agregarCategoria} onCancel={toggleModal}>
-        <Input placeholder='Nombre de la categoría' value={categoriaNombre} onChange={handleNombreChange} />
+        <Input placeholder='Nombre de la categoría' value={categoriaNombre} onChange={handleNombreChange} maxLength={20}/>
       </Modal>
     </>
   );
