@@ -28,6 +28,7 @@ export default function CreateProducts({reload, eventId}: {reload: boolean,event
         if (!modal.edit || newFileList.length !== 0) {
           await deleteImage(file, setProductSelect, newFileList);
         } else {
+          setProductSelect({ ...productSelect, images: [{...file,status:  'done'}] });
           DispatchMessageService({ type: 'warning', msj: 'el producto debe tener mínimo una imagen', action: 'show' });
         }
         setLoadingModal(false)
