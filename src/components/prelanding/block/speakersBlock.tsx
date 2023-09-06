@@ -42,23 +42,27 @@ const SpeakersBlock = () => {
 
   const scrollPlus = () => {
     let carrusel = document.getElementById('carrusel-speakers');
-    let scrollLeftPrevious = carrusel?.scrollLeft;
-    if(carrusel?.scrollLeft) carrusel.scrollLeft += 450;
-    setTimeout(() => {
-      if (carrusel?.scrollLeft === scrollLeftPrevious) {
-        setDisabledPlus(true);
-      }
-    }, 1000);
-    setDisabledMinus(false);
+    if(carrusel){
+      let scrollLeftPrevious = carrusel?.scrollLeft;
+      carrusel.scrollLeft += 450;
+      setTimeout(() => {
+        if (carrusel?.scrollLeft === scrollLeftPrevious) {
+          setDisabledPlus(true);
+        }
+      }, 1000);
+      setDisabledMinus(false);
+    }
   };
 
   const scrollMinus = () => {
     let carrusel = document.getElementById('carrusel-speakers');
-    if(carrusel?.scrollLeft) carrusel.scrollLeft -= 450;
-    if (carrusel?.scrollLeft && carrusel?.scrollLeft < 50) {
-      setDisabledMinus(true);
+    if(carrusel) {
+      carrusel.scrollLeft -= 450;
+      if (carrusel.scrollLeft < 50) {
+        setDisabledMinus(true);
+      }
+      setDisabledPlus(false);
     }
-    setDisabledPlus(false);
   };
 
   return (
