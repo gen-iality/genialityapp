@@ -21,7 +21,7 @@ export default function SelectProducts({ products, onclick }: Omit<ProductsProps
           style={{ width: '100%', padding: 0 }}
           dataSource={products}
           renderItem={(product) => (
-            <List.Item /* className={product.state === 'auctioned' ? '' : 'products'} */ key={product._id}>
+            <List.Item style={{border: selected === product._id ? '2px solid #4A5052' : 'transparent', borderRadius: 5}} key={product._id}>
               <Badge.Ribbon
                 text={product?.state === 'auctioned' ? product?.state : ''}
                 color={product?.state === 'auctioned' ? 'red' : 'transparent'}
@@ -39,14 +39,14 @@ export default function SelectProducts({ products, onclick }: Omit<ProductsProps
                   key={product._id + 'card'}
                   style={{ 
                     width: '100%', /* borderRadius: 10, */ backgroundColor: '#C4C4C420', 
-                    border: selected === product._id ? '2px solid #4A5052' : 'transparent'
+                    /* border: selected === product._id ? '2px solid #4A5052' : 'transparent' */
                   }}
                   cover={
                     product && product.images && product.images.length > 0 ? (
                       <img
                         alt='imagen del producto'
                         src={product.images[0].url}
-                        style={{ height: '150px', objectFit: 'fill', backgroundColor: '#C4C4C440' }}
+                        style={{ height: '150px', objectFit: 'fill', backgroundColor: '#C4C4C440'}}
                       />
                     ) : (
                       <Empty

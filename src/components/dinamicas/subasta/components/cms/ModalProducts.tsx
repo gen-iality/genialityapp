@@ -71,7 +71,7 @@ export default function ModalProducts({ product, onChange, onCancel, onSave, loa
         </Form.Item>
 
         <Row justify='end'>
-          <Button loading={loading} onClick={()=> onCancel(product.images)} /* type='primary' */ style={{ marginRight: 10 }}  icon={<CloseCircleOutlined />}>
+          <Button loading={loading} onClick={()=> onCancel(product.images)} /* type='primary' */ style={{ marginRight: 10 }}  /* icon={<CloseCircleOutlined />} */>
             Cancelar
           </Button>
           <Button loading={loading} type='primary' style={{ marginRight: 10 }} htmlType='submit' icon={<SaveOutlined />}>
