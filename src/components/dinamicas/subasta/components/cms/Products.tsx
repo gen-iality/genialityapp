@@ -1,56 +1,76 @@
-import { Card, Col, Popconfirm, Result, Row, Tag, Typography } from 'antd';
+import { Badge, Card, Col, Empty, List, Popconfirm, Result, Row, Space, Tag, Tooltip, Typography } from 'antd';
 import React from 'react';
 import { ProductsProps } from '../../interfaces/auction.interface';
-import { AntCloudOutlined, DeleteOutlined } from '@ant-design/icons';
+import { AntCloudOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 
 export default function Products({ products, onclick, onDelete }: ProductsProps) {
   return (
     <>
-      <Row wrap gutter={[16, 16]} style={{ padding: 10, width: '100%'}} justify='center'>
-        {products?.length > 0 ? (
-          products?.map((product) => (
-            <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8} key={product._id}>
-             
-              <Card
-                className={product.state === 'auctioned' ? '' :'products'}
-                key={product._id + 'card'}
-                bordered={true}
-                style={{ width: 300, aspectRatio: 'relative', height: 310, borderRadius: 20}}
-                cover={
-                  <>
-                  <img
-                    alt='imagen del producto'
-                    src={product.images[0].url}
-                    style={{ height: '250px', objectFit: 'fill', backgroundColor: '#C4C4C440', borderRadius: '20px 20px 0 0px' }}
-                    onClick={() => {
-                      if(product.state !== 'auctioned') onclick(product)}}
-                  />
-                  </>
-                }
-                >
-                  <Card.Meta 
+      {products?.length > 0 ?
+        <List
+          grid={{
+            gutter: 20,
+            xs: 1,
+            sm: 1,
+            md: 2,
+            lg: 5,
+            xl: 6,
+            xxl: 6,
+          }}
+          style={{ padding: 20 }}
+          dataSource={products}
+          renderItem={(product) => (
+            <List.Item style={{ height: '100%' }} key={product._id}>
+              <Badge.Ribbon
+                text={product?.state === 'auctioned' ? product?.state : ''}
+                color={product?.state === 'auctioned' ? 'red' : 'transparent'}
+              >
+                <Card
+                  hoverable
+                  className={product.state === 'auctioned' ? '' : 'products'}
+                  key={product._id + 'card'}
+                  style={{ width: '100%', cursor: 'auto', borderRadius: 10, backgroundColor: '#C4C4C420' }}
+                  actions={[
+                    product.state !== 'auctioned' && <EditOutlined onClick={() => onclick(product)} />,
+                    <Popconfirm
+                      placement='top'
+                      title={'¿Está seguro de eliminar el producto?'}
+                      onConfirm={() => onDelete(product._id, product.images)}
+                      okText='Sí'
+                      cancelText='No'>
+                      <DeleteOutlined key={'delete'} style={{color: 'red'}}/>
+                    </Popconfirm>
+                  ]}
+                  cover={
+                    product && product.images && product.images.length > 0 ? (
+                      <img
+                        alt='imagen del producto'
+                        src={product.images[0].url}
+                        style={{ height: '200px', objectFit: 'fill', backgroundColor: '#C4C4C440' }}
+                      />
+                    ) : (
+                      <Empty
+                        style={{ height: '200px', display: 'grid', justifyContent: 'center', alignItems: 'center' }}
+                        description={'Sin imagen'}
+                      />
+                    )
+                  }>
+                  <Card.Meta
                     title={
-                      <Row justify={'space-between'}>
+                      <Tooltip title={product.name} placement='bottomLeft'>
                         <Typography.Text strong>{product.name}</Typography.Text>
-                        {product.state === 'auctioned' && <Tag  color='red'>{product.state}</Tag>}
-                          <Popconfirm
-                            placement='top'
-                            title={'¿Está seguro de eliminar la información?'}
-                            onConfirm={() => onDelete(product._id, product.images)}
-                            okText='Yes'
-                            cancelText='No'>
-                            <DeleteOutlined key={'delete'} style={{color: 'red'}}/>
-                          </Popconfirm>
-                      </Row>
+                      </Tooltip>
                     }
                   />
                 </Card>
-            </Col>
-          ))
-        ) : (
-          <Result status='info' icon={<AntCloudOutlined />} title='No hay productos creados.' />
-        )}
-      </Row>
+              </Badge.Ribbon>
+            </List.Item>
+          )}
+        /> :
+        <Row justify='center' align='middle' style={{width: '100%'}}>
+          <Result status='info' /* icon={<AntCloudOutlined />} */ title='No hay productos creados.' />
+        </Row>
+      }
     </>
   );
 }

@@ -206,45 +206,6 @@ export default function CreateAuction({ active, auction, event }: CreateProps) {
                   </Card>
                 </Col>
               )}
-              {/* <Col span={12}>
-                {auction && (
-                  <Col span={24}>
-                    <Card hoverable style={{ borderRadius: 20 }}>
-                      <Form.Item label={'Tiempo de espera entre pujas'} initialValue={auction.timerBids ?? 10} name={'timerBids'}>
-                        <Select>
-                            <Select.Option value={10}>10 SEGUNDOS</Select.Option>
-                            <Select.Option value={15}>15 SEGUNDOS</Select.Option>
-                            <Select.Option value={20}>20 SEGUNDOS</Select.Option>
-                            <Select.Option value={25}>25 SEGUNDOS</Select.Option>
-                        </Select>
-                      </Form.Item>
-                      <Form.Item label={'Monto entre pujas'}
-                      name={'amount'}
-                      initialValue={auction.amount}
-                      help={
-                        <Typography.Text type='secondary'>
-                              <InfoCircleOutlined /> Si este campo esta vacio entonces la puja sera libre para el usuario
-                            </Typography.Text>}>
-                        <InputNumber
-                          style={{ width: '100%' }}
-                          formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                        />
-                      </Form.Item>
-                    </Card>
-                  </Col>
-                )}
-              </Col>
-              <Col span={12}>
-                {auction && (
-                  <Col span={24}>
-                    <Card hoverable style={{ borderRadius: 20 }}>
-                      <Form.Item label={'Reglamento de la subasta'}  initialValue={auction.rules  ?? ''} name={'rules'}>
-                        <TextArea showCount rows={6} maxLength={500} placeholder='Escriba el reglamento para la subasta'/>
-                      </Form.Item>
-                    </Card>
-                  </Col>
-                )}
-              </Col> */}
             </Row>
           </>
         }
