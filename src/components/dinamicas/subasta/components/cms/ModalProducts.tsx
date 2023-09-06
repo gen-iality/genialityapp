@@ -24,7 +24,7 @@ export default function ModalProducts({ product, onChange, onCancel, onSave, loa
 
   return (
     <Fragment>
-      <Form  layout='vertical' autoComplete='off' onFinish={onSave}>
+      <Form layout='vertical' autoComplete='off' onFinish={onSave}>
         <Form.Item hidden name={'_id'} initialValue={product._id || ''} key={'id'}>
           <Input name='id' type='text' />
         </Form.Item>
@@ -47,13 +47,12 @@ export default function ModalProducts({ product, onChange, onCancel, onSave, loa
           />
         </Form.Item>
         <Form.Item  label={'Descripción'} name={'description'} initialValue={product.description || ''}>
-          <TextArea maxLength={100}  rows={2} placeholder={'Ej: Hecha por el artista..'} />
+          <TextArea maxLength={100} showCount autoSize={{minRows: 2, maxRows: 4}} placeholder={'Ej: Hecha por el artista..'} />
         </Form.Item>
 
         <Form.Item
           label={'Imagenes'}
           name='imgs'
-          rules={[{ required: true, message: 'Es necesario cargar una imagen para el producto' }]}
           initialValue={''}>
           <Upload
             disabled={loading}
@@ -72,7 +71,7 @@ export default function ModalProducts({ product, onChange, onCancel, onSave, loa
         </Form.Item>
 
         <Row justify='end'>
-          <Button loading={loading} onClick={()=> onCancel(product.images)} /* type='primary' */ style={{ marginRight: 10 }}  icon={<CloseCircleOutlined />}>
+          <Button loading={loading} onClick={()=> onCancel(product.images)} /* type='primary' */ style={{ marginRight: 10 }}  /* icon={<CloseCircleOutlined />} */>
             Cancelar
           </Button>
           <Button loading={loading} type='primary' style={{ marginRight: 10 }} htmlType='submit' icon={<SaveOutlined />}>

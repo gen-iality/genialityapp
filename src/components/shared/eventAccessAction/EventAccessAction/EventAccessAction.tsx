@@ -86,7 +86,7 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 	
 	const ORIGINAL_EVENT_ID  : { [key : string] : string}= {
 		'64f2159bf5076637df054592': '64cacb2d6014cebb340ef142',// demo wom
-		'64230dc18611006a490d6022' : '645536848fb7b0e0dd0eb262'//evento de pruebas para aleja
+		/* '64230dc18611006a490d6022' : '645536848fb7b0e0dd0eb262' *///evento de pruebas para aleja
 	}
 	const handleFunction = (params: EventAccessActionButtonsInterface[]) : EventAccessActionButtonsInterface[] => {
 		const fakeEvents = Object.keys(ORIGINAL_EVENT_ID)
