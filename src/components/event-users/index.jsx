@@ -338,15 +338,35 @@ class ListEventUser extends Component {
             key: item.name,
             ellipsis: true,
             sorter: (a, b) => {
+            if( !isFinite(a[item.name]) && !isFinite(b[item.name]) ) {
+              return ( isNaN(a[item.name]) && isNaN(b[item.name]) )
+                ? 1
+                : a[item.name] < b[item.name]
+                    ? -1
+                    : a[item.name] === b[item.name]
+                        ? 0
+                        : 1;
+            }
+            if( !isFinite(a[item.name]) ) {
+                return 1;
+            }
+            if( !isFinite(b[item.name]) ) {
+                return -1;
+            }
+            return a[item.name]-b[item.name];
+              /* console.log(a[item.name]?.length - b[item.name]?.length)
+              a[item.name]?.length - b[item.name]?.length
+              console.log(toString(a[item.name])?.toLowerCase())
               const nameA = toString(a[item?.name])?.toLowerCase()
               const nameB = toString(b[item?.name])?.toLowerCase();
               if (nameA < nameB) {
+
                   return -1;
               }
               if (nameA > nameB) {
                   return 1;
               }
-              return 0;
+              return 0; */
           },
             ...self.getColumnSearchProps(item.name),
             render: (record, key) => {
