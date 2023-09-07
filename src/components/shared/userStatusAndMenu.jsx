@@ -363,50 +363,47 @@ const UserStatusAndMenu = (props) => {
     <>
       {!isAtOrganizationLanding && !isAtEventLanding && (
         <Space justify="end">
-          <Col style={{ marginLeft: '2rem' }}>
-            <Link
-              title="Ir a la organización"
-              to={`/organization/${
-                Array.isArray(organizations) && organizations[0]?.id
-              }/events`}
-            >
-              <Text style={{ fontWeight: '700' }}>
-                {' '}
-                {Array.isArray(organizations) && organizations[0]?.name}
-              </Text>
-            </Link>
-          </Col>
+          <Link
+            title="Ir a la organización"
+            to={`/organization/${
+              Array.isArray(organizations) && organizations[0]?.id
+            }/events`}
+          >
+            <Text style={{ fontWeight: '700' }}>
+              {' '}
+              {Array.isArray(organizations) && organizations[0]?.name}
+            </Text>
+          </Link>
         </Space>
       )}
       {isAtOrganizationLanding && (
         <>
-          <Col>
+          <Link
+            title="Ir a la organización"
+            to={`/organization/${organization._id}/events`}
+          >
+            <img
+              style={{
+                height: '50px',
+                borderRadius: '10px',
+                boxShadow: '2px 2px 10px 1px rgba(0,0,0,0.25)',
+                backgroundColor: '#FFFFFF',
+                width: 'auto',
+                maxWith: '50%',
+              }}
+              src={organization?.styles?.event_image || 'error'}
+              fallback="http://via.placeholder.com/500/F5F5F7/CCCCCC?text=No%20Image"
+            />
+          </Link>
+
+          {!screens.xs && (
             <Link
+              style={{ marginLeft: '10px' }}
               title="Ir a la organización"
               to={`/organization/${organization._id}/events`}
             >
-              <Image
-                style={{
-                  height: '50px',
-                  borderRadius: '10px',
-                  boxShadow: '2px 2px 10px 1px rgba(0,0,0,0.25)',
-                  backgroundColor: '#FFFFFF',
-                }}
-                src={organization?.styles?.event_image || 'error'}
-                fallback="http://via.placeholder.com/500/F5F5F7/CCCCCC?text=No%20Image"
-              />
+              <Text style={{ fontWeight: '700' }}>{organization?.name}</Text>
             </Link>
-          </Col>
-
-          {!screens.xs && (
-            <Col style={{ marginLeft: '2rem' }}>
-              <Link
-                title="Ir a la organización"
-                to={`/organization/${organization._id}/events`}
-              >
-                <Text style={{ fontWeight: '700' }}>{organization?.name}</Text>
-              </Link>
-            </Col>
           )}
           {loggedInuser}
         </>

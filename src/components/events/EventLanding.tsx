@@ -102,9 +102,6 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
           }
         >
           <Row gutter={32}>
-            <Col sm={24} md={6} style={{ width: '100%', padding: '0 5px' }}>
-              {event && <AdditionalEventInfo event={event} />}
-            </Col>
             <Col sm={24} md={18} style={{ padding: '0 5px' }}>
               <div className="activities-main-list">
                 <ActivitiesList
@@ -113,6 +110,9 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
                   eventProgressPercent={cEventProgress.progressFilteredActivities}
                 />
               </div>
+            </Col>
+            <Col sm={24} md={6} style={{ width: '100%', padding: '0 5px' }}>
+              {event && <AdditionalEventInfo event={event} />}
             </Col>
           </Row>
           {/* Si event video existe */}
