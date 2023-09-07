@@ -3,8 +3,9 @@ import { DeleteOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
 import { membersGetColumnSearchProps } from '../searchFunctions/membersGetColumnSearchProps';
 import SendChangePassword from '@/components/event-users/ChangePassword';
 import { deleteUserConfirmation } from './utils/deleteMembers';
+import { editUserConfirmation, getIconForActiveState } from './utils/disableUser';
 
-export const columns = (columnsData, editModalUser, organizationId, fetchEventsStatisticsData) => [
+export const columns = (membersAll, columnsData, editModalUser, organizationId, fetchEventsStatisticsData) => [
   {
     title: 'Avatar',
     dataIndex: 'picture',
@@ -88,13 +89,13 @@ export const columns = (columnsData, editModalUser, organizationId, fetchEventsS
     fixed: 'right',
     width: 80,
     render(val, item, index) {
+      let newData = { active: false}
+      const active = membersAll[index]?.active;
       return (
         <>
           {item.isAuthor ? (
             <>
-
-            <SendChangePassword email={item.email} />
-            
+              <SendChangePassword email={item.email} />
             </>
           ) : (
             <Space>
@@ -116,6 +117,15 @@ export const columns = (columnsData, editModalUser, organizationId, fetchEventsS
                   size='small'
                   onClick={() => deleteUserConfirmation(organizationId, item._id, fetchEventsStatisticsData)}
                   icon={<DeleteOutlined />}></Button>
+              </Tooltip>
+              <Tooltip placement='topLeft' title={'Inhabilitar usuario'}>
+                <Button
+                  id={`editAction${index}`}
+                  type={'primary'}
+                  icon={getIconForActiveState(active)}
+                  size='small'
+                  onClick={() => editUserConfirmation(membersAll, organizationId, item._id, newData, fetchEventsStatisticsData)}
+                ></Button>
               </Tooltip>
             </Space>
           )}

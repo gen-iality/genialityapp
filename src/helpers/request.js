@@ -879,6 +879,10 @@ export const CategoriesApi = {
     const resp = await Actions.getAll('api/categories', true);
     return handleSelect(resp.data);
   },
+  create: async (data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`api/categories?token=${token}`, data);
+  },
 };
 export const TypesApi = {
   getAll: async () => {

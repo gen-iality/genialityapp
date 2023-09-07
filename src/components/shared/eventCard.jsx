@@ -1,16 +1,23 @@
-import { Component } from 'react';
+import { Component, useEffect } from 'react';
 import Moment from 'moment';
 import { Link, withRouter } from 'react-router-dom';
-import { Badge, Button, Card, Space, Tooltip, Typography } from 'antd';
+import { Badge, Button, Card, Space, Tag, Tooltip, Typography } from 'antd';
 import { imageUtils } from '../../Utilities/ImageUtils';
 import { HelperContext } from '@/context/helperContext/helperContext';
+import { CategoriesApi } from '@/helpers/request';
 
 const EventImage = imageUtils.EventImage;
 const { Meta } = Card;
 class EventCard extends Component {
+  
   static contextType = HelperContext;
+  
+
+
   render() {
+
     const { event, bordered, right, loading, isAdmin, buttonBuyOrRegistered, textButtonBuyOrRegistered } = this.props;
+    
     // const { eventIsActive } = this.context;
     const styleNormal = {
       fontWeight: 'bold',
@@ -23,17 +30,23 @@ class EventCard extends Component {
 
     const getDateEvent = () => {
       if (!event) return <></>;
-      const MIN_DATES = 1
-      const EVENT_WITH_ONE_DATE = 1
-      const FIRST_DATE = 0
+      const MIN_DATES = 1;
+      const EVENT_WITH_ONE_DATE = 1;
+      const FIRST_DATE = 0;
       if (event.dates?.length >= MIN_DATES) {
-        const LAST_DATE = event.dates?.length - 1
+        const LAST_DATE = event.dates?.length - 1;
         if (event.dates?.length === EVENT_WITH_ONE_DATE) {
-          return <time dateTime={event.dates[FIRST_DATE].start}>{Moment(event.dates[FIRST_DATE].start).format('DD MMM YYYY')}</time>;
-        }else{
+          return (
+            <time dateTime={event.dates[FIRST_DATE].start}>
+              {Moment(event.dates[FIRST_DATE].start).format('DD MMM YYYY')}
+            </time>
+          );
+        } else {
           return (
             <>
-              <time dateTime={event.dates[FIRST_DATE].start}>{Moment(event.dates[FIRST_DATE].start).format('DD MMM YYYY')}</time>
+              <time dateTime={event.dates[FIRST_DATE].start}>
+                {Moment(event.dates[FIRST_DATE].start).format('DD MMM YYYY')}
+              </time>
               {'-'}
               <time dateTime={event.dates[LAST_DATE].end}>
                 {Moment(event.dates[LAST_DATE].end).format('DD MMM YYYY')}
@@ -42,7 +55,7 @@ class EventCard extends Component {
           );
         }
       }
-      if(Moment(event.datetime_from).format('DD MMM YYYY') === Moment(event.datetime_to).format('DD MMM YYYY')) {
+      if (Moment(event.datetime_from).format('DD MMM YYYY') === Moment(event.datetime_to).format('DD MMM YYYY')) {
         return (
           <>
             <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
@@ -64,7 +77,30 @@ class EventCard extends Component {
     //aqui  tiene que venir ahora unos minutos en caso de tener plan
     /* let blockedDate = new Date(actualDate.setDate(actualDate.getDate() + blockedEvent));
     let formatDate = Moment(blockedDate).format('DD MMM YYYY'); */
-
+    const getEventInfo = () => {
+      if (event.category_ids && event.category_ids.length > 0) {
+        return (
+          <Space>
+            {event.category_ids.map((category, index) => (
+              <Tag key={index}>{category}</Tag>
+            ))}
+          </Space>
+        );
+      } else {
+        const possibleNames = [
+          event.organizer?.name
+            ? event.organizer?.name
+            : event.author?.displayName
+            ? event.author?.displayName
+            : event.author?.names
+        ];
+        const validNames = possibleNames.filter((name) => name);
+        return validNames.map((name, index) => (
+          <span key={index}>{name}</span>
+        ));
+      }
+    };
+    
     return (
       <div className='animate__animated animate__fadeIn'>
         <Badge.Ribbon
@@ -81,7 +117,16 @@ class EventCard extends Component {
                   <span>
                     <i className='fas fa-map-marker-alt' />
                   </span>
-                  <Tooltip title={event.type_event === 'onlineEvent' ? '' : event.address ? (event.venue ? event.address + ', ' + event.venue : event.address) : event.venue}>
+                  <Tooltip
+                    title={
+                      event.type_event === 'onlineEvent'
+                        ? ''
+                        : event.address
+                        ? event.venue
+                          ? event.address + ', ' + event.venue
+                          : event.address
+                        : event.venue
+                    }>
                     <span>
                       {event.type_event === 'physicalEvent'
                         ? 'Físico'
@@ -138,7 +183,7 @@ class EventCard extends Component {
                   <span style={{ fontSize: '12px' }}>
                     <Space>
                       <i className='fas fa-calendar-alt' />
-                     {getDateEvent()}
+                      {getDateEvent()}
                     </Space>
                   </span>
                   <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
@@ -146,16 +191,16 @@ class EventCard extends Component {
                       {event.name}
                     </Typography.Text>
                   </Link>
-                  <span>
-                    {event.organizer?.name
-                      ? event.organizer?.name
-                      : event.author?.displayName
-                      ? event.author?.displayName
-                      : event.author?.names}
-                  </span>
+                  {getEventInfo()}
                   {buttonBuyOrRegistered && (
-                    <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
-                      <Button type='primary'>{textButtonBuyOrRegistered ?? 'Comprar'}</Button>
+                    <Link
+                      to={
+                        textButtonBuyOrRegistered === 'Comprar'
+                          ? event.payment.urlExternalPayment
+                          : `/landing/${event._id}`
+                      }
+                      target={textButtonBuyOrRegistered === 'Comprar' ? '_blank' : '_self'}>
+                      <Button type='primary'>{textButtonBuyOrRegistered}</Button>
                     </Link>
                   )}
                   {/* RESTRICIONES */}

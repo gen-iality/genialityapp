@@ -1,5 +1,7 @@
+/* eslint-disable no-console */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
-import { Route, NavLink, Redirect, Switch, withRouter } from 'react-router-dom';
+import { Route, NavLink, Redirect, Switch, withRouter, Link } from 'react-router-dom';
 import Loading from '@/components/profile/loading';
 import { OrganizationApi } from '@/helpers/request';
 import OrganizationProfile from './profile';
@@ -18,12 +20,13 @@ import {
   SketchOutlined,
   TeamOutlined,
   UserSwitchOutlined,
-  ProjectOutlined,
   MenuOutlined,
+  AppstoreOutlined,
 } from '@ant-design/icons';
 import MenuLanding from '@/components/menuLanding/index';
 import NoMatchPage from '@/components/notFoundPage/noMatchPage';
 import ValidateAccessRouteCms from '@/components/roles/hooks/validateAccessRouteCms';
+import Category from './Category';
 
 function Organization(props) {
   const [organization, setOrganization] = useState({});
@@ -75,6 +78,10 @@ function Organization(props) {
                 {'Información'}
                 <NavLink to={`${props.match.url}/information`} />
               </Menu.Item>
+              <Menu.Item key={'6'} icon={<AppstoreOutlined />}>
+                {'Categorías'}
+                <NavLink to={`${props.match.url}/category`} />
+              </Menu.Item>
               <Menu.Item key={'3'} icon={<SketchOutlined />}>
                 {'Apariencia'}
                 <NavLink to={`${props.match.url}/appearance`} />
@@ -88,7 +95,7 @@ function Organization(props) {
                 <NavLink to={`${props.match.url}/membersettings`} />
               </Menu.Item>
               {/*Plantillas temporalmente deshabilitadas (no borrar)*/}
-             {/*  <Menu.Item key={'6'} icon={<ProjectOutlined />}>
+              {/*  <Menu.Item key={'6'} icon={<ProjectOutlined />}>
                 <small>{'Configuración de Plantillas'}</small>
                 <NavLink to={`${props.match.url}/templatesettings`} />
               </Menu.Item> */}
@@ -104,12 +111,9 @@ function Organization(props) {
             ) : (
               <div style={{ padding: '5px' }}>
                 <Tag color='#2bf4d5' icon={<DoubleRightOutlined />} style={{ marginBottom: 10, marginLeft: 20 }}>
-                  <a
-                    target='_blank'
-                    href={`${window.location.origin}/organization/${organization._id}/events
-                        `}>
-                    {`Ir al landing de la organización: ${organization.name}`}
-                  </a>
+                  <Link to={`/organization/${organization._id}/events`} target='_blank'>
+                    Ir al landing de la organización: {organization.name}
+                  </Link>
                 </Tag>
 
                 <Switch>
@@ -132,6 +136,13 @@ function Organization(props) {
                     component={OrganizationProfile}
                     org={organization}
                     componentKey='information'
+                  />
+                  <Protected
+                    exact
+                    path={`${props.match.url}/category`}
+                    component={Category}
+                    org={organization}
+                    componentKey='category'
                   />
                   <Protected
                     exact

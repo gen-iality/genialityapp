@@ -75,7 +75,7 @@ class General extends Component {
       registrationMessage: props.event && props.event.registration_message ? props.event.registration_message : '',
       redirect_activity: null,
       show_event_date: false,
-      hide_event_in_passed:false,
+      hide_event_in_passed: false,
       // redirect_landing: null,
       itemsMenu: [],
       // Estado inicial de la seccion de formulario de registro
@@ -116,7 +116,6 @@ class General extends Component {
   };
 
   async componentDidMount() {
-    console.log(this.props.event);
     this.getCurrentConsumptionPlanByUsers();
     //inicializacion del estado de menu
     if (this.state.event.itemsMenu) {
@@ -306,9 +305,13 @@ class General extends Component {
     this.setState({ event: { ...this.state.event, description: content } });
   };
   //Funciones para manejar el cambio en listas desplegables
-  selectCategory = (selectedCategories) => {
-    this.setState({ selectedCategories }, this.valid);
+  selectCategory = (selectedCategoryIds) => {
+    this.setState({ selectedCategories: selectedCategoryIds }, () => {
+      this.valid(); 
+    });
   };
+  
+  
 
   selectOrganizer = (selectedOrganizer) => {
     if (!selectedOrganizer.value) selectedOrganizer = undefined;
@@ -447,18 +450,18 @@ class General extends Component {
     this.setState({ event: { ...this.state.event, ...values } });
   }
 
-  validateUrlExtensionPayment (url = '', externalPayment = false) {
-    if(url.length === 0 && externalPayment){
-      DispatchMessageService({ action:'show', type:'error',msj:'Url no debe estar vacia'});
+  validateUrlExtensionPayment(url = '', externalPayment = false) {
+    if (url.length === 0 && externalPayment) {
+      DispatchMessageService({ action: 'show', type: 'error', msj: 'Url no debe estar vacia' });
       return false;
-    } 
-    if(externalPayment){
-      if(!isValidUrl(url)){
-        DispatchMessageService({ action:'show', type:'error',msj:'Debe ingresar una url valida'});
+    }
+    if (externalPayment) {
+      if (!isValidUrl(url)) {
+        DispatchMessageService({ action: 'show', type: 'error', msj: 'Debe ingresar una url valida' });
         return false;
       }
     }
-      return true
+    return true;
   }
 
   //Envío de datos
@@ -487,7 +490,7 @@ class General extends Component {
     const datetime_from = Moment(date_start + ' ' + hour_start, 'YYYY-MM-DD HH:mm');
     const datetime_to = Moment(date_end + ' ' + hour_end, 'YYYY-MM-DD HH:mm');
     const categories = this.state.selectedCategories.map((item) => {
-      return item.value;
+      return item;
     });
     const minValueEvent = 2000;
     const data = {
@@ -499,7 +502,7 @@ class General extends Component {
         price: event.payment?.price || minValueEvent,
         currency: event.payment?.currency || 'COP',
         externalPayment: event.payment?.externalPayment ?? false,
-        urlExternalPayment: event.payment?.urlExternalPayment ?? ''
+        urlExternalPayment: event.payment?.urlExternalPayment ?? '',
       },
       picture: image,
       video: event.video || null,
@@ -540,9 +543,8 @@ class General extends Component {
       is_custom_password_label: this.state.isCustomPasswordLabel || false,
       custom_password_label: this.state.customPasswordLabel || 'Contraseña',
       show_event_date: this.state.event.show_event_date,
-      hide_event_in_passed:this.state.event.hide_event_in_passed ?? false
+      hide_event_in_passed: this.state.event.hide_event_in_passed ?? false,
     };
-    console.log('data',data)
     try {
       if (event._id) {
         const info = await EventsApi.editOne(data, event._id);
@@ -684,7 +686,7 @@ class General extends Component {
   //Esto es para la configuración de autenticación. Nuevo flujo de Login, cambiar los campos internamente
   changeAccessTypeForEvent = (value) => {
     const minValueEvent = 2000;
-    const DefatulExternalPaymentState = false
+    const DefatulExternalPaymentState = false;
     this.setState({ accessSelected: value });
     switch (value) {
       case 'PAYMENT_EVENT':
@@ -700,7 +702,7 @@ class General extends Component {
               price: minValueEvent,
               currency: 'COP',
               externalPayment: DefatulExternalPaymentState,
-              urlExternalPayment:''
+              urlExternalPayment: '',
             },
           },
         });
@@ -718,7 +720,7 @@ class General extends Component {
               price: minValueEvent,
               currency: 'COP',
               externalPayment: DefatulExternalPaymentState,
-              urlExternalPayment:''
+              urlExternalPayment: '',
             },
           },
         });
@@ -735,7 +737,7 @@ class General extends Component {
               price: minValueEvent,
               currency: 'COP',
               externalPayment: DefatulExternalPaymentState,
-              urlExternalPayment:''
+              urlExternalPayment: '',
             },
           },
         });
@@ -752,7 +754,7 @@ class General extends Component {
               price: minValueEvent,
               currency: 'COP',
               externalPayment: DefatulExternalPaymentState,
-              urlExternalPayment:''
+              urlExternalPayment: '',
             },
           },
         });
@@ -763,7 +765,7 @@ class General extends Component {
     }
   };
 
-  onChangePrice =  (newPrice) => {
+  onChangePrice = (newPrice) => {
     this.setState({
       event: {
         ...this.state.event,
@@ -773,7 +775,7 @@ class General extends Component {
         },
       },
     });
-  }
+  };
 
   onChangeCurrency = (newCurrency) => {
     this.setState({
@@ -781,22 +783,22 @@ class General extends Component {
         ...this.state.event,
         payment: {
           ...this.state.event.payment,
-          currency:newCurrency
+          currency: newCurrency,
         },
       },
     });
-  }
+  };
   onChangeExternalPayment = (externalPayment) => {
     this.setState({
       event: {
         ...this.state.event,
         payment: {
           ...this.state.event.payment,
-          externalPayment
+          externalPayment,
         },
       },
     });
-  }
+  };
 
   onChangeUrlExternalPayment = (urlExternalPayment) => {
     this.setState({
@@ -804,11 +806,11 @@ class General extends Component {
         ...this.state.event,
         payment: {
           ...this.state.event.payment,
-          urlExternalPayment
+          urlExternalPayment,
         },
       },
     });
-  }
+  };
   /** RESTRICIONES */
   theEventIsActive = (state) => {
     this.setState({
@@ -829,18 +831,16 @@ class General extends Component {
     });
   };
 
-  onChangeHideEvents = (checked)=>{
+  onChangeHideEvents = (checked) => {
     this.setState({
       event: {
         ...this.state.event,
         hide_event_in_passed: checked,
       },
     });
-  }
+  };
 
   render() {
-    console.log('this.props.event',this.state)
-
     const {
       event,
       categories,
@@ -856,7 +856,6 @@ class General extends Component {
       accessSelected,
       extraState,
     } = this.state;
-
     if (loading) return <Loading />;
     // const userContext = this.context;
     /** RESTRICIONES */
@@ -1012,7 +1011,9 @@ class General extends Component {
                     onChangeHideEvents={this.onChangeHideEvents}
                   />
                   <Form.Item label={'Ocultar fecha del evento'}>
-                    <Checkbox onChange={(e) => this.onChangeCheckDate(e.target.checked)} checked={event.show_event_date}>
+                    <Checkbox
+                      onChange={(e) => this.onChangeCheckDate(e.target.checked)}
+                      checked={event.show_event_date}>
                       Seleccione esta opción si deseas que tu fecha no sea visible para tu evento
                     </Checkbox>
                   </Form.Item>
@@ -1070,15 +1071,19 @@ class General extends Component {
                   </Form.Item>
 
                   <Form.Item>
-                    <SelectInput
-                      name={'Categorías:'}
-                      isMulti={true}
-                      max_options={2}
-                      selectedOptions={selectedCategories}
-                      selectOption={this.selectCategory}
-                      options={categories}
-                      /* required={true} */
-                    />
+                    <Select
+                      showArrow
+                      placeholder='Elegir una categoría'
+                      value={selectedCategories}
+                      onChange={this.selectCategory} 
+                      maxTagCount={2}
+                    >
+                      {categories.map((category) => (
+                        <Select.Option key={category.label} value={category.label}>
+                          {category.label}
+                        </Select.Option>
+                      ))}
+                    </Select>
                   </Form.Item>
 
                   <Form.Item>
@@ -1244,15 +1249,15 @@ class General extends Component {
                   <Col span={24}>
                     <Card style={{ borderRadius: '8px', boxShadow: '0px 2px 0px 2px #2593FC' }}>
                       <Typography.Title level={4}>Configuración avanzada</Typography.Title>
-                      <ConfigAdvancePayment 
-                        valueInput={this.state.event.payment?.price} 
-                        changeValue={this.onChangePrice} 
-                        payment = {accessSelected === 'PAYMENT_EVENT'} 
-                        currency={this.state.event.payment.currency}  
-                        changeCurrency = {this.onChangeCurrency}
+                      <ConfigAdvancePayment
+                        valueInput={this.state.event.payment?.price}
+                        changeValue={this.onChangePrice}
+                        payment={accessSelected === 'PAYMENT_EVENT'}
+                        currency={this.state.event.payment.currency}
+                        changeCurrency={this.onChangeCurrency}
                         onChangeUrlExternalPayment={this.onChangeUrlExternalPayment}
-                        onChangeExternalPayment = {this.onChangeExternalPayment} 
-                        valueUrlExternalPayment = {this.state.event.payment?.urlExternalPayment}
+                        onChangeExternalPayment={this.onChangeExternalPayment}
+                        valueUrlExternalPayment={this.state.event.payment?.urlExternalPayment}
                         checkedExternalPayment={this.state.event.payment.externalPayment}
                       />
                     </Card>
@@ -1287,9 +1292,11 @@ function handleFields(organizers, types, categories, event) {
   let selectedType = {};
   const { category_ids, organizer_id, event_type_id } = event;
   if (category_ids) {
-    categories.map((item) => {
+    categories.forEach((item) => {
       let pos = category_ids.indexOf(item.value);
-      return pos >= 0 ? selectedCategories.push(item) : '';
+      if (pos >= 0) {
+        selectedCategories.push({ name: item.label });
+      }
     });
   }
   const pos = organizers
