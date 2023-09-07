@@ -151,11 +151,11 @@ export const ModalAddAndEditUsers = ({
     const { picture, password, ...userToOrganization } = newUser;
     const alreadyExistUser = await alreadyExistUserInOrganization(newUser.email);
     if (alreadyExistUser) return resultUserExistIntoOrganization(newUser.email);
-
+     let active= true
     try {
       const respUser = await OrganizationApi.saveUser(
         organizationId,
-        { properties: userToOrganization },
+        { properties: userToOrganization, active },
         addToUserEvents
       );
 
@@ -179,6 +179,7 @@ export const ModalAddAndEditUsers = ({
     return await OrganizationApi.editUser(organizationId, selectedUser?._id, {
       properties: { ...userToOrganization, rol_id },
       rol_id,
+      active: true
     });
   };
 
@@ -289,6 +290,7 @@ export const ModalAddAndEditUsers = ({
       content: (
         <div>
           <UserOrganizationForm
+            active={true}
             form={formBasicData}
             setimageFile={setImagesFile}
             filesSelected={imageFile}

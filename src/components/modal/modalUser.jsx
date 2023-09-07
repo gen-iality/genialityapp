@@ -180,10 +180,10 @@ class UserModal extends Component {
     //console.log('callback=>', values);
     let resp;
     let respActivity = true;
+    let active = true
     if (values) {
       /* console.log("ACA VALUES==>",values) */
-      const snap = { rol_id: values.rol_id, properties: values };
-
+      const snap = { rol_id: values.rol_id, properties: values, active };
       if (this.props.organizationId && !this.props.edit) {
         resp = await OrganizationApi.saveUser(this.props.organizationId, snap);
         /* console.log("10. resp ", resp) */

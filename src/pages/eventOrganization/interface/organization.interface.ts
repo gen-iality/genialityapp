@@ -8,4 +8,5 @@ export interface FormUserOrganization {
 
 export interface UserToOrganization extends FormUserOrganization {
     [key: string]: any;
+    active:boolean | undefined
 }

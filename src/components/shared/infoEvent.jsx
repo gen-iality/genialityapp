@@ -5,6 +5,7 @@ import { UseEventContext } from '../../context/eventContext';
 import EventAccessActionContainer from './eventAccessAction/EventAccessActionContainer';
 import { useIntl } from 'react-intl';
 import { useGetMultiDate } from '@/hooks/useGetMultiDate';
+import moment from 'moment';
 
 const { useBreakpoint } = Grid;
 
@@ -21,7 +22,49 @@ const InfoEvent = ({ paddingOff, preview }) => {
   const idEvent = cEventValues?._id;
   const intl = useIntl();
   const { getDateStart, getDateEnd, getStartTime, getEndTime } = useGetMultiDate(idEvent);
-
+  console.log(cEventValues);
+  const getDateEvent = () => {
+    if (!cEventValues) return <></>;
+    const MIN_DATES = 1;
+    const EVENT_WITH_ONE_DATE = 1;
+    const FIRST_DATE = 0;
+    if (cEventValues.dates?.length >= MIN_DATES) {
+      const LAST_DATE = cEventValues.dates?.length - 1;
+      if (cEventValues.dates?.length === EVENT_WITH_ONE_DATE) {
+        return (
+          <time dateTime={cEventValues.dates[FIRST_DATE].start}>
+            {moment(cEventValues.dates[FIRST_DATE].start).format('DD MMM YYYY')}
+          </time>
+        );
+      } else {
+        return (
+          <>
+            <time dateTime={cEventValues.dates[FIRST_DATE].start}>
+              {moment(cEventValues.dates[FIRST_DATE].start).format('DD MMM YYYY')}
+            </time>
+            {'-'}
+            <time dateTime={cEventValues.dates[LAST_DATE].end}>
+              {moment(cEventValues.dates[LAST_DATE].end).format('DD MMM YYYY')}
+            </time>
+          </>
+        );
+      }
+    }
+    if (moment(cEventValues.datetime_from).format('DD MMM YYYY') === moment(cEventValues.datetime_to).format('DD MMM YYYY')) {
+      return (
+        <>
+          <time dateTime={cEventValues.datetime_from}>{moment(cEventValues.datetime_from).format('DD MMM YYYY')}</time>
+        </>
+      );
+    }
+    return (
+      <>
+        <time dateTime={cEventValues.datetime_from}>{moment(cEventValues.datetime_from).format('DD MMM YYYY')}</time>
+        {'-'}
+        <time dateTime={cEventValues.datetime_to}>{moment(cEventValues.datetime_to).format('DD MMM YYYY')}</time>
+      </>
+    );
+  };
   return (
     <PageHeader
       style={{
@@ -59,14 +102,14 @@ const InfoEvent = ({ paddingOff, preview }) => {
                 <Space wrap>
                   <Space>
                     <CalendarFilled />
-                    <time>{getDateStart()}</time>
+                    <time>{getDateEvent()}</time>
                   </Space>
                   <Space>
                     <ClockCircleFilled />
                     <time>{getStartTime()}</time>
                   </Space>
                 </Space>
-                {idEvent !== '6334782dc19fe2710a0b8753' && (
+                {/* {idEvent !== '6334782dc19fe2710a0b8753' && (
                   <Space wrap>
                     <Space>
                       <CalendarFilled />
@@ -77,7 +120,7 @@ const InfoEvent = ({ paddingOff, preview }) => {
                       <time>{getEndTime()}</time>
                     </Space>
                   </Space>
-                )}
+                )} */}
               </Space>
               {cEventValues?.type_event !== 'onlineEvent' && (cEventValues?.address || cEventValues?.venue) && (
                 <Space>
