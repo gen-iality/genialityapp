@@ -40,7 +40,7 @@ import ActivityTypeSelector from '../activityType/ActivityTypeSelector'
 
 import { hourWithAdditionalMinutes } from '../hooks/useHourWithAdditionalMinutes'
 import SpeakerEditPage from '@components/speakers/SpeakerEditPage'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 
 export interface FormValues {
   name: string
@@ -84,6 +84,7 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
 
   const ref = useRef<InputRef>(null)
   const navigate = useNavigate()
+  const { pathname } = useLocation()
 
   const goSection = useCallback((path: string, state?: any) => {
     navigate(path, state)
@@ -304,7 +305,9 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
             </Col>
             <Col span={1}>
               <Button
-                onClick={() => goSection('..', { child: true })}
+                onClick={() => goSection('../../speakers', { child: true })}
+                // onClick={() => goSection('..', { child: true })}
+                //onClick={() => pathname && goSection(pathname + '/../' + 'speakers')}
                 icon={<SettingOutlined />}
                 title="Configurar en otra página"
               />
