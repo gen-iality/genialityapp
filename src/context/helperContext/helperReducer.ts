@@ -16,7 +16,7 @@ export const helperInitialState: HelperState = {
   currentActivity: null,
   showNotification: false,
   params: {},
-  eventIsActive: false,
+  eventIsActive: true,
 }
 
 export const helperReducer = (state: HelperState, action: HelperAction) => {
@@ -83,6 +83,7 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
 
     case 'eventIsActive':
       const eventId = action.eventId
+      state.eventIsActive = true
       /** RESTRICIONES quitar negacion en action.eventIsActive para dejar el flujo de manera correcta*/
       if (eventId) {
         return {
@@ -93,7 +94,7 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
       }
       return {
         ...state,
-        eventIsActive: !action.eventIsActive,
+        eventIsActive: true, //!action.eventIsActive,
       }
 
     //   case 'selectLiveBroadcast':
