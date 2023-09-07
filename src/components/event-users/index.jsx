@@ -232,6 +232,7 @@ class ListEventUser extends Component {
 
     this.checkFirebasePersistence();
     try {
+      const sorter = (a, b) => (isNaN(a) && isNaN(b) ? (a || '').localeCompare(b || '') : a - b);
       const event = await EventsApi.getOne(this.props.event._id);
 
       const properties = event.user_properties;
@@ -413,7 +414,7 @@ class ListEventUser extends Component {
         dataIndex: 'rol_id',
         key: 'rol_id',
         ellipsis: true,
-        sorter: (a, b) => a.rol_id.length - b.rol_id.length,
+        sorter: (a, b) => sorter(a.rol_id, b.rol_id) /* a.rol_id.length - b.rol_id.length */,
         ...self.getColumnSearchProps('rol_name'),
         render: self.rol_component,
       };
