@@ -441,7 +441,7 @@ const UserStatusAndMenu = (props) => {
                       size="middle"
                       icon={<SettingOutlined />}
                     >
-                      Editar curso
+                      Editar
                     </Button>
                   </Link>
                   {loggedInuser}
