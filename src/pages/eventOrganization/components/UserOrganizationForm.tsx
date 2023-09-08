@@ -13,6 +13,7 @@ interface Props extends FormProps {
   setimageFile: React.Dispatch<React.SetStateAction<UploadFile | undefined>>;
   filesSelected?: UploadFile | undefined;
   addToUserEvents: boolean;
+  active: boolean;
   onChangeAddUserToEvent: (checked: boolean) => void;
 }
 
@@ -22,6 +23,7 @@ export const UserOrganizationForm = ({
   filesSelected,
   onFinish,
   addToUserEvents,
+  active,
   onChangeAddUserToEvent,
 }: Props) => {
   const intl = useIntl();

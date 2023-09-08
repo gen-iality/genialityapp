@@ -7,6 +7,7 @@ import { OrganizationApi } from '@/helpers/request';
 export function useGetEventsStatisticsData(organizationId) {
   const [membersDat, setMembersData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [membersAll, setMembersAll] = useState(true);
 
   async function fetchEventsStatisticsData() {
     const { data } = await OrganizationApi.getUsers(organizationId);
@@ -24,6 +25,7 @@ export function useGetEventsStatisticsData(organizationId) {
       fieldsMembersData.push(properties);
     });
     setMembersData(fieldsMembersData);
+    setMembersAll(data)
     setIsLoading(false);
   }
 
@@ -31,5 +33,5 @@ export function useGetEventsStatisticsData(organizationId) {
     fetchEventsStatisticsData();
   }, [organizationId]);
 
-  return { membersDat, isLoading, fetchEventsStatisticsData };
+  return {membersAll, membersDat, isLoading, fetchEventsStatisticsData };
 }

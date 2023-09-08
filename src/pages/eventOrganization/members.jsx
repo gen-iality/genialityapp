@@ -20,8 +20,7 @@ const OrgMembers = (props) => {
   const [selectedUser, setSelectedUser] = useState();
   let { _id: organizationId, user_properties: userPropertiesOrg } = props.org;
 
-  const { membersDat, isLoading, fetchEventsStatisticsData } = useGetEventsStatisticsData(organizationId);
-
+  const {membersAll, membersDat, isLoading, fetchEventsStatisticsData } = useGetEventsStatisticsData(organizationId);
   function startingComponent() {
     fetchEventsStatisticsData();
     setLastUpdate(new Date());
@@ -52,7 +51,7 @@ const OrgMembers = (props) => {
     setSearchText,
   };
 
-  const columsMembersView = columns(columnsData, editModalUser, organizationId, fetchEventsStatisticsData);
+  const columsMembersView = columns(membersAll, columnsData, editModalUser, organizationId, fetchEventsStatisticsData);
   const columsMembersExcel = parseMembersColumsExcel(userPropertiesOrg);
 
   return (
