@@ -305,13 +305,12 @@ class General extends Component {
     this.setState({ event: { ...this.state.event, description: content } });
   };
   //Funciones para manejar el cambio en listas desplegables
-  selectCategory = (selectedCategoryIds) => {
-    this.setState({ selectedCategories: selectedCategoryIds }, () => {
-      this.valid(); 
+  selectCategory = (value) => {
+    const selectedCategories = Array.isArray(value) ? value : [value];
+    this.setState({ selectedCategories }, () => {
+      this.valid();
     });
   };
-  
-  
 
   selectOrganizer = (selectedOrganizer) => {
     if (!selectedOrganizer.value) selectedOrganizer = undefined;
@@ -856,6 +855,7 @@ class General extends Component {
       accessSelected,
       extraState,
     } = this.state;
+    console.log(selectedCategories);
     if (loading) return <Loading />;
     // const userContext = this.context;
     /** RESTRICIONES */
@@ -1069,16 +1069,12 @@ class General extends Component {
                       }
                     />
                   </Form.Item>
-
-                  <Form.Item>
+                  <Form.Item label={'Categoría'}>
                     <Select
-                      mode='multiple'
                       showArrow
                       placeholder='Elegir una categoría'
-                      value={selectedCategories}
-                      onChange={this.selectCategory} 
-                      maxTagCount={2}
-                    >
+                      value={selectedCategories} 
+                      onChange={ this.selectCategory}>
                       {categories.map((category) => (
                         <Select.Option key={category.label} value={category.label}>
                           {category.label}
@@ -1086,7 +1082,6 @@ class General extends Component {
                       ))}
                     </Select>
                   </Form.Item>
-
                   <Form.Item>
                     <SelectInput
                       name={'Tipo'}

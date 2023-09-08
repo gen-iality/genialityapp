@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable no-console */
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, Col, Input, Modal, Row, Table } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import Header from '@/antdComponents/Header';
 import { CategoriesApi } from '@/helpers/request';
+import { CurrentEventContext } from '@context/eventContext';
 
 interface Categoria {
   key?: string;
@@ -14,7 +16,22 @@ const Category: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [categoriaNombre, setCategoriaNombre] = useState<string>('');
   const [dataSource, setDataSource] = useState<Categoria[]>([]);
+  const cEvent = useContext(CurrentEventContext);
+  console.log(cEvent.value?.category_ids);
 
+  // const categoriesWithEvents = dataSource.reduce((result, category) => {
+  //   if (category.eventsByCategory) {
+  //     // If the category has events, increment the counter
+  //     const numberOfEvents = category.eventsByCategory.length;
+  //     if (numberOfEvents > 0) {
+  //       result.push({ name: category.name, numberOfEvents });
+  //     }
+  //   }
+  //   return result;
+  // }, []);
+  
+  // console.log(categoriesWithEvents);
+  
   // Función para mostrar/ocultar el modal
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
