@@ -45,18 +45,26 @@ export async function disableUser({membersAll, org, user, userData, fetchEventsS
 
 // Función de confirmación para editar un usuario
 export const editUserConfirmation = (membersAll, org, user, userData, fetchEventsStatisticsData) => {
-  Modal.confirm({
-    title: '¿Está seguro de editar la información de este usuario?',
-    icon: <ExclamationCircleOutlined />,
-    content: 'Una vez deshabilitado, el usuario no podrá acceder al contenido de tu organización.',
-    okText: 'Editar',
-    okType: 'primary',
-    cancelText: 'Cancelar',
-    async onOk() {
-      await disableUser({membersAll, org, user, userData, fetchEventsStatisticsData });
-    },
-  });
-};
+    Modal.confirm({
+      title: '¿Está seguro de editar la información de este usuario?',
+      icon: <ExclamationCircleOutlined />,
+      content: `Una vez ${
+        membersAll[user]?.active ? 'deshabilitado' : 'habilitado'
+      }, el usuario ${
+        membersAll[user]?.active ? 'no' : 'sí'
+      } podrá acceder al contenido de tu organización.`,
+      okText: 'Editar',
+      okType: 'primary',
+      cancelText: 'Cancelar',
+      async onOk() {
+        // Cambia el estado `active` en `userData` según el estado actual del usuario
+        userData.active = !membersAll[user]?.active;
+  
+        await disableUser({membersAll, org, user, userData, fetchEventsStatisticsData });
+      },
+    });
+  };
+  
 
 // Función para obtener el ícono correcto en función del estado active
 export const getIconForActiveState = (active) => {

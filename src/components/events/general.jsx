@@ -1072,6 +1072,7 @@ class General extends Component {
 
                   <Form.Item>
                     <Select
+                      mode='multiple'
                       showArrow
                       placeholder='Elegir una categoría'
                       value={selectedCategories}
