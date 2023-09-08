@@ -116,7 +116,16 @@ const SurveyDisplayer: FunctionComponent<ISurveyDisplayerProps> = (props) => {
   }
 
   return render({
-    questions: survey.questions,
+    questions: survey.questions.filter((question) => {
+      // We remove that because we only need the `win_Message` value that is
+      // passed to `render` too. The QuestionDisplayer does not need a html type
+      // question, it only need real questions.
+      //
+      // This problem occurs because the last deprecated survey data preprocessor
+      // created that to use react-survey to show an empty layout as a question.
+      // @ts-expect-error
+      return question.type !== 'html'
+    }),
     title: survey.survey,
     // questionIndex: 0,
     minimumScore: survey.minimumScore ?? 0,
