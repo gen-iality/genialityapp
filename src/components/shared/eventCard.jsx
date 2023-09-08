@@ -87,17 +87,18 @@ class EventCard extends Component {
           </Space>
         );
       } else {
-        const possibleNames = [
-          event.organizer?.name
-            ? event.organizer?.name
-            : event.author?.displayName
-            ? event.author?.displayName
-            : event.author?.names
-        ];
-        const validNames = possibleNames.filter((name) => name);
-        return validNames.map((name, index) => (
-          <span key={index}>{name}</span>
-        ));
+        return null
+        // const possibleNames = [
+        //   event.organizer?.name
+        //     ? event.organizer?.name
+        //     : event.author?.displayName
+        //     ? event.author?.displayName
+        //     : event.author?.names
+        // ];
+        // const validNames = possibleNames.filter((name) => name);
+        // return validNames.map((name, index) => (
+        //   <span key={index}>{name}</span>
+        // ));
       }
     };
     

@@ -120,7 +120,7 @@ export const columns = (membersAll, columnsData, editModalUser, organizationId, 
               </Tooltip>
               <Tooltip placement='topLeft' title={'Inhabilitar usuario'}>
                 <Button
-                  id={`editAction${index}`}
+                  id={`disableAction${index}`}
                   type={'primary'}
                   icon={getIconForActiveState(active)}
                   size='small'
