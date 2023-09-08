@@ -1,8 +1,8 @@
-import { Button, Modal } from 'antd';
+/* eslint-disable no-console */
+import { Modal } from 'antd';
 import { CheckCircleOutlined, ExclamationCircleOutlined, StopOutlined } from '@ant-design/icons';
 import { OrganizationApi } from '@/helpers/request';
 import { DispatchMessageService } from '@/context/MessageService';
-import { useEffect } from 'react';
 
 export async function disableUser({membersAll, org, user, userData, fetchEventsStatisticsData }) {
   try {
@@ -44,23 +44,29 @@ export async function disableUser({membersAll, org, user, userData, fetchEventsS
 }
 
 // Función de confirmación para editar un usuario
-export const editUserConfirmation = (membersAll, org, user, userData, fetchEventsStatisticsData) => {
+export const editUserConfirmation = (membersAll, org, userId, userData, fetchEventsStatisticsData) => {
+    const user = membersAll.find((member) => member._id === userId);
+    if (!user) {
+      // Manejar el caso en el que no se encuentra el usuario
+      console.error(`Usuario con ID ${userId} no encontrado en membersAll`);
+      return;
+    }
     Modal.confirm({
-      title: '¿Está seguro de editar la información de este usuario?',
+      title: `¿Está seguro de ${
+        user.active ? 'deshabilitar' : 'habilitar'
+      } este usuario?`,
       icon: <ExclamationCircleOutlined />,
       content: `Una vez ${
-        membersAll[user]?.active ? 'deshabilitado' : 'habilitado'
+        user.active ? 'deshabilitado' : 'habilitado'
       }, el usuario ${
-        membersAll[user]?.active ? 'no' : 'sí'
+        user.active ? 'no' : 'sí'
       } podrá acceder al contenido de tu organización.`,
-      okText: 'Editar',
+      okText: 'Confirmar',
       okType: 'primary',
       cancelText: 'Cancelar',
       async onOk() {
-        // Cambia el estado `active` en `userData` según el estado actual del usuario
-        userData.active = !membersAll[user]?.active;
-  
-        await disableUser({membersAll, org, user, userData, fetchEventsStatisticsData });
+        userData.active = !user.active;
+        await disableUser({ membersAll, org, user: userId, userData, fetchEventsStatisticsData });
       },
     });
   };

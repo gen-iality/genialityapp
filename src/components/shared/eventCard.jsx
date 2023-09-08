@@ -1,23 +1,18 @@
-import { Component, useEffect } from 'react';
+/* eslint-disable react/jsx-no-target-blank */
+import { Component } from 'react';
 import Moment from 'moment';
 import { Link, withRouter } from 'react-router-dom';
 import { Badge, Button, Card, Space, Tag, Tooltip, Typography } from 'antd';
 import { imageUtils } from '../../Utilities/ImageUtils';
 import { HelperContext } from '@/context/helperContext/helperContext';
-import { CategoriesApi } from '@/helpers/request';
 
 const EventImage = imageUtils.EventImage;
 const { Meta } = Card;
 class EventCard extends Component {
-  
   static contextType = HelperContext;
-  
-
 
   render() {
-
     const { event, bordered, right, loading, isAdmin, buttonBuyOrRegistered, textButtonBuyOrRegistered } = this.props;
-    
     // const { eventIsActive } = this.context;
     const styleNormal = {
       fontWeight: 'bold',
@@ -87,21 +82,18 @@ class EventCard extends Component {
           </Space>
         );
       } else {
-        return null
-        // const possibleNames = [
-        //   event.organizer?.name
-        //     ? event.organizer?.name
-        //     : event.author?.displayName
-        //     ? event.author?.displayName
-        //     : event.author?.names
-        // ];
-        // const validNames = possibleNames.filter((name) => name);
-        // return validNames.map((name, index) => (
-        //   <span key={index}>{name}</span>
-        // ));
+        const possibleNames = [
+          event.organizer?.name
+            ? event.organizer?.name
+            : event.author?.displayName
+            ? event.author?.displayName
+            : event.author?.names,
+        ];
+        const validNames = possibleNames.filter((name) => name);
+        return validNames.map((name, index) => <span key={index}>{name}</span>);
       }
     };
-    
+
     return (
       <div className='animate__animated animate__fadeIn'>
         <Badge.Ribbon
@@ -193,17 +185,19 @@ class EventCard extends Component {
                     </Typography.Text>
                   </Link>
                   {getEventInfo()}
-                  {buttonBuyOrRegistered && (
-                    <Link
-                      to={
-                        textButtonBuyOrRegistered === 'Comprar'
-                          ? event.payment.urlExternalPayment
-                          : `/landing/${event._id}`
-                      }
-                      target={textButtonBuyOrRegistered === 'Comprar' ? '_blank' : '_self'}>
-                      <Button type='primary'>{textButtonBuyOrRegistered}</Button>
-                    </Link>
-                  )}
+                  {buttonBuyOrRegistered ? (
+                    textButtonBuyOrRegistered === 'Comprar' && event.payment && event.payment.urlExternalPayment ? (
+                      <a href={event.payment.urlExternalPayment} target='_blank'>
+                        <Button type='primary'>{textButtonBuyOrRegistered}</Button>
+                      </a>
+                    ) : (
+                      <Link to={{ pathname: `/landing/${event._id}`, state: { event } }}>
+                        <Button type='primary'>{textButtonBuyOrRegistered}</Button>
+                      </Link>
+                    )
+                  ) : null}
+
+
                   {/* RESTRICIONES */}
                   {/* {!eventIsActive[event._id] && window.location.toString().includes('myprofile') && (
                     <Typography.Paragraph style={{ color: 'red' }}>
