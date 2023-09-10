@@ -289,8 +289,8 @@ const ModalAuth = (props) => {
 
             <Form.Item
               label={
-                typeof controllerLoginVisible.customPasswordLabel === 'string'
-                  ? controllerLoginVisible.customPasswordLabel
+                organization?.access_settings?.custom_password_label
+                  ? organization?.access_settings?.custom_password_label
                   : intl.formatMessage({
                       id: 'modal.label.password',
                       defaultMessage: 'Contraseña',
@@ -301,13 +301,12 @@ const ModalAuth = (props) => {
               rules={[
                 {
                   required: true,
-                  message:
-                    typeof controllerLoginVisible.customPasswordLabel === 'string'
-                      ? `Se requiere ${controllerLoginVisible.customPasswordLabel}`
-                      : intl.formatMessage({
-                          id: 'modal.rule.required.password',
-                          defaultMessage: 'Ingrese una contraseña',
-                        }),
+                  message: organization?.access_settings?.custom_password_label
+                    ? `Se requiere ${organization?.access_settings?.custom_password_label}`
+                    : intl.formatMessage({
+                        id: 'modal.rule.required.password',
+                        defaultMessage: 'Ingrese una contraseña',
+                      }),
                 },
               ]}
             >
@@ -315,10 +314,14 @@ const ModalAuth = (props) => {
                 <Input
                   disabled={isLoading}
                   size="large"
-                  placeholder={intl.formatMessage({
-                    id: 'modal.label.password',
-                    defaultMessage: controllerLoginVisible.customPasswordLabel,
-                  })}
+                  placeholder={
+                    organization?.access_settings?.custom_password_label
+                      ? organization?.access_settings?.custom_password_label
+                      : intl.formatMessage({
+                          id: 'modal.label.password',
+                          defaultMessage: 'Contraseña',
+                        })
+                  }
                   prefix={
                     <IdcardOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />
                   }
@@ -327,10 +330,14 @@ const ModalAuth = (props) => {
                 <Input.Password
                   disabled={isLoading}
                   size="large"
-                  placeholder={intl.formatMessage({
-                    id: 'modal.label.password',
-                    defaultMessage: 'Contraseña',
-                  })}
+                  placeholder={
+                    organization?.access_settings?.custom_password_label
+                      ? organization?.access_settings?.custom_password_label
+                      : intl.formatMessage({
+                          id: 'modal.label.password',
+                          defaultMessage: 'Contraseña',
+                        })
+                  }
                   prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
                   iconRender={(visible) =>
                     visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
