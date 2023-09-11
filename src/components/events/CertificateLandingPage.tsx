@@ -120,6 +120,10 @@ function CertificateLandingPage(props: WithEviusContextProps) {
     // Some certificates need an event progress
     _filteredCertificates = _filteredCertificates.filter((cert) => {
       // Filter by attendee type
+      console.debug(
+        'required_attendee_type is array?',
+        Array.isArray(cert.required_attendee_type),
+      )
       if (Array.isArray(cert.required_attendee_type)) {
         // If the admin forgot set the requirement, then they are lol
         if (cert.required_attendee_type.length === 0) return true
@@ -159,9 +163,11 @@ function CertificateLandingPage(props: WithEviusContextProps) {
        * - Filter here again
        */
       const activityTypeToIgnore = cert.requirement_config.ignore_activity_type ?? []
+      console.debug('activityTypeToIgnore:', activityTypeToIgnore)
       const reFilteredActivities = cEventProgress.rawActivities.filter(
         (activity) => !activityTypeToIgnore.includes(activity.type?.name as any),
       )
+      console.debug('reFilteredActivities:', reFilteredActivities)
       const reCalcedProgress = cEventProgress.calcProgress(
         cEventProgress.getAttendeesForActivities(
           reFilteredActivities.map((activity) => activity._id!),
@@ -173,7 +179,8 @@ function CertificateLandingPage(props: WithEviusContextProps) {
         reFilteredActivities,
         reCalcedProgress,
       })
-      if ((cert.requirement_config.completion ?? 0) > reCalcedProgress) {
+      console.log(cert, 'requires a completion of:', cert.requirement_config.completion)
+      if ((cert.requirement_config.completion ?? 0) >= reCalcedProgress) {
         console.log(
           `cert ${cert.name} has completion over progress:`,
           cert.requirement_config.completion,
