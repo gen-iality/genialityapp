@@ -3,6 +3,7 @@ import { Form } from 'antd'
 import { Rule } from 'antd/lib/form'
 import { IDynamicFieldProps } from './types'
 import DynamicFormDescription from './DynamicFormDescription'
+import { PropsWithChildren } from 'react'
 
 export interface IDynamicFormItemProps
   extends Omit<IDynamicFieldProps, 'allInitialValues'> {
@@ -13,7 +14,9 @@ export interface IDynamicFormItemProps
   initialValue?: any
 }
 
-const DynamicFormItem: React.FunctionComponent<IDynamicFormItemProps> = (props) => {
+const DynamicFormItem: React.FunctionComponent<
+  PropsWithChildren<IDynamicFormItemProps>
+> = (props) => {
   const {
     noStyle,
     hidden,
