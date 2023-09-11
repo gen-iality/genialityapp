@@ -4,7 +4,7 @@ import { CheckCircleOutlined, ExclamationCircleOutlined, StopOutlined } from '@a
 import { OrganizationApi } from '@/helpers/request';
 import { DispatchMessageService } from '@/context/MessageService';
 
-export async function disableUser({membersAll, org, user, userData, fetchEventsStatisticsData }) {
+export async function disableUser({ org, user, userData, fetchEventsStatisticsData }) {
   try {
     DispatchMessageService({
       type: 'loading',

@@ -15,8 +15,6 @@ export async function handleDeleteUser(org, user, fetchEventsStatisticsData) {
     await OrganizationApi.deleteUser(org, user);
     fetchEventsStatisticsData()
 
-    // window.location.reload();
-
     DispatchMessageService({
       key: 'loading',
       action: 'destroy',

@@ -883,13 +883,13 @@ export const CategoriesApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.post(`api/categories?token=${token}`, data);
   },
-  update: async (data, id_category) => {
+  update: async ( id_category, data) => {
     let token = await GetTokenUserFirebase();
     return await Actions.put(`api/categories/${id_category}?token=${token}`, data);
   },
   delete: async (id_category) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.delete(`api/categories/${id_category}?token=${token}`, true);
+    return await Actions.delete(`api/categories/${id_category}?token=${token}`, '', true);
   },
 };
 export const TypesApi = {
