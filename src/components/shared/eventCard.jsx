@@ -12,7 +12,16 @@ class EventCard extends Component {
   static contextType = HelperContext;
 
   render() {
-    const { event, bordered, right, loading, isAdmin, buttonBuyOrRegistered, textButtonBuyOrRegistered } = this.props;
+    const {
+      event,
+      bordered,
+      right,
+      loading,
+      isAdmin,
+      buttonBuyOrRegistered,
+      textButtonBuyOrRegistered,
+      location,
+    } = this.props;
     // const { eventIsActive } = this.context;
     const styleNormal = {
       fontWeight: 'bold',
@@ -72,7 +81,42 @@ class EventCard extends Component {
     //aqui  tiene que venir ahora unos minutos en caso de tener plan
     /* let blockedDate = new Date(actualDate.setDate(actualDate.getDate() + blockedEvent));
     let formatDate = Moment(blockedDate).format('DD MMM YYYY'); */
+
     const getEventInfo = () => {
+      const currentPath = location.pathname;
+
+      if (currentPath.startsWith('/organization/')) {
+        // Ruta "/organization/[id]/events": Muestra el nombre de la organización o la categoría
+        if (event.category_ids && event.category_ids.length > 0) {
+          return (
+            <Space>
+              {event.category_ids.map((category, index) => (
+                <Tag key={index}>{category}</Tag>
+              ))}
+            </Space>
+          );
+        } else {
+          const possibleNames = [
+            event.organizer?.name
+              ? event.organizer?.name
+              : event.author?.displayName
+              ? event.author?.displayName
+              : event.author?.names,
+          ];
+          const validNames = possibleNames.filter((name) => name);
+          return validNames.map((name, index) => <span key={index}>{name}</span>);
+        }
+      } else if (currentPath === '/myprofile') {
+        // Ruta "/myprofile": Muestra solo el nombre de la organización o del autor
+        if (event.organizer?.name) {
+          return <span>{event.organizer.name}</span>;
+        } else if (event.author?.displayName) {
+          return <span>{event.author.displayName}</span>;
+        } else if (event.author?.names) {
+          return <span>{event.author.names.join(', ')}</span>;
+        }
+      }
+      // En todas las demás rutas, muestra las categorías si están disponibles
       if (event.category_ids && event.category_ids.length > 0) {
         return (
           <Space>
@@ -93,7 +137,6 @@ class EventCard extends Component {
         return validNames.map((name, index) => <span key={index}>{name}</span>);
       }
     };
-
     return (
       <div className='animate__animated animate__fadeIn'>
         <Badge.Ribbon
@@ -196,7 +239,6 @@ class EventCard extends Component {
                       </Link>
                     )
                   ) : null}
-
 
                   {/* RESTRICIONES */}
                   {/* {!eventIsActive[event._id] && window.location.toString().includes('myprofile') && (
