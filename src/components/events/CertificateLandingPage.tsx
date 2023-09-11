@@ -173,7 +173,7 @@ function CertificateLandingPage(props: WithEviusContextProps) {
         reFilteredActivities,
         reCalcedProgress,
       })
-      if ((cert.requirement_config.completion ?? 0) > reCalcedProgress) {
+      if ((cert.requirement_config.completion ?? 0) >= reCalcedProgress) {
         console.log(
           `cert ${cert.name} has completion over progress:`,
           cert.requirement_config.completion,
