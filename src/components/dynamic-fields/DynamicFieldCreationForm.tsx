@@ -192,7 +192,6 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
       visibleByContacts: !!values.visibleByContacts,
     }
 
-    console.debug('send', field)
     onSave(field)
 
     setInfo((previous) => ({ ...previous, ...values }))
@@ -219,7 +218,6 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
       }
     }
   }, [])
-
   return (
     <Form form={form} autoComplete="off" onFinish={onFinish} {...formLayout}>
       <Form.Item
@@ -338,10 +336,9 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
           initialValue={dataToEdit?.link}
         >
           <Input placeholder="Enlace (esto depende el tipo de campo)" />
-          <Divider />
         </Form.Item>
       )}
-
+      <Divider />
       <Form.Item
         label="¿Obligatorio?"
         name="mandatory"
