@@ -116,6 +116,15 @@ export const EventProgressProvider: FunctionComponent<PropsWithChildren> = (prop
         .filter((id) => !nonPublishedActivityIDs.includes(id)),
       viewed_activities: newViewedActivities,
     }
+
+    cEventUser.value.activity_progresses = activityProgressesData
+    const updated = await EventsApi.updateEventUser(
+      cEventUser.value.event_id,
+      cEventUser.value._id,
+      cEventUser.value,
+    )
+    console.debug('updated:', updated)
+
     FB.ActivityProgresses.edit(
       cEventUser.value.event_id,
       cEventUser.value.account_id,
