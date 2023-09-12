@@ -19,7 +19,7 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
   const { paymentStep, result, dispatch } = useContext(OrganizationPaymentContext)
 
   const makeUserAsPaidPlan = async () => {
-    StateMessage.show('presend', 'info', 'Espera...')
+    StateMessage.show('presend', 'loading', 'Espera...')
     console.log(
       'payment initresult ',
       { organizationUser },
