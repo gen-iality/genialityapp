@@ -370,8 +370,9 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
             render={({ isLoading, activities, viewedActivities }) => {
               return (
                 <>
-                  {isLoading && <Spin />}
-                  {activityId === undefined ? (
+                  {isLoading ? (
+                    <Button disabled>{progressMap[item._id]}</Button>
+                  ) : activityId === undefined ? (
                     <Button
                       onClick={() => {
                         setIsProgressingModalOpened(true)
@@ -558,6 +559,10 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       const allEventUserData: any[] = []
 
       const eventUserAndUserPairIds: { eu: string; u: string }[] = []
+
+      // Save the progress as string to be request by the XLSX exporter
+      let newProgressMap: { [key: string]: string } = {}
+
       observer.forEach((result) => {
         const data = result.data()
 
@@ -570,12 +575,12 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         // to pre-calc this value in a way non-reactable
         type ActivityProgressesType = {
           activities?: any[]
-          checked_in_activities?: any[]
+          viewed_activities?: any[]
         }
-        const { activities, checked_in_activities }: ActivityProgressesType =
+        const { activities, viewed_activities }: ActivityProgressesType =
           data.activity_progresses ?? {}
         // Use % or n/N? ... use n/N for now
-        data.postprocess_progress = `${(checked_in_activities ?? []).length}/${Math.max(
+        data.postprocess_progress = `${(viewed_activities ?? []).length}/${Math.max(
           (activities ?? []).length,
           (preAllActivities ?? []).length,
         )}`
@@ -585,8 +590,23 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
           ...data,
         })
 
+        // Add the progress
+        if (!data.activity_progresses || !Array.isArray(viewed_activities)) {
+          newProgressMap[data._id] = 'Sin progreso'
+        } else {
+          const itsActivities = filterActivitiesByProgressSettings(
+            preAllActivities,
+            event.progress_settings || {},
+          )
+          newProgressMap[data._id] = `${(viewed_activities ?? []).length}/${Math.max(
+            (activities ?? []).length,
+            (itsActivities ?? []).length,
+          )}`
+        }
+
         eventUserAndUserPairIds.push({ eu: data._id, u: data.account_id })
       })
+      setProgressMap((previous: any) => ({ ...previous, ...newProgressMap }))
 
       Promise.all(
         eventUserAndUserPairIds.map(async ({ eu, u }) => {
@@ -615,7 +635,8 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
               (euu.ap.viewed_activities ?? []).length
             }/${Math.max((euu.ap.activities ?? []).length, (itsActivities ?? []).length)}`
           })
-          setProgressMap((previous: any) => ({ ...previous, ...newProgressMap }))
+          // Disable because we use the saved in DB. But, if you wanna redundancy, then able that
+          // setProgressMap((previous: any) => ({ ...previous, ...newProgressMap }))
           console.log(newProgressMap)
         })
 
