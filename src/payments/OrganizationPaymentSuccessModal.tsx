@@ -93,7 +93,12 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
         title="Pago exitoso"
         open={paymentStep == 'DISPLAYING_SUCCESS'}
         onOk={() => {
-          makeUserAsPaidPlan().then(() => window.location.reload())
+          makeUserAsPaidPlan().then(() => {
+            alert('Espere mientras se realiza el proceso...')
+            setTimeout(() => {
+              window.location.reload()
+            }, 4000)
+          })
           dispatch({ type: 'ABORT' })
         }}
         onCancel={() => {
