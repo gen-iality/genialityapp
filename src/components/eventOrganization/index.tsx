@@ -51,8 +51,8 @@ function EventOrganization({ match }: OrganizationProps) {
       const response = await OrganizationApi.getUsers(organization?._id);
       const users = response.data;
       const activeIds = users
-        .filter((user: { active: boolean | undefined; }) => user?.active === true || user?.active === undefined)
-        .map((user: { account_id: any; }) => user?.account_id);
+        .filter((user: { active: boolean | undefined }) => user?.active === true || user?.active === undefined)
+        .map((user: { account_id: any }) => user?.account_id);
       // Actualiza el estado con los _id de los usuarios activos
       setActiveUsers(activeIds);
     } catch (error) {
@@ -184,10 +184,12 @@ function EventOrganization({ match }: OrganizationProps) {
                     bodyStyle={{ paddingTop: '0px' }}
                     headStyle={{ border: 'none' }}
                     style={{ width: '100%', borderRadius: 20 }}>
-                    <Result style={{textAlign: 'center'}} status='warning' title='403' title={`Acceso bloqueado a ${organization?.name}.`}>
-                      Lamentamos informarte que tu acceso al contenido de {organization?.name} ha sido bloqueado.
-                      Entendemos que esta situación pueda ser frustrante, y estamos aquí para ayudarte a resolverla
-                    </Result>
+                    <Result
+                      style={{ textAlign: 'center' }}
+                      status='warning'
+                      title={`Acceso bloqueado a ${organization?.name}.`}
+                      subTitle={`  Lamentamos informarte que tu acceso al contenido de ${organization?.name} ha sido bloqueado.
+                      Entendemos que esta situación pueda ser frustrante, y estamos aquí para ayudarte a resolverla`}></Result>
                   </Card>
                 </Row>
               </Col>
