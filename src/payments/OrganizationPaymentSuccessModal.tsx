@@ -19,7 +19,7 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
   const { paymentStep, result, dispatch } = useContext(OrganizationPaymentContext)
 
   const makeUserAsPaidPlan = async () => {
-    StateMessage.show('presend', 'info', 'Espera...')
+    StateMessage.show('presend', 'loading', 'Espera...')
     console.log(
       'payment initresult ',
       { organizationUser },
@@ -94,7 +94,10 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
         open={paymentStep == 'DISPLAYING_SUCCESS'}
         onOk={() => {
           makeUserAsPaidPlan().then(() => {
-            alert('Espere mientras se realiza el proceso...')
+            Modal.confirm({
+              title: 'Transación en proceso',
+              content: 'Espere mientras se realiza el proceso...',
+            })
             setTimeout(() => {
               window.location.reload()
             }, 4000)
