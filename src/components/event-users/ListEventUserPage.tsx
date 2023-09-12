@@ -131,6 +131,31 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
 
   const intl = useIntl()
 
+  const ButtonThatOpenActivityProgressesModal: FunctionComponent<{
+    item: any
+    progressAsString?: string
+    viewedActivities?: any[]
+    totalActivities?: any[]
+  }> = (props) => {
+    const { item, progressAsString, viewedActivities, totalActivities } = props
+    return (
+      <Button
+        onClick={() => {
+          setIsProgressingModalOpened(true)
+          setWatchedUserInProgressingModal(item)
+        }}
+      >
+        {progressAsString ??
+          `${(viewedActivities ?? []).length}/${Math.max(
+            (totalActivities ?? []).length,
+            allActivities.filter(
+              ({ _id }: { _id: string }) => !nonPublishedActivityIDs.includes(_id),
+            ).length,
+          )}`}
+      </Button>
+    )
+  }
+
   const getNameFromURL = (fileUrl: string) => {
     if (typeof fileUrl == 'string') {
       const splitUrl = fileUrl?.split('/')
@@ -294,24 +319,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
     },
   })
 
-  const getAllAttendees = async () => {
-    const orgId = event.organizer._id
-    const org = await OrganizationApi.getOne(orgId)
-
-    const eventActivities = await AgendaApi.byEvent(event._id)
-    const preAllActivities = eventActivities.data
-    setAllActivities(eventActivities.data)
-
-    const newSimplifyOrgProperties = (org.user_properties || []).filter(
-      (property: any) => !['email', 'password', 'names'].includes(property.name),
-    )
-    const newRolesList: any[] = await RolAttApi.byEventRolsGeneral()
-    const newBadgeEvent = await BadgeApi.get(event._id)
-
-    setSimplifyOrgProperties(newSimplifyOrgProperties)
-    setRolesList(newRolesList)
-    setBadgeEvent(newBadgeEvent)
-
+  const buildColumns = () => {
     let newExtraFields: IDynamicFieldData[] = fieldNameEmailFirst(event.user_properties)
     newExtraFields = addDefaultLabels(newExtraFields)
     newExtraFields = orderFieldsByWeight(newExtraFields)
@@ -319,7 +327,6 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
     setExtraFields(newExtraFields)
 
     // Set the columns
-
     const checkInColumn: ColumnType<any> = {
       title: 'Fecha de ingreso',
       width: 180,
@@ -370,21 +377,19 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
             render={({ isLoading, activities, viewedActivities }) => {
               return (
                 <>
-                  {isLoading ? (
-                    <Button disabled>{progressMap[item._id]}</Button>
+                  {isLoading && progressMap[item._id] !== undefined ? (
+                    <ButtonThatOpenActivityProgressesModal
+                      item={item}
+                      progressAsString={progressMap[item._id]}
+                    />
+                  ) : isLoading ? (
+                    <Spin />
                   ) : activityId === undefined ? (
-                    <Button
-                      onClick={() => {
-                        setIsProgressingModalOpened(true)
-                        setWatchedUserInProgressingModal(item)
-                      }}
-                    >{`${viewedActivities.length}/${Math.max(
-                      activities.length,
-                      preAllActivities.filter(
-                        ({ _id }: { _id: string }) =>
-                          !nonPublishedActivityIDs.includes(_id),
-                      ).length,
-                    )}`}</Button>
+                    <ButtonThatOpenActivityProgressesModal
+                      item={item}
+                      viewedActivities={viewedActivities}
+                      totalActivities={activities}
+                    />
                   ) : (
                     <>{viewedActivities.length > 0 ? 'Visto' : 'No visto'}</>
                   )}
@@ -554,6 +559,25 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       updatedAtColumn,
       editColumn,
     ])
+  }
+
+  const getAllAttendees = async () => {
+    const orgId = event.organizer._id
+    const org = await OrganizationApi.getOne(orgId)
+
+    const eventActivities = await AgendaApi.byEvent(event._id)
+    const preAllActivities = eventActivities.data
+    setAllActivities(eventActivities.data)
+
+    const newSimplifyOrgProperties = (org.user_properties || []).filter(
+      (property: any) => !['email', 'password', 'names'].includes(property.name),
+    )
+    const newRolesList: any[] = await RolAttApi.byEventRolsGeneral()
+    const newBadgeEvent = await BadgeApi.get(event._id)
+
+    setSimplifyOrgProperties(newSimplifyOrgProperties)
+    setRolesList(newRolesList)
+    setBadgeEvent(newBadgeEvent)
 
     const unsubscribe = eventUsersRef.onSnapshot((observer) => {
       const allEventUserData: any[] = []
@@ -709,6 +733,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
     getAllAttendees()
       .then((callback) => {
         unsubscribe = callback
+        buildColumns()
       })
       .finally(() => setIsLoading(false))
 
@@ -718,6 +743,10 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       }
     }
   }, [])
+
+  useEffect(() => {
+    buildColumns()
+  }, [allActivities, progressMap])
 
   useEffect(() => {
     allActivities.forEach((activity) => {
