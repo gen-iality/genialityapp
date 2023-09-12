@@ -785,11 +785,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         }
         back
       />
-      {isProgressLoading && (
-        <>
-          <Spin /> Cargando el progreso aún...
-        </>
-      )}
+      {isProgressLoading && <>...</>}
       <Table
         size="small"
         loading={isLoading || dataSource === undefined}
