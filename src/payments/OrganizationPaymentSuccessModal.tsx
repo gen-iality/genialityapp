@@ -94,7 +94,10 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
         open={paymentStep == 'DISPLAYING_SUCCESS'}
         onOk={() => {
           makeUserAsPaidPlan().then(() => {
-            alert('Espere mientras se realiza el proceso...')
+            Modal.confirm({
+              title: 'Transación en proceso',
+              content: 'Espere mientras se realiza el proceso...',
+            })
             setTimeout(() => {
               window.location.reload()
             }, 4000)
