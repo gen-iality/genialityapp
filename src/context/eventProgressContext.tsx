@@ -1,6 +1,6 @@
 import { ExtendedAgendaType } from '@Utilities/types/AgendaType'
 import { FB } from '@helpers/firestore-request'
-import { AgendaApi, UsersApi } from '@helpers/request'
+import { AgendaApi, EventsApi, UsersApi } from '@helpers/request'
 import {
   createContext,
   useContext,
@@ -107,18 +107,19 @@ export const EventProgressProvider: FunctionComponent<PropsWithChildren> = (prop
     console.log('new activity is added as viewed activity:', activityId)
     const newViewedActivities = [...viewedActivities, activityId]
 
+    const activityProgressesData = {
+      activities: rawActivities
+        .map((activity) => activity._id!)
+        .filter((id) => !nonPublishedActivityIDs.includes(id)),
+      filtered_activities: filteredActivities
+        .map((activity) => activity._id!)
+        .filter((id) => !nonPublishedActivityIDs.includes(id)),
+      viewed_activities: newViewedActivities,
+    }
     FB.ActivityProgresses.edit(
       cEventUser.value.event_id,
       cEventUser.value.account_id,
-      {
-        activities: rawActivities
-          .map((activity) => activity._id!)
-          .filter((id) => !nonPublishedActivityIDs.includes(id)),
-        filtered_activities: filteredActivities
-          .map((activity) => activity._id!)
-          .filter((id) => !nonPublishedActivityIDs.includes(id)),
-        viewed_activities: newViewedActivities,
-      },
+      activityProgressesData,
       { merge: true },
     ).finally(() =>
       console.log(
