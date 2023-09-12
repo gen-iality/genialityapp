@@ -24,6 +24,7 @@ function OrganizationInformation(props: { org: any }) {
     allow_register,
     enable_notification_providers = [],
     access_settings,
+    public_help_message,
   } = props.org
 
   const [typeEvents, setTypeEvents] = useState<any[]>([])
@@ -143,6 +144,13 @@ function OrganizationInformation(props: { org: any }) {
                   initialValue={access_settings}
                 >
                   <OrganizationAccessSettingsField />
+                </Form.Item>
+                <Form.Item
+                  label="Mensaje público de ayuda (opcional)"
+                  name={['organization', 'public_help_message']}
+                  initialValue={public_help_message}
+                >
+                  <Input placeholder="Mensaje de contacto" />
                 </Form.Item>
               </Col>
             </Row>

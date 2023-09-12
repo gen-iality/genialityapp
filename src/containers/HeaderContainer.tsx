@@ -425,16 +425,20 @@ const HeaderContainer: FunctionComponent<IHeaderContainerProps> = (props) => {
                   )
                 )}
                 {<ModalLoginHelpers organization={1} />}
-                <a>
-                  <Popover
-                    content={
-                      'Para cualquier inquietud, duda, o ayudar sobre la aplicación, contenidos o material comunicarse al correo: soporteace@ark-med.com'
-                    }
-                    title="Ayuda"
+                {((currentOrganization?.public_help_message as string) ?? '').trim() && (
+                  <div
+                    style={{ cursor: 'help', marginLeft: '1rem' }}
+                    role="button"
+                    aria-label="información de contacto de soporte"
                   >
-                    <QuestionCircleOutlined />
-                  </Popover>
-                </a>
+                    <Popover
+                      content={currentOrganization?.public_help_message}
+                      title="Ayuda"
+                    >
+                      <QuestionCircleOutlined />
+                    </Popover>
+                  </div>
+                )}
               </>
             )}
           </Row>
