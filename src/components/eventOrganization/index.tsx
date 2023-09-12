@@ -2,10 +2,10 @@
 /* eslint-disable no-console */
 /* eslint-disable array-callback-return */
 /* eslint-disable jsx-a11y/alt-text */
-import { Col, Row, Grid } from 'antd';
+import { Col, Row, Grid, Result, Card, Badge } from 'antd';
 import { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
-import { OrganizationFuction } from '../../helpers/request';
+import { OrganizationApi, OrganizationFuction } from '../../helpers/request';
 import moment from 'moment';
 import ModalLoginHelpers from '../authentication/ModalLoginHelpers';
 import Loading from '../profile/loading';
@@ -17,12 +17,14 @@ import { SocialNetworks } from './components/SocialNetworks';
 import { MyEvents } from './components/MyEvents';
 import { NextEvents } from './components/NextEvents';
 import { PassEvents } from './components/PassEvents';
+import { Title } from 'chart.js';
 
 const { useBreakpoint } = Grid;
 
 function EventOrganization({ match }: OrganizationProps) {
   const screens = useBreakpoint();
   const cUser = UseCurrentUser();
+
   const [state, setstate] = useState<DataOrganizations>({
     orgId: '',
     view: false,
@@ -37,6 +39,27 @@ function EventOrganization({ match }: OrganizationProps) {
     match.params.id,
     cUser.value?._id
   );
+
+  const [activeUsers, setActiveUsers] = useState([]);
+
+  useEffect(() => {
+    fetchOrganizationUser();
+  }, [organization]);
+
+  const fetchOrganizationUser = async () => {
+    try {
+      const response = await OrganizationApi.getUsers(organization?._id);
+      const users = response.data;
+      const activeIds = users
+        .filter((user: { active: boolean | undefined; }) => user?.active === true || user?.active === undefined)
+        .map((user: { account_id: any; }) => user?.account_id);
+      // Actualiza el estado con los _id de los usuarios activos
+      setActiveUsers(activeIds);
+    } catch (error) {
+      console.error('Error al obtener el usuario de la organización:', error);
+    }
+  };
+
   useEffect(() => {
     let orgId = match.params.id;
     if (orgId) {
@@ -89,6 +112,8 @@ function EventOrganization({ match }: OrganizationProps) {
   const havePaymentEvent = (event: any): boolean => {
     return event.payment ? (event.payment.active as boolean) : false;
   };
+  //@ts-ignore
+  const hasAccess = activeUsers.includes(cUser?.value?._id);
 
   return (
     <div
@@ -112,45 +137,63 @@ function EventOrganization({ match }: OrganizationProps) {
               )}
             </div>
           )}
-
-          <Row justify='center' style={{ paddingTop: '32px', paddingBottom: '32px' }}>
-            <Col span={23}>
-              <Row gutter={[0, 32]}>
-                {cUser.value && (
-                  <Col style={{ width: '100%' }}>
-                    <MyEvents
-                      eventsWithEventUser={eventsWithEventUser}
-                      isLoadingOtherEvents={isLoadingOtherEvents}
-                      organization={organization}
-                      setIsModalCertificatesOpen={setIsModalCertificatesOpen}
-                    />
-                    {isModalCertificatesOpen && (
-                      <ModalCertificatesByOrganizacionAndUser
-                        destroyOnClose
-                        visible={isModalCertificatesOpen}
-                        onCloseDrawer={() => setIsModalCertificatesOpen(false)}
-                        eventUserId={cUser.value?._id}
-                        organizationId={match.params.id}
-                        orgContainerBg={organization?.styles?.containerBgColor}
-                        orgTextColor={organization?.styles?.textMenu}
+          {hasAccess || !cUser?.value ? (
+            <Row justify='center' style={{ paddingTop: '32px', paddingBottom: '32px' }}>
+              <Col span={23}>
+                <Row gutter={[0, 32]}>
+                  {cUser.value && (
+                    <Col style={{ width: '100%' }}>
+                      <MyEvents
+                        eventsWithEventUser={eventsWithEventUser}
+                        isLoadingOtherEvents={isLoadingOtherEvents}
+                        organization={organization}
+                        setIsModalCertificatesOpen={setIsModalCertificatesOpen}
                       />
-                    )}
+                      {isModalCertificatesOpen && (
+                        <ModalCertificatesByOrganizacionAndUser
+                          destroyOnClose
+                          visible={isModalCertificatesOpen}
+                          onCloseDrawer={() => setIsModalCertificatesOpen(false)}
+                          eventUserId={cUser.value?._id}
+                          organizationId={match.params.id}
+                          orgContainerBg={organization?.styles?.containerBgColor}
+                          orgTextColor={organization?.styles?.textMenu}
+                        />
+                      )}
+                    </Col>
+                  )}
+                  <Col style={{ width: '100%' }}>
+                    <PassEvents
+                      eventsOld={eventsOld}
+                      havePaymentEvent={havePaymentEvent}
+                      isUserRegisterInEvent={isUserRegisterInEvent}
+                    />
                   </Col>
-                )}
-                <Col style={{ width: '100%' }}>
-                  <PassEvents
-                    eventsOld={eventsOld}
-                    havePaymentEvent={havePaymentEvent}
-                    isUserRegisterInEvent={isUserRegisterInEvent}
-                  />
-                </Col>
-                <Col style={{ width: '100%' }}>
-                  {/* Lista de eventos próximos */}
-                  <NextEvents events={events} />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
+                  <Col style={{ width: '100%' }}>
+                    {/* Lista de eventos próximos */}
+                    <NextEvents events={events} />
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+          ) : (
+            <Row justify='center' style={{ paddingTop: '32px', paddingBottom: '32px' }}>
+              <Col span={23}>
+                <Row gutter={[0, 32]}>
+                  <Card
+                    bodyStyle={{ paddingTop: '0px' }}
+                    headStyle={{ border: 'none' }}
+                    style={{ width: '100%', borderRadius: 20 }}>
+                    <Result style={{textAlign: 'center'}} status='warning' title='403' title={`Acceso bloqueado a ${organization?.name}.`}>
+                      Lamentamos informarte que tu acceso al contenido de {organization?.name} ha sido bloqueado.
+                      Entendemos que esta situación pueda ser frustrante, y estamos aquí para ayudarte a resolverla
+                    </Result>
+                  </Card>
+                </Row>
+              </Col>
+            </Row>
+          )}
+
           {/* FOOTER */}
           {organization !== null && (
             <div style={{ width: '100%', maxHeight: '350px' }}>

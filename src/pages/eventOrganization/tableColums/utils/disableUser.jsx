@@ -45,42 +45,38 @@ export async function disableUser({ org, user, userData, fetchEventsStatisticsDa
 
 // Función de confirmación para editar un usuario
 export const editUserConfirmation = (membersAll, org, userId, userData, fetchEventsStatisticsData) => {
-    const user = membersAll.find((member) => member._id === userId);
-    if (!user) {
-      // Manejar el caso en el que no se encuentra el usuario
-      console.error(`Usuario con ID ${userId} no encontrado en membersAll`);
-      return;
-    }
-    Modal.confirm({
-      title: `¿Está seguro de ${
-        user.active ? 'deshabilitar' : 'habilitar'
-      } este usuario?`,
-      icon: <ExclamationCircleOutlined />,
-      content: `Una vez ${
-        user.active ? 'deshabilitado' : 'habilitado'
-      }, el usuario ${
-        user.active ? 'no' : 'sí'
-      } podrá acceder al contenido de tu organización.`,
-      okText: 'Confirmar',
-      okType: 'primary',
-      cancelText: 'Cancelar',
-      async onOk() {
-        userData.active = !user.active;
-        await disableUser({ membersAll, org, user: userId, userData, fetchEventsStatisticsData });
-      },
-    });
-  };
-  
+  const user = membersAll.find((member) => member._id === userId);
+  if (!user) {
+    // Manejar el caso en el que no se encuentra el usuario
+    console.error(`Usuario con ID ${userId} no encontrado en membersAll`);
+    return;
+  }
+  const userActive = user.active !== undefined ? user.active : true;
+  const actionText = userActive ? 'deshabilitar' : 'habilitar';
+  const contentText = `Una vez ${actionText}, el usuario ${
+    userActive ? 'no' : 'sí'
+  } podrá acceder al contenido de tu organización.`;
+
+  Modal.confirm({
+    title: `¿Está seguro de ${actionText} este usuario?`,
+    icon: <ExclamationCircleOutlined />,
+    content: contentText,
+    okText: 'Confirmar',
+    okType: 'primary',
+    cancelText: 'Cancelar',
+    async onOk() {
+      userData.active = !userActive;
+      await disableUser({ membersAll, org, user: userId, userData, fetchEventsStatisticsData });
+    },
+  });
+};
 
 // Función para obtener el ícono correcto en función del estado active
 export const getIconForActiveState = (active) => {
-    const iconStyle = {
-        color: active ? 'green' : 'red', 
-      };
-  
-    return active ? (
-      <CheckCircleOutlined style={iconStyle} />
-    ) : (
-      <StopOutlined style={iconStyle} />
-    );
+  const isActive = active || active === undefined;
+  const iconStyle = {
+    color: isActive ? 'green' : 'red',
   };
+
+  return isActive ? <CheckCircleOutlined style={iconStyle} /> : <StopOutlined style={iconStyle} />;
+};
