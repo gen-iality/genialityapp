@@ -167,6 +167,12 @@ const HeaderContainer: FunctionComponent<IHeaderContainerProps> = (props) => {
     return containtorganization ? 'organization' : 'landing'
   }
 
+  useEffect(() => {
+    if (!orgId) return
+
+    WhereHerePath()
+  }, [orgId])
+
   const userLogOut = (callBack: any) => {
     const params = {
       user: cUser.value,
