@@ -131,6 +131,31 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
 
   const intl = useIntl()
 
+  const ButtonThatOpenActivityProgressesModal: FunctionComponent<{
+    item: any
+    progressAsString?: string
+    viewedActivities?: any[]
+    totalActivities?: any[]
+  }> = (props) => {
+    const { item, progressAsString, viewedActivities, totalActivities } = props
+    return (
+      <Button
+        onClick={() => {
+          setIsProgressingModalOpened(true)
+          setWatchedUserInProgressingModal(item)
+        }}
+      >
+        {progressAsString ??
+          `${(viewedActivities ?? []).length}/${Math.max(
+            (totalActivities ?? []).length,
+            allActivities.filter(
+              ({ _id }: { _id: string }) => !nonPublishedActivityIDs.includes(_id),
+            ).length,
+          )}`}
+      </Button>
+    )
+  }
+
   const getNameFromURL = (fileUrl: string) => {
     if (typeof fileUrl == 'string') {
       const splitUrl = fileUrl?.split('/')
@@ -294,24 +319,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
     },
   })
 
-  const getAllAttendees = async () => {
-    const orgId = event.organizer._id
-    const org = await OrganizationApi.getOne(orgId)
-
-    const eventActivities = await AgendaApi.byEvent(event._id)
-    const preAllActivities = eventActivities.data
-    setAllActivities(eventActivities.data)
-
-    const newSimplifyOrgProperties = (org.user_properties || []).filter(
-      (property: any) => !['email', 'password', 'names'].includes(property.name),
-    )
-    const newRolesList: any[] = await RolAttApi.byEventRolsGeneral()
-    const newBadgeEvent = await BadgeApi.get(event._id)
-
-    setSimplifyOrgProperties(newSimplifyOrgProperties)
-    setRolesList(newRolesList)
-    setBadgeEvent(newBadgeEvent)
-
+  const buildColumns = () => {
     let newExtraFields: IDynamicFieldData[] = fieldNameEmailFirst(event.user_properties)
     newExtraFields = addDefaultLabels(newExtraFields)
     newExtraFields = orderFieldsByWeight(newExtraFields)
@@ -319,7 +327,6 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
     setExtraFields(newExtraFields)
 
     // Set the columns
-
     const checkInColumn: ColumnType<any> = {
       title: 'Fecha de ingreso',
       width: 180,
@@ -356,8 +363,10 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       title: 'Progreso',
       ellipsis: true,
       sorter: (a: any, b: any) =>
-        a.activity_progresses?.progress_filtered_activities -
-        b.activity_progresses?.progress_filtered_activities,
+        a.activity_progresses?.viewed_activities?.length /
+          Math.max(a.activity_progresses?.activities?.length, 1) -
+        b.activity_progresses?.viewed_activities?.length /
+          Math.max(b.activity_progresses?.activities?.length, 1),
       ...getColumnSearchProps('progreso', (value) => value.postprocess_progress),
       render: (item) => (
         <>
@@ -370,20 +379,19 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
             render={({ isLoading, activities, viewedActivities }) => {
               return (
                 <>
-                  {isLoading && <Spin />}
-                  {activityId === undefined ? (
-                    <Button
-                      onClick={() => {
-                        setIsProgressingModalOpened(true)
-                        setWatchedUserInProgressingModal(item)
-                      }}
-                    >{`${viewedActivities.length}/${Math.max(
-                      activities.length,
-                      preAllActivities.filter(
-                        ({ _id }: { _id: string }) =>
-                          !nonPublishedActivityIDs.includes(_id),
-                      ).length,
-                    )}`}</Button>
+                  {isLoading && progressMap[item._id] !== undefined ? (
+                    <ButtonThatOpenActivityProgressesModal
+                      item={item}
+                      progressAsString={progressMap[item._id]}
+                    />
+                  ) : isLoading ? (
+                    <Spin />
+                  ) : activityId === undefined ? (
+                    <ButtonThatOpenActivityProgressesModal
+                      item={item}
+                      viewedActivities={viewedActivities}
+                      totalActivities={activities}
+                    />
                   ) : (
                     <>{viewedActivities.length > 0 ? 'Visto' : 'No visto'}</>
                   )}
@@ -553,11 +561,34 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       updatedAtColumn,
       editColumn,
     ])
+  }
+
+  const getAllAttendees = async () => {
+    const orgId = event.organizer._id
+    const org = await OrganizationApi.getOne(orgId)
+
+    const eventActivities = await AgendaApi.byEvent(event._id)
+    const preAllActivities = eventActivities.data
+    setAllActivities(eventActivities.data)
+
+    const newSimplifyOrgProperties = (org.user_properties || []).filter(
+      (property: any) => !['email', 'password', 'names'].includes(property.name),
+    )
+    const newRolesList: any[] = await RolAttApi.byEventRolsGeneral()
+    const newBadgeEvent = await BadgeApi.get(event._id)
+
+    setSimplifyOrgProperties(newSimplifyOrgProperties)
+    setRolesList(newRolesList)
+    setBadgeEvent(newBadgeEvent)
 
     const unsubscribe = eventUsersRef.onSnapshot((observer) => {
       const allEventUserData: any[] = []
 
       const eventUserAndUserPairIds: { eu: string; u: string }[] = []
+
+      // Save the progress as string to be request by the XLSX exporter
+      let newProgressMap: { [key: string]: string } = {}
+
       observer.forEach((result) => {
         const data = result.data()
 
@@ -570,12 +601,12 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         // to pre-calc this value in a way non-reactable
         type ActivityProgressesType = {
           activities?: any[]
-          checked_in_activities?: any[]
+          viewed_activities?: any[]
         }
-        const { activities, checked_in_activities }: ActivityProgressesType =
+        const { activities, viewed_activities }: ActivityProgressesType =
           data.activity_progresses ?? {}
         // Use % or n/N? ... use n/N for now
-        data.postprocess_progress = `${(checked_in_activities ?? []).length}/${Math.max(
+        data.postprocess_progress = `${(viewed_activities ?? []).length}/${Math.max(
           (activities ?? []).length,
           (preAllActivities ?? []).length,
         )}`
@@ -585,8 +616,23 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
           ...data,
         })
 
+        // Add the progress
+        if (!data.activity_progresses || !Array.isArray(viewed_activities)) {
+          newProgressMap[data._id] = 'Sin progreso'
+        } else {
+          const itsActivities = filterActivitiesByProgressSettings(
+            preAllActivities,
+            event.progress_settings || {},
+          )
+          newProgressMap[data._id] = `${(viewed_activities ?? []).length}/${Math.max(
+            (activities ?? []).length,
+            (itsActivities ?? []).length,
+          )}`
+        }
+
         eventUserAndUserPairIds.push({ eu: data._id, u: data.account_id })
       })
+      setProgressMap((previous: any) => ({ ...previous, ...newProgressMap }))
 
       Promise.all(
         eventUserAndUserPairIds.map(async ({ eu, u }) => {
@@ -615,7 +661,8 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
               (euu.ap.viewed_activities ?? []).length
             }/${Math.max((euu.ap.activities ?? []).length, (itsActivities ?? []).length)}`
           })
-          setProgressMap((previous: any) => ({ ...previous, ...newProgressMap }))
+          // Disable because we use the saved in DB. But, if you wanna redundancy, then able that
+          // setProgressMap((previous: any) => ({ ...previous, ...newProgressMap }))
           console.log(newProgressMap)
         })
 
@@ -688,6 +735,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
     getAllAttendees()
       .then((callback) => {
         unsubscribe = callback
+        buildColumns()
       })
       .finally(() => setIsLoading(false))
 
@@ -697,6 +745,10 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       }
     }
   }, [])
+
+  useEffect(() => {
+    buildColumns()
+  }, [allActivities, progressMap])
 
   useEffect(() => {
     allActivities.forEach((activity) => {
@@ -735,11 +787,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         }
         back
       />
-      {isProgressLoading && (
-        <>
-          <Spin /> Cargando el progreso aún...
-        </>
-      )}
+      {isProgressLoading && <>...</>}
       <Table
         size="small"
         loading={isLoading || dataSource === undefined}

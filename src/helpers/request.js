@@ -318,6 +318,13 @@ export const EventsApi = {
       true,
     )
   },
+  updateEventUser: async (eventId, eventUserId, eventUser) => {
+    return await Actions.edit(
+      `api/events/${eventId}/eventusers/${eventUserId}`,
+      eventUser,
+      true,
+    )
+  },
   recoveryPassword: async (eventId, url, email) => {
     return await Actions.put(
       `/api/events/${eventId}/changeUserPassword?destination=${url}`,
