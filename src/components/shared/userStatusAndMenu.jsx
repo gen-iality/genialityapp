@@ -428,7 +428,8 @@ const UserStatusAndMenu = (props) => {
         {user ? (
           <>
             <></>
-            {isAtEventLanding && (
+            {/* este link del CMS se tiene que validar que sea solo para administradores */}
+            {false && isAtEventLanding && (
               <>
                 <Space justify="end">
                   <Link
