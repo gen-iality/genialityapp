@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 /* eslint-disable array-callback-return */
 /* eslint-disable jsx-a11y/alt-text */
-import { Col, Row, Grid, Result, Card, Badge } from 'antd';
+import { Col, Row, Grid, Result, Card } from 'antd';
 import { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { OrganizationApi, OrganizationFuction } from '../../helpers/request';
@@ -17,7 +17,6 @@ import { SocialNetworks } from './components/SocialNetworks';
 import { MyEvents } from './components/MyEvents';
 import { NextEvents } from './components/NextEvents';
 import { PassEvents } from './components/PassEvents';
-import { Title } from 'chart.js';
 
 const { useBreakpoint } = Grid;
 
@@ -40,21 +39,19 @@ function EventOrganization({ match }: OrganizationProps) {
     cUser.value?._id
   );
 
-  const [activeUsers, setActiveUsers] = useState([]);
+  const [isActive, setIsActive] = useState(true);
 
   useEffect(() => {
     fetchOrganizationUser();
-  }, [organization]);
+  }, [organization, cUser?.value?._id]);
 
   const fetchOrganizationUser = async () => {
     try {
-      const response = await OrganizationApi.getUsers(organization?._id);
-      const users = response.data;
-      const activeIds = users
-        .filter((user: { active: boolean | undefined }) => user?.active === true || user?.active === undefined)
-        .map((user: { account_id: any }) => user?.account_id);
-      // Actualiza el estado con los _id de los usuarios activos
-      setActiveUsers(activeIds);
+      const response = await OrganizationApi.getMeUser(organization?._id);
+      console.log(response.data);
+      const user = response.data[0].active ?? true;
+      setIsActive(user);
+      
     } catch (error) {
       console.error('Error al obtener el usuario de la organización:', error);
     }
@@ -112,8 +109,7 @@ function EventOrganization({ match }: OrganizationProps) {
   const havePaymentEvent = (event: any): boolean => {
     return event.payment ? (event.payment.active as boolean) : false;
   };
-  //@ts-ignore
-  const hasAccess = activeUsers.includes(cUser?.value?._id);
+
 
   return (
     <div
@@ -137,7 +133,7 @@ function EventOrganization({ match }: OrganizationProps) {
               )}
             </div>
           )}
-          {hasAccess || !cUser?.value ? (
+          {isActive || !cUser?.value ? (
             <Row justify='center' style={{ paddingTop: '32px', paddingBottom: '32px' }}>
               <Col span={23}>
                 <Row gutter={[0, 32]}>
