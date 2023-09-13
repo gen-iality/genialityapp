@@ -65,6 +65,8 @@ export const ModalAddAndEditUsers = ({
   const onChangeAddUserToEvent = (checked: boolean) => {
     setAddToUserEvents(checked);
   };
+
+  
   const { groupEvent } = useGetGruopEventList(organizationId);
 
   const onFinisUserOrganizationStep = (values: FormUserOrganization) => {

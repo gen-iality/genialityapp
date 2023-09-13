@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
 import { Form, FormInstance, FormProps, Input, Select } from 'antd';
 import { FormUserOrganization } from '../interface/organization.interface';
@@ -31,8 +31,8 @@ export const UserOrganizationForm = ({
 }: Props) => {
   const intl = useIntl();
 
+  const [registerOption, setRegisterOption] = useState<string>();
   const cEvent = UseEventContext();
-
   const ruleEmail: any[] = [
     {
       type: 'email',
@@ -87,6 +87,18 @@ export const UserOrganizationForm = ({
       }),
     },
   ];
+  useEffect(() => {
+    if (registerOption === 'all') {
+      onChangeAddUserToEvent(true);
+    } else {
+      onChangeAddUserToEvent(false);
+    }
+  }, [registerOption]);
+
+  const handleSelectChange = (value: string, option: OptionType | OptionType[]) => {
+    setRegisterOption(value);
+  };
+
   return (
     <div>
       <div style={{ marginTop: '30px' }}>
@@ -147,21 +159,35 @@ export const UserOrganizationForm = ({
               prefix={<UserOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
             />
           </Form.Item>
-          {/* <Form.Item label={<label style={{ marginTop: '2%' }}>Agregar usuario a todos los eventos actuales</label>}>
-            <Checkbox checked={addToUserEvents} onChange={({ target: { checked } }) => onChangeAddUserToEvent(checked)}>
-              Se agregara el nuevo usuario a los eventos actualmente creados
-            </Checkbox>
-          </Form.Item> */}
           <Form.Item
-            label={intl.formatMessage({
-              id: 'modal.label.group',
-              defaultMessage: 'Grupo',
-            })}
-            name='group'
+            initialValue={'not-register'}
+            label={'Inscribir este usuario en'}
+            name='registered-option'
             hasFeedback
             style={{ marginBottom: '10px', textAlign: 'left' }}>
-            <Select size='large' options={groupEvent} allowClear mode='multiple' />
+            <Select
+              size='large'
+              options={[
+                { label: 'Todos los eventos de la organización', value: 'all' },
+                { label: 'Grupos de eventos', value: 'group-event' },
+                { label: 'Solo en la organización', value: 'not-register' },
+              ]}
+              onChange={handleSelectChange}
+            />
           </Form.Item>
+
+          {registerOption === 'group-event' && (
+            <Form.Item
+              label={intl.formatMessage({
+                id: 'modal.label.group',
+                defaultMessage: 'Grupo',
+              })}
+              name='group'
+              hasFeedback
+              style={{ marginBottom: '10px', textAlign: 'left' }}>
+              <Select size='large' options={groupEvent} mode='multiple' allowClear />
+            </Form.Item>
+          )}
         </Form>
       </div>
     </div>
