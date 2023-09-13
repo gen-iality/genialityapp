@@ -1,13 +1,12 @@
 /* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Row } from 'antd';
-import { PlusCircleOutlined } from '@ant-design/icons';
+import { Col, Row } from 'antd';
 import Header from '@/antdComponents/Header';
 import { CategoriesApi } from '@/helpers/request';
-// import { CurrentEventContext } from '@context/eventContext';
-import CategoryTable from './CategoryTable';
 import CategoryModal from './CategoryModal';
 import { handleDeleteCategory } from '../tableColums/utils/deleteCategories';
+import CardCategory from './CardCategory';
+import CardGroupEvent from './CardGroup';
 
 interface Categoria {
   key?: string;
@@ -20,9 +19,9 @@ const Category: React.FC = () => {
   const [categoriaNombre, setCategoriaNombre] = useState<string>('');
   const [dataSource, setDataSource] = useState<Categoria[]>([]);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isGroupModalVisible, setIsGroupModalVisible] = useState(false);
   const [updatedCategoryName, setUpdatedCategoryName] = useState<string>('');
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('');
-  // const cEvent = useContext(CurrentEventContext);
 
   const showEditModal = (record: Categoria) => {
     setSelectedCategoryId(record.key || '');
@@ -30,6 +29,9 @@ const Category: React.FC = () => {
     setIsEditModalVisible(true);
   };
   // Función para mostrar/ocultar el modal
+  const toggleModalGroup = () => {
+    setIsGroupModalVisible(!isGroupModalVisible);
+  };
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
@@ -40,7 +42,7 @@ const Category: React.FC = () => {
   const handleNombreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCategoriaNombre(e.target.value);
   };
-// Función para actualizar los datos de categorías
+  // Función para actualizar los datos de categorías
   const updateCategoriaData = async () => {
     try {
       const response: any[] = await CategoriesApi.getAll();
@@ -75,7 +77,6 @@ const Category: React.FC = () => {
 
     await CategoriesApi.create(nuevaCategoria);
     await updateCategoriaData();
-
   };
 
   useEffect(() => {
@@ -121,26 +122,35 @@ const Category: React.FC = () => {
   const eliminarCategoria = async (id: string) => {
     try {
       await handleDeleteCategory(id);
-        await updateCategoriaData();
-      
+      await updateCategoriaData();
     } catch (error) {
       console.error('Error al eliminar la categoría', error);
     }
   };
   return (
     <>
-      <Header title={'Categorías'} />
-      <Row wrap justify='end' gutter={[8, 8]}>
-        <Col>
-          <Button type='primary' icon={<PlusCircleOutlined />} onClick={toggleModal}>
-            {'Agregar'}
-          </Button>
+    <Header title={'Categorías y grupos'} />
+      <Row gutter={[8, 0]}>
+        <Col span={12}>
+          <CardCategory
+            dataSource={dataSource}
+            showEditModal={showEditModal}
+            handleDeleteCategory={eliminarCategoria}
+            toggleModal={toggleModal}
+          />
+        </Col>
+        <Col span={12}>
+          <CardGroupEvent dataSource={dataSource} showEditModalGroup={''} handleDeleteGroup={''} toggleModalGroup={toggleModalGroup} />
         </Col>
       </Row>
-      <CategoryTable
-        dataSource={dataSource}
-        showEditModal={showEditModal}
-        handleDeleteCategory={eliminarCategoria}
+      <CategoryModal
+        isVisible={isGroupModalVisible}
+        onOk={toggleModalGroup}
+        onCancel={toggleModalGroup}
+        title='Agregar Grupo'
+        categoryValue={categoriaNombre}
+        handleCategoryChange={toggleModalGroup}
+        namePlaceHolder='Nombre del grupo'
       />
       <CategoryModal
         isVisible={isModalVisible}
@@ -149,6 +159,7 @@ const Category: React.FC = () => {
         title='Agregar Categoría'
         categoryValue={categoriaNombre}
         handleCategoryChange={handleNombreChange}
+        namePlaceHolder='Nombre de la categoría'
       />
       <CategoryModal
         isVisible={isEditModalVisible}
@@ -160,6 +171,7 @@ const Category: React.FC = () => {
         title='Editar Categoría'
         categoryValue={updatedCategoryName}
         handleCategoryChange={(e) => setUpdatedCategoryName(e.target.value)}
+        namePlaceHolder='Nombre de la categoría'
       />
     </>
   );

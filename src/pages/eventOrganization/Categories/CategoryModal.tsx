@@ -7,6 +7,7 @@ interface CategoryModalProps {
     title: string;
     categoryValue: string;
     handleCategoryChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    namePlaceHolder: string;
   }
   const CategoryModal: React.FC<CategoryModalProps> = ({
   isVisible,
@@ -15,6 +16,7 @@ interface CategoryModalProps {
   title,
   categoryValue,
   handleCategoryChange,
+  namePlaceHolder
 }) => {
   return (
     <Modal
@@ -24,7 +26,7 @@ interface CategoryModalProps {
       onCancel={onCancel}
     >
       <Input
-        placeholder='Nombre de la categoría'
+        placeholder={namePlaceHolder}
         value={categoryValue}
         onChange={handleCategoryChange}
         maxLength={20}

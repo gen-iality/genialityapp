@@ -1,16 +1,16 @@
 /* eslint-disable react/jsx-no-target-blank */
-import { Component } from 'react';
+import { Component, useEffect, useState } from 'react';
 import Moment from 'moment';
 import { Link, withRouter } from 'react-router-dom';
 import { Badge, Button, Card, Space, Tag, Tooltip, Typography } from 'antd';
 import { imageUtils } from '../../Utilities/ImageUtils';
 import { HelperContext } from '@/context/helperContext/helperContext';
+import { OrganizationApi } from '@/helpers/request';
 
 const EventImage = imageUtils.EventImage;
 const { Meta } = Card;
 class EventCard extends Component {
   static contextType = HelperContext;
-
   render() {
     const {
       event,
@@ -81,7 +81,15 @@ class EventCard extends Component {
     //aqui  tiene que venir ahora unos minutos en caso de tener plan
     /* let blockedDate = new Date(actualDate.setDate(actualDate.getDate() + blockedEvent));
     let formatDate = Moment(blockedDate).format('DD MMM YYYY'); */
-
+  const fetchOrganizationUser = async () => {
+    try {
+      const response = await OrganizationApi.getMeUser(event?.organizer?._id);
+      const users = response.data;
+     
+    } catch (error) {
+      console.error('Error al obtener el usuario de la organización:', error);
+    }
+  };
     const getEventInfo = () => {
       const currentPath = location.pathname;
 
