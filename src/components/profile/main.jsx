@@ -406,7 +406,8 @@ const MainProfile = () => {
                           <Loading />
                         ) : (
                           <>
-                            {organizations &&
+                            {false &&
+                              organizations &&
                               OrganizationApi.isAdminOfItsFirstOrganization(
                                 organizations,
                               ) && (
@@ -510,7 +511,8 @@ const MainProfile = () => {
                           <Loading />
                         ) : (
                           <>
-                            {organizations &&
+                            {false &&
+                              organizations &&
                               OrganizationApi.isAdminOfItsFirstOrganization(
                                 organizations,
                               ) && (
@@ -554,7 +556,8 @@ const MainProfile = () => {
                   <Loading />
                 ) : (
                   <Row gutter={[16, 16]}>
-                    {organizations &&
+                    {false &&
+                      organizations &&
                       OrganizationApi.isAdminOfItsFirstOrganization(organizations) && (
                         <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
                           <NewEventProvider>
@@ -582,7 +585,8 @@ const MainProfile = () => {
                   <Loading />
                 ) : (
                   <Row gutter={[16, 16]}>
-                    {organizations &&
+                    {false &&
+                      organizations &&
                       OrganizationApi.isAdminOfItsFirstOrganization(organizations) && (
                         <Col xs={24} sm={12} md={12} lg={8} xl={6}>
                           <NewEventProvider>
