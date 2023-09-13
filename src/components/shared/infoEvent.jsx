@@ -22,7 +22,6 @@ const InfoEvent = ({ paddingOff, preview }) => {
   const idEvent = cEventValues?._id;
   const intl = useIntl();
   const { getDateStart, getDateEnd, getStartTime, getEndTime } = useGetMultiDate(idEvent);
-  console.log(cEventValues);
   const getDateEvent = () => {
     if (!cEventValues) return <></>;
     const MIN_DATES = 1;

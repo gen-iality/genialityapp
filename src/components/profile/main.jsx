@@ -38,6 +38,7 @@ import MyPlan from './components/myPlan';
 import { useHelper } from '@/context/helperContext/hooks/useHelper';
 import { featureBlockingListener } from '@/services/featureBlocking/featureBlocking';
 import eventCard from '../shared/eventCard';
+import { UseCurrentUser } from '@/context/userContext';
 
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
@@ -60,7 +61,8 @@ const MainProfile = (props) => {
   const selectedTab = props.match.params.tab;
   const { helperDispatch } = useHelper();
   const IS_USER_ADMIN = props.cUser?.value?.is_admin 
-
+	const cUser = UseCurrentUser();
+	console.log(cUser?.value)
   const showSider = () => {
     if (!collapsed) {
       setCollapsed(true);
@@ -378,6 +380,7 @@ const MainProfile = (props) => {
                                       blockedEvent={
                                         props?.cUser?.value?.plan?.availables?.later_days || eventCard.value?.later_days
                                       }
+                                      currentUser={cUser}
                                     />
                                   </Col>
                                 );

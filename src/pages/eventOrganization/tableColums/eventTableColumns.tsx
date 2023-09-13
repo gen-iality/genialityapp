@@ -1,9 +1,12 @@
-import { Button } from 'antd';
+import { Button, Space, Tooltip } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import moment from 'moment';
 import { DATE_FORMAT } from '@/constants/datesformat.constants';
+import { EditOutlined } from '@ant-design/icons';
 
-export const columns = (goToEvent: (eventId: string) => void): ColumnsType<any> => [
+type GoToEvent = (eventId: string) => void;
+type OpenModal = (event: any) => void;
+export const columns = (goToEvent: GoToEvent, openModal: OpenModal): ColumnsType<any> => [
   {
     title: 'Nombre del evento',
     dataIndex: 'name',
@@ -56,5 +59,29 @@ export const columns = (goToEvent: (eventId: string) => void): ColumnsType<any> 
     align: 'center',
     ellipsis: true,
     sorter: (a, b) => a.checked_in - b.checked_in,
+  },
+  {
+    title: 'Opción',
+    dataIndex: 'index',
+    fixed: 'right',
+    width: 80,
+    render(val, item, index) {
+      return (
+        <>
+          <Space>
+            <Tooltip title='Editar'>
+              <Button
+                id={`editAction${index}`}
+                type='primary'
+                size='small'
+                onClick={(e) => {
+                  openModal(item);
+                }}
+                icon={<EditOutlined />}></Button>
+            </Tooltip>
+          </Space>
+        </>
+      );
+    },
   },
 ];

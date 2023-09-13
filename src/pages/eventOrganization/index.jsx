@@ -26,7 +26,7 @@ import {
 import MenuLanding from '@/components/menuLanding/index';
 import NoMatchPage from '@/components/notFoundPage/noMatchPage';
 import ValidateAccessRouteCms from '@/components/roles/hooks/validateAccessRouteCms';
-import Category from './Category';
+import Category from './Categories/Category';
 
 function Organization(props) {
   const [organization, setOrganization] = useState({});
