@@ -1,7 +1,7 @@
 import { Button, Space, Tooltip, Card, Table } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 //@ts-ignore
-const CardGroupEvent = ({ dataSource, showEditModalGroup, handleDeleteGroup, toggleModalGroup }) => {
+const CardGroupEvent = ({ dataSource, showModalGroup, handleDeleteGroup, toggleModalGroup }) => {
   const columns = [
     {
       title: 'Nombre grupo',
@@ -15,7 +15,7 @@ const CardGroupEvent = ({ dataSource, showEditModalGroup, handleDeleteGroup, tog
       render: (text: any, record: { key: any; }) => (
         <Space>
           <Tooltip title='Editar'>
-            <Button type='primary' onClick={() => showEditModalGroup(record)} icon={<EditOutlined />} />
+            <Button type='primary' onClick={() => showModalGroup(record)} icon={<EditOutlined />} />
           </Tooltip>
           <Tooltip title='Eliminar'>
             <Button type='primary' danger onClick={() => handleDeleteGroup(record.key)} icon={<DeleteOutlined />} />

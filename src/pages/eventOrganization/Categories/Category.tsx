@@ -13,20 +13,33 @@ interface Categoria {
   name: string;
   eventosPorCategoria?: any;
 }
+interface Group {
+  key?: string;
+  name: string;
+}
 
 const Category: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [categoriaNombre, setCategoriaNombre] = useState<string>('');
+  const [grupoNombre, setGrupoNombre] = useState<string>('');
   const [dataSource, setDataSource] = useState<Categoria[]>([]);
+  const [dataGroup, setDataGroup] = useState<Group[]>([]);
+  const [dataEditGroup, setDataEditGroup] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [isGroupModalVisible, setIsGroupModalVisible] = useState(false);
   const [updatedCategoryName, setUpdatedCategoryName] = useState<string>('');
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('');
+  const [selectedGroupId, setSelectedGroupId] = useState<string>('');
 
   const showEditModal = (record: Categoria) => {
     setSelectedCategoryId(record.key || '');
     setUpdatedCategoryName(record.name);
-    setIsEditModalVisible(true);
+    setDataEditGroup(true);
+  };
+  const showEditModalGroup = (record: Group) => {
+    setSelectedGroupId(record.key || '');
+    setUpdatedCategoryName(record.name);
+    setDataEditGroup(true);
   };
   // Función para mostrar/ocultar el modal
   const toggleModalGroup = () => {
@@ -41,6 +54,9 @@ const Category: React.FC = () => {
   // Función para manejar el cambio en el campo de nombre
   const handleNombreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCategoriaNombre(e.target.value);
+  };
+  const handleNombreChangeGroup = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setGrupoNombre(e.target.value);
   };
   // Función para actualizar los datos de categorías
   const updateCategoriaData = async () => {
@@ -78,7 +94,41 @@ const Category: React.FC = () => {
     await CategoriesApi.create(nuevaCategoria);
     await updateCategoriaData();
   };
+  // Función para agregar una nuevo grupo
+  const agregarGrupo = async () => {
+    // Agregar la nueva categoría al dataGroup
+    const nuevoGrupo: Categoria = {
+      name: grupoNombre,
+    };
 
+    // Actualizar el dataGroup
+    setDataGroup([...dataGroup, nuevoGrupo]);
+
+    // Ocultar el modal
+    toggleModal();
+
+    await CategoriesApi.create(nuevoGrupo);
+    await updateCategoriaData();
+  };
+
+  const editarGrupo = async () => {
+    // Encuentra el grupo en dataGroup y actualiza su nombre
+    const updatedDataGroup = dataGroup.map((grupo) => {
+      if (grupo.key === selectedGroupId) {
+        return { ...grupo, name: grupoNombre };
+      }
+      return grupo;
+    });
+  
+    // Actualiza dataGroup con los cambios
+    setDataGroup(updatedDataGroup);
+  
+    // Cierra el modal de edición de grupos
+    toggleModalGroup();
+  
+    // Aquí puedes realizar una llamada a la API para actualizar el grupo si es necesario.
+  };
+  
   useEffect(() => {
     // Cargar categorías existentes al montar el componente
     cargarCategorias();
@@ -129,7 +179,7 @@ const Category: React.FC = () => {
   };
   return (
     <>
-    <Header title={'Categorías y grupos'} />
+      <Header title={'Categorías y grupos'} />
       <Row gutter={[8, 0]}>
         <Col span={12}>
           <CardCategory
@@ -140,18 +190,33 @@ const Category: React.FC = () => {
           />
         </Col>
         <Col span={12}>
-          <CardGroupEvent dataSource={dataSource} showEditModalGroup={''} handleDeleteGroup={''} toggleModalGroup={toggleModalGroup} />
+          <CardGroupEvent
+            dataSource={dataGroup}
+            showModalGroup={''}
+            handleDeleteGroup={''}
+            toggleModalGroup={toggleModalGroup}
+          />
         </Col>
       </Row>
       <CategoryModal
         isVisible={isGroupModalVisible}
-        onOk={toggleModalGroup}
+        onOk={agregarGrupo}
         onCancel={toggleModalGroup}
         title='Agregar Grupo'
         categoryValue={categoriaNombre}
-        handleCategoryChange={toggleModalGroup}
+        handleCategoryChange={handleNombreChangeGroup}
         namePlaceHolder='Nombre del grupo'
       />
+      <CategoryModal
+        isVisible={dataEditGroup}
+        onOk={editarGrupo} 
+        onCancel={toggleModalGroup}
+        title='Editar Grupo'
+        categoryValue={grupoNombre}
+        handleCategoryChange={handleNombreChangeGroup}
+        namePlaceHolder='Nombre del grupo'
+      />
+
       <CategoryModal
         isVisible={isModalVisible}
         onOk={agregarCategoria}
