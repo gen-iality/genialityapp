@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
+import { GroupEvent } from '../interface/group.interfaces';
 
-const data: Group[] = [
+const data: GroupEvent[] = [
   {
     name: 'Finanzas',
     organizationId: 'f1e4fe4fef',
@@ -13,13 +14,9 @@ const data: Group[] = [
   },
 ];
 
-interface Group {
-  organizationId: string;
-  name: string;
-  _id: string;
-}
+
 export const useGetGruopEventList = (organizationId: string) => {
-  const [groupEvent, setgroupEvent] = useState<Group[]>([]);
+  const [groupEvent, setgroupEvent] = useState<GroupEvent[]>([]);
   const [isLoading, setisLoading] = useState(true);
 
   const getData = async () => {

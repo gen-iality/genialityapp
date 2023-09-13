@@ -1,27 +1,20 @@
 import { Form, Modal, ModalProps, Select } from 'antd';
 import { useGetGruopEventList } from '../../hooks/useGetGruopEventList';
+import { getGroupsToSelect } from '../../utils/transformDataToSelect';
 
 interface Props extends ModalProps {
   onCancel: () => void;
   selectedEvent: any;
   organizationId: string;
 }
-interface OptionType {
-  value: string;
-  label: string;
-  disabled?: boolean;
-}
+
 interface EditEventOrganization {
   groupId: string;
 }
 
-
 export const AddEventToGroup = ({ onCancel: onCanel, organizationId, ...modalProps }: Props) => {
   const { groupEvent, isLoading } = useGetGruopEventList(organizationId);
   const [form] = Form.useForm<EditEventOrganization>();
-  const getGroupsToSelect = (): OptionType[] => {
-    return groupEvent.map((option) => ({ label: option.name, value: option._id }));
-  };
 
   const onAddEventToGroup = () => {};
   return (
@@ -32,7 +25,7 @@ export const AddEventToGroup = ({ onCancel: onCanel, organizationId, ...modalPro
             loading={isLoading}
             size='large'
             placeholder='micorreo@ejemplo.com'
-            options={getGroupsToSelect()}
+            options={getGroupsToSelect(groupEvent)}
             allowClear
           />
         </Form.Item>

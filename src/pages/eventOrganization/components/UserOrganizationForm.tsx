@@ -1,12 +1,13 @@
 import React from 'react';
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
-import { Checkbox, Form, FormInstance, FormProps, Input } from 'antd';
+import { Form, FormInstance, FormProps, Input, Select } from 'antd';
 import { FormUserOrganization } from '../interface/organization.interface';
 import { useIntl } from 'react-intl';
 import { UseEventContext } from '@/context/eventContext';
 import { eventWithCedula } from '@/helpers/helperEvent';
 import { UploadImageWithEdition } from '@/components/upload/UploadImage';
 import { UploadFile } from 'antd/lib/upload/interface';
+import { OptionType } from '../interface/group.interfaces';
 
 interface Props extends FormProps {
   form: FormInstance<FormUserOrganization>;
@@ -15,6 +16,7 @@ interface Props extends FormProps {
   addToUserEvents: boolean;
   active: boolean;
   onChangeAddUserToEvent: (checked: boolean) => void;
+  groupEventSelect: OptionType[];
 }
 
 export const UserOrganizationForm = ({
@@ -25,6 +27,7 @@ export const UserOrganizationForm = ({
   addToUserEvents,
   active,
   onChangeAddUserToEvent,
+  groupEventSelect: groupEvent,
 }: Props) => {
   const intl = useIntl();
 
@@ -144,10 +147,20 @@ export const UserOrganizationForm = ({
               prefix={<UserOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
             />
           </Form.Item>
-          <Form.Item label={<label style={{ marginTop: '2%' }}>Agregar usuario a todos los eventos actuales</label>}>
+          {/* <Form.Item label={<label style={{ marginTop: '2%' }}>Agregar usuario a todos los eventos actuales</label>}>
             <Checkbox checked={addToUserEvents} onChange={({ target: { checked } }) => onChangeAddUserToEvent(checked)}>
               Se agregara el nuevo usuario a los eventos actualmente creados
             </Checkbox>
+          </Form.Item> */}
+          <Form.Item
+            label={intl.formatMessage({
+              id: 'modal.label.group',
+              defaultMessage: 'Grupo',
+            })}
+            name='group'
+            hasFeedback
+            style={{ marginBottom: '10px', textAlign: 'left' }}>
+            <Select size='large' options={groupEvent} allowClear mode='multiple' />
           </Form.Item>
         </Form>
       </div>
