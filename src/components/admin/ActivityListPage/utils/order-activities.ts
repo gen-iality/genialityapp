@@ -37,7 +37,6 @@ type WishedT = { order?: number; created_at?: any }
 export default function orderActivities<T extends WishedT>(activities: T[]) {
   const _activities = [...activities]
   return _activities.sort((a, b) => {
-    console.log('abc', a.order, b.order)
     if (typeof a.order === 'number' && typeof b.order === 'number') {
       if (a.order === b.order) return -1
       return a.order - b.order
@@ -46,6 +45,6 @@ export default function orderActivities<T extends WishedT>(activities: T[]) {
     } else if (typeof b.order === 'number') {
       return 1
     }
-    return a.created_at.localeCompare(-b.created_at)
+    return b.created_at.localeCompare(-a.created_at)
   })
 }
