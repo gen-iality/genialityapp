@@ -14,7 +14,7 @@ export default function useOrderUpdater() {
 
   const updateOrder = (eventId: string, activityId: string, order: number) => {
     setIsUpdatingOrder(true)
-    FB.Activities.update(eventId, activityId, { order })
+    FB.Activities.edit(eventId, activityId, { order }, { merge: true })
       .then(() => {
         console.debug(
           `update order for event ${eventId}, activity ${activityId}, to order ${order}`,
