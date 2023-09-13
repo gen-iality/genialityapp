@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, FunctionComponent } from 'react'
 import { Modal, Form, Input, Button, Table, Space, Typography, Tooltip } from 'antd'
 import { ModulesApi } from '@helpers/request'
 import { ColumnsType } from 'antd/lib/table'
@@ -6,61 +6,27 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 
 import { MenuOutlined } from '@ant-design/icons'
 
-import { DndProvider, useDrag, useDrop } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
-
-import './ModulePage.css'
 import Header from '@antdComponents/Header'
 
-interface DraggableBodyRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
-  index: number
-  moveRow: (dragIndex: number, hoverIndex: number) => void
-}
+// DnD
 
-const type = 'DraggableBodyRow'
+import arrayMove from 'array-move'
+import type { SortableContainerProps, SortEnd } from 'react-sortable-hoc'
+import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc'
 
-const DraggableBodyRow = ({
-  index,
-  moveRow,
-  className,
-  style,
-  ...restProps
-}: DraggableBodyRowProps) => {
-  const ref = useRef<HTMLTableRowElement>(null)
-  const [{ isOver, dropClassName }, drop] = useDrop({
-    accept: type,
-    collect: (monitor: any) => {
-      const { index: dragIndex } = monitor.getItem() || {}
-      if (dragIndex === index) {
-        return {}
-      }
-      return {
-        isOver: monitor.isOver(),
-        dropClassName: dragIndex < index ? ' drop-over-downward' : ' drop-over-upward',
-      }
-    },
-    drop: (item: { index: number }) => {
-      moveRow(item.index, index)
-    },
-  })
-  const [, drag] = useDrag({
-    type,
-    item: { index },
-    collect: (monitor: any) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  })
-  drop(drag(ref))
+// Styles for DnD
+import './ModulePage.css'
 
-  return (
-    <tr
-      ref={ref}
-      className={`${className}${isOver ? dropClassName : ''}`}
-      style={{ cursor: 'move', ...style }}
-      {...restProps}
-    />
-  )
-}
+const DragHandle = SortableHandle(() => (
+  <MenuOutlined style={{ cursor: 'grab', color: '#999' }} />
+))
+
+const SortableItem = SortableElement(
+  (props: React.HTMLAttributes<HTMLTableRowElement>) => <tr {...props} />,
+)
+const SortableBody = SortableContainer(
+  (props: React.HTMLAttributes<HTMLTableSectionElement>) => <tbody {...props} />,
+)
 
 function ModulePage(props: any) {
   const [columnsData, setColumnsData] = useState<ColumnsType<any>>([])
@@ -87,7 +53,24 @@ function ModulePage(props: any) {
 
   const loadAllModules = async () => {
     const modules: any[] = await ModulesApi.byEvent(props.event._id)
-    const data = modules.sort((a: any, b: any) => (a.order || 0) - (b.order || 0))
+
+    const maxOrder = modules
+      .filter((module) => typeof module.order === 'number')
+      .map((module) => module.order)
+      .reduce((a, b) => Math.max(a, b), 0)
+
+    const data = modules
+      .map((module, index) => {
+        let newIndex = maxOrder + index
+        if (typeof module.order === 'number') {
+          newIndex = module.order
+        }
+        return {
+          order: newIndex,
+          ...module,
+        }
+      })
+      .sort((a, b) => a.order - b.order)
     setDataSource(data)
   }
 
@@ -137,18 +120,19 @@ function ModulePage(props: any) {
     return currentDataSource
   }
 
-  const moveRow = useCallback(
-    (dragIndex: number, hoverIndex: number) => {
-      setDataSource(sortDataSource(dragIndex, hoverIndex))
-    },
-    [dataSource],
-  )
-
   useEffect(() => {
     const columns: ColumnsType = [
       {
         key: 'sort',
-        render: () => <MenuOutlined />,
+        dataIndex: 'order',
+        width: 30,
+        className: 'drag-visible',
+        render: (item) => (
+          <Tooltip title={`último order ${item + 1}`}>
+            {' '}
+            <DragHandle />{' '}
+          </Tooltip>
+        ),
       },
       {
         key: 'name',
@@ -195,6 +179,45 @@ function ModulePage(props: any) {
     }
   }, [currentEditingItem])
 
+  // Dnd too
+  const DraggableBodyRow: FunctionComponent<any> = ({
+    className,
+    style,
+    ...restProps
+  }) => {
+    // function findIndex base on Table rowKey props and should always be a right array index
+    const index = dataSource.findIndex((x) => x.order === restProps['data-row-key'])
+    return <SortableItem index={index} {...restProps} />
+  }
+
+  // DnD
+  const onSortEnd = ({ oldIndex, newIndex }: SortEnd) => {
+    if (oldIndex !== newIndex) {
+      console.log('wanna change', oldIndex, newIndex)
+      const newData = arrayMove(dataSource.slice(), oldIndex, newIndex).filter(
+        (el: any) => !!el,
+      )
+      console.log('Sorted items: ', newData)
+
+      // Update all the order
+      newData.forEach((data, index) => {
+        ModulesApi.update(data._id, data.module_name, index)
+      })
+
+      setDataSource(newData)
+    }
+  }
+
+  const DraggableContainer = (props: SortableContainerProps) => (
+    <SortableBody
+      useDragHandle
+      disableAutoscroll
+      helperClass="row-dragging"
+      onSortEnd={onSortEnd}
+      {...props}
+    />
+  )
+
   return (
     <>
       <Space
@@ -211,26 +234,19 @@ function ModulePage(props: any) {
         </Button>
       </Space>
 
-      <DndProvider backend={HTML5Backend}>
-        <Table
-          pagination={false}
-          columns={columnsData}
-          dataSource={dataSource}
-          rowKey="index"
-          components={{
-            body: {
-              row: DraggableBodyRow,
-            },
-          }}
-          onRow={(_, index) => {
-            const attr = {
-              index,
-              moveRow,
-            }
-            return attr as React.HTMLAttributes<any>
-          }}
-        />
-      </DndProvider>
+      <Table
+        pagination={false}
+        columns={columnsData}
+        dataSource={dataSource}
+        rowKey="order"
+        // DnD
+        components={{
+          body: {
+            wrapper: DraggableContainer,
+            row: DraggableBodyRow,
+          },
+        }}
+      />
       <Modal
         open={isOpened}
         title={currentEditingItem === null ? 'Agregar nuevo modulo' : 'Editar módulo'}
