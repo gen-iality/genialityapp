@@ -9,12 +9,27 @@ import { EventExcelColums } from './tableColums/utils/excelEventColums.utils';
 import { parseEventsDataToExcel } from './tableColums/utils/parseData.utils';
 import { ExportExcelAsync } from '@/components/export-excel/ExportExcelAsync';
 import { OrganizationApi } from '@/helpers/request';
+import { AddEventToGroup } from './components/addEventToGroup/AddEventToGroup';
+import { useState } from 'react';
 
 function OrgEvents(props: any) {
   let { _id: organizationId } = props.org;
   const history = useHistory();
   const { eventData, isLoading, pagination } = useGetEventWithStatistics(organizationId);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState()
+  const onCloseModal = () => {
+    setOpenModal(false);
+  };
 
+  const handledOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const onSelectedEvent = (event:any) => {
+    setSelectedEvent(event);
+    handledOpenModal()
+  }
   const onAsyncList = async () => {
     try {
       const data = await OrganizationApi.getEventsStatisticsExport(organizationId, 'latest');
@@ -53,7 +68,7 @@ function OrgEvents(props: any) {
     <>
       <Header title='Eventos' />
       <Table
-        columns={columns(goToEvent)}
+        columns={columns(goToEvent, onSelectedEvent)}
         dataSource={eventData}
         loading={isLoading}
         size='small'
@@ -61,6 +76,9 @@ function OrgEvents(props: any) {
         pagination={pagination}
         title={renderTitle}
       />
+      {openModal && (
+        <AddEventToGroup visible={openModal} onCancel={onCloseModal} organizationId='fe2fef' selectedEvent={selectedEvent} />
+      )}
     </>
   );
 }
