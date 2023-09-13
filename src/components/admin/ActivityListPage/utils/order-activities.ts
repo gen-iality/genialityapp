@@ -45,6 +45,6 @@ export default function orderActivities<T extends WishedT>(activities: T[]) {
     } else if (typeof b.order === 'number') {
       return 1
     }
-    return a.datetime_start.localeCompare(-b.datetime_start)
+    return b.datetime_start.localeCompare(-a.datetime_start)
   })
 }
