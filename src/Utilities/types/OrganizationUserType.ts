@@ -1,6 +1,7 @@
 export interface OrganizationUserType {
   _id?: string
   organization_id: string
+  email?: string
   user_properties: { [x: string]: any }
   properties: any
   account_id: string

@@ -16,8 +16,8 @@ const PaymentGateway = ({ org }: any) => {
     testPrivateKey,
     setChecked,
     setCheckedTest,
-    updatePaymentGateway,
-    updatePaymentGatewayTest,
+    updatePaymentGatewayOrganization,
+    updatePaymentGatewayByCheckbox,
   } = usePayment(org)
 
   return (
@@ -29,29 +29,37 @@ const PaymentGateway = ({ org }: any) => {
       />
       {/* Formulario de Producción*/}
 
-      <Checkbox checked={checked} onChange={() => setChecked(!checked)}>
+      <Checkbox
+        checked={checked}
+        onChange={() => {
+          setChecked(!checked)
+          updatePaymentGatewayByCheckbox(0, !checked)
+        }}
+      >
         {label}
       </Checkbox>
       <Form
         disabled={checked}
         {...formLayout}
         size="small"
-        onFinish={updatePaymentGateway}
+        onFinish={updatePaymentGatewayOrganization}
       >
         <Header title={``} description="" save form />
         <Row justify="center" gutter={[8, 8]} wrap>
           <Col span={12}>
             <Form.Item
-              name={['paymentGateway', 'publicKey']}
+              name={['paymentGateway', 'publicKeyProd']}
               label="Llave pública (Producción)"
               initialValue={publicKey}
+              required
             >
-              <Input />
+              <Input type="text" />
             </Form.Item>
             <Form.Item
-              name={['paymentGateway', 'privateKey']}
+              name={['paymentGateway', 'privateKeyProd']}
               label="Llave privada (Producción)"
               initialValue={privateKey}
+              required
             >
               <Input.Password
                 type="password"
@@ -63,7 +71,13 @@ const PaymentGateway = ({ org }: any) => {
           </Col>
         </Row>
       </Form>
-      <Checkbox checked={checkedTest} onChange={() => setCheckedTest(!checkedTest)}>
+      <Checkbox
+        checked={checkedTest}
+        onChange={() => {
+          setCheckedTest(!checkedTest)
+          updatePaymentGatewayByCheckbox(1, !checkedTest)
+        }}
+      >
         {labelTest}
       </Checkbox>
 
@@ -73,22 +87,24 @@ const PaymentGateway = ({ org }: any) => {
         disabled={checkedTest}
         {...formLayout}
         size="small"
-        onFinish={updatePaymentGatewayTest}
+        onFinish={updatePaymentGatewayOrganization}
       >
         <Header title={``} description="" save form />
         <Row justify="center" gutter={[8, 8]} wrap>
           <Col span={12}>
             <Form.Item
-              name={['paymentGateway', 'testPublicKey']}
+              name={['paymentGatewayTest', 'publicKeyTest']}
               label="Llave pública (Modo de Prueba)"
               initialValue={testPublicKey}
+              required
             >
               <Input />
             </Form.Item>
             <Form.Item
-              name={['paymentGateway', 'testPrivateKey']}
+              name={['paymentGatewayTest', 'privateKeyTest']}
               label="Llave privada (Modo de Prueba)"
               initialValue={testPrivateKey}
+              required
             >
               <Input.Password
                 type="password"

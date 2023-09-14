@@ -772,6 +772,11 @@ export const TypesApi = {
     return handleSelect(resp.data)
   },
 }
+export const PaymentGatewayApi = {
+  get: async (id) => {
+    return await Actions.getAll(`api/wompi/get-stored-event/${id}`)
+  },
+}
 export const OrganizationApi = {
   mine: async () => {
     const token = await GetTokenUserFirebase()
@@ -800,6 +805,14 @@ export const OrganizationApi = {
   editOne: async (data, id) => {
     const token = await GetTokenUserFirebase()
     return await Actions.edit(`/api/organizations/${id}?token=${token}`, data, true)
+  },
+  editOnePaymentGateway: async (data, id) => {
+    const token = await GetTokenUserFirebase()
+    return await Actions.edit(
+      `/api/organizations/${id}/payment-gateway?token=${token}`,
+      data,
+      true,
+    )
   },
   events: async (id) => {
     return await Actions.getOne(`/api/organizations/${id}/`, 'events')
