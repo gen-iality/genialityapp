@@ -176,7 +176,7 @@ const EventCard = ({
                 {noAvailable ? (
                   <Link to={location.pathname} onClick={() => openModal()}>
                     <Space size={1} direction="vertical">
-                      <span style={{ fontSize: '12px' }}>
+                      {/* <span style={{ fontSize: '12px' }}>
                         {!noDates && (
                           <Space>
                             <i className="fas fa-calendar-alt" />
@@ -189,7 +189,7 @@ const EventCard = ({
                             </time>
                           </Space>
                         )}
-                      </span>
+                      </span> */}
                       <Typography.Text
                         ellipsis={!!isAdmin}
                         style={isAdmin ? styleAdmin : styleNormal}
@@ -225,7 +225,7 @@ const EventCard = ({
                   >
                     <Space size={1} direction="vertical">
                       <span style={{ fontSize: '12px' }}>
-                        {!noDates && (
+                        {/* {!noDates && (
                           <Space>
                             <i className="fas fa-calendar-alt" />
                             <time dateTime={event.datetime_from}>
@@ -236,7 +236,7 @@ const EventCard = ({
                               {dayjs(event.datetime_to).format('DD MMM YYYY')}
                             </time>
                           </Space>
-                        )}
+                        )} */}
                       </span>
                       <Typography.Text
                         ellipsis={!!isAdmin}

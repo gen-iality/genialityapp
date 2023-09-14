@@ -606,6 +606,7 @@ const MainProfile = () => {
                       return (
                         <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
                           <EventCard
+                            // noDates={true}
                             isAdmin
                             bordered={false}
                             event={event}
@@ -615,7 +616,7 @@ const MainProfile = () => {
                                 <Link to={`/eventadmin/${event._id}`}>
                                   <Space>
                                     <SettingOutlined />
-                                    <span>Administrar</span>
+                                    <span>Administrar </span>
                                   </Space>
                                 </Link>
                               </div>,
