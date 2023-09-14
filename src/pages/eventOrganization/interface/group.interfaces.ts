@@ -1,7 +1,7 @@
 export interface GroupEvent {
-  organizationId: string;
+  organizationId?: string;
   name: string;
-  _id: string;
+  _id?: string;
 }
 
 export interface OptionType {

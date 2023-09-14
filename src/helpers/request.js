@@ -896,21 +896,21 @@ export const CategoriesApi = {
   },
 };
 export const GroupsApi = {
-  getAll: async (orgId) => {
-    const resp = await Actions.getAll(`/organizations/${orgId}/groups`, true);
+  getGroupsByOrg: async (orgId) => {
+    const resp = await Actions.getAll(`api/organizations/${orgId}/groups`, true);
     return handleSelect(resp.data);
   },
   create: async (orgId, data) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.post(`/organizations/${orgId}/groups?token=${token}`, data);
+    return await Actions.post(`api/organizations/${orgId}/groups?token=${token}`, data);
   },
   update: async (orgId, groupId, data) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.put(`/organizations/${orgId}/groups/${groupId}?token=${token}`, data);
+    return await Actions.put(`api/organizations/${orgId}/groups/${groupId}?token=${token}`, data);
   },
   deleteOne: async (orgId, groupId) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.delete(`/organizations/${orgId}/groups/${groupId}?token=${token}`, '', true);
+    return await Actions.delete(`api/organizations/${orgId}/groups/${groupId}?token=${token}`, '', true);
   },
 };
 
