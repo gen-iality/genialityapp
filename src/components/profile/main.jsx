@@ -406,8 +406,7 @@ const MainProfile = () => {
                           <Loading />
                         ) : (
                           <>
-                            {false &&
-                              organizations &&
+                            {organizations &&
                               OrganizationApi.isAdminOfItsFirstOrganization(
                                 organizations,
                               ) && (
@@ -511,8 +510,7 @@ const MainProfile = () => {
                           <Loading />
                         ) : (
                           <>
-                            {false &&
-                              organizations &&
+                            {organizations &&
                               OrganizationApi.isAdminOfItsFirstOrganization(
                                 organizations,
                               ) && (
@@ -556,8 +554,7 @@ const MainProfile = () => {
                   <Loading />
                 ) : (
                   <Row gutter={[16, 16]}>
-                    {false &&
-                      organizations &&
+                    {organizations &&
                       OrganizationApi.isAdminOfItsFirstOrganization(organizations) && (
                         <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
                           <NewEventProvider>
@@ -574,64 +571,71 @@ const MainProfile = () => {
                         return (
                           <Col key={index} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
                             <OrganizationCard data={organization} />
+                            {OrganizationApi.isAdminOfItsFirstOrganization(
+                              organizations,
+                            ) && <p>fallo</p>}
                           </Col>
                         )
                       })}
                   </Row>
                 )}
               </TabPane>
-              <TabPane tab="Cursos creados" key="3">
-                {eventsIHaveCreatedIsLoading ? (
-                  <Loading />
-                ) : (
-                  <Row gutter={[16, 16]}>
-                    {false &&
-                      organizations &&
-                      OrganizationApi.isAdminOfItsFirstOrganization(organizations) && (
-                        <Col xs={24} sm={12} md={12} lg={8} xl={6}>
-                          <NewEventProvider>
-                            {organizationsLimited.length > 0 ? (
-                              <NewEventCard
-                                entityType="event"
-                                user={cUser.value}
-                                org={organizationsLimited}
+              {organizations &&
+                OrganizationApi.isAdminOfItsFirstOrganization(organizations) && (
+                  <TabPane tab="Cursos creados" key="3">
+                    {eventsIHaveCreatedIsLoading ? (
+                      <Loading />
+                    ) : (
+                      <Row gutter={[16, 16]}>
+                        {organizations &&
+                          OrganizationApi.isAdminOfItsFirstOrganization(
+                            organizations,
+                          ) && (
+                            <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                              <NewEventProvider>
+                                {organizationsLimited.length > 0 ? (
+                                  <NewEventCard
+                                    entityType="event"
+                                    user={cUser.value}
+                                    org={organizationsLimited}
+                                  />
+                                ) : (
+                                  <NewEventCard entityType="event" user={cUser.value} />
+                                )}
+                              </NewEventProvider>
+                            </Col>
+                          )}
+                        {events.map((event, index) => {
+                          return (
+                            <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
+                              <EventCard
+                                // noDates={true}
+                                isAdmin
+                                bordered={false}
+                                event={event}
+                                // action={{ name: 'Ver', url: `landing/${event._id}` }}
+                                right={[
+                                  <div key="admin">
+                                    <Link to={`/eventadmin/${event._id}`}>
+                                      <Space>
+                                        <SettingOutlined />
+                                        <span>Administrar </span>
+                                      </Space>
+                                    </Link>
+                                  </div>,
+                                ]}
+                                blockedEvent={
+                                  cUser.value?.plan?.availables?.later_days ||
+                                  eventCard.value?.later_days
+                                }
                               />
-                            ) : (
-                              <NewEventCard entityType="event" user={cUser.value} />
-                            )}
-                          </NewEventProvider>
-                        </Col>
-                      )}
-                    {events.map((event, index) => {
-                      return (
-                        <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
-                          <EventCard
-                            // noDates={true}
-                            isAdmin
-                            bordered={false}
-                            event={event}
-                            // action={{ name: 'Ver', url: `landing/${event._id}` }}
-                            right={[
-                              <div key="admin">
-                                <Link to={`/eventadmin/${event._id}`}>
-                                  <Space>
-                                    <SettingOutlined />
-                                    <span>Administrar </span>
-                                  </Space>
-                                </Link>
-                              </div>,
-                            ]}
-                            blockedEvent={
-                              cUser.value?.plan?.availables?.later_days ||
-                              eventCard.value?.later_days
-                            }
-                          />
-                        </Col>
-                      )
-                    })}
-                  </Row>
+                            </Col>
+                          )
+                        })}
+                      </Row>
+                    )}
+                  </TabPane>
                 )}
-              </TabPane>
               <TabPane tab="Registros a cursos" key="4">
                 {eventsThatIHaveParticipatedIsLoading ? (
                   <Loading />

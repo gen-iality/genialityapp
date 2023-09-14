@@ -799,7 +799,7 @@ export const OrganizationApi = {
     return data
   },
   isAdminOfItsFirstOrganization: (organizations) => {
-    return organizations && organizations.some((orgUser) => orgUser.rol?.type !== 'admin')
+    return organizations && organizations.some((orgUser) => orgUser.rol?.type == 'admin')
   },
   getOne: async (id) => {
     return await Actions.getOne('/api/organizations/', id)

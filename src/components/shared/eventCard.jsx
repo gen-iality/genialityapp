@@ -52,6 +52,9 @@ const EventCard = ({
     fontWeight: 'bold',
     width: '250px',
   }
+
+  const currentDateNow = dayjs()
+
   //Esto sólo va a aplicar para cuando el usuario tiene un plan
   //Se esta validando la fecha en la que se va a bloquear el evento, osea hasta la fecha que tiene acceso
   const actualDate = new Date(event.datetime_to)
@@ -88,7 +91,8 @@ const EventCard = ({
           style={{ maxWidth: '100%' }}
           cover={
             <>
-              {noAvailable ? (
+              {/* {noAvailable ? ( */}
+              {!isAdmin && dayjs(event.datetime_from).isAfter(dayjs()) ? (
                 <Link to={location.pathname} onClick={() => openModal()}>
                   <img
                     className="animate__animated animate__fadeIn animate__slower"

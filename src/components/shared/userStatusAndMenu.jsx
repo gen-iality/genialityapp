@@ -369,7 +369,7 @@ const UserStatusAndMenu = (props) => {
               Array.isArray(organizations) && organizations[0]?.id
             }/events`}
           >
-            <Text style={{ fontWeight: '700' }}>
+            <Text style={{ fontWeight: '700', paddingRight: '5px' }}>
               {' '}
               {Array.isArray(organizations) && organizations[0]?.name}
             </Text>
