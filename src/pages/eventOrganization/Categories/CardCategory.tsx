@@ -1,7 +1,8 @@
 import { Button, Space, Tooltip, Card, Table } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 //@ts-ignore
-const CardCategory = ({ dataSource, showEditModal, handleDeleteCategory, toggleModal }) => {
+const CardCategory = ({ dataSource, openCategoryModal, handledSelectCategory }) => {
+  const handleDeleteCategory = (categoryId: string) => {};
   const columns = [
     {
       title: 'Nombre categoría',
@@ -12,10 +13,17 @@ const CardCategory = ({ dataSource, showEditModal, handleDeleteCategory, toggleM
       title: 'Acciones',
       key: 'acciones',
       width: 100,
-      render: (text: any, record: { key: any; }) => (
+      render: (text: any, record: { key: any }) => (
         <Space>
           <Tooltip title='Editar'>
-            <Button type='primary' onClick={() => showEditModal(record)} icon={<EditOutlined />} />
+            <Button
+              type='primary'
+              onClick={() => {
+                handledSelectCategory(record);
+                openCategoryModal();
+              }}
+              icon={<EditOutlined />}
+            />
           </Tooltip>
           <Tooltip title='Eliminar'>
             <Button type='primary' danger onClick={() => handleDeleteCategory(record.key)} icon={<DeleteOutlined />} />
@@ -27,10 +35,10 @@ const CardCategory = ({ dataSource, showEditModal, handleDeleteCategory, toggleM
 
   return (
     <Card
-    headStyle={{border: 'none'}}
+      headStyle={{ border: 'none' }}
       title={'Categorías'}
       extra={
-        <Button type='primary' icon={<PlusCircleOutlined />} onClick={toggleModal}>
+        <Button type='primary' icon={<PlusCircleOutlined />} onClick={openCategoryModal}>
           {'Agregar'}
         </Button>
       }>

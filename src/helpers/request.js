@@ -882,11 +882,11 @@ export const CategoriesApi = {
     const resp = await Actions.getAll('api/categories', true);
     return handleSelect(resp.data);
   },
-  create: async (data) => {
+  create: async (organizationId, data) => {
     let token = await GetTokenUserFirebase();
     return await Actions.post(`api/categories?token=${token}`, data);
   },
-  update: async (id_category, data) => {
+  update: async (organizationId, id_category, data) => {
     let token = await GetTokenUserFirebase();
     return await Actions.put(`api/categories/${id_category}?token=${token}`, data);
   },
