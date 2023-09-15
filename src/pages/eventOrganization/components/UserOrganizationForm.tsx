@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined, LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
 import { Form, FormInstance, FormProps, Input, Select } from 'antd';
 import { FormUserOrganization } from '../interface/organization.interface';
 import { useIntl } from 'react-intl';
@@ -7,7 +7,9 @@ import { UseEventContext } from '@/context/eventContext';
 import { eventWithCedula } from '@/helpers/helperEvent';
 import { UploadImageWithEdition } from '@/components/upload/UploadImage';
 import { UploadFile } from 'antd/lib/upload/interface';
-import { OptionType } from '../interface/group.interfaces';
+import { GroupEventMongo, OptionType } from '../interface/group.interfaces';
+import { registeredUserOptions } from '../interface/registerUserOption';
+import { getSelectOptionGroups } from '../utils/getSelectOptionGroup';
 
 interface Props extends FormProps {
   form: FormInstance<FormUserOrganization>;
@@ -16,7 +18,7 @@ interface Props extends FormProps {
   addToUserEvents: boolean;
   active: boolean;
   onChangeAddUserToEvent: (checked: boolean) => void;
-  groupEventSelect: OptionType[];
+  groupEventSelect: GroupEventMongo[];
 }
 
 export const UserOrganizationForm = ({
@@ -162,18 +164,10 @@ export const UserOrganizationForm = ({
           <Form.Item
             initialValue={'not-register'}
             label={'Inscribir este usuario en'}
-            name='registered-option'
+            name='registeredOption'
             hasFeedback
             style={{ marginBottom: '10px', textAlign: 'left' }}>
-            <Select
-              size='large'
-              options={[
-                { label: 'Todos los eventos de la organización', value: 'all' },
-                { label: 'Grupos de eventos', value: 'group-event' },
-                { label: 'Solo en la organización', value: 'not-register' },
-              ]}
-              onChange={handleSelectChange}
-            />
+            <Select size='large' options={registeredUserOptions} onChange={handleSelectChange} />
           </Form.Item>
 
           {registerOption === 'group-event' && (
@@ -182,10 +176,14 @@ export const UserOrganizationForm = ({
                 id: 'modal.label.group',
                 defaultMessage: 'Grupo',
               })}
+              tooltip={{
+                title: 'Los grupos estaran inhabilitados cuando no tengan eventos asignados',
+                icon: <InfoCircleOutlined />,
+              }}
               name='group'
               hasFeedback
               style={{ marginBottom: '10px', textAlign: 'left' }}>
-              <Select size='large' options={groupEvent} mode='multiple' allowClear />
+              <Select size='large' options={getSelectOptionGroups(groupEvent)} mode='multiple' allowClear showArrow />
             </Form.Item>
           )}
         </Form>
