@@ -33,7 +33,10 @@ export interface DataOrganizations {
     view: boolean,
 }
 
-
+export interface contactOrg {
+    email: string;
+    celular: string;
+}
 export interface Organization {
     _id:            string;
     id:             string;
@@ -43,7 +46,8 @@ export interface Organization {
     created_at:     string;
     itemsMenu?:     any[] | ItemsMenuClass;
     show_my_certificates?:boolean
-    social_networks?:SocialNetworksOrg
+    social_networks?:SocialNetworksOrg,
+    contact?: contactOrg
 }
 
 export interface SocialNetworksOrg {

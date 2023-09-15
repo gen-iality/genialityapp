@@ -1,24 +1,65 @@
 import { Button, Space, Tooltip, Card, Table } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { GroupsApi } from '@/helpers/request';
+import { DispatchMessageService } from '@/context/MessageService';
 //@ts-ignore
-const CardGroupEvent = ({ dataSource, showModalGroup, handleDeleteGroup, toggleModalGroup }) => {
+
+interface Props {
+  dataSource: any;
+  handledOpenModalGroup: any;
+  toggleModalGroup: any;
+  organizationId: any;
+  selectGroup: any;
+  updateListGroup: any;
+  handledDelete: any;
+}
+const CardGroupEvent = ({
+  dataSource,
+  handledOpenModalGroup,
+  toggleModalGroup,
+  organizationId,
+  selectGroup,
+  updateListGroup,
+  handledDelete,
+}: Props) => {
+  const handleDeleteGroupLocal = async (groupId: string) => {
+    try {
+      await GroupsApi.deleteOne(organizationId, groupId);
+      updateListGroup();
+      DispatchMessageService({ msj: 'Se elimino correctamente', type: 'success', action: 'show' });
+    } catch (error) {
+      DispatchMessageService({ msj: 'No se pudo eliminar el grupo', type: 'info', action: 'show' });
+    }
+  };
   const columns = [
     {
       title: 'Nombre grupo',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'label',
+      key: 'label',
     },
     {
       title: 'Acciones',
       key: 'acciones',
       width: 100,
-      render: (text: any, record: { key: any; }) => (
+      render: (text: any, record: { key: any; item: any; label: string; value: string }) => (
         <Space>
           <Tooltip title='Editar'>
-            <Button type='primary' onClick={() => showModalGroup(record)} icon={<EditOutlined />} />
+            <Button
+              type='primary'
+              onClick={() => {
+                handledOpenModalGroup();
+                selectGroup(record.item);
+              }}
+              icon={<EditOutlined />}
+            />
           </Tooltip>
           <Tooltip title='Eliminar'>
-            <Button type='primary' danger onClick={() => handleDeleteGroup(record.key)} icon={<DeleteOutlined />} />
+            <Button
+              type='primary'
+              danger
+              onClick={() => handleDeleteGroupLocal(record.value)}
+              icon={<DeleteOutlined />}
+            />
           </Tooltip>
         </Space>
       ),

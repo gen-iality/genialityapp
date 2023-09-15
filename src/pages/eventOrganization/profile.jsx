@@ -20,7 +20,10 @@ const socialNetworksInitialValue = {
   youtube: '',
   yourSite: '',
 };
-
+const initiaValueContact = {
+  email: '',
+  celular: ''
+}
 function OrganizationInformation(props) {
   let {
     name,
@@ -29,10 +32,10 @@ function OrganizationInformation(props) {
     type_event,
     show_my_certificates = false,
     social_networks = socialNetworksInitialValue,
+    contact = initiaValueContact
   } = props.org;
   const [typeEvents, setTypeEvents] = useState([]);
   const [showMyCertificates, setShowMyCertificates] = useState(false);
-
   async function updateOrganization(values) {
     const { name, description, type_event } = values.organization;
     const body = {
@@ -40,7 +43,8 @@ function OrganizationInformation(props) {
       description,
       type_event: type_event,
       show_my_certificates: showMyCertificates,
-      social_networks:values.social_networks
+      social_networks: values.social_networks,
+      contact: values.contact,
     };
     try {
       await OrganizationApi.editOne(body, organizationId);
@@ -108,7 +112,6 @@ function OrganizationInformation(props) {
               initialValue={type_event || 'Corporativo'}
               name={['organization', 'type_event']}>
               <Select onChange={null}>
-                {' '}
                 {typeEvents.map((type) => (
                   <Option value={type.label}>{type.label}</Option>
                 ))}
@@ -121,7 +124,32 @@ function OrganizationInformation(props) {
                 Mostrar "Ver mis certificados" en landing de Organizaciones
               </Checkbox>
             </Form.Item>
-
+            <Form.Item
+              name={['contact', 'email']}
+              label='Email de contacto'
+              initialValue={contact?.email}
+              rules={[
+                {
+                  required: true,
+                  message: 'Por favor ingresa un correo de contacto',
+                },
+                {
+                  type: 'email',
+                  message: 'Ingresa un correo electrónico válido',
+                },
+              ]}>
+              <Input
+                placeholder='ejemplo@evius.co'
+              />
+            </Form.Item>
+            <Form.Item
+              name={['contact', 'celular']}
+              label='Número de contacto'
+              initialValue={contact?.celular}>
+              <Input
+                placeholder='Ingrese un número de contacto'
+              />
+            </Form.Item>
             <Form.Item
               name={['social_networks', 'facebook']}
               label='Facebook'
@@ -177,10 +205,7 @@ function OrganizationInformation(props) {
               ]}>
               <Input placeholder='https:youtube.com/yourprofile' />
             </Form.Item>
-            <Form.Item
-              name={['social_networks', 'yourSite']}
-              label='Sitio web'
-              initialValue={social_networks.yourSite}>
+            <Form.Item name={['social_networks', 'yourSite']} label='Sitio web' initialValue={social_networks.yourSite}>
               <Input placeholder='https:yourSite.com/' />
             </Form.Item>
           </Col>

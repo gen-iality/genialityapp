@@ -1,35 +1,53 @@
-import { Form, Modal, ModalProps, Select } from 'antd';
+import { Select } from 'antd';
 import { useGetGruopEventList } from '../../hooks/useGetGruopEventList';
-import { getGroupsToSelect } from '../../utils/transformDataToSelect';
+import { EventsApi } from '@/helpers/request';
+import { DispatchMessageService } from '@/context/MessageService';
+import { useEffect, useState } from 'react';
 
-interface Props extends ModalProps {
-  onCancel: () => void;
+interface Props {
   selectedEvent: any;
-  organizationId: string;
 }
 
-interface EditEventOrganization {
-  groupId: string;
-}
+export const AddEventToGroup = ({ selectedEvent }: Props) => {
+  const { groupEvent, isLoading } = useGetGruopEventList(selectedEvent.organizer_id);
+  const [selectedGroup, setSelectedGroup] = useState<string | undefined>('');
+  const [isLoadingSelect, setIsLoadingSelect] = useState(false);
 
-export const AddEventToGroup = ({ onCancel: onCanel, organizationId, ...modalProps }: Props) => {
-  const { groupEvent, isLoading } = useGetGruopEventList(organizationId);
-  const [form] = Form.useForm<EditEventOrganization>();
-
-  const onAddEventToGroup = () => {};
+  const onAddEventToGroup = async (groupId: string | undefined) => {
+    try {
+      setSelectedGroup(groupId);
+      setIsLoadingSelect(true);
+      await EventsApi.editOne({ group_organization_id: groupId ?? '' }, selectedEvent._id);
+      DispatchMessageService({ action: 'show', type: 'success', msj: 'Se agrego al grupo correctamente' });
+    } catch (error) {
+      setSelectedGroup(undefined);
+      if ((error as any).request.status === 401)
+        return DispatchMessageService({
+          action: 'show',
+          type: 'error',
+          msj: 'No esta autorizado para editar este evento',
+        });
+      DispatchMessageService({ action: 'show', type: 'error', msj: 'No se pudo agregar al evento' });
+    } finally {
+      setIsLoadingSelect(false);
+    }
+  };
+  useEffect(() => {
+    setSelectedGroup(selectedEvent.group_organization_id);
+  }, [selectedEvent]);
+  /* todo: validar que al editar desde aqui solo importa ser admin en la organizacion */
   return (
-    <Modal {...modalProps} onCancel={onCanel} footer={false} title={'Edicion de eventos en organizacion'}>
-      <Form onFinish={onAddEventToGroup}>
-        <Form.Item label={'Escoger el grupo'} name='group' hasFeedback>
-          <Select
-            loading={isLoading}
-            size='large'
-            placeholder='micorreo@ejemplo.com'
-            options={getGroupsToSelect(groupEvent)}
-            allowClear
-          />
-        </Form.Item>
-      </Form>
-    </Modal>
+    <Select
+      disabled={isLoadingSelect}
+      onClear={() => onAddEventToGroup(undefined)}
+      value={selectedGroup}
+      style={{ width: '100%' }}
+      onSelect={onAddEventToGroup}
+      loading={isLoading || isLoadingSelect}
+      size='large'
+      placeholder='Seleccionar grupo'
+      options={groupEvent}
+      allowClear
+    />
   );
 };

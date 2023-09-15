@@ -878,39 +878,43 @@ export const DocumentsApi = {
 };
 
 export const CategoriesApi = {
-  getAll: async () => {
-    const resp = await Actions.getAll('api/categories', true);
+  getAll: async (orgId) => {
+    const resp = await Actions.getAll(`api/organizations/${orgId}/categories`, true);
     return handleSelect(resp.data);
   },
-  create: async (data) => {
+  create: async (organizationId, data) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.post(`api/categories?token=${token}`, data);
+    return await Actions.post(`api/organizations/${organizationId}/categories?token=${token}`, data);
   },
-  update: async (id_category, data) => {
+  createOne: async (organizationId, id_category, data) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.put(`api/categories/${id_category}?token=${token}`, data);
+    return await Actions.post(`api/oneorganizations/${organizationId}/categories/${id_category}?token=${token}`, data);
   },
-  delete: async (id_category) => {
+  update: async (organizationId, id_category, data) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.delete(`api/categories/${id_category}?token=${token}`, '', true);
+    return await Actions.put(`api/organizations/${organizationId}/categories/${id_category}?token=${token}`, data);
+  },
+  delete: async (organizationId, id_category) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/organizations/${organizationId}/categories/${id_category}?token=${token}`, '', true);
   },
 };
 export const GroupsApi = {
-  getAll: async (orgId) => {
-    const resp = await Actions.getAll(`/organizations/${orgId}/groups`, true);
-    return handleSelect(resp.data);
+  getGroupsByOrg: async (orgId) => {
+    const resp = await Actions.getAll(`api/organizations/${orgId}/groups`, true);
+    return handleSelect(resp);
   },
   create: async (orgId, data) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.post(`/organizations/${orgId}/groups?token=${token}`, data);
+    return await Actions.post(`api/organizations/${orgId}/groups?token=${token}`, data);
   },
   update: async (orgId, groupId, data) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.put(`/organizations/${orgId}/groups/${groupId}?token=${token}`, data);
+    return await Actions.put(`api/organizations/${orgId}/groups/${groupId}?token=${token}`, data);
   },
   deleteOne: async (orgId, groupId) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.delete(`/organizations/${orgId}/groups/${groupId}?token=${token}`, '', true);
+    return await Actions.delete(`api/organizations/${orgId}/groups/${groupId}?token=${token}`, '', true);
   },
 };
 

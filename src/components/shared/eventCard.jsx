@@ -41,15 +41,15 @@ class EventCard extends Component {
         const LAST_DATE = event.dates?.length - 1;
         if (event.dates?.length === EVENT_WITH_ONE_DATE) {
           return (
-            <time dateTime={event.dates[FIRST_DATE].start}>
-              {Moment(event.dates[FIRST_DATE].start).format('DD MMM YYYY')}
+            <time dateTime={event.dates[FIRST_DATE]?.start}>
+              {Moment(event.dates[FIRST_DATE]?.start).format('DD MMM YYYY')}
             </time>
           );
         } else {
           return (
             <>
-              <time dateTime={event.dates[FIRST_DATE].start}>
-                {Moment(event.dates[FIRST_DATE].start).format('DD MMM YYYY')}
+              <time dateTime={event.dates[FIRST_DATE]?.start}>
+                {Moment(event.dates[FIRST_DATE]?.start).format('DD MMM YYYY')}
               </time>
               {'-'}
               <time dateTime={event.dates[LAST_DATE].end}>

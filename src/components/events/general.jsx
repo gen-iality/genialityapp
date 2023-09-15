@@ -155,12 +155,14 @@ class General extends Component {
     try {
       const { event } = this.props;
       // event.picture = (typeof event.picture === 'object') ? event.picture[0] : "";
-      const categories = await CategoriesApi.getAll();
       const types = await TypesApi.getAll();
       let organizers = await OrganizationApi.mine();
       organizers = organizers.map((item) => {
         return { value: item.id, label: item.name };
       });
+      const categories = await CategoriesApi.getAll(event._id);
+      console.log(categories)
+      console.log(event._id);
       const { selectedCategories, selectedOrganizer, selectedType } = handleFields(
         organizers,
         types,
@@ -855,7 +857,6 @@ class General extends Component {
       accessSelected,
       extraState,
     } = this.state;
-    console.log(selectedCategories);
     if (loading) return <Loading />;
     // const userContext = this.context;
     /** RESTRICIONES */

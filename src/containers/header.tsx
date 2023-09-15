@@ -315,10 +315,9 @@ const Headers = (props: Props) => {
 							<Button
 								type='link'
 								onClick={landingOrganization}
-								icon={<ApartmentOutlined style={{ color: getCorrectColor(bgcolorContainer) }} />}
 								size='large'>
 								<Typography.Text style={{ color: getCorrectColor(bgcolorContainer) }}>
-									Ver más contenido de{' '}
+									Ir a{' '}
 									<Typography.Text strong style={{ color: getCorrectColor(bgcolorContainer) }}>
 										{cEvent.value?.organizer?.name}
 									</Typography.Text>
