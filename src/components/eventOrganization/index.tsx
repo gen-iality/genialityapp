@@ -1,8 +1,9 @@
+/* eslint-disable react/jsx-no-target-blank */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-console */
 /* eslint-disable array-callback-return */
 /* eslint-disable jsx-a11y/alt-text */
-import { Col, Row, Grid, Result, Card } from 'antd';
+import { Col, Row, Grid, Result, Card, List } from 'antd';
 import { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { OrganizationApi, OrganizationFuction } from '../../helpers/request';
@@ -48,15 +49,12 @@ function EventOrganization({ match }: OrganizationProps) {
   const fetchOrganizationUser = async () => {
     try {
       const response = await OrganizationApi.getMeUser(organization?._id);
-      console.log(response.data);
       const user = response.data[0].active ?? true;
       setIsActive(user);
-      
     } catch (error) {
       console.error('Error al obtener el usuario de la organización:', error);
     }
   };
-
   useEffect(() => {
     let orgId = match.params.id;
     if (orgId) {
@@ -110,7 +108,7 @@ function EventOrganization({ match }: OrganizationProps) {
     return event.payment ? (event.payment.active as boolean) : false;
   };
 
-
+  const contactNumber = organization?.contact?.celular ? `Celular: ${organization?.contact?.celular}` : null;
   return (
     <div
       style={{
@@ -185,7 +183,22 @@ function EventOrganization({ match }: OrganizationProps) {
                       status='warning'
                       title={`Acceso bloqueado a ${organization?.name}.`}
                       subTitle={`  Lamentamos informarte que tu acceso al contenido de ${organization?.name} ha sido bloqueado.
-                      Entendemos que esta situación pueda ser frustrante, y estamos aquí para ayudarte a resolverla`}></Result>
+                      Entendemos que esta situación pueda ser frustrante, y estamos aquí para ayudarte a resolverla, 
+                      Puedes contactarnos a los siguientes medios:`}>
+                      <List>
+                        {organization?.contact?.email && <List.Item>Email: {organization?.contact?.email}</List.Item>}
+                        {contactNumber && <List.Item>{contactNumber}</List.Item>}
+                        {Object.entries(organization?.social_networks || {})
+                          .filter(([key, value]) => value !== null)
+                          .map(([key, value]) => (
+                            <List.Item key={key}>
+                              <a href={value} target='_blank'>
+                                {key === 'yourSite' ? 'Sitio web' : key.charAt(0).toUpperCase() + key.slice(1)}
+                              </a>
+                            </List.Item>
+                          ))}
+                      </List>
+                    </Result>
                   </Card>
                 </Row>
               </Col>

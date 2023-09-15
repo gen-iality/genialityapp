@@ -878,21 +878,25 @@ export const DocumentsApi = {
 };
 
 export const CategoriesApi = {
-  getAll: async () => {
-    const resp = await Actions.getAll('api/categories', true);
+  getAll: async (orgId) => {
+    const resp = await Actions.getAll(`api/organizations/${orgId}/categories`, true);
     return handleSelect(resp.data);
   },
   create: async (organizationId, data) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.post(`api/categories?token=${token}`, data);
+    return await Actions.post(`api/organizations/${organizationId}/categories?token=${token}`, data);
+  },
+  createOne: async (organizationId, id_category, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`api/oneorganizations/${organizationId}/categories/${id_category}?token=${token}`, data);
   },
   update: async (organizationId, id_category, data) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.put(`api/categories/${id_category}?token=${token}`, data);
+    return await Actions.put(`api/organizations/${organizationId}/categories/${id_category}?token=${token}`, data);
   },
   delete: async (organizationId, id_category) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.delete(`api/categories/${id_category}?token=${token}`, '', true);
+    return await Actions.delete(`api/organizations/${organizationId}/categories/${id_category}?token=${token}`, '', true);
   },
 };
 export const GroupsApi = {

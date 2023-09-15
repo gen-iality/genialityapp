@@ -37,14 +37,14 @@ function OrganizationInformation(props) {
   const [typeEvents, setTypeEvents] = useState([]);
   const [showMyCertificates, setShowMyCertificates] = useState(false);
   async function updateOrganization(values) {
-    const { contact, name, description, type_event } = values.organization;
+    const { name, description, type_event } = values.organization;
     const body = {
       name,
       description,
       type_event: type_event,
       show_my_certificates: showMyCertificates,
       social_networks: values.social_networks,
-      contact: contact,
+      contact: values.contact,
     };
     try {
       await OrganizationApi.editOne(body, organizationId);
