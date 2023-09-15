@@ -890,7 +890,7 @@ export const CategoriesApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.put(`api/categories/${id_category}?token=${token}`, data);
   },
-  delete: async (id_category) => {
+  delete: async (organizationId, id_category) => {
     let token = await GetTokenUserFirebase();
     return await Actions.delete(`api/categories/${id_category}?token=${token}`, '', true);
   },
@@ -898,7 +898,7 @@ export const CategoriesApi = {
 export const GroupsApi = {
   getGroupsByOrg: async (orgId) => {
     const resp = await Actions.getAll(`api/organizations/${orgId}/groups`, true);
-    return handleSelect(resp.data);
+    return handleSelect(resp);
   },
   create: async (orgId, data) => {
     let token = await GetTokenUserFirebase();

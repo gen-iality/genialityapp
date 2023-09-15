@@ -15,7 +15,7 @@ import { useModalLogic } from '@/hooks/useModalLogic';
 
 const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
   const { groupEvent, updateListGroup, handledDelete } = useGetGruopEventList(organizationId);
-  const { categories } = useGetCategorys(organizationId);
+  const { categories, updateListCategories } = useGetCategorys(organizationId);
   const { closeGroupModal, isOpenGroupModal, openGroupModal, selectedGroup, handledSelectGroup } = useModalLogic(
     'Group'
   );
@@ -50,9 +50,11 @@ const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
       <Row gutter={[8, 0]}>
         <Col span={12}>
           <CardCategory
+            updateListCategories={updateListCategories}
             dataSource={categories}
             handledSelectCategory={handledSelectCategory}
             openCategoryModal={openCategoryModal}
+            organizationId={organizationId}
           />
         </Col>
         <Col span={12}>

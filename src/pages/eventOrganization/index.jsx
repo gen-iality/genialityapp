@@ -79,7 +79,7 @@ function Organization(props) {
                 <NavLink to={`${props.match.url}/information`} />
               </Menu.Item>
               <Menu.Item key={'6'} icon={<AppstoreOutlined />}>
-                {'Categorías'}
+                {'Categorías y grupos'}
                 <NavLink to={`${props.match.url}/category`} />
               </Menu.Item>
               <Menu.Item key={'3'} icon={<SketchOutlined />}>

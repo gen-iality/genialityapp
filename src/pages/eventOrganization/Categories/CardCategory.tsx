@@ -1,8 +1,33 @@
 import { Button, Space, Tooltip, Card, Table } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
-//@ts-ignore
-const CardCategory = ({ dataSource, openCategoryModal, handledSelectCategory }) => {
-  const handleDeleteCategory = (categoryId: string) => {};
+import { CategoriesApi } from '@/helpers/request';
+import { DispatchMessageService } from '@/context/MessageService';
+
+interface Props {
+  dataSource: any;
+  openCategoryModal: any;
+  handledSelectCategory: any;
+  organizationId: string;
+  updateListCategories: () => void;
+}
+const CardCategory = ({
+  dataSource,
+  openCategoryModal,
+  handledSelectCategory,
+  organizationId,
+  updateListCategories,
+}: Props) => {
+  const handleDeleteCategory = async (categoryId: string) => {
+    try {
+      await CategoriesApi.delete(organizationId, categoryId);
+      DispatchMessageService({ action: 'show', type: 'success', msj: 'Se elimino correctamente' });
+      updateListCategories();
+    } catch (error) {
+      DispatchMessageService({ action: 'show', type: 'error', msj: 'No se pudo eliminar, intentelo mas tarde' });
+    }
+  };
+
+  
   const columns = [
     {
       title: 'Nombre categoría',

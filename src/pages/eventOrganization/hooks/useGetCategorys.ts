@@ -5,6 +5,8 @@ import { ICategory } from '../interface/category.interface';
 export const useGetCategorys = (organizationId: string) => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [reFetch, setReFetch] = useState(false);
+
   const getCategory = async () => {
     try {
       const response: any[] = await CategoriesApi.getAll();
@@ -25,9 +27,13 @@ export const useGetCategorys = (organizationId: string) => {
     }
   };
 
+  const updateListCategories = () => {
+    setReFetch((current) => !current);
+  };
+
   useEffect(() => {
     getCategory();
-  }, [organizationId]);
+  }, [organizationId, reFetch]);
 
-  return { categories, isLoading };
+  return { categories, isLoading, updateListCategories };
 };
