@@ -75,14 +75,14 @@ const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
           selectedGroup={selectedGroup}
         />
       )}
-      {{
+      {
         /* <CategoryModal
           onOk={agregarCategoria}
           title='Agregar Categoría'
           categoryValue={categoriaNombre}
           namePlaceHolder='Nombre de la categoría'
         /> */
-      }}
+      }
       {/* 
 
       <CategoryModal
@@ -110,4 +110,4 @@ const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
   );
 };
 
-export default ICategory;
+export default Category;
