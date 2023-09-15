@@ -17,7 +17,7 @@ function OrgEvents(props: any) {
   const history = useHistory();
   const { eventData, isLoading, pagination } = useGetEventWithStatistics(organizationId);
   const [openModal, setOpenModal] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState()
+  const [selectedEvent, setSelectedEvent] = useState();
   const onCloseModal = () => {
     setOpenModal(false);
   };
@@ -26,10 +26,10 @@ function OrgEvents(props: any) {
     setOpenModal(true);
   };
 
-  const onSelectedEvent = (event:any) => {
+  const onSelectedEvent = (event: any) => {
     setSelectedEvent(event);
-    handledOpenModal()
-  }
+    handledOpenModal();
+  };
   const onAsyncList = async () => {
     try {
       const data = await OrganizationApi.getEventsStatisticsExport(organizationId, 'latest');
@@ -76,9 +76,6 @@ function OrgEvents(props: any) {
         pagination={pagination}
         title={renderTitle}
       />
-      {openModal && (
-        <AddEventToGroup visible={openModal} onCancel={onCloseModal} organizationId='fe2fef' selectedEvent={selectedEvent} />
-      )}
     </>
   );
 }

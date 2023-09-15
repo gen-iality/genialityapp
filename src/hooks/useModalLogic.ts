@@ -15,7 +15,7 @@ type Actions<Type, T> = {
 };
 
 
-export const useModalLogic = <T, K extends string>(nameModal: K):Actions<K, T> => {
+export const useModalLogic = <T = any, K extends string = string>(nameModal: K): Actions<K, T> => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState<T>()
 

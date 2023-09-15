@@ -17,7 +17,6 @@ import { useSteps } from '../hooks/useSteps';
 import { DispatchMessageService } from '@/context/MessageService';
 import { ROLS_USER } from '@/constants/rols.constants';
 import { useGetGruopEventList } from '../hooks/useGetGruopEventList';
-import { getGroupsToSelect } from '../utils/transformDataToSelect';
 
 const initialForm: FormUserOrganization = {
   email: '',
@@ -302,7 +301,7 @@ export const ModalAddAndEditUsers = ({
             onFinish={onFinisUserOrganizationStep}
             addToUserEvents={addToUserEvents}
             onChangeAddUserToEvent={onChangeAddUserToEvent}
-            groupEventSelect={getGroupsToSelect(groupEvent)}
+            groupEventSelect={groupEvent}
           />
           <Button onClick={() => formBasicData.submit()}>Siguiente</Button>
         </div>

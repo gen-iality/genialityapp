@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Col, Row } from 'antd';
 import Header from '@/antdComponents/Header';
 import { CategoriesApi } from '@/helpers/request';
@@ -14,13 +14,18 @@ import { useGetCategorys } from '../hooks/useGetCategorys';
 import { useModalLogic } from '@/hooks/useModalLogic';
 
 const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
-  const [categoriaNombre, setCategoriaNombre] = useState<string>('');
   const { groupEvent, updateListGroup, handledDelete } = useGetGruopEventList(organizationId);
-  const { categories } = useGetCategorys(organizationId);
+  const { categories, updateListCategories } = useGetCategorys(organizationId);
   const { closeGroupModal, isOpenGroupModal, openGroupModal, selectedGroup, handledSelectGroup } = useModalLogic(
     'Group'
   );
-
+  const {
+    isOpenCategoryModal,
+    closeCategoryModal,
+    openCategoryModal,
+    handledSelectCategory,
+    selectedCategory,
+  } = useModalLogic<ICategory, 'Category'>('Category');
   const updateCategoriaData = async () => {
     try {
       const response: any[] = await CategoriesApi.getAll();
@@ -39,21 +44,19 @@ const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
     }
   };
 
-  const agregarCategoria = async () => {
-    // Agregar la nueva categoría al dataSource
-    const nuevaCategoria: ICategory = {
-      name: categoriaNombre,
-    };
-
-    await CategoriesApi.create(nuevaCategoria);
-    await updateCategoriaData();
-  };
-
   return (
     <>
       <Header title={'Categorías y grupos'} />
       <Row gutter={[8, 0]}>
-        <Col span={12}>{/* <CardCategory dataSource={categories} showEditModal={showEditModal} /> */}</Col>
+        <Col span={12}>
+          <CardCategory
+            updateListCategories={updateListCategories}
+            dataSource={categories}
+            handledSelectCategory={handledSelectCategory}
+            openCategoryModal={openCategoryModal}
+            organizationId={organizationId}
+          />
+        </Col>
         <Col span={12}>
           <CardGroupEvent
             handledDelete={handledDelete}
@@ -75,37 +78,15 @@ const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
           selectedGroup={selectedGroup}
         />
       )}
-      {
-        /* <CategoryModal
-          onOk={agregarCategoria}
-          title='Agregar Categoría'
-          categoryValue={categoriaNombre}
-          namePlaceHolder='Nombre de la categoría'
-        /> */
-      }
-      {/* 
 
-      <CategoryModal
-        isVisible={isModalVisible}
-        onOk={agregarCategoria}
-        onCancel={toggleModal}
-        title='Agregar Categoría'
-        categoryValue={categoriaNombre}
-        handleCategoryChange={handleNombreChange}
-        namePlaceHolder='Nombre de la categoría'
-      />
-      <CategoryModal
-        isVisible={isEditModalVisible}
-        onOk={() => {
-          updateCategoria(selectedCategoryId, updatedCategoryName);
-          toggleEditModal();
-        }}
-        onCancel={toggleEditModal}
-        title='Editar Categoría'
-        categoryValue={updatedCategoryName}
-        handleCategoryChange={(e) => setUpdatedCategoryName(e.target.value)}
-        namePlaceHolder='Nombre de la categoría'
-      /> */}
+      {isOpenCategoryModal && (
+        <CategoryModal
+          onCancel={closeCategoryModal}
+          visible={isOpenCategoryModal}
+          organizationId={organizationId}
+          selectedCategory={selectedCategory}
+        />
+      )}
     </>
   );
 };
