@@ -59,12 +59,6 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
     )
     console.log('payment result fin', data, result)
     // Do request to send email
-
-
-
-
-    te invitamos a explorar nuestra plataforma. (poner el link lo más visible posible)
-
     try {
       await EventsApi.sendGenericMail(
         organizationUser?.user?.email,
