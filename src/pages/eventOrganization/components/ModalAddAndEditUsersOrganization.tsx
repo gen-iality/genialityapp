@@ -22,6 +22,7 @@ const initialForm: FormUserOrganization = {
   email: '',
   names: '',
   password: '',
+  registeredOption: 'not-register',
 };
 
 interface Props extends ModalProps {
@@ -48,6 +49,7 @@ export const ModalAddAndEditUsers = ({
   const [haveDinamicProperties, setHaveDinamicProperties] = useState(false);
   const { current, onLastStep, onNextStep } = useSteps(3);
   const [addToUserEvents, setAddToUserEvents] = useState(false);
+  const [groupsIds, setGroupsIds] = useState<string[]>();
   const {
     backToCreate,
     loadingRequest,
@@ -65,10 +67,13 @@ export const ModalAddAndEditUsers = ({
     setAddToUserEvents(checked);
   };
 
-  
   const { groupEvent } = useGetGruopEventList(organizationId);
 
   const onFinisUserOrganizationStep = (values: FormUserOrganization) => {
+    if (values.registeredOption === 'group-event') {
+      const groups = values.group as string[];
+      setGroupsIds(groups);
+    }
     setdataBasic(values);
     onNextStep();
   };
@@ -155,11 +160,11 @@ export const ModalAddAndEditUsers = ({
     const { picture, password, ...userToOrganization } = newUser;
     const alreadyExistUser = await alreadyExistUserInOrganization(newUser.email);
     if (alreadyExistUser) return resultUserExistIntoOrganization(newUser.email);
-     let active= true
+    let active = true;
     try {
       const respUser = await OrganizationApi.saveUser(
         organizationId,
-        { properties: userToOrganization, active },
+        { properties: userToOrganization, active, group_organization_ids: groupsIds },
         addToUserEvents
       );
 
@@ -183,7 +188,7 @@ export const ModalAddAndEditUsers = ({
     return await OrganizationApi.editUser(organizationId, selectedUser?._id, {
       properties: { ...userToOrganization, rol_id },
       rol_id,
-      active: true
+      active: true,
     });
   };
 

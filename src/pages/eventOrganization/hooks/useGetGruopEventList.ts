@@ -10,7 +10,7 @@ export const useGetGruopEventList = (organizationId: string) => {
 
   const fetchData = async () => {
     try {
-      const response = await GroupsApi.getGroupsByOrg(organizationId);
+      const response: GroupEventMongo[] = await GroupsApi.getGroupsByOrg(organizationId);
       setGroupEvent(response);
       setIsLoading(false);
     } catch (error) {
