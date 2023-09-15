@@ -3,7 +3,7 @@
 /* eslint-disable no-console */
 /* eslint-disable array-callback-return */
 /* eslint-disable jsx-a11y/alt-text */
-import { Col, Row, Grid, Result, Card, List } from 'antd';
+import { Col, Row, Grid, Result, Card, List, Descriptions, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { OrganizationApi, OrganizationFuction } from '../../helpers/request';
@@ -18,6 +18,7 @@ import { SocialNetworks } from './components/SocialNetworks';
 import { MyEvents } from './components/MyEvents';
 import { NextEvents } from './components/NextEvents';
 import { PassEvents } from './components/PassEvents';
+import { GlobalOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
 
 const { useBreakpoint } = Grid;
 
@@ -108,7 +109,29 @@ function EventOrganization({ match }: OrganizationProps) {
     return event.payment ? (event.payment.active as boolean) : false;
   };
 
-  const contactNumber = organization?.contact?.celular ? `Celular: ${organization?.contact?.celular}` : null;
+  const contactNumber = organization?.contact?.celular ? organization?.contact?.celular : null;
+  const data = [
+    {
+      key: 'email',
+      label: <MailOutlined />,
+      value: organization?.contact?.email,
+    },
+    {
+      key: 'contactNumber',
+      label: <PhoneOutlined />,
+      value: contactNumber,
+    },
+    {
+      key: 'social_networks',
+      label: <GlobalOutlined/>,
+      value: organization?.social_networks?.yourSite ? (
+        <a href={organization?.social_networks?.yourSite} target='_blank'>
+          Sitio web
+        </a>
+      ) : null,
+    },
+  ];
+
   return (
     <div
       style={{
@@ -172,39 +195,36 @@ function EventOrganization({ match }: OrganizationProps) {
             </Row>
           ) : (
             <Row justify='center' style={{ paddingTop: '32px', paddingBottom: '32px' }}>
-              <Col span={23}>
+              <Col xs={24} sm={20} md={16} lg={12} xl={10} >
                 <Row gutter={[0, 32]}>
                   <Card
                     bodyStyle={{ paddingTop: '0px' }}
                     headStyle={{ border: 'none' }}
-                    style={{ width: '100%', borderRadius: 20 }}>
+                    style={{ width: '100%', borderRadius: 20, margin: '0 auto' }}>
                     <Result
                       style={{ textAlign: 'center' }}
                       status='warning'
                       title={`Acceso bloqueado a ${organization?.name}.`}
-                      subTitle={`  Lamentamos informarte que tu acceso al contenido de ${organization?.name} ha sido bloqueado.
-                      Entendemos que esta situación pueda ser frustrante, y estamos aquí para ayudarte a resolverla, 
-                      Puedes contactarnos a los siguientes medios:`}>
-                      <List>
-                        {organization?.contact?.email && <List.Item>Email: {organization?.contact?.email}</List.Item>}
-                        {contactNumber && <List.Item>{contactNumber}</List.Item>}
-                        {Object.entries(organization?.social_networks || {})
-                          .filter(([key, value]) => value !== null)
-                          .map(([key, value]) => (
-                            <List.Item key={key}>
-                              <a href={value} target='_blank'>
-                                {key === 'yourSite' ? 'Sitio web' : key.charAt(0).toUpperCase() + key.slice(1)}
-                              </a>
-                            </List.Item>
-                          ))}
-                      </List>
+                      subTitle={
+                        <Typography>
+                          Lamentamos informarte que tu acceso al contenido de {organization?.name} ha sido bloqueado.
+                          Entendemos que esta situación pueda ser frustrante, y estamos aquí para ayudarte a resolverla,
+                          Puedes contactarnos a los siguientes medios:
+                        </Typography>
+                      }>
+                      <Descriptions layout='horizontal'>
+                        {data.map((item) => (
+                          <Descriptions.Item key={item.key} label={item.label}>
+                            {item.value}
+                          </Descriptions.Item>
+                        ))}
+                      </Descriptions>
                     </Result>
                   </Card>
                 </Row>
               </Col>
             </Row>
           )}
-
           {/* FOOTER */}
           {organization !== null && (
             <div style={{ width: '100%', maxHeight: '350px' }}>
