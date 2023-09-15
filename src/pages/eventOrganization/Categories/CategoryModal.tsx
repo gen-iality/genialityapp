@@ -7,15 +7,22 @@ interface CategoryModalProps extends ModalProps {
   onCancel: () => void;
   selectedCategory?: ICategory;
   organizationId: string;
+  updateListCategories: () => void;
 }
-const CategoryModal: React.FC<CategoryModalProps> = ({ onCancel, selectedCategory, organizationId, ...modalProps }) => {
+const CategoryModal: React.FC<CategoryModalProps> = ({
+  onCancel,
+  selectedCategory,
+  organizationId,
+  updateListCategories,
+  ...modalProps
+}) => {
   const [nameCategory, setNameCategory] = useState('');
 
   const handledCatgoryName = (value: string) => {
     setNameCategory(value);
   };
 
-  const agregarCategory = async () => {
+  const addCategory = async () => {
     try {
       const nuevoGrupo: ICategory = {
         name: nameCategory,
@@ -23,6 +30,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({ onCancel, selectedCategor
       await CategoriesApi.create(organizationId, nuevoGrupo);
       DispatchMessageService({ action: 'show', type: 'success', msj: 'Se agrego la categoria correctamente' });
       onCancel();
+      updateListCategories()
     } catch (error) {
       DispatchMessageService({ action: 'show', type: 'info', msj: 'Ocurrio un error al agregar la categoria' });
     }
@@ -32,6 +40,9 @@ const CategoryModal: React.FC<CategoryModalProps> = ({ onCancel, selectedCategor
     if (!selectedCategory) return;
     try {
       await CategoriesApi.update(organizationId, selectedCategory.key, { name: nameCategory });
+      DispatchMessageService({ action: 'show', type: 'success', msj: 'Se edito la categoria correctamente' });
+      updateListCategories()
+      onCancel();
     } catch (error) {
       DispatchMessageService({ action: 'show', type: 'info', msj: 'No se pudo editar la categoria' });
       onCancel();
@@ -58,7 +69,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({ onCancel, selectedCategor
         maxLength={20}
         value={nameCategory}
       />
-      <Button>{selectedCategory ? 'Editar' : 'Agregar'}</Button>
+      <Button onClick={selectedCategory ? editCategory : addCategory}>{selectedCategory ? 'Editar' : 'Agregar'}</Button>
     </Modal>
   );
 };

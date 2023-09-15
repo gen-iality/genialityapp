@@ -9,7 +9,7 @@ export const useGetCategorys = (organizationId: string) => {
 
   const getCategory = async () => {
     try {
-      const response: any[] = await CategoriesApi.getAll();
+      const response: any[] = await CategoriesApi.getAll(organizationId);
       if (response && Array.isArray(response)) {
         const categoriasArray: ICategory[] = response.map((categoria) => ({
           key: categoria.value,

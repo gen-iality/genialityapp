@@ -26,6 +26,7 @@ const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
     handledSelectCategory,
     selectedCategory,
   } = useModalLogic<ICategory, 'Category'>('Category');
+
   const updateCategoriaData = async () => {
     try {
       const response: any[] = await CategoriesApi.getAll();
@@ -82,6 +83,7 @@ const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
       {isOpenCategoryModal && (
         <CategoryModal
           onCancel={closeCategoryModal}
+          updateListCategories={updateListCategories}
           visible={isOpenCategoryModal}
           organizationId={organizationId}
           selectedCategory={selectedCategory}

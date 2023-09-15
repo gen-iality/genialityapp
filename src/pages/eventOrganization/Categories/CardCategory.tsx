@@ -17,6 +17,7 @@ const CardCategory = ({
   organizationId,
   updateListCategories,
 }: Props) => {
+  
   const handleDeleteCategory = async (categoryId: string) => {
     try {
       await CategoriesApi.delete(organizationId, categoryId);
