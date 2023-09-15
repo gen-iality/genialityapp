@@ -60,18 +60,22 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
     console.log('payment result fin', data, result)
     // Do request to send email
 
+
+
+
+    te invitamos a explorar nuestra plataforma. (poner el link lo más visible posible)
+
     try {
       await EventsApi.sendGenericMail(
         organizationUser?.user?.email,
         `http://${window.location.host}/organization/${organization._id}`,
-        `<p>Bienvenida/o, has sido inscrita/o de manera satisfactoria  a "${organization.name}".</p> 
+        `<p>El pago para acceder a la plataforma "${organization.name}" se ha realizado de manera satisfactoria, recuerda que este pago tendrá vigencia de un año a partir de la fecha.</p> 
       <p>Plataforma de educación médica virtual de la Asociación Colombiana de Endocrinología, Diabetes y Metabolismo - ACE</p>
-      <p>Nos complace darle la más cordial bienvenida a nuestra plataforma educativa.</p>
+      <p>    En Endocampus encontrarás una amplia variedad de simposios, congresos, cursos y material educativo de alta calidad, desarrollado por la asociación Colombiana de endocrinología, Diabetes y Metabolismo. 
+      </p>
       <p>
-      En Endocampus encontrará una amplia variedad de Simposios, Congresos, Cursos y Materiales educativos de alta calidad, desarrollado por líderes de opinión en diferentes patologías de la Endocrinología. Nuestro objetivo es brindarle una experiencia de aprendizaje enriquecedora.
-      Le invitamos a explorar nuestra plataforma</p>`,
+      te invitamos a explorar nuestra plataforma</p>`,
         'Ir a ' + organization.name,
-        `Has sido inscrita/o de manera satisfactoria a  ${organization.name}.`,
       )
 
       StateMessage.destroy('presend')
