@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { Component, createRef } from 'react'
 import {
   Activity,
   AttendeeApi,
@@ -54,7 +54,7 @@ class UserModal extends Component {
       existGenialialityUser: true,
       makeUserRegister: false,
     }
-    this.ifrmPrint = React.createRef()
+    this.ifrmPrint = createRef()
   }
 
   async componentDidMount() {
