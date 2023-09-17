@@ -1,6 +1,6 @@
 import { FunctionComponent, useState } from 'react'
 import { Link } from 'react-router-dom'
-import Importacion from './importacion'
+import Importation from './importation'
 import Preview from './preview'
 import Result from './result'
 import Async from 'async'
@@ -140,7 +140,7 @@ const ImportUsers: FunctionComponent<IImportUsersProps> = (props) => {
   // }
 
   const layout = [
-    <Importacion
+    <Importation
       key={1}
       handleXls={handleXls}
       extraFields={props.extraFields}

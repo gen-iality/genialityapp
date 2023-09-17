@@ -10,7 +10,7 @@ import { uploadImagedummyRequest } from '@/Utilities/imgUtils'
 dayjs.locale('es')
 momentLocalizer()
 
-const Importacion = (props) => {
+const Importation = (props) => {
   const [errMsg, setErrMsg] = useState('')
   const handleXlsFile = (files) => {
     if (files.status === 'error') {
@@ -157,4 +157,4 @@ const Importacion = (props) => {
   )
 }
 
-export default Importacion
+export default Importation
