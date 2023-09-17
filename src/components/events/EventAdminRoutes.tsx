@@ -56,7 +56,7 @@ const Informativesection = loadable(
 )
 
 //invitations
-const InvitedUsers = loadable(() => import('../invitations'))
+const InvitedUsers = loadable(() => import('../invitations/InvitedUsers'))
 
 //Messages
 const Messages = loadable(() => import('../messages'))
