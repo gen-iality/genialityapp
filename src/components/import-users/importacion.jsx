@@ -132,7 +132,11 @@ const Importacion = (props) => {
           <Upload.Dragger
             maxCount={1}
             onChange={(e) => handleXlsFile(e.fileList[0])}
-            onDrop={(e) => handleXlsFile(e.fileList[0])}
+            onDrop={(e) => {
+              if (e.fileList) {
+                handleXlsFile(e.fileList[0])
+              }
+            }}
             customRequest={uploadImagedummyRequest}
             multiple={false}
             accept=".xls,.xlsx"
