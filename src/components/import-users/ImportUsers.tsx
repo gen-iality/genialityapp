@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { FunctionComponent, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Importacion from './importacion'
 import Preview from './preview'
@@ -8,35 +8,39 @@ import Header from '@antdComponents/Header'
 import { Steps } from 'antd'
 import { StateMessage } from '@context/MessageService'
 
+interface IImportUsersProps {
+  event: any
+  eventId: string
+  extraFields: any[]
+  organization?: any
+  locationParams: any
+  handleModal?: () => void
+}
+
 const { Step } = Steps
 
-class ImportUsers extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      step: 0,
-      list: [],
-      toImport: [],
-      password: '',
-      no_send_mail: false,
+const ImportUsers: FunctionComponent<IImportUsersProps> = (props) => {
+  const [step, setStep] = useState(0)
+  const [list, setList] = useState<any[]>([])
+  const [toImport, setToImport] = useState<any[]>([])
+
+  const [disableSendMail, setDisableSendMail] = useState(false)
+
+  const handleXls = (thingList: any[]) => {
+    console.debug('xlsx loaded:', thingList)
+    if (thingList.length >= 2) {
+      setStep((previous) => previous + 1)
+      setList(thingList)
     }
   }
 
-  handleXls = (list) => {
-    if (list.length >= 2) {
-      this.setState((prevState) => {
-        return { list, step: prevState.step + 1 }
-      })
-    }
+  const onChangeCheckbox = (checked: boolean) => {
+    setDisableSendMail(checked)
+    console.debug('disableSendMail', disableSendMail)
   }
 
-  onChangeCheckbox = () => {
-    this.setState({ no_send_mail: !this.state.no_send_mail })
-    console.log('this.state.no_send_mail', this.state.no_send_mail)
-  }
-
-  importUsers = (users, password) => {
-    const self = this
+  const importUsers = (candidateUsers: any[], password: string) => {
+    console.debug('users to import', candidateUsers)
     StateMessage.show(
       'loading',
       'loading',
@@ -44,16 +48,16 @@ class ImportUsers extends Component {
     )
 
     if (password) {
-      const genericPassword = []
-      for (let i = 0; i < users[0].list.length; i++) {
+      const genericPassword: any[] = []
+      for (let i = 0; i < candidateUsers[0].list.length; i++) {
         genericPassword.push(password)
       }
-      users.push({ key: 'password', list: genericPassword, used: true })
+      candidateUsers.push({ key: 'password', list: genericPassword, used: true })
     }
 
     try {
       // Agregamos el campo ticket_id sino hacemos esto, la validación de campos seleccionados para importar lo quita y finalmente se pierde
-      users = users.map((column) => {
+      const preprocessedUsers = candidateUsers.map((column) => {
         if (column.key === 'ticket_id') {
           column.used = true
         }
@@ -62,41 +66,61 @@ class ImportUsers extends Component {
 
       //Quitamos de los usuarios traidos del excel los campos que no se seleccionaron para importar  y luego enviamos
       //al componente result que realiza la importación uno a uno usando el api
-      Async.waterfall(
+      Async.waterfall<any[]>(
         [
-          function (cb) {
-            const newUsers = users
+          function (cb: (err: any, ...args: any[]) => void) {
+            const newUsers = preprocessedUsers
             // const newUsers = users.filter((user) => {
             //   return user.used
             // })
             cb(null, newUsers)
           },
-          function (newUsers, cb) {
+          function (
+            newUsers: typeof preprocessedUsers,
+            cb: (err: any, ...args: any[]) => void,
+          ) {
+            console.debug('importing (2)', { newUsers })
             const long = newUsers[0].list.length
-            const itemsecondwaterfall = []
-            let initwaterfallcounter = 0
-            for (; initwaterfallcounter < long; ) {
-              itemsecondwaterfall[initwaterfallcounter] = {}
-              initwaterfallcounter++
+            const itemSecondWaterfall: any[] = []
+            let initWaterfallCounter = 0
+            for (; initWaterfallCounter < long; ) {
+              itemSecondWaterfall[initWaterfallCounter] = {}
+              initWaterfallCounter++
             }
-            if (initwaterfallcounter === long) {
-              cb(null, itemsecondwaterfall, newUsers)
+            if (initWaterfallCounter === long) {
+              cb(null, itemSecondWaterfall, newUsers)
             }
           },
-          function (items, newUsers, cb) {
+          function (
+            items: any[],
+            newUsers: typeof preprocessedUsers,
+            cb: (err: any, ...args: any[]) => void,
+          ) {
+            console.debug('importing (3)', { items, newUsers })
             const len = newUsers.length
             for (let i = 0; i < items.length; i++) {
               for (let j = 0; j < len; j++) {
                 items[i][newUsers[j].key] = newUsers[j].list[i]
               }
             }
-            cb(items)
+            cb(null, items)
           },
         ],
-        function (result) {
-          self.setState((prevState) => {
-            return { step: prevState.step + 1, toImport: result }
-          })
+        function (err, result) {
+          if (err) {
+            console.error(err)
+            StateMessage.show(
+              null,
+              'error',
+              'Hay un error al procesar la cola de usuarios',
+            )
+            return
+          }
+
+          console.debug('importing (4)', { result })
+
+          setStep((previous) => previous + 1)
+          setToImport(result!)
         },
       )
       StateMessage.destroy('loading')
@@ -108,69 +132,59 @@ class ImportUsers extends Component {
     }
   }
 
-  closeModal = () => {
-    this.setState({ list: [] })
-    this.props.handleModal()
-  }
-
-  // getDerivedStateFromProps(nextProps) {
-  //   if (nextProps.modal !== this.props.modal) {
-  //     this.setState({ modal: nextProps.modal, step: 0 });
+  // const closeModal = () => {
+  //   setList([])
+  //   if (typeof props.handleModal === 'function') {
+  //     props.handleModal()
   //   }
   // }
 
-  /* onChange = step => {
-    console.log('onChange:', step);
-    this.setState({ step });
-  }; */
+  const layout = [
+    <Importacion
+      key={1}
+      handleXls={handleXls}
+      extraFields={props.extraFields}
+      organization={props.organization}
+      event={props.event || null}
+    />,
+    <Preview
+      key={2}
+      list={list}
+      eventId={props.eventId}
+      importUsers={importUsers}
+      extraFields={props.extraFields}
+      no_send_mail={disableSendMail}
+      onChangeCheckbox={onChangeCheckbox}
+    />,
+    <Result
+      key={3}
+      list={toImport}
+      eventId={props.eventId}
+      extraFields={props.extraFields}
+      organization={props.organization}
+      locationParams={props.locationParams}
+      no_send_mail={disableSendMail}
+    />,
+  ]
 
-  render() {
-    const layout = [
-      <Importacion
-        key={1}
-        handleXls={this.handleXls}
-        extraFields={this.props.extraFields}
-        organization={this.props.organization}
-        event={this.props.event || null}
-      />,
-      <Preview
-        key={2}
-        list={this.state.list}
-        eventId={this.props.eventId}
-        importUsers={this.importUsers}
-        extraFields={this.props.extraFields}
-        no_send_mail={this.state.no_send_mail}
-        onChangeCheckbox={this.onChangeCheckbox}
-      />,
-      <Result
-        key={3}
-        list={this.state.toImport}
-        eventId={this.props.eventId}
-        extraFields={this.props.extraFields}
-        organization={this.props.organization}
-        locationParams={this.props.locationParams}
-        no_send_mail={this.state.no_send_mail}
-      />,
-    ]
-    return (
-      <>
-        <Header
-          title={<Link to="..">Invitados</Link>}
-          back
-          description="Importación de usuarios - Excel"
-        />
-        <br />
-        <Steps current={this.state.step} /* onChange={this.onChange} */>
-          <Step title="Importar" />
-          <Step title="Relacionar" />
-          <Step title="Resultado" />
-        </Steps>
-        <br />
+  return (
+    <>
+      <Header
+        title={<Link to="..">Invitados</Link>}
+        back
+        description="Importación de usuarios - Excel"
+      />
+      <br />
+      <Steps current={step} /* onChange={this.onChange} */>
+        <Step title="Importar" />
+        <Step title="Relacionar" />
+        <Step title="Resultado" />
+      </Steps>
+      <br />
 
-        <div>{layout[this.state.step]}</div>
-      </>
-    )
-  }
+      <div>{layout[step]}</div>
+    </>
+  )
 }
 
 export default ImportUsers

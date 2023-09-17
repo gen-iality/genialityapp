@@ -350,7 +350,7 @@ class Preview extends Component {
         <br />
         <Checkbox
           defaultChecked={this.props.no_send_mail}
-          onChange={this.props.onChangeCheckbox}
+          onChange={(e) => this.props.onChangeCheckbox(e.target.checked)}
         >
           No deseo notificar por correo a los usuarios
         </Checkbox>
