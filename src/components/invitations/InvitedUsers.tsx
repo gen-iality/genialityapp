@@ -1,25 +1,31 @@
-import { useEffect, useState } from 'react'
+import { FunctionComponent, useEffect, useState } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
-import InvitedUsers from './eventUsersList'
+import EventUsersList from './eventUsersList'
 import CreateMessage from './send'
 import ImportUsers from '../import-users/importUser'
 import { EventsApi } from '@helpers/request'
 
-function ListaInvitados(props) {
-  const { eventId, event } = props
+interface IInvitedUsersProps {
+  event: any
+}
+
+const InvitedUsers: FunctionComponent<IInvitedUsersProps> = (props) => {
+  const { event } = props
 
   const location = useLocation()
 
-  useEffect(() => {
-    if (location.pathname.startsWith(`/eventadmin/${eventId}`)) {
-      obtenerEvento()
-    }
+  const getEventData = async () => {
+    const respEvento = await EventsApi.getOne(event._id)
+    setUserProperties(respEvento.user_properties)
+  }
 
-    async function obtenerEvento() {
-      const respEvento = await EventsApi.getOne(eventId)
-      setUserProperties(respEvento.user_properties)
+  useEffect(() => {
+    if (!event?._id) return
+
+    if (location.pathname.startsWith(`/eventadmin/${event._id}`)) {
+      getEventData()
     }
-  }, [location.pathname])
+  }, [location.pathname, event])
 
   const [guestSelected, setGuestSelected] = useState([])
   const [userProperties, setUserProperties] = useState([])
@@ -29,28 +35,26 @@ function ListaInvitados(props) {
       <Route
         path="/"
         element={
-          <InvitedUsers
+          <EventUsersList
             event={event}
-            eventID={eventId}
+            eventID={event._id}
             setGuestSelected={setGuestSelected}
           />
         }
       />
       <Route
-        exact
         path="/createmessage"
         element={
-          <CreateMessage event={event} eventID={eventId} selection={guestSelected} />
+          <CreateMessage event={event} eventID={event._id} selection={guestSelected} />
         }
       />
 
       <Route
-        exact
         path="/importar-excel"
         element={
           <ImportUsers
             extraFields={userProperties}
-            eventId={eventId}
+            eventId={event._id}
             event={event}
             locationParams={location}
           />
@@ -60,4 +64,4 @@ function ListaInvitados(props) {
   )
 }
 
-export default ListaInvitados
+export default InvitedUsers
