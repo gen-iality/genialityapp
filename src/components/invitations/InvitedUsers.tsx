@@ -2,7 +2,7 @@ import { FunctionComponent, useEffect, useState } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import EventUsersList from './eventUsersList'
 import CreateMessage from './send'
-import ImportUsers from '../import-users/importUser'
+import ImportUsers from '../import-users/ImportUsers'
 import { EventsApi } from '@helpers/request'
 
 interface IInvitedUsersProps {
