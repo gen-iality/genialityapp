@@ -7,6 +7,7 @@ import Async from 'async'
 import Header from '@antdComponents/Header'
 import { Steps } from 'antd'
 import { StateMessage } from '@context/MessageService'
+import { FieldType } from './types'
 
 interface IImportUsersProps {
   event: any
@@ -21,12 +22,12 @@ const { Step } = Steps
 
 const ImportUsers: FunctionComponent<IImportUsersProps> = (props) => {
   const [step, setStep] = useState(0)
-  const [list, setList] = useState<any[]>([])
+  const [list, setList] = useState<FieldType[]>([])
   const [toImport, setToImport] = useState<any[]>([])
 
   const [disableSendMail, setDisableSendMail] = useState(false)
 
-  const handleXls = (thingList: any[]) => {
+  const handleXls = (thingList: FieldType[]) => {
     console.debug('xlsx loaded:', thingList)
     if (thingList.length >= 2) {
       setStep((previous) => previous + 1)
@@ -39,7 +40,7 @@ const ImportUsers: FunctionComponent<IImportUsersProps> = (props) => {
     console.debug('disableSendMail', disableSendMail)
   }
 
-  const importUsers = (candidateUsers: any[], password: string) => {
+  const importUsers = (candidateUsers: FieldType[], password: string) => {
     console.debug('users to import', candidateUsers)
     StateMessage.show(
       'loading',
@@ -66,7 +67,7 @@ const ImportUsers: FunctionComponent<IImportUsersProps> = (props) => {
 
       //Quitamos de los usuarios traidos del excel los campos que no se seleccionaron para importar  y luego enviamos
       //al componente result que realiza la importación uno a uno usando el api
-      Async.waterfall<any[]>(
+      Async.waterfall<FieldType[]>(
         [
           function (cb: (err: any, ...args: any[]) => void) {
             const newUsers = preprocessedUsers
