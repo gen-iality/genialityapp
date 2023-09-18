@@ -104,7 +104,21 @@ const ImportUsers: FunctionComponent<IImportUsersProps> = (props) => {
                 items[i][newUsers[j].key] = newUsers[j].list[i]
               }
             }
-            cb(null, items)
+            const noUndefinedItems = items
+              .filter((item) => {
+                if (item.names === undefined || item.email === undefined) {
+                  console.warn('user event data is invalid:', item)
+                  return false
+                }
+                return true
+              })
+              .map((item) => {
+                if (item.rol_name === undefined) {
+                  item.rol_name = typeof item.rol === 'string' ? item.rol : 'Attendee' // I see that the backend needs this and validate that this exists
+                }
+                return item
+              })
+            cb(null, noUndefinedItems)
           },
         ],
         function (err, result) {
