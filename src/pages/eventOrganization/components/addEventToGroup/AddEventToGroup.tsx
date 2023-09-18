@@ -38,9 +38,9 @@ export const AddEventToGroup = ({ selectedEvent }: Props) => {
   /* todo: validar que al editar desde aqui solo importa ser admin en la organizacion */
   return (
     <Select
-      disabled={isLoadingSelect}
+      disabled={isLoadingSelect || isLoading}
       onClear={() => onAddEventToGroup(undefined)}
-      value={selectedGroup}
+      value={groupEvent.length > 0 ? selectedGroup : null}
       style={{ width: '100%' }}
       onSelect={onAddEventToGroup}
       loading={isLoading || isLoadingSelect}
