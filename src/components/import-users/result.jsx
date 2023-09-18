@@ -2,6 +2,7 @@ import { Component } from 'react'
 import Async from 'async'
 import { Actions } from '@helpers/request'
 import { Row, Col, Tag, Tabs, Table, Spin } from 'antd'
+import { StateMessage } from '@context/MessageService'
 
 const { TabPane } = Tabs
 const { Column } = Table
@@ -115,12 +116,17 @@ class Result extends Component {
                 cb()
               })
               .catch((err) => {
+                console.error(err)
                 if (err.response) {
                   const { data } = err.response
                   let error = 'ERROR '
                   Object.keys(data).map((field) => {
-                    return (error = error + data[field][0] + ' ')
+                    const passed = Array.isArray(data[field])
+                      ? data[field][0]
+                      : data[field]
+                    return (error = error + passed + ' ')
                   })
+                  StateMessage.show(null, 'error', `mensaje: ${error.toString()}`)
                   notok[key] = {
                     [extraFields[0].name]: user[extraFields[0].name],
                     [extraFields[1].name]: user[extraFields[1].name],
