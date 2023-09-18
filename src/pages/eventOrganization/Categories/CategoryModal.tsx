@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Modal, Input, ModalProps, Button } from 'antd';
 import { ICategory } from '../interface/category.interface';
 import { CategoriesApi } from '@/helpers/request';
@@ -17,6 +17,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
   ...modalProps
 }) => {
   const [nameCategory, setNameCategory] = useState('');
+  const inputRef = useRef<any>();
 
   const handledCatgoryName = (value: string) => {
     setNameCategory(value);
@@ -30,7 +31,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
       await CategoriesApi.create(organizationId, nuevoGrupo);
       DispatchMessageService({ action: 'show', type: 'success', msj: 'Se agrego la categoria correctamente' });
       onCancel();
-      updateListCategories()
+      updateListCategories();
     } catch (error) {
       DispatchMessageService({ action: 'show', type: 'info', msj: 'Ocurrio un error al agregar la categoria' });
     }
@@ -41,7 +42,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
     try {
       await CategoriesApi.update(organizationId, selectedCategory.key, { name: nameCategory });
       DispatchMessageService({ action: 'show', type: 'success', msj: 'Se edito la categoria correctamente' });
-      updateListCategories()
+      updateListCategories();
       onCancel();
     } catch (error) {
       DispatchMessageService({ action: 'show', type: 'info', msj: 'No se pudo editar la categoria' });
@@ -55,6 +56,12 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
     }
   }, [selectedCategory]);
 
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
   return (
     <Modal
       {...modalProps}
@@ -62,6 +69,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
       onCancel={onCancel}
       footer={null}>
       <Input
+        ref={inputRef}
         placeholder={'Ingrese el nombre de la categoria'}
         onChange={({ target: { value } }) => {
           handledCatgoryName(value);

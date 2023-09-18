@@ -1,5 +1,5 @@
+import { useEffect, useRef, useState } from 'react';
 import { Button, Input, Modal, ModalProps } from 'antd';
-import React, { useEffect, useState } from 'react';
 import { GroupEvent } from '../../interface/group.interfaces';
 import { GroupsApi } from '@/helpers/request';
 import { DispatchMessageService } from '@/context/MessageService';
@@ -13,7 +13,7 @@ interface Props extends ModalProps {
 
 export const GroupModal = ({ onCancel, selectedGroup, organizationId, updateListGroup, ...modalProps }: Props) => {
   const [groupName, setgroupName] = useState('');
-
+  const inputRef = useRef<any>();
   const handledChange = (value: string) => {
     setgroupName(value);
   };
@@ -49,9 +49,16 @@ export const GroupModal = ({ onCancel, selectedGroup, organizationId, updateList
     }
   }, [selectedGroup]);
 
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
   return (
     <Modal {...modalProps} onCancel={onCancel} title={selectedGroup ? 'Editar grupo' : 'Agregar grupo'} footer={null}>
       <Input
+        ref={inputRef}
         placeholder={'Ingrese el nombre del grupo'}
         value={groupName}
         onChange={({ target: { value } }) => handledChange(value)}
