@@ -1,18 +1,27 @@
-import { useState } from 'react'
+import { FunctionComponent, useState } from 'react'
 import { utils, writeFileXLSX, read } from 'xlsx'
 import dayjs from 'dayjs'
 import momentLocalizer from 'react-widgets-moment'
-import { Row, Col, Button, Divider, Upload } from 'antd'
+import { Row, Col, Button, Divider, Upload, UploadFile, Alert } from 'antd'
 import { DownloadOutlined, InboxOutlined } from '@ant-design/icons'
 import { StateMessage } from '@context/MessageService'
 import { uploadImagedummyRequest } from '@/Utilities/imgUtils'
+import { FieldType } from './types'
 
 dayjs.locale('es')
 momentLocalizer()
 
-const Importacion = (props) => {
+interface IImportationProps {
+  extraFields: any[]
+  organization?: any
+  event: any
+  handleXls: (data: any[]) => void
+}
+
+const Importation: FunctionComponent<IImportationProps> = (props) => {
   const [errMsg, setErrMsg] = useState('')
-  const handleXlsFile = (files) => {
+
+  const handleXlsFile = (files: UploadFile) => {
     if (files.status === 'error') {
       StateMessage.show(null, 'error', 'Error al cargar el archivo excel')
       return
@@ -27,14 +36,14 @@ const Importacion = (props) => {
     const f = files.originFileObj
     const reader = new FileReader()
     try {
-      reader.onload = (e) => {
+      reader.onload = (e: any) => {
         const data = e.target.result
         const workbook = read(data, { type: 'binary' })
         const sheetName = workbook.SheetNames[0]
         const sheetObj = workbook.Sheets[sheetName]
         if (sheetObj['!ref']) {
           const range = utils.decode_range(sheetObj['!ref'])
-          const fields = []
+          const fields: FieldType[] = []
           for (let colNum = range.s.c; colNum <= range.e.c; colNum++) {
             const keyCell = sheetObj[utils.encode_cell({ r: range.s.r, c: colNum })]
             const key = keyCell ? keyCell.v.trim() : undefined
@@ -79,7 +88,7 @@ const Importacion = (props) => {
   }
 
   const downloadExcel = () => {
-    const data = [{}]
+    const data: any[] = [{}]
     props.extraFields.map((extra) => {
       return (data[0][extra.name] = '')
     })
@@ -118,6 +127,7 @@ const Importacion = (props) => {
         </p>
       </div>
       <h2 className="has-text-grey has-text-weight-bold">CAMPOS REQUERIDOS</h2>
+      {errMsg && <Alert type="error" message={errMsg} />}
       <Row wrap gutter={[8, 8]}>
         {addMoreItemsToExtraFields().map((extra, key) => (
           <Col key={key}>
@@ -132,7 +142,9 @@ const Importacion = (props) => {
           <Upload.Dragger
             maxCount={1}
             onChange={(e) => handleXlsFile(e.fileList[0])}
-            onDrop={(e) => handleXlsFile(e.fileList[0])}
+            onDrop={(e) => {
+              console.log('dropped file:', e)
+            }}
             customRequest={uploadImagedummyRequest}
             multiple={false}
             accept=".xls,.xlsx"
@@ -153,4 +165,4 @@ const Importacion = (props) => {
   )
 }
 
-export default Importacion
+export default Importation

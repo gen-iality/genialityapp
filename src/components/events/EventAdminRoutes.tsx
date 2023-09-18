@@ -56,7 +56,7 @@ const Informativesection = loadable(
 )
 
 //invitations
-const InvitedUsers = loadable(() => import('../invitations'))
+const InvitedUsers = loadable(() => import('../invitations/InvitedUsers'))
 
 //Messages
 const Messages = loadable(() => import('../messages'))
@@ -343,10 +343,7 @@ class EventAdminRoutes extends Component<
                 element={<Informativesection eventId={event._id} event={event} />}
               />
               {/** AÚN NO TIENEN PERMISOS */}
-              <Route
-                path="invitados/*"
-                element={<InvitedUsers eventId={event._id} event={event} />}
-              />
+              <Route path="invitados/*" element={<InvitedUsers event={event} />} />
               <Route
                 path="certificate-email"
                 element={<CertificateEmailEditPage event={event} />}
