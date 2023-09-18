@@ -39,8 +39,8 @@ function QuizBadge(props: QuizBadgetProps) {
    */
   const statsMessage = useMemo(() => {
     if (isLoading) return 'N de M'
-    return `${right} de ${total}`
-  }, [isLoading, right, total])
+    return `${right} de ${total} (mínimo ${minimum})`
+  }, [isLoading, right, total, minimum])
 
   useEffect(() => {
     setIsRight(right >= minimum)
