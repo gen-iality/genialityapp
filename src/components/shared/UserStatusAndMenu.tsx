@@ -527,7 +527,7 @@ const UserStatusAndMenu: FunctionComponent<IUserStatusAndMenuProps> = (props) =>
               </Typography.Paragraph>
             ) : extraLandingResources[0].type === 'video' ? (
               <Space direction="vertical" style={{ width: '100%' }}>
-                <ReactPlayer width="100%" url={extraLandingResources[0].url} />
+                <ReactPlayer width="100%" controls url={extraLandingResources[0].url} />
                 <Typography.Paragraph>
                   {extraLandingResources[0].caption}
                 </Typography.Paragraph>
