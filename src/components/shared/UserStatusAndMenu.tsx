@@ -391,7 +391,11 @@ const UserStatusAndMenu: FunctionComponent<IUserStatusAndMenuProps> = (props) =>
     <>
       {!isAtOrganizationLanding && !isAtEventLanding && (
         <Space style={{ marginRight: 16 }}>
-          {organizationMenuItems?.length && organizationMenuItems?.length > 0 ? (
+          {organizations.length === 1 ? (
+            <Link to={`/organization/${organizations[0].id}/events`}>
+              Ir a: {organizations[0].name}
+            </Link>
+          ) : organizationMenuItems?.length && organizationMenuItems?.length > 0 ? (
             <Dropdown menu={{ items: organizationMenuItems }}>
               <a>Ir a la organización</a>
             </Dropdown>
