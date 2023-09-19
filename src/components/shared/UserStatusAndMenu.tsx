@@ -405,6 +405,29 @@ const UserStatusAndMenu: FunctionComponent<IUserStatusAndMenuProps> = (props) =>
     })
   }
 
+  const ExtraLandingResource: FunctionComponent<{
+    resource: ExtraLandingResourceType
+  }> = (props) => {
+    const { resource } = props
+    if (resource.type === 'text') {
+      return (
+        <Button type="link" onClick={openExtraLandingResourceModal}>
+          Ver texto
+        </Button>
+      )
+    }
+
+    if (resource.type === 'video') {
+      return (
+        <Button type="link" onClick={openExtraLandingResourceModal}>
+          {resource.label ?? 'contenido del vídeo'}
+        </Button>
+      )
+    }
+
+    return null
+  }
+
   return (
     <>
       {!isAtOrganizationLanding && !isAtEventLanding && (
@@ -451,15 +474,20 @@ const UserStatusAndMenu: FunctionComponent<IUserStatusAndMenuProps> = (props) =>
           )}
           {!screens.xs && extraLandingResources.length > 0 && (
             <Space style={{ marginLeft: '10px' }}>
-              {extraLandingResources[0].type === 'text' ? (
-                <Button type="link" onClick={openExtraLandingResourceModal}>
-                  Ver texto
-                </Button>
-              ) : extraLandingResources[0].type === 'video' ? (
-                <Button type="link" onClick={openExtraLandingResourceModal}>
-                  Ver: {extraLandingResources[0].caption ?? 'contenido del vídeo'}
-                </Button>
-              ) : null}
+              {extraLandingResources.length === 1 ? (
+                <ExtraLandingResource resource={extraLandingResources[0]} />
+              ) : (
+                <Dropdown
+                  menu={{
+                    items: extraLandingResources.map((resource, index) => ({
+                      key: index,
+                      label: <ExtraLandingResource resource={resource} />,
+                    })),
+                  }}
+                >
+                  <a>Ver recursos extras</a>
+                </Dropdown>
+              )}
             </Space>
           )}
           {loggedInuser}
