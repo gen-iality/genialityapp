@@ -1,4 +1,4 @@
-import { FunctionComponent, useContext, useEffect, useState } from 'react'
+import { FunctionComponent, useContext, useEffect, useMemo, useState } from 'react'
 import { Modal } from 'antd'
 import OrganizationPaymentContext from './OrganizationPaymentContext'
 
@@ -19,6 +19,13 @@ const OrganizationPaymentConfirmationModal: FunctionComponent<
     }
   }, [organization])
 
+  const preAccessMessage = useMemo(() => {
+    const baseMessage: string =
+      organization?.access_settings?.pre_access_message ??
+      '<Este mensaje debe ser definido por el administrador>'
+    return baseMessage.replace('{price}', `${money}`)
+  }, [organization?.access_settings?.pre_access_message, money])
+
   return (
     <Modal
       title="Confirmación Pago"
@@ -27,13 +34,7 @@ const OrganizationPaymentConfirmationModal: FunctionComponent<
       onOk={() => dispatch({ type: 'DISPLAY_PAYMENT' })}
       onCancel={() => dispatch({ type: 'ABORT' })}
     >
-      <p>
-        Para acceder al contenido seleccionado debe suscribirse a ENDOCAMPUS ACE, esta
-        suscripción tiene un costo de 50.000 COP o 15 USD y con ella tiene derecho a
-        material académico desarrollado por la ACE (Congresos y simposios). Esta
-        suscripción tiene vigencia de 1 año a partir de la fecha en que se realice el
-        pago.
-      </p>
+      <p>{preAccessMessage}</p>
     </Modal>
   )
 }

@@ -1,10 +1,12 @@
 import { FunctionComponent, useEffect, useState } from 'react'
-import { Form, Input, InputNumber, Switch } from 'antd'
+import { Divider, Form, Input, InputNumber, Switch } from 'antd'
 
 interface IOrganizationAccessSettingsFieldProps {
   value?: any
   onChange?: (value: any) => void
 }
+
+const PRE_ACCESS_MESSAGE_DEFAULT = 'You have to pay ${price}'
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -19,6 +21,9 @@ const OrganizationAccessSettingsField: FunctionComponent<
   const [isFieldEnabled, setIsFieldEnabled] = useState<boolean>(value?.type === 'payment')
   const [priceValue, setPriceValue] = useState<number>(value?.price ?? 0)
   const [availableDays, setAvailableDays] = useState<number>(value?.days ?? 30)
+  const [preAccessMessage, setPreAccessMessage] = useState<string>(
+    value?.pre_access_message ?? PRE_ACCESS_MESSAGE_DEFAULT,
+  )
   const [customPasswordLabel, setCustomPasswordLabel] = useState<undefined | string>(
     value?.custom_password_label,
   )
@@ -37,8 +42,9 @@ const OrganizationAccessSettingsField: FunctionComponent<
       price,
       type,
       custom_password_label: customPasswordLabel,
+      pre_access_message: preAccessMessage ?? PRE_ACCESS_MESSAGE_DEFAULT,
     })
-  }, [isFieldEnabled, priceValue, availableDays, customPasswordLabel])
+  }, [isFieldEnabled, priceValue, availableDays, customPasswordLabel, preAccessMessage])
 
   return (
     <>
@@ -101,6 +107,17 @@ const OrganizationAccessSettingsField: FunctionComponent<
           </Form.Item>
         </>
       )}
+      <Divider />
+      <Form.Item
+        {...formLayout}
+        label="Mensaje previo al acceso (opcional)"
+        extra="*La etiqueta {price} será remplazada automáticamente por el valor definido"
+      >
+        <Input
+          value={preAccessMessage}
+          onChange={(event) => setPreAccessMessage(event.target.value)}
+        />
+      </Form.Item>
     </>
   )
 }
