@@ -8,27 +8,27 @@ interface Props {
   openCategoryModal: any;
   handledSelectCategory: any;
   organizationId: string;
-  updateListCategories: () => void;
+  isLoadingCategories: boolean;
+  handledDeleteCategory: (categoryId: string) => Promise<void>;
 }
 const CardCategory = ({
   dataSource,
   openCategoryModal,
   handledSelectCategory,
+  isLoadingCategories,
   organizationId,
-  updateListCategories,
+  handledDeleteCategory,
 }: Props) => {
   
   const handleDeleteCategory = async (categoryId: string) => {
     try {
-      await CategoriesApi.delete(organizationId, categoryId);
+      await handledDeleteCategory(categoryId);
       DispatchMessageService({ action: 'show', type: 'success', msj: 'Se elimino correctamente' });
-      updateListCategories();
     } catch (error) {
       DispatchMessageService({ action: 'show', type: 'error', msj: 'No se pudo eliminar, intentelo mas tarde' });
     }
   };
 
-  
   const columns = [
     {
       title: 'Nombre categoría',
@@ -68,7 +68,14 @@ const CardCategory = ({
           {'Agregar'}
         </Button>
       }>
-      <Table columns={columns} dataSource={dataSource} size='small' rowKey='key' pagination={false} />
+      <Table
+        loading={isLoadingCategories}
+        columns={columns}
+        dataSource={dataSource}
+        size='small'
+        rowKey='key'
+        pagination={false}
+      />
     </Card>
   );
 };

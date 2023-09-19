@@ -8,36 +8,41 @@ interface Props extends ModalProps {
   onCancel: () => void;
   selectedGroup?: any;
   organizationId: string;
-  updateListGroup: any;
+  handledUpdate: (groupId: string, newGroupData: GroupEvent) => Promise<void>;
+  handledAddGroup: (newGrupo: GroupEvent) => Promise<void>;
 }
 
-export const GroupModal = ({ onCancel, selectedGroup, organizationId, updateListGroup, ...modalProps }: Props) => {
+export const GroupModal = ({
+  onCancel,
+  selectedGroup,
+  organizationId,
+  handledUpdate,
+  handledAddGroup,
+  ...modalProps
+}: Props) => {
   const [groupName, setgroupName] = useState('');
   const inputRef = useRef<any>();
   const handledChange = (value: string) => {
     setgroupName(value);
   };
 
-  const agregarGrupo = async () => {
+  const onAddGroup = async () => {
     try {
-      const nuevoGrupo: GroupEvent = {
+      await handledAddGroup({
         name: groupName,
-      };
-      await GroupsApi.create(organizationId, nuevoGrupo);
+      });
       DispatchMessageService({ action: 'show', type: 'success', msj: 'Se agrego el grupo correctamente' });
-      updateListGroup();
       onCancel();
     } catch (error) {
       DispatchMessageService({ action: 'show', type: 'info', msj: 'Ocurrio un error al agregar el grupo' });
     }
   };
 
-  const editGroup = async () => {
+  const onEditGroup = async () => {
     try {
-      await GroupsApi.update(organizationId, selectedGroup._id, { name: groupName });
-      DispatchMessageService({ action: 'show', type: 'success', msj: 'Se edito el grupo correctamente' });
-      updateListGroup();
+      await handledUpdate(selectedGroup._id, { name: groupName });
       onCancel();
+      DispatchMessageService({ action: 'show', type: 'success', msj: 'Se edito el grupo correctamente' });
     } catch (error) {
       DispatchMessageService({ action: 'show', type: 'info', msj: 'No se pudo editar el grupo' });
     }
@@ -64,7 +69,7 @@ export const GroupModal = ({ onCancel, selectedGroup, organizationId, updateList
         onChange={({ target: { value } }) => handledChange(value)}
         maxLength={20}
       />
-      <Button onClick={selectedGroup ? editGroup : agregarGrupo}>{selectedGroup ? 'Editar' : 'Agregar'}</Button>
+      <Button onClick={selectedGroup ? onEditGroup : onAddGroup}>{selectedGroup ? 'Editar' : 'Agregar'}</Button>
     </Modal>
   );
 };

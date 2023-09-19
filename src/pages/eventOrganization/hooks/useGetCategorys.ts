@@ -4,10 +4,9 @@ import { ICategory } from '../interface/category.interface';
 
 export const useGetCategorys = (organizationId: string) => {
   const [categories, setCategories] = useState<ICategory[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [reFetch, setReFetch] = useState(false);
+  const [isLoadingCategories, setIsLoading] = useState(true);
 
-  const getCategory = async () => {
+  const getCategorys = async () => {
     try {
       const response: any[] = await CategoriesApi.getAll(organizationId);
       if (response && Array.isArray(response)) {
@@ -27,13 +26,43 @@ export const useGetCategorys = (organizationId: string) => {
     }
   };
 
-  const updateListCategories = () => {
-    setReFetch((current) => !current);
+  const handledDeleteCategory = async (categoryId: string) => {
+    try {
+      await CategoriesApi.delete(organizationId, categoryId);
+      setCategories((currentCategories) => currentCategories.filter((category) => category.key !== categoryId));
+    } catch (error) {
+      throw new Error();
+    }
+  };
+
+  const handledUpdateCategory = async (categoryId: string, newCategoryData: ICategory) => {
+    try {
+      await CategoriesApi.update(organizationId, categoryId, newCategoryData);
+      setCategories((currentCategories) =>
+        currentCategories.map((category) => {
+          if (category.key === categoryId) {
+            return { ...category, name: newCategoryData.name };
+          }
+          return category;
+        })
+      );
+    } catch (error) {
+      throw new Error();
+    }
+  };
+
+  const handledAddCategory = async (newCategory: ICategory) => {
+    try {
+      await CategoriesApi.create(organizationId, newCategory);
+      getCategorys();
+    } catch (error) {
+      throw new Error();
+    }
   };
 
   useEffect(() => {
-    getCategory();
-  }, [organizationId, reFetch]);
+    getCategorys();
+  }, [organizationId]);
 
-  return { categories, isLoading, updateListCategories };
+  return { categories, isLoadingCategories, handledDeleteCategory, handledUpdateCategory, handledAddCategory };
 };

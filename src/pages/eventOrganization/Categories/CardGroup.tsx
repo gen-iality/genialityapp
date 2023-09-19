@@ -1,7 +1,9 @@
 import { Button, Space, Tooltip, Card, Table } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { GroupsApi } from '@/helpers/request';
 import { DispatchMessageService } from '@/context/MessageService';
+import { ModalConfirm } from '@/components/ModalConfirm/ModalConfirm';
+import { useState } from 'react';
+import { GroupEventMongo } from '../interface/group.interfaces';
 //@ts-ignore
 
 interface Props {
@@ -10,8 +12,8 @@ interface Props {
   toggleModalGroup: any;
   organizationId: any;
   selectGroup: any;
-  updateListGroup: any;
-  handledDelete: any;
+  handledDelete: (groupId: string) => Promise<void>;
+  isLoadingGroup: boolean;
 }
 const CardGroupEvent = ({
   dataSource,
@@ -19,18 +21,30 @@ const CardGroupEvent = ({
   toggleModalGroup,
   organizationId,
   selectGroup,
-  updateListGroup,
   handledDelete,
+  isLoadingGroup,
 }: Props) => {
-  const handleDeleteGroupLocal = async (groupId: string) => {
+  const [modalConfirm, setModalConfirm] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState<GroupEventMongo>();
+
+  const handleDeleteGroupLocal = async (group: GroupEventMongo) => {
     try {
-      await GroupsApi.deleteOne(organizationId, groupId);
-      updateListGroup();
+      await handledDelete(group.value);
       DispatchMessageService({ msj: 'Se elimino correctamente', type: 'success', action: 'show' });
     } catch (error) {
       DispatchMessageService({ msj: 'No se pudo eliminar el grupo', type: 'info', action: 'show' });
     }
   };
+
+  const onOpenModalConfirn = (group: GroupEventMongo) => {
+    setSelectedGroup(group);
+    setModalConfirm(true);
+  };
+
+  const onCloseModalConfirm = () => {
+    setModalConfirm(false);
+  };
+
   const columns = [
     {
       title: 'Nombre grupo',
@@ -41,7 +55,7 @@ const CardGroupEvent = ({
       title: 'Acciones',
       key: 'acciones',
       width: 100,
-      render: (text: any, record: { key: any; item: any; label: string; value: string }) => (
+      render: (text: any, record: GroupEventMongo) => (
         <Space>
           <Tooltip title='Editar'>
             <Button
@@ -54,12 +68,7 @@ const CardGroupEvent = ({
             />
           </Tooltip>
           <Tooltip title='Eliminar'>
-            <Button
-              type='primary'
-              danger
-              onClick={() => handleDeleteGroupLocal(record.value)}
-              icon={<DeleteOutlined />}
-            />
+            <Button type='primary' danger onClick={() => onOpenModalConfirn(record)} icon={<DeleteOutlined />} />
           </Tooltip>
         </Space>
       ),
@@ -75,7 +84,26 @@ const CardGroupEvent = ({
           {'Agregar'}
         </Button>
       }>
-      <Table columns={columns} dataSource={dataSource} size='small' rowKey='key' pagination={false} />
+      <Table
+        loading={isLoadingGroup}
+        columns={columns}
+        dataSource={dataSource}
+        size='small'
+        rowKey='key'
+        pagination={false}
+      />
+      {modalConfirm && selectedGroup && (
+        <ModalConfirm
+          visible={modalConfirm}
+          onCancel={onCloseModalConfirm}
+          nameItem={selectedGroup.label}
+          onAction={() => {
+            handleDeleteGroupLocal(selectedGroup);
+          }}
+          titleConfirm={`¿Desea borrar a "${selectedGroup.label}" de la lista?`}
+          descriptionConfirm={`Esta acción borrará permanentemente los datos de "${selectedGroup.label}" de la lista y los evenots asociados seran retirados de este grupo.`}
+        />
+      )}
     </Card>
   );
 };

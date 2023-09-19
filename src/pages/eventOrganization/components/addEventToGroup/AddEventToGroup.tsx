@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const AddEventToGroup = ({ selectedEvent }: Props) => {
-  const { groupEvent, isLoading } = useGetGruopEventList(selectedEvent.organizer_id);
+  const { groupEvent, isLoadingGroup } = useGetGruopEventList(selectedEvent.organizer_id);
   const [selectedGroup, setSelectedGroup] = useState<string | undefined>('');
   const [isLoadingSelect, setIsLoadingSelect] = useState(false);
 
@@ -38,12 +38,12 @@ export const AddEventToGroup = ({ selectedEvent }: Props) => {
   /* todo: validar que al editar desde aqui solo importa ser admin en la organizacion */
   return (
     <Select
-      disabled={isLoadingSelect || isLoading}
+      disabled={isLoadingSelect || isLoadingGroup}
       onClear={() => onAddEventToGroup(undefined)}
       value={groupEvent.length > 0 ? selectedGroup : null}
       style={{ width: '100%' }}
       onSelect={onAddEventToGroup}
-      loading={isLoading || isLoadingSelect}
+      loading={isLoadingGroup || isLoadingSelect}
       size='large'
       placeholder='Seleccionar grupo'
       options={groupEvent}

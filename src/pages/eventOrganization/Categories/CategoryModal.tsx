@@ -1,19 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Modal, Input, ModalProps, Button } from 'antd';
 import { ICategory } from '../interface/category.interface';
-import { CategoriesApi } from '@/helpers/request';
 import { DispatchMessageService } from '@/context/MessageService';
 interface CategoryModalProps extends ModalProps {
   onCancel: () => void;
   selectedCategory?: ICategory;
   organizationId: string;
-  updateListCategories: () => void;
+  handledUpdateCategory: (categoryId: string, newCategoryData: ICategory) => Promise<void>;
+  handledAddCategory: (newGrupo: ICategory) => Promise<void>;
 }
 const CategoryModal: React.FC<CategoryModalProps> = ({
   onCancel,
   selectedCategory,
   organizationId,
-  updateListCategories,
+  handledUpdateCategory,
+  handledAddCategory,
   ...modalProps
 }) => {
   const [nameCategory, setNameCategory] = useState('');
@@ -25,13 +26,11 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
 
   const addCategory = async () => {
     try {
-      const nuevoGrupo: ICategory = {
+      await handledAddCategory({
         name: nameCategory,
-      };
-      await CategoriesApi.create(organizationId, nuevoGrupo);
+      });
       DispatchMessageService({ action: 'show', type: 'success', msj: 'Se agrego la categoria correctamente' });
       onCancel();
-      updateListCategories();
     } catch (error) {
       DispatchMessageService({ action: 'show', type: 'info', msj: 'Ocurrio un error al agregar la categoria' });
     }
@@ -40,9 +39,8 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
   const editCategory = async () => {
     if (!selectedCategory) return;
     try {
-      await CategoriesApi.update(organizationId, selectedCategory.key, { name: nameCategory });
+      await handledUpdateCategory(selectedCategory.key ?? '', { name: nameCategory });
       DispatchMessageService({ action: 'show', type: 'success', msj: 'Se edito la categoria correctamente' });
-      updateListCategories();
       onCancel();
     } catch (error) {
       DispatchMessageService({ action: 'show', type: 'info', msj: 'No se pudo editar la categoria' });

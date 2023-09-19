@@ -1,14 +1,13 @@
 /* eslint-disable no-console */
 import { useEffect, useState } from 'react';
-import { GroupEventMongo } from '../interface/group.interfaces';
+import { GroupEvent, GroupEventMongo } from '../interface/group.interfaces';
 import { GroupsApi } from '@/helpers/request';
 
 export const useGetGruopEventList = (organizationId: string) => {
   const [groupEvent, setGroupEvent] = useState<GroupEventMongo[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [reFetch, setReFetch] = useState(false);
+  const [isLoadingGroup, setIsLoading] = useState(true);
 
-  const fetchData = async () => {
+  const getGroups = async () => {
     try {
       const response: GroupEventMongo[] = await GroupsApi.getGroupsByOrg(organizationId);
       setGroupEvent(response);
@@ -18,20 +17,46 @@ export const useGetGruopEventList = (organizationId: string) => {
       console.error('No se ha podido traer la informacion', error);
     }
   };
+
+  const handledDelete = async (groupId: string) => {
+    try {
+      await GroupsApi.deleteOne(organizationId, groupId);
+      setGroupEvent((currentGroups) => {
+        const newGroups = currentGroups.filter((group) => group.item._id !== groupId);
+        return newGroups;
+      });
+    } catch (error) {
+      throw new Error();
+    }
+  };
+
+  const handledUpdateGroup = async (groupId: string, newGroupData: GroupEvent) => {
+    try {
+      await GroupsApi.update(organizationId, groupId, newGroupData);
+      setGroupEvent((currentGroups) =>
+        currentGroups.map((group) => {
+          if (group.item._id === groupId) {
+            return { ...group, item: { ...group.item, name: newGroupData.name }, label: newGroupData.name };
+          }
+          return group;
+        })
+      );
+    } catch (error) {
+      throw new Error();
+    }
+  };
+
+  const handledAddGroup = async (newGrupo: GroupEvent) => {
+    try {
+      await GroupsApi.create(organizationId, newGrupo);
+      getGroups();
+    } catch (error) {
+      throw new Error();
+    }
+  };
+
   useEffect(() => {
-    fetchData();
-  }, [organizationId, reFetch]);
-
-  const updateListGroup = () => {
-    setReFetch((current) => !current);
-  };
-
-  const handledDelete = (groupId: string) => {
-    setGroupEvent((currentGroups) => {
-      const newGroups = currentGroups.filter((group) => group.item._id !== groupId);
-      return newGroups;
-    });
-  };
-
-  return { isLoading, groupEvent, updateListGroup, handledDelete };
+    getGroups();
+  }, [organizationId]);
+  return { isLoadingGroup, groupEvent, handledDelete, handledUpdateGroup, handledAddGroup, getGroups };
 };
