@@ -48,6 +48,7 @@ const OrganizationAccessSettingsField: FunctionComponent<
 
   return (
     <>
+      <Divider />
       <Form.Item {...formLayout} label="Habilitar modo pago">
         <Form.Item label="Etiqueta en campo contraseña">
           <Input
