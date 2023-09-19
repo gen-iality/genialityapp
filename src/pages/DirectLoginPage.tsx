@@ -1,12 +1,13 @@
-import { LoadingOutlined } from '@ant-design/icons'
+import { LoadingOutlined, WarningOutlined } from '@ant-design/icons'
 import { useCurrentUser } from '@context/userContext'
 import { app } from '@helpers/firebase'
-import { Grid, Image, Result } from 'antd'
+import { Alert, Grid, Image, Result } from 'antd'
 import { FunctionComponent, useEffect, useReducer } from 'react'
 
 type DLState = {
   text?: string
   email?: string
+  failed?: boolean
 }
 
 type DLAction =
@@ -15,6 +16,7 @@ type DLAction =
   | { type: 'LOGGED_IN' }
   | { type: 'REDIRECT' }
   | { type: 'BAB_LOGGING' }
+  | { type: 'ERROR'; errorMessage?: string }
 
 const { useBreakpoint } = Grid
 
@@ -35,21 +37,27 @@ const reducerDL = (state: DLState, action: DLAction): DLState => {
 
         return { ...state, text: 'Iniciando sesión...', email }
       } else {
-        return { ...state, text: 'La URL no proporciona un email' }
+        return { ...state, text: 'La URL no proporciona un email', failed: true }
       }
 
     case 'REDIRECT':
       const redirect = params.get('redirect')
       if (redirect) {
-        setTimeout(() => {
-          window.location.href = redirect
-        }, 5000)
+        // setTimeout(() => {
+        //   window.location.href = redirect
+        // }, 5000)
         return { ...state, text: 'Rediridiendo...' }
       } else {
-        return { ...state, text: 'No se ha podido hacer la redirección' }
+        return { ...state, text: 'No se ha podido hacer la redirección', failed: true }
       }
     case 'BAB_LOGGING':
-      return { ...state, text: 'No se ha podido iniciar sesión' }
+      return { ...state, text: 'No se ha podido iniciar sesión', failed: true }
+    case 'ERROR':
+      return {
+        ...state,
+        text: action.errorMessage ?? 'Error al procesar el link de un sólo uso',
+        failed: true,
+      }
     default:
       return state
   }
@@ -89,6 +97,10 @@ const DirectLoginPage: FunctionComponent = () => {
             dispatch({ type: 'BAB_LOGGING' })
           }
         })
+        .catch((err) => {
+          console.error(err)
+          dispatch({ type: 'ERROR', errorMessage: err.toString() })
+        })
     }
   }, [state.email])
 
@@ -119,12 +131,19 @@ const DirectLoginPage: FunctionComponent = () => {
         }}
       >
         <Result
-          icon={<LoadingOutlined />}
-          status="info"
-          title="Procesando..."
+          icon={state.failed ? <WarningOutlined /> : <LoadingOutlined />}
+          status={state.failed ? 'error' : 'info'}
+          title={state.failed ? 'Proceso fallido' : 'Procesando...'}
           subTitle={state.text}
         />
         <Image preview={false} width={110} src={import.meta.env.VITE_LOGO_SVG} />
+        {state.failed && (
+          <Alert
+            style={{ marginTop: 32 }}
+            type="info"
+            message="Si el enlace ha expirado, por favor solicite otro e intente nuevamente"
+          />
+        )}
       </div>
     </div>
   )
