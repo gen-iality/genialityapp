@@ -8,6 +8,7 @@ import Header from '@antdComponents/Header'
 import { StateMessage } from '@context/MessageService'
 import { CardSelector } from '@components/events/CardSelector'
 import OrganizationAccessSettingsField from './OrganizationAccessSettingsField'
+import OrganizationExtraLandingResources from './OrganizationExtraLandingResources'
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -25,6 +26,7 @@ function OrganizationInformation(props: { org: any }) {
     enable_notification_providers = [],
     access_settings,
     public_help_message,
+    extra_landing_resources,
   } = props.org
 
   const [typeEvents, setTypeEvents] = useState<any[]>([])
@@ -70,6 +72,8 @@ function OrganizationInformation(props: { org: any }) {
       visibility: visibilityState,
       allow_register: allowRegister,
     }
+
+    console.debug('will save the organization data:', organizationData)
 
     try {
       await OrganizationApi.editOne(organizationData, organizationId)
@@ -151,6 +155,14 @@ function OrganizationInformation(props: { org: any }) {
                   initialValue={public_help_message}
                 >
                   <Input placeholder="Mensaje de contacto" />
+                </Form.Item>
+                <Form.Item
+                  label="Recursos públicos del Landing"
+                  name={['organization', 'extra_landing_resources']}
+                  initialValue={extra_landing_resources}
+                  extra="Agrege recursos y defina el tipo de recurso"
+                >
+                  <OrganizationExtraLandingResources />
                 </Form.Item>
               </Col>
             </Row>

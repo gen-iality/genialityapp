@@ -22,6 +22,7 @@ import {
   Grid,
   Typography,
   MenuProps,
+  Alert,
 } from 'antd'
 import {
   ArrowLeftOutlined,
@@ -46,6 +47,8 @@ import { useEventContext } from '@context/eventContext'
 import WithLoading from './withLoading'
 import { useUserEvent } from '@context/eventUserContext'
 import { useCurrentUser } from '@context/userContext'
+import { ExtraLandingResourceType } from '@/pages/eventOrganization/OrganizationExtraLandingResources'
+import ReactPlayer from 'react-player'
 
 const MenuStyle: CSSProperties = {
   flex: 1,
@@ -94,6 +97,16 @@ const UserStatusAndMenu: FunctionComponent<IUserStatusAndMenuProps> = (props) =>
   const [organization, setOrganization] = useState<any>({})
   const [organizations, setOrganizations] = useState<any[]>([])
 
+  const [isOpenedExtraLandingResource, setIsOpenedExtraLandingResource] = useState(false)
+
+  const openExtraLandingResourceModal = () => {
+    setIsOpenedExtraLandingResource(true)
+  }
+
+  const closeExtraLandingResourceModal = () => {
+    setIsOpenedExtraLandingResource(false)
+  }
+
   const cEvent = useEventContext()
   const intl = useIntl()
   const screens = useBreakpoint()
@@ -103,6 +116,11 @@ const UserStatusAndMenu: FunctionComponent<IUserStatusAndMenuProps> = (props) =>
   function linkToTheMenuRouteS(menuRoute: string) {
     window.location.href = `${window.location.origin}${menuRoute}`
   }
+
+  const extraLandingResources: ExtraLandingResourceType[] = useMemo(
+    () => organization?.extra_landing_resources?.resources ?? [],
+    [organization?.extra_landing_resources],
+  )
 
   useEffect(() => {
     OrganizationApi.mine().then((data) => {
@@ -391,7 +409,11 @@ const UserStatusAndMenu: FunctionComponent<IUserStatusAndMenuProps> = (props) =>
     <>
       {!isAtOrganizationLanding && !isAtEventLanding && (
         <Space style={{ marginRight: 16 }}>
-          {organizationMenuItems?.length && organizationMenuItems?.length > 0 ? (
+          {organizations.length === 1 ? (
+            <Link to={`/organization/${organizations[0].id}/events`}>
+              Ir a: {organizations[0].name}
+            </Link>
+          ) : organizationMenuItems?.length && organizationMenuItems?.length > 0 ? (
             <Dropdown menu={{ items: organizationMenuItems }}>
               <a>Ir a la organización</a>
             </Dropdown>
@@ -418,7 +440,6 @@ const UserStatusAndMenu: FunctionComponent<IUserStatusAndMenuProps> = (props) =>
               fallback="http://via.placeholder.com/500/F5F5F7/CCCCCC?text=No%20Image"
             />
           </Link>
-
           {!screens.xs && (
             <Link
               style={{ marginLeft: '10px' }}
@@ -427,6 +448,19 @@ const UserStatusAndMenu: FunctionComponent<IUserStatusAndMenuProps> = (props) =>
             >
               <Text style={{ fontWeight: '700' }}>{organization?.name}</Text>
             </Link>
+          )}
+          {!screens.xs && extraLandingResources.length > 0 && (
+            <Space style={{ marginLeft: '10px' }}>
+              {extraLandingResources[0].type === 'text' ? (
+                <Button type="link" onClick={openExtraLandingResourceModal}>
+                  Ver texto
+                </Button>
+              ) : extraLandingResources[0].type === 'video' ? (
+                <Button type="link" onClick={openExtraLandingResourceModal}>
+                  Ver: {extraLandingResources[0].caption ?? 'contenido del vídeo'}
+                </Button>
+              ) : null}
+            </Space>
           )}
           {loggedInuser}
         </>
@@ -478,6 +512,35 @@ const UserStatusAndMenu: FunctionComponent<IUserStatusAndMenuProps> = (props) =>
           loggedOutUser
         )}
       </Space>
+
+      <Modal
+        open={isOpenedExtraLandingResource}
+        onCancel={closeExtraLandingResourceModal}
+        onOk={closeExtraLandingResourceModal}
+        cancelButtonProps={{ disabled: true }}
+      >
+        {extraLandingResources.length > 0 ? (
+          <>
+            {extraLandingResources[0].type === 'text' ? (
+              <Typography.Paragraph>
+                {extraLandingResources[0].content}
+              </Typography.Paragraph>
+            ) : extraLandingResources[0].type === 'video' ? (
+              <Space direction="vertical" style={{ width: '100%' }}>
+                <ReactPlayer width="100%" url={extraLandingResources[0].url} />
+                <Typography.Paragraph>
+                  {extraLandingResources[0].caption}
+                </Typography.Paragraph>
+              </Space>
+            ) : null}
+          </>
+        ) : (
+          <Alert
+            type="error"
+            message="Sin contenido extra configurado para el landing de la organización"
+          />
+        )}
+      </Modal>
     </>
   )
 }
