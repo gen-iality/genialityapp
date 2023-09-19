@@ -1,5 +1,5 @@
 /** React's libraries */
-import { useEffect, useState } from 'react'
+import { CSSProperties, FunctionComponent, useEffect, useMemo, useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Link, useLocation, useParams } from 'react-router-dom'
 
@@ -21,6 +21,7 @@ import {
   Image,
   Grid,
   Typography,
+  MenuProps,
 } from 'antd'
 import {
   ArrowLeftOutlined,
@@ -39,13 +40,14 @@ import LogoutIcon from '@2fd/ant-design-icons/lib/Logout'
 import { OrganizationApi } from '@helpers/request'
 
 /** Context */
-import withContext from '@context/withContext'
 import { useEventContext } from '@context/eventContext'
 
 /** Components */
 import WithLoading from './withLoading'
+import { useUserEvent } from '@context/eventUserContext'
+import { useCurrentUser } from '@context/userContext'
 
-const MenuStyle = {
+const MenuStyle: CSSProperties = {
   flex: 1,
   textAlign: 'right',
 }
@@ -60,8 +62,21 @@ const { confirm, destroyAll } = Modal
 const { useBreakpoint } = Grid
 const { Text } = Typography
 
-const UserStatusAndMenu = (props) => {
-  const { cEventUser } = props
+interface IUserStatusAndMenuProps {
+  user: any
+  menuOpen: boolean
+  photo: string
+  name: string
+  userEvent: any
+  eventId: string
+  logout: (callBack: any) => any
+  openMenu: () => any
+  loginInfo: string
+  anonimususer?: boolean
+  setViewPerfil: (data: any) => any
+}
+
+const UserStatusAndMenu: FunctionComponent<IUserStatusAndMenuProps> = (props) => {
   const user = props.user
   const photo = props.photo
   const name = props.name
@@ -76,14 +91,16 @@ const UserStatusAndMenu = (props) => {
   const [isAtOrganizationLanding, setIsAtOrganizationLanding] = useState(false)
   const [isAtEventLanding, setIsAtEventLanding] = useState(false)
   const [isAtHome, setIsAtHome] = useState(false)
-  const [organization, setOrganization] = useState({})
-  const [organizations, setOrganizations] = useState({})
+  const [organization, setOrganization] = useState<any>({})
+  const [organizations, setOrganizations] = useState<any[]>([])
 
   const cEvent = useEventContext()
   const intl = useIntl()
   const screens = useBreakpoint()
+  const cEventUser = useUserEvent()
+  const cUser = useCurrentUser()
 
-  function linkToTheMenuRouteS(menuRoute) {
+  function linkToTheMenuRouteS(menuRoute: string) {
     window.location.href = `${window.location.origin}${menuRoute}`
   }
 
@@ -125,6 +142,19 @@ const UserStatusAndMenu = (props) => {
       setIsAtHome(true)
     }
   }, [location.pathname])
+
+  const organizationMenuItems: MenuProps['items'] = useMemo(() => {
+    if (!Array.isArray(organizations)) return [] as MenuProps['items']
+
+    return organizations.map((organization, index) => {
+      return {
+        key: index,
+        label: (
+          <Link to={`/organization/${organization.id}/events`}>{organization.name}</Link>
+        ),
+      }
+    }) as MenuProps['items']
+  }, [organizations])
 
   const menu = !props.anonimususer ? (
     <Menu>
@@ -229,7 +259,7 @@ const UserStatusAndMenu = (props) => {
             }
           >
             {isSomeAdminUser && (
-              <Button block type="primary" size="medium">
+              <Button block type="primary" size="middle">
                 <FormattedMessage id="header.create_event" defaultMessage="Crear curso" />
               </Button>
             )}
@@ -270,9 +300,7 @@ const UserStatusAndMenu = (props) => {
   ) : (
     <Menu>
       {!props.anonimususer ? (
-        <Menu.Item
-          style={ItemStyle}
-        >{`Bienvenido ${props.cUser?.value?.names}`}</Menu.Item>
+        <Menu.Item style={ItemStyle}>{`Bienvenido ${cUser?.value?.names}`}</Menu.Item>
       ) : (
         <Menu.Item
           data-testid="menu-item-logout"
@@ -362,18 +390,12 @@ const UserStatusAndMenu = (props) => {
   return (
     <>
       {!isAtOrganizationLanding && !isAtEventLanding && (
-        <Space justify="end">
-          <Link
-            title="Ir a la organización"
-            to={`/organization/${
-              Array.isArray(organizations) && organizations[0]?.id
-            }/events`}
-          >
-            <Text style={{ fontWeight: '700', paddingRight: '5px' }}>
-              {' '}
-              {Array.isArray(organizations) && organizations[0]?.name}
-            </Text>
-          </Link>
+        <Space style={{ marginRight: 16 }}>
+          {organizationMenuItems?.length && organizationMenuItems?.length > 0 ? (
+            <Dropdown menu={{ items: organizationMenuItems }}>
+              <a>Ir a la organización</a>
+            </Dropdown>
+          ) : null}
         </Space>
       )}
       {isAtOrganizationLanding && (
@@ -382,14 +404,15 @@ const UserStatusAndMenu = (props) => {
             title="Ir a la organización"
             to={`/organization/${organization._id}/events`}
           >
-            <img
+            <Image
+              preview={false}
               style={{
                 height: '50px',
                 borderRadius: '10px',
                 boxShadow: '2px 2px 10px 1px rgba(0,0,0,0.25)',
                 backgroundColor: '#FFFFFF',
                 width: 'auto',
-                maxWith: '50%',
+                maxWidth: '50px',
               }}
               src={organization?.styles?.event_image || 'error'}
               fallback="http://via.placeholder.com/500/F5F5F7/CCCCCC?text=No%20Image"
@@ -409,7 +432,7 @@ const UserStatusAndMenu = (props) => {
         </>
       )}
 
-      <Space justify="end">
+      <Space>
         {isAtEventLanding && (
           <Link
             title="Ir a la organización"
@@ -431,7 +454,7 @@ const UserStatusAndMenu = (props) => {
             {/* este link del CMS se tiene que validar que sea solo para administradores */}
             {false && isAtEventLanding && (
               <>
-                <Space justify="end">
+                <Space>
                   <Link
                     title="Ir al CMS del curso"
                     to={`/eventadmin/${cEvent.value?._id}`}
@@ -463,8 +486,4 @@ const mapDispatchToProps = {
   setViewPerfil,
 }
 
-const UserStatusAndMenuWithContext = withContext(UserStatusAndMenu)
-export default connect(
-  null,
-  mapDispatchToProps,
-)(WithLoading(UserStatusAndMenuWithContext))
+export default connect(null, mapDispatchToProps)(WithLoading(UserStatusAndMenu))
