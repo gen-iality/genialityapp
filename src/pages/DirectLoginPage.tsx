@@ -15,6 +15,7 @@ type DLAction =
   | { type: 'LOGGED_IN' }
   | { type: 'REDIRECT' }
   | { type: 'BAB_LOGGING' }
+  | { type: 'ERROR'; errorMessage?: string }
 
 const { useBreakpoint } = Grid
 
@@ -41,15 +42,20 @@ const reducerDL = (state: DLState, action: DLAction): DLState => {
     case 'REDIRECT':
       const redirect = params.get('redirect')
       if (redirect) {
-        setTimeout(() => {
-          window.location.href = redirect
-        }, 5000)
+        // setTimeout(() => {
+        //   window.location.href = redirect
+        // }, 5000)
         return { ...state, text: 'Rediridiendo...' }
       } else {
         return { ...state, text: 'No se ha podido hacer la redirección' }
       }
     case 'BAB_LOGGING':
       return { ...state, text: 'No se ha podido iniciar sesión' }
+    case 'ERROR':
+      return {
+        ...state,
+        text: action.errorMessage ?? 'Error al procesar el link de un sólo uso',
+      }
     default:
       return state
   }
@@ -88,6 +94,10 @@ const DirectLoginPage: FunctionComponent = () => {
           } else {
             dispatch({ type: 'BAB_LOGGING' })
           }
+        })
+        .catch((err) => {
+          console.error(err)
+          dispatch({ type: 'ERROR', errorMessage: err.toString() })
         })
     }
   }, [state.email])
