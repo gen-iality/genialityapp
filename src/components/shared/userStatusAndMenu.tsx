@@ -1,5 +1,5 @@
 /** React's libraries */
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Link, useLocation, useParams } from 'react-router-dom'
 
@@ -21,6 +21,7 @@ import {
   Image,
   Grid,
   Typography,
+  MenuProps,
 } from 'antd'
 import {
   ArrowLeftOutlined,
@@ -125,6 +126,19 @@ const UserStatusAndMenu = (props) => {
       setIsAtHome(true)
     }
   }, [location.pathname])
+
+  const organizationMenuItems: MenuProps['items'] = useMemo(() => {
+    if (!Array.isArray(organizations)) return [] as MenuProps['items']
+
+    return organizations.map((organization, index) => {
+      return {
+        key: index,
+        label: (
+          <Link to={`/organization/${organization.id}/events`}>{organization.name}</Link>
+        ),
+      }
+    }) as MenuProps['items']
+  }, [organizations])
 
   const menu = !props.anonimususer ? (
     <Menu>
@@ -362,18 +376,12 @@ const UserStatusAndMenu = (props) => {
   return (
     <>
       {!isAtOrganizationLanding && !isAtEventLanding && (
-        <Space justify="end">
-          <Link
-            title="Ir a la organización"
-            to={`/organization/${
-              Array.isArray(organizations) && organizations[0]?.id
-            }/events`}
-          >
-            <Text style={{ fontWeight: '700' }}>
-              {' '}
-              {Array.isArray(organizations) && organizations[0]?.name}
-            </Text>
-          </Link>
+        <Space style={{ marginRight: 16 }}>
+          {organizationMenuItems?.length && organizationMenuItems?.length > 0 ? (
+            <Dropdown menu={{ items: organizationMenuItems }}>
+              <a>Ir a la organización</a>
+            </Dropdown>
+          ) : null}
         </Space>
       )}
       {isAtOrganizationLanding && (
