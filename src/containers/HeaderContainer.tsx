@@ -39,7 +39,7 @@ import ModalLoginHelpers from '@components/authentication/ModalLoginHelpers'
 import MenuOld from '@components/events/shared/menu'
 import { recordTypeForThisEvent } from '@components/events/Landing/helpers/thisRouteCanBeDisplayed'
 import ErrorServe from '@components/modal/serverError'
-import UserStatusAndMenu from '@components/shared/userStatusAndMenu'
+import UserStatusAndMenu from '@components/shared/UserStatusAndMenu'
 import { OrganizationFuction } from '@helpers/request'
 
 const { useBreakpoint } = Grid
