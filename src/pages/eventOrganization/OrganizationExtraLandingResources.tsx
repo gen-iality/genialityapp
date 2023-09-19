@@ -1,16 +1,17 @@
 import { DeleteOutlined } from '@ant-design/icons'
 import { Button, Divider, Form, Input, Modal, Select, Space } from 'antd'
 import { FunctionComponent, useEffect, useState } from 'react'
-import ReactPlayer from 'react-player'
 
 export type ExtraLandingResourceType =
   | {
       type: 'video'
+      label: string
       url: string
       caption?: string
     }
   | {
       type: 'text'
+      label: string
       content: string
     }
 
@@ -36,6 +37,7 @@ const OrganizationExtraLandingResources: FunctionComponent<
       ...resources,
       {
         type: 'text',
+        label: '',
         content: '',
       },
     ])
@@ -49,10 +51,10 @@ const OrganizationExtraLandingResources: FunctionComponent<
     const copy = [...resources]
     switch (type) {
       case 'text':
-        copy[index] = { type: 'text', content: '' }
+        copy[index] = { type: 'text', label: copy[index].label ?? '', content: '' }
         break
       case 'video':
-        copy[index] = { type: 'video', url: '' }
+        copy[index] = { type: 'video', label: copy[index].label ?? '', url: '' }
         break
       default:
         Modal.error({
@@ -154,7 +156,25 @@ const OrganizationExtraLandingResources: FunctionComponent<
               value={resource.type}
               onChange={(value) => changeResourceType(value, index)}
             />
-            {renderByType(resource, index)}
+            <Space direction="vertical">
+              <Form.Item
+                label="Etiqueta"
+                validateStatus={resource.label ? 'success' : 'error'}
+                help={!resource.label ? 'Este valor es necesario' : undefined}
+              >
+                <Input
+                  value={resource.label}
+                  onChange={(event) => {
+                    const copy = [...resources]
+                    resource.label = event.target.value ?? ''
+                    copy[index] = resource
+                    setResources(copy)
+                  }}
+                  placeholder="Etiqueta"
+                />
+              </Form.Item>
+              {renderByType(resource, index)}
+            </Space>
           </Space>
           <Button danger onClick={() => deleteField(index)} icon={<DeleteOutlined />}>
             Eliminar
