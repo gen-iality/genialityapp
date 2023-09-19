@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable array-callback-return */
 import { useState, useEffect } from 'react';
 import {
   Avatar,
@@ -62,7 +64,6 @@ const MainProfile = (props) => {
   const { helperDispatch } = useHelper();
   const IS_USER_ADMIN = props.cUser?.value?.is_admin 
 	const cUser = UseCurrentUser();
-	console.log(cUser?.value)
   const showSider = () => {
     if (!collapsed) {
       setCollapsed(true);
@@ -344,7 +345,7 @@ const MainProfile = (props) => {
                       </Row>
                     </Col>
                     <Col span={24}>
-                      <Divider orientation='left'>Eventos creado</Divider>
+                      <Divider orientation='left'>Eventos creados</Divider>
                       <Row gutter={[16, 16]}>
                         {eventsIHaveCreatedIsLoading ? (
                           <Loading />
