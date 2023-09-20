@@ -21,11 +21,12 @@ export const GroupModal = ({
 }: Props) => {
   const inputRef = useRef<any>();
   const [form] = Form.useForm<GroupEvent>();
+
   const onAddGroup = async (newGroupData: GroupEvent) => {
     try {
       await handledAddGroup({
         name: newGroupData.name,
-        accest_to_all_organization: newGroupData.accest_to_all_organization,
+        free_access_organization: newGroupData.free_access_organization,
       });
       DispatchMessageService({ action: 'show', type: 'success', msj: 'Se agrego el grupo correctamente' });
       onCancel();
@@ -47,12 +48,12 @@ export const GroupModal = ({
   useEffect(() => {
     if (selectedGroup) {
       form.setFieldsValue({
-        accest_to_all_organization: selectedGroup.item.accest_to_all_organization,
+        free_access_organization: selectedGroup.item.free_access_organization,
         name: selectedGroup.item.name,
       });
     } else {
       form.setFieldsValue({
-        accest_to_all_organization: false,
+        free_access_organization: false,
         name: '',
       });
     }
@@ -71,7 +72,8 @@ export const GroupModal = ({
           <Input ref={inputRef} placeholder={'Ingrese el nombre del grupo'} maxLength={20} />
         </Form.Item>
         <Form.Item
-          name={'accest_to_all_organization'}
+          valuePropName='checked'
+          name={'free_access_organization'}
           label={<label>Acceso libre para los miembros de la organización</label>}>
           <Switch />
         </Form.Item>

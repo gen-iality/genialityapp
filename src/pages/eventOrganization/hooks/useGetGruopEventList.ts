@@ -36,7 +36,15 @@ export const useGetGruopEventList = (organizationId: string) => {
       setGroupEvent((currentGroups) =>
         currentGroups.map((group) => {
           if (group.item._id === groupId) {
-            return { ...group, item: { ...group.item, name: newGroupData.name }, label: newGroupData.name };
+            return {
+              ...group,
+              item: {
+                ...group.item,
+                name: newGroupData.name,
+                free_access_organization: newGroupData.free_access_organization,
+              },
+              label: newGroupData.name,
+            };
           }
           return group;
         })
