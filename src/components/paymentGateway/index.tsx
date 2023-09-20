@@ -1,7 +1,7 @@
 import Header from '@antdComponents/Header'
 import { Col, Form, Row, Input, Switch, Space, Button, Divider } from 'antd'
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons'
-import { KindOfKey, usePayment } from '@/hooks/paymentGateways/usePayment'
+import { KindOfKey, usePaymentManager } from '@/hooks/paymentGateways/usePaymentManager'
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -20,7 +20,7 @@ const PaymentGateway = ({ org }: any) => {
     onEnableTestChange,
     updatePaymentGateway,
     repairPaymentGateway,
-  } = usePayment(org)
+  } = usePaymentManager(org)
 
   return (
     <>

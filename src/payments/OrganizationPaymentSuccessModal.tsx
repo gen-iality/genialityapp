@@ -6,7 +6,7 @@ import OrganizationPaymentContext from './OrganizationPaymentContext'
 import dayjs from 'dayjs'
 import { StateMessage } from '@context/MessageService'
 import { LoadingOutlined } from '@ant-design/icons'
-import { usePayment } from '@/hooks/paymentGateways/usePayment'
+import { usePaymentManager } from '@/hooks/paymentGateways/usePaymentManager'
 
 interface IOrganizationPaymentSuccessModalProps {
   organizationUser: OrganizationUserType
@@ -20,7 +20,7 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
 
   const { paymentStep, result, dispatch } = useContext(OrganizationPaymentContext)
   const [isLoading, setIsLoading] = useState(true)
-  const { getStatusPayment } = usePayment(organization ?? {})
+  const { getStatusPayment } = usePaymentManager(organization ?? {})
   const [stateTransaction, setStateTransaction] = useState<any>(null)
 
   const SendId = async () => {

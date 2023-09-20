@@ -45,7 +45,9 @@ type PaymentManagerHook = {
   getStatusPayment: (transactionId: string) => any
 }
 
-export function usePayment<T extends OrganizationLike = {}>(org: T): PaymentManagerHook {
+export function usePaymentManager<T extends OrganizationLike = {}>(
+  org: T,
+): PaymentManagerHook {
   const {
     _id: organizationId,
     privateKeyProd,
