@@ -21,7 +21,7 @@ const InfoEvent = ({ paddingOff, preview }) => {
   //Validacion temporal para el evento audi
   const idEvent = cEventValues?._id;
   const intl = useIntl();
-  const { getDateStart, getDateEnd, getStartTime, getEndTime } = useGetMultiDate(idEvent);
+  const { getStartTime} = useGetMultiDate(idEvent);
   const getDateEvent = () => {
     if (!cEventValues) return <></>;
     const MIN_DATES = 1;

@@ -1,7 +1,8 @@
 import { Button, Space, Tooltip, Card, Table } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { CategoriesApi } from '@/helpers/request';
 import { DispatchMessageService } from '@/context/MessageService';
+import { useState } from 'react';
+import { ModalConfirm } from '@/components/ModalConfirm/ModalConfirm';
 
 interface Props {
   dataSource: any;
@@ -11,6 +12,10 @@ interface Props {
   isLoadingCategories: boolean;
   handledDeleteCategory: (categoryId: string) => Promise<void>;
 }
+interface ICategory {
+  name: string;
+  key: string
+}
 const CardCategory = ({
   dataSource,
   openCategoryModal,
@@ -19,14 +24,26 @@ const CardCategory = ({
   organizationId,
   handledDeleteCategory,
 }: Props) => {
-  
+  const [modalConfirm, setModalConfirm] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<ICategory>();
+
   const handleDeleteCategory = async (categoryId: string) => {
     try {
       await handledDeleteCategory(categoryId);
       DispatchMessageService({ action: 'show', type: 'success', msj: 'Se elimino correctamente' });
+      setModalConfirm(false);
     } catch (error) {
       DispatchMessageService({ action: 'show', type: 'error', msj: 'No se pudo eliminar, intentelo mas tarde' });
     }
+  };
+
+  const onOpenModalConfirn = (record: any) => {
+    setItemToDelete(record);
+    setModalConfirm(true);
+  };
+
+  const onCloseModalConfirm = () => {
+    setModalConfirm(false);
   };
 
   const columns = [
@@ -52,7 +69,7 @@ const CardCategory = ({
             />
           </Tooltip>
           <Tooltip title='Eliminar'>
-            <Button type='primary' danger onClick={() => handleDeleteCategory(record.key)} icon={<DeleteOutlined />} />
+            <Button type='primary' danger onClick={() => onOpenModalConfirn(record)} icon={<DeleteOutlined />} />
           </Tooltip>
         </Space>
       ),
@@ -76,6 +93,18 @@ const CardCategory = ({
         rowKey='key'
         pagination={false}
       />
+      {modalConfirm && itemToDelete && (
+        <ModalConfirm
+          visible={modalConfirm}
+          onCancel={onCloseModalConfirm}
+          nameItem={itemToDelete.name}
+          onAction={() => {
+            handleDeleteCategory(itemToDelete.key);
+          }}
+          titleConfirm={`¿Desea borrar a "${itemToDelete.name}" de la lista?`}
+          descriptionConfirm={`Esta acción borrará permanentemente los datos de la categoría`}
+        />
+      )}
     </Card>
   );
 };
