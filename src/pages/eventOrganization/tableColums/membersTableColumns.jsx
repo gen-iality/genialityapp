@@ -96,7 +96,7 @@ export const columns = (
     sorter: (a, b) => (a.payment_plan?.price ?? 0) - (b.payment_plan?.price ?? 0),
     ...membersGetColumnSearchProps('payment_plan'),
     render(payment_plan) {
-      console.log('payment_plan', payment_plan)
+      // console.log('payment_plan', payment_plan)
       return payment_plan?.price ? 'Premium' : 'Free'
     },
   }
