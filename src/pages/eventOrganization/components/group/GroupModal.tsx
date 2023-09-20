@@ -21,7 +21,6 @@ export const GroupModal = ({
 }: Props) => {
   const inputRef = useRef<any>();
   const [form] = Form.useForm<GroupEvent>();
-  console.log('selectedGroup', selectedGroup);
   const onAddGroup = async (newGroupData: GroupEvent) => {
     try {
       await handledAddGroup({
@@ -67,11 +66,13 @@ export const GroupModal = ({
 
   return (
     <Modal {...modalProps} onCancel={onCancel} title={selectedGroup ? 'Editar grupo' : 'Agregar grupo'} footer={null}>
-      <Form form={form} onFinish={selectedGroup ? onEditGroup : onAddGroup}>
-        <Form.Item name={'name'}>
+      <Form form={form} onFinish={selectedGroup ? onEditGroup : onAddGroup} layout='vertical'>
+        <Form.Item name={'name'} label={<label>Nombre</label>}>
           <Input ref={inputRef} placeholder={'Ingrese el nombre del grupo'} maxLength={20} />
         </Form.Item>
-        <Form.Item name={'accest_to_all_organization'}>
+        <Form.Item
+          name={'accest_to_all_organization'}
+          label={<label>Acceso libre para los miembros de la organización</label>}>
           <Switch />
         </Form.Item>
         <Button htmlType='submit'>{selectedGroup ? 'Editar' : 'Agregar'}</Button>
