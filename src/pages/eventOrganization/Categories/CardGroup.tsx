@@ -11,7 +11,7 @@ interface Props {
   handledOpenModalGroup: any;
   toggleModalGroup: any;
   organizationId: any;
-  selectGroup: any;
+  selectGroup: (groupEvent: GroupEventMongo) => void;
   handledDelete: (groupId: string) => Promise<void>;
   isLoadingGroup: boolean;
 }
@@ -62,7 +62,7 @@ const CardGroupEvent = ({
               type='primary'
               onClick={() => {
                 handledOpenModalGroup();
-                selectGroup(record.item);
+                selectGroup(record);
               }}
               icon={<EditOutlined />}
             />

@@ -10,6 +10,7 @@ import { useGetGruopEventList } from '../hooks/useGetGruopEventList';
 import { ICategory } from '../interface/category.interface';
 import { useGetCategorys } from '../hooks/useGetCategorys';
 import { useModalLogic } from '@/hooks/useModalLogic';
+import { GroupEventMongo } from '../interface/group.interfaces';
 
 const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
   const { groupEvent, handledDelete, handledUpdateGroup, isLoadingGroup, handledAddGroup } = useGetGruopEventList(
@@ -22,9 +23,9 @@ const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
     handledUpdateCategory,
     isLoadingCategories,
   } = useGetCategorys(organizationId);
-  const { closeGroupModal, isOpenGroupModal, openGroupModal, selectedGroup, handledSelectGroup } = useModalLogic(
-    'Group'
-  );
+  const { closeGroupModal, isOpenGroupModal, openGroupModal, selectedGroup, handledSelectGroup } = useModalLogic<
+    GroupEventMongo
+  >('Group');
   const {
     isOpenCategoryModal,
     closeCategoryModal,
