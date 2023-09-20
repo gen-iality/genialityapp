@@ -39,7 +39,7 @@ import MenuLanding from '@components/menuLanding/index'
 import NoMatchPage from '@components/notFoundPage/NoMatchPage'
 import ValidateAccessRouteCms from '@components/roles/hooks/ValidateAccessRouteCms'
 import OrganizationTimeTrackingPage from './timetracking/OrganizationTimeTrackingPage'
-import PaymentGateway from '@components/paymentGateway'
+import PaymentGateway from '@components/paymentGateway/PaymentGateway'
 
 interface IProtectedProps {
   orgId: string
