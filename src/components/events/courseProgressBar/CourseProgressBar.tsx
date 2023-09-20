@@ -109,8 +109,10 @@ function CourseProgressBar(props: CourseProgressBarProps) {
   }, [incomingActivities])
 
   useEffect(() => {
+    const orderedIncomingActivities =
+      orderActivities<ExtendedAgendaType>(incomingActivities)
     setActivities(
-      incomingActivities.filter(
+      orderedIncomingActivities.filter(
         (activity) => !nonPublishedActivities.includes(activity._id!),
       ),
     )
@@ -136,41 +138,43 @@ function CourseProgressBar(props: CourseProgressBarProps) {
 
   const activityAndAttendeeList = useMemo(
     () =>
-      cEventProgress.filteredActivities.map((activity) => {
-        const attendee = cEventProgress.checkedInFilteredActivities.find(
-          (attende) =>
-            attende.activity_id == activity._id || attende.activityId == activity._id,
-        )
-        let isViewed = false
-        console.log('xxa attendee', attendee)
-        if (attendee) {
-          const humanViewProgress = (attendee.viewProgress ?? 0) * 100
-          if (attendee.checked_in) {
-            isViewed = true
-          } else if (
-            humanViewProgress >=
-            (event?.progress_settings?.lesson_percent_to_completed ?? 0)
-          ) {
-            isViewed = true
-          } else if (isSurveyLike(activity)) {
-            isViewed = true
+      orderActivities(cEventProgress.filteredActivities)
+        .filter((activity) => !nonPublishedActivities.includes(activity._id!))
+        .map((activity) => {
+          const attendee = cEventProgress.checkedInFilteredActivities.find(
+            (attende) =>
+              attende.activity_id == activity._id || attende.activityId == activity._id,
+          )
+          let isViewed = false
+          console.log('xxa attendee', attendee)
+          if (attendee) {
+            const humanViewProgress = (attendee.viewProgress ?? 0) * 100
+            if (attendee.checked_in) {
+              isViewed = true
+            } else if (
+              humanViewProgress >=
+              (event?.progress_settings?.lesson_percent_to_completed ?? 0)
+            ) {
+              isViewed = true
+            } else if (isSurveyLike(activity)) {
+              isViewed = true
+            } else {
+              console.log(
+                'xxa',
+                humanViewProgress,
+                event?.progress_settings?.lesson_percent_to_completed,
+              )
+              isViewed = false
+            }
           } else {
-            console.log(
-              'xxa',
-              humanViewProgress,
-              event?.progress_settings?.lesson_percent_to_completed,
-            )
-            isViewed = false
+            console.log('xxa no', activity)
           }
-        } else {
-          console.log('xxa no', activity)
-        }
 
-        return {
-          ...activity,
-          isViewed,
-        }
-      }),
+          return {
+            ...activity,
+            isViewed,
+          }
+        }),
     [
       cEventProgress.filteredActivities,
       cEventProgress.checkedInFilteredActivities,
