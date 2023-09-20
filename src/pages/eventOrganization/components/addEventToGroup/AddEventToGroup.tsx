@@ -1,5 +1,5 @@
 import { Select } from 'antd';
-import { useGetGruopEventList } from '../../hooks/useGetGruopEventList';
+import { useCrudGruopEventList } from '../../hooks/useCrudGruopEventList';
 import { EventsApi } from '@/helpers/request';
 import { DispatchMessageService } from '@/context/MessageService';
 import { useEffect, useState } from 'react';
@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const AddEventToGroup = ({ selectedEvent }: Props) => {
-  const { groupEvent, isLoadingGroup } = useGetGruopEventList(selectedEvent.organizer_id);
+  const { groupEvent, isLoadingGroup } = useCrudGruopEventList(selectedEvent.organizer_id);
   const [selectedGroup, setSelectedGroup] = useState<string | undefined>('');
   const [isLoadingSelect, setIsLoadingSelect] = useState(false);
 

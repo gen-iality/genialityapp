@@ -3,12 +3,13 @@ import { useEffect, useState } from 'react';
 import { GroupEvent, GroupEventMongo } from '../interface/group.interfaces';
 import { GroupsApi } from '@/helpers/request';
 
-export const useGetGruopEventList = (organizationId: string) => {
+export const useCrudGruopEventList = (organizationId: string) => {
   const [groupEvent, setGroupEvent] = useState<GroupEventMongo[]>([]);
   const [isLoadingGroup, setIsLoading] = useState(true);
 
   const getGroups = async () => {
     try {
+      setIsLoading(true);
       const response: GroupEventMongo[] = await GroupsApi.getGroupsByOrg(organizationId);
       setGroupEvent(response);
       setIsLoading(false);

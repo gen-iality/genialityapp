@@ -6,14 +6,14 @@ import CategoryModal from './CategoryModal';
 import CardCategory from './CardCategory';
 import CardGroupEvent from './CardGroup';
 import { GroupModal } from '../components/group/GroupModal';
-import { useGetGruopEventList } from '../hooks/useGetGruopEventList';
+import { useCrudGruopEventList } from '../hooks/useCrudGruopEventList';
 import { ICategory } from '../interface/category.interface';
 import { useGetCategorys } from '../hooks/useGetCategorys';
 import { useModalLogic } from '@/hooks/useModalLogic';
 import { GroupEventMongo } from '../interface/group.interfaces';
 
 const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
-  const { groupEvent, handledDelete, handledUpdateGroup, isLoadingGroup, handledAddGroup } = useGetGruopEventList(
+  const { groupEvent, handledDelete, handledUpdateGroup, isLoadingGroup, handledAddGroup } = useCrudGruopEventList(
     organizationId
   );
   const {
