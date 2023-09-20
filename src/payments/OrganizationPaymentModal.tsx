@@ -35,6 +35,18 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
   const { organizationUser, organization } = props
   console.log('organizationUser', organizationUser)
 
+  // Función para obtener la llave pública de la organización en modo de pruebas en caso de que exista,
+  // de lo contrario se retorna la llave pública establecida en las env's.
+
+  const publicKeyW = useMemo(() => {
+    //aquí se establece la llave pública de la organización en modo de pruebas, si se va para prod cambiar a publicKeyProd
+    if (organization?.publicKeyTest) {
+      return organization?.publicKeyTest
+    } else {
+      return publicKey
+    }
+  }, [organization])
+
   const money = useMemo(
     () => organization?.access_settings?.price || 50000,
     [organization],
@@ -94,7 +106,7 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
       reference: `${new Date().getTime()}-${organization._id}-${
         organizationUser.account_id
       }`,
-      publicKey: publicKey,
+      publicKey: publicKeyW,
       redirectUrl,
       customerData: {
         email: organizationUser.user.email,
