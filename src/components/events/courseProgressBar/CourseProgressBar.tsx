@@ -109,8 +109,10 @@ function CourseProgressBar(props: CourseProgressBarProps) {
   }, [incomingActivities])
 
   useEffect(() => {
+    const orderedIncomingActivities =
+      orderActivities<ExtendedAgendaType>(incomingActivities)
     setActivities(
-      incomingActivities.filter(
+      orderedIncomingActivities.filter(
         (activity) => !nonPublishedActivities.includes(activity._id!),
       ),
     )
