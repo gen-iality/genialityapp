@@ -1,12 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
-import { Button, Input, Modal, ModalProps } from 'antd';
-import { GroupEvent } from '../../interface/group.interfaces';
-import { GroupsApi } from '@/helpers/request';
+import { useEffect, useRef } from 'react';
+import { Button, Form, Input, Modal, ModalProps, Switch } from 'antd';
+import { GroupEvent, GroupEventMongo } from '../../interface/group.interfaces';
 import { DispatchMessageService } from '@/context/MessageService';
 
 interface Props extends ModalProps {
   onCancel: () => void;
-  selectedGroup?: any;
+  selectedGroup?: GroupEventMongo;
   organizationId: string;
   handledUpdate: (groupId: string, newGroupData: GroupEvent) => Promise<void>;
   handledAddGroup: (newGrupo: GroupEvent) => Promise<void>;
@@ -20,16 +19,14 @@ export const GroupModal = ({
   handledAddGroup,
   ...modalProps
 }: Props) => {
-  const [groupName, setgroupName] = useState('');
   const inputRef = useRef<any>();
-  const handledChange = (value: string) => {
-    setgroupName(value);
-  };
-
-  const onAddGroup = async () => {
+  const [form] = Form.useForm<GroupEvent>();
+  console.log('selectedGroup', selectedGroup);
+  const onAddGroup = async (newGroupData: GroupEvent) => {
     try {
       await handledAddGroup({
-        name: groupName,
+        name: newGroupData.name,
+        accest_to_all_organization: newGroupData.accest_to_all_organization,
       });
       DispatchMessageService({ action: 'show', type: 'success', msj: 'Se agrego el grupo correctamente' });
       onCancel();
@@ -38,9 +35,9 @@ export const GroupModal = ({
     }
   };
 
-  const onEditGroup = async () => {
+  const onEditGroup = async (newGroupData: GroupEvent) => {
     try {
-      await handledUpdate(selectedGroup._id, { name: groupName });
+      await handledUpdate(selectedGroup?.item._id ?? '', newGroupData);
       onCancel();
       DispatchMessageService({ action: 'show', type: 'success', msj: 'Se edito el grupo correctamente' });
     } catch (error) {
@@ -50,7 +47,15 @@ export const GroupModal = ({
 
   useEffect(() => {
     if (selectedGroup) {
-      setgroupName(selectedGroup.name);
+      form.setFieldsValue({
+        accest_to_all_organization: selectedGroup.item.accest_to_all_organization,
+        name: selectedGroup.item.name,
+      });
+    } else {
+      form.setFieldsValue({
+        accest_to_all_organization: false,
+        name: '',
+      });
     }
   }, [selectedGroup]);
 
@@ -62,14 +67,15 @@ export const GroupModal = ({
 
   return (
     <Modal {...modalProps} onCancel={onCancel} title={selectedGroup ? 'Editar grupo' : 'Agregar grupo'} footer={null}>
-      <Input
-        ref={inputRef}
-        placeholder={'Ingrese el nombre del grupo'}
-        value={groupName}
-        onChange={({ target: { value } }) => handledChange(value)}
-        maxLength={20}
-      />
-      <Button onClick={selectedGroup ? onEditGroup : onAddGroup}>{selectedGroup ? 'Editar' : 'Agregar'}</Button>
+      <Form form={form} onFinish={selectedGroup ? onEditGroup : onAddGroup}>
+        <Form.Item name={'name'}>
+          <Input ref={inputRef} placeholder={'Ingrese el nombre del grupo'} maxLength={20} />
+        </Form.Item>
+        <Form.Item name={'accest_to_all_organization'}>
+          <Switch />
+        </Form.Item>
+        <Button htmlType='submit'>{selectedGroup ? 'Editar' : 'Agregar'}</Button>
+      </Form>
     </Modal>
   );
 };

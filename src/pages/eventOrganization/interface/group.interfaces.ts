@@ -1,5 +1,6 @@
 export interface GroupEvent {
   name: string;
+  accest_to_all_organization: boolean;
 }
 
 export interface GroupEventMongo extends OptionType {
@@ -10,6 +11,7 @@ export interface GroupEventMongo extends OptionType {
     updated_at: string;
     created_at: string;
     amount_events: number;
+    accest_to_all_organization: boolean;
   };
 }
 
