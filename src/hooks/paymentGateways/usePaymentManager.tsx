@@ -70,6 +70,7 @@ export function usePaymentManager<T extends OrganizationLike = {}>(
     let organizationData: OrganizationLike = {}
 
     if (paymentGateway) {
+      console.debug('will to update keys')
       const { publicKeyProd, privateKeyProd } = paymentGateway
       organizationData = {
         ...organization,
@@ -77,6 +78,7 @@ export function usePaymentManager<T extends OrganizationLike = {}>(
         privateKeyProd,
       }
     } else if (paymentGatewayTest) {
+      console.debug('will to update testing keys')
       const { publicKeyTest, privateKeyTest } = paymentGatewayTest
       organizationData = {
         ...organization,
@@ -119,6 +121,17 @@ export function usePaymentManager<T extends OrganizationLike = {}>(
       console.warn('the value `kindOfKey` is invalid:', kindOfKey)
       return
     }
+
+    console.debug(
+      'repair',
+      kindOfKey === KindOfKey.PRODUCTION
+        ? 'production'
+        : kindOfKey === KindOfKey.TESTING
+        ? 'testing'
+        : null,
+      'to',
+      organizationData,
+    )
 
     // Update the data
     try {

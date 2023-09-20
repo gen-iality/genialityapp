@@ -2,7 +2,7 @@ import Header from '@antdComponents/Header'
 import { Col, Form, Row, Input, Switch, Space, Button, Divider } from 'antd'
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons'
 import { KindOfKey, usePaymentManager } from '@/hooks/paymentGateways/usePaymentManager'
-import { FunctionComponent } from 'react'
+import { FunctionComponent, useEffect } from 'react'
 
 interface IPaymentGatewayProps {
   org: any
@@ -15,6 +15,10 @@ const formLayout = {
 
 const PaymentGateway: FunctionComponent<IPaymentGatewayProps> = (props) => {
   const { org } = props
+
+  useEffect(() => {
+    console.log('PaymentGateway:', org)
+  }, [org])
 
   const {
     isEnabled,
@@ -60,7 +64,7 @@ const PaymentGateway: FunctionComponent<IPaymentGatewayProps> = (props) => {
               name={['paymentGateway', 'publicKeyProd']}
               label="Llave pública (Producción)"
               initialValue={publicKey}
-              required
+              rules={[{ required: true, message: 'Este valor es necesario' }]}
             >
               <Input placeholder="Llave pública aquí" />
             </Form.Item>
@@ -68,7 +72,7 @@ const PaymentGateway: FunctionComponent<IPaymentGatewayProps> = (props) => {
               name={['paymentGateway', 'privateKeyProd']}
               label="Llave privada (Producción)"
               initialValue={privateKey}
-              required
+              rules={[{ required: true, message: 'Este valor es necesario' }]}
             >
               <Input.Password
                 placeholder="Llave privada aquí"
@@ -114,7 +118,7 @@ const PaymentGateway: FunctionComponent<IPaymentGatewayProps> = (props) => {
               name={['paymentGatewayTest', 'publicKeyTest']}
               label="Llave pública (Modo de Prueba)"
               initialValue={publicTestKey}
-              required
+              rules={[{ required: true, message: 'Este valor es necesario' }]}
             >
               <Input placeholder="Llave pública aquí" />
             </Form.Item>
@@ -122,7 +126,7 @@ const PaymentGateway: FunctionComponent<IPaymentGatewayProps> = (props) => {
               name={['paymentGatewayTest', 'privateKeyTest']}
               label="Llave privada (Modo de Prueba)"
               initialValue={privateTestKey}
-              required
+              rules={[{ required: true, message: 'Este valor es necesario' }]}
             >
               <Input.Password
                 type="password"
