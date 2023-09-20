@@ -1,8 +1,51 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { StateMessage } from '@context/MessageService'
 import { OrganizationApi, PaymentGatewayApi } from '@helpers/request'
 
-export const usePayment = (org: any) => {
+export enum KindOfKey {
+  PRODUCTION,
+  TESTING,
+}
+
+type OrganizationLike = {
+  _id?: string
+  privateKeyProd?: string
+  privateKeyTest?: string
+  publicKeyProd?: string
+  publicKeyTest?: string
+}
+
+type PaymentGatewayOrganization = {
+  organization: any
+  paymentGateway?: {
+    publicKeyProd: string
+    privateKeyProd: string
+  }
+  paymentGatewayTest?: {
+    publicKeyTest: string
+    privateKeyTest: string
+  }
+}
+
+type PaymentManagerHook = {
+  isEnabled: boolean
+  isEnabledTest: boolean
+  publicKey?: string | null
+  privateKey?: string | null
+  publicTestKey?: string | null
+  privateTestKey?: string | null
+  updatePublicKey: (pk: string) => void
+  updatePrivateKey: (pk: string) => void
+  updatePublicTestKey: (pk: string) => void
+  updatePrivateTestKey: (pk: string) => void
+  onEnableChange: (value: boolean) => void
+  onEnableTestChange: (value: boolean) => void
+  updatePaymentGateway: (values: PaymentGatewayOrganization) => void
+  repairPaymentGateway: (kindOfKey: KindOfKey, checked: boolean) => void
+  getStatusPayment: (transactionId: string) => any
+}
+
+export function usePayment<T extends OrganizationLike = {}>(org: T): PaymentManagerHook {
   const {
     _id: organizationId,
     privateKeyProd,
@@ -10,29 +53,19 @@ export const usePayment = (org: any) => {
     publicKeyProd,
     publicKeyTest,
   } = org
-  const [checked, setChecked] = useState(publicKeyProd ? false : true)
-  const [checkedTest, setCheckedTest] = useState(publicKeyTest ? false : true)
+
+  const [isEnabled, setIsEnabled] = useState(publicKeyProd ? false : true)
+  const [isEnabledTest, setIsEnabledTest] = useState(publicKeyTest ? false : true)
   const [publicKey, setPublicKey] = useState(publicKeyProd ?? null)
   const [privateKey, setPrivateKey] = useState(privateKeyProd ?? null)
-  const [testPublicKey, setTestPublicKey] = useState(publicKeyTest ?? null)
-  const [testPrivateKey, setTestPrivateKey] = useState(privateKeyTest ?? null)
+  const [publicTestKey, setPublicTestKey] = useState(publicKeyTest ?? null)
+  const [privateTestKey, setPrivateTestKey] = useState(privateKeyTest ?? null)
 
-  const label = checked
-    ? 'Habilitar pasarela de pagos personalizada.'
-    : 'Deshabilitar pasarela de pagos personalizada.'
-
-  const labelTest = checkedTest
-    ? 'Habilitar pasarela de pagos. (en modo de pruebas)'
-    : 'Deshabilitar pasarela de pagos. (en modo de pruebas)'
-
-  const formLayout = {
-    labelCol: { span: 24 },
-    wrapperCol: { span: 24 },
-  }
-
-  async function updatePaymentGatewayOrganization(values: any) {
+  const updatePaymentGateway: PaymentManagerHook['updatePaymentGateway'] = async (
+    values,
+  ) => {
     const { organization, paymentGateway, paymentGatewayTest } = values
-    let organizationData = {}
+    let organizationData: OrganizationLike = {}
 
     if (paymentGateway) {
       const { publicKeyProd, privateKeyProd } = paymentGateway
@@ -50,6 +83,9 @@ export const usePayment = (org: any) => {
       }
     }
 
+    /**
+     * @todo create a new endpoint to save that value because those access tokens can be accessed from public GET request. When that new endpoint gets be created, you should not edit all the organzation, only the payment access tokens
+     */
     try {
       await OrganizationApi.editOne(organizationData, organizationId)
       StateMessage.show(null, 'success', 'Información actualizada correctamente')
@@ -58,33 +94,40 @@ export const usePayment = (org: any) => {
     }
   }
 
-  async function updatePaymentGatewayByCheckbox(typeCheckbox: number, checked: boolean) {
-    if (typeCheckbox == 0 && checked == true) {
-      const organizationData = {
-        publicKeyProd: null,
-        privateKeyProd: null,
-      }
-      try {
-        await OrganizationApi.editOne(organizationData, organizationId)
-        StateMessage.show(null, 'success', 'Información actualizada correctamente')
-      } catch (error) {
-        StateMessage.show(null, 'error', 'No se pudo actualizar la información')
-      }
-    } else if (typeCheckbox == 1 && checked == true) {
-      const organizationData = {
-        publicKeyTest: null,
-        privateKeyTest: null,
-      }
-      try {
-        await OrganizationApi.editOne(organizationData, organizationId)
-        StateMessage.show(null, 'success', 'Información actualizada correctamente')
-      } catch (error) {
-        StateMessage.show(null, 'error', 'No se pudo actualizar la información')
-      }
+  const repairPaymentGateway: PaymentManagerHook['repairPaymentGateway'] = async (
+    kindOfKey,
+    checked,
+  ) => {
+    if (checked) return
+
+    const organizationData =
+      kindOfKey == KindOfKey.PRODUCTION
+        ? {
+            publicKeyProd: null,
+            privateKeyProd: null,
+          }
+        : kindOfKey == KindOfKey.TESTING
+        ? {
+            publicKeyTest: null,
+            privateKeyTest: null,
+          }
+        : null
+
+    if (organizationData === null) {
+      console.warn('the value `kindOfKey` is invalid:', kindOfKey)
+      return
+    }
+
+    // Update the data
+    try {
+      await OrganizationApi.editOne(organizationData, organizationId)
+      StateMessage.show(null, 'success', 'Información actualizada correctamente')
+    } catch (error) {
+      StateMessage.show(null, 'error', 'No se pudo actualizar la información')
     }
   }
 
-  async function getStatusPayment(result: any) {
+  const getStatusPayment: PaymentManagerHook['getStatusPayment'] = async (result) => {
     try {
       const response = await PaymentGatewayApi.get(result)
       return response
@@ -97,23 +140,30 @@ export const usePayment = (org: any) => {
   }
 
   return {
-    checked,
-    checkedTest,
-    label,
-    labelTest,
+    isEnabled,
+    isEnabledTest,
     publicKey,
     privateKey,
-    testPublicKey,
-    testPrivateKey,
-    formLayout,
-    setPublicKey,
-    setPrivateKey,
-    setTestPublicKey,
-    setTestPrivateKey,
-    setChecked,
-    setCheckedTest,
-    updatePaymentGatewayOrganization,
-    updatePaymentGatewayByCheckbox,
+    publicTestKey: publicTestKey,
+    privateTestKey: privateTestKey,
+    updatePublicKey: (pk) => setPublicKey(pk),
+    updatePrivateKey: (pk) => setPrivateKey(pk),
+    updatePublicTestKey: (pk) => setPublicTestKey(pk),
+    updatePrivateTestKey: (pk) => setPrivateTestKey(pk),
+    onEnableChange: (value) => {
+      setIsEnabled(value)
+      // if (value && isEnabledTest) {
+      //   setIsEnabledTest(false)
+      // }
+    },
+    onEnableTestChange: (value) => {
+      setIsEnabledTest(value)
+      // if (value && isEnabled) {
+      //   setIsEnabled(false)
+      // }
+    },
+    updatePaymentGateway,
+    repairPaymentGateway,
     getStatusPayment,
   }
 }

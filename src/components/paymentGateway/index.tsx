@@ -1,50 +1,52 @@
 import Header from '@antdComponents/Header'
-import { Checkbox, Col, Form, Row, Input } from 'antd'
+import { Col, Form, Row, Input, Switch, Space, Button, Divider } from 'antd'
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons'
-import { usePayment } from '@/hooks/paymentGateways/usePayment'
+import { KindOfKey, usePayment } from '@/hooks/paymentGateways/usePayment'
+
+const formLayout = {
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 },
+}
 
 const PaymentGateway = ({ org }: any) => {
   const {
-    checked,
-    checkedTest,
-    label,
-    labelTest,
-    formLayout,
+    isEnabled,
+    isEnabledTest,
     publicKey,
     privateKey,
-    testPublicKey,
-    testPrivateKey,
-    setChecked,
-    setCheckedTest,
-    updatePaymentGatewayOrganization,
-    updatePaymentGatewayByCheckbox,
+    publicTestKey,
+    privateTestKey,
+    onEnableChange,
+    onEnableTestChange,
+    updatePaymentGateway,
+    repairPaymentGateway,
   } = usePayment(org)
 
   return (
     <>
       <Header
-        title={`Pasarela de pago`}
+        title="Pasarela de pago"
         back
         description="(Podrás guardar la configuración de tu pasarela de pago en la parte inferior)"
       />
-      {/* Formulario de Producción*/}
-
-      <Checkbox
-        checked={checked}
-        onChange={() => {
-          setChecked(!checked)
-          updatePaymentGatewayByCheckbox(0, !checked)
-        }}
-      >
-        {label}
-      </Checkbox>
+      <Space direction="horizontal">
+        <Switch
+          checked={isEnabled}
+          onChange={(checked) => {
+            onEnableChange(checked)
+            repairPaymentGateway(KindOfKey.PRODUCTION, checked)
+          }}
+          checkedChildren="Habilitada"
+          unCheckedChildren="Deshabilitada"
+        />
+        Pasarela de pago
+      </Space>
       <Form
-        disabled={checked}
         {...formLayout}
+        disabled={!isEnabled}
         size="small"
-        onFinish={updatePaymentGatewayOrganization}
+        onFinish={updatePaymentGateway}
       >
-        <Header title={``} description="" save form />
         <Row justify="center" gutter={[8, 8]} wrap>
           <Col span={12}>
             <Form.Item
@@ -53,7 +55,7 @@ const PaymentGateway = ({ org }: any) => {
               initialValue={publicKey}
               required
             >
-              <Input type="text" />
+              <Input placeholder="Llave pública aquí" />
             </Form.Item>
             <Form.Item
               name={['paymentGateway', 'privateKeyProd']}
@@ -62,56 +64,72 @@ const PaymentGateway = ({ org }: any) => {
               required
             >
               <Input.Password
-                type="password"
+                placeholder="Llave privada aquí"
                 iconRender={(visible) =>
                   visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
                 }
               />
             </Form.Item>
+
+            <Form.Item>
+              <Button htmlType="submit" type="primary" size="middle">
+                Guardar
+              </Button>
+            </Form.Item>
           </Col>
         </Row>
       </Form>
-      <Checkbox
-        checked={checkedTest}
-        onChange={() => {
-          setCheckedTest(!checkedTest)
-          updatePaymentGatewayByCheckbox(1, !checkedTest)
-        }}
-      >
-        {labelTest}
-      </Checkbox>
+
+      <Divider />
 
       {/* Formulario de Pruebas*/}
-
+      <Space direction="horizontal">
+        <Switch
+          checked={isEnabledTest}
+          onChange={(checked) => {
+            onEnableTestChange(checked)
+            repairPaymentGateway(KindOfKey.TESTING, checked)
+          }}
+          checkedChildren="Habilitada"
+          unCheckedChildren="Deshabilitada"
+        />
+        Pasarela de pago (en modo de prueba)
+      </Space>
       <Form
-        disabled={checkedTest}
         {...formLayout}
+        disabled={!isEnabledTest}
         size="small"
-        onFinish={updatePaymentGatewayOrganization}
+        onFinish={updatePaymentGateway}
       >
-        <Header title={``} description="" save form />
         <Row justify="center" gutter={[8, 8]} wrap>
           <Col span={12}>
             <Form.Item
               name={['paymentGatewayTest', 'publicKeyTest']}
               label="Llave pública (Modo de Prueba)"
-              initialValue={testPublicKey}
+              initialValue={publicTestKey}
               required
             >
-              <Input />
+              <Input placeholder="Llave pública aquí" />
             </Form.Item>
             <Form.Item
               name={['paymentGatewayTest', 'privateKeyTest']}
               label="Llave privada (Modo de Prueba)"
-              initialValue={testPrivateKey}
+              initialValue={privateTestKey}
               required
             >
               <Input.Password
                 type="password"
+                placeholder="Llave privada aquí"
                 iconRender={(visible) =>
                   visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
                 }
               />
+            </Form.Item>
+
+            <Form.Item>
+              <Button htmlType="submit" type="primary" size="middle">
+                Guardar
+              </Button>
             </Form.Item>
           </Col>
         </Row>
