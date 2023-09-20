@@ -87,7 +87,7 @@ const OrganizationMembersPage: FunctionComponent<IOrganizationMembersPageProps> 
       indexOrganization++
     ) {
       const userId = orgUsersList[indexOrganization].account_id
-      const email = orgUsersList[indexOrganization].user.email
+      const email = orgUsersList[indexOrganization].user?.email
 
       let totalActividades = 0
       let totalActividadesVistas = 0
@@ -131,13 +131,15 @@ const OrganizationMembersPage: FunctionComponent<IOrganizationMembersPageProps> 
       console.log('Estado - Lista de cargos', positionList)
 
       const properties = {
+        names: orgUser.user?.names,
+        email: orgUser.user?.email,
         ...orgUser.properties,
         _id: orgUser._id,
         created_at: orgUser.created_at,
         updated_at: orgUser.updated_at,
         role: orgUser.rol?.name || 'Sin rol',
         rol_id: orgUser.rol_id || null,
-        picture: orgUser.user.picture,
+        picture: orgUser.user?.picture,
         position: orgUser.position?.position_name || 'Sin cargo',
         position_id: orgUser.position?._id || null,
         stats: userActivities[orgUser.account_id],

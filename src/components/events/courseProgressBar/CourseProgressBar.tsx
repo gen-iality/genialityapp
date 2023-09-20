@@ -14,6 +14,7 @@ import './CourseProgressBar.css'
 import { FB } from '@helpers/firestore-request'
 import { ExtendedAgendaType } from '@Utilities/types/AgendaType'
 import { useEventProgress } from '@context/eventProgressContext'
+import orderActivities from '@components/admin/ActivityListPage/utils/order-activities'
 
 interface Activity extends ExtendedAgendaType {
   _id: string
@@ -85,7 +86,7 @@ function CourseProgressBar(props: CourseProgressBarProps) {
     const filteredActivities: Activity[] = calcedActivities.filter(
       (item) => !!item && item.checked_in,
     ) as Activity[]
-    setAttendees(filteredActivities)
+    setAttendees(orderActivities<Activity>(filteredActivities))
   }
 
   useEffect(() => {

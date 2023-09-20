@@ -63,6 +63,7 @@ const TimeTrackingStats: FunctionComponent<ITimeTrackingStatsProps> = ({ user })
   const [timing, setTiming] = useState(0)
 
   useEffect(() => {
+    if (!user) return
     const localRef = fireRealtime.ref(`user_sessions/local/${user._id}`)
     localRef.get().then((result) => {
       const logDict = result && result.exists() ? result.val() : {}
