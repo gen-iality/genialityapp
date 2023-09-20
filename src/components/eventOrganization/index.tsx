@@ -109,13 +109,11 @@ function EventOrganization({ match }: OrganizationProps) {
     return event.payment ? (event.payment.active as boolean) : false;
   };
 
- 
-
   return (
     <div
       style={{
         backgroundImage: `url(${organization?.styles?.BackgroundImage})`,
-        backgroundColor: `${organization?.styles?.containerBgColor || '#FFFFFF'}`,
+        backgroundColor: `${organization?.styles?.containerBgColor ?? '#FFFFFF'}`,
       }}>
       <SocialNetworks organization={organization} />
       <ModalLoginHelpers />
@@ -139,12 +137,16 @@ function EventOrganization({ match }: OrganizationProps) {
                 <Row gutter={[0, 32]}>
                   {cUser.value && (
                     <Col style={{ width: '100%' }}>
-                      <MyEvents
-                        eventsWithEventUser={eventsWithEventUser}
-                        isLoadingOtherEvents={isLoadingOtherEvents}
-                        organization={organization}
-                        setIsModalCertificatesOpen={setIsModalCertificatesOpen}
-                      />
+                      {!isLoadingOtherEvents && (
+                        <MyEvents
+                          eventUserId={cUser.value?._id}
+                          organizationId={match.params.id}
+                          eventsWithEventUser={eventsWithEventUser}
+                          isLoadingOtherEvents={isLoadingOtherEvents}
+                          organization={organization}
+                          setIsModalCertificatesOpen={setIsModalCertificatesOpen}
+                        />
+                      )}
                       {isModalCertificatesOpen && (
                         <ModalCertificatesByOrganizacionAndUser
                           destroyOnClose
@@ -166,14 +168,13 @@ function EventOrganization({ match }: OrganizationProps) {
                     />
                   </Col>
                   <Col style={{ width: '100%' }}>
-                    {/* Lista de eventos próximos */}
                     <NextEvents events={events} />
                   </Col>
                 </Row>
               </Col>
             </Row>
           ) : (
-            <ContactInfo organization={organization}/>
+            <ContactInfo organization={organization} />
           )}
           {/* FOOTER */}
           {organization !== null && (
