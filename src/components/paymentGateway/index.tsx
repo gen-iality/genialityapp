@@ -2,13 +2,20 @@ import Header from '@antdComponents/Header'
 import { Col, Form, Row, Input, Switch, Space, Button, Divider } from 'antd'
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons'
 import { KindOfKey, usePaymentManager } from '@/hooks/paymentGateways/usePaymentManager'
+import { FunctionComponent } from 'react'
+
+interface IPaymentGatewayProps {
+  org: any
+}
 
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
 }
 
-const PaymentGateway = ({ org }: any) => {
+const PaymentGateway: FunctionComponent<IPaymentGatewayProps> = (props) => {
+  const { org } = props
+
   const {
     isEnabled,
     isEnabledTest,
