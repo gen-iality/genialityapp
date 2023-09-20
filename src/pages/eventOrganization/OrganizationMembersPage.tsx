@@ -131,6 +131,8 @@ const OrganizationMembersPage: FunctionComponent<IOrganizationMembersPageProps> 
       console.log('Estado - Lista de cargos', positionList)
 
       const properties = {
+        names: orgUser.user?.names,
+        email: orgUser.user?.email,
         ...orgUser.properties,
         _id: orgUser._id,
         created_at: orgUser.created_at,
