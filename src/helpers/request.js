@@ -957,6 +957,13 @@ export const OrganizationApi = {
       true
     );
   },
+  getEventsFreeAcces: async (organizationId, ) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(
+      `/api/organizations/${organizationId}/events-free-access?token=${token}`,
+      true
+    );
+  },
   getOne: async (id) => {
     return await Actions.getOne('/api/organizations/', id);
   },
