@@ -56,8 +56,8 @@ export function usePaymentManager<T extends OrganizationLike = {}>(
     publicKeyTest,
   } = org
 
-  const [isEnabled, setIsEnabled] = useState(publicKeyProd ? false : true)
-  const [isEnabledTest, setIsEnabledTest] = useState(publicKeyTest ? false : true)
+  const [isEnabled, setIsEnabled] = useState(!!publicKeyProd)
+  const [isEnabledTest, setIsEnabledTest] = useState(!!publicKeyTest)
   const [publicKey, setPublicKey] = useState(publicKeyProd ?? null)
   const [privateKey, setPrivateKey] = useState(privateKeyProd ?? null)
   const [publicTestKey, setPublicTestKey] = useState(publicKeyTest ?? null)
