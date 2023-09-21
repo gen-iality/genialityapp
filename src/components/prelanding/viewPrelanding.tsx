@@ -300,7 +300,7 @@ const ViewPrelanding = ({ preview }: PropsPreLanding) => {
                       }}>
                       <CountdownBlock
                         textColor={textColor}
-                        date={date}
+                        date={cEventContext?.value?.dateLimit }
                         countdownMessage={cEventContext?.value?.countdownMessage}
                         countdownFinalMessage={
                           cEventContext?.value?.countdownFinalMessage
