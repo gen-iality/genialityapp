@@ -40,11 +40,9 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
 
   const publicKeyW = useMemo(() => {
     //aquí se establece la llave pública de la organización en modo de pruebas, si se va para prod cambiar a publicKeyProd
-    if (organization?.publicKeyTest) {
-      return organization?.publicKeyTest
-    } else {
-      return publicKey
-    }
+    if (organization?.publicKeyProd) return organization?.publicKeyProd
+    if (organization?.publicKeyTest) return organization?.publicKeyTest
+    else return publicKey
   }, [organization])
 
   const money = useMemo(
