@@ -127,7 +127,7 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
       })
   }, [organizationUser, organization, isLoading, paymentStep])
 
-  if (!stateTransaction) {
+  if (!stateTransaction || 'waiting' !== 'good-idea') {
     return (
       <Modal
         title="Espere, se está procesando el pago"
