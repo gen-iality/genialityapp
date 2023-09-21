@@ -1,5 +1,5 @@
 import { useEffect, FunctionComponent, useState, useContext } from 'react'
-import { Modal, Result } from 'antd'
+import { Modal, Result, Space } from 'antd'
 import { EventsApi, OrganizationApi } from '@helpers/request'
 import { OrganizationUserType } from '@Utilities/types/OrganizationUserType'
 import OrganizationPaymentContext from './OrganizationPaymentContext'
@@ -115,52 +115,55 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
     if (!organizationUser) return
     if (!organization) return
     if (!isLoading) return
-    console.log('paymentStep', paymentStep)
-    if (paymentStep !== 'DISPLAYING_SUCCESS') return
+    console.debug('paymentStep', paymentStep)
+    console.debug('stateTransaction', stateTransaction)
 
-    makeUserAsPaidPlan()
-      .finally(() => {
-        setIsLoading(false)
-      })
-      .catch((err) => {
-        StateMessage.show(null, 'error', err.toString())
-      })
-  }, [organizationUser, organization, isLoading, paymentStep])
+    // Now, we dont use the local checking, use the backend checking instead
+    // if (paymentStep !== 'DISPLAYING_SUCCESS') return
 
-  if (!stateTransaction || 'waiting' !== 'good-idea') {
+    if (stateTransaction?.data?.transaction?.status === 'APPROVED') {
+      makeUserAsPaidPlan()
+        .finally(() => {
+          setIsLoading(false)
+        })
+        .catch((err) => {
+          StateMessage.show(null, 'error', err.toString())
+        })
+    }
+  }, [
+    organizationUser,
+    organization,
+    isLoading,
+    paymentStep,
+    stateTransaction?.data?.transaction?.status,
+  ])
+
+  if (!stateTransaction) {
     return (
       <Modal
         title="Espere, se está procesando el pago"
         open={paymentStep == 'DISPLAYING_SUCCESS'}
-        okButtonProps={{ disabled: isLoading }}
-        cancelButtonProps={{ disabled: isLoading }}
         onOk={() => {
-          if (!isLoading) {
-            window.location.reload()
-            dispatch({ type: 'ABORT' })
-          }
+          window.location.reload()
+          dispatch({ type: 'ABORT' })
         }}
         onCancel={() => {
           dispatch({ type: 'ABORT' })
           window.location.reload()
         }}
       >
-        {isLoading ? (
-          <Result
-            title="Transación en progreso..."
-            subTitle="Espere, por favor, para evitar problemas"
-            status="info"
-            icon={<LoadingOutlined />}
-          />
-        ) : (
-          <div>
-            <p> Referencia {result && result.reference}</p>
-            <p> Estado: {result && result.status}</p>
-            <p> Nombre {result && result.customerData && result.customerData.fullName}</p>
-            <p>Estado de la transacción: {stateTransaction?.status}</p>
-            <p>{stateTransaction?.message}</p>
-          </div>
-        )}
+        <Result
+          title="Transación en progreso..."
+          subTitle="Espere, por favor, para evitar problemas"
+          status="info"
+          icon={<LoadingOutlined />}
+          extra={
+            <Space direction="vertical">
+              <p>Estado de la transacción: {stateTransaction?.status}</p>
+              <p>{stateTransaction?.message}</p>
+            </Space>
+          }
+        />
       </Modal>
     )
   } else if (stateTransaction?.status == 404 || stateTransaction?.status == 500) {
@@ -169,12 +172,12 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
         title="Ha ocurrido un error con la transacción"
         open={paymentStep == 'DISPLAYING_SUCCESS'}
         onOk={() => {
-          makeUserAsPaidPlan().then(() => window.location.reload())
           dispatch({ type: 'ABORT' })
+          window.location.reload()
         }}
         onCancel={() => {
           dispatch({ type: 'ABORT' })
-          makeUserAsPaidPlan().then(() => window.location.reload())
+          window.location.reload()
         }}
       >
         <p>Estado de la transacción: {stateTransaction?.status}</p>
@@ -185,20 +188,40 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
     return (
       <>
         <Modal
-          title="Pago exitoso"
+          title="Pago e inscripción exitosa"
           open={paymentStep == 'DISPLAYING_SUCCESS'}
+          okButtonProps={{ disabled: isLoading }}
+          cancelButtonProps={{ disabled: isLoading }}
           onOk={() => {
-            makeUserAsPaidPlan().then(() => window.location.reload())
-            dispatch({ type: 'ABORT' })
+            if (!isLoading) {
+              window.location.reload()
+              dispatch({ type: 'ABORT' })
+            }
           }}
           onCancel={() => {
-            dispatch({ type: 'ABORT' })
-            makeUserAsPaidPlan().then(() => window.location.reload())
+            if (!isLoading) {
+              dispatch({ type: 'ABORT' })
+              window.location.reload()
+            }
           }}
         >
-          <p> Referencia {result && result.reference}</p>
-          <p> Estado: {result && result.status}</p>
-          <p> Nombre {result && result.customerData && result.customerData.fullName}</p>
+          {isLoading ? (
+            <Result
+              title="Inscripción en progreso..."
+              subTitle="Espere, por favor, para evitar problemas"
+              status="info"
+              icon={<LoadingOutlined />}
+            />
+          ) : (
+            <div>
+              <p> Referencia {result && result.reference}</p>
+              <p> Estado: {result && result.status}</p>
+              <p>
+                {' '}
+                Nombre {result && result.customerData && result.customerData.fullName}
+              </p>
+            </div>
+          )}
         </Modal>
       </>
     )
