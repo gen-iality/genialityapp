@@ -3,7 +3,7 @@
 /* eslint-disable no-console */
 /* eslint-disable array-callback-return */
 /* eslint-disable jsx-a11y/alt-text */
-import { Col, Row, Grid } from 'antd';
+import { Col, Row, Grid, Card } from 'antd';
 import { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { OrganizationApi, OrganizationFuction } from '../../helpers/request';
@@ -174,7 +174,13 @@ function EventOrganization({ match }: OrganizationProps) {
               </Col>
             </Row>
           ) : (
-            <ContactInfo organization={organization} />
+            <Row justify='center' style={{ paddingTop: '32px', paddingBottom: '32px' }}>
+              <Col xs={24} sm={24} md={20} lg={12} xl={12} xxl={12}>
+                <Card style={{ width: '100%', borderRadius: 20, margin: '0 auto' }}>
+                  <ContactInfo organization={organization} />
+                </Card>
+              </Col>
+            </Row>
           )}
           {/* FOOTER */}
           {organization !== null && (
