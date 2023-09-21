@@ -3,6 +3,7 @@ import { useEffect, FunctionComponent, useContext, useMemo } from 'react'
 import OrganizationPaymentContext from './OrganizationPaymentContext'
 import { OrganizationUserType } from '@Utilities/types/OrganizationUserType'
 import { StateMessage } from '@context/MessageService'
+import { notification } from 'antd'
 
 const publicKey: string = import.meta.env.VITE_WOMPI_DEV_PUB_API_KEY
 
@@ -41,8 +42,13 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
   const publicKeyW = useMemo(() => {
     //aquí se establece la llave pública de la organización en modo de pruebas, si se va para prod cambiar a publicKeyProd
     if (organization?.publicKeyProd) return organization?.publicKeyProd
-    if (organization?.publicKeyTest) return organization?.publicKeyTest
-    else return publicKey
+    if (organization?.publicKeyTest) {
+      notification.open({
+        message: 'Modo de pago',
+        description: 'Estás usando el modo de PRUEBA en la parasela de pago',
+      })
+      return organization?.publicKeyTest
+    } else return publicKey
   }, [organization])
 
   const money = useMemo(
