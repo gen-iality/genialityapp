@@ -236,8 +236,15 @@ export const EventsApi = {
     const events = await Actions.getAll(`/api/me/contributors/events/?token=${token}`, true);
     return events;
   },
-  getOne: async (id) => {
-    return await Actions.getOne('/api/events/', id);
+  // getOne: async (id) => {
+  //   return await Actions.getOne('/api/events/', id);
+  // },
+   getOne: async (id) => {
+    let token = await GetTokenUserFirebase();
+    if (token) {
+        return await Actions.getOne('/api/events/', `${id}?token=${token}`);
+    }
+    return await Actions.getOne('/api/events/', `${id}`);
   },
   getOneByNameEvent: async (eventName) => {
     return await Actions.get(`/api/events/?filtered=[{"field":"name","value":[%22${eventName}%22]}]`);
