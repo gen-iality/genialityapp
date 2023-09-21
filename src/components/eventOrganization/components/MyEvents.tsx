@@ -25,11 +25,12 @@ export const MyEvents = ({
   eventUserId,
   organizationId,
 }: Props) => {
-  const { filteredList, setSearchTerm } = useSearchList(eventsWithEventUser, 'name');
   const { eventsFreeAcces, isLoadingEventFreeAcces } = useGetEventsFreeAcces(organizationId, eventUserId);
   const [isFiltering, setisFiltering] = useState(true);
   const [eventFreeFiltered, setEventFreeFiltered] = useState<any[]>([]);
-
+  const myAllEvents = [...eventsWithEventUser,...eventFreeFiltered]
+  const { filteredList, setSearchTerm } = useSearchList(myAllEvents, 'name');
+  
   useEffect(() => {
     if (!isLoadingEventFreeAcces) {
       setisFiltering(true);
@@ -41,17 +42,18 @@ export const MyEvents = ({
     }
   }, [isLoadingEventFreeAcces, eventsWithEventUser]);
 
+
   return (
     <>
       <Card
         bodyStyle={{ paddingTop: '0px' }}
         headStyle={{ border: 'none' }}
         title={
-          <Badge offset={[60, 22]} count={`${eventsWithEventUser.length} Eventos`}>
+          <Badge offset={[60, 22]} count={`${myAllEvents.length} Eventos`}>
             <Title level={2}>Mis eventos</Title>
           </Badge>
         }
-        extra={<Space>{eventsWithEventUser.length > 0 && <InputSearchEvent onHandled={setSearchTerm} />}</Space>}
+        extra={<Space>{myAllEvents.length > 0 && <InputSearchEvent onHandled={setSearchTerm} />}</Space>}
         style={{ width: '100%', borderRadius: 20 }}>
         <Row gutter={[0, 32]}>
           <Col span={24}>
@@ -69,10 +71,10 @@ export const MyEvents = ({
                 </div>
               ) : (
                 <>
-                  {eventsWithEventUser && eventsWithEventUser.length > 0 ? (
+                  {filteredList && filteredList.length > 0 ? (
                     <>
                       {filteredList.length > 0 ? (
-                        [...filteredList, ...eventFreeFiltered].map((event, index) => (
+                        filteredList.map((event, index) => (
                           <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6} xxl={4}>
                             <EventCard
                               bordered={false}
