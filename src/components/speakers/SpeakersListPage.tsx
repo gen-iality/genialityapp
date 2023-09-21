@@ -222,7 +222,7 @@ const SpeakersListPage: FunctionComponent<ISpeakersListPageProps> = (props) => {
       <Header
         title="Conferencistas"
         titleTooltip="Agregue o edite las personas que son conferencistas"
-        addUrl="/speaker"
+        addUrl="./speaker"
         addUrlState={{ new: true }}
         /* listLenght={sortAndIndexSpeakers()} */
       />
