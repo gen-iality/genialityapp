@@ -5,6 +5,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { Badge, Button, Card, Space, Tag, Tooltip, Typography } from 'antd';
 import { imageUtils } from '../../Utilities/ImageUtils';
 import { HelperContext } from '@/context/helperContext/helperContext';
+import { getDateEvent } from './utils/getDatesEvents';
 
 const EventImage = imageUtils.EventImage;
 const { Meta } = Card;
@@ -29,49 +30,6 @@ class EventCard extends Component {
     const styleAdmin = {
       fontWeight: 'bold',
       width: '250px',
-    };
-
-    const getDateEvent = () => {
-      if (!event) return <></>;
-      const MIN_DATES = 1;
-      const EVENT_WITH_ONE_DATE = 1;
-      const FIRST_DATE = 0;
-      if (event.dates?.length >= MIN_DATES) {
-        const LAST_DATE = event.dates?.length - 1;
-        if (event.dates?.length === EVENT_WITH_ONE_DATE) {
-          return (
-            <time dateTime={event.dates[FIRST_DATE]?.start}>
-              {Moment(event.dates[FIRST_DATE]?.start).format('DD MMM YYYY')}
-            </time>
-          );
-        } else {
-          return (
-            <>
-              <time dateTime={event.dates[FIRST_DATE]?.start}>
-                {Moment(event.dates[FIRST_DATE]?.start).format('DD MMM YYYY')}
-              </time>
-              {'-'}
-              <time dateTime={event.dates[LAST_DATE].end}>
-                {Moment(event.dates[LAST_DATE].end).format('DD MMM YYYY')}
-              </time>
-            </>
-          );
-        }
-      }
-      if (Moment(event.datetime_from).format('DD MMM YYYY') === Moment(event.datetime_to).format('DD MMM YYYY')) {
-        return (
-          <>
-            <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
-          </>
-        );
-      }
-      return (
-        <>
-          <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
-          {'-'}
-          <time dateTime={event.datetime_to}>{Moment(event.datetime_to).format('DD MMM YYYY')}</time>
-        </>
-      );
     };
 
     //Esto sólo va a aplicar para cuando el usuario tiene un plan
@@ -217,7 +175,7 @@ class EventCard extends Component {
                   <span style={{ fontSize: '12px' }}>
                     <Space>
                       <i className='fas fa-calendar-alt' />
-                      {getDateEvent()}
+                      {getDateEvent(event)}
                     </Space>
                   </span>
                   <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>

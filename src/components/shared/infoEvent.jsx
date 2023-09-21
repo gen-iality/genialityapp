@@ -6,6 +6,8 @@ import EventAccessActionContainer from './eventAccessAction/EventAccessActionCon
 import { useIntl } from 'react-intl';
 import { useGetMultiDate } from '@/hooks/useGetMultiDate';
 import moment from 'moment';
+import event from '../events/event';
+import { getDateEvent } from './utils/getDatesEvents';
 
 const { useBreakpoint } = Grid;
 
@@ -22,48 +24,6 @@ const InfoEvent = ({ paddingOff, preview }) => {
   const idEvent = cEventValues?._id;
   const intl = useIntl();
   const { getStartTime} = useGetMultiDate(idEvent);
-  const getDateEvent = () => {
-    if (!cEventValues) return <></>;
-    const MIN_DATES = 1;
-    const EVENT_WITH_ONE_DATE = 1;
-    const FIRST_DATE = 0;
-    if (cEventValues.dates?.length >= MIN_DATES) {
-      const LAST_DATE = cEventValues.dates?.length - 1;
-      if (cEventValues.dates?.length === EVENT_WITH_ONE_DATE) {
-        return (
-          <time dateTime={cEventValues.dates[FIRST_DATE].start}>
-            {moment(cEventValues.dates[FIRST_DATE].start).format('DD MMM YYYY')}
-          </time>
-        );
-      } else {
-        return (
-          <>
-            <time dateTime={cEventValues.dates[FIRST_DATE].start}>
-              {moment(cEventValues.dates[FIRST_DATE].start).format('DD MMM YYYY')}
-            </time>
-            {'-'}
-            <time dateTime={cEventValues.dates[LAST_DATE].end}>
-              {moment(cEventValues.dates[LAST_DATE].end).format('DD MMM YYYY')}
-            </time>
-          </>
-        );
-      }
-    }
-    if (moment(cEventValues.datetime_from).format('DD MMM YYYY') === moment(cEventValues.datetime_to).format('DD MMM YYYY')) {
-      return (
-        <>
-          <time dateTime={cEventValues.datetime_from}>{moment(cEventValues.datetime_from).format('DD MMM YYYY')}</time>
-        </>
-      );
-    }
-    return (
-      <>
-        <time dateTime={cEventValues.datetime_from}>{moment(cEventValues.datetime_from).format('DD MMM YYYY')}</time>
-        {'-'}
-        <time dateTime={cEventValues.datetime_to}>{moment(cEventValues.datetime_to).format('DD MMM YYYY')}</time>
-      </>
-    );
-  };
   return (
     <PageHeader
       style={{
@@ -101,7 +61,7 @@ const InfoEvent = ({ paddingOff, preview }) => {
                 <Space wrap>
                   <Space>
                     <CalendarFilled />
-                    <time>{getDateEvent()}</time>
+                    <time>{getDateEvent(event)}</time>
                   </Space>
                   <Space>
                     <ClockCircleFilled />
