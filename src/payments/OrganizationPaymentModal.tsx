@@ -99,8 +99,8 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
     return new WidgetCheckout({
       currency: 'COP',
       amountInCents: calcPrice(money),
-      name: 'Monthly rent - Wompi Tower Apartments', // Payment link name
-      description: 'Pay here your apartment monthly rent',
+      name: `Suscripción a la organización: ${organization.name}`,
+      description: 'Paga aquí tu suscripción usando el medio de pago disponible',
       reference: `${new Date().getTime()}-${organization._id}-${
         organizationUser.account_id
       }`,
