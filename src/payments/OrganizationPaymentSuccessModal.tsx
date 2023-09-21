@@ -1,4 +1,4 @@
-import { useEffect, FunctionComponent, useContext, useState } from 'react'
+import { useEffect, FunctionComponent, useState, useContext } from 'react'
 import { Modal, Result } from 'antd'
 import { EventsApi, OrganizationApi } from '@helpers/request'
 import { OrganizationUserType } from '@Utilities/types/OrganizationUserType'
@@ -6,6 +6,7 @@ import OrganizationPaymentContext from './OrganizationPaymentContext'
 import dayjs from 'dayjs'
 import { StateMessage } from '@context/MessageService'
 import { LoadingOutlined } from '@ant-design/icons'
+import { usePaymentManager } from '@/hooks/paymentGateways/usePaymentManager'
 
 interface IOrganizationPaymentSuccessModalProps {
   organizationUser: OrganizationUserType
@@ -19,6 +20,27 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
 
   const { paymentStep, result, dispatch } = useContext(OrganizationPaymentContext)
   const [isLoading, setIsLoading] = useState(true)
+  const { getStatusPayment } = usePaymentManager(organization ?? {})
+  const [stateTransaction, setStateTransaction] = useState<any>(null)
+
+  const SendId = async () => {
+    const resp = await getStatusPayment(result.id)
+    setStateTransaction(resp)
+  }
+
+  useEffect(() => {
+    if (result) {
+      console.log('id: ', result.id)
+      const timeoutId = setTimeout(() => {
+        SendId() // Realiza la consulta después de un tiempo determinado
+      }, 8000) // Espera 5 segundos (puedes ajustar el tiempo según tus necesidades)
+
+      return () => {
+        // Limpia el timeout si el componente se desmonta antes de que se cumpla
+        clearTimeout(timeoutId)
+      }
+    }
+  }, [result])
 
   const makeUserAsPaidPlan = async () => {
     StateMessage.show('presend', 'loading', 'Espera...')
@@ -103,10 +125,10 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
       })
   }, [organizationUser, organization, isLoading, paymentStep])
 
-  return (
-    <>
+  if (!stateTransaction || 'waiting' !== 'good-idea') {
+    return (
       <Modal
-        title="Pago exitoso"
+        title="Espere, se está procesando el pago"
         open={paymentStep == 'DISPLAYING_SUCCESS'}
         okButtonProps={{ disabled: isLoading }}
         cancelButtonProps={{ disabled: isLoading }}
@@ -133,11 +155,52 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
             <p> Referencia {result && result.reference}</p>
             <p> Estado: {result && result.status}</p>
             <p> Nombre {result && result.customerData && result.customerData.fullName}</p>
+            <p>Estado de la transacción: {stateTransaction?.status}</p>
+            <p>{stateTransaction?.message}</p>
           </div>
         )}
       </Modal>
-    </>
-  )
+    )
+  } else if (stateTransaction?.status == 404 || stateTransaction?.status == 500) {
+    return (
+      <Modal
+        title="Ha ocurrido un error con la transacción"
+        open={paymentStep == 'DISPLAYING_SUCCESS'}
+        onOk={() => {
+          makeUserAsPaidPlan().then(() => window.location.reload())
+          dispatch({ type: 'ABORT' })
+        }}
+        onCancel={() => {
+          dispatch({ type: 'ABORT' })
+          makeUserAsPaidPlan().then(() => window.location.reload())
+        }}
+      >
+        <p>Estado de la transacción: {stateTransaction?.status}</p>
+        <p> {stateTransaction?.message}</p>
+      </Modal>
+    )
+  } else {
+    return (
+      <>
+        <Modal
+          title="Pago exitoso"
+          open={paymentStep == 'DISPLAYING_SUCCESS'}
+          onOk={() => {
+            makeUserAsPaidPlan().then(() => window.location.reload())
+            dispatch({ type: 'ABORT' })
+          }}
+          onCancel={() => {
+            dispatch({ type: 'ABORT' })
+            makeUserAsPaidPlan().then(() => window.location.reload())
+          }}
+        >
+          <p> Referencia {result && result.reference}</p>
+          <p> Estado: {result && result.status}</p>
+          <p> Nombre {result && result.customerData && result.customerData.fullName}</p>
+        </Modal>
+      </>
+    )
+  }
 }
 
 export default OrganizationPaymentSuccessModal
