@@ -7,6 +7,7 @@ import { Card, Avatar, Button, Modal, Row, Col, Tooltip, Typography } from 'antd
 import { CloseOutlined, UserOutlined } from '@ant-design/icons';
 import withContext from '../../context/withContext';
 import ReactQuill from 'react-quill';
+import { injectIntl } from 'react-intl';
 
 const { Meta } = Card;
 const { Paragraph, Text, Title } = Typography;
@@ -139,7 +140,10 @@ class Speakers extends Component {
           key={'sp' + speaker._id}
           data-target='#myModal'
           aria-haspopup='true'>
-          Ver más...
+          {this.props.intl.formatMessage({
+            id: 'see_more',
+            defaultMessage: 'Ver más...',
+          })}
         </Button>
       );
     }
@@ -480,5 +484,5 @@ class Speakers extends Component {
   }
 }
 
-let SpeakerswithContext = withContext(Speakers);
+let SpeakerswithContext = withContext(injectIntl(Speakers));
 export default SpeakerswithContext;

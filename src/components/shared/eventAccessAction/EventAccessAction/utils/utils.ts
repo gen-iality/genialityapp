@@ -96,6 +96,7 @@ export const assignStatusAccordingToAction = ({
 	const not_invited = intl.formatMessage({id: 'not_invited', defaultMessage: 'No estas invitado'});
 	const has_been_invited_event = intl.formatMessage({id: 'has_been_invited_event', defaultMessage: 'Has sido invitado a este evento'});
 	const INITIAL_STATE = intl.formatMessage({id: 'INITIAL_STATE', defaultMessage: 'INITIAL_STATE'})
+	const buy = intl.formatMessage({id: 'buy', defaultMessage: 'Comprar'})
 	//Validacion temporal para el evento audi
 	const idEvent = cEvent?._id;
 	const labelAudi: string = idEvent !== '6334782dc19fe2710a0b8753' ? signup_event : signup;
@@ -135,7 +136,7 @@ export const assignStatusAccordingToAction = ({
 			setButtonsActions(buttonsAction);
 			break;
 		case 'ACTION_LOG_IN_OR_REGISTER_FOR_THE_EVENT_PAYMENT':
-			buttonsAction = [{ label: 'Comprar', action: () => {
+			buttonsAction = [{ label: buy, action: () => {
 				if(cEvent.payment?.externalPayment){
 					window.open(cEvent.payment?.urlExternalPayment,'_blank')
 					return
@@ -147,13 +148,13 @@ export const assignStatusAccordingToAction = ({
 			setButtonsActions(buttonsAction);
 			break;
 		case 'ACTION_REGISTER_FOR_THE_EVENT':
-			buttonsAction = [{ label: 'Inscribirme al evento', action: () => handleChangeTypeModal('registerForTheEvent') }];
+			buttonsAction = [{ label: signup_event, action: () => handleChangeTypeModal('registerForTheEvent') }];
 			// if (bingoExists) buttonsAction.push({ label: 'Imprimir cartón', action: () => handleChangeTypeModal('registerForTheEvent') })
 
 			setButtonsActions(buttonsAction);
 			break;
 		case 'ACTION_REGISTER_FOR_THE_EVENT_PAYMENT':
-			buttonsAction = [{ label: 'Comprar', action: () => {
+			buttonsAction = [{ label: buy, action: () => {
 				if(cEvent.payment?.externalPayment){
 					window.open(cEvent.payment?.urlExternalPayment,'_blank')
 					return
