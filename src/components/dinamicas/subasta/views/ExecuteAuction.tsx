@@ -18,28 +18,7 @@ export default function ExecuteAuction( {auction, eventId} : GeneralAuctionProps
   const { products, loading, refresh } = useProducts(eventId);
   const { Bids, loading: Loadbids } = useBids(eventId, auction?.currentProduct?._id, auction?.playing);
   const [selectedProduct, setselectedProduct] = useState<Products | null>(null);
-  /* const columns: ColumnsType<IBids> = [
-    {
-      key: 'date',
-      title: 'Fecha',
-      dataIndex: 'date',
-      width: '30%',
-    },
-    {
-      key: 'name',
-      title: 'Nombre',
-      dataIndex: 'name',
-      width: '30%',
-    },
-    {
-      key: 'offered',
-      title: 'Puja',
-      dataIndex: 'offered',
-      render(value, record, index) {
-        return <Typography.Text strong>{`$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</Typography.Text>;
-      }
-    }
-  ]; */
+ 
   const startAuction = async () => {
     if (selectedProduct && auction) {
       setVisibility(false);

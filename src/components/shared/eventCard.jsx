@@ -26,7 +26,6 @@ class EventCard extends Component {
     const styleNormal = {
       fontWeight: 'bold',
     };
-
     const styleAdmin = {
       fontWeight: 'bold',
       width: '250px',

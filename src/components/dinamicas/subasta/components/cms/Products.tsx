@@ -33,6 +33,7 @@ export default function Products({ products, onclick, onDelete }: ProductsProps)
                   actions={[
                     product.state !== 'auctioned' && <EditOutlined onClick={() => onclick(product)} />,
                     <Popconfirm
+                      key={product._id + 'confirmDelete'}
                       placement='top'
                       title={'¿Está seguro de eliminar el producto?'}
                       onConfirm={() => onDelete(product._id, product.images)}
