@@ -139,7 +139,7 @@ function EventOrganization({ match }: OrganizationProps) {
                     <Col style={{ width: '100%' }}>
                       {!isLoadingOtherEvents && (
                         <MyEvents
-                          eventUserId={cUser.value?._id}
+                          cUser={cUser}
                           organizationId={match.params.id}
                           eventsWithEventUser={eventsWithEventUser}
                           isLoadingOtherEvents={isLoadingOtherEvents}
