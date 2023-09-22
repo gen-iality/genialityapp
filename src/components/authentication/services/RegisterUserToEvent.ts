@@ -2,7 +2,7 @@ import { DispatchMessageService } from "@/context/MessageService";
 import { UsersApi } from "@/helpers/request";
 import { defaultBootstrapCss } from "entries/react";
 
-async function createEventUser(basicDataUser: any,dataEventUser: any,cEvent: any) {
+async function createEventUser(basicDataUser: any, dataEventUser: any,cEvent: any) {
     let response = null
     let clonBasicDataUser = { ...basicDataUser };
     delete clonBasicDataUser.password;

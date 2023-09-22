@@ -236,8 +236,15 @@ export const EventsApi = {
     const events = await Actions.getAll(`/api/me/contributors/events/?token=${token}`, true);
     return events;
   },
-  getOne: async (id) => {
-    return await Actions.getOne('/api/events/', id);
+  // getOne: async (id) => {
+  //   return await Actions.getOne('/api/events/', id);
+  // },
+   getOne: async (id) => {
+    let token = await GetTokenUserFirebase();
+    if (token) {
+        return await Actions.getOne('/api/events/', `${id}?token=${token}`);
+    }
+    return await Actions.getOne('/api/events/', `${id}`);
   },
   getOneByNameEvent: async (eventName) => {
     return await Actions.get(`/api/events/?filtered=[{"field":"name","value":[%22${eventName}%22]}]`);
@@ -947,6 +954,13 @@ export const OrganizationApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.get(
       `/api/organizations/${organizationId}/user/${organizarionUserId}/events?event_user=${event_user}&order=${order}&token=${token}`,
+      true
+    );
+  },
+  getEventsFreeAcces: async (organizationId, ) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(
+      `/api/organizations/${organizationId}/events-free-access?token=${token}`,
       true
     );
   },

@@ -90,6 +90,7 @@ export default function CustomDateEvent(props: Props) {
                 date={date}
                 onClick={() => openEditDate(date)}
                 handledDelete={handledDelete}
+                canFinish={dates.length > 1}
               />
             </Col>
           ))}

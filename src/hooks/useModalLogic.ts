@@ -25,6 +25,7 @@ export const useModalLogic = <T = any, K extends string = string>(nameModal: K):
     },
     [`close${nameModal}Modal`]: () => {
       setIsOpenModal(false);
+      setSelectedItem(undefined)
     },
     [`isOpen${nameModal}Modal`]: isOpenModal,
     [`selected${nameModal}`]: selectedItem,

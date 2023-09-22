@@ -16,7 +16,7 @@ import { useResultsUserOrganizations } from '../hooks/useResultsUserOrganization
 import { useSteps } from '../hooks/useSteps';
 import { DispatchMessageService } from '@/context/MessageService';
 import { ROLS_USER } from '@/constants/rols.constants';
-import { useGetGruopEventList } from '../hooks/useGetGruopEventList';
+import { useCrudGruopEventList } from '../hooks/useCrudGruopEventList';
 
 const initialForm: FormUserOrganization = {
   email: '',
@@ -67,7 +67,7 @@ export const ModalAddAndEditUsers = ({
     setAddToUserEvents(checked);
   };
 
-  const { groupEvent } = useGetGruopEventList(organizationId);
+  const { groupEvent } = useCrudGruopEventList(organizationId);
 
   const onFinisUserOrganizationStep = (values: FormUserOrganization) => {
     if (values.registeredOption === 'group-event') {
