@@ -1,15 +1,13 @@
-import { Drawer, Grid, Input, PageHeader, Typography } from 'antd';
+import { Drawer, Input, PageHeader, Typography } from 'antd';
 import { FileProtectOutlined } from '@ant-design/icons';
 import { DrawerRulesProps } from '../../interfaces/auction.interface';
-import useBreakpoint from 'use-breakpoint'
-
-/* const { useBreakpoint } = Grid; */
-const BREAKPOINTS = { mobile: 0, tablet: 768, desktop: 1280 }
+import useBreakpoint from 'use-breakpoint';
+import { RexUrlValidator } from '@/hooks/useIsValidUrl';
+const BREAKPOINTS = { mobile: 0, tablet: 768, desktop: 1280 };
 const { Title } = Typography;
 
-const DrawerRules = ({ showDrawerRules, setshowDrawerRules, cEvent ,auctionRules}: DrawerRulesProps) => {
-  /* const screens = useBreakpoint(); */
-  const { breakpoint } = useBreakpoint(BREAKPOINTS, 'desktop')
+const DrawerRules = ({ showDrawerRules, setshowDrawerRules, cEvent, auctionRules }: DrawerRulesProps) => {
+  const { breakpoint } = useBreakpoint(BREAKPOINTS, 'desktop');
 
   return (
     <Drawer
@@ -36,16 +34,18 @@ const DrawerRules = ({ showDrawerRules, setshowDrawerRules, cEvent ,auctionRules
       visible={showDrawerRules}
       closable={true}
       onClose={() => setshowDrawerRules(false)}>
-      <Input.TextArea
-        style={{ padding: '0px' }}
-        bordered={false}
-        autoSize={{ minRows: 25, maxRows: 25 }}
-        cols={20}
-        wrap='hard'
-        placeholder={'Reglamento de  la subasta'}
-        readOnly={true}
-        value={auctionRules}
-      />
+      <div style={{ padding: '0px', width: "100%"}}>
+        {auctionRules.split('\n').map((item, i) => {
+          return (
+            <p key={item}>
+              {item.split(' ').map((words, i) => {;
+                if (RexUrlValidator(words)) return <a href={!words.includes('https') ? `https://${words}` : words} target='_blank' rel="noreferrer">{words + ' '}</a>;
+                return words + ' ';
+              })}
+            </p>
+          );
+        })}
+      </div>
     </Drawer>
   );
 };

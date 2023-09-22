@@ -37,7 +37,7 @@ import { getCorrectColor } from '@/helpers/utils';
 import { FaGavel } from 'react-icons/fa'
 import moment from 'moment';
 import useBreakpoint from 'use-breakpoint'
-
+import '../../styles/landing.styles.css'
 
 /* const { useBreakpoint } = Grid; */
 const BREAKPOINTS = { mobile: 0, tablet: 768, desktop: 1280 }
@@ -105,7 +105,8 @@ export default function DrawerAuction({
       });
     }
   };
-
+  const haveMount = auction.amount !== undefined && auction.amount !== 0 && auction.amount !== null
+  
   return (
     <Drawer
       headerStyle={{
@@ -321,7 +322,8 @@ export default function DrawerAuction({
               <Form onFinish={onBid} layout='vertical' style={{ margin: 10 }}>
                 <Form.Item
                   name={'offerValue'}
-                  label='Valor de la puja'
+                  label='Desea confirmar el valor de la puja'
+                  className={haveMount  ?  'input_center' : ''}
                   initialValue={(Bids[0]?.offered ??  auction.currentProduct?.start_price) + (auction.amount ?? 0)}
                   rules={[
                     { required: true, message: `Se requiere un valor mayor que  ${Bids[0]?.offered ?? auction.currentProduct?.start_price}` },
@@ -330,8 +332,9 @@ export default function DrawerAuction({
                     //@ts-ignore
                   }
                   <InputNumber
-                    readOnly={auction.amount !== undefined && auction.amount !== 0 && auction.amount !== null}
-                    style={{ width: '100%' }} 
+                    readOnly={haveMount}
+                    className={haveMount  ?  'input_puja' : ''}
+                    style={{ width: '100%' }}
                     controls={{ upIcon: <PlusOutlined />, downIcon: <MinusOutlined /> }}
                     min={(Bids[0]?.offered ??  auction.currentProduct?.start_price) + (auction.amount ?? 0)}
                     size='large'
