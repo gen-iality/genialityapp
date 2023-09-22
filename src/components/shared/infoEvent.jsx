@@ -5,8 +5,6 @@ import { UseEventContext } from '../../context/eventContext';
 import EventAccessActionContainer from './eventAccessAction/EventAccessActionContainer';
 import { useIntl } from 'react-intl';
 import { useGetMultiDate } from '@/hooks/useGetMultiDate';
-import moment from 'moment';
-import event from '../events/event';
 import { getDateEvent } from './utils/getDatesEvents';
 
 const { useBreakpoint } = Grid;
@@ -61,7 +59,7 @@ const InfoEvent = ({ paddingOff, preview }) => {
                 <Space wrap>
                   <Space>
                     <CalendarFilled />
-                    <time>{getDateEvent(event)}</time>
+                    <time>{getDateEvent(cEventValues)}</time>
                   </Space>
                   <Space>
                     <ClockCircleFilled />
