@@ -3,7 +3,7 @@
 /* eslint-disable no-console */
 /* eslint-disable array-callback-return */
 /* eslint-disable jsx-a11y/alt-text */
-import { Col, Row, Grid, Result, Card, List, Descriptions, Typography } from 'antd';
+import { Col, Row, Grid, Card } from 'antd';
 import { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { OrganizationApi, OrganizationFuction } from '../../helpers/request';
@@ -18,7 +18,7 @@ import { SocialNetworks } from './components/SocialNetworks';
 import { MyEvents } from './components/MyEvents';
 import { NextEvents } from './components/NextEvents';
 import { PassEvents } from './components/PassEvents';
-import { GlobalOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
+import ContactInfo from './components/ContactInfo';
 
 const { useBreakpoint } = Grid;
 
@@ -109,34 +109,11 @@ function EventOrganization({ match }: OrganizationProps) {
     return event.payment ? (event.payment.active as boolean) : false;
   };
 
-  const contactNumber = organization?.contact?.celular ? organization?.contact?.celular : null;
-  const data = [
-    {
-      key: 'email',
-      label: <MailOutlined />,
-      value: organization?.contact?.email,
-    },
-    {
-      key: 'contactNumber',
-      label: <PhoneOutlined />,
-      value: contactNumber,
-    },
-    {
-      key: 'social_networks',
-      label: <GlobalOutlined/>,
-      value: organization?.social_networks?.yourSite ? (
-        <a href={organization?.social_networks?.yourSite} target='_blank'>
-          Sitio web
-        </a>
-      ) : null,
-    },
-  ];
-
   return (
     <div
       style={{
         backgroundImage: `url(${organization?.styles?.BackgroundImage})`,
-        backgroundColor: `${organization?.styles?.containerBgColor || '#FFFFFF'}`,
+        backgroundColor: `${organization?.styles?.containerBgColor ?? '#FFFFFF'}`,
       }}>
       <SocialNetworks organization={organization} />
       <ModalLoginHelpers />
@@ -160,12 +137,16 @@ function EventOrganization({ match }: OrganizationProps) {
                 <Row gutter={[0, 32]}>
                   {cUser.value && (
                     <Col style={{ width: '100%' }}>
-                      <MyEvents
-                        eventsWithEventUser={eventsWithEventUser}
-                        isLoadingOtherEvents={isLoadingOtherEvents}
-                        organization={organization}
-                        setIsModalCertificatesOpen={setIsModalCertificatesOpen}
-                      />
+                      {!isLoadingOtherEvents && (
+                        <MyEvents
+                          cUser={cUser}
+                          organizationId={match.params.id}
+                          eventsWithEventUser={eventsWithEventUser}
+                          isLoadingOtherEvents={isLoadingOtherEvents}
+                          organization={organization}
+                          setIsModalCertificatesOpen={setIsModalCertificatesOpen}
+                        />
+                      )}
                       {isModalCertificatesOpen && (
                         <ModalCertificatesByOrganizacionAndUser
                           destroyOnClose
@@ -187,7 +168,6 @@ function EventOrganization({ match }: OrganizationProps) {
                     />
                   </Col>
                   <Col style={{ width: '100%' }}>
-                    {/* Lista de eventos próximos */}
                     <NextEvents events={events} />
                   </Col>
                 </Row>
@@ -195,33 +175,10 @@ function EventOrganization({ match }: OrganizationProps) {
             </Row>
           ) : (
             <Row justify='center' style={{ paddingTop: '32px', paddingBottom: '32px' }}>
-              <Col xs={24} sm={20} md={16} lg={12} xl={10} >
-                <Row gutter={[0, 32]}>
-                  <Card
-                    bodyStyle={{ paddingTop: '0px' }}
-                    headStyle={{ border: 'none' }}
-                    style={{ width: '100%', borderRadius: 20, margin: '0 auto' }}>
-                    <Result
-                      style={{ textAlign: 'center' }}
-                      status='warning'
-                      title={`Acceso bloqueado a ${organization?.name}.`}
-                      subTitle={
-                        <Typography>
-                          Lamentamos informarte que tu acceso al contenido de {organization?.name} ha sido bloqueado.
-                          Entendemos que esta situación pueda ser frustrante, y estamos aquí para ayudarte a resolverla,
-                          Puedes contactarnos a los siguientes medios:
-                        </Typography>
-                      }>
-                      <Descriptions layout='horizontal'>
-                        {data.map((item) => (
-                          <Descriptions.Item key={item.key} label={item.label}>
-                            {item.value}
-                          </Descriptions.Item>
-                        ))}
-                      </Descriptions>
-                    </Result>
-                  </Card>
-                </Row>
+              <Col xs={24} sm={24} md={20} lg={12} xl={12} xxl={12}>
+                <Card style={{ width: '100%', borderRadius: 20, margin: '0 auto' }}>
+                  <ContactInfo organization={organization} />
+                </Card>
               </Col>
             </Row>
           )}

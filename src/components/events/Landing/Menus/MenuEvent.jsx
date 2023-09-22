@@ -6,6 +6,7 @@ import { UseEventContext } from '../../../../context/eventContext';
 import { useHelper } from '../../../../context/helperContext/hooks/useHelper';
 import { setSectionPermissions } from '../../../../redux/sectionPermissions/actions';
 import { connect } from 'react-redux';
+import { useIntl } from 'react-intl';
 
 const MenuEvent = ({ isMobile }) => {
   let { url } = useRouteMatch();
@@ -13,6 +14,7 @@ const MenuEvent = ({ isMobile }) => {
   let { totalsolicitudes, eventPrivate } = useHelper();
   let event = cEvent.value;
   const history = useHistory();
+  const intl = useIntl();
 
   const redirectToPreLanding = () => {
     sessionStorage.removeItem('session');
@@ -52,9 +54,10 @@ const MenuEvent = ({ isMobile }) => {
                   <iconComponents.HomeOutlined
                     style={{
                       fontSize: '22px',
+                      color: event.styles.textMenu,
                     }}
                   />
-                  Inicio
+                  {intl.formatMessage({id: 'header.home', defaultMessage: 'Inicio'})}
                 </Space>
               </Button>
             </Menu.Item>
@@ -136,16 +139,19 @@ const MenuEvent = ({ isMobile }) => {
               }}
               key={'pre-landing-drawer'}
               className='MenuItem_event'>
-              <iconComponents.ArrowLeftOutlined
-                style={{
-                  margin: '0 auto',
-                  fontSize: '22px',
-                }}
-              />
+              <Space size={4}>
+                <iconComponents.HomeOutlined
+                  style={{
+                    margin: '0 auto',
+                    fontSize: '22px',
+                    color: event.styles.textMenu,
+                  }}
+                />
 
-              <Link className='menuEvent_section-text' onClick={redirectToPreLanding}>
-                {` Inicio`}
-              </Link>
+                <Link className='menuEvent_section-text' onClick={redirectToPreLanding} style={{ color: event.styles.textMenu }}>
+                  {intl.formatMessage({id: 'header.home', defaultMessage: 'Inicio'})}
+                </Link>
+              </Space>
             </Menu.Item>
             {event.itemsMenu &&
               Object.keys(event.itemsMenu).map((key) => {

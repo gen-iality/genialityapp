@@ -1,5 +1,5 @@
 import { Select } from 'antd';
-import { useGetGruopEventList } from '../../hooks/useGetGruopEventList';
+import { useCrudGruopEventList } from '../../hooks/useCrudGruopEventList';
 import { EventsApi } from '@/helpers/request';
 import { DispatchMessageService } from '@/context/MessageService';
 import { useEffect, useState } from 'react';
@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const AddEventToGroup = ({ selectedEvent }: Props) => {
-  const { groupEvent, isLoading } = useGetGruopEventList(selectedEvent.organizer_id);
+  const { groupEvent, isLoadingGroup } = useCrudGruopEventList(selectedEvent.organizer_id);
   const [selectedGroup, setSelectedGroup] = useState<string | undefined>('');
   const [isLoadingSelect, setIsLoadingSelect] = useState(false);
 
@@ -38,12 +38,12 @@ export const AddEventToGroup = ({ selectedEvent }: Props) => {
   /* todo: validar que al editar desde aqui solo importa ser admin en la organizacion */
   return (
     <Select
-      disabled={isLoadingSelect}
+      disabled={isLoadingSelect || isLoadingGroup}
       onClear={() => onAddEventToGroup(undefined)}
-      value={selectedGroup}
+      value={groupEvent.length > 0 ? selectedGroup : null}
       style={{ width: '100%' }}
       onSelect={onAddEventToGroup}
-      loading={isLoading || isLoadingSelect}
+      loading={isLoadingGroup || isLoadingSelect}
       size='large'
       placeholder='Seleccionar grupo'
       options={groupEvent}

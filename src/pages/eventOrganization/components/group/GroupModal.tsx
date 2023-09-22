@@ -1,43 +1,45 @@
-import { Button, Input, Modal, ModalProps } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { GroupEvent } from '../../interface/group.interfaces';
-import { GroupsApi } from '@/helpers/request';
+import { useEffect, useRef } from 'react';
+import { Button, Form, Input, Modal, ModalProps, Switch } from 'antd';
+import { GroupEvent, GroupEventMongo } from '../../interface/group.interfaces';
 import { DispatchMessageService } from '@/context/MessageService';
 
 interface Props extends ModalProps {
   onCancel: () => void;
-  selectedGroup?: any;
+  selectedGroup?: GroupEventMongo;
   organizationId: string;
-  updateListGroup: any;
+  handledUpdate: (groupId: string, newGroupData: GroupEvent) => Promise<void>;
+  handledAddGroup: (newGrupo: GroupEvent) => Promise<void>;
 }
 
-export const GroupModal = ({ onCancel, selectedGroup, organizationId, updateListGroup, ...modalProps }: Props) => {
-  const [groupName, setgroupName] = useState('');
+export const GroupModal = ({
+  onCancel,
+  selectedGroup,
+  organizationId,
+  handledUpdate,
+  handledAddGroup,
+  ...modalProps
+}: Props) => {
+  const inputRef = useRef<any>();
+  const [form] = Form.useForm<GroupEvent>();
 
-  const handledChange = (value: string) => {
-    setgroupName(value);
-  };
-
-  const agregarGrupo = async () => {
+  const onAddGroup = async (newGroupData: GroupEvent) => {
     try {
-      const nuevoGrupo: GroupEvent = {
-        name: groupName,
-      };
-      await GroupsApi.create(organizationId, nuevoGrupo);
+      await handledAddGroup({
+        name: newGroupData.name,
+        free_access_organization: newGroupData.free_access_organization,
+      });
       DispatchMessageService({ action: 'show', type: 'success', msj: 'Se agrego el grupo correctamente' });
-      updateListGroup();
       onCancel();
     } catch (error) {
       DispatchMessageService({ action: 'show', type: 'info', msj: 'Ocurrio un error al agregar el grupo' });
     }
   };
 
-  const editGroup = async () => {
+  const onEditGroup = async (newGroupData: GroupEvent) => {
     try {
-      await GroupsApi.update(organizationId, selectedGroup._id, { name: groupName });
-      DispatchMessageService({ action: 'show', type: 'success', msj: 'Se edito el grupo correctamente' });
-      updateListGroup();
+      await handledUpdate(selectedGroup?.item._id ?? '', newGroupData);
       onCancel();
+      DispatchMessageService({ action: 'show', type: 'success', msj: 'Se edito el grupo correctamente' });
     } catch (error) {
       DispatchMessageService({ action: 'show', type: 'info', msj: 'No se pudo editar el grupo' });
     }
@@ -45,19 +47,38 @@ export const GroupModal = ({ onCancel, selectedGroup, organizationId, updateList
 
   useEffect(() => {
     if (selectedGroup) {
-      setgroupName(selectedGroup.name);
+      form.setFieldsValue({
+        free_access_organization: selectedGroup.item.free_access_organization,
+        name: selectedGroup.item.name,
+      });
+    } else {
+      form.setFieldsValue({
+        free_access_organization: false,
+        name: '',
+      });
     }
   }, [selectedGroup]);
 
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
   return (
     <Modal {...modalProps} onCancel={onCancel} title={selectedGroup ? 'Editar grupo' : 'Agregar grupo'} footer={null}>
-      <Input
-        placeholder={'Ingrese el nombre del grupo'}
-        value={groupName}
-        onChange={({ target: { value } }) => handledChange(value)}
-        maxLength={20}
-      />
-      <Button onClick={selectedGroup ? editGroup : agregarGrupo}>{selectedGroup ? 'Editar' : 'Agregar'}</Button>
+      <Form form={form} onFinish={selectedGroup ? onEditGroup : onAddGroup} layout='vertical'>
+        <Form.Item name={'name'} label={<label>Nombre</label>}>
+          <Input ref={inputRef} placeholder={'Ingrese el nombre del grupo'} maxLength={20} />
+        </Form.Item>
+        <Form.Item
+          valuePropName='checked'
+          name={'free_access_organization'}
+          label={<label>Acceso libre para los miembros de la organización</label>}>
+          <Switch />
+        </Form.Item>
+        <Button htmlType='submit'>{selectedGroup ? 'Editar' : 'Agregar'}</Button>
+      </Form>
     </Modal>
   );
 };

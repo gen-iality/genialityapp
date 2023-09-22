@@ -1,11 +1,11 @@
 /* eslint-disable react/jsx-no-target-blank */
-import { Component, useEffect, useState } from 'react';
+import { Component } from 'react';
 import Moment from 'moment';
 import { Link, withRouter } from 'react-router-dom';
 import { Badge, Button, Card, Space, Tag, Tooltip, Typography } from 'antd';
 import { imageUtils } from '../../Utilities/ImageUtils';
 import { HelperContext } from '@/context/helperContext/helperContext';
-import { OrganizationApi } from '@/helpers/request';
+import { getDateEvent } from './utils/getDatesEvents';
 
 const EventImage = imageUtils.EventImage;
 const { Meta } = Card;
@@ -32,64 +32,12 @@ class EventCard extends Component {
       width: '250px',
     };
 
-    const getDateEvent = () => {
-      if (!event) return <></>;
-      const MIN_DATES = 1;
-      const EVENT_WITH_ONE_DATE = 1;
-      const FIRST_DATE = 0;
-      if (event.dates?.length >= MIN_DATES) {
-        const LAST_DATE = event.dates?.length - 1;
-        if (event.dates?.length === EVENT_WITH_ONE_DATE) {
-          return (
-            <time dateTime={event.dates[FIRST_DATE]?.start}>
-              {Moment(event.dates[FIRST_DATE]?.start).format('DD MMM YYYY')}
-            </time>
-          );
-        } else {
-          return (
-            <>
-              <time dateTime={event.dates[FIRST_DATE]?.start}>
-                {Moment(event.dates[FIRST_DATE]?.start).format('DD MMM YYYY')}
-              </time>
-              {'-'}
-              <time dateTime={event.dates[LAST_DATE].end}>
-                {Moment(event.dates[LAST_DATE].end).format('DD MMM YYYY')}
-              </time>
-            </>
-          );
-        }
-      }
-      if (Moment(event.datetime_from).format('DD MMM YYYY') === Moment(event.datetime_to).format('DD MMM YYYY')) {
-        return (
-          <>
-            <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
-          </>
-        );
-      }
-      return (
-        <>
-          <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
-          {'-'}
-          <time dateTime={event.datetime_to}>{Moment(event.datetime_to).format('DD MMM YYYY')}</time>
-        </>
-      );
-    };
-
     //Esto sólo va a aplicar para cuando el usuario tiene un plan
     //Se esta validando la fecha en la que se va a bloquear el evento, osea hasta la fecha que tiene acceso
     // let actualDate = new Date(event.datetime_to);
     //aqui  tiene que venir ahora unos minutos en caso de tener plan
     /* let blockedDate = new Date(actualDate.setDate(actualDate.getDate() + blockedEvent));
     let formatDate = Moment(blockedDate).format('DD MMM YYYY'); */
-  const fetchOrganizationUser = async () => {
-    try {
-      const response = await OrganizationApi.getMeUser(event?.organizer?._id);
-      const users = response.data;
-     
-    } catch (error) {
-      console.error('Error al obtener el usuario de la organización:', error);
-    }
-  };
     const getEventInfo = () => {
       const currentPath = location.pathname;
 
@@ -114,7 +62,7 @@ class EventCard extends Component {
           const validNames = possibleNames.filter((name) => name);
           return validNames.map((name, index) => <span key={index}>{name}</span>);
         }
-      } else if (currentPath === '/myprofile') {
+      } else if (currentPath === '/myprofile/organization' | currentPath === '/myprofile') {
         // Ruta "/myprofile": Muestra solo el nombre de la organización o del autor
         if (event.organizer?.name) {
           return <span>{event.organizer.name}</span>;
@@ -227,7 +175,7 @@ class EventCard extends Component {
                   <span style={{ fontSize: '12px' }}>
                     <Space>
                       <i className='fas fa-calendar-alt' />
-                      {getDateEvent()}
+                      {getDateEvent(event)}
                     </Space>
                   </span>
                   <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>

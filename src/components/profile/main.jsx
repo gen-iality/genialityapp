@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable array-callback-return */
 import { useState, useEffect } from 'react';
 import {
   Avatar,
@@ -20,7 +22,6 @@ import {
   CarryOutOutlined,
   EditOutlined,
   LockOutlined,
-  SettingOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 import OrganizationCard from './organizationCard';
@@ -28,8 +29,6 @@ import NewCard from './newCard';
 import ExploreEvents from './exploreEvents';
 import withContext from '../../context/withContext';
 import { EventsApi, TicketsApi, OrganizationApi } from '../../helpers/request';
-import EventCard from '../shared/eventCard';
-import { Link } from 'react-router-dom';
 import moment from 'moment';
 import Loading from './loading';
 import ChangePassword from './components/changePassword';
@@ -37,8 +36,8 @@ import EditInformation from './components/EditInformation';
 import MyPlan from './components/myPlan';
 import { useHelper } from '@/context/helperContext/hooks/useHelper';
 import { featureBlockingListener } from '@/services/featureBlocking/featureBlocking';
-import eventCard from '../shared/eventCard';
 import { UseCurrentUser } from '@/context/userContext';
+import EventCardRenderer from './RenderCardMain';
 
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
@@ -60,9 +59,8 @@ const MainProfile = (props) => {
   const screens = useBreakpoint();
   const selectedTab = props.match.params.tab;
   const { helperDispatch } = useHelper();
-  const IS_USER_ADMIN = props.cUser?.value?.is_admin 
-	const cUser = UseCurrentUser();
-	console.log(cUser?.value)
+  const IS_USER_ADMIN = props.cUser?.value?.is_admin;
+  const cUser = UseCurrentUser();
   const showSider = () => {
     if (!collapsed) {
       setCollapsed(true);
@@ -76,52 +74,53 @@ const MainProfile = (props) => {
   };
 
   const eventsIHaveCreated = async () => {
-    const events = await EventsApi.mine();
-
-    if (events.length > 0) {
-      events.map((event) => {
-        featureBlockingListener(event._id, helperDispatch, 'map');
+    const eventsAll = await TicketsApi.getAll();
+    const eventsMine = await EventsApi.mine();
+    const matchingEvents = eventsMine
+      .map((mineEvent) => {
+        const matchingAllEvent = eventsAll.find((allEvent) => mineEvent._id === allEvent.event_id);
+        if (matchingAllEvent) {
+          return matchingAllEvent;
+        }
+        return null;
+      })
+      .filter((event) => event !== null);
+    if (matchingEvents.length > 0) {
+      matchingEvents.map((event) => {
+        featureBlockingListener(event.event_id, helperDispatch, 'map');
       });
     }
-    const eventsDataSorted = events.sort((a, b) => moment(b.datetime_from) - moment(a.datetime_from));
+    const eventsDataSorted = matchingEvents.sort((a, b) => moment(b.datetime_from) - moment(a.datetime_from));
     setevents(eventsDataSorted);
-    seteventsLimited(events.slice(0, 3));
+    seteventsLimited(eventsDataSorted.slice(0, 4));
     setEventsIHaveCreatedIsLoading(false);
   };
 
   const eventsThatIHaveParticipated = async () => {
-    const ticketsall = await TicketsApi.getAll();
-
-    if (ticketsall.length === 0) {
-      settickets(ticketsall);
+    const eventsAll = await TicketsApi.getAll();
+    if (eventsAll.length === 0) {
+      settickets(eventsAll);
       setEventsThatIHaveParticipatedIsLoading(false);
       return;
     }
-
-    ticketsall.map((event) => {
+    eventsAll.map((event) => {
       featureBlockingListener(event.event_id, helperDispatch, 'map');
     });
 
-    const ticketsDataSorted = ticketsall.sort((a, b) => moment(b.created_at) - moment(a.created_at));
-    const usersInscription = [];
-    ticketsDataSorted.forEach(async (element) => {
-      const eventByTicket = await EventsApi.getOne(element.event_id);
-      if (eventByTicket) {
-        usersInscription.push(eventByTicket);
-      }
-      settickets(usersInscription);
-      setticketsLimited(usersInscription.slice(0, 4));
-      setEventsThatIHaveParticipatedIsLoading(false);
-    });
+    const eventsDataSorted = eventsAll.sort((a, b) => moment(b.created_at) - moment(a.created_at));
+    const limitedTickets = eventsDataSorted.slice(0, 4);
+    settickets(eventsDataSorted);
+    setticketsLimited(limitedTickets);
+    setEventsThatIHaveParticipatedIsLoading(false);
   };
 
   const myOrganizations = async () => {
-      const organizations = await OrganizationApi.mine();
-      const organizationsFilter = organizations.filter((orgData) => orgData.id);
-      const organizationDataSorted = organizationsFilter.sort((a, b) => moment(b.created_at) - moment(a.created_at));
-      setorganizations(organizationDataSorted);
-      setorganizationsLimited(organizationDataSorted.slice(0, 5));
-      setOrganizationsIsLoading(false);
+    const organizations = await OrganizationApi.mine();
+    const organizationsFilter = organizations.filter((orgData) => orgData.id);
+    const organizationDataSorted = organizationsFilter.sort((a, b) => moment(b.created_at) - moment(a.created_at));
+    setorganizations(organizationDataSorted);
+    setorganizationsLimited(organizationDataSorted.slice(0, 5));
+    setOrganizationsIsLoading(false);
   };
 
   const fetchItem = async () => {
@@ -141,7 +140,7 @@ const MainProfile = (props) => {
   }, []);
 
   useEffect(() => {
-    if(IS_USER_ADMIN){
+    if (IS_USER_ADMIN) {
       switch (selectedTab) {
         case 'organization':
           setActiveTab('2');
@@ -155,19 +154,18 @@ const MainProfile = (props) => {
         default:
           setActiveTab('1');
       }
-    }else{
+    } else {
       setActiveTab('2');
     }
-  }, [IS_USER_ADMIN])
-  
-  useEffect(() => {
     fetchItem();
-  }, [IS_USER_ADMIN])
+  }, [IS_USER_ADMIN, selectedTab]);
   
+
   useEffect(() => {
-    if (activeTab !== '2') return;
-    fetchItem();
-  }, [activeTab]);
+    if (IS_USER_ADMIN && activeTab === '2') {
+      fetchItem();
+    }
+  }, [IS_USER_ADMIN, activeTab]);
 
   return (
     <Layout style={{ height: '90.8vh' }}>
@@ -344,7 +342,7 @@ const MainProfile = (props) => {
                       </Row>
                     </Col>
                     <Col span={24}>
-                      <Divider orientation='left'>Eventos creado</Divider>
+                      <Divider orientation='left'>Eventos creados</Divider>
                       <Row gutter={[16, 16]}>
                         {eventsIHaveCreatedIsLoading ? (
                           <Loading />
@@ -358,33 +356,14 @@ const MainProfile = (props) => {
                               )}
                             </Col>
                             {/* aqui empieza el mapeo de eventCard.jsx maximo 4 */}
-                            {eventsLimited.length > 0 &&
-                              eventsLimited.map((event, index) => {
-                                return (
-                                  <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
-                                    <EventCard
-                                      isAdmin
-                                      bordered={false}
-                                      event={event}
-                                      action={{ name: 'Ver', url: `landing/${event._id}` }}
-                                      right={[
-                                        <div key={'admin'}>
-                                          <Link to={`/eventadmin/${event._id}`}>
-                                            <Space>
-                                              <SettingOutlined />
-                                              <span>Administrar</span>
-                                            </Space>
-                                          </Link>
-                                        </div>,
-                                      ]}
-                                      blockedEvent={
-                                        props?.cUser?.value?.plan?.availables?.later_days || eventCard.value?.later_days
-                                      }
-                                      currentUser={cUser}
-                                    />
-                                  </Col>
-                                );
-                              })}
+                            {eventsLimited.length > 0 && (
+                              <EventCardRenderer
+                                eventDataArray={eventsLimited}
+                                isAdmin={true}
+                                props={props}
+                                cUser={cUser}
+                              />
+                            )}
                             {/* aqui termina el mapeo de eventCard.jsx maximo 4  */}
                           </>
                         )}
@@ -399,20 +378,12 @@ const MainProfile = (props) => {
                         ) : (
                           <>
                             {ticketsLimited.length > 0 ? (
-                              ticketsLimited.map((event, index) => {
-                                return (
-                                  <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
-                                    <EventCard
-                                      bordered={false}
-                                      event={event}
-                                      action={{ name: 'Ver', url: `landing/${event._id}` }}
-                                      /* blockedEvent={
-                                        props?.cUser?.value?.plan?.availables?.later_days || eventCard.value?.later_days
-                                      } */
-                                    />
-                                  </Col>
-                                );
-                              })
+                              <EventCardRenderer
+                                eventDataArray={ticketsLimited}
+                                isAdmin={false}
+                                props={props}
+                                cUser={cUser}
+                              />
                             ) : (
                               <Col span={24}>
                                 <ExploreEvents />
@@ -450,92 +421,57 @@ const MainProfile = (props) => {
                   </Row>
                 </TabPane>
               )}
-               <TabPane tab='Organizaciones' key='2'>
+              <TabPane tab='Organizaciones' key='2'>
                 {organizationsIsLoading ? (
                   <Loading />
                 ) : (
                   <Row gutter={[16, 16]}>
-                    {IS_USER_ADMIN && 
-                    <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
-                      <NewCard entityType='organization' cUser={props.cUser} fetchItem={fetchItem} />
-                    </Col>
-                    }
-                    {organizations.length > 0 ?
+                    {IS_USER_ADMIN && (
+                      <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
+                        <NewCard entityType='organization' cUser={props.cUser} fetchItem={fetchItem} />
+                      </Col>
+                    )}
+                    {organizations.length > 0 ? (
                       organizations.map((organization, index) => {
                         return (
                           <Col key={index} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
-                            <OrganizationCard data={organization} IS_USER_ADMIN={IS_USER_ADMIN}/>
+                            <OrganizationCard data={organization} IS_USER_ADMIN={IS_USER_ADMIN} />
                           </Col>
                         );
                       })
-                      :
-                        <Col xs={12} >
-                          <Empty description="No se encuentra ninguna organizacion"/>
-                        </Col>
-                      }
+                    ) : (
+                      <Col xs={12}>
+                        <Empty description='No se encuentra ninguna organizacion' />
+                      </Col>
+                    )}
                   </Row>
                 )}
               </TabPane>
-              {IS_USER_ADMIN && <TabPane tab='Eventos creados' key='3'>
-                {eventsIHaveCreatedIsLoading ? (
-                  <Loading />
-                ) : (
-                  <Row gutter={[16, 16]}>
-                    <Col xs={24} sm={12} md={12} lg={8} xl={6}>
-                      {organizationsLimited.length > 0 ? (
-                        <NewCard entityType='event' cUser={props.cUser} org={organizationsLimited} />
-                      ) : (
-                        <NewCard entityType='event' cUser={props.cUser} />
-                      )}
-                    </Col>
-                    {events.map((event, index) => {
-                      return (
-                        <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
-                          <EventCard
-                            isAdmin
-                            bordered={false}
-                            event={event}
-                            // action={{ name: 'Ver', url: `landing/${event._id}` }}
-                            right={[
-                              <div key={'admin'}>
-                                <Link to={`/eventadmin/${event._id}`}>
-                                  <Space>
-                                    <SettingOutlined />
-                                    <span>Administrar</span>
-                                  </Space>
-                                </Link>
-                              </div>,
-                            ]}
-                            /* blockedEvent={
-                              props?.cUser?.value?.plan?.availables?.later_days || eventCard.value?.later_days
-                            } */
-                          />
-                        </Col>
-                      );
-                    })}
-                  </Row>
-                )}
-              </TabPane>}
+              {IS_USER_ADMIN && (
+                <TabPane tab='Eventos creados' key='3'>
+                  {eventsIHaveCreatedIsLoading ? (
+                    <Loading />
+                  ) : (
+                    <Row gutter={[16, 16]}>
+                      <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                        {organizationsLimited.length > 0 ? (
+                          <NewCard entityType='event' cUser={props.cUser} org={organizationsLimited} />
+                        ) : (
+                          <NewCard entityType='event' cUser={props.cUser} />
+                        )}
+                      </Col>
+                      <EventCardRenderer eventDataArray={events} isAdmin={true} props={props} cUser={cUser} />
+                    </Row>
+                  )}
+                </TabPane>
+              )}
               <TabPane tab='Inscripciones a eventos' key='4'>
                 {eventsThatIHaveParticipatedIsLoading ? (
                   <Loading />
                 ) : (
                   <Row gutter={[16, 16]}>
                     {tickets.length > 0 ? (
-                      tickets.map((event, index) => {
-                        return (
-                          <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
-                            <EventCard
-                              bordered={false}
-                              event={event}
-                              action={{ name: 'Ver', url: `landing/${event._id}` }}
-                              /* blockedEvent={
-                                props?.cUser?.value?.plan?.availables?.later_days || eventCard.value?.later_days
-                              } */
-                            />
-                          </Col>
-                        );
-                      })
+                      <EventCardRenderer eventDataArray={tickets} isAdmin={true} props={props} cUser={cUser} />
                     ) : (
                       <Col span={24}>
                         <ExploreEvents />

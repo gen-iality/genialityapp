@@ -2,23 +2,30 @@
 import React from 'react';
 import { Col, Row } from 'antd';
 import Header from '@/antdComponents/Header';
-import { CategoriesApi } from '@/helpers/request';
 import CategoryModal from './CategoryModal';
-import { handleDeleteCategory } from '../tableColums/utils/deleteCategories';
 import CardCategory from './CardCategory';
 import CardGroupEvent from './CardGroup';
 import { GroupModal } from '../components/group/GroupModal';
-import { useGetGruopEventList } from '../hooks/useGetGruopEventList';
+import { useCrudGruopEventList } from '../hooks/useCrudGruopEventList';
 import { ICategory } from '../interface/category.interface';
 import { useGetCategorys } from '../hooks/useGetCategorys';
 import { useModalLogic } from '@/hooks/useModalLogic';
+import { GroupEventMongo } from '../interface/group.interfaces';
 
 const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
-  const { groupEvent, updateListGroup, handledDelete } = useGetGruopEventList(organizationId);
-  const { categories, updateListCategories } = useGetCategorys(organizationId);
-  const { closeGroupModal, isOpenGroupModal, openGroupModal, selectedGroup, handledSelectGroup } = useModalLogic(
-    'Group'
+  const { groupEvent, handledDelete, handledUpdateGroup, isLoadingGroup, handledAddGroup } = useCrudGruopEventList(
+    organizationId
   );
+  const {
+    categories,
+    handledAddCategory,
+    handledDeleteCategory,
+    handledUpdateCategory,
+    isLoadingCategories,
+  } = useGetCategorys(organizationId);
+  const { closeGroupModal, isOpenGroupModal, openGroupModal, selectedGroup, handledSelectGroup } = useModalLogic<
+    GroupEventMongo
+  >('Group');
   const {
     isOpenCategoryModal,
     closeCategoryModal,
@@ -27,31 +34,14 @@ const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
     selectedCategory,
   } = useModalLogic<ICategory, 'Category'>('Category');
 
-  const updateCategoriaData = async () => {
-    try {
-      const response: any[] = await CategoriesApi.getAll();
-      // Verificar si la API respondió correctamente
-      if (response && Array.isArray(response)) {
-        const categoriasArray: ICategory[] = response.map((categoria) => ({
-          key: categoria.value,
-          name: categoria.label,
-          eventosPorCategoria: categoria.item,
-        }));
-      } else {
-        console.error('Error updating category data:', response);
-      }
-    } catch (error) {
-      console.error('Error updating category data:', error);
-    }
-  };
-
   return (
     <>
       <Header title={'Categorías y grupos'} />
       <Row gutter={[8, 0]}>
         <Col span={12}>
           <CardCategory
-            updateListCategories={updateListCategories}
+            handledDeleteCategory={handledDeleteCategory}
+            isLoadingCategories={isLoadingCategories}
             dataSource={categories}
             handledSelectCategory={handledSelectCategory}
             openCategoryModal={openCategoryModal}
@@ -60,8 +50,8 @@ const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
         </Col>
         <Col span={12}>
           <CardGroupEvent
+            isLoadingGroup={isLoadingGroup}
             handledDelete={handledDelete}
-            updateListGroup={updateListGroup}
             selectGroup={handledSelectGroup}
             dataSource={groupEvent}
             handledOpenModalGroup={openGroupModal}
@@ -72,7 +62,8 @@ const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
       </Row>
       {isOpenGroupModal && (
         <GroupModal
-          updateListGroup={updateListGroup}
+          handledAddGroup={handledAddGroup}
+          handledUpdate={handledUpdateGroup}
           visible={isOpenGroupModal}
           onCancel={closeGroupModal}
           organizationId={organizationId}
@@ -82,8 +73,9 @@ const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
 
       {isOpenCategoryModal && (
         <CategoryModal
+          handledUpdateCategory={handledUpdateCategory}
+          handledAddCategory={handledAddCategory}
           onCancel={closeCategoryModal}
-          updateListCategories={updateListCategories}
           visible={isOpenCategoryModal}
           organizationId={organizationId}
           selectedCategory={selectedCategory}

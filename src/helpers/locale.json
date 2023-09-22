@@ -362,7 +362,10 @@
     "private_event": "Private event",
     "not_invited": "You are not invited",
     "has_been_invited_event": "You have been invited to this event",
-    "INITIAL_STATE": "Initial state"
+    "INITIAL_STATE": "Initial state",
+    "buy": "Buy",
+    "see_more": "See more...",
+    "go_to": "Go to"
   },
   "es": {
     "header.help": "Ayuda",
@@ -736,7 +739,10 @@
     "private_event": "Evento privado",
     "not_invited": "No estas invitado",
     "has_been_invited_event": "Has sido invitado a este evento",
-    "INITIAL_STATE": "Estado inicial"
+    "INITIAL_STATE": "Estado inicial",
+    "buy": "Comprar",
+    "see_more": "Ver más...",
+    "go_to": "Ir a"
   },
   "pt": {
     "live.join": "Entrar",
