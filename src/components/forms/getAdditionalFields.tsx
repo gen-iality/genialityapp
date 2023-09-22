@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Checkbox, Collapse, Divider, Form, Input, Select, Upload, DatePicker } from 'antd';
+import { Button, Checkbox, Collapse, Divider, Form, Input, Select, Upload, DatePicker, Typography } from 'antd';
 import { InboxOutlined, UploadOutlined } from '@ant-design/icons';
 import ImgCrop from 'antd-img-crop';
 import { useIntl } from 'react-intl';
@@ -10,13 +10,12 @@ import { deleteFireStorageData } from '@/Utilities/deleteFireStorageData';
 import { countryApi } from '@/helpers/request';
 /**TODO::ocaciona error en ios */
 
-import { async } from 'ramda-adjunct';
 const { Option } = Select;
 const { Panel } = Collapse;
 const { TextArea } = Input;
 const { Dragger } = Upload;
 
-const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
+const GetAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
   const intl = useIntl();
   let attendeeProperties = attendee?.properties || {};
   let areacodeselected = attendeeProperties['code'] || '+57';
@@ -103,7 +102,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
       let labelPosition = field.labelPosition;
       let target = name;
 
-      let value = attendeeProperties.email || attendeeProperties.names ? attendeeProperties[target] : null;
+      let value = attendeeProperties.email || attendeeProperties.names ? attendeeProperties[target] ?? attendee[target]: null;
 
       //esogemos el tipo de validación para email
       rule = type === 'email' ? { ...rule, type: 'email' } : rule;
@@ -356,7 +355,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
         );
       }
 
-      if (type === 'list') {
+      if (type === 'list' || type === 'list_type_user') {
         input = field.options
           ? field.options.map((option: any, key: any) => {
               return (
@@ -367,8 +366,11 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
             })
           : [];
         input = (
-          <Form.Item initialValue={value} name={name} noStyle>
-            <Select style={{ width: '100%' }}>
+          <Form.Item initialValue={value} name={name} noStyle={name !== 'rol_id' && attendee?.anonymous} 
+            help={name === 'rol_id' && attendee?.anonymous && 
+            <Typography.Text strong type='secondary'>El rol no se pueden modificar cuando el usuario es de tipo anónimo</Typography.Text>}
+          >
+            <Select style={{ width: '100%' }} disabled={name === 'rol_id' && attendee?.anonymous}>
               <Option value={''}>Seleccione...</Option>
               {input}
             </Select>
@@ -559,4 +561,4 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
   return additionalFormFields;
 };
 
-export default getAdditionalFields;
+export default GetAdditionalFields;

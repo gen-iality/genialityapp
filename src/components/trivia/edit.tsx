@@ -60,6 +60,9 @@ const parseStringNumber = (value: string | number) => {
 };
 
 function TriviaEdit(props: any) {
+	const { eventIsActive } = useHelper();
+	const cEventIsActive = eventIsActive;
+	const [disablePosting, setDisablePosting] = useState<boolean>(false)
 	const [state, setState] = useState<State>({
 		_id: '',
 		idSurvey: '',
@@ -82,7 +85,7 @@ function TriviaEdit(props: any) {
 		allow_anonymous_answers: false,
 		allow_gradable_survey: false,
 		hasMinimumScore: false, // Si la encuesta calificable requiere un puntaje minimo de aprobación
-		isGlobal: false, // determina si la encuesta esta disponible desde cualquier actividad
+		isGlobal: true, // determina si la encuesta esta disponible desde cualquier actividad
 		showNoVotos: false,
 
 		// estado de la encuesta
@@ -104,10 +107,20 @@ function TriviaEdit(props: any) {
 		graphyType: 'y',
 
 		// Puntaje mínimo de aprobación
-		minimumScore: 0,
+		minimumScore: 0
 	});
 	const formEditRef = createRef<HTMLFormElement | null>();
-
+	useEffect(() => {
+    let questionText = false;
+    state.question.map((question) => {
+      if (question.type === 'Texto' && parseStringBoolean(allow_gradable_survey)) questionText = true;
+    });
+    if (questionText && !disablePosting) {
+      setDisablePosting(true);
+    } else if (disablePosting) {
+      setDisablePosting(false);
+    }
+  }, [state.question,state.allow_gradable_survey]);
 	//Funcion para poder cambiar el value del input o select
 	const changeInput = (e: any) => {
 		const { name } = e.target;
@@ -750,25 +763,49 @@ function TriviaEdit(props: any) {
 		displayGraphsInSurveys,
 		isLoading,
 	} = state;
+	const messageTag = (question: Question) => {
+    switch (question.type) {
+      case 'Texto':
+		
+        return (
+          <Tag icon={<CheckCircleOutlined />} color='error'>
+            Las preguntas de tipo texto no pueden ser calificables
+          </Tag>
+        );
 
+      case 'Selección Múltiple':
+        return question.correctAnswer?.length ? (
+          <Tag icon={<CheckCircleOutlined />} color='success'>
+            Respuesta asignada
+          </Tag>
+        ) : (
+          <Tag icon={<CloseCircleOutlined />} color='error'>
+            Sin respuesta asignada
+          </Tag>
+        );
+      default:
+		return question.correctAnswer ? (
+			<Tag icon={<CheckCircleOutlined />} color='success'>
+				Respuesta asignada
+			</Tag>
+		) : (
+			<Tag icon={<CloseCircleOutlined />} color='error'>
+				Sin respuesta asignada
+			</Tag>
+		)
+        break;
+    }
+  };
 	const columns = [
 		{
 			title: 'Pregunta',
 			key: 'title',
-			render: (e: any) => {
+			render: (e: Question) => {
 				return (
 					<>
-						<div style={{ marginBottom: '10px' }}>
-							{e.correctAnswer ? (
-								<Tag icon={<CheckCircleOutlined />} color='success'>
-									Respuesta asignada
-								</Tag>
-							) : (
-								<Tag icon={<CloseCircleOutlined />} color='error'>
-									Sin respuesta asignada
-								</Tag>
-							)}
-						</div>
+						{parseStringBoolean(state.allow_gradable_survey) && <div style={{ marginBottom: '10px' }}>
+							{messageTag(e)}
+						</div>}
 						<div>{e.title}</div>
 					</>
 				);
@@ -791,8 +828,7 @@ function TriviaEdit(props: any) {
 			title: 'Opciones',
 			key: 'action',
 			render: (text: any, record: any) => {
-				const { eventIsActive } = useHelper();
-				const cEventIsActive = eventIsActive;
+				
 				return (
 					<Row gutter={[8, 8]}>
 						<Col>
@@ -835,15 +871,19 @@ function TriviaEdit(props: any) {
 				remove={remove}
 				edit={state.idSurvey}
 				extra={
-					<Space direction='horizontal' style={{ marginRight: '50px' }}>
+					<Space direction='horizontal' align='baseline' style={{ marginRight: '50px' }}>
 						{state.idSurvey && (
 							<>
+								<Col>
+								{disablePosting && (<Tag icon={<CheckCircleOutlined />} color='error'>No se puede publicar Hasta solucionar todos los problemas</Tag>)}
+								</Col>
 								<Col>
 									<Form.Item label={'Publicar'} labelCol={{ span: 14 }} name={'publish'}>
 										<Switch
 											checked={parseStringBoolean(publish)}
 											checkedChildren='Sí'
 											unCheckedChildren='No'
+											disabled={disablePosting}
 											// onChange={checked => setState(prev => ({ ...prev, publish: checked }))}
 											onChange={checked => handleChangeSurveyStatus({ isPublished: checked })}
 											loading={surveyStatusLoading}

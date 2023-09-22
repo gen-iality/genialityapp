@@ -32,9 +32,29 @@ export default interface AgendaType {
   host_ids: any[] | null,
   length: string,
   latitude: string,
+  userTypes: string[]
 };
 
 export interface ExtendedAgendaType extends AgendaType {
   type?: { name: string },
   video?: string | null,
+  videoId?: string 
 };
+
+export interface DownloadQuality {
+  quality:      string;
+  rendition:    string;
+  type:         string;
+  width:        number;
+  height:       number;
+  expires:      string;
+  link:         string;
+  created_time: string;
+  fps:          number;
+  size:         number;
+  md5:          null;
+  public_name:  string;
+  size_short:   string;
+}
+
+

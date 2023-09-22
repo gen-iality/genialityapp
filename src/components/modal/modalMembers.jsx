@@ -78,7 +78,6 @@ function ModalMembers(props) {
   async function saveUser(values) {
     setLoadingregister(true);
     let resp;
-
     const body = { properties: values };
     if (props.editMember) {
       resp = await OrganizationApi.editUser(organizationId, userId, values);

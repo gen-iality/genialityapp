@@ -40,5 +40,8 @@
 		"commandCenter.border": "#e7e7e799"
 	},
 	"peacock.color": "#16284A",
-	"dotenv.enableAutocloaking": true
+	"dotenv.enableAutocloaking": true,
+	"[css]": {
+		"editor.defaultFormatter": "vscode.css-language-features"
+	}
 }

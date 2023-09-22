@@ -111,7 +111,7 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
-        name: '  Reporte de networking',
+        name: '  Networking',
         path: '/reportNetworking',
         key: 'reporte-networking',
         onClick: handleClick,
@@ -125,10 +125,16 @@ export const MenuItems = [
     ],
   },
   {
-    name: 'Juegos',
+    name: 'Dinámicas',
     icon: <RocketOutlined />,
     key: 'games',
     items: [
+      {
+        name: 'Subasta',
+        path: '/subasta',
+        key: 'Subasta',
+        onClick: handleClick,
+      },
       {
         name: 'Bingo',
         path: '/bingo',

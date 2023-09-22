@@ -2,14 +2,14 @@ import { useState } from 'react';
 import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Form, Input, Button, Space, Upload, Alert } from 'antd';
 import ImgCrop from 'antd-img-crop';
-import createNewUser from './ModalsFunctions/createNewUser';
+import createNewUser from './services/createNewUser';
 import { app } from '../../helpers/firebase';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
 import { DispatchMessageService } from '@/context/MessageService';
 import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
 
-const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
+const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop , isPayment}) => {
   const intl = useIntl();
   const { handleChangeTypeModal } = useHelper();
   const [errorEmail, setErrorEmail] = useState(false);
@@ -29,7 +29,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
       }),
     },
   ];
-
+  
   const rulePassword = [
     {
       required: true,
@@ -94,8 +94,8 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           .then((login) => {
             if (login) {
               //PERMITE VALIDAR EN QUE SECCIÓN DE EVIUS SE ENCUENTRA Y ASÍ RENDERIZAR EL MODAL CORRESPONDIENTE
-              if (window.location.toString().includes('landing') || window.location.toString().includes('event')) {
-                handleChangeTypeModal('loginSuccess');
+              if (isPayment) {
+                handleChangeTypeModal('registerForTheEventPayment')
               } else {
                 handleChangeTypeModal('loginSuccess');
               }

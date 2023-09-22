@@ -10,7 +10,7 @@ import { UseEventContext } from '../../context/eventContext';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { DispatchMessageService } from '../../context/MessageService';
 import { app } from '../../helpers/firebase';
-import openNewWindow from './ModalsFunctions/openNewWindow';
+import openNewWindow from './services/openNewWindow';
 const { Step } = Steps;
 const { Title } = Typography;
 

@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { Form, Input, Tooltip, Alert } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
@@ -133,8 +133,9 @@ class SearchComponent extends Component {
       }
     }
   };
-
+  
   render() {
+    const { intl } = this.props;
     return (
       <div className={this.props.classes} style={{ width: '100%' }}>
         <Form.Item rules={[{ required: true }]} onSubmit={this.searchCert}>
@@ -144,7 +145,7 @@ class SearchComponent extends Component {
             size={this.props.size ? this.props.size : 'large'}
             // onChange={this.handleFilter}
             onInput={this.handleFilter}
-            placeholder={`Buscar ${this.props.placeholder || ''}`}
+            placeholder={intl.formatMessage({id:'search', defaultMessage:'Buscar'}) + this.props.placeholder || ''}
             value={this.state.value}
             suffix={`Total: ${
               this.props.users && this.props.users.length
@@ -178,4 +179,4 @@ class SearchComponent extends Component {
   }
 }
 
-export default SearchComponent;
+export default injectIntl(SearchComponent);

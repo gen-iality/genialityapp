@@ -1,12 +1,11 @@
-import { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import { EventsApi, eventTicketsApi } from '../helpers/request';
 import NotFoundPage from '../components/notFoundPage';
 
-export const CurrentEventContext = React.createContext();
+export const CurrentEventContext = createContext();
 
-export function CurrentEventProvider({ children }) {
+export function CurrentEventProvider({ children, history, match }) {
 	let { event_id, event_name, event } = useParams();
 	/* ('params=>>', useParams()); */
 	let eventNameFormated = null;
@@ -28,8 +27,12 @@ export function CurrentEventProvider({ children }) {
 			let dataevent;
 			switch (type) {
 				case 'id':
+					try {	
 					eventGlobal = await EventsApi.getOne(event_id || event);
 					dataevent = { status: 'LOADED', value: eventGlobal, nameEvent: event_id || event, isByname: false };
+					} catch (error) {
+						history.push(`${match.url || 'absolute'}/notfound`)
+					}
 					break;
 
 				case 'name':
@@ -72,8 +75,9 @@ export function CurrentEventProvider({ children }) {
 }
 
 export function UseEventContext() {
-	const contextevent = React.useContext(CurrentEventContext);
+	const contextevent = useContext(CurrentEventContext);
 	if (!contextevent) {
+		console.log('me mori');
 		throw new Error('eventContext debe estar dentro del proveedor');
 	}
 

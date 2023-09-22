@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import EnvironmentPlugin from 'vite-plugin-environment';
 import { createHtmlPlugin } from 'vite-plugin-html';
+import eslint from 'vite-plugin-eslint';
 
 const path = require('path');
 Object.assign(require('less').options, {
@@ -18,6 +19,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [
+      eslint(),
       react(),
       //Permite cambiar estilos entre Evius y Geniality adcionando una clase global en el body en el index.html
       createHtmlPlugin({

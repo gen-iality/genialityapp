@@ -5,17 +5,16 @@ import 'moment/locale/es-us';
 import { EventsApi } from '../../helpers/request';
 /* import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; */
-import { FormattedMessage } from 'react-intl';
-import Quill from 'react-quill';
 import EviusReactQuill from '../shared/eviusReactQuill';
-import { Button, Checkbox, Row, Col, Form, Input, Modal, Spin, Card, Typography } from 'antd';
-Moment.locale('es-us');
+import { Button, Checkbox, Row, Col, Form, Input, Modal, Card, Typography, Alert } from 'antd';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import { CalendarOutlined, FieldTimeOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { DispatchMessageService } from '../../context/MessageService';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import Loading from '../profile/loading';
+
+Moment.locale('es-us');
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -36,7 +35,6 @@ class SendRsvp extends Component {
     this.submit = this.submit.bind(this);
     this.onChangeDate = this.onChangeDate.bind(this);
   }
-
   componentDidMount() {
     let default_header = ' Has sido invitado a: <br /> <span className="strong">' + this.props.event.name + '</span> ';
     this.setState({
@@ -194,9 +192,14 @@ class SendRsvp extends Component {
       include_date: e.target.checked,
     });
   }
+  handleButtonClick = () => {
+    const { history } = this.props;
+    const path = `/eventadmin/${this.props.eventID}/main`;
+    history.push(path);
+  };
 
   render() {
-    const { disabled, include_date, isLoading } = this.state;
+    const { include_date, isLoading } = this.state;
     if (this.state.redirect) return <Redirect to={{ pathname: this.state.url_redirect }} />;
     return (
       <>
@@ -245,42 +248,74 @@ class SendRsvp extends Component {
                   />
                   {/* <Quill value={this.state.rsvp.content_header} onChange={this.QuillComplement1} name='content_header' /> */}
                 </Form.Item>
-
                 <Form.Item label={'Específicar fecha del evento'}>
                   <Checkbox style={{ marginRight: '2%' }} defaultChecked={include_date} onChange={this.onChangeDate} />
                 </Form.Item>
-
                 {include_date && (
-                  <Row gutter={[8, 8]} wrap>
-                    <Col span={12}>
-                      <p>
-                        {' '}
-                        <CalendarOutlined /> Fecha Inicio
-                      </p>
-                      <p className='date'>{Moment(this.props.event.datetime_from).format('DD MMM YYYY')}</p>
-                    </Col>
-                    <Col span={12}>
-                      <p>
-                        {' '}
-                        <FieldTimeOutlined /> Hora
-                      </p>
-                      <p className='date'>{Moment(this.props.event.datetime_from).format('HH:mm')}</p>
-                    </Col>
-                    <Col span={12}>
-                      <p>
-                        {' '}
-                        <CalendarOutlined /> Fecha Fin
-                      </p>
-                      <p className='date'>{Moment(this.props.event.datetime_to).format('DD MMM YYYY')}</p>
-                    </Col>
-                    <Col span={12}>
-                      <p>
-                        {' '}
-                        <FieldTimeOutlined /> Hora
-                      </p>
-                      <p className='date'>{Moment(this.props.event.datetime_to).format('HH:mm')}</p>
-                    </Col>
-                  </Row>
+                  <div>
+                    <Row gutter={[8, 8]} wrap>
+                      <Col span={12}>
+                        <p>
+                          <CalendarOutlined /> Fecha Inicio
+                        </p>
+                        <p className='date'>
+                          {this.props.event.dates && !!this.props.event.dates.length 
+                            ? Moment(this.props.event.dates[0].start).format('DD MMM YYYY')
+                            : Moment(this.props.event.datetime_from).format('DD MMM YYYY')}
+                        </p>
+                      </Col>
+                      <Col span={12}>
+                        <p>
+                          <FieldTimeOutlined /> Hora
+                        </p>
+                        <p className='date'>
+                          {this.props.event.dates && !!this.props.event.dates.length 
+                            ? Moment(this.props.event.dates[0].start).format('HH:mm')
+                            : Moment(this.props.event.datetime_from).format('HH:mm')}
+                        </p>
+                      </Col>
+                      <Col span={12}>
+                        <p>
+                          <CalendarOutlined /> Fecha Fin
+                        </p>
+                        <p className='date'>
+                          {this.props.event.dates && !!this.props.event.dates.length
+                            ? Moment(this.props.event.dates[this.props.event.dates.length - 1].end).format(
+                                'DD MMM YYYY'
+                              )
+                            : Moment(this.props.event.datetime_to).format('DD MMM YYYY')}
+                        </p>
+                      </Col>
+                      <Col span={12}>
+                        <p>
+                          <FieldTimeOutlined /> Hora
+                        </p>
+                        <p className='date'>
+                          {this.props.event.dates && !!this.props.event.dates.length
+                            ? Moment(this.props.event.dates[this.props.event.dates.length - 1].end).format('HH:mm')
+                            : Moment(this.props.event.datetime_to).format('HH:mm')}
+                        </p>
+                      </Col>
+                    </Row>
+                    {this.props.event.dates && !!this.props.event.dates.length ? null : (
+                      <>
+                        <Alert
+                          message={<Typography.Text strong>Formato de fecha incorrecto</Typography.Text>}
+                          description={
+                            <Typography.Paragraph>
+                              Configurar nuevo formato para las fechas
+                            </Typography.Paragraph>
+                          }
+                          type='error'
+                        />
+                        <div style={{ marginTop: '16px' }}>
+                          <Button type='primary' onClick={this.handleButtonClick}>
+                            Ir a configurar fecha
+                          </Button>
+                        </div>
+                      </>
+                    )}
+                  </div>
                 )}
                 <Row justify='center'>
                   <Col>

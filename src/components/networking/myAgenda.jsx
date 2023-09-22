@@ -1,46 +1,45 @@
-import {
-  Avatar,
-  Button,
-  Card,
-  Col,
-  Modal,
-  notification,
-  Row,
-  Spin,
-  Tabs,
-  Space,
-  Typography,
-  Popconfirm,
-  Divider,
-} from 'antd';
+import { Button, Card, Col, Drawer, notification, Result, Row, Spin, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
-import moment from 'moment';
-import { find, map, mergeRight, path, propEq } from 'ramda';
-import { isNonEmptyArray } from 'ramda-adjunct';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { firestore } from '../../helpers/firebase';
-import { getDatesRange } from '../../helpers/utils';
-import { deleteAgenda, getAcceptedAgendasFromEventUser } from './services';
-import { createChatRoom } from './agendaHook';
 import { isStagingOrProduccion } from '@/Utilities/isStagingOrProduccion';
-
-const { TabPane } = Tabs;
-const { Meta } = Card;
-const { confirm } = Modal;
+import useGetMeetingConfirmed from './hooks/useGetMeetingConfirmed';
+import TabComponent from './components/my-agenda/TabComponent';
+import { JitsiMeeting } from '@jitsi/react-sdk';
+import {INITIAL_MEET_CONFIG} from './utils/utils' 
+import { LeftOutlined } from '@ant-design/icons';
+import { getConfig } from './services/configuration.service';
+import { isMobile } from 'react-device-detect';
+import { useIntl } from 'react-intl';
 
 function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
-  const [loading, setLoading] = useState(true);
   const [enableMeetings, setEnableMeetings] = useState(false);
-  const [acceptedAgendas, setAcceptedAgendas] = useState([]);
   const [currentRoom, setCurrentRoom] = useState(null);
+  const [meetConfig, setMeetConfig] = useState(INITIAL_MEET_CONFIG);
+  const { listDays, haveMeetings, loading } = useGetMeetingConfirmed();
+  const [openChat, setOpenChat] = useState(false);
+  const intl = useIntl();
 
-  const eventDatesRange = useMemo(() => {
-    return getDatesRange(event.date_start || event.datetime_from, event.date_end || event.datetime_to);
-  }, [event.date_start, event.date_end]);
+  const defineName = () => {
+    let userName = 'Anonimo' + new Date().getTime();
+    let userEmail = `${userName}@gmail.com`
+    if(eventUser && eventUser.properties && eventUser.properties.names ) userName = eventUser.properties.names
+    if(eventUser && eventUser.properties && eventUser.properties.email ) userEmail = eventUser.properties.email
+    
+    return {
+      userName,
+      userEmail
+    }
+  }
+  const loadConfigMeet = async () => {
+    const data = await getConfig(event._id);
+    /* console.log('configuracion',data) */
+    if (data?.ConfigMeet) setMeetConfig(data.ConfigMeet);
+    };
 
   useEffect(() => {
     if (!event || !event._id) return;
-
+    loadConfigMeet()
     firestore
       .collection('events')
       .doc(event._id)
@@ -49,94 +48,87 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
       });
   }, [event]);
 
-  useEffect(() => {
-    if (event._id && currentEventUserId && isNonEmptyArray(eventUsers)) {
-      setLoading(true);
-      getAcceptedAgendasFromEventUser(event._id, currentEventUserId)
-        .then((agendas) => {
-          if (isNonEmptyArray(agendas)) {
-            const newAcceptedAgendas = map((agenda) => {
-              const agendaAttendees = path(['attendees'], agenda);
-              const otherAttendeeId = isNonEmptyArray(agendaAttendees)
-                ? find((attendeeId) => attendeeId !== currentEventUserId, agendaAttendees)
-                : null;
-
-              if (otherAttendeeId) {
-                const otherEventUser = find(propEq('_id', otherAttendeeId), eventUsers);
-                return mergeRight(agenda, { otherEventUser });
-              } else {
-                return agenda;
-              }
-            }, agendas);
-            setAcceptedAgendas(newAcceptedAgendas);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          notification.error({
-            message: 'Error',
-            description: 'Obteniendo las citas del usuario',
-          });
-        })
-        .finally(() => setLoading(false));
-    }
-  }, [event._id, currentEventUserId, eventUsers]);
-
-  useEffect(() => {
-    if (currentRoom) {
-      createChatRoom(currentRoom);
-    }
-  }, [currentRoom]);
-
   if (loading) {
     return (
-      <Row align='middle' justify='center' style={{ height: 100 }}>
-        <Spin />
-        <p>Aun no se encuentran reuniones activas, vuelve mas tarde</p>
+      <Row align='middle' justify='center' >
+        <Spin 
+          size='large'
+          tip={<Typography.Text strong>{intl.formatMessage({id: 'loading', defaultMessage: 'Cargando...'})}</Typography.Text>}/>
       </Row>
     );
   }
 
   if (currentRoom) {
-    let userName = eventUser && eventUser.properties ? eventUser.properties.names : 'Anonimo' + new Date().getTime();
-    //https://video-app-1496-dev.twil.io/?UserName=vincent&URLRoomName=hola2&passcode=8816111496
-    //
+    const {userEmail, userName} = defineName()
+
 
     return (
-      <Row align='middle'>
+      <Row align='middle' gutter={[16, 16]}>
         <Col span={24}>
           <Button
             className='button_regresar'
             type='primary'
+            danger
+            icon={<LeftOutlined />}
             onClick={() => {
               setCurrentRoom(null);
             }}>
-            Regresar al listado de citas
+            {intl.formatMessage({id: 'networking_return_list_appointments', defaultMessage: 'Regresar al listado de citas'})}
           </Button>
-          <Row gutter={[12, 12]}>
-            <Col xs={24} sm={24} md={16} xl={16} xxl={16}>
+          {isMobile && <Button onClick={() => setOpenChat(!openChat)} style={{marginLeft: 10}}>Chat</Button>}
+          <Row gutter={[16, 16]}>
+            <Col xs={24} sm={24} md={16} lg={16} xl={16} xxl={16}>
               <div className='aspect-ratio-box' style={{ width: '100%' }}>
                 <div className='aspect-ratio-box-inside'>
-                  <iframe
-                    style={{ border: '2px solid blue' }}
-                    src={
-                      'https://video-app-0463-9499-dev.twil.io?UserName=' +
-                      userName +
-                      '&URLRoomName=' +
-                      currentRoom +
-                      '&passcode=52125404639499'
-                    }
-                    allow='autoplay;fullscreen; camera *;microphone *'
-                    allowusermedia
-                    allowFullScreen
-                    title='video'
-                    className='iframe-zoom nuevo'>
-                    <p>Your browser does not support iframes.</p>
-                  </iframe>
+                  <JitsiMeeting
+                    domain='meet.evius.co'
+                    roomName={currentRoom}
+                    configOverwrite={meetConfig.config} 
+                    userInfo={{
+                      displayName : userName,
+                      email : userEmail
+                    }}
+                    getIFrameRef={(wrapperRef) => {
+                      wrapperRef.style.height = '100%';
+                      wrapperRef.lang = 'es';
+                    }}
+                    onApiReady={(externalApi) => {
+                      console.log(externalApi);
+                    }}
+                  />
                 </div>
               </div>
             </Col>
-            <Col xs={24} sm={24} md={8} xl={8} xxl={8}>
+            {!isMobile &&
+              <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
+                {userName && (
+                  <iframe
+                    title='chatevius'
+                    className='ChatEviusLan'
+                    src={
+                      'https://chatevius.netlify.app?nombre=' +
+                      userName +
+                      '&chatid=' +
+                      currentRoom +
+                      '&eventid=' +
+                      event._id +
+                      '&userid=' +
+                      currentEventUserId +
+                      '&version=0.0.2' +
+                      '&mode=' +
+                      isStagingOrProduccion()
+                    }></iframe>
+                )}
+              </Col>
+            }
+          </Row>
+          <Drawer
+            width={'100%'}
+            closable={true}
+            onClose={() => setOpenChat(!openChat)}
+            visible={openChat}
+            maskClosable={true}
+            className='drawerMobile'>
               {userName && (
                 <iframe
                   title='chatevius'
@@ -155,204 +147,32 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                     isStagingOrProduccion()
                   }></iframe>
               )}
-            </Col>
-          </Row>
+          </Drawer>
         </Col>
       </Row>
     );
   }
 
   return (
-    <div>
-      {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
-      {/* <Switch>
-          <Route path={props.match.url+"listadoCitas"} render={(props) => (
-             <ListadoCitas {...props}/>
-          )} />
-            
-            <Route path={props.match.url+"/reunion"} render={(props) => (
-          
-            <Reunion {...props}/>
-            )} />
-          
-          <Route path={props.match.url+""} render={(props) => (
-            <ListadoCitas {...props}/>
-            )} />
-        </Switch> */}
-
-      {isNonEmptyArray(eventDatesRange) ? (
-        <Tabs>
-          {eventDatesRange.map((eventDate, eventDateIndex) => {
-            const dayAgendas = acceptedAgendas.filter(({ timestamp_start }) => {
-              const agendaDate = moment(timestamp_start).format('YYYY-MM-DD');
-              return agendaDate === eventDate;
-            });
-
-            return (
-              <TabPane
-                tab={
-                  <div style={{ textTransform: 'capitalize', fontWeight: 'bold' }}>
-                    {moment(eventDate).format('MMMM DD')}
-                  </div>
-                }
-                key={`event-date-${eventDateIndex}-${eventDate}`}>
-                {isNonEmptyArray(dayAgendas) ? (
-                  dayAgendas.map((acceptedAgenda) => (
-                    <>
-                      <AcceptedCard
-                        key={`accepted-${acceptedAgenda.id}`}
-                        eventId={event._id}
-                        eventUser={eventUser}
-                        data={acceptedAgenda}
-                        enableMeetings={enableMeetings}
-                        setCurrentRoom={setCurrentRoom}
-                      />
-                    </>
-                  ))
-                ) : (
-                  <Card style={{ textAlign: 'center' }}>{'No tienes citas agendadas para esta fecha'}</Card>
-                )}
-              </TabPane>
-            );
-          })}
-        </Tabs>
-      ) : (
-        <Card>{'No tienes citas actualmente'}</Card>
-      )}
-    </div>
-  );
-}
-
-function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom }) {
-  const [loading, setLoading] = useState(false);
-  const [deleted, setDeleted] = useState(false);
-
-  //const userName = pathOr('', ['names','name'], data);
-  const userName = data.owner_id == eventUser._id ? data.name ?? 'Sin nombre' : data.name_requesting ?? 'Sin nombre';
-  //const userEmail = pathOr('', ['otherEventUser', 'properties', 'email'], data);
-  const userEmail = (data.otherEventUser && data.otherEventUser.properties.email) || data.email;
-  const userImage = (data.otherEventUser && data.otherEventUser.properties.picture) || undefined;
-
-  /** Entramos a la sala 1 a 1 de la reunión
-   *
-   */
-  const accessMeetRoom = (data, eventUser) => {
-    if (!eventUser) {
-      alert('Tenemos problemas con tu usuario, itenta recargar la página');
-      return;
-    }
-    let roomName = data.id;
-
-    setCurrentRoom(roomName);
-  };
-
-  const deleteThisAgenda = () => {
-    if (!loading) {
-      setLoading(true);
-      deleteAgenda(eventId, data.id)
-        .then(() => setDeleted(true))
-        .catch((error) => {
-          console.error(error);
-          notification.error({
-            message: 'Error',
-            description: 'Error eliminando la cita',
-          });
-        })
-        .finally(() => setLoading(false));
-    }
-  };
-
-  const validDateRoom = (room) => {
-    let dateFrom = moment(room.timestamp_start).format('YYYY-MM-DD');
-
-    if (moment().format('YYYY-MM-DD') == dateFrom) {
-      return true;
-    }
-    return false;
-  };
-
-  return (
-    <Row justify='center' style={{ marginBottom: '20px' }}>
-      <Card
-        headStyle={{ border: 'none' }}
-        style={{ width: 600, textAlign: 'left', borderRadius: '10px' }}
-        bodyStyle={{ paddingTop: '0px' }}
-        bordered={true}
-        extra={
-          <Popconfirm
-            title='¿Desea cancelar/eliminar esta cita?'
-            onConfirm={deleteThisAgenda}
-            okText='Si'
-            cancelText='No'>
-            <Button type='text' danger disabled={loading} loading={loading}>
-              {'Cancelar Cita'}
-            </Button>
-          </Popconfirm>
-        }
-        title={
-          <Space wrap>
-            {/* <div style={{ textTransform: 'capitalize' }}>{moment(data.timestamp_start).format('MMMM DD')}</div> */}
-            <Typography.Text style={{ fontSize: '12px' }} type='secondary'>
-              {moment(data.timestamp_start).format('hh:mm a')}
-            </Typography.Text>
-            <Typography.Text style={{ fontSize: '12px' }} type='secondary'>
-              {moment(data.timestamp_end).format('hh:mm a')}
-            </Typography.Text>
-          </Space>
-        }>
-        {/* <div style={{ marginBottom: '10px' }}>{'Cita con: '}</div> */}
-        <Meta
-          avatar={
-            userImage ? (
-              <Avatar size={50} src={userImage}></Avatar>
-            ) : (
-              <Avatar size={50}>{userName ? userName.charAt(0).toUpperCase() : userName}</Avatar>
-            )
-          }
-          title={<Typography.Title level={5}>{userName || 'No registra nombre'}</Typography.Title>}
-          description={
-            <Typography.Paragraph style={{ marginTop: '-15px' }}>
-              <Typography.Text type='secondary' style={{ paddingRight: '20px' }}>
-                {userEmail || 'No registra correo'}
-              </Typography.Text>
-              {!!data.message && (
-                <p style={{ paddingRight: '20px' }}>
-                  <Divider orientation='left' plain style={{ marginBottom: '0px' }}>
-                    Mensaje
-                  </Divider>
-                  <Typography.Paragraph type='secondary' ellipsis={{ rows: 2 }}>
-                    {data.message}
-                  </Typography.Paragraph>
-                </p>
-              )}
-            </Typography.Paragraph>
-          }
-        />
-        {!deleted ? (
-          <Row justify='center'>
-            <Col xs={24} sm={24} md={12} xl={12}>
-              <Button
-                block
-                type='primary'
-                disabled={loading || (!enableMeetings && !validDateRoom(data))}
-                loading={loading}
-                onClick={() => {
-                  accessMeetRoom(data, eventUser);
-                }}>
-                {validDateRoom(data) && !enableMeetings
-                  ? 'Ingresar a reunión'
-                  : !validDateRoom(data) && !enableMeetings
-                  ? 'Reunión no iniciada'
-                  : 'Reunión Cerrada'}
-              </Button>
+    <>
+      <div>
+        {haveMeetings ? (
+          <TabComponent
+            listTabPanels={listDays}
+            eventUser={eventUser}
+            enableMeetings={enableMeetings}
+            setCurrentRoom={setCurrentRoom}
+            eventId={event._id}
+          />
+        ) : (
+          <Row justify='center' align='middle'>
+            <Col>
+              <Result title={intl.formatMessage({id: 'networking_dont_have_dates', defaultMessage: 'No tienes citas actualmente'})}/>
             </Col>
           </Row>
-        ) : (
-          <Row>{`Cita cancelada.`}</Row>
         )}
-      </Card>
-    </Row>
+      </div>
+    </>
   );
 }
 

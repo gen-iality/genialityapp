@@ -14,6 +14,7 @@ import ThisRouteCanBeDisplayed, {
 } from '../../events/Landing/helpers/thisRouteCanBeDisplayed';
 import AnonymousEvenUserForm from '../hooks/anonymousEvenUserForm';
 import { isStagingOrProduccion } from '@/Utilities/isStagingOrProduccion';
+import useListeningConfigChat from '@/components/events/ChatExport/hooks/useListeningConfigChat';
 const { TabPane } = Tabs;
 const { setNotification } = notificationsActions;
 
@@ -28,6 +29,10 @@ const ChatList = (props) => {
   let cEvent = UseEventContext();
   let cEventUser = UseUserEvent();
 
+
+  const { configChat } = useListeningConfigChat(cEvent.value?._id);
+  
+  
   let { chatActual, HandleGoToChat, privateChatsList, chatPublicPrivate, HandlePublicPrivate } = useHelper();
 
   // constante para insertar texto dinamico con idioma
@@ -58,7 +63,6 @@ const ChatList = (props) => {
 
   let userNameActive = cUser.value?.name ? cUser.value?.name : cUser.value?.names;
   let anonymous = cUser.value?.isAnonymous ? cUser.value?.isAnonymous : 'false';
-
   return (
     <Tabs style={{ marginTop: '-18px' }} activeKey={chatPublicPrivate} size='small' onChange={callback} centered>
       {props.generalTabs.publicChat && (
@@ -88,7 +92,8 @@ const ChatList = (props) => {
               '&anonimo=' +
               anonymous +
               '&mode=' +
-              isStagingOrProduccion()
+              isStagingOrProduccion() 
+               +`&control=${configChat?.message_controlled}`
             }></iframe>
         </TabPane>
       )}
@@ -143,6 +148,8 @@ const ChatList = (props) => {
                   '&nombre=' +
                   chatActual?.chatname +
                   '&mode=' +
+                  isStagingOrProduccion() +
+                  '&control=' +
                   isStagingOrProduccion()
                 }></iframe>
             </>

@@ -4,7 +4,7 @@ import AdditionalFieldsToFormEnrollAttendeeToEvent from './AdditionalFieldsToFor
 import { Alert, Button, Card, Col, Divider, Form, Row, Space, Spin, Typography } from 'antd';
 import { useIntl } from 'react-intl';
 import { LoadingOutlined } from '@ant-design/icons';
-import dispatchFormEnrollAttendeeToEvent from './dispatchFormEnrollAttendeeToEvent';
+import useDispatchFormEnrollAttendeeToEvent from './useDispatchFormEnrollAttendeeToEvent';
 import {
   aditionalFields,
   alertStyles,
@@ -38,6 +38,7 @@ const FormEnrollAttendeeToEvent = ({
   printUser,
   badgeEvent,
   activityId,
+  isAddFromOrganization
 }: FormEnrollAttendeeToEventPropsTypes) => {
   const [form] = Form.useForm();
   const intl = useIntl();
@@ -46,7 +47,7 @@ const FormEnrollAttendeeToEvent = ({
 
   const [attendeeInformation, setAttendeeInformation] = useState<AttendeeInformation | null>(null);
 
-  const { formDispatch, formState } = dispatchFormEnrollAttendeeToEvent();
+  const { formDispatch, formState } = useDispatchFormEnrollAttendeeToEvent();
   const { basicFields, thereAreExtraFields, buttonText } = formState;
   const [validatedFields, setValidatedFields] = useState<Array<any>>([]);
   const { icon, styles, text } = submitButtonProps;
@@ -98,7 +99,7 @@ const FormEnrollAttendeeToEvent = ({
               <Col span={24}>
                 <Card bodyStyle={textLeft} style={cardStyles}>
                   <Spin tip='Guardando cambios' spinning={loaderWhenSavingUpdatingOrDelete}>
-                    <BasicFieldsToFormEnrollAttendeeToEvent basicFields={basicFields} attendee={attendee} />
+                    <BasicFieldsToFormEnrollAttendeeToEvent basicFields={basicFields} attendee={attendee} isAddFromOrganization={isAddFromOrganization}/>
                     <Divider />
                     {thereAreExtraFields > 0 && (
                       <Title level={4} style={{ marginBottom: '30px', textAlign: 'center' }}>

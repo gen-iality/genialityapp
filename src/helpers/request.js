@@ -6,6 +6,7 @@ import Moment from 'moment';
 import { GetTokenUserFirebase } from './HelperAuth';
 import { DispatchMessageService } from '../context/MessageService';
 import { async } from 'ramda-adjunct';
+import { ROLS_USER } from '@/constants/rols.constants';
 
 const publicInstance = axios.create({
   url: ApiUrl,
@@ -65,7 +66,7 @@ export const Actions = {
     if (unsafe) return publicInstance.delete(`${url}${id}`).then(({ data }) => data);
     return privateInstance.delete(`${url}/${id}`).then(({ data }) => data);
   },
-  edit: async (url, data, unsafe) => {
+  edit: async (url, data, unsafe, id) => {
     if (unsafe) return publicInstance.put(`${url}`, data).then(({ data }) => data);
     return privateInstance.put(`${url}/${id}`, data).then(({ data }) => data);
   },
@@ -215,8 +216,12 @@ export const EventsApi = {
     return await Actions.getOne(`/api/events/${id}/`, 'invitations');
   },
   sendMeetingRequest: async (eventId, data) => {
-    let token = await GetTokenUserFirebase();
-    return await Actions.post(`/api/events/${eventId}/meetingrequest/notify?token=${token}`, data);
+    try {
+      let token = await GetTokenUserFirebase();
+      return await Actions.post(`/api/events/${eventId}/meetingrequest/notify?token=${token}`, data);
+    } catch (error) {
+      console.log('Ocurrio un error al enviar el email');
+    }
   },
 
   sendInvitation: async (eventId, data) => {
@@ -231,8 +236,15 @@ export const EventsApi = {
     const events = await Actions.getAll(`/api/me/contributors/events/?token=${token}`, true);
     return events;
   },
-  getOne: async (id) => {
-    return await Actions.getOne('/api/events/', id);
+  // getOne: async (id) => {
+  //   return await Actions.getOne('/api/events/', id);
+  // },
+   getOne: async (id) => {
+    let token = await GetTokenUserFirebase();
+    if (token) {
+        return await Actions.getOne('/api/events/', `${id}?token=${token}`);
+    }
+    return await Actions.getOne('/api/events/', `${id}`);
   },
   getOneByNameEvent: async (eventName) => {
     return await Actions.get(`/api/events/?filtered=[{"field":"name","value":[%22${eventName}%22]}]`);
@@ -467,15 +479,59 @@ export const BingoApi = {
   },
   getListUsersWithOrWithoutBingo: async (eventId, numberItems, page) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.get(`api/events/${eventId}/eventusers/bingocards?numberItems=${numberItems}&page=${page}&token=${token}`, true);
+    return await Actions.get(
+      `api/events/${eventId}/eventusers/bingocards?numberItems=${numberItems}&page=${page}&token=${token}`,
+      true
+    );
   },
 
   getTemplates: async (format) => {
-    let token = await GetTokenUserFirebase()
-    return await Actions.get(`api/bingotemplates/format/${format}?token=${token}`, true)
-  }
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`api/bingotemplates/format/${format}?token=${token}`, true);
+  },
 };
+export const AuctionApi = {
+  getOne: async (event) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`/api/events/${event}/subastas?token=${token}`, true);
+  },
+  createOne: async (event, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`/api/events/${event}/subastas?token=${token}`, data, true);
+  },
+  editOne: async (event, id, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`/api/events/${event}/subastas/${id}?token=${token}`, data, true);
+  },
 
+  deleteOne: async (event, subasta_id) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/events/${event}/subastas/${subasta_id}?token=${token}`, '', true);
+  },
+  resetProducts: async (event) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`/api/events/${event}/subastas/reset-products?token=${token}`, '', true);
+  },
+};
+export const AuctionProductApi = {
+  getOne: async (event) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`/api/events/${event}/products?type=just-auction`, true);
+  },
+  createOne: async (event, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`/api/events/${event}/products?token=${token}`, data, true);
+  },
+  editOne: async (event, id, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`/api/events/${event}/products/${id}?token=${token}`, data, true);
+  },
+
+  deleteOne: async (event, id) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/events/${event}/products/${id}?token=${token}`, '', true);
+  },
+};
 export const WhoWantsToBeAMillonaireApi = {
   getOne: async (eventId) => {
     let token = await GetTokenUserFirebase();
@@ -829,11 +885,46 @@ export const DocumentsApi = {
 };
 
 export const CategoriesApi = {
-  getAll: async () => {
-    const resp = await Actions.getAll('api/categories', true);
+  getAll: async (orgId) => {
+    const resp = await Actions.getAll(`api/organizations/${orgId}/categories`, true);
     return handleSelect(resp.data);
   },
+  create: async (organizationId, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`api/organizations/${organizationId}/categories?token=${token}`, data);
+  },
+  createOne: async (organizationId, id_category, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`api/oneorganizations/${organizationId}/categories/${id_category}?token=${token}`, data);
+  },
+  update: async (organizationId, id_category, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`api/organizations/${organizationId}/categories/${id_category}?token=${token}`, data);
+  },
+  delete: async (organizationId, id_category) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/organizations/${organizationId}/categories/${id_category}?token=${token}`, '', true);
+  },
 };
+export const GroupsApi = {
+  getGroupsByOrg: async (orgId) => {
+    const resp = await Actions.getAll(`api/organizations/${orgId}/groups`, true);
+    return handleSelect(resp);
+  },
+  create: async (orgId, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`api/organizations/${orgId}/groups?token=${token}`, data);
+  },
+  update: async (orgId, groupId, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`api/organizations/${orgId}/groups/${groupId}?token=${token}`, data);
+  },
+  deleteOne: async (orgId, groupId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/organizations/${orgId}/groups/${groupId}?token=${token}`, '', true);
+  },
+};
+
 export const TypesApi = {
   getAll: async () => {
     const resp = await Actions.getAll('api/eventTypes', true);
@@ -850,12 +941,28 @@ export const OrganizationApi = {
         _id: item._id,
         id: item.organization?._id,
         name: item.organization?.name,
+        user_properties: item.organization?.user_properties,
         styles: item.organization?.styles,
         created_at: item.organization?.created_at,
         itemsMenu: item.organization?.itemsMenu,
+        rolInOrganization: { _id: item.rol._id, name: item.rol.name },
       };
     });
     return data;
+  },
+  getEventsWithUserOrg: async (organizationId, organizarionUserId, event_user = false, order = 'oldest') => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(
+      `/api/organizations/${organizationId}/user/${organizarionUserId}/events?event_user=${event_user}&order=${order}&token=${token}`,
+      true
+    );
+  },
+  getEventsFreeAcces: async (organizationId, ) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(
+      `/api/organizations/${organizationId}/events-free-access?token=${token}`,
+      true
+    );
   },
   getOne: async (id) => {
     return await Actions.getOne('/api/organizations/', id);
@@ -875,6 +982,12 @@ export const OrganizationApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.get(`/api/organizations/${id}/organizationusers?token=${token}`);
   },
+  getUsersWithStatusInEvent: async (id, eventId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(
+      `/api/organizations/${id}/event/${eventId}/validate-existence-members-by-events?token=${token}`
+    );
+  },
   getEpecificUser: async (orgId, memberId) => {
     let token = await GetTokenUserFirebase();
     return await Actions.getOne(`/api/organizations/${orgId}/organizationusers/${memberId}?token=${token}`, '', true);
@@ -883,8 +996,11 @@ export const OrganizationApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.getOne(`/api/me/organizations/${orgId}/?token=${token}`, '', true);
   },
-  saveUser: async (org, data) => {
-    return await Actions.post(`/api/organizations/${org}/addorganizationuser`, data);
+  saveUser: async (org, data, addUserInEvents = false) => {
+    return await Actions.post(
+      `/api/organizations/${org}/addorganizationuser?createIntoEvents=${addUserInEvents}`,
+      data
+    );
   },
   editUser: async (org, member, data) => {
     let token = await GetTokenUserFirebase();
@@ -894,8 +1010,12 @@ export const OrganizationApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.delete(`/api/organizations/${org}/organizationusers`, `/${member}?token=${token}`, true);
   },
-  getEventsStatistics: async (org) => {
-    return await Actions.get(`/api/organizations/${org}/eventsstadistics`);
+  getEventsStatistics: async (org, order = 'oldest') => {
+    return await Actions.get(`/api/organizations/${org}/eventsstadistics?order=${order}`);
+  },
+  getEventsStatisticsExport: async (org, order = 'oldest') => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`/api/organizations/${org}/eventsstadistics/export?order=${order}&token=${token}`);
   },
   editAllUserProperties: async (org, data) => {
     let token = await GetTokenUserFirebase();
@@ -1006,6 +1126,22 @@ export const CertsApi = {
         });
     });
   },
+  generateCertList: async (body) => {
+    // eslint-disable-next-line no-unused-vars
+    return new Promise(async (resolve, reject) => {
+      let token = await GetTokenUserFirebase();
+      publicInstance
+        .post(`/api/generatecertificates?token=${token}&download=1`, body, {
+          responseType: 'blob',
+        })
+        .then((response) => {
+          resolve({
+            type: response.headers['content-type'],
+            blob: response.data,
+          });
+        });
+    });
+  },
 };
 
 export const NewsFeed = {
@@ -1080,7 +1216,9 @@ export const RolAttApi = {
     /** Se discriminan estos dos rol id debido a que no se deben editar ni eliminar y aunque el back tiene dicha validacion en el componente CMS es dificil validar dicha accion ya que es un componente que se reutiliza varias veces y puede alterar la logica de otras funcionalidades, este arreglo es temporal mientras se estructura la logica para roles */
 
     const rollsByEventFiltered = rollsByEvent.filter(
-      (rol) => rol._id !== '5c1a59b2f33bd40bb67f2322' && rol._id !== '60e8a7e74f9fb74ccd00dc22'
+      (rol) =>
+        rol._id !== ROLS_USER.ADMINISTRATOR_ID /* '5c1a59b2f33bd40bb67f2322' */ &&
+        rol._id !== ROLS_USER.ATTENDEE_ID /* '60e8a7e74f9fb74ccd00dc22' */
     );
     return rollsByEventFiltered;
   },
@@ -1198,6 +1336,7 @@ export const TypesAgendaApi = {
     return await Actions.create(`api/events/${event}/type`, data);
   },
 };
+
 export const AgendaApi = {
   byEvent: async (event, query) => {
     return await Actions.getAll(`api/events/${event}/activities${query ? query : ''}`, true);
@@ -1225,6 +1364,12 @@ export const AgendaApi = {
   },
   zoomConference: async (event, id, data) => {
     return await Actions.create(`api/events/${event}/createmeeting/${id}`, data);
+  },
+  getStatusVideoVimeo: async (videoId) => {
+    return await Actions.get(`api/vimeo/videos/${videoId}`);
+  },
+  deleteVideoVimeo: async (videoId) => {
+    return await Actions.delete(`api/vimeo/videos/${videoId}`, '');
   },
 };
 export const SpeakersApi = {
@@ -1440,8 +1585,8 @@ export const ActivityBySpeaker = {
 
 export const OrganizationFuction = {
   // OBTENER EVENTOS PROXIMOS POR ORGANIZACION
-  getEventsNextByOrg: async (orgId) => {
-    const events = await Actions.getAll(`api/organizations/${orgId}/events`);
+  getEventsNextByOrg: async (orgId, order = 'oldest') => {
+    const events = await Actions.getAll(`api/organizations/${orgId}/events?&order=${order}`);
     return events.data;
   },
 

@@ -12,9 +12,10 @@ type Props = {
   onChange: (color: string) => void;
   isVisible?: boolean;
   setIsVisible?: (isVisible: boolean) => void;
+  labelColorName?: string;
 };
 
-export default function InputColor({ color, onChange, isVisible, setIsVisible }: Props) {
+export default function InputColor({ color, onChange, isVisible, setIsVisible, labelColorName }: Props) {
   const [isVisibleModalColor, setIsVisibleModalColor] = useState(false);
 
   const colorsP = [
@@ -87,7 +88,7 @@ export default function InputColor({ color, onChange, isVisible, setIsVisible }:
         </Row>
       </Modal>
       <div onClick={() => onChangeVisibility()}>
-        <Form.Item label='Color de fondo' name='background_color' initialValue={color}>
+        <Form.Item label={labelColorName ? labelColorName : 'Color de fondo'} name='background_color' initialValue={color}>
           <Space>
             <Card
               style={{

@@ -110,26 +110,26 @@ let ItemAttende = memo((props) => (
   </>
 ));
 
-function compare(a, b) {
-  if (a.status == 'online') {
-    return -1;
-  }
-  if (b.status == 'online') {
-    return 1;
-  }
-  return 0;
-}
+// function compare(a, b) {
+//   if (a.status == 'online') {
+//     return -1;
+//   }
+//   if (b.status == 'online') {
+//     return 1;
+//   }
+//   return 0;
+// }
 
-function whatGenderIs(gender) {
-  // console.log('gender', gender);
-  const ramdonicon = Math.floor(Math.random() * femaleicons.length);
-  const ramdoniconmale = Math.floor(Math.random() * maleIcons.length);
-  return gender == 'male'
-    ? maleIcons[ramdoniconmale]
-    : gender == 'female'
-    ? femaleicons[ramdonicon]
-    : gender == 'unknown' && imageforDefaultProfile;
-}
+// function whatGenderIs(gender) {
+//   // console.log('gender', gender);
+//   const ramdonicon = Math.floor(Math.random() * femaleicons.length);
+//   const ramdoniconmale = Math.floor(Math.random() * maleIcons.length);
+//   return gender == 'male'
+//     ? maleIcons[ramdoniconmale]
+//     : gender == 'female'
+//     ? femaleicons[ramdonicon]
+//     : gender == 'unknown' && imageforDefaultProfile;
+// }
 
 function adapt_attendee_info(attende, key) {
   if (attende && !attende['uid']) attende['uid'] = attende.user !== null && attende.user.uid;

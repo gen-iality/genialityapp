@@ -20,12 +20,12 @@ import EmpresasRoutes from '../empresas';
 import TriviaRoutes from '../trivia';
 import DocumentsRoutes from '../documents';
 import Speakers from '../speakers';
-import MenuLanding from '../menuLanding';
+import MenuLanding from '../menuLanding/index';
 import ReportList from '../agenda/report';
 import ConferenceRoute from '../zoom/index';
-import ReportNetworking from '../networking/report';
+import NetworkingPage from '../networking/Networking.page';
 import NewsSectionRoutes from '../news/newsRoute';
-import ProductSectionRoutes from '../products/productsRoute';
+import ProductSectionRoutes from '../products/routes/productsRoute';
 import { withRouter } from 'react-router-dom';
 import withContext from '../../context/withContext';
 import { Layout, Space, Row, Col, Button, Result } from 'antd';
@@ -42,6 +42,7 @@ import WhereIs from '../games/whereIs';
 import SharePhoto from '../games/sharePhoto';
 import WhoWantsToBeAMillonaire from '../games/WhoWantsToBeAMillonaire';
 import Assembly from '../assembly';
+import auctionModule from '../dinamicas/subasta';
 
 const { Sider, Content } = Layout;
 //import Styles from '../App/styles';
@@ -209,9 +210,9 @@ class Event extends Component {
     if (error)
       return (
         <Result
-          status='error'
-          title='Error inesperado'
-          subTitle={`Lo sentimos, hubo un error de tipo: ${handleRequestError(error).message}`}
+          status='404'
+          title='Evento no encontrado'
+          subTitle={`Lo sentimos, hubo un error inesperado`}
           extra={[
             <Link to={`/`}>
               <Button type='primary' key='eventData'>
@@ -360,9 +361,17 @@ class Event extends Component {
               />
               <Protected
                 path={`${match.url}/reportNetworking`}
-                component={ReportNetworking}
+                component={NetworkingPage}
+                eventId={event._id}
                 event={event}
                 componentKey='reportNetworking'
+              />
+              <Protected
+                path={`${match.url}/subasta`}
+                component={auctionModule}
+                eventId={event._id}
+                event={event}
+                componentKey='subasta'
               />
               <Protected
                 path={`${match.url}/assistants`}

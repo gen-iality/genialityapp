@@ -18,9 +18,9 @@ import useWindowSize from '@/hooks/useWindowSize';
 const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 
 function Graphics(props: any) {
-	const { currentActivity, eventId, idSurvey, operation } = props;
+	const { eventId, idSurvey, operation } = props;
 	const cEvent = UseEventContext();
-	const cSurveys = UseSurveysContext();
+	const cSurveys : any= UseSurveysContext();
 	const isAssambley = cEvent.value.user_properties.some((property: any) => property.type === 'voteWeight');
 	const [graphicType, setGraphicType] = useState<'horizontal' | 'vertical' | 'pie'>('vertical');
 	const [graphicsData, setGraphicsData] = useState<GraphicsData>({
@@ -35,6 +35,7 @@ function Graphics(props: any) {
 		currentChart: {
 			labels: [],
 			dataValues: [],
+			typeQuestion:''
 		},
 		chart: null,
 		chartCreated: false,
@@ -80,7 +81,6 @@ function Graphics(props: any) {
 				totalUser: usersChecked.length,
 			}));
 			getGraphicType(dataSurvey.graphyType);
-			// mountChart();
 		} catch (error) {
 			console.log(error);
 		} finally {
@@ -89,11 +89,11 @@ function Graphics(props: any) {
 	};
 
 	useEffect(() => {
-		// if (!state.dataSurvey && !state.usersRegistered) {
+
 		fetchSurveyData().then(() => {
 			mountChart();
-		});
-		// }
+		}).catch(()=>{});
+
 	}, [eventId, idSurvey]);
 
 	useEffect(() => {
@@ -101,7 +101,6 @@ function Graphics(props: any) {
 	}, [state.currentPage, state.dataSurvey]);
 
 	const setCurrentPage = (page: number, pageSize: number) => {
-		// console.log(page, pageSize);
 		setState((prev) => ({ ...prev, currentPage: page }));
 	};
 
@@ -155,7 +154,6 @@ function Graphics(props: any) {
 		}
 		let generatedlabels: string[] = [];
 		let totalVotosUsuarios = 0;
-		let porcentaj_answer = 0;
 		let colorB = COLORS_SETTINGS.backgroundColor[0];
 		let list: List[] = [];
 
@@ -163,24 +161,20 @@ function Graphics(props: any) {
 
 		const colorsforGraphics = COLORS_SETTINGS.backgroundColor;
 
-		for (let a = 0; options.choices.length > a; a++) {
+		for (let a = 0; options.choices?.length > a; a++) {
 			// @ts-ignore
 			colorB = colorsforGraphics[a % colorsforGraphics.length];
 			// @ts-ignore
 			options.choices[a] = `${options.choices[a]}:` + `${answer_count[a]} Voto(s): ${totalPercentResponse[a]} %`;
 			switch (operation) {
 				case 'onlyCount':
-					generatedlabels[a] =
-						answer_count && answer_count[a] ? options.choices[a] + ` ${answer_count[a][0]} Voto(s)` : '0 Votos';
+					generatedlabels[a] = answer_count[a] ? options.choices[a] + ` ${answer_count[a][0]} Voto(s)` : '0 Votos';
 					break;
 				case 'participationPercentage':
-					generatedlabels[a] =
-						answer_count && answer_count[a]
-							? `${numberToAlphabet(a)}  ${answer_count[a][0]} Voto(s), ${answer_count[a][1]}% \n `
+					generatedlabels[a] = answer_count[a] !== undefined	? `${numberToAlphabet(a)}  ${answer_count[a][0]} Voto(s), ${answer_count[a][1]}% \n `
 							: '0 Votos';
 					break;
 			}
-			porcentaj_answer = answer_count[a][1];
 			list.push({
 				voto: answer_count[a][0],
 				porcentaje: answer_count[a][1],
@@ -214,20 +208,20 @@ function Graphics(props: any) {
 
 		let formatterTitle = options.title;
 		setState((prev) => ({ ...prev, titleQuestion: formatterTitle }));
-		// if (options.title && options.title.length > 70) formatterTitle = divideString(options.title);
 		setState((prev) => ({
 			...prev,
 			currentChart: {
 				...prev.currentChart,
 				dataValues: Object.values(totalPercentResponse || []),
 				labels: generatedlabels,
+				typeQuestion:options.type
 			},
 		}));
 	};
 
-	const mountChart = () => {
+	const mountChart = async () => {
 		if (!state.dataSurvey) return;
-		SurveyAnswers.getAnswersQuestion(
+		await SurveyAnswers.getAnswersQuestion(
 			idSurvey,
 			state.dataSurvey.questions[state.currentPage - 1].id,
 			eventId,
@@ -235,7 +229,7 @@ function Graphics(props: any) {
 			operation
 		);
 		if (isAssambley) {
-			SurveyAnswers.listenAnswersQuestion(
+			await SurveyAnswers.listenAnswersQuestion(
 				idSurvey,
 				state.dataSurvey.questions[state.currentPage - 1].id,
 				eventId,
@@ -271,6 +265,7 @@ function Graphics(props: any) {
 								isMobile={state.isMobile}
 								labels={state.currentChart.labels}
 								type={graphicType}
+								typeQuestion={state.currentChart.typeQuestion}
 							/>
 						)}
 						<Col span={24}>
@@ -285,7 +280,7 @@ function Graphics(props: any) {
 			</Col>
 			{/* Cards */}
 			<Col span={24}>
-				<Card headStyle={{border:'none'}} bodyStyle={{paddingTop:'0px'}} title={`Conteo de votos`}>
+				{state.currentChart.typeQuestion !== 'text' && <Card headStyle={{border:'none'}} bodyStyle={{paddingTop:'0px'}} title={`Conteo de votos`}>
 					<Row gutter={[16, 16]}>
 						{/* Cards Questions */}
 						{isAssambley &&
@@ -339,7 +334,7 @@ function Graphics(props: any) {
 							))}
 						{/* Card Users Without Answer */}
 					</Row>
-				</Card>
+				</Card>}
 			</Col>
 			{parseStringBoolean(cSurveys.currentSurvey.showNoVotos) && (
 				<Col span={24}>
@@ -388,7 +383,7 @@ function Graphics(props: any) {
 const mapDispatchToProps = { setCurrentSurvey, setSurveyVisible };
 
 const mapStateToProps = (state: any) => ({
-	currentActivity: state.stage.data.currentActivity,
+  currentActivity: state.stage.data.currentActivity,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Graphics);

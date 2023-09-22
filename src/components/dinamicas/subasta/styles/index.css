@@ -1,0 +1,48 @@
+.products {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    transition: all 0.5s ease-out;
+}
+.cardLanding {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    transition: all 0.5s ease-out;
+}
+.winner {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.winner::before {
+    border: 10px solid red;
+  /*   background-size: 200% 200%;
+    background-origin: border-box; */
+    filter: blur(5px); /* Efecto de desenfoque para un aspecto más brillante */
+}
+
+
+.container {
+    width: 100%;
+    height: 530px;
+    position: relative;
+/*     background-color: red; */
+}
+.cardLanding { 
+/*     background-color: blue; */
+    padding: 10px;
+    height: 500px;
+    width: 1000px;
+    border-radius: 10px;
+    position: absolute;
+    top: 10%;
+    left: calc(50% - 500px);
+    margin: -25px 0 0 -25px; 
+}
+.btnBackground {
+    border-radius: 10px;
+    /* centrar vertical y horizontalmente */
+    position: absolute;
+    top: 3%;
+    left: 50%;
+    margin: -25px 0 0 -25px; /* aplicar a top y al margen izquierdo un valor negativo para completar el centrado del elemento hijo */
+}
+.products:hover {
+   transform: scale(1.05);
+   cursor: pointer;
+}

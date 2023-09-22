@@ -202,16 +202,21 @@ class DatosModal extends Component {
   //funciona pra crear datos predeterminados
 
   handleKeyDown = (event) => {
-    const { inputValue } = this.state;
+    const { inputValue , info } = this.state;
     const value = inputValue;
+    const exist = info.options.find((item)=> item.label === value)
+    if(exist) {
+      DispatchMessageService({
+        type: 'error',
+        msj: `La opcion ya se encuentra registrada`,
+        action: 'show',
+      });
+    }
     if (!value) return;
     switch (event.keyCode) {
       case 9:
       case 13:
-        this.setState({
-          inputValue: '',
-          info: { ...this.state.info, options: [...(this.state.info?.options || []), createOption(value)] },
-        });
+        if(!exist) this.setState({ inputValue: '', info: { ...this.state.info, options: [...(this.state.info?.options || []), createOption(value)] },});
         event.preventDefault();
         break;
       // eslint-disable-next-line no-empty
@@ -333,6 +338,7 @@ class DatosModal extends Component {
                   : false ||
                     info.type === 'voteWeight' ||
                     info.type === 'checkInField' ||
+                    info.type === 'list_type_user' ||
                     info.name === 'birthdate' ||
                     info.name === 'bloodtype' ||
                     info.name === 'gender'
@@ -340,7 +346,7 @@ class DatosModal extends Component {
               onChange={(value) => this.handleChange({ target: { name: 'type', value: value } })}></Select>
           </Form.Item>
 
-          {(info.type === 'list' || info.type === 'multiplelist' || info.type === 'multiplelisttable') && (
+          {(info.type === 'list'  || info.type === 'list_type_user' || info.type === 'multiplelist' || info.type === 'multiplelisttable') && (
             <CreatableSelect
               components={{ DropdownIndicator: null }}
               inputValue={inputValue}
@@ -381,7 +387,7 @@ class DatosModal extends Component {
               disabled={info.type === 'checkInField' || info.type === 'voteWeight'}
             />
           </Form.Item>
-          <Form.Item label={'Visible para Contactos'} htmlFor={`visibleByContactsModal`} name='visibleByContacts'>
+          {/* <Form.Item label={'Visible para Contactos'} htmlFor={`visibleByContactsModal`} name='visibleByContacts'>
             <Checkbox
               id={`visibleByContactsModal`}
               name={`visibleByContacts`}
@@ -403,7 +409,7 @@ class DatosModal extends Component {
               checked={info.visibleByAdmin}
               onChange={this.changeFieldCheckVisibleByAdmin}
             />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item label={'Descripción'} name='description'>
             <TextArea
               placeholder={'Descripción corta'}

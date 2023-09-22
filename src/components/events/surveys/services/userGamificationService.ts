@@ -49,7 +49,11 @@ const userGamification = {
       } else {
          let { points } = userInfo;
          let { data } = response;
-         isNaN(data.points) ? points : points += data.points;
+         if (isNaN(data.points)) { 
+            // points
+         } else { 
+            points += data.points
+         };
 
          firestore
             .collection(`${eventId}_users_gamification`)

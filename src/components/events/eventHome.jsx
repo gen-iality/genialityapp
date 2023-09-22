@@ -10,14 +10,17 @@ const EventHome = () => {
   /*Contextos*/
   let cEvent = UseEventContext();
   let cEventUser = useContext(CurrentEventUserContext);
-  if (!cEvent.value) {
-    return <>Cargando...</>;
-  }
   //PERMITE EJECUTAR CODIGO JAVASCRIPT // SE UTILIZA PARA REDIRIGIR DESPUES DE LOQUEAR UN EVENTUSER
   useEffect(() => {
     if (!cEvent.value || !cEventUser.value) return;
-    cEvent && cEvent.value && cEvent.value?.message_user && cEventUser.value ? eval(cEvent.value?.message_user) : null;
+    if (cEvent && cEvent.value && cEvent.value?.message_user && cEventUser.value) {
+      eval(cEvent.value?.message_user)
+    }
   }, [cEvent, cEventUser]);
+  
+  if (!cEvent.value) {
+    return <>Cargando...</>;
+  }
 
   return (
     <>

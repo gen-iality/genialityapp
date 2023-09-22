@@ -1,8 +1,11 @@
-import { Tooltip, Button, Row, Col, Popover, Image, Avatar, Empty } from 'antd';
-import { EditOutlined, UserOutlined } from '@ant-design/icons';
+import { Tooltip, Button, Row, Col, Popover, Image, Avatar, Empty, Space } from 'antd';
+import { DeleteOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
 import { membersGetColumnSearchProps } from '../searchFunctions/membersGetColumnSearchProps';
+import SendChangePassword from '@/components/event-users/ChangePassword';
+import { deleteUserConfirmation } from './utils/deleteMembers';
+import { editUserConfirmation, getIconForActiveState } from './utils/disableUser';
 
-export const columns = (columnsData, editModalUser) => [
+export const columns = (membersAll, columnsData, editModalUser, organizationId, fetchEventsStatisticsData) => [
   {
     title: 'Avatar',
     dataIndex: 'picture',
@@ -86,17 +89,47 @@ export const columns = (columnsData, editModalUser) => [
     fixed: 'right',
     width: 80,
     render(val, item, index) {
+      let newData = { active: false}
+      const active = membersAll[index]?.active;
       return (
-        <Tooltip title='Editar'>
-          <Button
-            id={`editAction${index}`}
-            type='primary'
-            size='small'
-            onClick={(e) => {
-              editModalUser(item);
-            }}
-            icon={<EditOutlined />}></Button>
-        </Tooltip>
+        <>
+          {item.isAuthor ? (
+            <>
+              <SendChangePassword email={item.email} />
+            </>
+          ) : (
+            <Space>
+              <Tooltip title='Editar'>
+                <Button
+                  id={`editAction${index}`}
+                  type='primary'
+                  size='small'
+                  onClick={(e) => {
+                    editModalUser(item);
+                  }}
+                  icon={<EditOutlined />}></Button>
+              </Tooltip>
+              {!item.anonymous && <SendChangePassword email={item.email} />}
+              <Tooltip title='Eliminar'>
+                <Button
+                  id={`deleteAction${index}`}
+                  type='danger'
+                  size='small'
+                  onClick={() => deleteUserConfirmation(organizationId, item._id, fetchEventsStatisticsData)}
+                  icon={<DeleteOutlined />}></Button>
+              </Tooltip>
+              <Tooltip placement='topLeft' title={'Inhabilitar usuario'}>
+                <Button
+                  id={`disableAction${index}`}
+                  type={'primary'}
+                  icon={getIconForActiveState(active)}
+                  size='small'
+                  onClick={() => editUserConfirmation(membersAll, organizationId, item._id, newData, fetchEventsStatisticsData)}
+                ></Button>
+              </Tooltip>
+            </Space>
+          )}
+        </>
       );
     },
   },

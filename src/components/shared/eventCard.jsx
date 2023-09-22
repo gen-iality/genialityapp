@@ -1,22 +1,31 @@
+/* eslint-disable react/jsx-no-target-blank */
 import { Component } from 'react';
 import Moment from 'moment';
 import { Link, withRouter } from 'react-router-dom';
-import { Badge, Card, Space, Typography } from 'antd';
+import { Badge, Button, Card, Space, Tag, Tooltip, Typography } from 'antd';
 import { imageUtils } from '../../Utilities/ImageUtils';
 import { HelperContext } from '@/context/helperContext/helperContext';
+import { getDateEvent } from './utils/getDatesEvents';
 
 const EventImage = imageUtils.EventImage;
 const { Meta } = Card;
 class EventCard extends Component {
   static contextType = HelperContext;
   render() {
-    const { event, bordered, right, loading, isAdmin, blockedEvent } = this.props;
-    const { eventIsActive } = this.context;
-
+    const {
+      event,
+      bordered,
+      right,
+      loading,
+      isAdmin,
+      buttonBuyOrRegistered,
+      textButtonBuyOrRegistered,
+      location,
+    } = this.props;
+    // const { eventIsActive } = this.context;
     const styleNormal = {
       fontWeight: 'bold',
     };
-
     const styleAdmin = {
       fontWeight: 'bold',
       width: '250px',
@@ -24,11 +33,65 @@ class EventCard extends Component {
 
     //Esto sólo va a aplicar para cuando el usuario tiene un plan
     //Se esta validando la fecha en la que se va a bloquear el evento, osea hasta la fecha que tiene acceso
-    let actualDate = new Date(event.datetime_to);
+    // let actualDate = new Date(event.datetime_to);
     //aqui  tiene que venir ahora unos minutos en caso de tener plan
     /* let blockedDate = new Date(actualDate.setDate(actualDate.getDate() + blockedEvent));
     let formatDate = Moment(blockedDate).format('DD MMM YYYY'); */
+    const getEventInfo = () => {
+      const currentPath = location.pathname;
 
+      if (currentPath.startsWith('/organization/')) {
+        // Ruta "/organization/[id]/events": Muestra el nombre de la organización o la categoría
+        if (event.category_ids && event.category_ids.length > 0) {
+          return (
+            <Space>
+              {event.category_ids.map((category, index) => (
+                <Tag key={index}>{category}</Tag>
+              ))}
+            </Space>
+          );
+        } else {
+          const possibleNames = [
+            event.organizer?.name
+              ? event.organizer?.name
+              : event.author?.displayName
+              ? event.author?.displayName
+              : event.author?.names,
+          ];
+          const validNames = possibleNames.filter((name) => name);
+          return validNames.map((name, index) => <span key={index}>{name}</span>);
+        }
+      } else if (currentPath === '/myprofile/organization' | currentPath === '/myprofile') {
+        // Ruta "/myprofile": Muestra solo el nombre de la organización o del autor
+        if (event.organizer?.name) {
+          return <span>{event.organizer.name}</span>;
+        } else if (event.author?.displayName) {
+          return <span>{event.author.displayName}</span>;
+        } else if (event.author?.names) {
+          return <span>{event.author.names.join(', ')}</span>;
+        }
+      }
+      // En todas las demás rutas, muestra las categorías si están disponibles
+      if (event.category_ids && event.category_ids.length > 0) {
+        return (
+          <Space>
+            {event.category_ids.map((category, index) => (
+              <Tag key={index}>{category}</Tag>
+            ))}
+          </Space>
+        );
+      } else {
+        const possibleNames = [
+          event.organizer?.name
+            ? event.organizer?.name
+            : event.author?.displayName
+            ? event.author?.displayName
+            : event.author?.names,
+        ];
+        const validNames = possibleNames.filter((name) => name);
+        return validNames.map((name, index) => <span key={index}>{name}</span>);
+      }
+    };
     return (
       <div className='animate__animated animate__fadeIn'>
         <Badge.Ribbon
@@ -45,7 +108,26 @@ class EventCard extends Component {
                   <span>
                     <i className='fas fa-map-marker-alt' />
                   </span>
-                  <span>{event.venue ? event.venue : 'Virtual'}</span>
+                  <Tooltip
+                    title={
+                      event.type_event === 'onlineEvent'
+                        ? ''
+                        : event.address
+                        ? event.venue
+                          ? event.address + ', ' + event.venue
+                          : event.address
+                        : event.venue
+                    }>
+                    <span>
+                      {event.type_event === 'physicalEvent'
+                        ? 'Físico'
+                        : event.type_event === 'onlineEvent'
+                        ? 'Virtual'
+                        : event.type_event === 'hybridEvent'
+                        ? 'Híbrido'
+                        : 'Tipo de evento desconocido'}
+                    </span>
+                  </Tooltip>
                 </Space>
               </div>
             </span>
@@ -92,21 +174,27 @@ class EventCard extends Component {
                   <span style={{ fontSize: '12px' }}>
                     <Space>
                       <i className='fas fa-calendar-alt' />
-                      <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
-                      {'-'}
-                      <time dateTime={event.datetime_to}>{Moment(event.datetime_to).format('DD MMM YYYY')}</time>
+                      {getDateEvent(event)}
                     </Space>
                   </span>
-                  <Typography.Text ellipsis={isAdmin ? true : false} style={isAdmin ? styleAdmin : styleNormal}>
-                    {event.name}
-                  </Typography.Text>
-                  <span>
-                    {event.organizer?.name
-                      ? event.organizer?.name
-                      : event.author?.displayName
-                      ? event.author?.displayName
-                      : event.author?.names}
-                  </span>
+                  <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
+                    <Typography.Text ellipsis={isAdmin ? true : false} style={isAdmin ? styleAdmin : styleNormal}>
+                      {event.name}
+                    </Typography.Text>
+                  </Link>
+                  {getEventInfo()}
+                  {buttonBuyOrRegistered ? (
+                    textButtonBuyOrRegistered === 'Comprar' && event.payment && event.payment.urlExternalPayment ? (
+                      <a href={event.payment.urlExternalPayment} target='_blank'>
+                        <Button type='primary'>{textButtonBuyOrRegistered}</Button>
+                      </a>
+                    ) : (
+                      <Link to={{ pathname: `/landing/${event._id}`, state: { event } }}>
+                        <Button type='primary'>{textButtonBuyOrRegistered}</Button>
+                      </Link>
+                    )
+                  ) : null}
+
                   {/* RESTRICIONES */}
                   {/* {!eventIsActive[event._id] && window.location.toString().includes('myprofile') && (
                     <Typography.Paragraph style={{ color: 'red' }}>

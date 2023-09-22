@@ -1,8 +1,8 @@
 import { Component, Fragment } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { UsersApi, eventTicketsApi } from '../../helpers/request';
-import { Table, Input, Button, Space, Menu, Row, Col, Tag } from 'antd';
-import { SearchOutlined, UserOutlined, DownloadOutlined, UploadOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { Table, Input, Button, Space, Menu, Row, Col, Tag, Dropdown } from 'antd';
+import { SearchOutlined, UserOutlined, DownloadOutlined, UploadOutlined, PlusCircleOutlined, DownOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { parseData2Excel } from '../../helpers/utils';
 import { utils, writeFileXLSX } from 'xlsx';
@@ -11,7 +11,7 @@ import ModalAdvise from './modal';
 import Header from '../../antdComponents/Header';
 import { HelperContext } from '@/context/helperContext/helperContext';
 import moment from 'moment';
-import { useConvertUTC } from '@/hooks/useConvertUTC';
+import { convertUTC } from '@/hooks/useConvertUTC';
 
 class eventUsersList extends Component {
   constructor(props) {
@@ -83,7 +83,7 @@ class eventUsersList extends Component {
         //Se necesita enviar la fecha con el formato de new Date()
         const newDate = new Date(val);
         //Retorna la fecha con formato YYYY-MM-DD HH:mm:ss
-        return useConvertUTC(newDate).newDateWithMoment;
+        return convertUTC(newDate).newDateWithMoment;
       },
     });
 
@@ -133,7 +133,7 @@ class eventUsersList extends Component {
           //Se necesita enviar la fecha con el formato de new Date()
           const newDate = new Date(val);
           //Retorna la fecha con formato YYYY-MM-DD HH:mm:ss
-          return useConvertUTC(newDate).newDateWithMoment;
+          return convertUTC(newDate).newDateWithMoment;
         },
       },
       {
@@ -147,7 +147,7 @@ class eventUsersList extends Component {
           //Se necesita enviar la fecha con el formato de new Date()
           const newDate = new Date(val);
           //Retorna la fecha con formato YYYY-MM-DD HH:mm:ss
-          return useConvertUTC(newDate).newDateWithMoment;
+          return convertUTC(newDate).newDateWithMoment;
         },
       }
     );
@@ -277,7 +277,7 @@ class eventUsersList extends Component {
   render() {
     const { eventIsActive } = this.context;
 
-    const menu = (
+    /* const menu = (
       <Menu>
         <Menu.Item key='1' icon={<UserOutlined />} onClick={this.modalUser}>
           Crear Usuario
@@ -288,7 +288,24 @@ class eventUsersList extends Component {
           </Menu.Item>
         </Link>
       </Menu>
-    );
+    ); */
+
+    const menu = (
+      <Menu>
+        <Menu.Item
+          key='menu-item-1'
+          onClick={this.modalUser}>
+          Nuevo
+        </Menu.Item>
+
+        <Menu.Item
+          key='menu-item-2'
+          onClick={() => {}}>
+          Desde mi organización
+        </Menu.Item>
+      </Menu>
+    )
+
     const { columnsTable, attendeesFormatedForTable, selectedRowKeys } = this.state;
     const rowSelection = {
       selectedRowKeys,
@@ -351,13 +368,22 @@ class eventUsersList extends Component {
                 </Link>
               </Col>
               <Col>
-                <Button
+                <Dropdown overlay={menu} trigger={['click', 'hover']}>
+                  <Button type='primary' size='middle' disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
+                    <Space>
+                      <PlusCircleOutlined />
+                      Agregar usuario
+                      <DownOutlined />
+                    </Space>
+                  </Button>
+                </Dropdown>
+                {/* <Button
                   type='primary'
                   onClick={this.modalUser}
                   icon={<PlusCircleOutlined />}
                   disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                   Agregar Usuario
-                </Button>
+                </Button> */}
               </Col>
             </Row>
           )}

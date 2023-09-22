@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, Fragment } from 'react';
 import { UsersApi, TicketsApi, EventsApi, EventFieldsApi } from '../../../helpers/request';
 import FormTags, { setSuccessMessageInRegisterForm } from './constants';
 import {
@@ -36,6 +36,7 @@ import { UseCurrentUser } from '../../../context/userContext';
 import { app } from '../../../helpers/firebase';
 import { DispatchMessageService } from '../../../context/MessageService';
 import { countryApi } from '@/helpers/request';
+import { ROLS_USER } from '@/constants/rols.constants';
 /**TODO::ocaciona error en ios */
 
 const { Option } = Select;
@@ -115,7 +116,7 @@ function fieldsAditional(extraFields) {
   if (extraFields) {
     const countFields = extraFields.filter(
       (field) =>
-        field.name !== 'names' && field.name !== 'email' && (field.type !== 'password' || field.name === 'contrasena')
+      !field.visibleByAdmin && field.name !== 'names' && field.name !== 'email' && (field.type !== 'password' || field.name === 'contrasena')
     );
     return countFields.length;
   }
@@ -556,7 +557,7 @@ const FormRegister = ({
                         }
                         // }
                       } else {
-                        setErrorLogin(true);
+                        // setErrorLogin(true);
                       }
                     });
                 };
@@ -849,7 +850,7 @@ const FormRegister = ({
 
         if (type === 'tituloseccion') {
           input = (
-            <React.Fragment>
+            <Fragment>
               <div className={`label has-text-grey ${mandatory ? 'required' : ''}`}>
                 <div
                   dangerouslySetInnerHTML={{
@@ -857,7 +858,7 @@ const FormRegister = ({
                   }}></div>
               </div>
               <Divider />
-            </React.Fragment>
+            </Fragment>
           );
         }
 
@@ -868,8 +869,8 @@ const FormRegister = ({
         }
 
         if (type === 'boolean') {
+          let textoError = intl.formatMessage({ id: 'form.field.required' });
           if (mandatory) {
-            let textoError = intl.formatMessage({ id: 'form.field.required' });
 
             rule = {
               validator: (_, value) => (value == true ? Promise.resolve() : Promise.reject(textoError)),
@@ -974,7 +975,7 @@ const FormRegister = ({
           );
         }
 
-        if (type === 'list') {
+        if (type === 'list' || type === 'list_type_user') {
           //Filtramos las opciones ya tomadas si la opción justonebyattendee esta activada
 
           let fieldId = m._id && m._id['$oid'] ? m._id['$oid'] : m._id;
@@ -1210,7 +1211,7 @@ const FormRegister = ({
             )}
             {eventUser !== undefined &&
               eventUser !== null &&
-              eventUser.rol_id == '60e8a7e74f9fb74ccd00dc22' &&
+              eventUser.rol_id == ROLS_USER.ATTENDEE_ID/* '60e8a7e74f9fb74ccd00dc22' */ &&
               cEvent.value?._id &&
               cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && (
                 <Row style={{ textAlign: 'center' }} justify={'center'} align={'center'}>
@@ -1228,7 +1229,7 @@ const FormRegister = ({
               )}
             {eventUser !== undefined &&
               eventUser !== null &&
-              eventUser.rol_id == '60e8a7e74f9fb74ccd00dc22' &&
+              eventUser.rol_id == ROLS_USER.ATTENDEE_ID/* '60e8a7e74f9fb74ccd00dc22' */ &&
               cEvent.value?._id &&
               cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && <ButtonPayment />}
 
@@ -1297,6 +1298,7 @@ deberia ser solo la url de la imagen
                       paddingRight: '0px',
                       borderRadius: '8px',
                     }}>
+                    {console.log(extraFields, 'extraFields')}
                     {fieldsAditional(extraFields) > 0 && (
                       <Typography.Title level={5}>
                         {intl.formatMessage({

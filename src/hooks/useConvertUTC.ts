@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-export const useConvertUTC = (date: Date, format: string) => {
+export const convertUTC = (date: Date, format: string) => {
   if (!date) return null;
   if (!format) format = 'YYYY-MM-DD HH:mm:ss';
 

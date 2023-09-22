@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Avatar, Card, Space, Timeline, Comment, Badge, Grid, Button, Typography } from 'antd';
+import { Row, Col, Avatar, Card, Space, Timeline, Comment, Badge, Grid, Button, Typography, Modal } from 'antd';
 import { useHistory } from 'react-router-dom';
 import Moment from 'moment-timezone';
 import './style.scss';
@@ -30,6 +30,7 @@ function AgendaActivityItem(props) {
   const [related_meetings, setRelatedMeetings] = useState();
   const [meetingState, setMeetingState] = useState(null);
   const [typeActivity, setTypeActivity] = useState(null);
+  const [descriptionActiveModal, setDescriptionActiveModal] = useState(false);
   const intl = useIntl();
 
   const timeZone = Moment.tz.guess();
@@ -289,6 +290,8 @@ function AgendaActivityItem(props) {
                   padding: '10px',
                   borderRadius: '15px',
                   backgroundColor: cEvent.value.styles.toolbarDefaultBg,
+                  maxHeight: '280px',
+                  minHeight: '187px',
                 }}>
                 <Row gutter={[8, 8]}>
                   <Col md={4} lg={4} xl={4} className='agenda-hora'>
@@ -480,19 +483,58 @@ function AgendaActivityItem(props) {
                                     className='descripcion'
                                     content={
                                       cEvent.value?._id !== '62c5e89176dfb307163c05a9' && (
-                                        <div
-                                          style={{
-                                            overflow: 'hidden',
-                                            display: '-webkit-box',
-                                            WebkitLineClamp: '3',
-                                            WebkitBoxOrient: 'vertical',
-                                            width: '100%',
-                                            color: cEvent.value.styles.textMenu,
-                                          }}
-                                          dangerouslySetInnerHTML={{
-                                            __html: item.description,
-                                          }}
-                                        />
+                                        <>
+                                          <Space direction='vertical'
+                                            style={{
+                                              overflow: 'hidden',
+                                              display: '-webkit-box',
+                                              WebkitLineClamp: '3',
+                                              WebkitBoxOrient: 'vertical',
+                                              width: '100%',
+                                              color: cEvent.value.styles.textMenu,
+                                            }}
+                                          >
+                                            {item?.description?.length > 120 ?
+                                                <p style={{color: cEvent.value.styles.textMenu}} dangerouslySetInnerHTML={{ __html: item?.description.slice(0, 120) + '...'}}></p>
+                                          :
+                                                <p style={{color: cEvent.value.styles.textMenu}} dangerouslySetInnerHTML={{ __html: item?.description}}></p>
+                                            }
+                                            {item?.description?.length > 120 && 
+                                            <>
+                                              <Button onClick={(event) => {
+                                                event.stopPropagation();
+                                                setDescriptionActiveModal(true);
+                                              }}>Ver más detalle</Button>
+                                              <Modal  
+                                                footer={null}
+                                                visible={descriptionActiveModal} 
+                                                onCancel={(event) => {
+                                                  event.stopPropagation();
+                                                  setDescriptionActiveModal(false);
+                                                }}
+                                              >
+                                                <Space direction='vertical'>
+                                                  <Typography.Text strong style={{color: cEvent.value.styles.textMenu}}>{item.name}</Typography.Text>
+                                                  <p style={{color: cEvent.value.styles.textMenu}} dangerouslySetInnerHTML={{ __html: item?.description}}></p>
+                                                </Space>
+                                              </Modal>
+                                            </>
+                                          }
+                                          </Space>
+                                          {/* <div
+                                            style={{
+                                              overflow: 'hidden',
+                                              display: '-webkit-box',
+                                              WebkitLineClamp: '3',
+                                              WebkitBoxOrient: 'vertical',
+                                              width: '100%',
+                                              color: cEvent.value.styles.textMenu,
+                                            }}
+                                            dangerouslySetInnerHTML={{
+                                              __html: item.description,
+                                            }}
+                                          />*/}
+                                        </>
                                       )
                                     }
                                   />
@@ -565,7 +607,10 @@ function AgendaActivityItem(props) {
                   <Col md={6} lg={5} xl={5} style={{ textAlign: 'right', maxHeight: '220px' }}>
                     {/* {console.log(meetingState, 'meetingState', item.video)} */}
                     {/* Aplicada la condición ya que no mostraba el video */}
+                    {/* Se comento las condiciones y funciono de nuevo pero es porque no sale ninguna de las condiciones, solo created_meeting_room
+                    tambien funciona si se le agrega esa condicion adicional */ }
                     {(meetingState === 'ended_meeting_room' ||
+                      meetingState === 'created_meeting_room' ||
                       meetingState === '' ||
                       meetingState === null ||
                       meetingState === 'null') && (

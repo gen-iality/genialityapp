@@ -18,21 +18,20 @@ export interface ActivityVideoUploadFieldProps {
 
 function ActivityVideoUploadField(props: ActivityVideoUploadFieldProps) {
   // const { selectOption, typeOptions } = useTypeActivity();
-  const { setContentSource } = useActivityType();
+  const { setContentSource ,setVideoId} = useActivityType();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleOnChange = async (info: any) => {
     const { status, response } = info.file;
     switch (status) {
       case 'done':
-        // selectOption(typeOptions.key, `${response.video.iframe_url}*${response.video.id}`);
-        const finalURL = `${response.video.iframe_url}*${response.video.id}`;
+        const finalURL = `${response.video.uri}*${response.video.video_id}`;
         setContentSource(finalURL);
-        /* console.debug('file uploaded to', finalURL); */
+        setVideoId(response.video.video_id)
         setIsLoading(false);
         break;
       case 'error':
-        if (response?.message == 'ERROR: Invalid format') {
+        if (response?.message === 'ERROR: Invalid format') {
           message.error('Formato de video inválido');
         } else {
           message.error('Error al cargar el video');
@@ -50,14 +49,14 @@ function ActivityVideoUploadField(props: ActivityVideoUploadFieldProps) {
         break;
     }
 
-    if (status == 'error') {
+    if (status === 'error') {
     }
   };
 
   return (
     <Upload.Dragger
       beforeUpload={handleBeforeUpload}
-      action={`${urlUploadVideoGcore}?nameActivity=${props.activityName}`}
+      action={`https://devapi.evius.co/api/vimeo/videos/upload`}
       maxCount={1}
       accept='video/*'
       name='video'

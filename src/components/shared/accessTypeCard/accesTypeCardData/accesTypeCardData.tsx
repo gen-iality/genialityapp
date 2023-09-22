@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 
-import { Space, Switch, Tooltip, Typography } from 'antd';
+import { Checkbox, InputNumber, Select, Space, Switch, Tooltip, Typography } from 'antd';
 import { AccessTypeCardInterface, textTooltipType, iconTooltipType, extraProperties } from '../interfaces/interfaces';
 import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import ShieldAccountIcon from '@2fd/ant-design-icons/lib/ShieldAccount';
@@ -12,6 +12,9 @@ import DatabaseIcon from '@2fd/ant-design-icons/lib/Database';
 import DatabaseOffIcon from '@2fd/ant-design-icons/lib/DatabaseOff';
 import CardAccountDetailsStarIcon from '@2fd/ant-design-icons/lib/CardAccountDetailsStar';
 import AccountKeyIcon from '@2fd/ant-design-icons/lib/AccountKey';
+import CashMultipleIcon from '@2fd/ant-design-icons/lib/CashMultiple';
+import CashCheckIcon from '@2fd/ant-design-icons/lib/CashCheck';
+import { ConfigAdvancePayment } from '../components/ConfigAdvancePayment';
 
 //evento publico con registro sin autenticación de usuario
 // PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS
@@ -77,5 +80,58 @@ export const AccessTypeCardData: AccessTypeCardInterface[] = [
       iconWithTooltip('Tiene chat público', <MessageIcon />),
       iconWithTooltip('Tiene chat privado', <MessageLockIcon />),
     ],
+  },
+  {
+    index: 'PAYMENT_EVENT',
+    icon: <CashCheckIcon />,
+    title: 'Evento pago',
+    description: 'Solo pueden ingresar los asistentes que cancelaron el monto asignado.',
+    infoIcon: [
+      iconWithTooltip('Requiere pago', <CashMultipleIcon />),
+      iconWithTooltip('Tiene autenticación de usuario', <AccountKeyIcon />),
+      iconWithTooltip('Puede recolectar información de sus asistentes', <DatabaseIcon />),
+      iconWithTooltip('Tiene chat público', <MessageIcon />),
+      iconWithTooltip('Tiene chat privado', <MessageLockIcon />),
+    ],
+    payment: true,
+    /* extra: ({ changeValue = () => {}, valueInput = 0, payment = false , currency = 'COP', changeCurrency = () => {}}: extraProperties) => {
+      const [checkedExternalPayment, setCheckedExternalPayment] = useState(false)
+
+      const onChangeLocationPayment = (checked:boolean) => {
+        setCheckedExternalPayment(checked)
+      }
+      return (
+        <Space direction='vertical'>
+          <Typography.Text strong style={{ fontWeight: '500' }}>
+            Valor de la inscripción.
+          </Typography.Text>
+          <Space wrap>
+          <InputNumber
+            min={ currency === 'COP' ? 2000 : 1}
+            disabled={!payment}
+            value={valueInput}
+            onChange={(state) => {
+              changeValue(state);
+            }}
+          />
+          <Select
+            value={currency}
+            disabled={!payment}
+            options={[
+              { value: 'COP', label: 'COP' },
+              { value: 'USD', label: 'USD' },
+            ]}
+            onChange={changeCurrency}
+          />
+          <Checkbox onChange={(e)=>onChangeLocationPayment(e.target.checked)} checked={checkedExternalPayment}>
+            Manejar pago de manera externa
+          </Checkbox>
+          </Space>
+          <Typography.Text style={{ marginTop: '8px' }}>
+            El valor mínimo es de $2000 pesos o $1 dolar.
+          </Typography.Text>
+        </Space>
+      );
+    }, */
   },
 ];

@@ -1,3 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-console */
 import { message } from 'antd';
 import { useContext, useEffect, useState, useCallback } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
@@ -56,6 +60,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   const [activityType, setActivityType] = useState<ActivityType.Name | null>(null);
   const [activityContentType, setActivityContentType] = useState<ActivityType.ContentValue | null>(null);
   const [contentSource, setContentSource] = useState<string | null>(meetingId || null);
+  const [videoId, setVideoId] = useState<string | null>()
 
   const queryClient = useQueryClient();
 
@@ -254,7 +259,12 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
         }
         const data = inputContentSource.split('*');
         const urlVideo = data[0];
-        const respUrlVideo = await AgendaApi.editOne({ video: urlVideo }, activityEdit, cEvent.value._id);
+        let editActivity: any = { video: urlVideo }
+
+        if(videoId){
+          editActivity.videoId = videoId
+        }
+        const respUrlVideo = await AgendaApi.editOne(editActivity, activityEdit, cEvent.value._id);
         if (respUrlVideo) {
           const resp = await saveConfig({ platformNew: '', type: 'video', data: urlVideo, habilitar_ingreso: '' });
           setTypeActivity('video');
@@ -346,6 +356,8 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     deleteActivityType,
     resetActivityType,
     setContentSource,
+    videoId,
+    setVideoId,
     saveActivityContent,
     setActivityContentType,
     translateActivityType,
@@ -388,6 +400,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
             } else if (theseAreVideo.includes(typeIncoming as ActivityType.ContentValue)) {
               setActivityType(MainUI.VIDEO);
               setContentSource(agendaInfo.video || null);
+              setVideoId(agendaInfo.videoId)
               /* console.debug('from beginning contentSource is going to be:', agendaInfo.video || null); */
             } else if (theseAreMeeting.includes(typeIncoming as ActivityType.ContentValue)) {
               setActivityType(MainUI.MEETING);

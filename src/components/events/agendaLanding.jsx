@@ -17,6 +17,7 @@ import AgendaActivityItem from './AgendaActivityItem/index';
 import { ArrowRightOutlined, CalendarOutlined, DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
 import * as notificationsActions from '../../redux/notifications/actions';
 import { setTabs } from '../../redux/stage/actions';
+import moment from 'moment-timezone';
 const { TabPane } = Tabs;
 let attendee_states = {
   STATE_DRAFT: '5b0efc411d18160bce9bc706', //"DRAFT";
@@ -468,7 +469,7 @@ class Agenda extends Component {
           if (!checkRegisterDevice || checkRegisterDevice !== this.props.cUser._id) {
             this.props.cUser.registered_devices = this.props.cUser.registered_devices + 1;
             window.localStorage.setItem('eventUser_id', this.props.cUser._id);
-            AttendeeApi.update(event._id, this.props.cUser, this.props.cUser._id);
+            AttendeeApi.update(this.props.cEvent.value._id, this.props.cUser, this.props.cUser._id);
           }
         } else {
           if (!checkRegisterDevice) {
@@ -479,7 +480,7 @@ class Agenda extends Component {
       } else {
         this.props.cUser.registered_devices = 1;
         window.localStorage.setItem('eventUser_id', this.props.cUser._id);
-        AttendeeApi.update(event._id, this.props.cUser, this.props.cUser._id);
+        AttendeeApi.update(this.props.cEvent.value._id, this.props.cUser, this.props.cUser._id);
       }
 
       this.gotoActivity(activity);
@@ -580,20 +581,23 @@ class Agenda extends Component {
   //FUNCION QUE PERMITE VERIFICAR SI EXISTEN ACTIVIDADES PUBLICADAS POR DIA
   //SIRVE PARA MOSTRAR U OCULTAR FECHAS
   getActivitiesByDayVisibility = (date) => {
+    if (!date) return;
+
     const { toggleConference } = this.props;
     const { hideBtnDetailAgenda, show_inscription, data, survey, documents } = this.state;
 
-    //Se trae el filtro de dia para poder filtar por fecha y mostrar los datos
+
     const list =
       date != null
         ? data
             .filter(
               (a) =>
-                date &&
-                date.format &&
+              {
+                return date.format &&
                 a.datetime_start &&
                 a.datetime_start.includes(date.format('YYYY-MM-DD')) &&
                 (a.isPublished || a.isPublished == undefined)
+              }
             )
             .sort(
               (a, b) =>
@@ -603,6 +607,7 @@ class Agenda extends Component {
         : data;
     return list;
   };
+
 
   //End modal methods
 
@@ -760,8 +765,8 @@ class Agenda extends Component {
                         borderRadius: '10px',
                         paddingLeft: '25px',
                       }}>
-                      {days.map(
-                        (day, index) =>
+                      {days.map((day, index) => {
+                        return (
                           this.getActivitiesByDayVisibility(day) &&
                           this.getActivitiesByDayVisibility(day).length > 0 && (
                             <TabPane
@@ -782,7 +787,8 @@ class Agenda extends Component {
                               {this.getActivitiesByDay(day)}
                             </TabPane>
                           )
-                      )}
+                        );
+                      })}
                     </Tabs>
                   )}
               </div>

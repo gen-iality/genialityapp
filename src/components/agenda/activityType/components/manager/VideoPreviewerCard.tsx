@@ -1,5 +1,7 @@
-import * as React from 'react';
-import { useMemo } from 'react';
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable jsx-a11y/iframe-has-title */
+/* eslint-disable no-console */
+import { useEffect, useMemo } from 'react';
 
 import {
   Card,
@@ -15,21 +17,23 @@ import {
   Badge,
   Popconfirm,
   Result,
-  Statistic,
+  Dropdown,
+  Menu,
 } from 'antd';
 import ReactPlayer from 'react-player';
-import { CheckCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
+import { CheckCircleOutlined, DownOutlined, DownloadOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
 import useActivityType from '@context/activityType/hooks/useActivityType';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import AgendaContext from '@context/AgendaContext';
 import VimeoIcon from '@2fd/ant-design-icons/lib/Vimeo';
 import EmoticonSadOutline from '@2fd/ant-design-icons/lib/EmoticonSadOutline';
-import { startRecordingLiveStream, stopRecordingLiveStream } from '@/adaptors/gcoreStreamingApi';
 import { urlErrorCodeValidation } from '@/Utilities/urlErrorCodeValidation';
 import type { ActivityType } from '@context/activityType/types/activityType';
 import convertSecondsToHourFormat from '../../utils/convertSecondsToHourFormat';
 import { TypeDisplayment } from '@context/activityType/constants/enum'
-
+import { Option } from 'antd/lib/mentions';
+import { useGetStatusVideoVimeo } from '../../hooks/useGetStatusVideoVimeo';
+import { LoadingOutlined } from '@ant-design/icons';
 interface VideoPreviewerCardProps {
   type: ActivityType.TypeAsDisplayment,
   activityName: string,
@@ -41,6 +45,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
   const [errorMessage, setErrorMessage] = useState('');
   let {
     contentSource: data,
+    videoId,
   } = useActivityType();
   const {
     roomStatus,
@@ -53,12 +58,12 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
     stopRecordTransmition,
     loadingRecord,
     record,
-    viewers,
-    viewersOnline,
-    totalViews,
-    maxViewers,
     saveConfig,
   } = useContext(AgendaContext);
+  const { urlVideo, visibleReactPlayer } : {urlVideo: string, visibleReactPlayer: any} = obtainUrl(props.type, data);
+  const [intervalState, setIntervalState] = useState<NodeJS.Timer>()
+  const {isLoading, statusVide, downloads, getStatusVideo } = useGetStatusVideoVimeo(videoId)
+  
 
   /* console.debug('VideoPreviewerCard.dataLive:', dataLive); */
 
@@ -70,11 +75,19 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
     if (!data) return (
       <><Spin/><p>Esperando recurso...</p></>
     );
-    const { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data);
+
+    useEffect(() => {
+      if(!videoId || downloads.length > 0) {
+        return clearInterval(intervalState)
+      } 
+      const interval = setInterval(getStatusVideo, 5000);
+      setIntervalState(interval)
+      return () => clearInterval(interval);
+    }, [videoId, downloads]);
 
     return (
       <>
-        {errorOcurred ? (
+        {errorOcurred || statusVide==='error' ? (
           <Result
             status='info'
             title='Lo sentimos'
@@ -87,8 +100,17 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
           />
         ) : (
           <>
-            {visibleReactPlayer && (
-              // @ts-expect-error
+          {
+            statusVide ==='in_progress' && <Result
+            status='info'
+            title='Espérenos'
+            subTitle={'El video se encuentra siendo procesado, estara disponible en breve'}
+            icon={<LoadingOutlined />}
+          />
+          }
+            {visibleReactPlayer && statusVide === 'complete' && !isLoading && (
+              <>
+              {/* @ts-expect-error */}
               <ReactPlayer
                 playing={true}
                 loop={true}
@@ -96,7 +118,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
                 style={{ objectFit: 'cover', aspectRatio: '16/9' }}
                 width='100%'
                 height='100%'
-                url={urlVideo}
+                url={urlVideo /* videoId ? urlVideo.split(DIVIDER_URL_OF_QUERYPARAMS)[0]:urlVideo */}
                 controls={true}
                 onError={(e) => {
                   if (props.type !== TypeDisplayment.EVIUS_MEET && props.type !== TypeDisplayment.TRANSMISSION) {
@@ -105,6 +127,35 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
                   }
                 }}
               />
+               {
+                  downloads?.length > 0 && 
+                  <Dropdown 
+                    overlay={<Menu>
+                                {
+                                  downloads.map(item=>(
+                                      <Menu.Item
+                                        key='menu-item-1'
+                                        onClick={() => {
+                                          const link = document.createElement("a");
+                                          link.href = item.link;
+                                          link.download = 'video.mp4';
+                                          link.click();}}>
+                                        {`Calidad ${item.quality} ${item.rendition} - ${item.size_short}`}
+                                      </Menu.Item>
+                                  ))
+                                }
+                            </Menu>}
+                   trigger={['click', 'hover']}>
+                  <Button type='primary' size='middle' >
+                    <Space>
+                      <DownloadOutlined />
+                      Descargar
+                      <DownOutlined />
+                    </Space>
+                  </Button>
+                </Dropdown>
+            }
+              </>
             )}
           </>
         )}
@@ -202,11 +253,11 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
                 </Typography.Text>
               }
               content={
-                props.type == TypeDisplayment.MEETING ? (
+                props.type === TypeDisplayment.MEETING ? (
                   'Sala de reuniones'
                 ) : props.type === TypeDisplayment.VIDEO ? (
                   convertSecondsToHourFormat(duration)
-                ) : props.type === TypeDisplayment.VIMEO || props.type == TypeDisplayment.YOUTUBE ? (
+                ) : props.type === TypeDisplayment.VIMEO || props.type === TypeDisplayment.YOUTUBE ? (
                   'Conexión externa'
                 ) : dataLive?.active ? (
                   <Typography.Text type='success'>Iniciado</Typography.Text>
@@ -254,8 +305,8 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
 
         {(props.type === TypeDisplayment.TRANSMISSION ||
           props.type === TypeDisplayment.VIMEO ||
-          props.type == TypeDisplayment.YOUTUBE ||
-          props.type == TypeDisplayment.EVIUS_MEET) && (
+          props.type === TypeDisplayment.YOUTUBE ||
+          props.type === TypeDisplayment.EVIUS_MEET) && (
           <Space style={{ width: '100%' }}>
             <Typography.Text strong>ID {props.type}:</Typography.Text>
             <Typography.Text
@@ -280,10 +331,10 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
                   .then(() => console.log('config saved - habilitar_ingreso:', value));
               }}
               style={{ width: '100%' }}>
-              <Select.Option value='created_meeting_room'>Actividad creada</Select.Option>
-              <Select.Option value='closed_meeting_room'>Iniciará pronto</Select.Option>
-              <Select.Option value='open_meeting_room'>En vivo</Select.Option>
-              <Select.Option value='ended_meeting_room'>Finalizada</Select.Option>
+              <Option value='created_meeting_room'>Actividad creada</Option>
+              <Option value='closed_meeting_room'>Iniciará pronto</Option>
+              <Option value='open_meeting_room'>En vivo</Option>
+              <Option value='ended_meeting_room'>Finalizada</Option>
             </Select>
           </Space>
         )}

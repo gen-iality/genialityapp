@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag, message } from 'antd';
+import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag, message, Row, Typography, Space, Result } from 'antd';
 import { ScheduleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 /* import 'react-toastify/dist/ReactToastify.css'; */
 import { Networking, UsersApi } from '../../helpers/request';
@@ -9,12 +9,16 @@ import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 import { DispatchMessageService } from '../../context/MessageService';
 import { CurrentEventUserContext } from '../../context/eventUserContext';
 import { CurrentEventContext } from '@/context/eventContext';
+import { isMobile } from 'react-device-detect';
+import { useIntl } from 'react-intl'; 
 
 // Componente que lista las invitaciones recibidas -----------------------------------------------------------
 const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
   const [invitationsReceived, setInvitationsReceived] = useState([]);
   const cEvent = useContext(CurrentEventContext);
   const [loading, setLoading] = useState(true);
+  const intl = useIntl();
+
   const obtenerImageUser = async (idUser) => {
     const eventUser = await UsersApi.getOne(cEvent.value?._id, idUser);
     if (eventUser) {
@@ -42,47 +46,64 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
 
   if (invitationsReceived.length)
     return (
-      <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
-        <Card>
-          <List
-            dataSource={invitationsReceived}
-            renderItem={(item) => (
-              <List.Item
-                key={item._id}
-                actions={[
-                  <Button key='btn-aceptar' onClick={() => sendResponseToInvitation(item, true)}>
-                    Aceptar
-                  </Button>,
-                  <Button key='btn-noaceptar' onClick={() => sendResponseToInvitation(item, false)}>
-                    Rechazar
-                  </Button>,
-                ]}>
-                <List.Item.Meta
-                  avatar={
-                    <Avatar src={item?.picture ? item.picture : null}>
-                      {item?.picture
-                        ? null
-                        : item.user_name_requested
-                        ? item.user_name_requested.charAt(0).toUpperCase()
-                        : item._id.charAt(0).toUpperCase()}
-                    </Avatar>
-                  }
-                  title={item.user_name_requested || item._id}
-                  style={{ textAlign: 'left' }}
-                />
-              </List.Item>
-            )}
-          />
-        </Card>
-      </Col>
+      <Row gutter={[16, 16]} justify='center'>
+        <Col span={23}>
+          <Card>
+            <List
+              itemLayout={isMobile ? 'vertical' : 'horizontal'}
+              dataSource={invitationsReceived}
+              renderItem={(item) => (
+                <List.Item
+                  key={item._id}
+                  actions={[
+                    <Row wrap gutter={[16, 16]} style={isMobile && {marginLeft: 15}}>
+                      <Col>
+                        <Button key='btn-aceptar' onClick={() => sendResponseToInvitation(item, true)}>
+                          {intl.formatMessage({id: 'accept', defaultMessage: 'Aceptar'})}
+                        </Button>
+                      </Col>
+                      <Col>
+                        <Button key='btn-noaceptar' onClick={() => sendResponseToInvitation(item, false)}>
+                          {intl.formatMessage({id: 'decline', defaultMessage: 'Rechazar'})}
+                        </Button>
+                      </Col>
+                    </Row>
+                  ]}>
+                  <List.Item.Meta
+                    avatar={
+                      <Avatar src={item?.picture ? item.picture : null}>
+                        {item?.picture
+                          ? null
+                          : item.user_name_requested
+                          ? item.user_name_requested.charAt(0).toUpperCase()
+                          : item._id.charAt(0).toUpperCase()}
+                      </Avatar>
+                    }
+                    title={item.user_name_requested || item._id}
+                    style={{ textAlign: 'left' }}
+                  />
+                </List.Item>
+              )}
+            />
+          </Card>
+        </Col>
+      </Row>
     );
 
   return !loading ? (
-    <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
-      <Card>No tiene solicitudes actualmente</Card>
-    </Col>
+    <Row justify='center' align='middle'>
+      <Col >
+        <Result 
+          title={intl.formatMessage({id: 'networking_not_requests', defaultMessage: '¡No tienes solicitudes actualmente!'})}
+        />
+      </Col>
+    </Row>
   ) : (
-    <Spin />
+    <Row justify='center' align='middle'>
+      <Col>
+        <Spin size='large' tip={<Typography.Text strong>{intl.formatMessage({id: 'loading', defaultMessage: 'Cargando...'})}</Typography.Text>}/>
+      </Col>
+    </Row>
   );
 };
 
@@ -91,6 +112,7 @@ const InvitacionListSent = ({ list }) => {
   const [invitationsSent, setInvitationsSent] = useState([]);
   const cEvent = useContext(CurrentEventContext);
   const [loading, setLoading] = useState(true);
+  const intl = useIntl();
   const obtenerImageUser = async (idUser) => {
     const eventUser = await UsersApi.getOne(cEvent.value?._id, idUser);
     if (eventUser) {
@@ -118,46 +140,63 @@ const InvitacionListSent = ({ list }) => {
 
   if (invitationsSent.length)
     return (
-      <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
-        <Card>
-          <List
-            dataSource={invitationsSent}
-            renderItem={(item) => (
-              <List.Item key={item._id}>
-                <List.Item.Meta
-                  avatar={
-                    <Avatar src={item?.picture ? item.picture : null}>
-                      {item?.picture
-                        ? null
-                        : item.user_name_requesting
-                        ? item.user_name_requesting.charAt(0).toUpperCase()
-                        : item._id.charAt(0).toUpperCase()}
-                      {/* {console.log('ITEM===>', item)} */}
-                    </Avatar>
-                  }
-                  title={item.user_name_requesting || item._id}
-                  style={{ textAlign: 'left' }}
-                />
-                <div>
-                  <Tag
-                    icon={!item.response ? <ScheduleOutlined /> : <CloseCircleOutlined />}
-                    color={item.response === 'rejected' && 'error'}>
-                    {!item.response ? item.state : item.response}
-                  </Tag>
-                </div>
-              </List.Item>
-            )}
-          />
-        </Card>
-      </Col>
+      <Row gutter={[16, 16]} justify='center'>
+        <Col span={23}>
+          <Card>
+            <List
+              itemLayout={isMobile ? 'vertical' : 'horizontal'}
+              dataSource={invitationsSent}
+              renderItem={(item) => (
+                <List.Item 
+                  key={item._id} 
+                  actions={[
+                    <Row wrap gutter={[16, 16]} style={isMobile && {marginLeft: 15}}>
+                      <Col>
+                        <Tag
+                          icon={!item.response ? <ScheduleOutlined /> : <CloseCircleOutlined />}
+                          color={item.response === 'rejected' && 'error'}
+                          style={{padding: '4px 15px'}}
+                        >
+                          {item.response ? item.response : item.state === 'send' ? intl.formatMessage({id: 'networking_send', defaultMessage: 'Enviado'}) : item.state}
+                        </Tag>
+                      </Col>
+                    </Row>
+                  ]}>
+                  <List.Item.Meta
+                    avatar={
+                      <Avatar src={item?.picture ? item.picture : null}>
+                        {item?.picture
+                          ? null
+                          : item.user_name_requesting
+                          ? item.user_name_requesting.charAt(0).toUpperCase()
+                          : item._id.charAt(0).toUpperCase()}
+                      </Avatar>
+                    }
+                    title={item.user_name_requesting || item._id}
+                    style={{ textAlign: 'left' }}
+                  />
+                </List.Item>
+              )}
+            />
+          </Card>
+        </Col>
+      </Row>
     );
 
   return !loading ? (
-    <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
-      <Card>No ha enviado ninguna solicitud</Card>
-    </Col>
+    <Row justify='center' align='middle'>
+      <Col >
+        <Result 
+          title={intl.formatMessage({id: 'networking_not_submitted_any_requests', defaultMessage: '¡No has enviado ninguna solicitud!'})}
+        />
+      </Col>
+    </Row>
   ) : (
-    <Spin />
+    <Row justify='center' align='middle'>
+      <Col>
+        <Spin size='large' tip={<Typography.Text strong>{intl.formatMessage({id: 'loading', defaultMessage: 'Cargando...'})}</Typography.Text>}/>
+      </Col>
+    </Row>
   );
 };
 
@@ -167,6 +206,7 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
   const [currentUserId, setCurrentUserId] = useState(null);
   const [loading, setLoading] = useState(false);
   const eventUserCtx = useContext(CurrentEventUserContext);
+  const intl = useIntl();
 
   // Funcion que obtiene la lista de solicitudes o invitaciones recibidas
   const getInvitationsList = async () => {
@@ -241,7 +281,7 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
       .then(async () => {
         DispatchMessageService({
           type: 'success',
-          msj: 'Respuesta enviada',
+          msj: intl.formatMessage({id: 'networking_reply_sent', defaultMessage: 'Respuesta enviada'}),
           action: 'show',
         });
 
@@ -258,7 +298,7 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
         // console.error('ERROR API==>', err);
         DispatchMessageService({
           type: 'error',
-          msj: 'Hubo un problema',
+          msj: intl.formatMessage({id: 'message_error_problem', defaultMessage: 'Hubo un problema'}),
           action: 'show',
         });
       });
@@ -272,21 +312,44 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
 
   if (!loading)
     return currentUser === null ? (
-      <Col xs={22} sm={22} md={15} lg={15} xl={15} style={{ margin: '0 auto' }}>
-        <Alert
-          message='Iniciar Sesión'
-          description='Para poder ver contactos es necesario iniciar sesión.'
-          type='info'
-          showIcon
-        />
-      </Col>
+      <Row justify='center' align='middle'>
+        <Col>
+          <Result
+            title={intl.formatMessage({id: 'log_in', defaultMessage: 'Iniciar Sesión'})}
+            description={intl.formatMessage({id: 'see_contacts_login', defaultMessage: 'Para poder ver contactos es necesario iniciar sesión.'})}
+          />
+        </Col>
+      </Row>
     ) : (
-      <div>
-        <Divider>Solicitudes de contacto recibidas</Divider>
-        <InvitacionListReceived list={requestListReceived} sendResponseToInvitation={sendResponseToInvitation} />
-        <Divider>Solicitudes de contacto enviadas</Divider>
-        <InvitacionListSent list={requestListSent} />
-      </div>
+      <>
+        <Divider><Typography.Text strong>{intl.formatMessage({id: 'networking_contact_requests_received', defaultMessage: 'Solicitudes de contacto recibidas'})}</Typography.Text></Divider>
+        {requestListReceived.length > 0 ? 
+          <InvitacionListReceived list={requestListReceived} sendResponseToInvitation={sendResponseToInvitation} />
+        :
+          <Row justify='center'>
+            <Col>
+              <Result
+                title={intl.formatMessage({id: 'networking_not_contact_requests_received', defaultMessage: '¡No tienes solicitudes de contactos recibidas!'})}
+              />
+            </Col>
+          </Row>
+        }
+        
+        {/* {requestListReceived.length === 0 || requestListSent.length === 0 && <Divider />} */}
+        <Divider><Typography.Text strong>{intl.formatMessage({id: 'networking_contact_requests_sent', defaultMessage: 'Solicitudes de contacto enviadas'})}</Typography.Text></Divider>
+        {requestListSent.length > 0 ?
+          <InvitacionListSent list={requestListSent} />
+          :
+          <Row justify='center'>
+            <Col>
+              <Result
+                title={intl.formatMessage({id: 'networking_not_contact_requests_sent', defaultMessage: '¡No tienes solicitudes de contactos enviadas!'})}
+              />
+            </Col>
+          </Row>
+        }
+      </>
     );
-  if (loading) return <Spin></Spin>;
+  if (loading) return <Row justify='center' align='middle'><Col><Spin size='large'
+  tip={<Typography.Text strong>{intl.formatMessage({id: 'loading', defaultMessage: 'Cargando...'})}</Typography.Text>}/></Col></Row>;
 }

@@ -69,4 +69,6 @@ export interface Question {
   id:      string;
   image:   null;
   points:  string;
+  correctAnswer?: string | string[]
+  correctAnswerIndex?: number | number[]
 }

@@ -1,17 +1,25 @@
-import { Badge, Col, Menu, Row, Space } from 'antd';
-import { useRouteMatch, Link } from 'react-router-dom';
+import { Badge, Button, Menu, Space } from 'antd';
+import { useRouteMatch, Link, useHistory } from 'react-router-dom';
 import * as iconComponents from '@ant-design/icons';
 import { stylesMenuItems } from '../helpers/csshelpers';
 import { UseEventContext } from '../../../../context/eventContext';
 import { useHelper } from '../../../../context/helperContext/hooks/useHelper';
 import { setSectionPermissions } from '../../../../redux/sectionPermissions/actions';
 import { connect } from 'react-redux';
+import { useIntl } from 'react-intl';
 
 const MenuEvent = ({ isMobile }) => {
   let { url } = useRouteMatch();
   let cEvent = UseEventContext();
   let { totalsolicitudes, eventPrivate } = useHelper();
   let event = cEvent.value;
+  const history = useHistory();
+  const intl = useIntl();
+
+  const redirectToPreLanding = () => {
+    sessionStorage.removeItem('session');
+    history.push(`/${cEvent.value._id}`);
+  };
 
   return (
     <>
@@ -26,6 +34,34 @@ const MenuEvent = ({ isMobile }) => {
         //   }}
         // >
         <Menu style={stylesMenuItems} mode='inline' defaultSelectedKeys={['1']}>
+          {event.redirect_landing === true ? null : (
+            <Menu.Item className='MenuItem_event' key={'pre-landing'}>
+              <Button
+                type='primary'
+                className='menuEvent_section-text'
+                style={{
+                  fontSize: '22px',
+                  color: event.styles.textMenu,
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: 'none'
+                }}
+                onClick={redirectToPreLanding}>
+                <Space direction='vertical'>
+                  <iconComponents.HomeOutlined
+                    style={{
+                      fontSize: '22px',
+                      color: event.styles.textMenu,
+                    }}
+                  />
+                  {intl.formatMessage({id: 'header.home', defaultMessage: 'Inicio'})}
+                </Space>
+              </Button>
+            </Menu.Item>
+          )}
           {event.itemsMenu &&
             !eventPrivate.private &&
             Object.keys(event.itemsMenu).map((key) => {
@@ -35,13 +71,13 @@ const MenuEvent = ({ isMobile }) => {
               }
 
               let icon =
-                event._id === '62c5e89176dfb307163c05a9' && event.itemsMenu[key].icon == 'AudioOutlined'
+                event._id === '62c5e89176dfb307163c05a9' && event.itemsMenu[key].icon === 'AudioOutlined'
                   ? 'RocketOutlined'
                   : event.itemsMenu[key].icon;
 
               let IconoComponente = iconComponents[icon];
 
-              return key == 'networking' ? (
+              return key === 'networking' ? (
                 <Menu.Item key={event.itemsMenu[key].section} className='MenuItem_event'>
                   <Badge key={event.itemsMenu[key].section} count={totalsolicitudes} offset={[-30, -2]}>
                     <Link
@@ -82,7 +118,7 @@ const MenuEvent = ({ isMobile }) => {
                             color: event.styles.textMenu,
                             justifyContent: 'center',
                           }}>
-                          {` ${event.itemsMenu[key].name}`}
+                          {` ${event.itemsMenu[key].label ? event.itemsMenu[key].label : event.itemsMenu[key].name}`}
                         </span>
                       </Link>
                     </Menu.Item>
@@ -96,12 +132,33 @@ const MenuEvent = ({ isMobile }) => {
         isMobile &&
         !eventPrivate.private && (
           <Menu style={stylesMenuItems} mode='vertical' defaultSelectedKeys={['1']}>
+            <Menu.Item
+              style={{
+                position: 'relative',
+                color: event.styles.textMenu,
+              }}
+              key={'pre-landing-drawer'}
+              className='MenuItem_event'>
+              <Space size={4}>
+                <iconComponents.HomeOutlined
+                  style={{
+                    margin: '0 auto',
+                    fontSize: '22px',
+                    color: event.styles.textMenu,
+                  }}
+                />
+
+                <Link className='menuEvent_section-text' onClick={redirectToPreLanding} style={{ color: event.styles.textMenu }}>
+                  {intl.formatMessage({id: 'header.home', defaultMessage: 'Inicio'})}
+                </Link>
+              </Space>
+            </Menu.Item>
             {event.itemsMenu &&
               Object.keys(event.itemsMenu).map((key) => {
                 //icono personalizado
                 //CAMBIO DE ICONO TRIPULACIÓN KELLOGS
                 let icon =
-                  event._id === '62c5e89176dfb307163c05a9' && event.itemsMenu[key].icon == 'AudioOutlined'
+                  event._id === '62c5e89176dfb307163c05a9' && event.itemsMenu[key].icon === 'AudioOutlined'
                     ? 'RocketOutlined'
                     : event.itemsMenu[key].icon;
 

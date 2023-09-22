@@ -1,7 +1,9 @@
 import { Space, Image, Typography, Button, Card, Row, Grid, Result, Modal } from 'antd';
 import { useMillonaireLanding } from '../hooks/useMillonaireLanding';
-const { useBreakpoint } = Grid;
 import Stages from './Stages';
+
+const { useBreakpoint } = Grid;
+
 export default function GameStartAnnoucement() {
   const { millonaire, visibilityControl, onStartGame, onChangeStatusGame } = useMillonaireLanding();
   const { name, appearance } = millonaire;

@@ -1,9 +1,17 @@
+/* eslint-disable no-console */
+/* eslint-disable array-callback-return */
+/* eslint-disable no-useless-computed-key */
+/* eslint-disable default-case */
 import { createContext, useCallback, useContext, useEffect, useReducer, useState } from 'react';
 import moment from 'moment';
 import { DispatchMessageService } from '../context/MessageService';
 import { Actions, AgendaApi, EventsApi, OrganizationApi } from '../helpers/request';
 import { GetTokenUserFirebase } from '../helpers/HelperAuth';
 import { configEventsTemplate } from '../helpers/constants';
+import { firestore } from '@/helpers/firebase';
+import { useIntl } from 'react-intl';
+import { parseDate } from '@/components/events/hooks/useCustomDateEvent';
+import { dateToCustomDate } from '@/components/events/utils/CustomMultiDate';
 
 export const cNewEventContext = createContext();
 //INITIAL STATE
@@ -30,7 +38,7 @@ function reducer(state, action) {
     case 'SELECT_ORGANIZATION':
       if (organizationIdURL)
         organizationSelected = state.organizations
-          ? state.organizations.filter((org) => org.id == organizationIdURL)[0]
+          ? state.organizations.filter((org) => org.id === organizationIdURL)[0]
           : state.organizations[0];
       else if (organizationSelect) organizationSelected = organizationSelect;
       else organizationSelected = state.organizations[0];
@@ -43,6 +51,7 @@ function reducer(state, action) {
     case 'VISIBLE_MODAL':
       return { ...state, visible: action.payload.visible, tab: 'list' };
     case 'TYPE_EVENT':
+      const minValueEvent = 2000;
       switch (action.payload.type) {
         case 0:
           return { ...state, type: action.payload.type, allow_register: true, visibility: 'PUBLIC' };
@@ -50,6 +59,14 @@ function reducer(state, action) {
           return { ...state, type: action.payload.type, allow_register: false, visibility: 'PUBLIC' };
         case 2:
           return { ...state, type: action.payload.type, allow_register: false, visibility: 'PRIVATE' };
+        case 3:
+          return {
+            ...state,
+            type: action.payload.type,
+            allow_register: true,
+            visibility: 'PUBLIC',
+            payment: { active: true, price: minValueEvent },
+          };
       }
       break;
     case 'TYPE_AUTHENTICATION':
@@ -86,6 +103,7 @@ export const NewEventProvider = ({ children }) => {
   const [venue, setVenue] = useState('');
   const [address, setAddress] = useState('');
   const [state, dispatch] = useReducer(reducer, initialState);
+  const intl = useIntl();
 
   async function OrganizationsList() {
     dispatch({ type: 'LOADING' });
@@ -182,14 +200,14 @@ export const NewEventProvider = ({ children }) => {
   const handleInput = (event, name) => {
     let listerrors = errorInputs.filter((err) => err.name !== name);
     setValueInputs({ ...valueInputs, [name]: event.target.value });
-    if (name == 'name') {
+    if (name === 'name') {
       if (event.target.value.length >= 4) {
         listerrors.push({ name: 'name', value: false });
       } else if (event.target.value.length <= 3) {
         listerrors.push({ name: 'name', value: true });
       }
     }
-    if (name == 'description' && addDescription) {
+    if (name === 'description' && addDescription) {
       if (event.target.value.length >= 10) {
         listerrors.push({ name: 'description', value: false });
       } else if (event.target.value.length <= 9) {
@@ -225,7 +243,7 @@ export const NewEventProvider = ({ children }) => {
   };
 
   const containsError = (field) => {
-    let errorField = errorInputs.filter((error) => error.name == field);
+    let errorField = errorInputs.filter((error) => error.name === field);
     if (errorField.length > 0 && errorField[0].value) {
       return true;
     }
@@ -238,7 +256,7 @@ export const NewEventProvider = ({ children }) => {
     validatorsInput.map((validator) => {
       if (validator) {
         if (
-          (valueInputs.length == 0 && validator.required) ||
+          (valueInputs.length === 0 && validator.required) ||
           (!valueInputs[validator.name] && validator.required) ||
           (valueInputs[validator.name]?.length < validator.length && validator.required)
         ) {
@@ -267,8 +285,19 @@ export const NewEventProvider = ({ children }) => {
     });
   }, [selectedDay, selectedHours]);
   const saveEvent = async () => {
+    const minValueEvent = 2000;
     dispatch({ type: 'LOADING' });
+    let userProperties = [];
 
+    if (Array.isArray(state.selectOrganization?.user_properties)) {
+      userProperties = state.selectOrganization?.user_properties.map((user_propertie) => {
+        delete user_propertie.updated_at;
+        delete user_propertie.created_at;
+        delete user_propertie._id;
+        return user_propertie;
+      });
+    }
+    
     if (state.selectOrganization) {
       const data = {
         name: valueInputs.name,
@@ -283,7 +312,8 @@ export const NewEventProvider = ({ children }) => {
         category_ids: [],
         organizer_id: state.selectOrganization.id || state.selectOrganization._id,
         event_type_id: '5bf47203754e2317e4300b68',
-        user_properties: [],
+        user_properties: userProperties,
+        payment: state.payment || { active: false, price: minValueEvent },
         allow_register: state.allow_register,
         type_event: typeEvent,
         where_it_run: whereItRun,
@@ -325,6 +355,24 @@ export const NewEventProvider = ({ children }) => {
           show_title: true,
         },
       };
+
+      const dateStart = new Date(data.datetime_from);
+      const dateEnd = new Date(data.datetime_to);
+
+      let newDateRanges = dateToCustomDate(dateStart, dateEnd);
+
+      const parseDateRange = newDateRanges.map((date) => {
+        const dateStart = date.start;
+        const dateEnd = date.end;
+
+        return {
+          start: parseDate(dateStart),
+          end: parseDate(dateEnd),
+        };
+      });
+
+      data.dates = parseDateRange;
+
       const newMenu = {
         itemsMenu: {
           evento: {
@@ -349,8 +397,10 @@ export const NewEventProvider = ({ children }) => {
       //CREAR EVENTO
       try {
         let token = await GetTokenUserFirebase();
+        // console.log('data=>', data);
 
         const result = await Actions.create(`/api/events?token=${token}`, data);
+        // console.log('result=>', result);
         result._id = result._id ? result._id : result.data?._id;
         if (result._id) {
           let sectionsDefault = state.selectOrganization?.itemsMenu
@@ -372,28 +422,39 @@ export const NewEventProvider = ({ children }) => {
               datetime_start: selectedDateEvent?.from + ':00',
             };
             const agenda = await AgendaApi.create(result._id, activity);
+            //Se actualiza el evento para enviar la propiedad redirect_activity: agenda._id despues de crear la actividad con el id de la misma
+            await Actions.put(`api/events/${result._id}?token=${token}`, { redirect_activity: agenda._id });
             if (agenda._id) {
               //CREAR TEMPLATE PARA EL EVENTO
               let template = !templateId && true;
               if (templateId) {
                 template = await EventsApi.createTemplateEvent(result._id, templateId);
                 await firestore
-										.collection('events')
-										.doc(result._id)
-										.update(template);
+                  .collection('events')
+                  .doc(result._id)
+                  .update(template);
               }
               if (template) {
                 const data = {
                   useCountdown: true,
                   dateLimit: selectedDateEvent?.from + ':00',
-                  countdownMessage: 'El evento inicia en',
-                  countdownFinalMessage: 'Ha terminado el evento',
+                  countdownMessage: intl.formatMessage({
+                    id: 'the_event_start_at',
+                    defaultMessage: 'El evento inicia en',
+                  }),
+                  countdownFinalMessage: intl.formatMessage({
+                    id: 'the_event_has_ended',
+                    defaultMessage: 'Ha terminado el evento',
+                  }),
                 };
                 const respApi = await EventsApi.editOne(data, result._id);
                 if (respApi?._id) {
                   DispatchMessageService({
                     type: 'success',
-                    msj: 'Evento creado correctamente...',
+                    msj: intl.formatMessage({
+                      id: 'event_successfully_created',
+                      defaultMessage: 'Evento creado correctamente...',
+                    }),
                     action: 'show',
                   });
                   window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
@@ -401,7 +462,10 @@ export const NewEventProvider = ({ children }) => {
               } else {
                 DispatchMessageService({
                   type: 'error',
-                  msj: 'Error al crear evento con su template',
+                  msj: intl.formatMessage({
+                    id: 'error_creating_event_with_template',
+                    defaultMessage: 'Error al crear evento con su template',
+                  }),
                   action: 'show',
                 });
               }
@@ -409,7 +473,7 @@ export const NewEventProvider = ({ children }) => {
           } else {
             DispatchMessageService({
               type: 'error',
-              msj: 'Error al crear el evento',
+              msj: intl.formatMessage({ id: 'error_creating_event', defaultMessage: 'Error al crear el evento' }),
               action: 'show',
             });
             dispatch({ type: 'COMPLETE' });
@@ -417,7 +481,7 @@ export const NewEventProvider = ({ children }) => {
         } else {
           DispatchMessageService({
             type: 'error',
-            msj: 'Error al crear el evento',
+            msj: intl.formatMessage({ id: 'error_creating_event', defaultMessage: 'Error al crear el evento' }),
             action: 'show',
           });
           dispatch({ type: 'COMPLETE' });
@@ -426,7 +490,10 @@ export const NewEventProvider = ({ children }) => {
         console.error('CATCH==>', error);
         DispatchMessageService({
           type: 'error',
-          msj: 'Error al crear el evento catch',
+          msj: intl.formatMessage({
+            id: 'error_creating_event_catch',
+            defaultMessage: 'Error al crear el evento catch',
+          }),
           action: 'show',
         });
         dispatch({ type: 'COMPLETE' });
@@ -434,7 +501,7 @@ export const NewEventProvider = ({ children }) => {
     } else {
       DispatchMessageService({
         type: 'error',
-        msj: 'Seleccione una organización',
+        msj: intl.formatMessage({ id: 'select_organization', defaultMessage: 'Seleccione una organización' }),
         action: 'show',
       });
     }

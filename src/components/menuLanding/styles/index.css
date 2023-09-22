@@ -1,0 +1,34 @@
+.icons {
+    padding: 4px;
+    border-radius: 20%;
+
+}
+
+.icons:hover {
+    scale: 1.3;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.rowIcons {
+    overflow: auto;
+    flex-grow: 1;
+    font-size: 24px;
+    height: 80%;
+}
+
+.iconCurrent {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    width: 60px;
+    height: 60px;
+    text-align: center;
+
+    font-size: 40px;
+}
+
+.iconsContainer {
+    overflow: auto;
+    display: flexbox;
+    height: 80%;
+}

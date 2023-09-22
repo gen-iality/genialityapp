@@ -1,0 +1,13 @@
+{
+  "extends": ["react-app"],
+  "rules": {
+    "react/prop-types": "off",
+    "no-console": "warn",
+    "no-unused-vars": "warn",
+    "no-undef": "warn",
+    "react-hooks/rules-of-hooks": "off",
+    "react/jsx-no-undef": "warn",
+    "no-unused-expressions": "warn",
+    "react/no-typos": "warn"
+  }
+}

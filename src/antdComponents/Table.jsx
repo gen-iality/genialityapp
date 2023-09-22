@@ -15,7 +15,7 @@ import { sortableHandle } from 'react-sortable-hoc';
 // import ExportExcel from '../components/newComponent/ExportExcel';
 import moment from 'moment';
 import { Suspense } from 'react';
-import { ExportExcel } from '../components/newComponent/ExportExcel';
+// import { ExportExcel } from '../components/newComponent/ExportExcel';
 import { useHelper } from '@/context/helperContext/hooks/useHelper';
 //import { UseCurrentUser } from '../context/userContext';
 
@@ -28,7 +28,6 @@ const Table = (props) => {
   let {
     header,
     list,
-    key,
     loading,
     pagination,
     draggable,
@@ -38,7 +37,6 @@ const Table = (props) => {
     noRemove,
     search,
     setColumnsData,
-    setList,
     downloadFile,
     exportData,
     fileName,
@@ -52,7 +50,6 @@ const Table = (props) => {
     extraPathTitle,
     extraPathIcon,
     extraPathType,
-    extraPathId,
     extraPathStateName,
     scroll,
     widthAction,
@@ -61,6 +58,7 @@ const Table = (props) => {
     updateMails,
     takeOriginalHeader,
     footer = undefined,
+    // rowSelection = rowSelection
   } = props;
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -323,7 +321,7 @@ const Table = (props) => {
           <Row wrap justify='end' gutter={[8, 8]}>
             {exportData && (
               <Col>
-                <ExportExcel list={list} fileName={`${fileName}${moment(new Date()).format('YYYY-DD-MM')}`} />
+                {/* <ExportExcel list={list} fileName={`${fileName}${moment(new Date()).format('YYYY-DD-MM')}`} /> */}
               </Col>
             )}
             {titleTable && <Col>{titleTable}</Col>}
@@ -331,6 +329,7 @@ const Table = (props) => {
         )}
         scroll={scroll}
         footer={() => footer}
+        // rowSelection={rowSelection}
       />
     </Suspense>
   );

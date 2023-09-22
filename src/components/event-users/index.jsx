@@ -1,5 +1,9 @@
-import { Component } from 'react';
-import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from 'react-intl';
+/* eslint-disable array-callback-return */
+/* eslint-disable no-useless-concat */
+/* eslint-disable no-lone-blocks */
+/* eslint-disable no-console */
+import { Component, Fragment } from 'react';
+import { FormattedDate, FormattedTime } from 'react-intl';
 import { firestore } from '../../helpers/firebase';
 import { BadgeApi, EventsApi, RolAttApi } from '../../helpers/request';
 import UserModal from '../modal/modalUser';
@@ -7,7 +11,23 @@ import ErrorServe from '../modal/serverError';
 import { utils, writeFileXLSX } from 'xlsx';
 import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from '../../helpers/utils';
 import Moment from 'moment';
-import { Button, Card, Col, Drawer, Image, Row, Statistic, Typography, Tag, Input, Space, Tooltip, Select } from 'antd';
+
+import {
+  Button,
+  Col,
+  Drawer,
+  Image,
+  Row,
+  Statistic,
+  Typography,
+  Tag,
+  Input,
+  Space,
+  Tooltip,
+  Select,
+  Dropdown,
+  Menu,
+} from 'antd';
 
 import updateAttendees from './eventUserRealTime';
 import { Link } from 'react-router-dom';
@@ -20,6 +40,9 @@ import {
   SearchOutlined,
   UsergroupAddOutlined,
   StarOutlined,
+  DownOutlined,
+  InfoCircleOutlined,
+  DeleteOutlined,
 } from '@ant-design/icons';
 import QrModal from './qrModal';
 
@@ -27,12 +50,14 @@ import Header from '../../antdComponents/Header';
 import TableA from '../../antdComponents/Table';
 import Highlighter from 'react-highlight-words';
 import { DispatchMessageService } from '../../context/MessageService';
-import Loading from '../profile/loading';
-import moment from 'moment';
 import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox';
 import { HelperContext } from '@/context/helperContext/helperContext';
 import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton';
 import { UsersPerEventOrActivity } from './utils/utils';
+import printBagdeUser from '../badge/utils/printBagdeUser';
+import ModalUsersOrganization from '../user-organization-to-event/components/ModalUsersOrganization';
+import SendChangePassword from './ChangePassword';
+import deleteUserConfirmation from '@/App/deleteUserConfirmation';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -90,23 +115,48 @@ class ListEventUser extends Component {
       qrModalOpen: false,
       unSusCribeConFigFast: () => {},
       unSuscribeAttendees: () => {},
+      modalUserOrganization: false,
+      currentPage:1,
+      pageSize:10
     };
   }
   static contextType = HelperContext;
 
+  openModalUserOrganization = () => {
+    this.setState({ modalUserOrganization: true });
+  };
+
+  closeModalUserOrganization = () => {
+    this.setState({ modalUserOrganization: false });
+  };
+
   // eslint-disable-next-line no-unused-vars
   editcomponent = (text, item, index) => {
     const { eventIsActive } = this.context;
+    const activityId = this.props.activityId;
+    const self = this;
     return (
-      <Tooltip placement='topLeft' title='Editar'>
-        <Button
-          type={'primary'}
-          icon={<EditOutlined />}
-          size='small'
-          onClick={() => this.openEditModalUser(item)}
-          disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
-        />
-      </Tooltip>
+      <Space>
+        <Tooltip placement='topLeft' title={'Editar'}>
+          <Button
+            type={'primary'}
+            icon={<EditOutlined />}
+            size='small'
+            onClick={() => this.openEditModalUser(item)}
+            disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+          />
+        </Tooltip>
+        {!item.anonymous && <SendChangePassword email={item.email} />}
+        <Tooltip placement='topLeft' title={'Eliminar'}>
+          <Button
+            type={'primary'}
+            icon={<DeleteOutlined />}
+            size='small'
+            danger
+            onClick={() => deleteUserConfirmation(item._id, activityId, self.props.event?._id )}
+          />
+        </Tooltip>
+      </Space>
     );
   };
 
@@ -124,7 +174,7 @@ class ListEventUser extends Component {
   rol_component = (text, item, index) => {
     if (this.state.rolesList) {
       for (let role of this.state.rolesList) {
-        if (item.rol_id == role._id) {
+        if (item.rol_id === role._id) {
           item['rol_name'] = role.name;
           return <p>{role.name}</p>;
         }
@@ -182,6 +232,7 @@ class ListEventUser extends Component {
 
     this.checkFirebasePersistence();
     try {
+      const sorter = (a, b) => (isNaN(a) && isNaN(b) ? (a || '').localeCompare(b || '') : a - b);
       const event = await EventsApi.getOne(this.props.event._id);
 
       const properties = event.user_properties;
@@ -265,7 +316,7 @@ class ListEventUser extends Component {
       };
 
       let editColumn = {
-        title: 'Editar',
+        title: 'Acciones',
         key: 'edit',
         fixed: 'right',
         width: 60,
@@ -287,7 +338,37 @@ class ListEventUser extends Component {
             dataIndex: item.name,
             key: item.name,
             ellipsis: true,
-            sorter: (a, b) => a[item.name]?.length - b[item.name]?.length,
+            sorter: (a, b) => {
+            if( !isFinite(a[item.name]) && !isFinite(b[item.name]) ) {
+              return ( isNaN(a[item.name]) && isNaN(b[item.name]) )
+                ? 1
+                : a[item.name] < b[item.name]
+                    ? -1
+                    : a[item.name] === b[item.name]
+                        ? 0
+                        : 1;
+            }
+            if( !isFinite(a[item.name]) ) {
+                return 1;
+            }
+            if( !isFinite(b[item.name]) ) {
+                return -1;
+            }
+            return a[item.name]-b[item.name];
+              /* console.log(a[item.name]?.length - b[item.name]?.length)
+              a[item.name]?.length - b[item.name]?.length
+              console.log(toString(a[item.name])?.toLowerCase())
+              const nameA = toString(a[item?.name])?.toLowerCase()
+              const nameB = toString(b[item?.name])?.toLowerCase();
+              if (nameA < nameB) {
+
+                  return -1;
+              }
+              if (nameA > nameB) {
+                  return 1;
+              }
+              return 0; */
+          },
             ...self.getColumnSearchProps(item.name),
             render: (record, key) => {
               switch (item.type) {
@@ -307,6 +388,20 @@ class ListEventUser extends Component {
                 case 'avatar':
                   return <Image width={40} height={40} src={key?.user?.picture} />;
 
+                case 'email':
+                  return key.anonymous ? (
+                    <Space>
+                      {key.anonymous && (
+                        <Tooltip title='Usuario anónimo'>
+                          <InfoCircleOutlined style={{ color: 'orangered' }} />
+                        </Tooltip>
+                      )}
+                      <>{key[item.name]}</>
+                    </Space>
+                  ) : (
+                    <>{key[item.name]}</>
+                  );
+
                 default:
                   return key[item.name];
               }
@@ -319,7 +414,7 @@ class ListEventUser extends Component {
         dataIndex: 'rol_id',
         key: 'rol_id',
         ellipsis: true,
-        sorter: (a, b) => a.rol_id.length - b.rol_id.length,
+        sorter: (a, b) => sorter(a.rol_id, b.rol_id) /* a.rol_id.length - b.rol_id.length */,
         ...self.getColumnSearchProps('rol_name'),
         render: self.rol_component,
       };
@@ -416,12 +511,12 @@ class ListEventUser extends Component {
                   updatedAttendees[i].user[key.name] || JSON.stringify(updatedAttendees[i][key.name]);
               }
               if (extraFields) {
-                let codearea = extraFields?.filter((field) => field.type == 'codearea');
+                let codearea = extraFields?.filter((field) => field.type === 'codearea');
                 if (
                   codearea[0] &&
                   updatedAttendees[i] &&
                   Object.keys(updatedAttendees[i]).includes(codearea[0].name) &&
-                  key.name == codearea[0].name
+                  key.name === codearea[0].name
                 ) {
                   updatedAttendees[i][codearea[0].name] = updatedAttendees[i]['code']
                     ? '(' + updatedAttendees[i]['code'] + ')' + updatedAttendees[i].properties[codearea[0].name]
@@ -433,7 +528,7 @@ class ListEventUser extends Component {
                       ? updatedAttendees[i]['properties'][key.name][0]
                       : updatedAttendees[i]['properties'][key.name];
                     updatedAttendees[i]['textodeautorizacionparaimplementarenelmeetupfenalcoycolsubsidio'] =
-                      self.props.event._id == '60c8affc0b4f4b417d252b29' ? 'SI' : '';
+                      self.props.event._id === '60c8affc0b4f4b417d252b29' ? 'SI' : '';
                   }
                 }
               }
@@ -537,7 +632,6 @@ class ListEventUser extends Component {
   checkIn = async (id, item) => {
     let checkInStatus = null;
     const { qrData } = this.state;
-    const { event } = this.props;
     qrData.another = true;
     /*  try {
       let resp = await TicketsApi.checkInAttendee(event._id, id);
@@ -718,10 +812,10 @@ class ListEventUser extends Component {
             icon={<SearchOutlined />}
             size='small'
             style={{ width: 90 }}>
-            Search
+            Buscar
           </Button>
           <Button onClick={() => this.handleReset(clearFilters)} size='small' style={{ width: 90 }}>
-            Reset
+            Resetear
           </Button>
         </Space>
       </div>
@@ -784,9 +878,7 @@ class ListEventUser extends Component {
       extraFields,
       spacesEvent,
       editUser,
-      stage,
       ticket,
-      ticketsOptions,
       localChanges,
       quantityUsersSync,
       lastUpdate,
@@ -794,9 +886,17 @@ class ListEventUser extends Component {
       nameActivity,
       columns,
       fieldsForm,
+      modalUserOrganization,
     } = this.state;
-
     const activityId = this.props.match.params.id;
+
+    const onChangeCurrnetPage = (page) => {
+      this.setState({ currentPage: page });
+    };
+  
+    const onChangePageSize = (pageSize) => {
+      this.setState({ pageSize });
+    };
 
     const { loading, componentKey } = this.props;
     const { eventIsActive } = this.context;
@@ -809,21 +909,53 @@ class ListEventUser extends Component {
     const participantes = Math.round((totalCheckedIn / inscritos) * 100);
     const asistenciaCoeficientes = Math.round((totalCheckedInWithWeight / 100) * 100);
 
+    const menu = (
+      <Menu>
+        <Menu.Item key='menu-item-1' onClick={this.addUser}>
+          Nuevo
+        </Menu.Item>
+
+        <Menu.Item key='menu-item-2' onClick={() => this.openModalUserOrganization()}>
+          Desde mi organización
+        </Menu.Item>
+      </Menu>
+    );
+
     return (
-      <React.Fragment>
+      <Fragment>
         <Header
           title={
             componentKey === 'activity-checkin'
               ? 'Check-in actividad: ' + nameActivity
               : `Check-in evento: ${this.props.event?.name}`
           }
+          description={
+            this.props?.event?.visibility === 'ANONYMOUS' && (
+              <Space direction='vertical' size={0}>
+                <Typography.Paragraph>
+                  ¡Evento sin autenticación (anónimo)! La información recolectada dentro del evento no está enlazada a
+                  un usuario específico dentro de la plataforma, por lo tanto NO se pueden modificar los roles.
+                </Typography.Paragraph>
+              </Space>
+            )
+          }
         />
 
+        {modalUserOrganization && (
+          <ModalUsersOrganization
+            destroyOnClose
+            visible={modalUserOrganization}
+            onCancel={() => this.closeModalUserOrganization()}
+            organizationId={this.props?.event?.organizer_id}
+            eventId={this.props?.event?._id}
+            usersEvent={users}
+          />
+        )}
         {disabledPersistence && (
           <div style={{ margin: '5%', textAlign: 'center' }}>
             <label>
-              El almacenamiento local de lso datos esta deshabilitado. Cierre otras pestañanas de la plataforma para
-              pode habilitar el almacenamiento local
+              El almacenamiento local de lso datos esta deshabilitado. Cierre otras pestañas de la plataforma para pode
+              habilitar el almacenamiento local
             </label>
           </div>
         )}
@@ -850,9 +982,19 @@ class ListEventUser extends Component {
             activityId={activityId}
           />
         )}
-
         {/* {users.length > 0 && this.state.columns ? ( */}
         <TableA
+          pagination={{
+            showSizeChanger:true,
+            pageSize:this.state.pageSize,
+            current: this.state.currentPage,
+            onChange: onChangeCurrnetPage,
+            total: users.length,
+            onShowSizeChange: (page, pageSize) => {
+              onChangeCurrnetPage(page);
+              onChangePageSize(pageSize);
+            }
+          }}
           list={users.length > 0 && users}
           header={columns}
           takeOriginalHeader
@@ -866,14 +1008,14 @@ class ListEventUser extends Component {
                 textAlign: 'end',
                 borderRadius: '3px',
               }}>
-              <strong> Última Sincronización: </strong> <FormattedDate value={lastUpdate} />{' '}
+              <strong> Última sincronización: </strong> <FormattedDate value={lastUpdate} />{' '}
               <FormattedTime value={lastUpdate} />
             </div>
           }
           titleTable={
             <Row gutter={[6, 6]}>
               {!activityId && (
-                <React.Fragment>
+                <Fragment>
                   <Col>
                     <Tag
                       style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
@@ -894,7 +1036,7 @@ class ListEventUser extends Component {
                       </span>
                     </Tag>
                   </Col>
-                </React.Fragment>
+                </Fragment>
               )}
 
               <Col>
@@ -902,7 +1044,7 @@ class ListEventUser extends Component {
                   <>
                     <Tag>
                       <small>
-                        Asistencia por Coeficientes:
+                        Asistencia por coeficientes:
                         {totalCheckedInWithWeight + '/100' + ' (' + asistenciaCoeficientes + '%)'}
                       </small>
                     </Tag>
@@ -957,14 +1099,26 @@ class ListEventUser extends Component {
                 </Link>
               </Col>
               <Col>
-                <Button
+                <Dropdown overlay={menu} trigger={['click']}>
+                  <Button
+                    type='primary'
+                    size='middle'
+                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
+                    <Space>
+                      <PlusCircleOutlined />
+                      Agregar usuario
+                      <DownOutlined />
+                    </Space>
+                  </Button>
+                </Dropdown>
+                {/* <Button
                   type='primary'
                   icon={<PlusCircleOutlined />}
                   size='middle'
                   onClick={this.addUser}
                   disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
-                  {'Agregar Usuario'}
-                </Button>
+                  {'Agregar usuario'}
+                </Button> */}
               </Col>
             </Row>
           }
@@ -1010,7 +1164,7 @@ class ListEventUser extends Component {
             </Button>,
             <div key='fecha' style={{ float: 'left' }}>
               <Title level={5}>
-                Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
+                Última sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
               </Title>
             </div>,
           ]}
@@ -1053,7 +1207,7 @@ class ListEventUser extends Component {
                 valueStyle={{ textAlign: 'center' }}
                 title={
                   <Title level={3} style={{ textAlign: 'center' /* , color: '#b5b5b5' */ }}>
-                    Asistencia por Coeficientes
+                    Asistencia por coeficientes
                   </Title>
                 }
                 value={
@@ -1068,7 +1222,7 @@ class ListEventUser extends Component {
             </Col>
           </Row>
         </Drawer>
-      </React.Fragment>
+      </Fragment>
     );
   }
 }

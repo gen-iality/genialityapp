@@ -18,6 +18,7 @@ const ImageUploaderDragAndDrop = ({
 	hoverable = true,
 	compactMode = false,
 	getDimensionsCallback,
+	onRemove=()=>{},
 }: ImageUploaderDragAndDropType) => {
 	const { Dragger } = Upload;
 	let [image, setImage] = useState<any>(null);
@@ -98,6 +99,7 @@ const ImageUploaderDragAndDrop = ({
 					setImage(null);
 					setIsUploading(false);
 					imageDataCallBack(null);
+					onRemove();
 					break;
 
 				default:

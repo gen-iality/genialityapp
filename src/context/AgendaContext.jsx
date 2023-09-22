@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable array-callback-return */
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   getLiveStreamStatus,
   getVideosLiveStream,
@@ -87,6 +90,43 @@ export const AgendaContextProvider = ({ children }) => {
     }
   }, [dataLive]);
 
+  async function obtenerDetalleActivity() {
+    /* console.log('8. OBTENER DETALLE ACTIVITY==>', cEvent.value._id, activityEdit); */
+
+    const service = new Service(firestore);
+    const hasVideoconference = await service.validateHasVideoconference(cEvent.value._id, activityEdit);
+    /* console.log('8. EDIT HAS VIDEO CONFERENCE===>', hasVideoconference); */
+    if (hasVideoconference) {
+      const configuration = await service.getConfiguration(cEvent.value._id, activityEdit);
+
+      /* console.log('8. CONFIGURATION==>', configuration); */
+      setIsPublished(typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true);
+      setPlatform(configuration.platform ? configuration.platform : 'wowza');
+      setMeetingId(configuration.meeting_id ? configuration.meeting_id : null);
+      setRoomStatus(
+        configuration?.habilitar_ingreso == null
+          ? ''
+          : configuration.habilitar_ingreso
+          ? configuration.habilitar_ingreso
+          : ''
+      );
+      setTransmition(configuration.transmition || null);
+      setAvailableGames(configuration.avalibleGames || []);
+      setChat(configuration.tabs && configuration.tabs.chat ? configuration.tabs.chat : false);
+      setSurveys(configuration.tabs && configuration.tabs.surveys ? configuration.tabs.surveys : false);
+      setGames(configuration.tabs && configuration.tabs.games ? configuration.tabs.games : false);
+      setAttendees(configuration.tabs && configuration.tabs.attendees ? configuration.tabs.attendees : false);
+      setHostId(typeof configuration.host_id !== 'undefined' ? configuration.host_id : null);
+      setHostName(typeof configuration.host_name !== 'undefined' ? configuration.host_name : null);
+      setHabilitarIngreso(configuration.habilitar_ingreso ? configuration.habilitar_ingreso : '');
+      setSelect_host_manual(configuration.select_host_manual ? configuration.select_host_manual : false);
+      setTypeActivity(configuration.typeActivity || null);
+      setDataLive(null);
+    } else {
+      initializeState();
+    }
+  }
+  
   useEffect(() => {
     if (activityEdit) {
       /* console.log('8. ACTIVIDAD ACA===>', activityEdit); */
@@ -95,42 +135,7 @@ export const AgendaContextProvider = ({ children }) => {
     } else {
       initializeState();
     }
-    async function obtenerDetalleActivity() {
-      /* console.log('8. OBTENER DETALLE ACTIVITY==>', cEvent.value._id, activityEdit); */
-
-      const service = new Service(firestore);
-      const hasVideoconference = await service.validateHasVideoconference(cEvent.value._id, activityEdit);
-      /* console.log('8. EDIT HAS VIDEO CONFERENCE===>', hasVideoconference); */
-      if (hasVideoconference) {
-        const configuration = await service.getConfiguration(cEvent.value._id, activityEdit);
-
-        /* console.log('8. CONFIGURATION==>', configuration); */
-        setIsPublished(typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true);
-        setPlatform(configuration.platform ? configuration.platform : 'wowza');
-        setMeetingId(configuration.meeting_id ? configuration.meeting_id : null);
-        setRoomStatus(
-          configuration?.habilitar_ingreso == null
-            ? ''
-            : configuration.habilitar_ingreso
-            ? configuration.habilitar_ingreso
-            : ''
-        );
-        setTransmition(configuration.transmition || null);
-        setAvailableGames(configuration.avalibleGames || []);
-        setChat(configuration.tabs && configuration.tabs.chat ? configuration.tabs.chat : false);
-        setSurveys(configuration.tabs && configuration.tabs.surveys ? configuration.tabs.surveys : false);
-        setGames(configuration.tabs && configuration.tabs.games ? configuration.tabs.games : false);
-        setAttendees(configuration.tabs && configuration.tabs.attendees ? configuration.tabs.attendees : false);
-        setHostId(typeof configuration.host_id !== 'undefined' ? configuration.host_id : null);
-        setHostName(typeof configuration.host_name !== 'undefined' ? configuration.host_name : null);
-        setHabilitarIngreso(configuration.habilitar_ingreso ? configuration.habilitar_ingreso : '');
-        setSelect_host_manual(configuration.select_host_manual ? configuration.select_host_manual : false);
-        setTypeActivity(configuration.typeActivity || null);
-        setDataLive(null);
-      } else {
-        initializeState();
-      }
-    }
+    
   }, [activityEdit]);
 
   //FUNCION QUE PERMITE REINICIALIZAR LOS ESTADOS YA QUE AL AGREGAR O EDITAR OTRA ACTIVIDAD ESTOS TOMAN VALORES ANTERIORES
@@ -339,7 +344,7 @@ export const AgendaContextProvider = ({ children }) => {
       transmition: transmition || null,
       //PERMITE REINICIALIZAR EL TIPO DE ACTIVIDAD O EN SU CASO BORRARLO  Y CONSERVAR EL ESTADO ACTUAL (type=delete)
       typeActivity:
-        datos?.type && datos?.type !== 'delete' ? datos?.type : datos?.type == 'delete' ? null : typeActivity,
+        datos?.type && datos?.type !== 'delete' ? datos?.type : datos?.type === 'delete' ? null : typeActivity,
     };
     const tabs = { chat, surveys, games, attendees };
     return { roomInfo, tabs };
@@ -425,9 +430,9 @@ export const AgendaContextProvider = ({ children }) => {
     /* console.log('TYPE==>', type); */
     //SE VALIDA CON URL QUE CONTENGA YOUTUBE DEBIDO A QUE REACT PLAYER NO MUESTRA VIDEO DE GCORE
     const visibleReactPlayer =
-      ((type == 'Youtube' ||
-        (type == 'Video' && data.includes('youtube')) ||
-        (type == 'Video' && data.includes('vimeo'))) &&
+      ((type === 'Youtube' ||
+        (type === 'Video' && data.includes('youtube')) ||
+        (type === 'Video' && data.includes('vimeo'))) &&
         urlVideo) ||
       (((dataLive?.live && !dataLive?.active) || (!dataLive?.live && !dataLive?.active)) &&
         (type === 'Transmisión' || type === 'EviusMeet'))
