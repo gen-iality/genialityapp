@@ -317,7 +317,10 @@ const Headers = (props: Props) => {
 								onClick={landingOrganization}
 								size='large'>
 								<Typography.Text style={{ color: getCorrectColor(bgcolorContainer) }}>
-									Ir a{' '}
+									{intl.formatMessage({
+										id: 'go_to',
+										defaultMessage: 'Ir a',
+									})}{' '}
 									<Typography.Text strong style={{ color: getCorrectColor(bgcolorContainer) }}>
 										{cEvent.value?.organizer?.name}
 									</Typography.Text>

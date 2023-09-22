@@ -364,7 +364,8 @@
     "has_been_invited_event": "You have been invited to this event",
     "INITIAL_STATE": "Initial state",
     "buy": "Buy",
-    "see_more": "See more..."
+    "see_more": "See more...",
+    "go_to": "Go to"
   },
   "es": {
     "header.help": "Ayuda",
@@ -740,7 +741,8 @@
     "has_been_invited_event": "Has sido invitado a este evento",
     "INITIAL_STATE": "Estado inicial",
     "buy": "Comprar",
-    "see_more": "Ver más..."
+    "see_more": "Ver más...",
+    "go_to": "Ir a"
   },
   "pt": {
     "live.join": "Entrar",
