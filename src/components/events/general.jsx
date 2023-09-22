@@ -160,9 +160,7 @@ class General extends Component {
       organizers = organizers.map((item) => {
         return { value: item.id, label: item.name };
       });
-      const categories = await CategoriesApi.getAll(event._id);
-      console.log(categories)
-      console.log(event._id);
+      const categories = await CategoriesApi.getAll(event.organizer_id);
       const { selectedCategories, selectedOrganizer, selectedType } = handleFields(
         organizers,
         types,
