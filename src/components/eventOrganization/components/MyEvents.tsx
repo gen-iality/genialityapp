@@ -38,7 +38,16 @@ export const MyEvents = ({
     !isLoadingEventFreeAcces && !isLoadingMyUserOrg
   );
   const myAllEvents = [...eventsWithEventUser, ...eventFreeFiltered];
-  const { filteredList, setSearchTerm } = useSearchList(myAllEvents, 'name');
+
+  const { filteredList: eventsWithUserfiltered, setSearchTerm: setSearchTermEventWithUser } = useSearchList(
+    eventsWithEventUser,
+    'name'
+  );
+  const { filteredList: eventsFreeFiltered, setSearchTerm: setSearchTermEventsFree } = useSearchList(
+    eventFreeFiltered,
+    'name'
+  );
+
   const [isRegisteringEventUser, setIsRegisteringEventUser] = useState(false);
 
   const redirectToEventFreeAcces = async (event: any) => {
@@ -78,7 +87,18 @@ export const MyEvents = ({
               <Title level={2}>Mis eventos</Title>
             </Badge>
           }
-          extra={<Space>{myAllEvents.length > 0 && <InputSearchEvent onHandled={setSearchTerm} />}</Space>}
+          extra={
+            <Space>
+              {myAllEvents.length > 0 && (
+                <InputSearchEvent
+                  onHandled={(serchTerm) => {
+                    setSearchTermEventWithUser(serchTerm);
+                    setSearchTermEventsFree(serchTerm);
+                  }}
+                />
+              )}
+            </Space>
+          }
           style={{ width: '100%', borderRadius: 20 }}>
           <Row gutter={[0, 32]}>
             <Col span={24}>
@@ -96,11 +116,12 @@ export const MyEvents = ({
                   </div>
                 ) : (
                   <>
-                    {filteredList && filteredList.length > 0 ? (
+                    {(eventsFreeFiltered || eventsWithUserfiltered) &&
+                    (eventsFreeFiltered.length > 0 || eventsWithUserfiltered.length > 0) ? (
                       <>
-                        {filteredList.length > 0 ? (
+                        {(eventsWithUserfiltered.length > 0 || eventsFreeFiltered.length > 0)? (
                           <>
-                            {eventsWithEventUser.map((event, index) => (
+                            {eventsWithUserfiltered.map((event, index) => (
                               <Col key={event._id} xs={24} sm={12} md={12} lg={8} xl={6} xxl={4}>
                                 <EventCard
                                   bordered={false}
@@ -110,7 +131,7 @@ export const MyEvents = ({
                                 />
                               </Col>
                             ))}
-                            {eventFreeFiltered.map((event, index) => (
+                            {eventsFreeFiltered.map((event, index) => (
                               <Col
                                 key={event._id}
                                 xs={24}
