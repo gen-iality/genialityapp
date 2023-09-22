@@ -16,13 +16,12 @@ const EventCardRenderer = ({ eventDataArray, isAdmin, props, cUser }) => {
         blockedEvent: props?.cUser?.value?.plan?.availables?.later_days || eventCard.value?.later_days,
         currentUser: cUser,
       };
-
       return (
         <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
           {eventData.is_active === true ? (
             <EventCard
               {...commonProps}
-              right={isAdmin ? (
+              right={isAdmin ? [(
                 <div key={'admin'}>
                   <Link to={`/eventadmin/${eventData.event._id}`}>
                     <Space>
@@ -31,7 +30,7 @@ const EventCardRenderer = ({ eventDataArray, isAdmin, props, cUser }) => {
                     </Space>
                   </Link>
                 </div>
-              ) : null}
+              )] : null}
             />
           ) : (
             <BlockedEventCard event={eventData.event} />
