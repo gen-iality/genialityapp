@@ -62,7 +62,7 @@ class EventCard extends Component {
           const validNames = possibleNames.filter((name) => name);
           return validNames.map((name, index) => <span key={index}>{name}</span>);
         }
-      } else if (currentPath === '/myprofile/organization') {
+      } else if (currentPath === '/myprofile/organization' | currentPath === '/myprofile') {
         // Ruta "/myprofile": Muestra solo el nombre de la organización o del autor
         if (event.organizer?.name) {
           return <span>{event.organizer.name}</span>;
