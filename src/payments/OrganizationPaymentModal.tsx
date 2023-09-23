@@ -102,22 +102,24 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
     console.log('moreCustomData:', moreCustomData)
     /// @ts-ignore
     /// WIDGET de WOMPI viene importado de forma global
-    return new WidgetCheckout({
-      currency: 'COP',
-      amountInCents: calcPrice(money),
-      name: `Suscripción a la organización: ${organization.name}`,
-      description: 'Paga aquí tu suscripción usando el medio de pago disponible',
-      reference: `${new Date().getTime()}-${organization._id}-${
-        organizationUser.account_id
-      }`,
-      publicKey: publicKeyW,
-      redirectUrl,
-      customerData: {
-        email: organizationUser.user.email,
-        fullName: organizationUser.user.names,
-        ...moreCustomData,
-      },
-    })
+    return !organization || !organizationUser
+      ? '<p></p>'
+      : new WidgetCheckout({
+          currency: 'COP',
+          amountInCents: calcPrice(money),
+          name: `Suscripción a la organización: ${organization.name}`,
+          description: 'Paga aquí tu suscripción usando el medio de pago disponible',
+          reference: `${new Date().getTime()}-${organization._id}-${
+            organizationUser.account_id
+          }`,
+          publicKey: 'pub_prod_SJtHVutpd9crWD84AvBY5oJKzUKWxLqb', //publicKeyW,
+          redirectUrl,
+          customerData: {
+            email: organizationUser.user.email,
+            fullName: organizationUser.user.names,
+            ...moreCustomData,
+          },
+        })
   }, [redirectUrl, organizationUser, money])
 
   useEffect(() => {
