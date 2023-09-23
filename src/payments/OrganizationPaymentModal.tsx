@@ -117,7 +117,7 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
           customerData: {
             email: organizationUser.user.email,
             fullName: organizationUser.user.names,
-            ...moreCustomData,
+            //...moreCustomData,
           },
         })
   }, [redirectUrl, organizationUser, money])
