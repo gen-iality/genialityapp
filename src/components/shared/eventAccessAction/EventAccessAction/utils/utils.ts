@@ -35,7 +35,7 @@ const EXTERNAL_REDIRECT_COPYS: CopyStatus = {
 const internalOrExternalEvent = ({ cEvent, history }: internalOrExternalEventInterface) => {
 	const { confirm } = Modal;
 	const eventId = cEvent?._id;
-
+	const organizationId = cEvent?.organizer_id
 	if (cEvent?.where_it_run === 'InternalEvent') {
 		//The user's session is saved for the current event
 		window.sessionStorage.setItem('session', cEvent?._id);
@@ -49,8 +49,11 @@ const internalOrExternalEvent = ({ cEvent, history }: internalOrExternalEventInt
 	}
 
 	const withURL: Status = !!cEvent?.url_external ? 'withURL' : 'noURL';
+	
+	// const isArkMedEvent = !!eventId ? ['6414c5bfecd0614a5c087352'].includes(eventId) : false;
 
-	const isArkMedEvent = !!eventId ? ['6414c5bfecd0614a5c087352'].includes(eventId) : false;
+	const isArkMedEvent = !!organizationId ? ['6435b160705b239e5506c727','6414c574211337f07601ae13'].includes(organizationId) : false;
+
 
 	if (isArkMedEvent) {
 		window.open(cEvent?.url_external, '_blank');

@@ -55,7 +55,7 @@ const ChatList = (props) => {
 
   if (
     (iAmRegisteredInThisEvent(cEventUser) === 'LOADING' || iAmRegisteredInThisEvent(cEventUser) === 'NOT_REGISTERED') &&
-    recordTypeForThisEvent(cEvent) == 'UN_REGISTERED_PUBLIC_EVENT' &&
+    recordTypeForThisEvent(cEvent) === 'UN_REGISTERED_PUBLIC_EVENT' &&
     props.generalTabs?.publicChat
   ) {
     return <AnonymousEvenUserForm />;
@@ -94,6 +94,7 @@ const ChatList = (props) => {
               '&mode=' +
               isStagingOrProduccion() 
                +`&control=${configChat?.message_controlled}`
+               +`&message_highlighted=${configChat?.message_highlighted ? configChat?.message_highlighted : '' }`
             }></iframe>
         </TabPane>
       )}
@@ -151,6 +152,7 @@ const ChatList = (props) => {
                   isStagingOrProduccion() +
                   '&control=' +
                   isStagingOrProduccion()
+                  +`&message_highlighted=${configChat?.message_highlighted ? configChat?.message_highlighted : '' }`
                 }></iframe>
             </>
           )}

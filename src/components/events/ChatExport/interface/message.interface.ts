@@ -16,4 +16,5 @@ export interface IMessage {
 
 export interface IConfigChat {
     message_controlled: boolean;
+    message_highlighted?: string | undefined;
 }
