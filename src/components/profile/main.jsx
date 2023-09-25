@@ -571,9 +571,6 @@ const MainProfile = () => {
                         return (
                           <Col key={index} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
                             <OrganizationCard data={organization} />
-                            {OrganizationApi.isAdminOfItsFirstOrganization(
-                              organizations,
-                            ) && <p>fallo</p>}
                           </Col>
                         )
                       })}
