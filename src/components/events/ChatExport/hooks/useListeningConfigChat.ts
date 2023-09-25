@@ -3,7 +3,7 @@ import { listeningConfigChat } from '@/components/games/bingo/services';
 import { IConfigChat } from '../interface/message.interface';
 
 const useListeningConfigChat = (eventId: string) => {
-    const [configChat, setConfigChat] = useState<IConfigChat>({ message_controlled: false } as IConfigChat);
+    const [configChat, setConfigChat] = useState<IConfigChat>({ message_controlled: false, message_highlighted: '' } as IConfigChat);
     const [isLoading, setisLoading] = useState(true);
 
     const onSetConfigChat = (configChatRealTime: IConfigChat) => {
