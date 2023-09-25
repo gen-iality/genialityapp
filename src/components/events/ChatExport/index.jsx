@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-console */
 import { useEffect, useState } from 'react';
 import { Tag, Button, Modal, Row, Col, Tooltip, Tabs, Badge } from 'antd';
 import { ExclamationCircleOutlined, DeleteOutlined, DownloadOutlined, ReloadOutlined } from '@ant-design/icons';
@@ -13,6 +16,8 @@ import { DispatchMessageService } from '../../../context/MessageService';
 import { useHelper } from '@/context/helperContext/hooks/useHelper';
 import { UseEventContext } from '@/context/eventContext';
 import ChatSettings from './ChatSettings';
+import HighlightedMessageComponent from './components/HighlightedMessageComponent';
+import useGetEventConfig from './hooks/useGetEventConfig';
 
 const { TabPane } = Tabs;
 
@@ -34,7 +39,7 @@ const ChatExport = ({ eventId, event }) => {
   let [listUsersBlocked, setlistUsersBlocked] = useState([]);
   let cEvent = UseEventContext();
   const { eventIsActive } = useHelper();
-
+  const { eventConfigChat } = useGetEventConfig(eventId);
   const renderMensaje = (text, record) => (
     <Tooltip title={record.text} placement='topLeft'>
       <Tag color='#3895FA'>{record.text}</Tag>
@@ -434,6 +439,15 @@ const ChatExport = ({ eventId, event }) => {
         <ChatSettings
         eventId={eventId}
         />
+      </TabPane>
+      <TabPane
+        tab={
+          <Badge count={listUsersBlocked.length} offset={[8, 0]}>
+            Mensajes destacados
+          </Badge>
+        }
+        >
+        <HighlightedMessageComponent eventId={eventId} highlightedMessage={eventConfigChat?.message_highlighted || ''}/>
       </TabPane>
     </Tabs>
   );

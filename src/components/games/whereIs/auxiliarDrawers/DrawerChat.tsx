@@ -4,7 +4,8 @@ import { UseCurrentUser } from '@/context/userContext';
 import { isStagingOrProduccion } from '@/Utilities/isStagingOrProduccion';
 import { CommentOutlined } from '@ant-design/icons';
 import { Drawer, PageHeader, Typography } from 'antd';
-import { DrawerChatInterface } from '../../interfaces/bingo';
+import { DrawerChatInterface } from '../../bingo/interfaces/bingo';
+import useListeningConfigChat from '@/components/events/ChatExport/hooks/useListeningConfigChat';
 
 const { Title } = Typography;
 
@@ -15,7 +16,7 @@ const DrawerChat = ({ showDrawerChat, setshowDrawerChat }: DrawerChatInterface) 
 
   let userNameActive = cUser.value?.name ? cUser.value?.name : cUser.value?.names;
   let anonymous = cUser.value?.isAnonymous ? cUser.value?.isAnonymous : 'false';
-
+  const { configChat } = useListeningConfigChat(cEvent.value?._id);
   return (
     <Drawer
       bodyStyle={{ padding: '0px' }}
@@ -60,6 +61,7 @@ const DrawerChat = ({ showDrawerChat, setshowDrawerChat }: DrawerChatInterface) 
           anonymous +
           '&mode=' +
           isStagingOrProduccion()
+          +`&message_highlighted=${configChat?.message_highlighted ? configChat?.message_highlighted : '' }`
         }></iframe>
     </Drawer>
   );

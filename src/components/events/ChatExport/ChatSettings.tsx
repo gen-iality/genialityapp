@@ -3,7 +3,6 @@ import { Form, Switch } from 'antd';
 import MessageList from './components/MessageList';
 import useGetEventConfig from './hooks/useGetEventConfig';
 import { updateConfigChat } from '@/components/games/bingo/services';
-import useListeningConfigChat from './hooks/useListeningConfigChat';
 
 interface IChatSettingsProps {
   eventId: string;
