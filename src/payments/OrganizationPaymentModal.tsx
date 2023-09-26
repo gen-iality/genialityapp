@@ -4,6 +4,7 @@ import OrganizationPaymentContext from './OrganizationPaymentContext'
 import { OrganizationUserType } from '@Utilities/types/OrganizationUserType'
 import { StateMessage } from '@context/MessageService'
 import { notification } from 'antd'
+import useIsDevOrStage from '@/hooks/useIsDevOrStage'
 
 const publicKey: string = import.meta.env.VITE_WOMPI_DEV_PUB_API_KEY
 
@@ -36,6 +37,8 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
   const { organizationUser, organization } = props
   console.log('organizationUser', organizationUser)
 
+  const { isDev, isStage } = useIsDevOrStage()
+
   // Función para obtener la llave pública de la organización en modo de pruebas en caso de que exista,
   // de lo contrario se retorna la llave pública establecida en las env's.
 
@@ -43,13 +46,15 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
     //aquí se establece la llave pública de la organización en modo de pruebas, si se va para prod cambiar a publicKeyProd
     if (organization?.publicKeyProd) return organization?.publicKeyProd
     if (organization?.publicKeyTest) {
-      notification.open({
-        message: 'Modo de pago',
-        description: 'Estás usando el modo de PRUEBA en la parasela de pago',
-      })
+      if (isDev || isStage) {
+        notification.open({
+          message: 'Modo de pago',
+          description: 'Estás usando el modo de PRUEBA en la parasela de pago',
+        })
+      }
       return organization?.publicKeyTest
     } else return publicKey
-  }, [organization])
+  }, [organization, isDev, isStage])
 
   const money = useMemo(
     () => organization?.access_settings?.price || 50000,
