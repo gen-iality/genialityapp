@@ -1,7 +1,7 @@
 export interface State {
   modal:                   boolean;
   available:               boolean;
-  info:                    Info;
+  info:                    Info | null;
   newField:                boolean;
   loading:                 boolean;
   deleteModal:             boolean;
