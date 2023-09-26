@@ -112,7 +112,7 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
           reference: `${new Date().getTime()}-${organization._id}-${
             organizationUser.account_id
           }`,
-          publicKey: 'pub_prod_SJtHVutpd9crWD84AvBY5oJKzUKWxLqb', //publicKeyW,
+          publicKey: publicKeyW,
           redirectUrl,
           customerData: {
             email: organizationUser.user.email,
