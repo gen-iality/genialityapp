@@ -174,8 +174,8 @@ export default function DrawerAuction({
       }
       footerStyle={{backgroundColor: auction?.styles?.cards?.backgroundColor,}}
     >
-      <Row justify='center' align='middle' style={{height: '100%'}}>
-        <Col span={breakpoint === 'largeScreen' ? 16 : 24}>
+      <Row justify='center' align='middle' style={breakpoint === 'largeScreen' ? {height: '100%'} : {}}>
+        <Col span={breakpoint === 'largeScreen' ? 19 : 24}>
           <Row 
             gutter={breakpoint === 'mobile' ? [0, 16] : breakpoint === 'tablet' ? [8, 8] : [32, 32]} 
             wrap 
@@ -205,7 +205,7 @@ export default function DrawerAuction({
                       style={{
                         borderRadius: '20px',
                         backgroundColor: auction.styles?.cards?.backgroundColor || '',
-                        maxHeight: '230px',
+                        maxHeight: breakpoint === 'largeScreen' ? '350px' : '230px',
                       }}
                       bordered={false}
                       bodyStyle={{ padding: '0px 20px' }}>
@@ -218,7 +218,7 @@ export default function DrawerAuction({
                         <Tabs.TabPane key={TabsDrawerAuction.Bids} tab='Pujas'>
                           {Bids.length > 0 ? (
                             <div style={{ 
-                                height: '180px' ,
+                                height: breakpoint === 'largeScreen' ? '280px' : '180px' ,
                                 overflowY: 'auto'
                               }}
                               className='desplazar'
@@ -258,7 +258,7 @@ export default function DrawerAuction({
                           ) : (
                             <Empty
                               style={{
-                                height: '180px',
+                                height: breakpoint === 'largeScreen' ? '280px' : '180px',
                                 display: 'grid',
                                 justifyContent: 'center',
                                 alignItems: 'center',
@@ -269,7 +269,7 @@ export default function DrawerAuction({
                         </Tabs.TabPane>
                         <Tabs.TabPane key={TabsDrawerAuction.History} tab='Historial de artículos' closable>
                           <div style={{ 
-                              height: '180px' ,
+                              height: breakpoint === 'largeScreen' ? '280px' : '180px' ,
                               overflowY: 'auto'
                             }}
                             className='desplazar'
@@ -303,7 +303,7 @@ export default function DrawerAuction({
                             ) : (
                               <Empty
                                 style={{
-                                  height: '180px',
+                                  height: breakpoint === 'largeScreen' ? '280px' : '180px',
                                   display: 'grid',
                                   justifyContent: 'center',
                                   alignItems: 'center',
