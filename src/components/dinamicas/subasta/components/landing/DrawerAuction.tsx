@@ -174,7 +174,7 @@ export default function DrawerAuction({
       }
       footerStyle={{backgroundColor: auction?.styles?.cards?.backgroundColor,}}
     >
-      <Row justify='center'>
+      <Row justify='center' align='middle' style={{height: '100%'}}>
         <Col span={breakpoint === 'largeScreen' ? 16 : 24}>
           <Row 
             gutter={breakpoint === 'mobile' ? [0, 16] : breakpoint === 'tablet' ? [8, 8] : [32, 32]} 
