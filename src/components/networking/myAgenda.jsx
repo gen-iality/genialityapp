@@ -11,6 +11,7 @@ import { LeftOutlined } from '@ant-design/icons';
 import { getConfig } from './services/configuration.service';
 import { isMobile } from 'react-device-detect';
 import { useIntl } from 'react-intl';
+import useListeningConfigChat from '../events/ChatExport/hooks/useListeningConfigChat';
 
 function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   const [enableMeetings, setEnableMeetings] = useState(false);
@@ -61,7 +62,8 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   if (currentRoom) {
     const {userEmail, userName} = defineName()
 
-
+    const { configChat } = useListeningConfigChat(event.value?._id);
+    console.log(configChat);
     return (
       <Row align='middle' gutter={[16, 16]}>
         <Col span={24}>
@@ -117,6 +119,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                       '&version=0.0.2' +
                       '&mode=' +
                       isStagingOrProduccion()
+                      +`&message_highlighted=${configChat?.message_highlighted ? configChat?.message_highlighted : '' }`
                     }></iframe>
                 )}
               </Col>
@@ -145,6 +148,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                     '&version=0.0.2' +
                     '&mode=' +
                     isStagingOrProduccion()
+                    +`&message_highlighted=${configChat?.message_highlighted ? configChat?.message_highlighted : '' }`
                   }></iframe>
               )}
           </Drawer>
