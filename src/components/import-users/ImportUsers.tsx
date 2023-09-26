@@ -113,7 +113,11 @@ const ImportUsers: FunctionComponent<IImportUsersProps> = (props) => {
                 return true
               })
               .map((item) => {
-                if (item.rol_name === undefined) {
+                if (
+                  item.rol_name === undefined ||
+                  item.rol_name === null ||
+                  !item.rol_name.toString().trim()
+                ) {
                   item.rol_name = typeof item.rol === 'string' ? item.rol : 'Attendee' // I see that the backend needs this and validate that this exists
                 }
                 return item
