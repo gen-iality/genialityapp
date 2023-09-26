@@ -49,7 +49,7 @@ export const InitialModalState : Products = {
   type : 'just-auction',
 };
 
-export const DATE_FORMAT = 'YYYY-MM-DD hh:mm A';
+export const DATE_FORMAT = 'YYYY-MM-DD hh:mm:ss A';
 
 
 export const orgOfferds = (Bids : IBids[]) => {

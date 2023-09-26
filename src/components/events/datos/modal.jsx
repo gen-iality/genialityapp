@@ -123,7 +123,7 @@ class DatosModal extends Component {
   }
 
   componentDidMount() {
-    if (this.props.info) this.setState({ info: this.props.info });
+    if (this.props.info !== undefined && this.props.info !== null) this.setState({ info: this.props.info });
   }
 
   generateFieldNameForLabel(name, value) {
@@ -153,17 +153,6 @@ class DatosModal extends Component {
     this.setState({ info: tmpInfo });
   };
 
-  validForm = () => {
-    const { name, label, type, options } = this.state.info;
-    let valid = !(name.length > 0 && label.length > 0 && type !== '');
-    if (type === 'list') {
-      valid = !(!valid && options && options.length > 0);
-      if (!options) {
-        this.setState({ info: { ...this.state.info, options: [] } });
-      }
-    }
-    this.setState({ valid });
-  };
   //Cambiar mandatory del campo del evento o lista
   changeFieldjustonebyattendee = () => {
     this.setState((prevState) => {
@@ -199,24 +188,41 @@ class DatosModal extends Component {
     this.setState({ info: { ...this.state.info, options: option } }, this.validForm);
   };
 
+  validForm = () => {
+    const { name, label, type, options } = this.state.info;
+    let valid = !(name.length > 0 && label.length > 0 && type !== '');
+    if (type === 'list') {
+      valid = !(!valid && options && options.length > 0);
+      if (!options) {
+        this.setState({ info: { ...this.state.info, options: [] } });
+      }
+    }
+    this.setState({ valid });
+  };
+
   //funciona pra crear datos predeterminados
 
   handleKeyDown = (event) => {
-    const { inputValue , info } = this.state;
+    const { inputValue, info } = this.state;
     const value = inputValue;
-    const exist = info.options.find((item)=> item.label === value)
-    if(exist) {
-      DispatchMessageService({
-        type: 'error',
-        msj: `La opcion ya se encuentra registrada`,
-        action: 'show',
-      });
-    }
+    const exist = info.options.find((item) => item.label === value);
+
     if (!value) return;
     switch (event.keyCode) {
       case 9:
       case 13:
-        if(!exist) this.setState({ inputValue: '', info: { ...this.state.info, options: [...(this.state.info?.options || []), createOption(value)] },});
+        if (exist) {
+          DispatchMessageService({
+            type: 'error',
+            msj: `La opcion ya se encuentra registrada`,
+            action: 'show',
+          });
+        }
+        if (!exist)
+          this.setState({
+            inputValue: '',
+            info: { ...this.state.info, options: [...(this.state.info?.options || []), createOption(value)] },
+          });
         event.preventDefault();
         break;
       // eslint-disable-next-line no-empty
@@ -346,7 +352,10 @@ class DatosModal extends Component {
               onChange={(value) => this.handleChange({ target: { name: 'type', value: value } })}></Select>
           </Form.Item>
 
-          {(info.type === 'list'  || info.type === 'list_type_user' || info.type === 'multiplelist' || info.type === 'multiplelisttable') && (
+          {(info.type === 'list' ||
+            info.type === 'list_type_user' ||
+            info.type === 'multiplelist' ||
+            info.type === 'multiplelisttable') && (
             <CreatableSelect
               components={{ DropdownIndicator: null }}
               inputValue={inputValue}

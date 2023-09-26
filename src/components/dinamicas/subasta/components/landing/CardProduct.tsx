@@ -6,7 +6,7 @@ import CardTextOutlineIcon from '@2fd/ant-design-icons/lib/CardTextOutline';
 import useBreakpoint from 'use-breakpoint'
 
 /* const {useBreakpoint} = Grid; */
-const BREAKPOINTS = { mobile: 0, tablet: 768, desktop: 1280 }
+const BREAKPOINTS = { mobile: 0, tablet: 768, desktop: 1280, largeScreen: 1920 }
 
 export default function CardProduct({auction, currentPrice} : Partial<CardProductProps>) {
 /*   const screens = useBreakpoint(); */
@@ -18,7 +18,7 @@ export default function CardProduct({auction, currentPrice} : Partial<CardProduc
       <Card
         bordered={false}
         hoverable={false}
-        style={{ maxHeight: breakpoint === 'mobile' ? 400 : 630, borderRadius: 20 , backgroundColor: auction?.styles?.cards?.backgroundColor || ''}}
+        style={{ maxHeight: breakpoint === 'mobile' ? 400 : breakpoint === 'largeScreen' ? 900 : 630, borderRadius: 20 , backgroundColor: auction?.styles?.cards?.backgroundColor || ''}}
         headStyle={{ textAlign: 'center' }}
 
         cover={
@@ -40,7 +40,7 @@ export default function CardProduct({auction, currentPrice} : Partial<CardProduc
                     alt='imagen del producto'
                     src={auction?.currentProduct.images[0].url}
                     style={{ 
-                      height: '490px',
+                      height: breakpoint === 'largeScreen' ? '600px' : '490px',
                       objectFit: 'fill',
                       backgroundColor: '#C4C4C440', 
                       borderRadius: '20px 20px 0 0px' 
@@ -51,7 +51,7 @@ export default function CardProduct({auction, currentPrice} : Partial<CardProduc
           ) : (
             <Empty
               image={<Skeleton.Image className='animate__animated animate__flipInX' />}
-              style={{ height: breakpoint === 'mobile' ? '260px' : '410px', display: 'grid', justifyContent: 'center', alignItems: 'center' }}
+              style={{ height: breakpoint === 'mobile' ? '260px' : breakpoint === 'largeScreen' ? '600px' : '410px', display: 'grid', justifyContent: 'center', alignItems: 'center' }}
               description={<div style={{color: getCorrectColor(auction?.styles?.cards?.backgroundColor)}}>Sin imagen</div>}
             />
           )
@@ -86,7 +86,7 @@ export default function CardProduct({auction, currentPrice} : Partial<CardProduc
                       }}
                       icon={<CardTextOutlineIcon />}
                     >
-                      {breakpoint === 'desktop' && 'Ver descripción'}
+                      {(breakpoint === 'desktop' || breakpoint === 'largeScreen') && 'Ver descripción'}
                     </Button>
                     <Modal
                       visible={openDescription}

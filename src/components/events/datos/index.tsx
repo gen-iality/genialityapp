@@ -34,7 +34,7 @@ export default function Datos(props: any) {
 	const [state, setState] = useState<State>({
 		modal: false,
 		available: false,
-		info: {},
+		info: null,
 		newField: false,
 		loading: true,
 		deleteModal: false,
@@ -267,7 +267,7 @@ export default function Datos(props: any) {
 	};
 
 	const closeModal2 = () => {
-		setState(prev => ({ ...prev, info: {}, modal: false, edit: false }));
+		setState(prev => ({ ...prev, info: null, modal: false, edit: false }));
 	};
 	//Borrar dato de la lista
 	const removeField = async (item: any, checkInFieldsDelete?: any) => {
@@ -331,7 +331,7 @@ export default function Datos(props: any) {
 	};
 
 	const closeModal = () => {
-		setState(prev => ({ ...prev, inputValue: '', modal: false, info: {}, edit: false }));
+		setState(prev => ({ ...prev, inputValue: '', modal: false, info: null, edit: false }));
 	};
 
 	const showError = (error: any) => {
