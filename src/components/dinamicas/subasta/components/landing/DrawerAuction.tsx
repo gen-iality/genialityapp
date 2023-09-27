@@ -328,7 +328,7 @@ export default function DrawerAuction({
                   <Form onFinish={onBid} layout='vertical' style={{ margin: 10 }}>
                     <Form.Item
                       name={'offerValue'}
-                      label='Desea confirmar el valor de la puja'
+                      label='¡Puja Ahora! el valor de tu puja es:'
                       className={haveMount  ?  'input_center' : ''}
                       initialValue={(Bids[0]?.offered ??  auction.currentProduct?.start_price) + (auction.amount ?? 0)}
                       rules={[
