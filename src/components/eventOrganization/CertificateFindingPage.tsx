@@ -1,6 +1,4 @@
 import { SearchOutlined } from '@ant-design/icons'
-import { StateMessage } from '@context/MessageService'
-import { OrganizationApi } from '@helpers/request'
 import {
   Badge,
   Button,
@@ -13,80 +11,18 @@ import {
   Spin,
   Typography,
 } from 'antd'
-import { FunctionComponent, useEffect, useState } from 'react'
+import { FunctionComponent } from 'react'
 import { useParams } from 'react-router'
+import useCertificateFinder from './hooks/useCertificateFinder'
 
 interface ICertificateFindingPageProops {}
 
 const CertificateFindingPage: FunctionComponent<ICertificateFindingPageProops> = () => {
-  const [isLoading, setIsLoading] = useState(false)
-  const [isSearching, setIsSearching] = useState(false)
-  const [searchText, setSearchText] = useState('')
-  const [searchedItems, setSearchedItems] = useState<any[]>([])
-  const [organization, setOrganization] = useState<any | null>(null)
-
   const params = useParams()
   const orgId = params.id
 
-  const search: (value: string) => Promise<any[]> = async (value) => {
-    if (!orgId) {
-      console.warn('orgId is invalid yet')
-      return []
-    }
-
-    console.debug(`searching for "${value}"...`)
-    // Wait for the backend development...
-    try {
-      const results = await OrganizationApi.searchCertificate(orgId, value)
-      console.debug(results)
-      return results
-        .sort((a, b) => {
-          return (a?.valoration ?? 0) - (b?.valoration ?? 0)
-        })
-        .reverse()
-        .map(({ organizationMember }) => organizationMember)
-    } catch (err: any) {
-      console.error(err)
-      if (err.response?.data?.error) {
-        StateMessage.show(null, 'error', err.response?.data?.error)
-      }
-    }
-    return []
-  }
-
-  const startSearching = () => {
-    if (!searchText) return
-
-    setIsSearching(true)
-    search(searchText)
-      .then((values) => {
-        setSearchedItems(values)
-      })
-      .finally(() => {
-        setIsSearching(false)
-      })
-  }
-
-  const onSearch = () => {
-    startSearching()
-  }
-
-  useEffect(() => {
-    if (!orgId) return
-
-    setIsLoading(true)
-    OrganizationApi.getOne(orgId)
-      .then((value) => {
-        setOrganization(value)
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
-  }, [orgId])
-
-  //   useEffect(() => {
-  //     startSearching()
-  //   }, [searchText])
+  const { isLoading, isSearching, organization, items, search, pattern, updatePattern } =
+    useCertificateFinder(orgId)
 
   if (isLoading) {
     return <Spin size="large" spinning tip="Cargando datos de la organización" />
@@ -117,12 +53,12 @@ const CertificateFindingPage: FunctionComponent<ICertificateFindingPageProops> =
               autoFocus
               size="large"
               style={{ width: '400px' }}
-              value={searchText}
-              onChange={(event) => setSearchText(event.target.value)}
+              value={pattern}
+              onChange={(event) => updatePattern(event.target.value)}
               placeholder="Término a buscar: correo, nombre, etc. (quizás)"
-              onPressEnter={onSearch}
+              onPressEnter={() => search()}
             />
-            <Button icon={<SearchOutlined />} size="large" onClick={onSearch}>
+            <Button icon={<SearchOutlined />} size="large" onClick={() => search()}>
               Buscar
             </Button>
           </Space>
@@ -132,10 +68,10 @@ const CertificateFindingPage: FunctionComponent<ICertificateFindingPageProops> =
       <Row gutter={[16, 16]} style={{ margin: 15 }}>
         <Col flex="auto">
           <List
-            dataSource={searchedItems}
+            dataSource={items}
             loading={isSearching}
-            header={`${searchedItems.length} Resultados`}
-            footer={searchText ? `término buscado: ${searchText}` : undefined}
+            header={`${items.length} Resultados`}
+            footer={pattern ? `término buscado: ${pattern}` : undefined}
             renderItem={(item) => (
               <List.Item style={{ width: '100%' }}>
                 <Row
