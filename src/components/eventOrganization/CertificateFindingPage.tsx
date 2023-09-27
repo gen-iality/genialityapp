@@ -1,6 +1,18 @@
 import { SearchOutlined } from '@ant-design/icons'
+import { StateMessage } from '@context/MessageService'
 import { OrganizationApi } from '@helpers/request'
-import { Button, Col, Input, List, Result, Row, Space, Spin } from 'antd'
+import {
+  Badge,
+  Button,
+  Col,
+  Input,
+  List,
+  Result,
+  Row,
+  Space,
+  Spin,
+  Typography,
+} from 'antd'
 import { FunctionComponent, useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 
@@ -17,8 +29,28 @@ const CertificateFindingPage: FunctionComponent<ICertificateFindingPageProops> =
   const orgId = params.id
 
   const search: (value: string) => Promise<any[]> = async (value) => {
+    if (!orgId) {
+      console.warn('orgId is invalid yet')
+      return []
+    }
+
     console.debug(`searching for "${value}"...`)
     // Wait for the backend development...
+    try {
+      const results = await OrganizationApi.searchCertificate(orgId, value)
+      console.debug(results)
+      return results
+        .sort((a, b) => {
+          return (a?.valoration ?? 0) - (b?.valoration ?? 0)
+        })
+        .reverse()
+        .map(({ organizationMember }) => organizationMember)
+    } catch (err: any) {
+      console.error(err)
+      if (err.response?.data?.error) {
+        StateMessage.show(null, 'error', err.response?.data?.error)
+      }
+    }
     return []
   }
 
@@ -99,10 +131,37 @@ const CertificateFindingPage: FunctionComponent<ICertificateFindingPageProops> =
       <Row gutter={[16, 16]} style={{ margin: 15 }}>
         <Col flex="auto">
           <List
-            dataSource={[]}
+            dataSource={searchedItems}
             loading={isSearching}
             header={`${searchedItems.length} Resultados`}
             footer={searchText ? `término buscado: ${searchText}` : undefined}
+            renderItem={(item) => (
+              <List.Item style={{ width: '100%' }}>
+                <Row
+                  gutter={[10, 10]}
+                  style={{
+                    width: '100%',
+                  }}
+                  wrap={false}
+                >
+                  <Col flex="200px">
+                    <Typography.Title level={5}>{item.user?.names}</Typography.Title>
+                  </Col>
+
+                  <Col flex="300px">
+                    <Typography.Text>{item.user?.email}</Typography.Text>
+                  </Col>
+
+                  <Col flex="auto"></Col>
+
+                  <Col>
+                    <Button type="text" disabled>
+                      <Badge count="Certificado" style={{ backgroundColor: 'red' }} />
+                    </Button>
+                  </Col>
+                </Row>
+              </List.Item>
+            )}
           />
         </Col>
       </Row>
