@@ -87,7 +87,7 @@ const CertificateFindingPage: FunctionComponent<ICertificateFindingPageProops> =
               style={{ width: '400px' }}
               value={searchText}
               onChange={(event) => setSearchText(event.target.value)}
-              placeholder="Término a buscar: correo, nombre, IDs, etc."
+              placeholder="Término a buscar: correo, nombre, etc. (quizás)"
             />
             <Button icon={<SearchOutlined />} size="large" onClick={onSearch}>
               Buscar
