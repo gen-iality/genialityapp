@@ -346,8 +346,8 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       filterSearch: true,
       onFilter: (value, record) => {
         if (value === 'attendees') {
-          return record.checkedin_at !== null
-        } else return record.checkedin_at === null
+          return record.checked_in
+        } else return !record.checked_in
       },
       render: (item) => (
         <AttendeeCheckInCheckbox
