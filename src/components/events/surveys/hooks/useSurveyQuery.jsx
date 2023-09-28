@@ -51,6 +51,7 @@ function useSurveyQuery(eventId, idSurvey, isResetingSurvey) {
 
   //no realtime Query
   useEffect(() => {
+    if (!eventId) return
     if (!idSurvey) return
     if (!currentUser.value?._id) return
     const innerAsyncCall = async () => {
@@ -66,10 +67,11 @@ function useSurveyQuery(eventId, idSurvey, isResetingSurvey) {
       setInnerQuery(loadedSurvey)
     }
     innerAsyncCall()
-  }, [idSurvey, currentUser.value, isResetingSurvey])
+  }, [idSurvey, eventId, currentUser.value, isResetingSurvey])
 
   //realtime Query
   useEffect(() => {
+    if (!idSurvey) return
     function handleRealTimeCallback(surveyStatus) {
       setInnerRealTimeQuery(surveyStatus)
     }
