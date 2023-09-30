@@ -43,6 +43,7 @@ import SharePhoto from '../games/sharePhoto';
 import WhoWantsToBeAMillonaire from '../games/WhoWantsToBeAMillonaire';
 import Assembly from '../assembly';
 import auctionModule from '../dinamicas/subasta';
+import Scorm from './informativeSections/Scorm';
 
 const { Sider, Content } = Layout;
 //import Styles from '../App/styles';
@@ -412,6 +413,13 @@ class Event extends Component {
               <Protected
                 path={`${match.url}/informativesection`}
                 component={Informativesection}
+                eventId={event._id}
+                event={event}
+                url={match.url}
+              />
+              <Protected
+                path={`${match.url}/informativesectionhtml`}
+                component={Scorm}
                 eventId={event._id}
                 event={event}
                 url={match.url}

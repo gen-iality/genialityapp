@@ -24,16 +24,11 @@ export default function AdmininformativeSection1(props) {
         checked: true,
         permissions: 'public',
       };
-
-      informativeMenu =
-        eventContext.value.itemsMenu && eventContext.value.itemsMenu.informativeSection1
-          ? eventContext.value.itemsMenu.informativeSection1
-          : informativeMenu;
-      informativeMenu = { ...informativeMenu, markup: content };
+      const informativeMenu1 = { ...informativeMenu, markup: content };
       const data = {
         itemsMenu: {
           ...eventContext.value.itemsMenu,
-          informativeSection1: informativeMenu,
+          informativeSection1: informativeMenu1,
         },
       };
       /* console.log('minu', data); */

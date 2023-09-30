@@ -111,7 +111,8 @@ function ThisRouteCanBeDisplayed({ children }) {
         return component;
       case 'informativeSection1':
         return component;
-
+      case 'informativeSection':
+        return component;
       default:
         return (
           <Result

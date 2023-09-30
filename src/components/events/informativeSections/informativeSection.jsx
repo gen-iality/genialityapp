@@ -25,12 +25,11 @@ class InformativeSection extends Component {
       ellipsis: true,
     };
   }
-
   componentDidMount() {
     this.props.setVirtualConference(false);
     this.setState({
       informativeSection: this.props.cEvent.value.itemsMenu.informativeSection,
-      markup: this.props.cEvent.value.itemsMenu.informativeSection.markup,
+      markup: this.props.cEvent.value.itemsMenu.informativeSection?.markup,
     });
     //OBTENER GALERIA
     // EventsApi.getGallery(this.props.cEvent.value._id).then((resp) => {
