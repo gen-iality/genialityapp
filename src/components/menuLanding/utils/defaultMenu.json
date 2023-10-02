@@ -103,14 +103,14 @@
     "name": "Sección Informativa",
     "position": 30,
     "section": "informativeSection",
-    "icon": "FileDoneOutlined",
+    "icon": "AuditOutlined",
     "markup": "",
     "checked": false,
     "label" : "",
     "permissions": "public"
   },
   "informativeSection1": {
-    "name": "Sección Informativa",
+    "name": "Sección Informativa 2",
     "position": 30,
     "section": "informativeSection1",
     "icon": "FileDoneOutlined",

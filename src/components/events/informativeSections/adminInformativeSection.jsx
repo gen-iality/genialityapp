@@ -10,6 +10,7 @@ import { DispatchMessageService } from '../../../context/MessageService';
 export default function AdmininformativeSection1(props) {
   const eventContext = UseEventContext();
   const [content, setContent] = useState('');
+  const [itemsMenus, setItemsMenus] = useState()
 
   const onFinish = (values) => {
     async function save() {
@@ -24,16 +25,11 @@ export default function AdmininformativeSection1(props) {
         checked: true,
         permissions: 'public',
       };
-
-      informativeMenu =
-        eventContext.value.itemsMenu && eventContext.value.itemsMenu.informativeSection1
-          ? eventContext.value.itemsMenu.informativeSection1
-          : informativeMenu;
-      informativeMenu = { ...informativeMenu, markup: content };
+      const informativeMenu1 = { ...itemsMenus?.informativeSection1, markup: content };
       const data = {
         itemsMenu: {
-          ...eventContext.value.itemsMenu,
-          informativeSection1: informativeMenu,
+          ...itemsMenus,
+          informativeSection1: informativeMenu1,
         },
       };
       /* console.log('minu', data); */
@@ -60,6 +56,7 @@ export default function AdmininformativeSection1(props) {
   useEffect(() => {
     async function getContent() {
       const result = await EventsApi.getOne(eventContext.value._id);
+      setItemsMenus(result?.itemsMenu)
       /* console.log('data', result); */
       let markup = result?.itemsMenu?.informativeSection1?.markup || '';
       setContent(markup);
