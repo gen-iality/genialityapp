@@ -43,7 +43,7 @@ import SharePhoto from '../games/sharePhoto';
 import WhoWantsToBeAMillonaire from '../games/WhoWantsToBeAMillonaire';
 import Assembly from '../assembly';
 import auctionModule from '../dinamicas/subasta';
-import Scorm from './informativeSections/Scorm';
+import SectionHtml from './informativeSections/SectionHtml';
 
 const { Sider, Content } = Layout;
 //import Styles from '../App/styles';
@@ -419,7 +419,7 @@ class Event extends Component {
               />
               <Protected
                 path={`${match.url}/informativesectionhtml`}
-                component={Scorm}
+                component={SectionHtml}
                 eventId={event._id}
                 event={event}
                 url={match.url}

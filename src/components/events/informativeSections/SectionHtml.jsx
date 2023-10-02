@@ -6,7 +6,7 @@ import { Button, Typography } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { useEffect, useState } from 'react';
 
-export default function Scorm() {
+export default function SectionHtml() {
   const eventContext = UseEventContext();
   const [htmlInput, setHtmlInput] = useState('');
   const [itemsMenus, setItemsMenus] = useState()
