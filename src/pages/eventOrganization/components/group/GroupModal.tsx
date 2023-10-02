@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react';
 import { Button, Form, Input, Modal, ModalProps, Switch } from 'antd';
 import { GroupEvent, GroupEventMongo } from '../../interface/group.interfaces';
 import { DispatchMessageService } from '@/context/MessageService';
+import MyTransferComponent from '@/components/common/my-transfer/MyTransferComponent';
+import { useGetEventsByOrg } from '@/components/eventOrganization/hooks/useGetEventsByOrg';
 
 interface Props extends ModalProps {
   onCancel: () => void;
@@ -21,7 +23,7 @@ export const GroupModal = ({
 }: Props) => {
   const inputRef = useRef<any>();
   const [form] = Form.useForm<GroupEvent>();
-
+  const { eventsByOrg, isLoadingEventsByOrg } = useGetEventsByOrg(organizationId);
   const onAddGroup = async (newGroupData: GroupEvent) => {
     try {
       await handledAddGroup({
@@ -70,6 +72,16 @@ export const GroupModal = ({
       <Form form={form} onFinish={selectedGroup ? onEditGroup : onAddGroup} layout='vertical'>
         <Form.Item name={'name'} label={<label>Nombre</label>}>
           <Input ref={inputRef} placeholder={'Ingrese el nombre del grupo'} maxLength={20} />
+        </Form.Item>
+        <Form.Item
+          label={'Eventos'}
+          name={'events'}
+          // rules={rules}
+        >
+          <MyTransferComponent
+            dataSource={eventsByOrg.map((event) => ({ ...event, title: event.name, key: event._id }))}
+            selectedRowKey={(recorder) => recorder._id}
+          />
         </Form.Item>
         <Form.Item
           valuePropName='checked'
