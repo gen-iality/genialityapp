@@ -9,17 +9,17 @@ import { useEffect, useState } from 'react';
 export default function Scorm() {
   const eventContext = UseEventContext();
   const [htmlInput, setHtmlInput] = useState('');
-  
+  const [itemsMenus, setItemsMenus] = useState()
   const handleInputChange = (event) => {
     setHtmlInput(event.target.value);
   };
 
   const onFinish = async () => {
     try {
-      const informativeMenuHtml = { ...eventContext.value?.itemsMenu?.informativeSection, markup: htmlInput }
+      const informativeMenuHtml = { ...eventContext.value?.itemsMenu?.informativeSection, markup: htmlInput };
       const data = {
         itemsMenu: {
-          ...eventContext.value.itemsMenu,
+          ...itemsMenus,
           informativeSection: informativeMenuHtml,
         },
       };
@@ -37,11 +37,11 @@ export default function Scorm() {
       });
     }
   };
-  
 
   useEffect(() => {
     async function getContent() {
       const result = await EventsApi.getOne(eventContext.value._id);
+      setItemsMenus(result?.itemsMenu)
       let markup = result?.itemsMenu?.informativeSection?.markup || '';
       setHtmlInput(markup);
     }

@@ -127,7 +127,7 @@ class InformativeSection extends Component {
     const { Paragraph } = Typography;
     return (
       <Fragment>
-        {informativeSection !== null && (
+        {(informativeSection !== null && informativeSection !== undefined) && (
           <div className='site-card-border-less-wrapper' style={{ marginTop: 35 }}>
             <Card
               title={informativeSection.name || 'clasificación'}
