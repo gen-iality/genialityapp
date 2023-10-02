@@ -13,10 +13,9 @@ export default function Scorm() {
   const handleInputChange = (event) => {
     setHtmlInput(event.target.value);
   };
-
   const onFinish = async () => {
     try {
-      const informativeMenuHtml = { ...eventContext.value?.itemsMenu?.informativeSection, markup: htmlInput };
+      const informativeMenuHtml = { ...itemsMenus?.informativeSection, markup: htmlInput };
       const data = {
         itemsMenu: {
           ...itemsMenus,

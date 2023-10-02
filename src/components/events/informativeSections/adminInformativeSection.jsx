@@ -25,7 +25,7 @@ export default function AdmininformativeSection1(props) {
         checked: true,
         permissions: 'public',
       };
-      const informativeMenu1 = { ...informativeMenu, markup: content };
+      const informativeMenu1 = { ...itemsMenus?.informativeSection1, markup: content };
       const data = {
         itemsMenu: {
           ...itemsMenus,
