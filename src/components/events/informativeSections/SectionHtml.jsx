@@ -52,7 +52,7 @@ export default function Scorm() {
       <TextArea value={htmlInput} onChange={handleInputChange} rows={4} />
       <div dangerouslySetInnerHTML={{ __html: htmlInput }} />
       <Button type='primary' onClick={onFinish}>
-        Enviar Datos
+        Gruardar
       </Button>
     </>
   );
