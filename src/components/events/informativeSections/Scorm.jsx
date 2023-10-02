@@ -16,16 +16,7 @@ export default function Scorm() {
 
   const onFinish = async () => {
     try {
-      const informativeMenu = {
-        name: 'Sección informativa',
-        position: 30,
-        section: 'informativeSection',
-        icon: 'AuditOutlined',
-        markup: null,
-        checked: true,
-        permissions: 'public',
-      };
-      const informativeMenuHtml = { ...informativeMenu, markup: htmlInput }
+      const informativeMenuHtml = { ...eventContext.value?.itemsMenu?.informativeSection, markup: htmlInput }
       const data = {
         itemsMenu: {
           ...eventContext.value.itemsMenu,
