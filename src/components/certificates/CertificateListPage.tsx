@@ -45,7 +45,7 @@ const CertificateListPage: FunctionComponent<any> = (props) => {
       title="Certificados"
       back
       titleTooltip="Agregue o edite los Certificados que se muestran en la aplicación"
-      addUrl="/certificate"
+      addUrl="./certificate"
       addUrlState={{ new: true }}
       columns={columns}
       key="_id"
