@@ -21,11 +21,10 @@ class InformativeSection2 extends Component {
   }
   render() {
     const { markup, informativeSection1 } = this.state;
-
     return (
       <Row justify='center' gutter={[8, 8]} wrap>
         <Col span={23}>
-          {informativeSection1 != null && (
+          {(informativeSection1 !== null && informativeSection1 !== undefined) && (
             <div className='site-card-border-less-wrapper'>
               {this.props.cEvent.value._id != '609180c6013150612044b547' &&
                 this.props.cEvent.value._id != '60797bfb2a9cc06ce973a1f4' && (

@@ -111,6 +111,12 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
+        name: ' Contenido HTML',
+        path: '/informativesectionhtml',
+        key: 'contenido-informativo-html',
+        onClick: handleClick,
+      },
+      {
         name: '  Networking',
         path: '/reportNetworking',
         key: 'reporte-networking',

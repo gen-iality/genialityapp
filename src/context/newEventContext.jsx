@@ -295,7 +295,7 @@ export const NewEventProvider = ({ children }) => {
         delete user_propertie.created_at;
         delete user_propertie._id;
         return user_propertie;
-      });
+      }).filter(user_propertie => !['email', 'names'].includes(user_propertie.name));
     }
     
     if (state.selectOrganization) {
