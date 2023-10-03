@@ -242,6 +242,18 @@ const OrganizationMembersPage: FunctionComponent<IOrganizationMembersPageProps> 
           }
           return user
         })
+        .map((user) => {
+          if (user.payment_plan) {
+            let fieldValue = 'no pago'
+            if (user.payment_plan.price) {
+              fieldValue = `$${user.payment_plan.price}`
+            } else if (user.payment_plan.date_until) {
+              fieldValue = `Inscripción activa hasta ${user.payment_plan.date_until}`
+            }
+            user.payment_plan = fieldValue
+          }
+          return user
+        })
         .filter((user) => {
           // Before we send the user data, we have to check if its dataIndex
           // contains a filtered value to remove this value
