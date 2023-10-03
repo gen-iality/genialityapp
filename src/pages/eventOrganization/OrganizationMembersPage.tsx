@@ -244,13 +244,18 @@ const OrganizationMembersPage: FunctionComponent<IOrganizationMembersPageProps> 
         })
         .map((user) => {
           if (user.payment_plan) {
-            let fieldValue = 'no pago'
+            let fieldValue = 'Acceso'
             if (user.payment_plan.price) {
-              fieldValue = `$${user.payment_plan.price}`
-            } else if (user.payment_plan.date_until) {
-              fieldValue = `Inscripción activa hasta ${user.payment_plan.date_until}`
+              fieldValue += ` pagado $${user.payment_plan.price}`
+            }
+            if (user.payment_plan.date_until) {
+              fieldValue += ` - hasta ${dayjs(user.payment_plan.date_until).format(
+                'DD/MM/YYYY',
+              )}`
             }
             user.payment_plan = fieldValue
+          } else {
+            user.payment_plan = 'Sin acceso'
           }
           return user
         })
