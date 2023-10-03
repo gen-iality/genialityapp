@@ -80,7 +80,8 @@ export const GroupModal = ({
         >
           <MyTransferComponent
             dataSource={eventsByOrg.map((event) => ({ ...event, title: event.name, key: event._id }))}
-            selectedRowKey={(recorder) => recorder._id}
+            selectedRowKey={(recorder) => recorder.key}
+            render={(item)=>item.title}
           />
         </Form.Item>
         <Form.Item
