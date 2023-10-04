@@ -22,6 +22,7 @@ import { FB } from '@helpers/firestore-request'
 import useIsDevOrStage from '@/hooks/useIsDevOrStage'
 import orderActivities from '@components/admin/ActivityListPage/utils/order-activities'
 import MarkAsViewedButton from './MarkAsViewedButton'
+import QuizOpenStatus from './QuizOpenStatus'
 
 interface ActivitiesListProps {
   eventId: string
@@ -169,6 +170,12 @@ const ActivitiesList: FunctionComponent<ActivitiesListProps> = (props) => {
               () => (
                 <TakenActivityBadge activityId={agenda._id!} eventUserId={eventUserId} />
               ),
+              () =>
+                ![activityContentValues.quizing, activityContentValues.survey].includes(
+                  agenda.type?.name as any,
+                ) ? null : (
+                  <QuizOpenStatus activityId={agenda._id!} eventId={eventId} />
+                ),
               () =>
                 ![activityContentValues.quizing, activityContentValues.survey].includes(
                   agenda.type?.name as any,

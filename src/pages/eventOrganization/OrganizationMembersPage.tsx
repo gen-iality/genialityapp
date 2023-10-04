@@ -242,6 +242,23 @@ const OrganizationMembersPage: FunctionComponent<IOrganizationMembersPageProps> 
           }
           return user
         })
+        .map((user) => {
+          if (user.payment_plan) {
+            let fieldValue = 'Acceso'
+            if (user.payment_plan.price) {
+              fieldValue += ` pagado $${user.payment_plan.price}`
+            }
+            if (user.payment_plan.date_until) {
+              fieldValue += ` - hasta ${dayjs(user.payment_plan.date_until).format(
+                'DD/MM/YYYY',
+              )}`
+            }
+            user.payment_plan = fieldValue
+          } else {
+            user.payment_plan = 'Sin acceso'
+          }
+          return user
+        })
         .filter((user) => {
           // Before we send the user data, we have to check if its dataIndex
           // contains a filtered value to remove this value
@@ -288,11 +305,11 @@ const OrganizationMembersPage: FunctionComponent<IOrganizationMembersPageProps> 
     })
   }
 
-  const togglePaymentPlan = async (organizationMember: any) => {
-    organizationMember = {
-      ...organizationMember,
-      payment_plan: organizationMember.payment_plan
-        ? undefined
+  const togglePaymentPlan = async (_organizationMember: any) => {
+    const organizationMember = {
+      ..._organizationMember,
+      payment_plan: _organizationMember.payment_plan
+        ? null
         : {
             date_until: dayjs(Date.now())
               .add(access_settings?.days ?? 15, 'day')
@@ -301,14 +318,17 @@ const OrganizationMembersPage: FunctionComponent<IOrganizationMembersPageProps> 
           },
     }
 
-    await OrganizationApi.editUser(
+    const result = await OrganizationApi.editUser(
       organizationId,
       organizationMember._id,
       organizationMember,
     )
+    console.debug('changing payment plan: ', result)
     setIsLoading(true)
     await updateDataMembers()
-    StateMessage.show(null, 'success', 'Estado del usuario cambiado')
+
+    const moreInfo = organizationMember.payment_plan ? 'pago' : 'no pago'
+    StateMessage.show(null, 'success', 'Estado del usuario cambiado a: ' + moreInfo)
   }
 
   const columnsData = {
