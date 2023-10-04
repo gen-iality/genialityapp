@@ -305,11 +305,11 @@ const OrganizationMembersPage: FunctionComponent<IOrganizationMembersPageProps> 
     })
   }
 
-  const togglePaymentPlan = async (organizationMember: any) => {
-    organizationMember = {
-      ...organizationMember,
-      payment_plan: organizationMember.payment_plan
-        ? undefined
+  const togglePaymentPlan = async (_organizationMember: any) => {
+    const organizationMember = {
+      ..._organizationMember,
+      payment_plan: _organizationMember.payment_plan
+        ? null
         : {
             date_until: dayjs(Date.now())
               .add(access_settings?.days ?? 15, 'day')
@@ -318,14 +318,17 @@ const OrganizationMembersPage: FunctionComponent<IOrganizationMembersPageProps> 
           },
     }
 
-    await OrganizationApi.editUser(
+    const result = await OrganizationApi.editUser(
       organizationId,
       organizationMember._id,
       organizationMember,
     )
+    console.debug('changing payment plan: ', result)
     setIsLoading(true)
     await updateDataMembers()
-    StateMessage.show(null, 'success', 'Estado del usuario cambiado')
+
+    const moreInfo = organizationMember.payment_plan ? 'pago' : 'no pago'
+    StateMessage.show(null, 'success', 'Estado del usuario cambiado a: ' + moreInfo)
   }
 
   const columnsData = {
