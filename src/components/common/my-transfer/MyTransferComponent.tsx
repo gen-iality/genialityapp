@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Transfer, TransferProps } from 'antd';
 import { TransferItem } from 'antd/es/transfer';
+import { TransferDirection } from 'antd/lib/transfer';
 
 interface IMyTransferComponentProps<T extends TransferItem> extends TransferProps<T> {
   onSetTargetKey?: (selectedDataList: T[]) => void;
@@ -14,43 +15,35 @@ export const filterOption = (inputValue: string, option: any) => {
 const MyTransferComponent = <T extends TransferItem>({
   onSetTargetKey,
   selectedRowKey,
-  targetKeys,
+  targetKeys: targetKeysProps,
   dataSource,
   ...transferProps
 }: IMyTransferComponentProps<T>) => {
-  const [attendeesKeyTarget, setAttendeesKeyTarget] = useState<string[]>([]);
-  const [selectedAttendesKeys, setSelectedAttendeesKey] = useState<string[]>([]);
-  console.log('dataSource',dataSource)
-  const onChange = (nextAttendeeKeyTarget: string[]) => {
-    setAttendeesKeyTarget(nextAttendeeKeyTarget);
-    if (onSetTargetKey)
-      onSetTargetKey(dataSource.filter((item) => nextAttendeeKeyTarget.includes(selectedRowKey(item))));
+  const [targetKeys, setTargetKeys] = useState([] as string[]);
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+
+  const onChange = (nextTargetKeys: string[], direction: TransferDirection, moveKeys: string[]) => {
+    setTargetKeys(nextTargetKeys);
   };
 
   const onSelectChange = (sourceSelectedKeys: string[], targetSelectedKeys: string[]) => {
-    setSelectedAttendeesKey([...sourceSelectedKeys, ...targetSelectedKeys]);
+    setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys]);
   };
 
   useEffect(() => {
-    if (targetKeys) setAttendeesKeyTarget(targetKeys);
+    if (targetKeysProps) setTargetKeys(targetKeysProps);
   }, []);
 
   //todo: poner la regla bien ya que si vien target key del editar y no lo tocas te salta la regla
 
   return (
     <Transfer
-      rowKey={selectedRowKey}
-      listStyle={{ width: 500 }}
-      filterOption={filterOption}
-      showSearch
-      titles={['Disponibles', 'Asignados']}
-      targetKeys={attendeesKeyTarget}
-      selectedKeys={selectedAttendesKeys}
-      onChange={onChange}
-      onSelectChange={onSelectChange}
-      oneWay={true}
-      showSelectAll={true}
       dataSource={dataSource}
+      titles={['Source', 'Target']}
+      targetKeys={targetKeys}
+      selectedKeys={selectedKeys}
+      onChange={()=>{console.log('gegegegeg')}}
+      onSelectChange={onSelectChange}
       {...transferProps}
     />
   );
