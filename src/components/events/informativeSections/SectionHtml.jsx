@@ -2,17 +2,21 @@
 import { DispatchMessageService } from '@/context/MessageService';
 import { UseEventContext } from '@/context/eventContext';
 import { EventsApi } from '@/helpers/request';
-import { Button, Typography } from 'antd';
+import { Button, Col, Divider, Row, Typography } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { useEffect, useState } from 'react';
 
 export default function SectionHtml() {
   const eventContext = UseEventContext();
   const [htmlInput, setHtmlInput] = useState('');
-  const [itemsMenus, setItemsMenus] = useState()
+  const [itemsMenus, setItemsMenus] = useState();
+  const [show, setShow] = useState(true);
+
   const handleInputChange = (event) => {
     setHtmlInput(event.target.value);
+    setShow(false);
   };
+
   const onFinish = async () => {
     try {
       const informativeMenuHtml = { ...itemsMenus?.informativeSection, markup: htmlInput };
@@ -23,6 +27,7 @@ export default function SectionHtml() {
         },
       };
       await EventsApi.editOne(data, eventContext.value._id);
+      setShow(true);
       DispatchMessageService({
         type: 'success',
         msj: 'Guardado correctamente',
@@ -46,14 +51,31 @@ export default function SectionHtml() {
     }
     getContent();
   }, []);
+
   return (
     <>
-      <Typography>Ingrese el HTML que deseas mostrar</Typography>
-      <TextArea value={htmlInput} onChange={handleInputChange} rows={4} />
-      <div dangerouslySetInnerHTML={{ __html: htmlInput }} />
-      <Button type='primary' onClick={onFinish}>
-        Gruardar
-      </Button>
+      <Row justify='space-between' align='center'>
+        <Col>
+          <Typography.Text strong>Ingrese el HTML que deseas mostrar</Typography.Text>
+        </Col>
+        <Col>
+          <Button type='primary' onClick={onFinish}>
+            Guardar
+          </Button>
+        </Col>
+      </Row>
+      <br />
+      <TextArea value={htmlInput} onChange={handleInputChange} rows={4} className='desplazar' />
+
+      {show && htmlInput && 
+        <>
+          <Divider />
+          <Typography.Text strong>Vista previa</Typography.Text>
+          <div style={{maxHeight: '350px', overflowX: 'auto'}} className='desplazar'>
+            <div dangerouslySetInnerHTML={{ __html: htmlInput }} style={{height: '100%'}} />
+          </div>
+        </>
+      }
     </>
   );
 }
