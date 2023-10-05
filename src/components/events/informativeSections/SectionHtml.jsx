@@ -5,7 +5,7 @@ import { EventsApi } from '@/helpers/request';
 import { Button, Col, Divider, Row, Typography } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { useEffect, useState } from 'react';
-
+import MenuEvents from '../../menuLanding/utils/defaultMenu.json';
 export default function SectionHtml() {
   const eventContext = UseEventContext();
   const [htmlInput, setHtmlInput] = useState('');
@@ -18,8 +18,14 @@ export default function SectionHtml() {
   };
 
   const onFinish = async () => {
+    let informativeMenu;
+    if (itemsMenus.informativeSection) {
+      informativeMenu = itemsMenus.informativeSection;
+    } else {
+      informativeMenu = MenuEvents.informativeSection;
+    }
     try {
-      const informativeMenuHtml = { ...itemsMenus?.informativeSection, markup: htmlInput };
+      const informativeMenuHtml = { ...informativeMenu, markup: htmlInput };
       const data = {
         itemsMenu: {
           ...itemsMenus,
@@ -45,7 +51,7 @@ export default function SectionHtml() {
   useEffect(() => {
     async function getContent() {
       const result = await EventsApi.getOne(eventContext.value._id);
-      setItemsMenus(result?.itemsMenu)
+      setItemsMenus(result?.itemsMenu);
       let markup = result?.itemsMenu?.informativeSection?.markup || '';
       setHtmlInput(markup);
     }
