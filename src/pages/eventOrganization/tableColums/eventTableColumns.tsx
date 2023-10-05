@@ -39,7 +39,8 @@ export const columns = (goToEvent: GoToEvent, openModal: OpenModal): ColumnsType
       );
     },
   },
-  {
+ /* IMPORTANT NOTE: Se quita esto debido a que no le sirve a ceta  
+ {
     title: 'Grupos',
     dataIndex: 'index',
     fixed: 'right',
@@ -50,7 +51,7 @@ export const columns = (goToEvent: GoToEvent, openModal: OpenModal): ColumnsType
         </>
       );
     },
-  },
+  }, */
   {
     title: 'Total usuarios',
     dataIndex: 'count',
