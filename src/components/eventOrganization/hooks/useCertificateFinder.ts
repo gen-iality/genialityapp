@@ -10,7 +10,8 @@ export default function useCertificateFinder<T extends {} = any>(
   const [organization, setOrganization] = useState<any | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isSearching, setIsSearching] = useState(false)
-  const [preloadedCerts, setPreloadedCerts] = useState<{ [key: string]: [] }>({})
+  const [limitOfPreloading, setLimitOfPreloading] = useState(7)
+  const [preloadedCerts, setPreloadedCerts] = useState<{ [key: string]: any[] }>({})
 
   /**
    * Update the internal pattern state.
@@ -107,7 +108,18 @@ export default function useCertificateFinder<T extends {} = any>(
       console.warn('organizationId is undefined yet')
       return []
     }
-    return await OrganizationApi.searchCertificates(organizationId, userId)
+    const data = await OrganizationApi.searchCertificates(organizationId, userId)
+    console.debug('data:', data)
+    return data
+  }
+
+  const preloadCertsByUser = async (userId: string) => {
+    const certs = await loadCertsByUser(userId)
+    console.log('preload certs to user', userId, { certs })
+    setPreloadedCerts((previous) => ({
+      ...previous,
+      [userId]: certs,
+    }))
   }
 
   useEffect(() => {
@@ -123,6 +135,15 @@ export default function useCertificateFinder<T extends {} = any>(
       })
   }, [organizationId])
 
+  useEffect(() => {
+    for (let i = 0; i < limitOfPreloading && i < items.length; i++) {
+      const element = items[i]
+      const userId = (element as any).user._id
+
+      preloadCertsByUser(userId)
+    }
+  }, [items, limitOfPreloading])
+
   return {
     items,
     search,
@@ -132,6 +153,9 @@ export default function useCertificateFinder<T extends {} = any>(
     rawSearch,
     isSearching,
     organization,
-    loadCertsByUser,
+    preloadCertsByUser,
+    preloadedCerts,
+    limitOfPreloading,
+    changeLimitOfPreload: (value: number) => setLimitOfPreloading(value),
   }
 }

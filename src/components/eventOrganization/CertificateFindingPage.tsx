@@ -22,8 +22,17 @@ const CertificateFindingPage: FunctionComponent<ICertificateFindingPageProops> =
   const params = useParams()
   const orgId = params.id
 
-  const { isLoading, isSearching, organization, items, search, pattern, updatePattern } =
-    useCertificateFinder(orgId)
+  const {
+    isLoading,
+    isSearching,
+    organization,
+    items,
+    search,
+    pattern,
+    updatePattern,
+    preloadedCerts,
+    preloadCertsByUser,
+  } = useCertificateFinder(orgId)
 
   if (isLoading) {
     return <Spin size="large" spinning tip="Cargando datos de la organización" />
@@ -95,8 +104,25 @@ const CertificateFindingPage: FunctionComponent<ICertificateFindingPageProops> =
                   <Col flex="auto"></Col>
 
                   <Col>
-                    <Button type="text" disabled>
-                      <Badge count="Certificado" style={{ backgroundColor: 'red' }} />
+                    <Button
+                      type="text"
+                      disabled={!!preloadedCerts[item.user._id]}
+                      onClick={() => {
+                        preloadCertsByUser(item.user._id)
+                      }}
+                    >
+                      <Badge
+                        count={
+                          preloadedCerts[item.user._id]
+                            ? `Certificados (${preloadedCerts[item.user._id].length})`
+                            : 'Consultar'
+                        }
+                        style={{
+                          backgroundColor: preloadedCerts[item.user._id]
+                            ? 'green'
+                            : 'red',
+                        }}
+                      />
                     </Button>
                   </Col>
                 </Row>
