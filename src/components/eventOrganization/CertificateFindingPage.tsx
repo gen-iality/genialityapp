@@ -14,6 +14,7 @@ import {
 import { FunctionComponent } from 'react'
 import { useParams } from 'react-router'
 import useCertificateFinder from './hooks/useCertificateFinder'
+import { Link } from 'react-router-dom'
 
 interface ICertificateFindingPageProops {}
 
@@ -82,7 +83,9 @@ const CertificateFindingPage: FunctionComponent<ICertificateFindingPageProops> =
                   wrap={false}
                 >
                   <Col flex="200px">
-                    <Typography.Title level={5}>{item.user?.names}</Typography.Title>
+                    <Link to={`./${item.account_id}`}>
+                      <Typography.Title level={5}>{item.user?.names}</Typography.Title>
+                    </Link>
                   </Col>
 
                   <Col flex="300px">
