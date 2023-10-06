@@ -944,6 +944,13 @@ export const OrganizationApi = {
     )
     return searching as any[]
   },
+  searchCertificates: async (organizationId: string, userId: string) => {
+    const { certificates } = await Actions.get(
+      `/api/organizations/${organizationId}/search-certificates/${userId}`,
+      true,
+    )
+    return certificates as any[]
+  },
 }
 export const BadgeApi = {
   create: async (data) => {
