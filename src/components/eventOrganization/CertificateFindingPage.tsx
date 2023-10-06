@@ -1,4 +1,4 @@
-import { SearchOutlined } from '@ant-design/icons'
+import { LinkOutlined, LoadingOutlined, SearchOutlined } from '@ant-design/icons'
 import {
   Badge,
   Button,
@@ -30,6 +30,8 @@ const CertificateFindingPage: FunctionComponent<ICertificateFindingPageProops> =
     search,
     pattern,
     updatePattern,
+    isRequestingForCerts,
+    // limitOfPreloading,
     preloadedCerts,
     preloadCertsByUser,
   } = useCertificateFinder(orgId)
@@ -47,6 +49,18 @@ const CertificateFindingPage: FunctionComponent<ICertificateFindingPageProops> =
       />
     )
   }
+
+  const SearchStatus = ({ results }: { results: any[] }) => (
+    <>
+      {results.length} Resultados
+      {isRequestingForCerts && (
+        <>
+          {' - '}
+          Precargando certificados <LoadingOutlined />
+        </>
+      )}
+    </>
+  )
 
   return (
     <>
@@ -80,7 +94,7 @@ const CertificateFindingPage: FunctionComponent<ICertificateFindingPageProops> =
           <List
             dataSource={items}
             loading={isSearching}
-            header={`${items.length} Resultados`}
+            header={<SearchStatus results={items} />}
             footer={pattern ? `término buscado: ${pattern}` : undefined}
             renderItem={(item) => (
               <List.Item style={{ width: '100%' }}>
@@ -93,7 +107,9 @@ const CertificateFindingPage: FunctionComponent<ICertificateFindingPageProops> =
                 >
                   <Col flex="200px">
                     <Link to={`./${item.account_id}`}>
-                      <Typography.Title level={5}>{item.user?.names}</Typography.Title>
+                      <Typography.Title level={5}>
+                        <LinkOutlined /> {item.user?.names}
+                      </Typography.Title>
                     </Link>
                   </Col>
 

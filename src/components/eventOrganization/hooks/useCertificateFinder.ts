@@ -12,6 +12,7 @@ export default function useCertificateFinder<T extends {} = any>(
   const [isSearching, setIsSearching] = useState(false)
   const [limitOfPreloading, setLimitOfPreloading] = useState(7)
   const [preloadedCerts, setPreloadedCerts] = useState<{ [key: string]: any[] }>({})
+  const [isRequestingForCerts, setIsRequestingForCerts] = useState(false)
 
   /**
    * Update the internal pattern state.
@@ -51,22 +52,26 @@ export default function useCertificateFinder<T extends {} = any>(
       if (err.response?.data?.error) {
         StateMessage.show(null, 'error', err.response?.data?.error)
       }
-      if (err.response?.status !== undefined) {
-        const { status } = err.response
-        switch (status) {
-          case 403:
-            StateMessage.show(null, 'error', 'Error en la solicitud')
-            break
-          case 400:
-            StateMessage.show(null, 'error', 'Error de permiso')
-            break
-          case 500:
-            StateMessage.show(null, 'error', 'Error del servidor')
-            break
-        }
-      }
+      handleBackEndError(err)
     }
     return [] as T[]
+  }
+
+  const handleBackEndError = (err: any) => {
+    if (err.response?.status !== undefined) {
+      const { status } = err.response
+      switch (status) {
+        case 403:
+          StateMessage.show(null, 'error', 'Error en la solicitud')
+          break
+        case 400:
+          StateMessage.show(null, 'error', 'Error de permiso')
+          break
+        case 500:
+          StateMessage.show(null, 'error', 'Error del servidor')
+          break
+      }
+    }
   }
 
   /**
@@ -108,13 +113,21 @@ export default function useCertificateFinder<T extends {} = any>(
       console.warn('organizationId is undefined yet')
       return []
     }
-    const data = await OrganizationApi.searchCertificates(organizationId, userId)
-    console.debug('data:', data)
-    return data
+    try {
+      const data = await OrganizationApi.searchCertificates(organizationId, userId)
+      console.debug('data:', data)
+      return data
+    } catch (err) {
+      console.error(err)
+      handleBackEndError(err)
+      return []
+    }
   }
 
   const preloadCertsByUser = async (userId: string) => {
+    setIsRequestingForCerts(true)
     const certs = await loadCertsByUser(userId)
+    setIsRequestingForCerts(false)
     console.log('preload certs to user', userId, { certs })
     setPreloadedCerts((previous) => ({
       ...previous,
@@ -136,12 +149,20 @@ export default function useCertificateFinder<T extends {} = any>(
   }, [organizationId])
 
   useEffect(() => {
-    for (let i = 0; i < limitOfPreloading && i < items.length; i++) {
-      const element = items[i]
-      const userId = (element as any).user._id
-
-      preloadCertsByUser(userId)
-    }
+    const firsts = items.slice(0, limitOfPreloading)
+    setIsRequestingForCerts(true)
+    Promise.all(
+      firsts.map(async (element) => {
+        const userId = (element as any).user._id
+        const data = await loadCertsByUser(userId)
+        return [userId, data]
+      }),
+    )
+      .then((allCerts) => {
+        const object = Object.fromEntries(allCerts)
+        setPreloadedCerts(object)
+      })
+      .finally(() => setIsRequestingForCerts(false))
   }, [items, limitOfPreloading])
 
   return {
@@ -153,6 +174,7 @@ export default function useCertificateFinder<T extends {} = any>(
     rawSearch,
     isSearching,
     organization,
+    isRequestingForCerts,
     preloadCertsByUser,
     preloadedCerts,
     limitOfPreloading,
