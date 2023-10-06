@@ -46,6 +46,20 @@ export default function useCertificateFinder<T extends {} = any>(
       if (err.response?.data?.error) {
         StateMessage.show(null, 'error', err.response?.data?.error)
       }
+      if (err.response?.status !== undefined) {
+        const { status } = err.response
+        switch (status) {
+          case 403:
+            StateMessage.show(null, 'error', 'Error en la solicitud')
+            break
+          case 400:
+            StateMessage.show(null, 'error', 'Error de permiso')
+            break
+          case 500:
+            StateMessage.show(null, 'error', 'Error del servidor')
+            break
+        }
+      }
     }
     return [] as T[]
   }
