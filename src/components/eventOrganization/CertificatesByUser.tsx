@@ -1,9 +1,11 @@
 import { LoadingOutlined } from '@ant-design/icons'
 import { StateMessage } from '@context/MessageService'
-import { OrganizationApi, UsersApi } from '@helpers/request'
-import { Result } from 'antd'
+import { UsersApi, EventsApi } from '@helpers/request'
+import { Result, Space, Table, Typography } from 'antd'
 import { FunctionComponent, useEffect, useState } from 'react'
 import { useParams } from 'react-router'
+import useCertificateFinder from './hooks/useCertificateFinder'
+import { ColumnsType } from 'antd/lib/table'
 
 type Params = {
   id: string
@@ -14,78 +16,91 @@ interface ICertificatesByUserProps {}
 
 const CertificatesByUser: FunctionComponent<ICertificatesByUserProps> = (props) => {
   const { id: organizationId, userId } = useParams<Params>()
-
-  const [isLoading, setisLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [user, setUser] = useState<any | null>(null)
-  const [organization, setOrganization] = useState<any | null>(null)
-  const [events, setEvents] = useState<any[]>([])
-  const [eventUsers, setEventUsers] = useState<any[]>([])
+  const [certs, setCerts] = useState<any[]>([])
 
-  const requestData = async () => {
-    try {
-      const value = await OrganizationApi.getOne(organizationId)
-      setOrganization(value)
-    } catch (err) {
-      StateMessage.show(null, 'error', JSON.stringify(err))
-      console.error(err)
-    }
+  const [dataSource, setDataSource] = useState<any>([])
+  const [isLoadingTable, setIsLoadingTable] = useState(false)
+  const [cacheEvents, setCacheEvents] = useState<{ [key: string]: any }>({})
 
-    try {
-      const value = await UsersApi.getProfile(userId)
-      setUser(value)
-    } catch (err) {
-      StateMessage.show(null, 'error', JSON.stringify(err))
-      console.error(err)
-    }
+  const [columns] = useState<ColumnsType>([
+    {
+      title: 'Certificado',
+      dataIndex: 'name',
+    },
+    {
+      title: 'Curso',
+      dataIndex: 'event',
+      render: (event: any) => event.name,
+    },
+  ])
 
-    let events: any[] = []
-    try {
-      const { data: value } = await OrganizationApi.events(organizationId)
-      console.log(value)
-      events = [...value]
-      setEvents(value)
-    } catch (err) {
-      StateMessage.show(null, 'error', JSON.stringify(err))
-      console.error(err)
-    }
-
-    try {
-      const value = await Promise.all(
-        events.map(async (event) => {
-          return await UsersApi.getOne(event._id, userId)
-        }),
-      )
-      setEventUsers(value)
-    } catch (err) {
-      StateMessage.show(null, 'error', JSON.stringify(err))
-      console.error(err)
-    }
-  }
+  const { loadCertsByUser } = useCertificateFinder(organizationId)
 
   useEffect(() => {
-    if (!userId || !organizationId) return
+    if (!userId) return
 
-    setisLoading(true)
-    requestData().finally(() => setisLoading(false))
-  }, [userId, organizationId])
+    UsersApi.getProfile(userId).then((data) => {
+      setUser(data)
+    })
 
-  return (
-    <>
-      events: {events.length} - event users: {eventUsers.length}
-    </>
-  )
+    setIsLoading(true)
+    loadCertsByUser(userId)
+      .then((certs) => {
+        setCerts(certs)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+  }, [userId])
+
+  useEffect(() => {
+    setIsLoadingTable(true)
+    Promise.all(
+      certs.map(async (cert) => {
+        const { name, event_id } = cert
+
+        let event: any = cacheEvents[event_id]
+        if (!event) {
+          event = await EventsApi.getOne(event_id)
+
+          setCacheEvents((previous) => ({
+            ...previous,
+            [event_id]: event,
+          }))
+        }
+
+        console.debug({ name, event })
+
+        return { name, event }
+      }),
+    )
+      .then((result) => {
+        console.debug('result', result)
+        setDataSource(result)
+      })
+      .finally(() => {
+        setIsLoadingTable(false)
+      })
+  }, [certs])
 
   if (isLoading) {
     return (
       <Result
         icon={<LoadingOutlined />}
         title="Cargando"
-        subTitle="Recuperando datos..."
+        subTitle="Recuperando datos (esto puede demorar una eternidad)..."
       />
     )
   }
 
-  return null
+  return (
+    <Space direction="vertical">
+      {user && <Typography.Title>{user.names}</Typography.Title>}
+      <Table loading={isLoadingTable} dataSource={dataSource} columns={columns} />
+    </Space>
+  )
 }
 
 export default CertificatesByUser

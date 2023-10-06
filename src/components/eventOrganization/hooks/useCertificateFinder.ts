@@ -176,6 +176,7 @@ export default function useCertificateFinder<T extends {} = any>(
     organization,
     isRequestingForCerts,
     preloadCertsByUser,
+    loadCertsByUser,
     preloadedCerts,
     limitOfPreloading,
     changeLimitOfPreload: (value: number) => setLimitOfPreloading(value),
