@@ -933,7 +933,7 @@ export const OrganizationApi = {
       return await Actions.get(`/api/organizations/${organizationId}/roles`)
     },
   },
-  searchCertificate: async (organizationId: string, pattern: string) => {
+  searchCandidatesForCertificates: async (organizationId: string, pattern: string) => {
     const queryParams = {
       pattern,
     }

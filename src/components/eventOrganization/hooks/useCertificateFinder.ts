@@ -33,7 +33,10 @@ export default function useCertificateFinder<T extends {} = any>(
    */
   const rawSearch = async <T extends {} = any>(orgId: string, pattern: string) => {
     try {
-      const results = await OrganizationApi.searchCertificate(orgId, pattern)
+      const results = await OrganizationApi.searchCandidatesForCertificates(
+        orgId,
+        pattern,
+      )
       console.debug(results)
       return results
         .sort((a, b) => {
