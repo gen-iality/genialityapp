@@ -36,6 +36,7 @@ import DirectLoginPage from '@/pages/DirectLoginPage'
 import CertificateGeneraterPage from '@/pages/CertificateGeneraterPage'
 import { OrganizationPaymentProvider } from '@/payments/OrganizationPaymentContext'
 import CertificateFindingPage from '@components/eventOrganization/CertificateFindingPage'
+import CertificatesByUser from '@components/eventOrganization/CertificatesByUser'
 //Code splitting
 const HeaderContainer = loadable(() => import('./HeaderContainer'))
 const Home = loadable(() => import('../pages/home'))
@@ -154,6 +155,10 @@ const ContentContainer = () => {
             <Route
               path="/organization/:id/certificates"
               element={<CertificateFindingPage />}
+            />
+            <Route
+              path="/organization/:id/certificates/:userId"
+              element={<CertificatesByUser />}
             />
             <Route path="/blockedEvent/:event_id" element={<BlockedEvent />} />
             <Route path="/event/:event_name/*" element={<LandingRoutes />} />
