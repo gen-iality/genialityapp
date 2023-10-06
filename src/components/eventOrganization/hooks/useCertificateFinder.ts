@@ -10,6 +10,7 @@ export default function useCertificateFinder<T extends {} = any>(
   const [organization, setOrganization] = useState<any | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isSearching, setIsSearching] = useState(false)
+  const [preloadedCerts, setPreloadedCerts] = useState<{ [key: string]: [] }>({})
 
   /**
    * Update the internal pattern state.
@@ -100,6 +101,15 @@ export default function useCertificateFinder<T extends {} = any>(
     setIsSearching(false)
   }
 
+  // NOTE: same api calling but with a nice name
+  const loadCertsByUser = async (userId: string) => {
+    if (!organizationId) {
+      console.warn('organizationId is undefined yet')
+      return []
+    }
+    return await OrganizationApi.searchCertificates(organizationId, userId)
+  }
+
   useEffect(() => {
     if (!organizationId) return
 
@@ -122,5 +132,6 @@ export default function useCertificateFinder<T extends {} = any>(
     rawSearch,
     isSearching,
     organization,
+    loadCertsByUser,
   }
 }
