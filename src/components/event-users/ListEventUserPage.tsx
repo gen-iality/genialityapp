@@ -561,6 +561,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         return (
           <Button
             danger
+            title={`Eliminar inscripción de ${value?.user?.names}`}
             type="primary"
             icon={<DeleteOutlined />}
             onClick={() => {
@@ -568,9 +569,14 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
                 title: '¿Eliminar esta inscripción?',
                 content: `Estás a punto de elimnar la inscripción del usuario: ${value?.user?.names}`,
                 onOk: () => {
-                  AttendeeApi.delete(event._id, value._id).then((value) => {
-                    console.debug(value)
-                  })
+                  AttendeeApi.delete(event._id, value._id)
+                    .then((value) => {
+                      console.debug(value)
+                    })
+                    .catch((reason) => {
+                      console.error(reason)
+                      window.location.reload()
+                    })
                 },
               })
             }}
