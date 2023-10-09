@@ -177,8 +177,7 @@ const AgendaActividadDetalle = (props: any) => {
       pathname: `/landing/${eventId}/agenda`,
     });
   };
-
-  const userType = cEventUser.value.properties.list_type_user;
+  const userType = cEventUser.value?.properties.list_type_user;
   const MIN_vALUE = 0;
   if (!dataTypes.includes(userType) && dataTypes.length > MIN_vALUE) {
     return (
