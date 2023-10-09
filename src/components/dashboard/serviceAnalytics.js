@@ -134,7 +134,7 @@ export const queryReportGnalByMoth = async (eventID) => {
     method: 'POST',
   })
   const respjson = await resp.json()
-  const datos = respjson.rows
+  const datos = Array.isArray(respjson.rows) ? respjson.rows : []
   const totalMetrics = []
   datos.map((dat) => {
     const metric = {
