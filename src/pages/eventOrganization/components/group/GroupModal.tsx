@@ -1,10 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Button, Form, Input, Modal, ModalProps, Switch, Transfer } from 'antd';
 import { GroupEvent, GroupEventMongo } from '../../interface/group.interfaces';
 import { DispatchMessageService } from '@/context/MessageService';
-import MyTransferComponent from '@/components/common/my-transfer/MyTransferComponent';
 import { useGetEventsByOrg } from '@/components/eventOrganization/hooks/useGetEventsByOrg';
-import { TransferDirection } from 'antd/lib/transfer';
 import { useTransfer } from '@/hooks/useTransfer';
 import { useGetOrganizationUsers } from '../../hooks/useGetOrganizationUsers';
 
@@ -26,19 +24,21 @@ export const GroupModal = ({
 }: Props) => {
   const inputRef = useRef<any>();
   const [form] = Form.useForm<GroupEvent>();
-  const { eventsByOrg, isLoadingEventsByOrg } = useGetEventsByOrg(organizationId);
-  const { organizationUsers, isLoadingOrgUsers } = useGetOrganizationUsers(organizationId);
+  const { eventsByOrg } = useGetEventsByOrg(organizationId);
+  const { organizationUsers } = useGetOrganizationUsers(organizationId);
   const {
     onChange: onChangeEvents,
     onSelectChange: onSelectChangeEvents,
     selectedKeys: selectedKeysEvents,
     targetKeys: targetKeysEvents,
+    setTargetKeys: setTargetKeysEvents,
   } = useTransfer([]);
   const {
     onChange: onChangeOrgUser,
     onSelectChange: onSelectChangeOrgUser,
     selectedKeys: selectedKeysOrgUser,
     targetKeys: targetKeysOrgUser,
+    setTargetKeys: setTargetKeysOrgUser,
   } = useTransfer([]);
 
   const onAddGroup = async (newGroupData: GroupEvent) => {
@@ -46,14 +46,22 @@ export const GroupModal = ({
       await handledAddGroup({
         name: newGroupData.name,
         free_access_organization: newGroupData.free_access_organization,
-        eventsId: newGroupData.eventsId,
-        usersId: newGroupData.usersId,
+        event_ids: newGroupData.event_ids,
+        organization_user_ids: newGroupData.organization_user_ids,
       });
 
-      DispatchMessageService({ action: 'show', type: 'success', msj: 'Se agrego el grupo correctamente' });
+      DispatchMessageService({
+        action: 'show',
+        type: 'success',
+        msj: 'Se agrego el grupo correctamente',
+      });
       onCancel();
     } catch (error) {
-      DispatchMessageService({ action: 'show', type: 'info', msj: 'Ocurrio un error al agregar el grupo' });
+      DispatchMessageService({
+        action: 'show',
+        type: 'info',
+        msj: 'Ocurrio un error al agregar el grupo',
+      });
     }
   };
 
@@ -61,7 +69,11 @@ export const GroupModal = ({
     try {
       await handledUpdate(selectedGroup?.item._id ?? '', newGroupData);
       onCancel();
-      DispatchMessageService({ action: 'show', type: 'success', msj: 'Se edito el grupo correctamente' });
+      DispatchMessageService({
+        action: 'show',
+        type: 'success',
+        msj: 'Se edito el grupo correctamente',
+      });
     } catch (error) {
       DispatchMessageService({ action: 'show', type: 'info', msj: 'No se pudo editar el grupo' });
     }
@@ -72,15 +84,17 @@ export const GroupModal = ({
       form.setFieldsValue({
         free_access_organization: selectedGroup.item.free_access_organization,
         name: selectedGroup.item.name,
-        eventsId: [],
-        usersId: [],
+        event_ids: selectedGroup.item.event_ids,
+        organization_user_ids: selectedGroup.item.organization_user_ids,
       });
+      setTargetKeysEvents(selectedGroup.item.event_ids);
+      setTargetKeysOrgUser(selectedGroup.item.organization_user_ids);
     } else {
       form.setFieldsValue({
         free_access_organization: false,
         name: '',
-        eventsId: [],
-        usersId: [],
+        event_ids: [],
+        organization_user_ids: [],
       });
     }
   }, [selectedGroup]);
@@ -100,11 +114,7 @@ export const GroupModal = ({
           rules={[{ required: true, message: 'El nombre es requerido' }]}>
           <Input ref={inputRef} placeholder={'Ingrese el nombre del grupo'} maxLength={20} />
         </Form.Item>
-        <Form.Item
-          label={'Eventos'}
-          name={'events'}
-          // rules={rules}
-        >
+        <Form.Item label={'Eventos'} name={'event_ids'}>
           <Transfer
             listStyle={{ width: '100%' }}
             oneWay={true}
@@ -119,11 +129,7 @@ export const GroupModal = ({
             showSelectAll={false}
           />
         </Form.Item>
-        <Form.Item
-          label={'Usuarios'}
-          name={'users'}
-          // rules={rules}
-        >
+        <Form.Item label={'Usuarios'} name={'organization_user_ids'}>
           <Transfer
             listStyle={{ width: '100%' }}
             oneWay={true}
