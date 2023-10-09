@@ -155,7 +155,7 @@ export const GroupModal = ({
           label={<label>Acceso libre para los miembros de la organización</label>}>
           <Switch />
         </Form.Item>
-        <Button htmlType='submit'>{selectedGroup ? 'Editar' : 'Agregar'}</Button>
+        <Button htmlType='submit'>{selectedGroup ? 'Guardar' : 'Agregar'}</Button>
       </Form>
     </Modal>
   );
