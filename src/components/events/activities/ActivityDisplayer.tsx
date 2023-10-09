@@ -99,11 +99,7 @@ const ActivityDisplayer: FunctionComponent<IActivityDisplayerProps> = ({
   activity,
   onActivityProgress,
 }) => {
-  return (
-    <section>
-      <div>{switchActivity(activity, onActivityProgress)}</div>
-    </section>
-  )
+  return <section>{switchActivity(activity, onActivityProgress)}</section>
 }
 
 export default ActivityDisplayer
