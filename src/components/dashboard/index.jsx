@@ -236,20 +236,28 @@ class DashboardEvent extends Component {
                 })
                 this.obtenerMetricas(dataMetricsActivity)
                 this.totalsMails(datametricsMail)
-                this.fetchDataMails().then((resp) => {
-                  this.setState(
-                    {
-                      mailsDetails: resp,
+                this.fetchDataMails()
+                  .then((resp) => {
+                    this.setState(
+                      {
+                        mailsDetails: resp,
+                        loadingMetrics: false,
+                      },
+                      () => {
+                        this.totalsMails(datametricsMail)
+                        this.graficRegistros()
+                        this.graficAttendees()
+                        this.graficPrintouts()
+                      },
+                    )
+                  })
+                  .catch((err) => {
+                    StateMessage.show(null, 'error', err.toString())
+                    this.setState({
+                      mailsDetails: [],
                       loadingMetrics: false,
-                    },
-                    () => {
-                      this.totalsMails(datametricsMail)
-                      this.graficRegistros()
-                      this.graficAttendees()
-                      this.graficPrintouts()
-                    },
-                  )
-                })
+                    })
+                  })
               } else {
                 this.setState({
                   loadingMetrics: false,
