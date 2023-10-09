@@ -430,6 +430,13 @@ const UserStatusAndMenu: FunctionComponent<IUserStatusAndMenuProps> = (props) =>
 
   return (
     <>
+      {organization?._id && (
+        <Space style={{ marginRight: 16 }}>
+          <Link to={`/organization/${organization._id}/certificates`} target="_blank">
+            Consultar certificados
+          </Link>
+        </Space>
+      )}
       {!isAtOrganizationLanding && !isAtEventLanding && (
         <Space style={{ marginRight: 16 }}>
           {organizations.length === 1 ? (
@@ -493,7 +500,6 @@ const UserStatusAndMenu: FunctionComponent<IUserStatusAndMenuProps> = (props) =>
           {loggedInuser}
         </>
       )}
-
       <Space>
         {isAtEventLanding && (
           <Link
@@ -540,7 +546,6 @@ const UserStatusAndMenu: FunctionComponent<IUserStatusAndMenuProps> = (props) =>
           loggedOutUser
         )}
       </Space>
-
       <Modal
         open={isOpenedExtraLandingResource}
         onCancel={closeExtraLandingResourceModal}
