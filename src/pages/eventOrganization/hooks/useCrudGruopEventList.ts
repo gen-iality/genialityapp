@@ -41,8 +41,7 @@ export const useCrudGruopEventList = (organizationId: string) => {
               ...group,
               item: {
                 ...group.item,
-                name: newGroupData.name,
-                free_access_organization: newGroupData.free_access_organization,
+                ...newGroupData,
               },
               label: newGroupData.name,
             };
