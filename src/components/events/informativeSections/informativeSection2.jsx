@@ -22,7 +22,7 @@ class InformativeSection2 extends Component {
   render() {
     const { markup, informativeSection1 } = this.state;
     return (
-      <Row justify='center' gutter={[8, 8]} wrap>
+      <Row justify='center' gutter={[8, 8]} wrap style={{width: '100%'}}>
         <Col span={23}>
           {(informativeSection1 !== null && informativeSection1 !== undefined) && (
             <div className='site-card-border-less-wrapper'>
@@ -31,6 +31,7 @@ class InformativeSection2 extends Component {
                   <Card
                     style={{
                       backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
+                      borderRadius: 20,
                     }}
                     title={
                       <Typography.Title level={4} style={{ color: this.props.cEvent.value.styles.textMenu }}>
@@ -40,8 +41,9 @@ class InformativeSection2 extends Component {
                       </Typography.Title>
                     }
                     bordered={false} /* style={{ width: 1000 }} */
+                    headStyle={{ border: 'none'}}
                   >
-                    <div id='img-informative' style={{ color: this.props.cEvent.value.styles.textMenu }}>
+                    <div id='img-informative'>
                       {markup != null && Parser(markup)}
                     </div>
                   </Card>

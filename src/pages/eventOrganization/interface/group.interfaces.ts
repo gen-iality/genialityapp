@@ -1,18 +1,18 @@
 export interface GroupEvent {
   name: string;
-  free_access_organization : boolean;
+  free_access_organization: boolean;
+  event_ids: string[];
+  organization_user_ids: string[];
 }
 
 export interface GroupEventMongo extends OptionType {
   item: {
     _id: string;
-    name: string;
     organization_id: string;
     updated_at: string;
     created_at: string;
     amount_events: number;
-    free_access_organization : boolean;
-  };
+  } & GroupEvent;
 }
 
 export interface OptionType {
