@@ -19,6 +19,14 @@ import { StateMessage } from '@context/MessageService'
 
 const initContent: string = JSON.stringify(defaultCertRows)
 
+export const getOrgMemberProperties = async (dataUser: any, orgId: string) => {
+  const { data: orgMembers } = await OrganizationApi.getUsers(orgId)
+  const orgMember = orgMembers.find(
+    (orgMember: any) => orgMember.account_id === dataUser.account_id,
+  )
+  return orgMember?.properties || {}
+}
+
 function CertificateLandingPage(props: WithEviusContextProps) {
   const { cEvent, cEventUser } = props
 
@@ -45,16 +53,6 @@ function CertificateLandingPage(props: WithEviusContextProps) {
   const cEventProgress = useEventProgress()
 
   const pdfGeneratorRef = useRef<Html2PdfCertsRef>(null)
-
-  const getOrgMemberProperties = async (dataUser: any) => {
-    const { data: orgMembers } = await OrganizationApi.getUsers(
-      cEvent.value.organiser._id,
-    )
-    const orgMember = orgMembers.find(
-      (orgMember: any) => orgMember.account_id === dataUser.account_id,
-    )
-    return orgMember?.properties || {}
-  }
 
   const generatePdfCertificate = () => {
     if (!selectedCertificateToDownload) {
@@ -240,7 +238,7 @@ function CertificateLandingPage(props: WithEviusContextProps) {
       currentCertRows = JSON.parse(selectedCertificateToDownload?.content) as CertRow[]
     }
 
-    getOrgMemberProperties(cEventUser.value)
+    getOrgMemberProperties(cEventUser.value, cEvent.value.organiser._id)
       .then((extraOrgMemberProperties) => {
         const newUserDataWithInjection = {
           ...cEventUser.value,
