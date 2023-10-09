@@ -24,6 +24,8 @@ import {
   updateMetricasActivity,
 } from './serviceAnalytics'
 import 'chartjs-plugin-datalabels'
+import * as ChartJSPackage from 'chart.js'
+import { Chart as ChartJS } from 'chart.js'
 import { Bar, Line } from 'react-chartjs-2'
 import ReactToPrint from 'react-to-print'
 import dayjs from 'dayjs'
@@ -33,6 +35,17 @@ import { GetTokenUserFirebase } from '@helpers/HelperAuth'
 import { StateMessage } from '@context/MessageService'
 import Header from '@antdComponents/Header'
 import classNames from 'classnames'
+
+ChartJS.register(
+  ChartJSPackage.CategoryScale,
+  ChartJSPackage.LinearScale,
+  ChartJSPackage.PointElement,
+  ChartJSPackage.LineElement,
+  ChartJSPackage.BarElement,
+  ChartJSPackage.Title,
+  ChartJSPackage.Tooltip,
+  ChartJSPackage.Legend,
+)
 
 const { Title } = Typography
 // Estilos pagina pdf
