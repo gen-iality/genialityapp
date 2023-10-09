@@ -1,5 +1,6 @@
 import {
   AgendaApi,
+  AttendeeApi,
   BadgeApi,
   EventsApi,
   OrganizationApi,
@@ -16,6 +17,7 @@ import {
   Image,
   Input,
   InputRef,
+  Modal,
   Row,
   Space,
   Spin,
@@ -35,6 +37,7 @@ import Highlighter from 'react-highlight-words'
 import { utils, writeFileXLSX } from 'xlsx'
 
 import {
+  DeleteOutlined,
   DownloadOutlined,
   EditOutlined,
   PlusCircleOutlined,
@@ -552,7 +555,38 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       render: editColumnRender,
     }
 
+    const deleteEventUserSection: ColumnType<any> = {
+      title: <DeleteOutlined />,
+      render: (value) => {
+        return (
+          <Button
+            danger
+            title={`Eliminar inscripción de ${value?.user?.names}`}
+            type="primary"
+            icon={<DeleteOutlined />}
+            onClick={() => {
+              Modal.confirm({
+                title: '¿Eliminar esta inscripción?',
+                content: `Estás a punto de elimnar la inscripción del usuario: ${value?.user?.names}`,
+                onOk: () => {
+                  AttendeeApi.delete(event._id, value._id)
+                    .then((value) => {
+                      console.debug(value)
+                    })
+                    .catch((reason) => {
+                      console.error(reason)
+                      window.location.reload()
+                    })
+                },
+              })
+            }}
+          />
+        )
+      },
+    }
+
     setColumns([
+      deleteEventUserSection,
       checkInColumn,
       ...extraColumns,
       progressingColumn,

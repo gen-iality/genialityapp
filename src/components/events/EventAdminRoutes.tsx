@@ -72,7 +72,7 @@ const Wall = loadable(() => import('../wall/index'))
 const FAQS = loadable(() => import('../faqs'))
 const EventsTicket = loadable(() => import('../ticketsEvent'))
 
-import StillInDeveloping from '@components/StillInDeveloping'
+// import StillInDeveloping from '@components/StillInDeveloping'
 
 dayjs.locale('es')
 momentLocalizer()
@@ -360,9 +360,9 @@ class EventAdminRoutes extends Component<
               <Route
                 path="dashboard"
                 element={
-                  <StillInDeveloping disableTesting>
-                    <DashboardEvent eventId={event._id} event={event} />
-                  </StillInDeveloping>
+                  // <StillInDeveloping disableTesting>
+                  <DashboardEvent eventId={event._id} event={event} />
+                  // </StillInDeveloping>
                 }
               />
               <Route
