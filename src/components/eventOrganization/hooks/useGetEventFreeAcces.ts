@@ -9,8 +9,8 @@ export const useGetEventsFreeAcces = (organizationId: string, eventUser: boolean
     const getEventsFreeAcces = async () => {
       try {
         setIsLoading(true);
-        const { free_events } = await OrganizationApi.getEventsFreeAcces(organizationId);
-        setEventsFreeAccess(free_events);
+        const free_events = await OrganizationApi.getEventsInGroups(organizationId, true);
+        if (Array.isArray(free_events)) setEventsFreeAccess(free_events);
       } catch (error) {
         setError('No se pudo obtener el los eventos con acceso libre');
       } finally {

@@ -1,9 +1,8 @@
-import { Alert, Button, Card, Col, List, Row, Space, Typography } from 'antd';
+import { Alert, Button, Card, Col, Row, Space, Typography } from 'antd';
 import { DateRangeEvius, useCustomDateEvent } from '../hooks/useCustomDateEvent';
 import Loading from '@/components/loaders/loading';
-import { TimeItem } from './TimeItem';
 import { DateEventItem } from './DateEventItem';
-import { PlusCircleOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
+import { PlusOutlined, SaveOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { DateModal } from './DateModal';
 
@@ -48,7 +47,7 @@ export default function CustomDateEvent(props: Props) {
   };
 
   return (
-    <Card style={{borderRadius: 20}} hoverable>
+    <Card style={{ borderRadius: 20 }} hoverable>
       {openModal && (
         <DateModal
           closeModal={closeModal}
@@ -64,18 +63,18 @@ export default function CustomDateEvent(props: Props) {
           destroyOnClose={true}
         />
       )}
-      <Space direction='vertical' style={{width: '100%'}}>
+      <Space direction='vertical' style={{ width: '100%' }}>
         {mustUpdateDate && (
           <Alert
             message={<Typography.Text strong>Formato de fecha incorrecto</Typography.Text>}
             description={
               <Typography.Paragraph>
-                Las fechas se han modificado a un nuevo formato, 
-                para continuar con la configuración correcta por favor verifique las fechas y horas respectivas del evento
-                (Fecha de inicio {datesOld?.startDateOld}, fecha final {datesOld?.endDateOld}). <br />  
-                Una vez validado guarde los cambios dando clic al botón 
-                <Typography.Text strong> Guardar fechas</Typography.Text>, al realizarse el cambio este mensaje desaparecerá. 
-                
+                Las fechas se han modificado a un nuevo formato, para continuar con la configuración correcta por favor
+                verifique las fechas y horas respectivas del evento (Fecha de inicio {datesOld?.startDateOld}, fecha
+                final {datesOld?.endDateOld}). <br />
+                Una vez validado guarde los cambios dando clic al botón
+                <Typography.Text strong> Guardar fechas</Typography.Text>, al realizarse el cambio este mensaje
+                desaparecerá.
               </Typography.Paragraph>
             }
             type='error'
@@ -83,24 +82,32 @@ export default function CustomDateEvent(props: Props) {
         )}
         <Typography.Text strong>Fechas seleccionadas</Typography.Text>
         <Row gutter={[8, 8]} wrap>
-          {dates.length > 0 && dates.map(date => (
+          {dates.length > 0 &&
+            dates.map((date) => (
+              <Col span={12}>
+                <DateEventItem
+                  key={date.id}
+                  date={date}
+                  onClick={() => openEditDate(date)}
+                  handledDelete={handledDelete}
+                  canFinish={dates.length > 1}
+                />
+              </Col>
+            ))}
+          {dates.length < 6 ? (
             <Col span={12}>
-              <DateEventItem
-                key={date.id}
-                date={date}
-                onClick={() => openEditDate(date)}
-                handledDelete={handledDelete}
-                canFinish={dates.length > 1}
-              />
+              <Card
+                onClick={openCreateNewDate}
+                hoverable
+                style={{ borderRadius: 10, border: '1px solid #C4C4C490', height: '100%' }}>
+                <Row justify='center' align='middle'>
+                  <Col>
+                    <PlusOutlined style={dates.length % 2 === 0 ? {} : { paddingTop: 10, fontSize: 30 }} />
+                  </Col>
+                </Row>
+              </Card>
             </Col>
-          ))}
-          <Col span={12}>
-            <Card onClick={openCreateNewDate} hoverable style={{borderRadius: 10, border: '1px solid #C4C4C490', height: '100%'}}>
-              <Row justify='center' align='middle'>
-                <Col><PlusOutlined style={dates.length%2 === 0 ? {} : {paddingTop: 10, fontSize: 30}} /></Col>
-              </Row>
-            </Card>
-          </Col>
+          ) : null}
         </Row>
         {/* <List 
           grid={{gutter: 8, column: 2}}
@@ -123,7 +130,12 @@ export default function CustomDateEvent(props: Props) {
             </Row>
           </List.Item>
         </List> */}
-        <Row justify='end' gutter={[8, 8]} wrap>
+        <Row justify='space-between' gutter={[8, 8]} wrap>
+          <Col>
+            <Typography.Text strong style={{ alignItems: 'center' }}>
+             {dates.length}/6 fechas
+            </Typography.Text>
+          </Col>
           <Col>
             <Button icon={<SaveOutlined />} type='primary' onClick={handleSubmit} loading={isSaving}>
               Guardar fechas

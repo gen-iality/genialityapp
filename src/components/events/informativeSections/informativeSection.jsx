@@ -25,12 +25,11 @@ class InformativeSection extends Component {
       ellipsis: true,
     };
   }
-
   componentDidMount() {
     this.props.setVirtualConference(false);
     this.setState({
       informativeSection: this.props.cEvent.value.itemsMenu.informativeSection,
-      markup: this.props.cEvent.value.itemsMenu.informativeSection.markup,
+      markup: this.props.cEvent.value.itemsMenu.informativeSection?.markup,
     });
     //OBTENER GALERIA
     // EventsApi.getGallery(this.props.cEvent.value._id).then((resp) => {
@@ -128,37 +127,54 @@ class InformativeSection extends Component {
     const { Paragraph } = Typography;
     return (
       <Fragment>
-        {informativeSection !== null && (
-          <div className='site-card-border-less-wrapper' style={{ marginTop: 35 }}>
-            <Card
-              title={informativeSection.name || 'clasificación'}
-              bordered={false}
-              style={{ backgroundColor: 'transparent', margin: 'auto' }}>
-              {this.props.cEvent.value._id !== '611c285104f5d97d1b0f5ed2' && markup && Parser(markup)}
+        <Row justify='center' gutter={[8, 8]} wrap>
+          <Col span={23}>
+            {(informativeSection !== null && informativeSection !== undefined) && (
+              <div className='site-card-border-less-wrapper' style={{ marginTop: 35 }}>
+                <Card
+                  style={{
+                    backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
+                    borderRadius: 20
+                  }}
+                  title={
+                    <Typography.Title level={4} style={{ color: this.props.cEvent.value.styles.textMenu }}>
+                      {informativeSection.name || 'clasificación'}
+                    </Typography.Title>
+                  }
+                  bordered={false}
+                  headStyle={{ border: 'none'}}
+                >
+                  {this.props.cEvent.value._id !== '611c285104f5d97d1b0f5ed2' && 
+                    <div id='frame-informative'>
+                        {markup && Parser(markup)}
+                    </div>
+                  }
 
-              {this.props.cEvent.value._id == '611c285104f5d97d1b0f5ed2' && (
-                <>
-                  <h2
-                    style={{
-                      fontWeight: 700,
-                      fontSize: '20px',
-                      borderBottom: '1px solid #C0BAB9',
-                      marginTop: '15px',
-                      margin: 'auto',
-                    }}>
-                    Proyecto Casos Clínicos de Obesidad: Adiposopatia en el Siglo XXI, más allá del peso Ideal
-                  </h2>
-                  <br></br>
-                  <ReactPlayer
-                    style={{ width: '560px', height: '445px', margin: 'auto' }}
-                    url='https://vimeo.com/589393733'
-                    controls
-                  />
-                </>
-              )}
-            </Card>
-          </div>
-        )}
+                  {this.props.cEvent.value._id == '611c285104f5d97d1b0f5ed2' && (
+                    <>
+                      <h2
+                        style={{
+                          fontWeight: 700,
+                          fontSize: '20px',
+                          borderBottom: '1px solid #C0BAB9',
+                          marginTop: '15px',
+                          margin: 'auto',
+                        }}>
+                        Proyecto Casos Clínicos de Obesidad: Adiposopatia en el Siglo XXI, más allá del peso Ideal
+                      </h2>
+                      <br></br>
+                      <ReactPlayer
+                        style={{ width: '560px', height: '445px', margin: 'auto' }}
+                        url='https://vimeo.com/589393733'
+                        controls
+                      />
+                    </>
+                  )}
+                </Card>
+              </div>
+            )}
+            </Col>
+          </Row>
       </Fragment>
     );
   }

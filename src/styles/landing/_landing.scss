@@ -48,3 +48,13 @@ section.landing .containerfenalco {
     width: 100% !important;
   }
 }
+
+#frame-informative {
+  width: 100% !important;
+  .mapouter {
+    width: 100% !important;
+    .gmap_canvas {
+      width: 100% !important;
+    }
+  }
+}
