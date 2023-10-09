@@ -357,14 +357,14 @@ class EventAdminRoutes extends Component<
                 path="tipo-asistentes/*"
                 element={<TipoAsistentes event={event} />}
               />
-              {/* <Route
+              <Route
                 path="dashboard"
                 element={
                   // <StillInDeveloping disableTesting>
                   <DashboardEvent eventId={event._id} event={event} />
                   // </StillInDeveloping>
                 }
-              /> */}
+              />
               <Route
                 path="badge"
                 element={<BadgeEvent eventId={event._id} event={event} />}
