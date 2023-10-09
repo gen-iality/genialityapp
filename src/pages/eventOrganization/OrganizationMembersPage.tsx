@@ -227,8 +227,8 @@ const OrganizationMembersPage: FunctionComponent<IOrganizationMembersPageProps> 
       membersDataSource
         .map((user) => {
           delete user._id
-          delete user.created_at
-          delete user.updated_at
+          // delete user.created_at
+          // delete user.updated_at
           delete user.position
           delete user.position_id
           delete user.rol_id
