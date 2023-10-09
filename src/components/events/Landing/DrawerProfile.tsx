@@ -8,7 +8,6 @@ import { connect } from 'react-redux'
 import { haveRequest, isMyContacts } from '@helpers/netWorkingFunctions'
 import { useEventContext } from '@context/eventContext'
 import { useUserEvent } from '@context/eventUserContext'
-import { setUserAgenda } from '../../../redux/networking/actions'
 import withContext, { WithEviusContextProps } from '@context/withContext'
 import { FunctionComponent, useEffect } from 'react'
 import { useState } from 'react'
@@ -25,7 +24,6 @@ type MapStateToPropsType = {
 
 const mapDispatchToProps = {
   setViewPerfil,
-  setUserAgenda,
 }
 
 type IDrawerProfileProps = WithEviusContextProps<

@@ -379,7 +379,6 @@ const LandingRoutes: FunctionComponent<WithEviusContextProps<ILandingRoutesProps
 const mapStateToProps = (state: any) => ({
   currentActivity: state.stage.data.currentActivity,
   tabs: state.stage.data.tabs,
-  view: state.topBannerReducer.view,
   userAgenda: state.spaceNetworkingReducer.userAgenda,
 })
 

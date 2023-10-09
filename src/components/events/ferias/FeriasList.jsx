@@ -7,7 +7,6 @@ import { useState } from 'react'
 import { connect } from 'react-redux'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
 import FeriaStand from './FeriasStand'
-import { setTopBanner } from '../../../redux/topBanner/actions'
 import { firestore } from '@helpers/firebase'
 import withContext from '@context/withContext'
 
@@ -21,11 +20,9 @@ const FeriasList = ({ event_id, setVirtualConference, setTopBanner, cEvent }) =>
   // Efecto para ocultar y mostrar virtual conference
   useEffect(() => {
     setVirtualConference(false)
-    setTopBanner(false)
     setBannerImage(cEvent.value.styles.banner_image)
     return () => {
       setVirtualConference(true)
-      setTopBanner(true)
     }
   }, [])
   useEffect(() => {
@@ -134,6 +131,5 @@ const FeriasList = ({ event_id, setVirtualConference, setTopBanner, cEvent }) =>
 }
 const mapDispatchToProps = {
   setVirtualConference,
-  setTopBanner,
 }
 export default connect(null, mapDispatchToProps)(withContext(FeriasList))

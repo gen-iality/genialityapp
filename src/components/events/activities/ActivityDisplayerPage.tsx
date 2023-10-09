@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import Moment from 'moment-timezone'
 import { FormattedMessage } from 'react-intl'
 import { Card, Col, Button, Row, Result, Alert, Spin } from 'antd'
-import { setTopBanner } from '../../../redux/topBanner/actions'
 import { AgendaApi } from '@helpers/request'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
@@ -97,9 +96,6 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
       setOrderedHost((result.hosts as any[]).sort((a, b) => a.order - b.order))
     })
 
-    props.setTopBanner(false)
-    props.setVirtualConference(false)
-
     if (cEvent?.value?.is_socialzone_opened) {
       HandleOpenCloseMenuRigth(false)
     } else {
@@ -128,7 +124,6 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
     })
 
     return () => {
-      props.setTopBanner(true)
       props.setVirtualConference(true)
       HandleOpenCloseMenuRigth(true)
       helperDispatch({ type: 'currentActivity', currentActivity: null })
@@ -273,7 +268,6 @@ const mapStateToProps = (state: any) => ({
 })
 
 const mapDispatchToProps = {
-  setTopBanner,
   setVirtualConference,
   setHasOpenSurveys,
 }
