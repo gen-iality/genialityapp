@@ -1,11 +1,15 @@
-import { FunctionComponent } from 'react'
+import { FunctionComponent, useEffect } from 'react'
 import HeaderColumnswithContext from '../HeaderColumns'
 import MeetingPlayer from '../MeetingPlayer'
 
 import { IBasicActivityProps } from './basicTypes'
 
 const MeetingActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
-  const { activity } = props
+  const { activity, onActivityProgress } = props
+
+  useEffect(() => {
+    if (typeof onActivityProgress === 'function') onActivityProgress(100)
+  }, [])
 
   return (
     <>

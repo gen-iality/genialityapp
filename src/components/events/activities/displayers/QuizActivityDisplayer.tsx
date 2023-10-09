@@ -9,11 +9,15 @@ import { getActivityFirestoreData } from './getActivityFirestoreData'
 import { CurrentEventContext } from '@context/eventContext'
 
 const QuizActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
-  const { activity } = props
+  const { activity, onActivityProgress } = props
 
   const [activityState, setActivityState] = useState<any>()
 
   const cEvent = useContext(CurrentEventContext)
+
+  useEffect(() => {
+    if (typeof onActivityProgress === 'function') onActivityProgress(100)
+  }, [])
 
   useEffect(() => {
     if (!activity || !cEvent.value) return
