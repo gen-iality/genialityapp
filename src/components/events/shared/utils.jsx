@@ -220,17 +220,17 @@ export const MenuItems = [
       },
     ],
   },
-  {
-    name: 'Estadísticas',
-    icon: <BarChartOutlined />,
-    key: 'estadisticas',
-    items: [
-      {
-        name: 'Accede a las estadisticas del curso / lecciones',
-        path: '/dashboard',
-        key: 'estadisticas-evento',
-        onClick: handleClick,
-      },
-    ],
-  },
+  // {
+  //   name: 'Estadísticas',
+  //   icon: <BarChartOutlined />,
+  //   key: 'estadisticas',
+  //   items: [
+  //     {
+  //       name: 'Accede a las estadisticas del curso / lecciones',
+  //       path: '/dashboard',
+  //       key: 'estadisticas-evento',
+  //       onClick: handleClick,
+  //     },
+  //   ],
+  // },
 ]
