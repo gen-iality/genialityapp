@@ -53,6 +53,7 @@ const CertificatesByUser: FunctionComponent<ICertificatesByUserProps> = (props) 
               setCurrentEvent(event)
               setSelectedCertificateToDownload(cert)
               setRoles(roles)
+              window.scrollTo({ top: 100 })
             }}
           >
             Precargar
