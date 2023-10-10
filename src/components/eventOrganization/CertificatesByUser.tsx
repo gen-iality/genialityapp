@@ -39,6 +39,8 @@ const CertificatesByUser: FunctionComponent<ICertificatesByUserProps> = (props) 
   const [cacheRoles, setCacheRoles] = useState<{ [key: string]: any }>({})
   const [currentEvent, setCurrentEvent] = useState<any | null>(null)
 
+  const [isPreparingCert, setIsPreparingCert] = useState(false)
+
   const pdfGeneratorRef = useRef<Html2PdfCertsRef>(null)
 
   const [certificateData, setCertificateData] = useState<CertificateType>({
@@ -181,6 +183,7 @@ const CertificatesByUser: FunctionComponent<ICertificatesByUserProps> = (props) 
       currentCertRows = JSON.parse(selectedCertificateToDownload?.content) as CertRow[]
     }
 
+    setIsPreparingCert(true)
     getOrgMemberProperties(eventUser, organizationId)
       .then((extraOrgMemberProperties) => {
         const newUserDataWithInjection = {
@@ -221,11 +224,16 @@ const CertificatesByUser: FunctionComponent<ICertificatesByUserProps> = (props) 
         console.error('The organization user can not be gotten:', err)
         StateMessage.show(null, 'error', 'No se ha podido obtener desde el servidor')
       })
+      .finally(() => {
+        setIsPreparingCert(false)
+      })
   }, [selectedCertificateToDownload, organizationId, eventUser, currentEvent])
 
   useEffect(() => {
     if (!currentEvent) return
     if (!user) return
+
+    setIsPreparingCert(true)
 
     UsersApi.getEventUserByUser(currentEvent._id, user._id)
       .then((data) => {
@@ -238,6 +246,9 @@ const CertificatesByUser: FunctionComponent<ICertificatesByUserProps> = (props) 
           'error',
           `No puede obtener el registro del usuario en el evento ${currentEvent.name}`,
         )
+      })
+      .finally(() => {
+        setIsPreparingCert(false)
       })
   }, [currentEvent, user])
 
@@ -260,13 +271,19 @@ const CertificatesByUser: FunctionComponent<ICertificatesByUserProps> = (props) 
       <Table loading={isLoadingTable} dataSource={dataSource} columns={columns} />
       {selectedCertificateToDownload && (
         <Button
-          disabled={isGenerating}
+          disabled={isGenerating || isPreparingCert}
           type="primary"
           onClick={() => {
             generatePdfCertificate()
           }}
         >
-          Descargar
+          {isPreparingCert ? (
+            <>
+              Cargando datos específicos... <LoadingOutlined />
+            </>
+          ) : (
+            'Descargar'
+          )}
         </Button>
       )}
       {selectedCertificateToDownload && (
