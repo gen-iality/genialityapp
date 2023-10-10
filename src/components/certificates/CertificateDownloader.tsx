@@ -185,6 +185,7 @@ const CertificateDownloader: FunctionComponent<ICertificateDownloaderProps> = (p
     if (!finalEventUser) return
     if (!finalEvent) return
     if (!finalRoles) return
+    if (!finalOrganization) return
 
     let currentCertRows: CertRow[] = defaultCertRows
     console.debug('selectedCertificateToDownload', { selectedCertificateToDownload })
