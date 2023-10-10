@@ -171,7 +171,6 @@ const CertificatesByUser: FunctionComponent<ICertificatesByUserProps> = (props) 
   useEffect(() => {
     if (!selectedCertificateToDownload) return
     if (!organizationId) return
-    if (!user) return
     if (!eventUser) return
     if (!currentEvent) return
 
@@ -222,7 +221,7 @@ const CertificatesByUser: FunctionComponent<ICertificatesByUserProps> = (props) 
         console.error('The organization user can not be gotten:', err)
         StateMessage.show(null, 'error', 'No se ha podido obtener desde el servidor')
       })
-  }, [selectedCertificateToDownload, user, organizationId, eventUser, currentEvent])
+  }, [selectedCertificateToDownload, organizationId, eventUser, currentEvent])
 
   useEffect(() => {
     if (!currentEvent) return
