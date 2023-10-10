@@ -48,6 +48,16 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
           console.log('load video to:', data.viewProgress * 100, '%')
           setViewedVideoProgress(data.viewProgress)
           setViewProgress(data.viewProgress)
+
+          // Some problems
+          if (data.viewProgress > 1) {
+            FB.Attendees.ref(activity._id, cEventUser.value._id).set(
+              {
+                viewProgress: 1,
+              },
+              { merge: true },
+            )
+          }
         }
       })
 
