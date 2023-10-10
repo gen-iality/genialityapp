@@ -1,39 +1,39 @@
-import { FunctionComponent, useEffect, useState } from 'react'
+import { FunctionComponent, useContext, useEffect, useState } from 'react'
 import SurveyDetailPage from '../../surveys/SurveyDetailPage'
 import HeaderColumnswithContext from '../HeaderColumns'
-
-import WithEviusContext from '@context/withContext'
 
 import { Spin } from 'antd'
 
 import { IBasicActivityProps } from './basicTypes'
 import { getActivityFirestoreData } from './getActivityFirestoreData'
+import { CurrentEventContext } from '@context/eventContext'
 
-// TODO: fix props definition, for example: cEvent
 const SurveyActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
-  const { activity } = props
+  const { activity, onActivityProgress } = props
 
-  const [activityState, setActivityState] = useState()
+  const [activityState, setActivityState] = useState<any>()
+
+  const cEvent = useContext(CurrentEventContext)
 
   useEffect(() => {
-    if (!activity || !props.cEvent) return
+    if (typeof onActivityProgress === 'function') onActivityProgress(100)
+  }, [])
+
+  useEffect(() => {
+    if (!activity || !cEvent.value) return
 
     let unsubscribe: any
     if (activity != null) {
-      unsubscribe = getActivityFirestoreData(
-        props.cEvent.value._id,
-        activity._id,
-        (data) => {
-          console.log('realtime', data)
-          setActivityState(data)
-        },
-      )
+      unsubscribe = getActivityFirestoreData(cEvent.value._id, activity._id, (data) => {
+        console.log('realtime', data)
+        setActivityState(data)
+      })
     }
 
     return () => {
       unsubscribe && unsubscribe()
     }
-  }, [activity, props.cEvent])
+  }, [activity, cEvent.value])
 
   return (
     <>
@@ -47,4 +47,4 @@ const SurveyActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) 
   )
 }
 
-export default WithEviusContext(SurveyActivityDisplayer)
+export default SurveyActivityDisplayer

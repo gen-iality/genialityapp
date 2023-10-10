@@ -13,7 +13,7 @@ import { getActivityFirestoreData } from './getActivityFirestoreData'
 import { useEventContext } from '@context/eventContext'
 
 const StreamingActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
-  const { activity } = props
+  const { activity, onActivityProgress } = props
   const [activityState, setActivityState] = useState('')
   const [meetingId, setMeetingId] = useState('')
   const [fnCiclo, setFnCiclo] = useState(false)
@@ -23,6 +23,11 @@ const StreamingActivityDisplayer: FunctionComponent<IBasicActivityProps> = (prop
   // Estado para controlar origen de transmision
 
   const { transmition, setTransmition } = useContext(AgendaContext)
+
+  // IDK
+  useEffect(() => {
+    if (typeof onActivityProgress === 'function') onActivityProgress(100)
+  }, [])
 
   useEffect(() => {
     async function GetStateStreamingRoom() {

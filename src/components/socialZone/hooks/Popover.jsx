@@ -206,7 +206,6 @@ const PopoverInfoUser = (props) => {
 
 const mapDispatchToProps = {
   setViewPerfil,
-  setUserAgenda,
 }
 
 export default connect(null, mapDispatchToProps)(PopoverInfoUser)

@@ -9,7 +9,6 @@ import survey from './survey/reducers'
 import notifications from './notifications/reducers'
 import tabs from './tabs/reducers'
 import notificationsNetReducer from './notifyNetworking/reducers'
-import topBannerReducer from './topBanner/reducers'
 import virtualConferenceReducer from './virtualconference/reducers'
 import viewPerfilReducer from './viewPerfil/reducers'
 import spaceNetworkingReducer from './networking/reducers'
@@ -27,7 +26,6 @@ export default {
   notifications,
   tabs,
   notificationsNetReducer,
-  topBannerReducer,
   virtualConferenceReducer,
   viewPerfilReducer,
   spaceNetworkingReducer,

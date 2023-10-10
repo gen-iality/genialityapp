@@ -589,8 +589,8 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       deleteEventUserSection,
       checkInColumn,
       ...extraColumns,
-      progressingColumn,
-      timeTrackingStatsColumn,
+      //progressingColumn,
+      //timeTrackingStatsColumn,
       rolColumn,
       createdAtColumn,
       updatedAtColumn,
@@ -715,7 +715,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         : dataSource || []
     let attendees = [...source].sort((a, b) => b.created_at - a.created_at)
 
-    console.info('attendees', attendees)
+    console.info('raw attendees', attendees)
 
     const joint = [...extraFields, ...simplifyOrgProperties]
 
@@ -734,6 +734,8 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       name: 'eventProgress',
       label: 'Progreso de curso',
     })
+
+    console.info('processed attendees', attendees)
 
     const data = await parseData2Excel(attendees, joint, rolesList)
     const ws = utils.json_to_sheet(data)

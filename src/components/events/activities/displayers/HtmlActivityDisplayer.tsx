@@ -4,10 +4,14 @@ import HeaderColumnswithContext from '../HeaderColumns'
 import { IBasicActivityProps } from './basicTypes'
 
 const HtmlActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
-  const { activity } = props
+  const { activity, onActivityProgress } = props
   const [htmlData, setHtmlData] = useState<string>('')
 
   const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (typeof onActivityProgress === 'function') onActivityProgress(100)
+  }, [])
 
   useEffect(() => {
     if (!activity) return

@@ -6,7 +6,6 @@ import ProductCard from './ProductCard'
 import Contact from './contact'
 import { useParams } from 'react-router'
 import { connect } from 'react-redux'
-import { setTopBanner } from '../../../redux/topBanner/actions'
 import { getEventCompany } from '../../empresas/services.js'
 import { useState } from 'react'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
@@ -25,10 +24,8 @@ const FeriasDetail = (props) => {
   const params = useParams()
 
   useEffect(() => {
-    props.setTopBanner(false)
     props.setVirtualConference(false)
     return () => {
-      props.setTopBanner(true)
       props.setVirtualConference(true)
     }
   })
@@ -210,12 +207,10 @@ const FeriasDetail = (props) => {
 const mapStateToProps = (state, { params }) => ({
   currentActivity: state.stage.data.currentActivity,
   tabs: state.stage.data.tabs,
-  view: state.topBannerReducer.view,
   params: params,
 })
 
 const mapDispatchToProps = {
-  setTopBanner,
   setVirtualConference,
 }
 
