@@ -1,20 +1,13 @@
 import { LoadingOutlined } from '@ant-design/icons'
-import { StateMessage } from '@context/MessageService'
 import { UsersApi, EventsApi, RolAttApi } from '@helpers/request'
-import { Button, Modal, Result, Space, Table, Typography } from 'antd'
-import { FunctionComponent, useEffect, useRef, useState } from 'react'
+import { Button, Result, Space, Table, Typography } from 'antd'
+import { FunctionComponent, useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import useCertificateFinder from './hooks/useCertificateFinder'
 import { ColumnsType } from 'antd/lib/table'
-import { CertRow, Html2PdfCerts, Html2PdfCertsRef } from 'html2pdf-certs'
 import CertificateType from '@Utilities/types/CertificateType'
-import {
-  defaultCertRows,
-  defaultCertificateBackground,
-} from '@components/certificates/constants'
-import { replaceAllTagValues } from '@components/certificates/utils/replaceAllTagValues'
-import { getOrgMemberProperties } from '@components/events/CertificateLandingPage'
-import dayjs from 'dayjs'
+
+import CertificateDownloader from '@components/certificates/CertificateDownloader'
 
 type Params = {
   id: string
@@ -23,38 +16,20 @@ type Params = {
 
 interface ICertificatesByUserProps {}
 
-const initContent: string = JSON.stringify(defaultCertRows)
-
 const CertificatesByUser: FunctionComponent<ICertificatesByUserProps> = (props) => {
   const { id: organizationId, userId } = useParams<Params>()
   const [isLoading, setIsLoading] = useState(false)
   const [user, setUser] = useState<any | null>(null)
-  const [eventUser, setEventUser] = useState<any | null>(null)
   const [certs, setCerts] = useState<any[]>([])
 
   const [dataSource, setDataSource] = useState<any>([])
   const [isLoadingTable, setIsLoadingTable] = useState(false)
-  const [roles, setRoles] = useState<any[]>([])
   const [cacheEvents, setCacheEvents] = useState<{ [key: string]: any }>({})
   const [cacheRoles, setCacheRoles] = useState<{ [key: string]: any }>({})
   const [currentEvent, setCurrentEvent] = useState<any | null>(null)
 
-  const [isPreparingCert, setIsPreparingCert] = useState(false)
+  const [roles, setRoles] = useState<any[]>([])
 
-  const pdfGeneratorRef = useRef<Html2PdfCertsRef>(null)
-
-  const [certificateData, setCertificateData] = useState<CertificateType>({
-    content: initContent,
-    background: defaultCertificateBackground,
-    event_id: '',
-    name: '',
-    event: null,
-  })
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [readyCertToGenerate, setReadyCertToGenerate] = useState<
-    CertificateType | undefined
-  >()
-  const [finalCertRows, setFinalCertRows] = useState<CertRow[]>(JSON.parse(initContent))
   const [selectedCertificateToDownload, setSelectedCertificateToDownload] = useState<
     CertificateType | undefined
   >()
@@ -88,19 +63,6 @@ const CertificatesByUser: FunctionComponent<ICertificatesByUserProps> = (props) 
   ])
 
   const { loadCertsByUser } = useCertificateFinder(organizationId)
-
-  const generatePdfCertificate = () => {
-    if (!selectedCertificateToDownload) {
-      Modal.error({
-        title: 'Error al generar',
-        content: 'Falta seleccionar el certificado a generar',
-      })
-      return
-    }
-
-    setIsGenerating(true)
-    setReadyCertToGenerate(selectedCertificateToDownload)
-  }
 
   useEffect(() => {
     if (!userId) return
@@ -157,101 +119,6 @@ const CertificatesByUser: FunctionComponent<ICertificatesByUserProps> = (props) 
       })
   }, [certs])
 
-  // Watch and generate the PDF
-  useEffect(() => {
-    if (!pdfGeneratorRef.current) {
-      console.debug('ref to Html2PdfCerts is undefined')
-      return
-    }
-    if (readyCertToGenerate !== undefined) {
-      console.log('start generating the certificate')
-      pdfGeneratorRef.current.generatePdf()
-      setReadyCertToGenerate(undefined)
-    }
-  }, [readyCertToGenerate, pdfGeneratorRef.current])
-
-  useEffect(() => {
-    if (!selectedCertificateToDownload) return
-    if (!organizationId) return
-    if (!eventUser) return
-    if (!currentEvent) return
-
-    let currentCertRows: CertRow[] = defaultCertRows
-    console.debug('selectedCertificateToDownload', { selectedCertificateToDownload })
-    if (selectedCertificateToDownload?.content) {
-      console.log('parse cert content from DB-saved')
-      currentCertRows = JSON.parse(selectedCertificateToDownload?.content) as CertRow[]
-    }
-
-    setIsPreparingCert(true)
-    getOrgMemberProperties(eventUser, organizationId)
-      .then((extraOrgMemberProperties) => {
-        const newUserDataWithInjection = {
-          ...eventUser,
-          properties: {
-            ...eventUser.properties,
-            ...extraOrgMemberProperties,
-          },
-        }
-
-        const eventWithDateOfToday = { ...currentEvent }
-        eventWithDateOfToday.datetime_from = dayjs(
-          eventWithDateOfToday.datetime_from,
-        ).format('DD/MM/YYYY')
-        eventWithDateOfToday.datetime_to = dayjs(eventWithDateOfToday.datetime_to).format(
-          'DD/MM/YYYY',
-        )
-
-        // Put the user's data in the cert rows to print
-        const newCertRows = replaceAllTagValues(
-          eventWithDateOfToday,
-          newUserDataWithInjection,
-          roles,
-          currentCertRows,
-        )
-
-        setCertificateData({
-          ...certificateData,
-          ...(selectedCertificateToDownload || {}),
-          background:
-            selectedCertificateToDownload?.background ??
-            certificateData.background ??
-            defaultCertificateBackground,
-        })
-        setFinalCertRows(newCertRows)
-      })
-      .catch((err) => {
-        console.error('The organization user can not be gotten:', err)
-        StateMessage.show(null, 'error', 'No se ha podido obtener desde el servidor')
-      })
-      .finally(() => {
-        setIsPreparingCert(false)
-      })
-  }, [selectedCertificateToDownload, organizationId, eventUser, currentEvent])
-
-  useEffect(() => {
-    if (!currentEvent) return
-    if (!user) return
-
-    setIsPreparingCert(true)
-
-    UsersApi.getEventUserByUser(currentEvent._id, user._id)
-      .then((data) => {
-        setEventUser(data)
-      })
-      .catch((err) => {
-        console.error(err)
-        StateMessage.show(
-          null,
-          'error',
-          `No puede obtener el registro del usuario en el evento ${currentEvent.name}`,
-        )
-      })
-      .finally(() => {
-        setIsPreparingCert(false)
-      })
-  }, [currentEvent, user])
-
   if (isLoading) {
     return (
       <Result
@@ -269,47 +136,14 @@ const CertificatesByUser: FunctionComponent<ICertificatesByUserProps> = (props) 
         <p>Seleccionado: {selectedCertificateToDownload.name}</p>
       )}
       <Table loading={isLoadingTable} dataSource={dataSource} columns={columns} />
-      {selectedCertificateToDownload && (
-        <Button
-          disabled={isGenerating || isPreparingCert}
-          type="primary"
-          onClick={() => {
-            generatePdfCertificate()
-          }}
-        >
-          {isPreparingCert ? (
-            <>
-              Cargando datos específicos... <LoadingOutlined />
-            </>
-          ) : (
-            'Descargar'
-          )}
-        </Button>
-      )}
-      {selectedCertificateToDownload && (
-        <Html2PdfCerts
-          handler={pdfGeneratorRef}
-          rows={finalCertRows}
-          imageUrl={certificateData.background ?? defaultCertificateBackground}
-          backgroundColor="#005882"
-          enableLinks={true}
-          filename={`certificate of ${user.names}.pdf`}
-          format={[
-            certificateData.cert_width ?? 1280,
-            certificateData.cert_height ?? 720,
-          ]}
-          sizeStyle={{
-            height: certificateData.cert_height ?? 720,
-            width: certificateData.cert_width ?? 1280,
-          }}
-          transformationScale={0.5}
-          unit="px"
-          orientation="landscape"
-          onEndGenerate={() => {
-            setIsGenerating(false)
-          }}
-        />
-      )}
+      <CertificateDownloader
+        user={user}
+        event={currentEvent}
+        roles={roles}
+        organizationId={organizationId}
+        cert={selectedCertificateToDownload}
+        certificateName={`certificate of ${user?.names} para ${currentEvent?.name}.pdf`}
+      />
     </Space>
   )
 }
