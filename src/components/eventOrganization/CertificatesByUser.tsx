@@ -60,7 +60,9 @@ const CertificatesByUser: FunctionComponent<ICertificatesByUserProps> = (props) 
                 setCurrentEvent(event)
                 setSelectedCertificateToDownload(cert)
                 setRoles(roles)
-                window.scrollTo({ top: 100 })
+                setTimeout(() => {
+                  window.scrollTo({ top: window.scrollMaxY ?? 9999 })
+                }, 3000)
               }}
             >
               {selectedCertificateToDownload?._id == cert._id
