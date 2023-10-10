@@ -228,7 +228,7 @@ const CertificatesByUser: FunctionComponent<ICertificatesByUserProps> = (props) 
     if (!currentEvent) return
     if (!user) return
 
-    EventsApi.getEventUser(user._id, currentEvent._id)
+    UsersApi.getEventUserByUser(currentEvent._id, user._id)
       .then((data) => {
         setEventUser(data)
       })
