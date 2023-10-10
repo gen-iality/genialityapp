@@ -1,11 +1,5 @@
 import CertificateType from '@Utilities/types/CertificateType'
-import {
-  AttendeeApi,
-  EventsApi,
-  OrganizationApi,
-  RolAttApi,
-  UsersApi,
-} from '@helpers/request'
+import { EventsApi, OrganizationApi, RolAttApi, UsersApi } from '@helpers/request'
 import { CertRow, Html2PdfCerts, Html2PdfCertsRef } from 'html2pdf-certs'
 import { FunctionComponent, useEffect, useRef, useState } from 'react'
 import { defaultCertRows, defaultCertificateBackground } from './constants'
