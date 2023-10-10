@@ -34,36 +34,44 @@ const CertificatesByUser: FunctionComponent<ICertificatesByUserProps> = (props) 
     CertificateType | undefined
   >()
 
-  const [columns] = useState<ColumnsType<any>>([
-    {
-      title: 'Certificado',
-      dataIndex: 'name',
-    },
-    {
-      title: 'Curso',
-      dataIndex: 'event',
-      render: (event: any) => event.name,
-    },
-    {
-      title: 'Opciones',
-      render: ({ cert, roles, event }) => {
-        return (
-          <Button
-            onClick={() => {
-              setCurrentEvent(event)
-              setSelectedCertificateToDownload(cert)
-              setRoles(roles)
-              window.scrollTo({ top: 100 })
-            }}
-          >
-            Precargar
-          </Button>
-        )
-      },
-    },
-  ])
+  const [columns, setColumns] = useState<ColumnsType<any>>([])
 
   const { loadCertsByUser } = useCertificateFinder(organizationId)
+
+  useEffect(() => {
+    setColumns([
+      {
+        title: 'Certificado',
+        dataIndex: 'name',
+      },
+      {
+        title: 'Curso',
+        dataIndex: 'event',
+        render: (event: any) => event.name,
+      },
+      {
+        title: 'Opciones',
+        render: ({ cert, roles, event }) => {
+          return (
+            <Button
+              type="primary"
+              disabled={selectedCertificateToDownload?._id == cert._id}
+              onClick={() => {
+                setCurrentEvent(event)
+                setSelectedCertificateToDownload(cert)
+                setRoles(roles)
+                window.scrollTo({ top: 100 })
+              }}
+            >
+              {selectedCertificateToDownload?._id == cert._id
+                ? 'Previsualizado'
+                : 'Precargar'}
+            </Button>
+          )
+        },
+      },
+    ])
+  }, [selectedCertificateToDownload])
 
   useEffect(() => {
     if (!userId) return
@@ -131,12 +139,12 @@ const CertificatesByUser: FunctionComponent<ICertificatesByUserProps> = (props) 
   }
 
   return (
-    <Space direction="vertical">
+    <Space direction="vertical" style={{ margin: 15 }}>
       {user && <Typography.Title>{user.names}</Typography.Title>}
       {selectedCertificateToDownload && (
         <p>Seleccionado: {selectedCertificateToDownload.name}</p>
       )}
-      <Table loading={isLoadingTable} dataSource={dataSource} columns={columns} />
+      <Table sticky loading={isLoadingTable} dataSource={dataSource} columns={columns} />
       <CertificateDownloader
         user={user}
         event={currentEvent}
