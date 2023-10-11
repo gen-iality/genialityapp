@@ -115,7 +115,7 @@ function QuizApprovedStatus(props: QuizApprovedStatusProps) {
         />
       )}
       {isLoaded && isApproved && props.approvedLink && (
-        <Link to={props.approvedLink}>
+        <Link to={props.approvedLink} target="_blank">
           <Button
             style={{
               background: '#356785',
