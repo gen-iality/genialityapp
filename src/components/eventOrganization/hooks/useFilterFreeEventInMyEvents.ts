@@ -6,7 +6,7 @@ export const useFilterFreeEventInMyEvents = (
   myUserOrg: any,
   condition: boolean
 ) => {
-  const [eventFreeFiltered, setEventFreeFiltered] = useState<any[]>([]);
+  const [eventsFree, setEventFreeFiltered] = useState<any[]>([]);
   const [isFiltering, setisFiltering] = useState(true);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export const useFilterFreeEventInMyEvents = (
   }, [condition, eventsWithEventUser.length]);
 
   return {
-    eventFreeFiltered,
+    eventsFree,
     isFiltering,
   };
 };

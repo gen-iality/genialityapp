@@ -73,7 +73,7 @@ export const useCrudGruopEventList = (organizationId: string, options?: Partial<
   };
 
   const handledDelteEvent = async (orgId: string, groupId: string, eventId: string) => {
-    await GroupsApi.deleteEventFromGroup(orgId, eventId, groupId);
+    await GroupsApi.deleteEventFromGroup(orgId, groupId, eventId);
     const newGroupList: GroupEventMongo[] = groupEvent.map((group) => ({
       ...group,
       item: {
@@ -90,13 +90,10 @@ export const useCrudGruopEventList = (organizationId: string, options?: Partial<
       item: {
         ...group.item,
         organization_user_ids: group.item.organization_user_ids.filter((orgUserIdItem) => {
-          console.log('orgUserIdItem', orgUserIdItem);
-          console.log('orgUserId', orgUserId);
           return orgUserIdItem !== orgUserId;
         }),
       },
     }));
-    console.log('newGroupList', newGroupList);
     setGroupEvent(newGroupList);
   };
 

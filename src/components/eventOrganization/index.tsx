@@ -135,7 +135,7 @@ function EventOrganization({ match }: OrganizationProps) {
             <Row justify='center' style={{ paddingTop: '32px', paddingBottom: '32px' }}>
               <Col span={23}>
                 <Row gutter={[0, 32]}>
-                  {cUser.value && (
+                  {cUser.value?._id && (
                     <Col style={{ width: '100%' }}>
                       {!isLoadingOtherEvents && (
                         <MyEvents

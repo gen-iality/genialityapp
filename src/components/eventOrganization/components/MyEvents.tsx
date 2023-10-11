@@ -8,8 +8,8 @@ import { Organization } from '../types';
 import { useGetEventsFreeAcces } from '../hooks/useGetEventFreeAcces';
 import createEventUser from '@/components/authentication/services/RegisterUserToEvent';
 import { useGetMyOrgUser } from '@/hooks/useGetMyOrgUser';
-import { notification } from 'antd';
 import { useFilterFreeEventInMyEvents } from '../hooks/useFilterFreeEventInMyEvents';
+import { DispatchMessageService } from '@/context/MessageService';
 
 const { Title } = Typography;
 
@@ -29,22 +29,23 @@ export const MyEvents = ({
   organizationId,
   cUser,
 }: Props) => {
-  const { eventsFreeAcces, isLoadingEventFreeAcces } = useGetEventsFreeAcces(organizationId);
+  const { eventsFreeAcces, isLoadingEventFreeAcces, getEventsFreeAcces } = useGetEventsFreeAcces(organizationId);
   const { myUserOrg, isLoadingMyUserOrg } = useGetMyOrgUser(organizationId);
-  const { eventFreeFiltered, isFiltering } = useFilterFreeEventInMyEvents(
+  const { eventsFree, isFiltering } = useFilterFreeEventInMyEvents(
     eventsFreeAcces,
     eventsWithEventUser,
     myUserOrg,
     !isLoadingEventFreeAcces && !isLoadingMyUserOrg
   );
-  const myAllEvents = [...eventsWithEventUser, ...eventFreeFiltered];
+  const myAllEvents = [...eventsWithEventUser, ...eventsFree];
+  const isLoadingMyAllEvents = isLoadingOtherEvents || isLoadingEventFreeAcces || isFiltering || isLoadingMyUserOrg;
 
   const { filteredList: eventsWithUserfiltered, setSearchTerm: setSearchTermEventWithUser } = useSearchList(
     eventsWithEventUser,
     'name'
   );
   const { filteredList: eventsFreeFiltered, setSearchTerm: setSearchTermEventsFree } = useSearchList(
-    eventFreeFiltered,
+    eventsFree,
     'name'
   );
 
@@ -52,11 +53,16 @@ export const MyEvents = ({
 
   const redirectToEventFreeAcces = async (event: any) => {
     try {
+      const lastEventsFreeAcces = await getEventsFreeAcces();
+      const accesToEvent = !!lastEventsFreeAcces.find((eventItem) => eventItem._id === event._id);
+      if (!accesToEvent) {
+        return DispatchMessageService({
+          action: 'show',
+          msj: 'Se le ha denegado el acceso al evento, pongase en contacto con el administrador',
+          type: 'warning',
+        });
+      }
       setIsRegisteringEventUser(true);
-      notification.open({
-        message: 'Redirigiendo',
-        description: `Se esta redirigiendo al evento ${event.name}`,
-      });
       const resUser = await createEventUser(
         {
           names: cUser.value?.names,
@@ -71,6 +77,11 @@ export const MyEvents = ({
         window.location.pathname = `/landing/${event._id}`;
       }
     } catch (error) {
+      return DispatchMessageService({
+        action: 'show',
+        msj: 'A ocurrido un error al ingresar al evento, vuelva a intentarlo',
+        type: 'warning',
+      });
     } finally {
       setIsRegisteringEventUser(false);
     }
@@ -110,16 +121,15 @@ export const MyEvents = ({
             </Col>
             <Col span={24}>
               <Row gutter={[16, 16]}>
-                {isLoadingOtherEvents || isLoadingEventFreeAcces || isFiltering || isLoadingMyUserOrg ? (
+                {isLoadingMyAllEvents ? (
                   <div style={{ width: '100vw', height: '100vh', textAlign: 'center' }}>
                     <Loading />
                   </div>
                 ) : (
                   <>
-                    {(eventsFreeFiltered || eventsWithUserfiltered) &&
-                    (eventsFreeFiltered.length > 0 || eventsWithUserfiltered.length > 0) ? (
+                    {eventsFree.length > 0 || eventsWithEventUser.length > 0 ? (
                       <>
-                        {(eventsWithUserfiltered.length > 0 || eventsFreeFiltered.length > 0)? (
+                        {eventsWithUserfiltered.length > 0 || eventsFreeFiltered.length > 0 ? (
                           <>
                             {eventsWithUserfiltered.map((event, index) => (
                               <Col key={event._id} xs={24} sm={12} md={12} lg={8} xl={6} xxl={4}>

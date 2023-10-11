@@ -29,8 +29,8 @@ export const GroupModal = ({
 }: Props) => {
   const inputRef = useRef<any>();
   const [form] = Form.useForm<GroupEvent>();
-  const { eventsByOrg } = useGetEventsByOrg(organizationId);
-  const { organizationUsers } = useGetOrganizationUsers(organizationId);
+  const { eventsByOrg, isLoadingEventsByOrg } = useGetEventsByOrg(organizationId);
+  const { organizationUsers, isLoadingOrgUsers } = useGetOrganizationUsers(organizationId);
   const {
     onChange: onChangeTransferEvents,
     onSelectChange: onSelectChangeEvents,
@@ -166,6 +166,7 @@ export const GroupModal = ({
         </Form.Item>
         <Form.Item label={'Eventos'} name={'event_ids'}>
           <Transfer
+            disabled={isLoadingEventsByOrg}
             listStyle={{ width: '100%' }}
             oneWay={true}
             showSearch
@@ -181,6 +182,7 @@ export const GroupModal = ({
         </Form.Item>
         <Form.Item label={'Usuarios'} name={'organization_user_ids'}>
           <Transfer
+            disabled={isLoadingOrgUsers}
             listStyle={{ width: '100%' }}
             oneWay={true}
             showSearch
