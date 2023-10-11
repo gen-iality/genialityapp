@@ -13,9 +13,15 @@ import { useModalLogic } from '@/hooks/useModalLogic';
 import { GroupEventMongo } from '../interface/group.interfaces';
 
 const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
-  const { groupEvent, handledDelete, handledUpdateGroup, isLoadingGroup, handledAddGroup } = useCrudGruopEventList(
-    organizationId
-  );
+  const {
+    groupEvent,
+    handledDelete,
+    handledUpdateGroup,
+    isLoadingGroup,
+    handledAddGroup,
+    handledDelteEvent,
+    handledDelteOrgUser,
+  } = useCrudGruopEventList(organizationId);
   const {
     categories,
     handledAddCategory,
@@ -52,7 +58,7 @@ const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
           <CardGroupEvent
             isLoadingGroup={isLoadingGroup}
             handledDelete={handledDelete}
-            selectGroup={handledSelectGroup}
+            setSelectGroup={handledSelectGroup}
             dataSource={groupEvent}
             handledOpenModalGroup={openGroupModal}
             toggleModalGroup={openGroupModal}
@@ -68,6 +74,8 @@ const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
           onCancel={closeGroupModal}
           organizationId={organizationId}
           selectedGroup={selectedGroup}
+          handledDelteEvent={handledDelteEvent}
+          handledDelteOrgUser={handledDelteOrgUser}
         />
       )}
 

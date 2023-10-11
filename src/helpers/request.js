@@ -923,6 +923,14 @@ export const GroupsApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.delete(`api/organizations/${orgId}/groups/${groupId}?token=${token}`, '', true);
   },
+  deleteOrgUserFromGroup: async (orgId, groupId, OrgUserId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/organizations/${orgId}/groups/${groupId}/organizationUsers/${OrgUserId}?token=${token}`, '', true);
+  },
+  deleteEventFromGroup: async (orgId, groupId, eventId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/organizations/${orgId}/groups/${groupId}/events/${eventId}?token=${token}`, '', true);
+  },
 };
 
 export const TypesApi = {
