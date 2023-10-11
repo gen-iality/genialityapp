@@ -46,7 +46,7 @@ export default function useCertificateFinder<T extends {} = any>(
           return (a?.valoration ?? 0) - (b?.valoration ?? 0)
         })
         .reverse()
-        .map(({ organizationMember }) => organizationMember) as T[]
+        .map(({ eventUser }) => eventUser) as T[]
     } catch (err: any) {
       console.error(err)
       if (err.response?.data?.error) {
