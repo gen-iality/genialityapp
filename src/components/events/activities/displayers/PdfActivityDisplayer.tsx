@@ -9,12 +9,16 @@ import 'react-pdf/dist/esm/Page/AnnotationLayer.css'
 import { IBasicActivityProps } from './basicTypes'
 
 const PdfActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
-  const { activity } = props
+  const { activity, onActivityProgress } = props
 
   const [pdfURL, setPdfURL] = useState()
 
   const [numPages, setNumPages] = useState<number | undefined>()
   const [pageNumber, setPageNumber] = useState(1)
+
+  useEffect(() => {
+    if (typeof onActivityProgress === 'function') onActivityProgress(100)
+  }, [])
 
   useEffect(() => {
     if (!activity) return

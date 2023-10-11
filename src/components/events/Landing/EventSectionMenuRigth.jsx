@@ -7,7 +7,6 @@ import MenuRigth from './Menus/MenuRigth'
 import { connect } from 'react-redux'
 const { Sider } = Layout
 import { useEventContext } from '@context/eventContext'
-import { setSpaceNetworking } from '../../../redux/networking/actions'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import DrawerProfile from './DrawerProfile'
 
@@ -73,7 +72,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   setViewPerfil,
-  setSpaceNetworking,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventSectionMenuRigth)

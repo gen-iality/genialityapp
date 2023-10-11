@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react'
+import { FunctionComponent, useEffect } from 'react'
 import { SmileOutlined } from '@ant-design/icons'
 import { Result } from 'antd'
 import HeaderColumnswithContext from '../HeaderColumns'
@@ -6,7 +6,11 @@ import HeaderColumnswithContext from '../HeaderColumns'
 import { IBasicActivityProps } from './basicTypes'
 
 const GenericActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
-  const { activity } = props
+  const { activity, onActivityProgress } = props
+
+  useEffect(() => {
+    if (typeof onActivityProgress === 'function') onActivityProgress(100)
+  }, [])
 
   return (
     <>

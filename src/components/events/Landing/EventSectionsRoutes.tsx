@@ -2,7 +2,6 @@ import { FunctionComponent, useEffect } from 'react'
 import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
-import { setSpaceNetworking } from '../../../redux/networking/actions'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions'
 import { useParams } from 'react-router-dom'
@@ -64,7 +63,6 @@ type MapStateToProps = {
 
 const mapDispatchToProps = {
   setVirtualConference,
-  setSpaceNetworking,
   setSectionPermissions,
 }
 
