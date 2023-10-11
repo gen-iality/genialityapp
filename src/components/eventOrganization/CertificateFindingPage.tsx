@@ -105,12 +105,29 @@ const CertificateFindingPage: FunctionComponent<ICertificateFindingPageProops> =
                   }}
                   wrap={false}
                 >
-                  <Col flex="200px">
+                  <Col flex="300px">
                     <Link to={`./${item.account_id}`}>
                       <Typography.Title level={5}>
                         <LinkOutlined /> {item.user?.names}
                       </Typography.Title>
                     </Link>
+                    {preloadedCerts[item.user._id] ? (
+                      <Typography.Text italic style={{ fontSize: '1rem' }}>
+                        Tiene {preloadedCerts[item.user._id].length} certificados
+                      </Typography.Text>
+                    ) : (
+                      <Button
+                        type="link"
+                        onClick={() => {
+                          preloadCertsByUser(item.user._id)
+                        }}
+                        style={{
+                          fontSize: '1rem',
+                        }}
+                      >
+                        Click para consultar el número de certificados
+                      </Button>
+                    )}
                   </Col>
 
                   <Col flex="300px">
@@ -120,26 +137,16 @@ const CertificateFindingPage: FunctionComponent<ICertificateFindingPageProops> =
                   <Col flex="auto"></Col>
 
                   <Col>
-                    <Button
-                      type="text"
-                      disabled={!!preloadedCerts[item.user._id]}
-                      onClick={() => {
-                        preloadCertsByUser(item.user._id)
-                      }}
-                    >
+                    <Link to={`./${item.account_id}`}>
                       <Badge
-                        count={
-                          preloadedCerts[item.user._id]
-                            ? `Certificados (${preloadedCerts[item.user._id].length})`
-                            : 'Consultar'
-                        }
+                        count="Consultar"
                         style={{
                           backgroundColor: preloadedCerts[item.user._id]
                             ? 'green'
                             : 'red',
                         }}
                       />
-                    </Button>
+                    </Link>
                   </Col>
                 </Row>
               </List.Item>
