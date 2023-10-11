@@ -9,12 +9,14 @@ import {
   Row,
   Space,
   Spin,
+  Table,
   Typography,
 } from 'antd'
 import { FunctionComponent } from 'react'
 import { useParams } from 'react-router'
 import useCertificateFinder from './hooks/useCertificateFinder'
 import { Link } from 'react-router-dom'
+import { ColumnsType } from 'antd/lib/table'
 
 interface ICertificateFindingPageProops {}
 
@@ -49,6 +51,59 @@ const CertificateFindingPage: FunctionComponent<ICertificateFindingPageProops> =
       />
     )
   }
+
+  const columns: ColumnsType<any> = [
+    {
+      title: 'Nombre',
+      width: '300px',
+      render: (item) => (
+        <>
+          <Link to={`./${item.account_id}`}>
+            <Typography.Title level={5}>
+              <LinkOutlined /> {item.user?.names}
+            </Typography.Title>
+          </Link>
+          {preloadedCerts[item.user._id] ? (
+            <Typography.Text italic style={{ fontSize: '1rem' }}>
+              Tiene {preloadedCerts[item.user._id].length} certificados
+            </Typography.Text>
+          ) : (
+            <Button
+              type="link"
+              onClick={() => {
+                preloadCertsByUser(item.user._id)
+              }}
+              style={{
+                fontSize: '1rem',
+              }}
+            >
+              Click para consultar el número de certificados
+            </Button>
+          )}
+        </>
+      ),
+    },
+    {
+      title: 'Correo',
+      render: (item) => <Typography.Text>{item.user?.email}</Typography.Text>,
+    },
+    {
+      title: 'Opciones',
+      width: '300px',
+      render: (item) => (
+        <>
+          <Link to={`./${item.account_id}`}>
+            <Badge
+              count="Consultar"
+              style={{
+                backgroundColor: preloadedCerts[item.user._id] ? 'green' : 'red',
+              }}
+            />
+          </Link>
+        </>
+      ),
+    },
+  ]
 
   const SearchStatus = ({ results }: { results: any[] }) => (
     <>
@@ -91,66 +146,14 @@ const CertificateFindingPage: FunctionComponent<ICertificateFindingPageProops> =
 
       <Row gutter={[16, 16]} style={{ margin: 15 }}>
         <Col flex="auto">
-          <List
-            dataSource={items}
+          <Table
+            sticky
             loading={isSearching}
-            header={<SearchStatus results={items} />}
-            footer={pattern ? `término buscado: ${pattern}` : undefined}
-            renderItem={(item) => (
-              <List.Item style={{ width: '100%' }}>
-                <Row
-                  gutter={[10, 10]}
-                  style={{
-                    width: '100%',
-                  }}
-                  wrap={false}
-                >
-                  <Col flex="300px">
-                    <Link to={`./${item.account_id}`}>
-                      <Typography.Title level={5}>
-                        <LinkOutlined /> {item.user?.names}
-                      </Typography.Title>
-                    </Link>
-                    {preloadedCerts[item.user._id] ? (
-                      <Typography.Text italic style={{ fontSize: '1rem' }}>
-                        Tiene {preloadedCerts[item.user._id].length} certificados
-                      </Typography.Text>
-                    ) : (
-                      <Button
-                        type="link"
-                        onClick={() => {
-                          preloadCertsByUser(item.user._id)
-                        }}
-                        style={{
-                          fontSize: '1rem',
-                        }}
-                      >
-                        Click para consultar el número de certificados
-                      </Button>
-                    )}
-                  </Col>
-
-                  <Col flex="300px">
-                    <Typography.Text>{item.user?.email}</Typography.Text>
-                  </Col>
-
-                  <Col flex="auto"></Col>
-
-                  <Col>
-                    <Link to={`./${item.account_id}`}>
-                      <Badge
-                        count="Consultar"
-                        style={{
-                          backgroundColor: preloadedCerts[item.user._id]
-                            ? 'green'
-                            : 'red',
-                        }}
-                      />
-                    </Link>
-                  </Col>
-                </Row>
-              </List.Item>
-            )}
+            columns={columns}
+            dataSource={items}
+            title={() => <SearchStatus results={items} />}
+            footer={() => (pattern ? `término buscado: ${pattern}` : undefined)}
+            pagination={{ defaultPageSize: 15 }}
           />
         </Col>
       </Row>
