@@ -15,10 +15,17 @@ import { useEventProgress } from '@context/eventProgressContext'
 export interface QuizApprovedStatusProps {
   eventId: string
   approvedLink?: string
+  /**
+   * The minimum percent to recalc the value of `required points` or `minimum`
+   * By default is 100
+   */
+  lessonPercentToCompleted?: number
   thereAreExam: (a: boolean) => void
 }
 
 function QuizApprovedStatus(props: QuizApprovedStatusProps) {
+  const { lessonPercentToCompleted = 100 } = props
+
   const [isLoaded, setIsLoaded] = useState(false)
   const [status, setStatus] = useState('estimando...')
   const [backgroundColor, setBackgroundColor] = useState('#9C835F')
@@ -73,21 +80,36 @@ function QuizApprovedStatus(props: QuizApprovedStatusProps) {
           survey,
         )
 
+        console.debug(`[survey checking] "${survey.survey}`)
+
         if (stats.minimum > 0) {
+          console.debug(
+            `[survey checking] right = ${stats.right}; stats.minimum = ${stats.minimum}`,
+          )
           if (stats.right >= stats.minimum) {
             passed = passed + 1
+            console.debug('[survey checking] passed')
           } else {
             notPassed = notPassed + 1
+            console.debug('[survey checking] NOT passed')
           }
         }
       }
+      console.debug(`passed = ${passed};surveys.length = ${surveys.length} `)
 
       setPassedOnes(passed)
       setTotalOnes(surveys.length)
 
       if (surveys.length > 0) {
         props.thereAreExam && props.thereAreExam(true)
-        if (passed === surveys.length) {
+        const relativeRequiredValue = Math.floor(
+          surveys.length * (lessonPercentToCompleted / 100),
+        )
+        console.log(
+          `[survey checking] according to required percent of ${lessonPercentToCompleted}% - the minimu was ${surveys.length} and now is ${relativeRequiredValue}`,
+        )
+        console.log(`[survey checking] passed is: ${passed}`)
+        if (passed >= relativeRequiredValue) {
           setStatus('Aprobado')
           setIsApproved(true)
           setBackgroundColor('#5EB841')
