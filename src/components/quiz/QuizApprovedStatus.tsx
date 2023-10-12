@@ -73,14 +73,22 @@ function QuizApprovedStatus(props: QuizApprovedStatusProps) {
           survey,
         )
 
+        console.debug(`[survey checking] "${survey.survey}`)
+
         if (stats.minimum > 0) {
+          console.debug(
+            `[survey checking] right = ${stats.right}; stats.minimum = ${stats.minimum}`,
+          )
           if (stats.right >= stats.minimum) {
             passed = passed + 1
+            console.debug('[survey checking] passed')
           } else {
             notPassed = notPassed + 1
+            console.debug('[survey checking] NOT passed')
           }
         }
       }
+      console.debug(`passed = ${passed};surveys.length = ${surveys.length} `)
 
       setPassedOnes(passed)
       setTotalOnes(surveys.length)
