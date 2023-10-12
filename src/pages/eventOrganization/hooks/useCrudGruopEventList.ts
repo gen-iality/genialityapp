@@ -40,7 +40,7 @@ export const useCrudGruopEventList = (organizationId: string, options?: Partial<
     }
   };
 
-  const handledUpdateGroup = async (groupId: string, newGroupData: GroupEvent) => {
+  const handledUpdateGroup = async (groupId: string, newGroupData: Partial<GroupEvent>) => {
     try {
       await GroupsApi.update(organizationId, groupId, newGroupData);
       setGroupEvent((currentGroups) =>
@@ -52,7 +52,7 @@ export const useCrudGruopEventList = (organizationId: string, options?: Partial<
                 ...group.item,
                 ...newGroupData,
               },
-              label: newGroupData.name,
+              label: newGroupData.name ?? group.label,
             };
           }
           return group;
@@ -78,7 +78,7 @@ export const useCrudGruopEventList = (organizationId: string, options?: Partial<
       ...group,
       item: {
         ...group.item,
-        event_ids: group.item.event_ids.filter((eventIdItem) => eventIdItem === eventId),
+        event_ids: group.item.event_ids.filter((eventIdItem) => eventIdItem !== eventId),
       },
     }));
     setGroupEvent(newGroupList);

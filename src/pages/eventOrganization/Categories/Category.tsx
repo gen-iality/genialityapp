@@ -11,6 +11,7 @@ import { ICategory } from '../interface/category.interface';
 import { useGetCategorys } from '../hooks/useGetCategorys';
 import { useModalLogic } from '@/hooks/useModalLogic';
 import { GroupEventMongo } from '../interface/group.interfaces';
+import { ManageGroup } from '../components/group/ManageGroup';
 
 const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
   const {
@@ -29,17 +30,27 @@ const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
     handledUpdateCategory,
     isLoadingCategories,
   } = useGetCategorys(organizationId);
-  const { closeGroupModal, isOpenGroupModal, openGroupModal, selectedGroup, handledSelectGroup } = useModalLogic<
-    GroupEventMongo
-  >('Group');
   const {
-    isOpenCategoryModal,
-    closeCategoryModal,
-    openCategoryModal,
-    handledSelectCategory,
-    selectedCategory,
-  } = useModalLogic<ICategory, 'Category'>('Category');
-
+    closeModal: closeGroupModal,
+    isOpenModal: isOpenGroupModal,
+    openModal: openGroupModal,
+    selectedItem: selectedGroup,
+    handledSelectedItem: handledSelectGroup,
+  } = useModalLogic<GroupEventMongo>();
+  const {
+    isOpenModal: isOpenCategoryModal,
+    closeModal: closeCategoryModal,
+    openModal: openCategoryModal,
+    handledSelectedItem: handledSelectCategory,
+    selectedItem: selectedCategory,
+  } = useModalLogic<ICategory>();
+  const {
+    isOpenModal: isOpenManageGroupModal,
+    closeModal: closeManageGroupModal,
+    openModal: openManageGroupModal,
+    handledSelectedItem: handledSelectManageGroup,
+    selectedItem: selectedManageGroup,
+  } = useModalLogic<GroupEventMongo>();
   return (
     <>
       <Header title={'Categorías y grupos'} />
@@ -63,6 +74,8 @@ const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
             handledOpenModalGroup={openGroupModal}
             toggleModalGroup={openGroupModal}
             organizationId={organizationId}
+            handledOpenManageGroup={openManageGroupModal}
+            handledSelectManageGroup={handledSelectManageGroup}
           />
         </Col>
       </Row>
@@ -87,6 +100,18 @@ const Category: React.FC<any> = ({ org: { _id: organizationId } }) => {
           visible={isOpenCategoryModal}
           organizationId={organizationId}
           selectedCategory={selectedCategory}
+        />
+      )}
+      {isOpenManageGroupModal && selectedManageGroup && (
+        <ManageGroup
+          handledAddGroup={handledAddGroup}
+          handledUpdate={handledUpdateGroup}
+          visible={isOpenManageGroupModal}
+          onCancel={closeManageGroupModal}
+          organizationId={organizationId}
+          selectedGroup={selectedManageGroup}
+          handledDelteEvent={handledDelteEvent}
+          handledDelteOrgUser={handledDelteOrgUser}
         />
       )}
     </>

@@ -5,13 +5,12 @@ import { DispatchMessageService } from '@/context/MessageService';
 import { useGetEventsByOrg } from '@/components/eventOrganization/hooks/useGetEventsByOrg';
 import { useTransfer } from '@/hooks/useTransfer';
 import { useGetOrganizationUsers } from '../../hooks/useGetOrganizationUsers';
-import { TransferDirection } from 'antd/lib/transfer';
 
 interface Props extends ModalProps {
   onCancel: () => void;
   selectedGroup?: GroupEventMongo;
   organizationId: string;
-  handledUpdate: (groupId: string, newGroupData: GroupEvent) => Promise<void>;
+  handledUpdate: (groupId: string, newGroupData: Partial<GroupEvent>) => Promise<void>;
   handledAddGroup: (newGrupo: GroupEvent) => Promise<void>;
   handledDelteEvent: (orgId: string, groupId: string, orgUserId: string) => Promise<void>;
   handledDelteOrgUser: (orgId: string, groupId: string, orgUserId: string) => Promise<void>;
@@ -84,51 +83,6 @@ export const GroupModal = ({
     }
   };
 
-  const onChangeEvent = async (targetKeys: string[], direction: TransferDirection, moveKeys: string[]) => {
-    try {
-      if (direction === 'left' && selectedGroup) {
-        const deleteOrgUserPromises = moveKeys.map((eventId) =>
-          handledDelteEvent(organizationId, selectedGroup.value, eventId)
-        );
-        await Promise.all(deleteOrgUserPromises);
-      }
-      onChangeTransferEvents(targetKeys, direction, moveKeys);
-      DispatchMessageService({
-        action: 'show',
-        type: 'success',
-        msj: 'Se retiro al evento del grupo correctamente',
-      });
-    } catch (error) {
-      DispatchMessageService({
-        action: 'show',
-        type: 'error',
-        msj: 'Ocurrio un error el intentar borrar el evento del grupo, intentelo mas tarde',
-      });
-    }
-  };
-  const onChangeOrgUsers = async (targetKeys: string[], direction: TransferDirection, moveKeys: string[]) => {
-    try {
-      if (direction === 'left' && selectedGroup) {
-        const deleteOrgUserPromises = moveKeys.map((orgUserId) =>
-          handledDelteOrgUser(organizationId, selectedGroup.value, orgUserId)
-        );
-        await Promise.all(deleteOrgUserPromises);
-      }
-      onChangeTransferOrgUser(targetKeys, direction, moveKeys);
-      DispatchMessageService({
-        action: 'show',
-        type: 'success',
-        msj: 'Se retiro al usuario del grupo correctamente',
-      });
-    } catch (error) {
-      DispatchMessageService({
-        action: 'show',
-        type: 'error',
-        msj: 'Ocurrio un error el intentar borrar el usuario del grupo, intentelo mas tarde',
-      });
-    }
-  };
-
   useEffect(() => {
     if (selectedGroup) {
       form.setFieldsValue({
@@ -164,42 +118,46 @@ export const GroupModal = ({
           rules={[{ required: true, message: 'El nombre es requerido' }]}>
           <Input ref={inputRef} placeholder={'Ingrese el nombre del grupo'} maxLength={20} />
         </Form.Item>
-        <Form.Item label={'Eventos'} name={'event_ids'}>
-          <Transfer
-            disabled={isLoadingEventsByOrg}
-            listStyle={{ width: '100%' }}
-            oneWay={true}
-            showSearch
-            dataSource={eventsByOrg.map((event) => ({ ...event, title: event.name, key: event._id }))}
-            titles={['Eventos', 'En el grupo']}
-            targetKeys={targetKeysEvents}
-            selectedKeys={selectedKeysEvents}
-            onChange={onChangeEvent}
-            onSelectChange={onSelectChangeEvents}
-            render={(item) => item.title}
-            showSelectAll={false}
-          />
-        </Form.Item>
-        <Form.Item label={'Usuarios'} name={'organization_user_ids'}>
-          <Transfer
-            disabled={isLoadingOrgUsers}
-            listStyle={{ width: '100%' }}
-            oneWay={true}
-            showSearch
-            dataSource={organizationUsers.map((orgUser) => ({
-              ...orgUser,
-              name: orgUser.properties.names,
-              key: orgUser._id,
-            }))}
-            titles={['Usuarios', 'En el grupo']}
-            targetKeys={targetKeysOrgUser}
-            selectedKeys={selectedKeysOrgUser}
-            onChange={onChangeOrgUsers}
-            onSelectChange={onSelectChangeOrgUser}
-            render={(item) => item.name}
-            showSelectAll={false}
-          />
-        </Form.Item>
+        {!selectedGroup && (
+          <Form.Item label={'Eventos'} name={'event_ids'}>
+            <Transfer
+              disabled={isLoadingEventsByOrg}
+              listStyle={{ width: '100%' }}
+              oneWay={true}
+              showSearch
+              dataSource={eventsByOrg.map((event) => ({ ...event, title: event.name, key: event._id }))}
+              titles={['Eventos', 'En el grupo']}
+              targetKeys={targetKeysEvents}
+              selectedKeys={selectedKeysEvents}
+              onChange={onChangeTransferOrgUser}
+              onSelectChange={onSelectChangeEvents}
+              render={(item) => item.title}
+              showSelectAll={false}
+            />
+          </Form.Item>
+        )}
+        {!selectedGroup && (
+          <Form.Item label={'Usuarios'} name={'organization_user_ids'}>
+            <Transfer
+              disabled={isLoadingOrgUsers}
+              listStyle={{ width: '100%' }}
+              oneWay={true}
+              showSearch
+              dataSource={organizationUsers.map((orgUser) => ({
+                ...orgUser,
+                name: orgUser.properties.names,
+                key: orgUser._id,
+              }))}
+              titles={['Usuarios', 'En el grupo']}
+              targetKeys={targetKeysOrgUser}
+              selectedKeys={selectedKeysOrgUser}
+              onChange={onChangeTransferEvents}
+              onSelectChange={onSelectChangeOrgUser}
+              render={(item) => item.name}
+              showSelectAll={false}
+            />
+          </Form.Item>
+        )}
 
         <Form.Item
           valuePropName='checked'
