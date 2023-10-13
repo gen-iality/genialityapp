@@ -37,6 +37,7 @@ export const GroupModal = ({
     targetKeys: targetKeysEvents,
     setTargetKeys: setTargetKeysEvents,
   } = useTransfer([]);
+
   const {
     onChange: onChangeTransferOrgUser,
     onSelectChange: onSelectChangeOrgUser,
@@ -129,7 +130,7 @@ export const GroupModal = ({
               titles={['Eventos', 'En el grupo']}
               targetKeys={targetKeysEvents}
               selectedKeys={selectedKeysEvents}
-              onChange={onChangeTransferOrgUser}
+              onChange={onChangeTransferEvents}
               onSelectChange={onSelectChangeEvents}
               render={(item) => item.title}
               showSelectAll={false}
@@ -151,7 +152,7 @@ export const GroupModal = ({
               titles={['Usuarios', 'En el grupo']}
               targetKeys={targetKeysOrgUser}
               selectedKeys={selectedKeysOrgUser}
-              onChange={onChangeTransferEvents}
+              onChange={onChangeTransferOrgUser}
               onSelectChange={onSelectChangeOrgUser}
               render={(item) => item.name}
               showSelectAll={false}

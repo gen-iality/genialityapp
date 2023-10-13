@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-
 export const useFilterFreeEventInMyEvents = (
   eventsFreeAcces: any[],
   eventsWithEventUser: any[],
@@ -10,15 +9,13 @@ export const useFilterFreeEventInMyEvents = (
   const [isFiltering, setisFiltering] = useState(true);
 
   useEffect(() => {
-    // if (condition) {
     setisFiltering(true);
     const eventsFreeFilter = eventsFreeAcces.filter(
       (eventFree) => !eventsWithEventUser.map((eventOfUser) => eventOfUser._id).includes(eventFree._id)
     );
     if (myUserOrg) setEventFreeFiltered(eventsFreeFilter ?? []);
     setisFiltering(false);
-    // }
-  }, [eventsFreeAcces.length, eventsWithEventUser.length]);
+  }, [eventsFreeAcces.length, eventsWithEventUser.length, myUserOrg]);
 
   return {
     eventsFree,
