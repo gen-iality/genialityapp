@@ -675,7 +675,7 @@ export const UsersApi = {
     }
 
     return await Actions.post(
-      `/api/events/${id}/adduserwithemailvalidation${token ? `/?token=${token}&origin=${origin}` : `/?free_access=${origin}`}`,
+      `/api/events/${id}/adduserwithemailvalidation${token ? `/?token=${token}&free_access=${origin}` : `/?free_access=${origin}`}`,
       data,
       true
     );

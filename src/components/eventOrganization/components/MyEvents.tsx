@@ -5,7 +5,7 @@ import { Badge, Button, Card, Col, Empty, Row, Space, Typography } from 'antd';
 import { InputSearchEvent } from './InputSearchEvent';
 import EventCard from '@/components/shared/eventCard';
 import { Organization } from '../types';
-import createEventUser, { createEventUserFree } from '@/components/authentication/services/RegisterUserToEvent';
+import { createEventUserFree } from '@/components/authentication/services/RegisterUserToEvent';
 import { useGetMyOrgUser } from '@/hooks/useGetMyOrgUser';
 import { DispatchMessageService } from '@/context/MessageService';
 import { useGetMyEventsInOrganization } from '../hooks/useGetMyEventsInOrganization';
@@ -97,7 +97,7 @@ export const MyEvents = ({ organization, setIsModalCertificatesOpen, organizatio
           }>
           <Row gutter={[0, 32]}>
             <Col span={24}>
-              {organization?.show_my_certificates && (
+              {organization?.show_my_certificates && myAllEvents.length > 0 && (
                 <Button size='large' type='default' onClick={() => setIsModalCertificatesOpen(true)}>
                   Mis certificados
                 </Button>
