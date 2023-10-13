@@ -662,7 +662,7 @@ export const UsersApi = {
   mineOrdes: async (id) => {
     return await Actions.getAll(`/api/users/${id}/orders`);
   },
-  createOne: async (data, id) => {
+  createOne: async (data, id, origin = false) => {
     //Este primero es que deberia estar pero no sirve
     //return await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${id}`, data);
     /** Se envia token para validar si el rol es cambiado por un damin */
@@ -675,10 +675,14 @@ export const UsersApi = {
     }
 
     return await Actions.post(
-      `/api/events/${id}/adduserwithemailvalidation${token ? `/?token=${token}` : '/'}`,
+      `/api/events/${id}/adduserwithemailvalidation${token ? `/?token=${token}&origin=${origin}` : `/?free_access=${origin}`}`,
       data,
       true
     );
+  },
+  createOneWithoConfirmEmail: async (data, id) => {
+    const token = await GetTokenUserFirebase();
+    return await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${id}?origin=free_access&token=${token}`, data);
   },
   deleteOne: async (user, id) => {
     let token = await GetTokenUserFirebase();

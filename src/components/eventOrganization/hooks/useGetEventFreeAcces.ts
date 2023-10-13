@@ -1,7 +1,7 @@
 import { OrganizationApi } from '@/helpers/request';
 import { useEffect, useState, useCallback } from 'react';
 
-export const useGetEventsFreeAcces = (organizationId: string, eventUser: boolean = false) => {
+export const useGetEventsFreeAcces = (organizationId: string) => {
   const [eventsFreeAcces, setEventsFreeAccess] = useState<any[]>([]);
   const [isLoadingEventFreeAcces, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

@@ -35,11 +35,9 @@ function EventOrganization({ match }: OrganizationProps) {
   const [eventsOld, setEventsOld] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [isModalCertificatesOpen, setIsModalCertificatesOpen] = useState(false);
-
-  const { eventsWithEventUser, isLoading: isLoadingOtherEvents } = useGetEventsWithUser(
-    match.params.id,
-    cUser.value?._id
-  );
+  const organizationId = match.params.id;
+  const eventUserId = cUser.value?._id;
+  const { eventsWithEventUser, isLoading: isLoadingOtherEvents } = useGetEventsWithUser(organizationId, eventUserId);
 
   const [isActive, setIsActive] = useState(true);
 
@@ -140,9 +138,8 @@ function EventOrganization({ match }: OrganizationProps) {
                       {!isLoadingOtherEvents && (
                         <MyEvents
                           cUser={cUser}
-                          organizationId={match.params.id}
-                          eventsWithEventUser={eventsWithEventUser}
-                          isLoadingOtherEvents={isLoadingOtherEvents}
+                          organizationId={organizationId}
+                          eventUserId={eventUserId}
                           organization={organization}
                           setIsModalCertificatesOpen={setIsModalCertificatesOpen}
                         />

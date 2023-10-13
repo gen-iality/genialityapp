@@ -5,50 +5,37 @@ import { Badge, Button, Card, Col, Empty, Row, Space, Typography } from 'antd';
 import { InputSearchEvent } from './InputSearchEvent';
 import EventCard from '@/components/shared/eventCard';
 import { Organization } from '../types';
-import { useGetEventsFreeAcces } from '../hooks/useGetEventFreeAcces';
-import createEventUser from '@/components/authentication/services/RegisterUserToEvent';
+import createEventUser, { createEventUserFree } from '@/components/authentication/services/RegisterUserToEvent';
 import { useGetMyOrgUser } from '@/hooks/useGetMyOrgUser';
-import { useFilterFreeEventInMyEvents } from '../hooks/useFilterFreeEventInMyEvents';
 import { DispatchMessageService } from '@/context/MessageService';
+import { useGetMyEventsInOrganization } from '../hooks/useGetMyEventsInOrganization';
 
 const { Title } = Typography;
 
 interface Props {
-  eventsWithEventUser: any[];
-  isLoadingOtherEvents: boolean;
   organization: Organization | null;
   setIsModalCertificatesOpen: (item: boolean) => void;
   organizationId: string;
+  eventUserId: string;
   cUser: any;
 }
-export const MyEvents = ({
-  eventsWithEventUser,
-  isLoadingOtherEvents,
-  organization,
-  setIsModalCertificatesOpen,
-  organizationId,
-  cUser,
-}: Props) => {
-  const { eventsFreeAcces, isLoadingEventFreeAcces, getEventsFreeAcces } = useGetEventsFreeAcces(organizationId);
-  const { myUserOrg, isLoadingMyUserOrg } = useGetMyOrgUser(organizationId);
-  const { eventsFree, isFiltering } = useFilterFreeEventInMyEvents(
-    eventsFreeAcces,
+export const MyEvents = ({ organization, setIsModalCertificatesOpen, organizationId, eventUserId, cUser }: Props) => {
+  const { myUserOrg } = useGetMyOrgUser(organizationId);
+  const {
+    eventsFreeToOneOreUse,
+    isLoadingEventsFreeToOneOreUs,
+    getEventsFreeAcces,
     eventsWithEventUser,
-    myUserOrg,
-    !isLoadingEventFreeAcces && !isLoadingMyUserOrg
-  );
-  const myAllEvents = [...eventsWithEventUser, ...eventsFree];
-  const isLoadingMyAllEvents = isLoadingOtherEvents || isLoadingEventFreeAcces || isFiltering || isLoadingMyUserOrg;
-
+  } = useGetMyEventsInOrganization(organizationId, eventUserId);
+  const myAllEvents = [...eventsWithEventUser, ...eventsFreeToOneOreUse];
   const { filteredList: eventsWithUserfiltered, setSearchTerm: setSearchTermEventWithUser } = useSearchList(
     eventsWithEventUser,
     'name'
   );
   const { filteredList: eventsFreeFiltered, setSearchTerm: setSearchTermEventsFree } = useSearchList(
-    eventsFree,
+    eventsFreeToOneOreUse,
     'name'
   );
-
   const [isRegisteringEventUser, setIsRegisteringEventUser] = useState(false);
 
   const redirectToEventFreeAcces = async (event: any) => {
@@ -63,16 +50,13 @@ export const MyEvents = ({
         });
       }
       setIsRegisteringEventUser(true);
-      const resUser = await createEventUser(
-        {
-          names: cUser.value?.names,
-          email: cUser.value?.email,
-          password: cUser.value?.password,
-          picture: cUser.value?.picture,
-        },
-        myUserOrg?.properties ?? {},
-        { value: { _id: event._id } }
-      );
+      const dataNewUser = {
+        names: cUser.value?.names,
+        email: cUser.value?.email,
+        ...myUserOrg?.properties,
+      };
+      const resUser = await createEventUserFree(dataNewUser, event._id);
+
       if (resUser) {
         window.location.pathname = `/landing/${event._id}`;
       }
@@ -93,24 +77,24 @@ export const MyEvents = ({
         <Card
           bodyStyle={{ paddingTop: '0px' }}
           headStyle={{ border: 'none' }}
+          style={{ width: '100%', borderRadius: 20 }}
           title={
             <Badge offset={[60, 22]} count={`${myAllEvents.length} Eventos`}>
               <Title level={2}>Mis eventos</Title>
             </Badge>
           }
           extra={
-            <Space>
-              {myAllEvents.length > 0 && (
+            myAllEvents.length > 0 && (
+              <Space>
                 <InputSearchEvent
                   onHandled={(serchTerm) => {
                     setSearchTermEventWithUser(serchTerm);
                     setSearchTermEventsFree(serchTerm);
                   }}
                 />
-              )}
-            </Space>
-          }
-          style={{ width: '100%', borderRadius: 20 }}>
+              </Space>
+            )
+          }>
           <Row gutter={[0, 32]}>
             <Col span={24}>
               {organization?.show_my_certificates && (
@@ -121,13 +105,13 @@ export const MyEvents = ({
             </Col>
             <Col span={24}>
               <Row gutter={[16, 16]}>
-                {isLoadingMyAllEvents ? (
+                {isLoadingEventsFreeToOneOreUs ? (
                   <div style={{ width: '100vw', height: '100vh', textAlign: 'center' }}>
                     <Loading />
                   </div>
                 ) : (
                   <>
-                    {eventsFree.length > 0 || eventsWithEventUser.length > 0 ? (
+                    {eventsFreeToOneOreUse.length > 0 || eventsWithEventUser.length > 0 ? (
                       <>
                         {eventsWithUserfiltered.length > 0 || eventsFreeFiltered.length > 0 ? (
                           <>
