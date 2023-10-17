@@ -4,7 +4,6 @@ import { OrganizationApi } from '@/helpers/request';
 export const useGetMyOrgUser = (organizationId: string) => {
   const [myUserOrg, setMyUserOrg] = useState<any>();
   const [isLoadingMyUserOrg, setisLoadingMyUserOrg] = useState(true);
-
   useEffect(() => {
     const getMyUserOrg = async () => {
       try {

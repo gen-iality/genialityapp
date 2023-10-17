@@ -161,14 +161,14 @@ export const UserOrganizationForm = ({
               prefix={<UserOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
             />
           </Form.Item>
-          <Form.Item
+         {/*  <Form.Item
             initialValue={'not-register'}
             label={'Inscribir este usuario en'}
             name='registeredOption'
             hasFeedback
             style={{ marginBottom: '10px', textAlign: 'left' }}>
             <Select size='large' options={registeredUserOptions} onChange={handleSelectChange} />
-          </Form.Item>
+          </Form.Item> */}
 
           {registerOption === 'group-event' && (
             <Form.Item

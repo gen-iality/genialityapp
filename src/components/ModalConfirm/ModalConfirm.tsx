@@ -9,6 +9,8 @@ interface Props extends ModalProps {
   titleConfirm: string;
   descriptionConfirm: string;
 }
+
+//ToDo: [ Luis ] Hacer este modal usando el ModalConfirm de ant desing  
 export const ModalConfirm = ({
   onCancel,
   nameItem,
