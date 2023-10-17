@@ -430,7 +430,7 @@ const UserStatusAndMenu: FunctionComponent<IUserStatusAndMenuProps> = (props) =>
 
   return (
     <>
-      {organization?._id && (
+      {organization?._id && organization.show_link_to_certificate_search_page && (
         <Space style={{ marginRight: 16 }}>
           <Link to={`/organization/${organization._id}/certificates`} target="_blank">
             Consultar certificados
