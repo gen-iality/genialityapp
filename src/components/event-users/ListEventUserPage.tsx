@@ -121,12 +121,16 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
     useState<any>()
   const [nonPublishedActivityIDs, setNonPublishedActivityIDs] = useState<string[]>([])
 
+  const eventIdSearch = activityId ?? event._id
+
   // TODO: if activity_id, then load to activity
   const [activity, setActivity] = useState<any | undefined>()
 
   const [allActivities, setAllActivities] = useState<any[]>([])
 
-  const [eventUsersRef] = useState(firestore.collection(`${event._id}_event_attendees`))
+  const [eventUsersRef] = useState(
+    firestore.collection(`${eventIdSearch}_event_attendees`),
+  )
 
   // Utiful to able the searcher thing
   const [searchText, setSearchText] = useState('')
@@ -186,8 +190,6 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
 
   const checkIn = async (id: string, item: any) => {
     let checkInStatus = null
-
-    const eventIdSearch = activityId ?? event._id
 
     let userRef = null
     try {
