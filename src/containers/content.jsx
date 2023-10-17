@@ -63,6 +63,7 @@ const ContentContainer = () => {
       } }>
       <main className='main'>
         <Switch>
+          <Route exact path={'/'} render={ ()=> <Redirect to='organization/64c01263743610c1e50b6c76' /> } />
           <RouteContext path={ ['/landing/:event_id', '/event/:event_name'] } component={ Landing } />
           <RouteContext path={ '/bingo/:event_id/' } component={ BingoPresentation } />
           {/*Ruta para ver resumen */ }
