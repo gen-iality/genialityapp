@@ -121,12 +121,16 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
     useState<any>()
   const [nonPublishedActivityIDs, setNonPublishedActivityIDs] = useState<string[]>([])
 
+  const eventIdSearch = activityId ?? event._id
+
   // TODO: if activity_id, then load to activity
   const [activity, setActivity] = useState<any | undefined>()
 
   const [allActivities, setAllActivities] = useState<any[]>([])
 
-  const [eventUsersRef] = useState(firestore.collection(`${event._id}_event_attendees`))
+  const [eventUsersRef] = useState(
+    firestore.collection(`${eventIdSearch}_event_attendees`),
+  )
 
   // Utiful to able the searcher thing
   const [searchText, setSearchText] = useState('')
@@ -186,8 +190,6 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
 
   const checkIn = async (id: string, item: any) => {
     let checkInStatus = null
-
-    const eventIdSearch = activityId ?? event._id
 
     let userRef = null
     try {
@@ -628,9 +630,12 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         const data = result.data()
 
         // Fix the date
-        if (data.checkedin_at) data.checkedin_at = dayjs(data.checkedin_at.toDate())
-        if (data.created_at) data.created_at = dayjs(data.created_at.toDate())
-        if (data.updated_at) data.updated_at = dayjs(data.updated_at.toDate())
+        if (dayjs.isDayjs(data.checkedin_at))
+          data.checkedin_at = dayjs(data.checkedin_at.toDate())
+        if (dayjs.isDayjs(data.created_at))
+          data.created_at = dayjs(data.created_at.toDate())
+        if (dayjs.isDayjs(data.updated_at))
+          data.updated_at = dayjs(data.updated_at.toDate())
 
         // Ant Design wont calc progresses of non-rendered component, then we have
         // to pre-calc this value in a way non-reactable

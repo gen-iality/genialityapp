@@ -83,6 +83,9 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
               thereAreExam={(param) => {
                 setThereAreQuizingOrSurveys(param)
               }}
+              lessonPercentToCompleted={
+                event?.progress_settings?.lesson_percent_to_completed
+              }
               eventId={event._id}
               approvedLink={`/landing/${event._id}/certificate`}
             />
