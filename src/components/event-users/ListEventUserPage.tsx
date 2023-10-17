@@ -628,9 +628,12 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         const data = result.data()
 
         // Fix the date
-        if (data.checkedin_at) data.checkedin_at = dayjs(data.checkedin_at.toDate())
-        if (data.created_at) data.created_at = dayjs(data.created_at.toDate())
-        if (data.updated_at) data.updated_at = dayjs(data.updated_at.toDate())
+        if (dayjs.isDayjs(data.checkedin_at))
+          data.checkedin_at = dayjs(data.checkedin_at.toDate())
+        if (dayjs.isDayjs(data.created_at))
+          data.created_at = dayjs(data.created_at.toDate())
+        if (dayjs.isDayjs(data.updated_at))
+          data.updated_at = dayjs(data.updated_at.toDate())
 
         // Ant Design wont calc progresses of non-rendered component, then we have
         // to pre-calc this value in a way non-reactable
