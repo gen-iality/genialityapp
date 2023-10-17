@@ -27,6 +27,7 @@ function OrganizationInformation(props: { org: any }) {
     access_settings,
     public_help_message,
     extra_landing_resources,
+    show_link_to_certificate_search_page,
   } = props.org
 
   const [typeEvents, setTypeEvents] = useState<any[]>([])
@@ -163,6 +164,14 @@ function OrganizationInformation(props: { org: any }) {
                   extra="Agrege recursos y defina el tipo de recurso"
                 >
                   <OrganizationExtraLandingResources />
+                </Form.Item>
+                <Form.Item
+                  label="Mostrar enlace en el landing para buscar certificados de miembros"
+                  name={['organization', 'show_link_to_certificate_search_page']}
+                  initialValue={show_link_to_certificate_search_page}
+                  valuePropName="checked"
+                >
+                  <Switch checkedChildren="Visible" unCheckedChildren="Oculto" />
                 </Form.Item>
               </Col>
             </Row>
