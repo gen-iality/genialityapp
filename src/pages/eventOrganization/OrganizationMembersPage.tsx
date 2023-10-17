@@ -7,7 +7,7 @@ import dayjs from 'dayjs'
 import { utils, writeFileXLSX } from 'xlsx'
 
 /** Antd imports */
-import { Table, Button, Row, Col, Tag } from 'antd'
+import { Table, Button, Row, Col, Tag, Modal, Typography, Input } from 'antd'
 import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons'
 
 /** Components */
@@ -16,7 +16,14 @@ import ModalMembers from '@components/modal/modalMembers'
 import { columns } from './tableColums/membersTableColumns'
 
 /** Helpers and utils */
-import { OrganizationApi, EventsApi, AgendaApi, PositionsApi } from '@helpers/request'
+import {
+  OrganizationApi,
+  EventsApi,
+  AgendaApi,
+  PositionsApi,
+  Actions,
+  UsersApi,
+} from '@helpers/request'
 
 /** Context */
 import { FB } from '@helpers/firestore-request'
@@ -50,6 +57,9 @@ const OrganizationMembersPage: FunctionComponent<IOrganizationMembersPageProps> 
   const [extraFields, setExtraFields] = useState<any[]>([])
 
   const [filtersToDataSource, setFiltersToDataSource] = useState<any>({})
+
+  const [userToChangePassword, setUserToChangePassword] = useState<any | null>(null)
+  const [newPasswordCandidate, setNewPasswordCandidate] = useState<string | null>(null)
 
   useEffect(() => {
     startingComponent()
@@ -361,6 +371,7 @@ const OrganizationMembersPage: FunctionComponent<IOrganizationMembersPageProps> 
           extraFields,
           togglePaymentPlan,
           props.org,
+          (user: any) => setUserToChangePassword(user),
         )}
         dataSource={membersDataSource}
         size="small"
@@ -385,6 +396,87 @@ const OrganizationMembersPage: FunctionComponent<IOrganizationMembersPageProps> 
           </Row>
         )}
       />
+
+      <Modal
+        open={!!userToChangePassword}
+        onOk={() => {
+          if (!newPasswordCandidate) {
+            StateMessage.show(null, 'warning', 'La contraseña NO fue cambiada')
+            setUserToChangePassword(null)
+            setNewPasswordCandidate(null)
+            return
+          }
+          const { email } = userToChangePassword
+          if (!email) {
+            StateMessage.show(null, 'error', 'Email de usuario no encontrada')
+            setNewPasswordCandidate(null)
+            setUserToChangePassword(null)
+            return
+          }
+          UsersApi.findByEmail(email)
+            .then((users: any[]) => {
+              console.debug('all found:', { users })
+              const [user] = users
+              console.debug('user to change the password resolved:', user)
+
+              const userId = user._id
+              if (!userId) {
+                StateMessage.show(null, 'error', 'ID de usuario no encontrada')
+                setNewPasswordCandidate(null)
+                setUserToChangePassword(null)
+                return
+              }
+              const params = new URLSearchParams({
+                password: newPasswordCandidate,
+              })
+              Actions.put(
+                `/api/updatePasswordTo/${userId}?${params.toString()}`,
+                '',
+                true,
+              )
+                .then((data: any) => {
+                  StateMessage.show(
+                    null,
+                    'success',
+                    data?.message ?? JSON.stringify(data),
+                  )
+                })
+                .catch((err) => {
+                  console.error(err)
+                  StateMessage.show(
+                    null,
+                    'error',
+                    `No puedo cambiar la contraseña: ${JSON.stringify(err)}`,
+                  )
+                })
+            })
+            .catch((err) => {
+              console.error(err)
+              StateMessage.show(
+                null,
+                'error',
+                `Error al buscar usuario ${email}: ${JSON.stringify(err)}`,
+              )
+            })
+          setNewPasswordCandidate(null)
+          setUserToChangePassword(null)
+        }}
+        onCancel={() => {
+          setNewPasswordCandidate(null)
+          setUserToChangePassword(null)
+        }}
+        title="Cambiar contraseña del usuario"
+      >
+        <Typography.Paragraph>
+          Vas a cambiar la contraseña del usuario {userToChangePassword?.names}
+        </Typography.Paragraph>
+        <Input.Password
+          visibilityToggle
+          placeholder="Contraseña nueva"
+          onChange={(event) => setNewPasswordCandidate(event.target.value || null)}
+          value={newPasswordCandidate ?? ''}
+        />
+      </Modal>
 
       {shouldRenderModal && (
         <ModalMembers
