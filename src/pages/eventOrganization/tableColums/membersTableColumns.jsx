@@ -3,10 +3,22 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 /** Antd imports */
-import { Tooltip, Button, Row, Col, Popover, Image, Avatar, Empty, Spin } from 'antd'
+import {
+  Tooltip,
+  Button,
+  Row,
+  Col,
+  Popover,
+  Image,
+  Avatar,
+  Empty,
+  Spin,
+  Modal,
+} from 'antd'
 import {
   ClockCircleOutlined,
   EditOutlined,
+  KeyOutlined,
   RiseOutlined,
   UserOutlined,
 } from '@ant-design/icons'
@@ -20,6 +32,7 @@ export const columns = (
   extraFields,
   togglePaymentPlan,
   organization,
+  changeUserToChangePassword,
 ) => {
   const navigate = useNavigate()
   const [columns, setColumns] = useState([])
@@ -154,6 +167,17 @@ export const columns = (
                 editModalUser(item)
               }}
               icon={<EditOutlined />}
+            ></Button>
+          </Tooltip>
+          <Tooltip title="Cambiar contraseña">
+            <Button
+              danger
+              type="primary"
+              size="small"
+              onClick={() => {
+                changeUserToChangePassword(item)
+              }}
+              icon={<KeyOutlined />}
             ></Button>
           </Tooltip>
           {organization.access_settings?.type === 'payment' && (
