@@ -55,7 +55,7 @@ const ViewPrelanding = loadable(() => import('@/components/prelanding/viewPrelan
 const { useBreakpoint } = Grid;
 const ContentContainer = () => {
   const screens = useBreakpoint();
-  const organizationCetaId = '64b7f26a920809c56a0e6e52';
+  const organizationCetaId = '653047d0b2b1aee7e00b57e2';
   return (
     <Router
       basename='/'
@@ -164,12 +164,13 @@ const RouteContext = ({ component: Component, ...rest }) => (
 
 const RouteContextValidationCeta = ({ component: Component, ...rest }) => {
   const history = useHistory();
-  const organizationCetaId = '64b7f26a920809c56a0e6e52';
+  const organizationCetaIdPrincipal = '653047d0b2b1aee7e00b57e2'
+  const organizationCetaIdDev = '64b7f26a920809c56a0e6e52'
   const organizationPaths = ['/organization/:id', '/admin/organization/:id', '/organization/:id/events'];
   const organizationId = rest.computedMatch.params.id;
-  if (organizationPaths.includes(rest.path) && organizationId !== organizationCetaId) {
-    history.replace(rest.path.replaceAll(organizationId, organizationCetaId));
-    return <Link to={rest.path.replaceAll(organizationId, organizationCetaId)} />;
+  if (organizationPaths.includes(rest.path) && ![organizationCetaIdDev,organizationCetaIdPrincipal].includes(organizationId)) {
+    history.replace(rest.path.replaceAll(organizationId, organizationCetaIdPrincipal));
+    return <Link to={rest.path.replaceAll(organizationId, organizationCetaIdPrincipal)} />;
   }
   return (
     <Route
@@ -247,12 +248,13 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 const PrivateRouteCetaValidation = ({ component: Component, ...rest }) => {
   const cUser = UseCurrentUser();
   const history = useHistory();
-  const organizationCetaId = '64b7f26a920809c56a0e6e52';
+  const organizationCetaIdPrincipal = '653047d0b2b1aee7e00b57e2'
+  const organizationCetaIdDev = '64b7f26a920809c56a0e6e52'
   const organizationPaths = ['/organization/:id', '/admin/organization/:id', '/organization/:id/events'];
   const organizationId = rest.computedMatch.params.id;
-  if (organizationPaths.includes(rest.path) && organizationId !== organizationCetaId) {
-    history.replace(rest.path.replaceAll(organizationId, organizationCetaId));
-    return <Link to={rest.path.replaceAll(organizationId, organizationCetaId)} />;
+  if (organizationPaths.includes(rest.path) && ![organizationCetaIdDev,organizationCetaIdPrincipal].includes(organizationId)) {
+    history.replace(rest.path.replaceAll(organizationId, organizationCetaIdPrincipal));
+    return <Link to={rest.path.replaceAll(organizationId, organizationCetaIdPrincipal)} />;
   }
   return (
     <Route
