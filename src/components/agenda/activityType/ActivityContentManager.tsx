@@ -26,6 +26,7 @@ import Document from '@components/documents/Document'
 import QuizCMS from '../../quiz/QuizCMS'
 import SurveyCMS from '../../survey/SurveyCMS'
 import EviusReactQuill from '@components/shared/eviusReactQuill'
+import { DownloadOutlined } from '@ant-design/icons'
 
 export interface ActivityContentManagerProps {
   activityName: string
@@ -242,6 +243,22 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
                   >
                     Eliminar contenido (para reasginar)
                   </Button>
+                  <br />
+                  {videoURL && (
+                    <Button
+                      type="primary"
+                      icon={<DownloadOutlined />}
+                      onClick={() => {
+                        const url = encodeURIComponent(videoURL)
+                        window.open(
+                          `https://api.geniality.com.co/api/vimeo/download?vimeo_url=${url}`,
+                          '_blank',
+                        )
+                      }}
+                    >
+                      Descargar
+                    </Button>
+                  )}
                 </Card>
               </Col>
             )}
