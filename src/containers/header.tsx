@@ -311,7 +311,7 @@ const Headers = (props: Props) => {
         }}>
         <Menu theme='light' mode='horizontal' style={{ backgroundColor: bgcolorContainer, border: 'none' }}>
           <Row justify='space-between' align='middle'>
-            {isLandingOrPreLanding() && !screens.xs && cEvent.value?.organizer?._id === '64b7f26a920809c56a0e6e52' && (
+            {isLandingOrPreLanding() && !screens.xs && (
               <Button type='link' onClick={landingOrganization} size='large'>
                 <Typography.Text style={{ color: getCorrectColor(bgcolorContainer) }}>
                   {intl.formatMessage({
