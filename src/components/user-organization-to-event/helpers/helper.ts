@@ -15,5 +15,6 @@ export const existsEventUser = async (eventId: string, userId: string): Promise<
 }
 
 export const isOrganizationCETA = () => {
-    return window.location.pathname.includes('64b7f26a920809c56a0e6e52')
+    const pathname = window.location.pathname
+    return pathname.includes('64b7f26a920809c56a0e6e52') || pathname.includes('64c8026f04fb2181a4000c22')
 }
