@@ -1,5 +1,5 @@
 import { Grid, Spin, Layout } from 'antd';
-import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect, Switch, useHistory, Link } from 'react-router-dom';
 import Event from '../components/events/event';
 import { ApiUrl } from '../helpers/constants';
 import WithFooter from '../components/withFooter';
@@ -55,6 +55,7 @@ const ViewPrelanding = loadable(() => import('@/components/prelanding/viewPrelan
 const { useBreakpoint } = Grid;
 const ContentContainer = () => {
   const screens = useBreakpoint();
+  const organizationCetaId = '653047d0b2b1aee7e00b57e2';
   return (
     <Router
       basename='/'
@@ -63,6 +64,8 @@ const ContentContainer = () => {
       } }>
       <main className='main'>
         <Switch>
+          <Route exact path={'/'} render={ ()=> <Redirect to={`organization/${organizationCetaId}`} /> } />
+          <Route exact path={'/organization'} render={ ()=> <Redirect to={`organization/${organizationCetaId}`} /> } />
           <RouteContext path={ ['/landing/:event_id', '/event/:event_name'] } component={ Landing } />
           <RouteContext path={ '/bingo/:event_id/' } component={ BingoPresentation } />
           {/*Ruta para ver resumen */ }
@@ -91,9 +94,9 @@ const ContentContainer = () => {
           <PrivateRoute path='/eventadmin/:event' component={ Event } />
           <PrivateRoute path='/orgadmin/:event' component={ Event } />
           <PrivateRoute path='/create-event' component={ NewEvent } />
-          <RouteContext exact path='/organization/:id/events' component={ EventOrganization } />
-          <RouteContext exact path='/organization/:id' component={ EventOrganization } />
-          <PrivateRoute path='/admin/organization/:id' component={ Organization } />
+          <RouteContextValidationCeta exact path='/organization/:id/events' component={ EventOrganization } />
+          <RouteContextValidationCeta exact path='/organization/:id' component={ EventOrganization } />
+          <PrivateRouteCetaValidation path='/admin/organization/:id' component={ Organization } />
           <PrivateRoute path='/noaccesstocms/:id/:withoutPermissions' component={ NoMatchPage } />
           <Route path='/terms' component={ Terms } />
           <Route path='/privacy' component={ Privacy } />
@@ -159,35 +162,100 @@ const RouteContext = ({ component: Component, ...rest }) => (
   />
 );
 
-const RouteContextNoModal = ({ component: Component, ...rest }) => (
-  <Route
-    { ...rest }
-    render={ (props) => (
-      <CurrentEventProvider>
-        <CurrentUserEventProvider>
-          <CurrentUserProvider>
-            <AgendaContextProvider>
-              <HelperContextProvider>
-                <SurveysProvider>
-                  <Layout
-                    style={ {
-                      minHeight: '100vh',
-                    } }>
-                    <Header />
-                    <Component { ...props } />
-                  </Layout>
-                </SurveysProvider>
-              </HelperContextProvider>
-            </AgendaContextProvider>
-          </CurrentUserProvider>
-        </CurrentUserEventProvider>
-      </CurrentEventProvider>
-    ) }
-  />
-);
+const RouteContextValidationCeta = ({ component: Component, ...rest }) => {
+  const history = useHistory();
+  const organizationCetaIdPrincipal = '653047d0b2b1aee7e00b57e2'
+  const organizationCetaIdDev = '64b7f26a920809c56a0e6e52'
+  const organizationPaths = ['/organization/:id', '/admin/organization/:id', '/organization/:id/events'];
+  const organizationId = rest.computedMatch.params.id;
+  if (organizationPaths.includes(rest.path) && ![organizationCetaIdDev,organizationCetaIdPrincipal].includes(organizationId)) {
+    history.replace(rest.path.replaceAll(organizationId, organizationCetaIdPrincipal));
+    return <Link to={rest.path.replaceAll(organizationId, organizationCetaIdPrincipal)} />;
+  }
+  return (
+    <Route
+      {...rest}
+      render={(props) => (
+        <CurrentEventProvider {...props}>
+          <CurrentUserEventProvider>
+            <CurrentUserProvider>
+              <AgendaContextProvider>
+                <HelperContextProvider>
+                  <SurveysProvider>
+                    <Layout
+                      style={{
+                        minHeight: '100vh',
+                      }}>
+                      {props.location.pathname.split('/')[1] !== 'bingo' && <Header />}
+                      <Component {...props} />
+                      <LGNotification />
+                      <ModalAuth />
+                      <ModalAuthAnonymous />
+                      <ModalNoRegister />
+                      <ModalUpdate />
+                    </Layout>
+                  </SurveysProvider>
+                </HelperContextProvider>
+              </AgendaContextProvider>
+            </CurrentUserProvider>
+          </CurrentUserEventProvider>
+        </CurrentEventProvider>
+      )}
+    />
+  );
+};
+
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const cUser = UseCurrentUser();
+  return (
+    <Route
+      { ...rest }
+      render={ (props) => (
+        <CurrentEventProvider {...props}>
+          <CurrentUserEventProvider>
+            <CurrentUserProvider>
+              <NewEventProvider>
+                <HelperContextProvider>
+                  <AgendaContextProvider>
+                    <SurveysProvider>
+                      <Layout style={ { minHeight: '100vh' } }>
+                        <Header />
+                        { cUser.value ? (
+                          <Component { ...props } />
+                        ) : cUser.value == null && cUser.status === 'LOADED' ? (
+                          <>
+                            <ModalAuth isPrivateRoute={ true } />
+
+                            <ForbiddenPage />
+                          </>
+                        ) : (
+                          <Spin />
+                        ) }
+                      </Layout>
+                    </SurveysProvider>
+                  </AgendaContextProvider>
+                </HelperContextProvider>
+              </NewEventProvider>
+            </CurrentUserProvider>
+          </CurrentUserEventProvider>
+        </CurrentEventProvider>
+      ) }
+    />
+  );
+};
+
+const PrivateRouteCetaValidation = ({ component: Component, ...rest }) => {
+  const cUser = UseCurrentUser();
+  const history = useHistory();
+  const organizationCetaIdPrincipal = '653047d0b2b1aee7e00b57e2'
+  const organizationCetaIdDev = '64b7f26a920809c56a0e6e52'
+  const organizationPaths = ['/organization/:id', '/admin/organization/:id', '/organization/:id/events'];
+  const organizationId = rest.computedMatch.params.id;
+  if (organizationPaths.includes(rest.path) && ![organizationCetaIdDev,organizationCetaIdPrincipal].includes(organizationId)) {
+    history.replace(rest.path.replaceAll(organizationId, organizationCetaIdPrincipal));
+    return <Link to={rest.path.replaceAll(organizationId, organizationCetaIdPrincipal)} />;
+  }
   return (
     <Route
       { ...rest }
