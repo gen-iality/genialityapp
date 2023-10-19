@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import EviusReactQuill from '../../shared/eviusReactQuill';
-import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 import { EventsApi } from '../../../helpers/request';
 import { UseEventContext } from '../../../context/eventContext';
 import { Form, Row, Col } from 'antd';
@@ -16,10 +15,10 @@ export default function AdmininformativeSection1(props) {
   const onFinish = (values) => {
     async function save() {
       let informativeMenu;
-      if (itemsMenus.informativeSection) {
-        informativeMenu = itemsMenus.informativeSection;
+      if (itemsMenus.informativeSection1) {
+        informativeMenu = itemsMenus.informativeSection1;
       } else {
-        informativeMenu = MenuEvents.informativeSection;
+        informativeMenu = MenuEvents.informativeSection1;
       }
       const informativeMenu1 = { ...informativeMenu, markup: content };
 
