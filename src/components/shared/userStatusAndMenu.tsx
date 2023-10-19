@@ -252,18 +252,8 @@ const UserStatusAndMenu = (props: any) => {
         logout(false);
         destroyAll();
         window.sessionStorage.removeItem('session');
-        if (props.cEvent.value.redirect_landing) {
-          history.replace(`/landing/${props?.cEvent?.value?._id}`);
-        }
-      },
-      onCancel() {
-        console.log('Cancel');
       },
     });
-    if (props.cEvent.value.redirect_landing) {
-      logout(false);
-      history.replace(`/landing/${props?.cEvent?.value?._id}`);
-    }
   }
   return <>{user ? loggedInuser : loggedOutUser}</>;
 };
