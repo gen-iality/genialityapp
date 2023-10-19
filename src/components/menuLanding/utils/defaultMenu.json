@@ -100,7 +100,7 @@
   },
 
   "informativeSection": {
-    "name": "Sección Informativa",
+    "name": "Scorm",
     "position": 30,
     "section": "informativeSection",
     "icon": "AuditOutlined",

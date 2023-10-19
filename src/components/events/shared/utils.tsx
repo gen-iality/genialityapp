@@ -111,7 +111,7 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
-        name: ' Contenido HTML',
+        name: ' SCORM',
         path: '/informativesectionhtml',
         key: 'contenido-informativo-html',
         onClick: handleClick,
