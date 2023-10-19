@@ -10,8 +10,10 @@ interface Props extends ModalProps {
   onCancel: () => void;
   selectedGroup?: GroupEventMongo;
   organizationId: string;
-  handledUpdate: (groupId: string, newGroupData: GroupEvent) => Promise<void>;
+  handledUpdate: (groupId: string, newGroupData: Partial<GroupEvent>) => Promise<void>;
   handledAddGroup: (newGrupo: GroupEvent) => Promise<void>;
+  handledDelteEvent: (orgId: string, groupId: string, orgUserId: string) => Promise<void>;
+  handledDelteOrgUser: (orgId: string, groupId: string, orgUserId: string) => Promise<void>;
 }
 
 export const GroupModal = ({
@@ -20,21 +22,24 @@ export const GroupModal = ({
   organizationId,
   handledUpdate,
   handledAddGroup,
+  handledDelteEvent,
+  handledDelteOrgUser,
   ...modalProps
 }: Props) => {
   const inputRef = useRef<any>();
   const [form] = Form.useForm<GroupEvent>();
-  const { eventsByOrg } = useGetEventsByOrg(organizationId);
-  const { organizationUsers } = useGetOrganizationUsers(organizationId);
+  const { eventsByOrg, isLoadingEventsByOrg } = useGetEventsByOrg(organizationId);
+  const { organizationUsers, isLoadingOrgUsers } = useGetOrganizationUsers(organizationId);
   const {
-    onChange: onChangeEvents,
+    onChange: onChangeTransferEvents,
     onSelectChange: onSelectChangeEvents,
     selectedKeys: selectedKeysEvents,
     targetKeys: targetKeysEvents,
     setTargetKeys: setTargetKeysEvents,
   } = useTransfer([]);
+
   const {
-    onChange: onChangeOrgUser,
+    onChange: onChangeTransferOrgUser,
     onSelectChange: onSelectChangeOrgUser,
     selectedKeys: selectedKeysOrgUser,
     targetKeys: targetKeysOrgUser,
@@ -114,40 +119,46 @@ export const GroupModal = ({
           rules={[{ required: true, message: 'El nombre es requerido' }]}>
           <Input ref={inputRef} placeholder={'Ingrese el nombre del grupo'} maxLength={20} />
         </Form.Item>
-        <Form.Item label={'Eventos'} name={'event_ids'}>
-          <Transfer
-            listStyle={{ width: '100%' }}
-            oneWay={true}
-            showSearch
-            dataSource={eventsByOrg.map((event) => ({ ...event, title: event.name, key: event._id }))}
-            titles={['Eventos', 'En el grupo']}
-            targetKeys={targetKeysEvents}
-            selectedKeys={selectedKeysEvents}
-            onChange={onChangeEvents}
-            onSelectChange={onSelectChangeEvents}
-            render={(item) => item.title}
-            showSelectAll={false}
-          />
-        </Form.Item>
-        <Form.Item label={'Usuarios'} name={'organization_user_ids'}>
-          <Transfer
-            listStyle={{ width: '100%' }}
-            oneWay={true}
-            showSearch
-            dataSource={organizationUsers.map((orgUser) => ({
-              ...orgUser,
-              name: orgUser.properties.names,
-              key: orgUser._id,
-            }))}
-            titles={['Usuarios', 'En el grupo']}
-            targetKeys={targetKeysOrgUser}
-            selectedKeys={selectedKeysOrgUser}
-            onChange={onChangeOrgUser}
-            onSelectChange={onSelectChangeOrgUser}
-            render={(item) => item.name}
-            showSelectAll={false}
-          />
-        </Form.Item>
+        {!selectedGroup && (
+          <Form.Item label={'Eventos'} name={'event_ids'}>
+            <Transfer
+              disabled={isLoadingEventsByOrg}
+              listStyle={{ width: '100%' }}
+              oneWay={true}
+              showSearch
+              dataSource={eventsByOrg.map((event) => ({ ...event, title: event.name, key: event._id }))}
+              titles={['Eventos', 'En el grupo']}
+              targetKeys={targetKeysEvents}
+              selectedKeys={selectedKeysEvents}
+              onChange={onChangeTransferEvents}
+              onSelectChange={onSelectChangeEvents}
+              render={(item) => item.title}
+              showSelectAll={false}
+            />
+          </Form.Item>
+        )}
+        {!selectedGroup && (
+          <Form.Item label={'Usuarios'} name={'organization_user_ids'}>
+            <Transfer
+              disabled={isLoadingOrgUsers}
+              listStyle={{ width: '100%' }}
+              oneWay={true}
+              showSearch
+              dataSource={organizationUsers.map((orgUser) => ({
+                ...orgUser,
+                name: orgUser.properties.names,
+                key: orgUser._id,
+              }))}
+              titles={['Usuarios', 'En el grupo']}
+              targetKeys={targetKeysOrgUser}
+              selectedKeys={selectedKeysOrgUser}
+              onChange={onChangeTransferOrgUser}
+              onSelectChange={onSelectChangeOrgUser}
+              render={(item) => item.name}
+              showSelectAll={false}
+            />
+          </Form.Item>
+        )}
 
         <Form.Item
           valuePropName='checked'

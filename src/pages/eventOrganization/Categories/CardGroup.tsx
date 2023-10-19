@@ -1,5 +1,5 @@
 import { Button, Space, Tooltip, Card, Table } from 'antd';
-import { EditOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, PlusCircleOutlined, ToolOutlined } from '@ant-design/icons';
 import { DispatchMessageService } from '@/context/MessageService';
 import { ModalConfirm } from '@/components/ModalConfirm/ModalConfirm';
 import { useState } from 'react';
@@ -8,10 +8,12 @@ import { GroupEventMongo } from '../interface/group.interfaces';
 
 interface Props {
   dataSource: any;
-  handledOpenModalGroup: any;
-  toggleModalGroup: any;
+  handledOpenModalGroup: () => void;
+  handledOpenManageGroup: () => void;
+  handledSelectManageGroup: (groupEvent: GroupEventMongo) => void;
+  toggleModalGroup: () => void;
   organizationId: any;
-  selectGroup: (groupEvent: GroupEventMongo) => void;
+  setSelectGroup: (groupEvent: GroupEventMongo) => void;
   handledDelete: (groupId: string) => Promise<void>;
   isLoadingGroup: boolean;
 }
@@ -20,9 +22,11 @@ const CardGroupEvent = ({
   handledOpenModalGroup,
   toggleModalGroup,
   organizationId,
-  selectGroup,
+  setSelectGroup,
   handledDelete,
   isLoadingGroup,
+  handledOpenManageGroup,
+  handledSelectManageGroup,
 }: Props) => {
   const [modalConfirm, setModalConfirm] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState<GroupEventMongo>();
@@ -57,16 +61,27 @@ const CardGroupEvent = ({
       width: 100,
       render: (text: any, record: GroupEventMongo) => (
         <Space>
+          <Tooltip title='Gestionar'>
+            <Button
+              type='primary'
+              onClick={() => {
+                handledOpenManageGroup();
+                handledSelectManageGroup(record);
+              }}
+              icon={<ToolOutlined />}
+            />
+          </Tooltip>
           <Tooltip title='Editar'>
             <Button
               type='primary'
               onClick={() => {
                 handledOpenModalGroup();
-                selectGroup(record);
+                setSelectGroup(record);
               }}
               icon={<EditOutlined />}
             />
           </Tooltip>
+
           <Tooltip title='Eliminar'>
             <Button type='primary' danger onClick={() => onOpenModalConfirn(record)} icon={<DeleteOutlined />} />
           </Tooltip>

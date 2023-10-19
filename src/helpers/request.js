@@ -662,7 +662,7 @@ export const UsersApi = {
   mineOrdes: async (id) => {
     return await Actions.getAll(`/api/users/${id}/orders`);
   },
-  createOne: async (data, id) => {
+  createOne: async (data, id, origin = false) => {
     //Este primero es que deberia estar pero no sirve
     //return await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${id}`, data);
     /** Se envia token para validar si el rol es cambiado por un damin */
@@ -675,10 +675,14 @@ export const UsersApi = {
     }
 
     return await Actions.post(
-      `/api/events/${id}/adduserwithemailvalidation${token ? `/?token=${token}` : '/'}`,
+      `/api/events/${id}/adduserwithemailvalidation${token ? `/?token=${token}&free_access=${origin}` : `/?free_access=${origin}`}`,
       data,
       true
     );
+  },
+  createOneWithoConfirmEmail: async (data, id) => {
+    const token = await GetTokenUserFirebase();
+    return await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${id}?origin=free_access&token=${token}`, data);
   },
   deleteOne: async (user, id) => {
     let token = await GetTokenUserFirebase();
@@ -922,6 +926,14 @@ export const GroupsApi = {
   deleteOne: async (orgId, groupId) => {
     let token = await GetTokenUserFirebase();
     return await Actions.delete(`api/organizations/${orgId}/groups/${groupId}?token=${token}`, '', true);
+  },
+  deleteOrgUserFromGroup: async (orgId, groupId, OrgUserId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/organizations/${orgId}/groups/${groupId}/organizationUsers/${OrgUserId}?token=${token}`, '', true);
+  },
+  deleteEventFromGroup: async (orgId, groupId, eventId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/organizations/${orgId}/groups/${groupId}/events/${eventId}?token=${token}`, '', true);
   },
 };
 
