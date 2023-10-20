@@ -20,7 +20,7 @@ const OrgMembers = (props) => {
   const [selectedUser, setSelectedUser] = useState();
   let { _id: organizationId, user_properties: userPropertiesOrg } = props.org;
 
-  const {membersAll, membersDat, isLoading, fetchEventsStatisticsData } = useGetEventsStatisticsData(organizationId);
+  const {membersAll, membersDat, isLoading, fetchEventsStatisticsData, pagination } = useGetEventsStatisticsData(organizationId);
   function startingComponent() {
     fetchEventsStatisticsData();
     setLastUpdate(new Date());
@@ -72,7 +72,7 @@ const OrgMembers = (props) => {
         dataSource={membersDat}
         size='small'
         rowKey='index'
-        pagination={false}
+        pagination={pagination}
         loading={isLoading}
         scroll={{ x: 'auto' }}
         title={() => (
