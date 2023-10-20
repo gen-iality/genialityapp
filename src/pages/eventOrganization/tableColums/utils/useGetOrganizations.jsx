@@ -3,12 +3,13 @@
 import { useState, useEffect } from 'react';
 import { convertUTC } from '@/hooks/useConvertUTC';
 import { OrganizationApi } from '@/helpers/request';
+import { usePaginationListLocal } from '@/hooks/usePaginationListLocal';
 
 export function useGetEventsStatisticsData(organizationId) {
   const [membersDat, setMembersData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [membersAll, setMembersAll] = useState(true);
-
+  const { pagination } = usePaginationListLocal(membersDat.length);
   async function fetchEventsStatisticsData() {
     const { data } = await OrganizationApi.getUsers(organizationId);
     const fieldsMembersData = [];
@@ -25,7 +26,7 @@ export function useGetEventsStatisticsData(organizationId) {
       fieldsMembersData.push(properties);
     });
     setMembersData(fieldsMembersData);
-    setMembersAll(data)
+    setMembersAll(data);
     setIsLoading(false);
   }
 
@@ -33,5 +34,5 @@ export function useGetEventsStatisticsData(organizationId) {
     fetchEventsStatisticsData();
   }, [organizationId]);
 
-  return {membersAll, membersDat, isLoading, fetchEventsStatisticsData };
+  return { membersAll, membersDat, isLoading, fetchEventsStatisticsData, pagination };
 }
