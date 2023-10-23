@@ -54,7 +54,7 @@ const ActivityBlock = ({ preview, title }: PropsPreLanding) => {
             grid={{gutter: 8, column: 1}}
             dataSource={activities}
             style={{paddingTop: 10}}
-            renderItem={activity => (
+            renderItem={(activity, index) => (
               <List.Item style={{border: 'none', backgroundColor: bgColor}}>
                 <Card style={{borderRadius: 10, border: 'none', backgroundColor: bgColor}} 
                 bodyStyle={isMobile || mobilePreview === 'tablet' || screens.sm ? {padding: 20} : {}}
@@ -76,21 +76,17 @@ const ActivityBlock = ({ preview, title }: PropsPreLanding) => {
                           </Typography.Text>
                         </Space>
                       }
+                      
                       title={
-                        <Space size={4} wrap>
-                          <ClockTimeFourOutlineIcon style={{color: textColor}}/>
-                          <Typography.Text style={{color: textColor}}>{dateFormat(activity?.datetime_start, 'hh:mm A')}</Typography.Text>
-                          <Typography.Text style={{color: textColor}}>-</Typography.Text>
-                          <Typography.Text style={{color: textColor}}>{dateFormat(activity?.datetime_end, 'hh:mm A')}</Typography.Text>
-                        </Space>
-                      }
-                      description={
                         <Space direction='vertical' size={0}>
                           <Typography.Text strong style={{color: textColor}}>{activity?.name}</Typography.Text>
                           {activity?.type?.name &&
                             <Typography.Text type='secondary' style={{fontSize: '12px', color: textColor}}>{determineType(activity.type.name)}</Typography.Text>
                           }
                         </Space>
+                      }
+                      description={
+                        index === 0 && <div dangerouslySetInnerHTML={{ __html: activity?.description ?? '' }} style={{height: '100%'}} />
                       }
                     />             
                     <Avatar.Group maxCount={3} maxStyle={{ color: textColor, backgroundColor: bgColor }} 
