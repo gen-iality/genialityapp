@@ -149,7 +149,7 @@ export const ModalAddAndEditUsers = ({
       resultUnexpectedError();
     }
   };
-
+  //toDo: Buscar una validacion diferente
   const alreadyExistUserInOrganization = async (email: string): Promise<boolean> => {
     const { data } = await OrganizationApi.getUsers(organizationId);
     return data.filter((userOrganization: any) => userOrganization.properties.email === email).length > 0;

@@ -990,9 +990,9 @@ export const OrganizationApi = {
   events: async (id) => {
     return await Actions.getOne(`/api/organizations/${id}/`, 'events');
   },
-  getUsers: async (id) => {
+  getUsers: async (id, page = null) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.get(`/api/organizations/${id}/organizationusers?token=${token}`);
+    return await Actions.get(`/api/organizations/${id}/organizationusers?${page ? `page=${page}&`:''}token=${token}`);
   },
   getUsersWithStatusInEvent: async (id, eventId) => {
     let token = await GetTokenUserFirebase();
