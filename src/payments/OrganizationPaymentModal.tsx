@@ -122,6 +122,14 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
         fullName: organizationUser.user.names,
         ...moreCustomData,
       },
+      collectShipping: 'true',
+      shippingAddress: {
+        addressLine1: '##########', // Take from properties from '<not deterministic field>
+        country: 'CO', // Take from properties from '<not deterministic field>
+        city: 'Bogotá', // Take from properties from '<not deterministic field>
+        phoneNumber: moreCustomData?.phoneNumber ?? '3000000000',
+        region: 'Cundinamarca', // Take from properties from '<not deterministic field>
+      },
     })
   }, [redirectUrl, organizationUser, money])
 
