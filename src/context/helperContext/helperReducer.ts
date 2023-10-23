@@ -10,7 +10,7 @@ export const helperInitialState: HelperState = {
   currentActivity: null,
   showNotification: false,
   params: {},
-  eventIsActive: false,
+  eventIsActive: true,
 };
 
 export const helperReducer = (state: HelperState, action: HelperAction) => {

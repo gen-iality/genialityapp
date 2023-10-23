@@ -261,7 +261,7 @@ const ViewPrelanding = ({ preview }: PropsPreLanding) => {
             </Col>
             <Col id='Bloques del evento' span={24}>
               <Row gutter={[0, 16]} align='stretch' justify='center'>
-                <Col span={24} order={1}>
+                {/* <Col span={24} order={1}>
                   {isVisibleCardSections()
                     ? shadow && (
                         <Card
@@ -285,8 +285,8 @@ const ViewPrelanding = ({ preview }: PropsPreLanding) => {
                         </Card>
                       )
                     : null}
-                </Col>
-                {visibleSection('Contador') && (
+                </Col> */}
+               {/*  {visibleSection('Contador') && (
                   <Col order={obtenerOrder('Contador')} span={24}>
                     <Card
                       id='Contador_block'
@@ -310,7 +310,7 @@ const ViewPrelanding = ({ preview }: PropsPreLanding) => {
                       />
                     </Card>
                   </Col>
-                )}
+                )} */}
                 {visibleSection('Descripción') && description?.length > 0 && (
                   <Col order={obtenerOrder('Descripción')} span={24}>
                     <Card

@@ -11,9 +11,19 @@ export function useGetEventsStatisticsData(organizationId) {
   const [membersAll, setMembersAll] = useState(true);
   const { pagination } = usePaginationListLocal(membersDat.length);
   async function fetchEventsStatisticsData() {
-    const { data } = await OrganizationApi.getUsers(organizationId);
+    const { data, meta } = await OrganizationApi.getUsers(organizationId);
+    let promiseList = [] 
+    for (let i = 2; i < meta.last_page + 1; i++) {
+      promiseList.push(OrganizationApi.getUsers(organizationId, i))
+    }
+   const res = await Promise.all(promiseList)
+
+   const otherOrgUser = res.reduce((acumulador, objeto) =>{
+    return acumulador.concat(objeto.data);
+  }, []);
+
     const fieldsMembersData = [];
-    data.map((membersData, index) => {
+    [...data,...otherOrgUser].map((membersData, index) => {
       const properties = {
         ...membersData.properties,
         _id: membersData._id,
