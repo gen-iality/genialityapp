@@ -5,7 +5,7 @@ import { usePaginationListLocal } from '@/hooks/usePaginationListLocal';
 export const useGetEventWithStatistics = (organizationId:string) => {
     const [eventData, setEventData] = useState([]);
     const [isLoading, setisLoading] = useState(true);
-    const {pagination}=  usePaginationListLocal(eventData)
+    const {pagination}=  usePaginationListLocal(eventData.length)
   
     const getData = async () => {
       try {
