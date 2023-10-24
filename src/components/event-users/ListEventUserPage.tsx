@@ -577,7 +577,11 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
                     })
                     .catch((reason) => {
                       console.error(reason)
-                      window.location.reload()
+                      if (reason.response?.status === 404) {
+                        FB.Attendees.ref(event._id, value._id).delete()
+                      } else {
+                        window.location.reload()
+                      }
                     })
                 },
               })
@@ -591,8 +595,8 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       deleteEventUserSection,
       checkInColumn,
       ...extraColumns,
-      //progressingColumn,
-      //timeTrackingStatsColumn,
+      progressingColumn,
+      timeTrackingStatsColumn,
       rolColumn,
       createdAtColumn,
       updatedAtColumn,
