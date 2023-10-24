@@ -57,6 +57,7 @@ import EnrollEventUserFromOrganizationMember from './EnrollEventUserFromOrganiza
 import ModalPassword from './ModalPassword'
 import { FilterConfirmProps } from 'antd/lib/table/interface'
 import filterActivitiesByProgressSettings from '@Utilities/filterActivitiesByProgressSettings'
+import { Timestamp } from 'firebase/firestore'
 
 interface ITimeTrackingStatsProps {
   user: any
@@ -376,6 +377,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       ...getColumnSearchProps('progreso', (value) => value.postprocess_progress),
       render: (item) => (
         <>
+          {/* This component need to be removed - but we have to find the `viewedActivities` from the somewhere like progressMap */}
           <EventProgressWrapper
             event={event}
             eventUser={item}
@@ -385,18 +387,10 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
             render={({ isLoading, activities, viewedActivities }) => {
               return (
                 <>
-                  {isLoading && progressMap[item._id] !== undefined ? (
+                  {activityId === undefined ? (
                     <ButtonThatOpenActivityProgressesModal
                       item={item}
                       progressAsString={progressMap[item._id]}
-                    />
-                  ) : isLoading ? (
-                    <Spin />
-                  ) : activityId === undefined ? (
-                    <ButtonThatOpenActivityProgressesModal
-                      item={item}
-                      viewedActivities={viewedActivities}
-                      totalActivities={activities}
                     />
                   ) : (
                     <>{viewedActivities.length > 0 ? 'Visto' : 'No visto'}</>
@@ -430,14 +424,14 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       sorter: (a, b) => a.created_at - b.created_at,
       render: (item) => {
         if (item.created_at !== null) {
-          const createdAt = item?.created_at || new Date()
+          const createdAt = item?.created_at ?? new Date()
 
           return (
             <>
-              {createdAt ? (
+              {dayjs(createdAt).isValid() ? (
                 <span>{dayjs(createdAt).format('D/MMM/YY h:mm:ss A ')}</span>
               ) : (
-                ''
+                `${createdAt.toString()}`
               )}
             </>
           )
@@ -454,6 +448,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       sorter: (a, b) => a.updated_at - b.updated_at,
       render: (item) => {
         const updatedAt = item?.updated_at
+
         return (
           <>
             {updatedAt ? (
@@ -577,7 +572,11 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
                     })
                     .catch((reason) => {
                       console.error(reason)
-                      window.location.reload()
+                      if (reason.response?.status === 404) {
+                        FB.Attendees.ref(event._id, value._id).delete()
+                      } else {
+                        window.location.reload()
+                      }
                     })
                 },
               })
@@ -590,9 +589,9 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
     setColumns([
       deleteEventUserSection,
       checkInColumn,
+      progressingColumn,
       ...extraColumns,
-      //progressingColumn,
-      //timeTrackingStatsColumn,
+      timeTrackingStatsColumn,
       rolColumn,
       createdAtColumn,
       updatedAtColumn,
@@ -632,10 +631,16 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         // Fix the date
         if (dayjs.isDayjs(data.checkedin_at))
           data.checkedin_at = dayjs(data.checkedin_at.toDate())
+
         if (dayjs.isDayjs(data.created_at))
           data.created_at = dayjs(data.created_at.toDate())
+        else if (data.created_at instanceof Timestamp)
+          data.created_at = dayjs(new Date(data.created_at.seconds * 1000))
+
         if (dayjs.isDayjs(data.updated_at))
           data.updated_at = dayjs(data.updated_at.toDate())
+        else if (data.updated_at instanceof Timestamp)
+          data.updated_at = dayjs(new Date(data.updated_at.seconds * 1000))
 
         // Ant Design wont calc progresses of non-rendered component, then we have
         // to pre-calc this value in a way non-reactable
@@ -645,6 +650,9 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         }
         const { activities, viewed_activities }: ActivityProgressesType =
           data.activity_progresses ?? {}
+        if (data?.properties?.email === 'jpablorua@gmail.com') {
+          console.log({ data, progress: data.activity_progresses })
+        }
         // Use % or n/N? ... use n/N for now
         data.postprocess_progress = `${(viewed_activities ?? []).length}/${Math.max(
           (activities ?? []).length,
