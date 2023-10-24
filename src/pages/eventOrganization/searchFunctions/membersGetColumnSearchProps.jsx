@@ -30,10 +30,10 @@ export const membersGetColumnSearchProps = (dataIndex, columnsData) => ({
           icon={<SearchOutlined />}
           size='small'
           style={{ width: 90 }}>
-          Search
+          Buscar
         </Button>
         <Button onClick={() => handleReset(clearFilters, columnsData)} size='small' style={{ width: 90 }}>
-          Reset
+          Limpiar
         </Button>
         <Button
           type='link'
@@ -43,7 +43,7 @@ export const membersGetColumnSearchProps = (dataIndex, columnsData) => ({
             columnsData.setSearchText(selectedKeys[0]);
             columnsData.setSearchedColumn(dataIndex);
           }}>
-          Filter
+          Filtrar
         </Button>
       </Space>
     </div>

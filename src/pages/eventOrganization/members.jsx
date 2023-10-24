@@ -20,9 +20,12 @@ const OrgMembers = (props) => {
   const [selectedUser, setSelectedUser] = useState();
   let { _id: organizationId, user_properties: userPropertiesOrg } = props.org;
 
-  const {membersAll, membersDat, isLoading, fetchEventsStatisticsData, pagination } = useGetEventsStatisticsData(organizationId);
+  const { getDataOrgUser, isLoadingMembersParsed, membersParsed, pagination } = useGetEventsStatisticsData(
+    organizationId
+  );
+
   function startingComponent() {
-    fetchEventsStatisticsData();
+    getDataOrgUser();
     setLastUpdate(new Date());
   }
   useEffect(() => {
@@ -51,7 +54,7 @@ const OrgMembers = (props) => {
     setSearchText,
   };
 
-  const columsMembersView = columns(membersAll, columnsData, editModalUser, organizationId, fetchEventsStatisticsData);
+  const columsMembersView = columns(membersParsed, columnsData, editModalUser, organizationId, getDataOrgUser);
   const columsMembersExcel = parseMembersColumsExcel(userPropertiesOrg);
 
   return (
@@ -65,26 +68,26 @@ const OrgMembers = (props) => {
       </p>
 
       <p>
-        <Tag>Inscritos: {membersDat.length || 0}</Tag>
+        <Tag>Inscritos: {membersParsed.length || 0}</Tag>
       </p>
       <Table
         columns={columsMembersView}
-        dataSource={membersDat}
+        dataSource={membersParsed}
         size='small'
         rowKey='index'
         pagination={pagination}
-        loading={isLoading}
+        loading={isLoadingMembersParsed}
         scroll={{ x: 'auto' }}
         title={() => (
           <Row wrap justify='end' gutter={[8, 8]}>
             <Col>
-              {/* {membersDat.length > 0 && (
+              {/* {membersParsed.length > 0 && (
                 <Button type='primary' icon={<DownloadOutlined />} onClick={exportFile}>
                   Exportar
                 </Button>
               )} */}
               <ExportExcel
-                list={parseDataMembersToExcel(membersDat, columsMembersExcel)}
+                list={parseDataMembersToExcel(membersParsed, columsMembersExcel)}
                 fileName={'memberReport'}
                 columns={columsMembersExcel}
               />
@@ -106,7 +109,7 @@ const OrgMembers = (props) => {
           }}
           organizationId={organizationId}
           selectedUser={selectedUser}
-          getEventsStatisticsData={fetchEventsStatisticsData}
+          getEventsStatisticsData={getDataOrgUser}
         />
       )}
     </>

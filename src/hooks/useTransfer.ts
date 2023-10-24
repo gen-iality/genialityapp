@@ -13,11 +13,14 @@ export const useTransfer = (initialTargetKeys: string[]) => {
     setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys]);
   };
 
+  const filterOption = (inputValue: string, item: any) => item.name.toLowerCase().includes(inputValue.toLowerCase());
+
   return {
     onChange,
     onSelectChange,
     targetKeys,
     selectedKeys,
     setTargetKeys,
+    filterOption,
   };
 };
