@@ -308,13 +308,18 @@ export type ActivityProgressesData = {
 
 /**
  * Lets you to save the user's activity progress. Uses the collection `events`.
+ *
+ * @deprecated will be removed because the progress is stored in the attendee of the event
  */
 const ActivityProgresses = {
+  /** @deprecated will be removed */
   name: 'activityProgresses',
   /**
    * Gets the Firebase collection reference from the provided event ID.
    * @param eventId The event ID.
    * @returns A Firebase collection reference object.
+   *
+   * @deprecated will be removed
    */
   collection: (eventId: string) => {
     if (typeof eventId === 'undefined') throw new Error(`eventId cannot be ${eventId}`)
@@ -325,6 +330,8 @@ const ActivityProgresses = {
    * @param eventId The event ID.
    * @param userId The user ID.
    * @returns A Firebase document reference object,
+   *
+   * @deprecated will be removed
    */
   ref: (eventId: string, userId: string) => {
     if (typeof eventId === 'undefined') throw new Error(`eventId cannot be ${eventId}`)
@@ -338,6 +345,8 @@ const ActivityProgresses = {
    * @param eventId The event ID.
    * @param userId The user ID.
    * @returns An exactly document data.
+   *
+   * @deprecated will be removed
    */
   get: async (eventId: string, userId: string) => {
     const documentRef = ActivityProgresses.ref(eventId, userId)
@@ -350,6 +359,8 @@ const ActivityProgresses = {
    * @param eventId The event ID.
    * @param userId The user ID.
    * @param data Any data to update.
+   *
+   * @deprecated will be removed
    */
   update: async (eventId: string, userId: string, data: ActivityProgressesData) => {
     await ActivityProgresses.ref(eventId, userId).update(data)
@@ -360,6 +371,8 @@ const ActivityProgresses = {
    * @param userId The user ID.
    * @param data Any data to edit.
    * @param options Firebase options for the editing process.
+   *
+   * @deprecated will be removed
    */
   edit: async (
     eventId: string,
