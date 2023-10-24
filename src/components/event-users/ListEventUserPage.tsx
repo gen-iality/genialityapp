@@ -377,6 +377,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       ...getColumnSearchProps('progreso', (value) => value.postprocess_progress),
       render: (item) => (
         <>
+          {/* This component need to be removed - but we have to find the `viewedActivities` from the somewhere like progressMap */}
           <EventProgressWrapper
             event={event}
             eventUser={item}
@@ -386,18 +387,10 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
             render={({ isLoading, activities, viewedActivities }) => {
               return (
                 <>
-                  {isLoading && progressMap[item._id] !== undefined ? (
+                  {activityId === undefined ? (
                     <ButtonThatOpenActivityProgressesModal
                       item={item}
                       progressAsString={progressMap[item._id]}
-                    />
-                  ) : isLoading ? (
-                    <Spin />
-                  ) : activityId === undefined ? (
-                    <ButtonThatOpenActivityProgressesModal
-                      item={item}
-                      viewedActivities={viewedActivities}
-                      totalActivities={activities}
                     />
                   ) : (
                     <>{viewedActivities.length > 0 ? 'Visto' : 'No visto'}</>
@@ -657,6 +650,9 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         }
         const { activities, viewed_activities }: ActivityProgressesType =
           data.activity_progresses ?? {}
+        if (data?.properties?.email === 'jpablorua@gmail.com') {
+          console.log({ data, progress: data.activity_progresses })
+        }
         // Use % or n/N? ... use n/N for now
         data.postprocess_progress = `${(viewed_activities ?? []).length}/${Math.max(
           (activities ?? []).length,
