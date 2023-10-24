@@ -57,6 +57,7 @@ import EnrollEventUserFromOrganizationMember from './EnrollEventUserFromOrganiza
 import ModalPassword from './ModalPassword'
 import { FilterConfirmProps } from 'antd/lib/table/interface'
 import filterActivitiesByProgressSettings from '@Utilities/filterActivitiesByProgressSettings'
+import { Timestamp } from 'firebase/firestore'
 
 interface ITimeTrackingStatsProps {
   user: any
@@ -430,14 +431,14 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       sorter: (a, b) => a.created_at - b.created_at,
       render: (item) => {
         if (item.created_at !== null) {
-          const createdAt = item?.created_at || new Date()
+          const createdAt = item?.created_at ?? new Date()
 
           return (
             <>
-              {createdAt ? (
+              {dayjs(createdAt).isValid() ? (
                 <span>{dayjs(createdAt).format('D/MMM/YY h:mm:ss A ')}</span>
               ) : (
-                ''
+                `${createdAt.toString()}`
               )}
             </>
           )
@@ -454,6 +455,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       sorter: (a, b) => a.updated_at - b.updated_at,
       render: (item) => {
         const updatedAt = item?.updated_at
+
         return (
           <>
             {updatedAt ? (
@@ -594,8 +596,8 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
     setColumns([
       deleteEventUserSection,
       checkInColumn,
-      ...extraColumns,
       progressingColumn,
+      ...extraColumns,
       timeTrackingStatsColumn,
       rolColumn,
       createdAtColumn,
@@ -636,10 +638,16 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         // Fix the date
         if (dayjs.isDayjs(data.checkedin_at))
           data.checkedin_at = dayjs(data.checkedin_at.toDate())
+
         if (dayjs.isDayjs(data.created_at))
           data.created_at = dayjs(data.created_at.toDate())
+        else if (data.created_at instanceof Timestamp)
+          data.created_at = dayjs(new Date(data.created_at.seconds * 1000))
+
         if (dayjs.isDayjs(data.updated_at))
           data.updated_at = dayjs(data.updated_at.toDate())
+        else if (data.updated_at instanceof Timestamp)
+          data.updated_at = dayjs(new Date(data.updated_at.seconds * 1000))
 
         // Ant Design wont calc progresses of non-rendered component, then we have
         // to pre-calc this value in a way non-reactable
