@@ -36,6 +36,7 @@ export const GroupModal = ({
     selectedKeys: selectedKeysEvents,
     targetKeys: targetKeysEvents,
     setTargetKeys: setTargetKeysEvents,
+    filterOption: filterOptionEvents,
   } = useTransfer([]);
 
   const {
@@ -44,6 +45,7 @@ export const GroupModal = ({
     selectedKeys: selectedKeysOrgUser,
     targetKeys: targetKeysOrgUser,
     setTargetKeys: setTargetKeysOrgUser,
+    filterOption: filterOptionOrgUser,
   } = useTransfer([]);
 
   const onAddGroup = async (newGroupData: GroupEvent) => {
@@ -126,6 +128,7 @@ export const GroupModal = ({
               listStyle={{ width: '100%' }}
               oneWay={true}
               showSearch
+              filterOption={filterOptionEvents}
               dataSource={eventsByOrg.map((event) => ({ ...event, title: event.name, key: event._id }))}
               titles={['Eventos', 'En el grupo']}
               targetKeys={targetKeysEvents}
@@ -143,6 +146,7 @@ export const GroupModal = ({
               disabled={isLoadingOrgUsers}
               listStyle={{ width: '100%' }}
               oneWay={true}
+              filterOption={filterOptionOrgUser}
               showSearch
               dataSource={organizationUsers.map((orgUser) => ({
                 ...orgUser,
