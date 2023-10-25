@@ -1014,9 +1014,9 @@ export const OrganizationApi = {
       data
     );
   },
-  editUser: async (org, member, data) => {
+  editUser: async (org, member, data, validate_change_rol = false) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.edit(`/api/organizations/${org}/organizationusers/${member}?token=${token}`, data, true);
+    return await Actions.edit(`/api/organizations/${org}/organizationusers/${member}?validate_change_rol=${validate_change_rol}&token=${token}`, data, true);
   },
   deleteUser: async (org, member) => {
     let token = await GetTokenUserFirebase();

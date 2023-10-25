@@ -184,12 +184,13 @@ export const ModalAddAndEditUsers = ({
   };
 
   const onEditUserToOrganization = async ({ rol_id, ...updateUser }: UserToOrganization) => {
+    const validate_change_rol = true
     const { picture, password, ...userToOrganization } = updateUser;
     return await OrganizationApi.editUser(organizationId, selectedUser?._id, {
       properties: { ...userToOrganization, rol_id },
       rol_id,
       active: true,
-    });
+    }, validate_change_rol);
   };
 
   const renderFormDinamic = () => {
