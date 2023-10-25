@@ -135,15 +135,13 @@ function EventOrganization({ match }: OrganizationProps) {
                 <Row gutter={[0, 32]}>
                   {cUser.value?._id && (
                     <Col style={{ width: '100%' }}>
-                      {!isLoadingOtherEvents && (
-                        <MyEvents
+                      <MyEvents
                           cUser={cUser}
                           organizationId={organizationId}
                           eventUserId={eventUserId}
                           organization={organization}
                           setIsModalCertificatesOpen={setIsModalCertificatesOpen}
                         />
-                      )}
                       {isModalCertificatesOpen && (
                         <ModalCertificatesByOrganizacionAndUser
                           destroyOnClose
