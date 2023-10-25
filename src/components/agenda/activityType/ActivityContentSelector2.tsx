@@ -91,6 +91,13 @@ const ActivityContentSelector: FunctionComponent<IActivityContentSelectorProps> 
           value,
         }))
 
+  useEffect(() => {
+    if (!activity.content) return
+
+    setContentType(activity.content.type as any)
+    setReference(activity.content.reference as any)
+  }, [activity.content])
+
   return (
     <>
       <Card>
