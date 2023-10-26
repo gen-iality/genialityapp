@@ -30,14 +30,17 @@ const StreamingActivityDisplayer: FunctionComponent<IBasicActivityProps> = (prop
   }, [])
 
   useEffect(() => {
+    if (!activity._id) return
+    if (!activity.content?.reference) return
+
+    setMeetingId(activity.content.reference)
     async function GetStateStreamingRoom() {
       if (!fnCiclo) {
         await getActivityFirestoreData(cEvent.value._id, activity._id, (data) => {
           console.log(data)
-          const { habilitar_ingreso, meeting_id } = data
+          const { habilitar_ingreso } = data
           console.log('realtime:', data)
           setActivityState(habilitar_ingreso)
-          setMeetingId(meeting_id)
           setTransmition(data.transmition)
           setFnCiclo(true)
         })
@@ -47,7 +50,7 @@ const StreamingActivityDisplayer: FunctionComponent<IBasicActivityProps> = (prop
     if (activity != null) {
       GetStateStreamingRoom()
     }
-  }, [activity, cEvent.value])
+  }, [activity.content, cEvent.value])
 
   const ViewTypeStreaming = (habilitar_ingreso: string | null | undefined) => {
     switch (habilitar_ingreso) {
