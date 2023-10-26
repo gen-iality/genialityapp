@@ -1008,6 +1008,10 @@ export const OrganizationApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.getOne(`/api/me/organizations/${orgId}/?token=${token}`, '', true);
   },
+  existeUserByEmail: async (organizationId, email) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`/api/organizations/${organizationId}/validate-user-exists?email=${email}&token=${token}`, true);
+  },
   saveUser: async (org, data, addUserInEvents = false) => {
     return await Actions.post(
       `/api/organizations/${org}/addorganizationuser?createIntoEvents=${addUserInEvents}`,

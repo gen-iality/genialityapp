@@ -46,7 +46,7 @@ class EventCard extends Component {
           return (
             <Space>
               {event.category_ids.map((category, index) => (
-                <Tag key={index}>{category}</Tag>
+                <Tag key={category}>{category}</Tag>
               ))}
             </Space>
           );
@@ -59,7 +59,7 @@ class EventCard extends Component {
               : event.author?.names,
           ];
           const validNames = possibleNames.filter((name) => name);
-          return validNames.map((name, index) => <span key={index}>{name}</span>);
+          return validNames.map((name, index) => <span key={name}>{name}</span>);
         }
       } else if (currentPath === '/myprofile/organization' | currentPath === '/myprofile') {
         // Ruta "/myprofile": Muestra solo el nombre de la organización o del autor

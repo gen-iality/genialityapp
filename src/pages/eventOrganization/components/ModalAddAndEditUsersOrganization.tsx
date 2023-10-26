@@ -149,10 +149,13 @@ export const ModalAddAndEditUsers = ({
       resultUnexpectedError();
     }
   };
-  //toDo: Buscar una validacion diferente
   const alreadyExistUserInOrganization = async (email: string): Promise<boolean> => {
-    const { data } = await OrganizationApi.getUsers(organizationId);
-    return data.filter((userOrganization: any) => userOrganization.properties.email === email).length > 0;
+    try {
+      await OrganizationApi.existeUserByEmail(organizationId, email);
+      return true;
+    } catch (error) {
+      return false;
+    }
   };
 
   const onAddUserToOrganization = async (newUser: UserToOrganization): Promise<void> => {
@@ -184,13 +187,18 @@ export const ModalAddAndEditUsers = ({
   };
 
   const onEditUserToOrganization = async ({ rol_id, ...updateUser }: UserToOrganization) => {
-    const validate_change_rol = true
+    const validate_change_rol = true;
     const { picture, password, ...userToOrganization } = updateUser;
-    return await OrganizationApi.editUser(organizationId, selectedUser?._id, {
-      properties: { ...userToOrganization, rol_id },
-      rol_id,
-      active: true,
-    }, validate_change_rol);
+    return await OrganizationApi.editUser(
+      organizationId,
+      selectedUser?._id,
+      {
+        properties: { ...userToOrganization, rol_id },
+        rol_id,
+        active: true,
+      },
+      validate_change_rol
+    );
   };
 
   const renderFormDinamic = () => {

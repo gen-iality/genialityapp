@@ -20,7 +20,7 @@ export const ModalCertificatesByOrganizacionAndUser = ({
   onCloseDrawer,
   orgContainerBg,
   orgTextColor,
-  ...modalProps
+  ...drawerProps
 }: Props) => {
   const { certificatesByEvents, eventsWithEventUser, isLoading } = useGetCertificatesByEvents(
     organizationId,
@@ -49,7 +49,7 @@ export const ModalCertificatesByOrganizacionAndUser = ({
           <Button icon={<CloseOutlined style={{ fontSize: 20 }} />} onClick={onCloseDrawer} type='text' />
         </Tooltip>
       }
-      {...modalProps}>
+      {...drawerProps}>
       {isLoading && (
         <Row align='middle' justify='center' style={{ height: '100%' }}>
           <Col>

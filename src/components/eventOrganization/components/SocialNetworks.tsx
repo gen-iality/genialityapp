@@ -6,7 +6,7 @@ import InstagramIcon from '@2fd/ant-design-icons/lib/Instagram';
 import YoutubeIcon from '@2fd/ant-design-icons/lib/Youtube';
 import LinkedinIcon from '@2fd/ant-design-icons/lib/Linkedin';
 import WebIcon from '@2fd/ant-design-icons/lib/Web';
-import { Avatar, Row, Space, Tooltip } from 'antd';
+import { Avatar, Space, Tooltip } from 'antd';
 import { getCorrectColor } from '@/helpers/utils';
 
 interface Props {
