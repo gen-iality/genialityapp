@@ -1022,9 +1022,9 @@ export const OrganizationApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.edit(`/api/organizations/${org}/organizationusers/${member}?validate_change_rol=${validate_change_rol}&token=${token}`, data, true);
   },
-  deleteUser: async (org, member) => {
+  deleteUser: async (org, member, deleteFromAllOrganizationEvents = false) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.delete(`/api/organizations/${org}/organizationusers`, `/${member}?token=${token}`, true);
+    return await Actions.delete(`/api/organizations/${org}/organizationusers`, `/${member}?delete_attendees=${deleteFromAllOrganizationEvents}token=${token}`, true);
   },
   getEventsStatistics: async (org, order = 'oldest') => {
     return await Actions.get(`/api/organizations/${org}/eventsstadistics?order=${order}`);
