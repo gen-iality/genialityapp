@@ -399,7 +399,11 @@ export const NewEventProvider = ({ children }) => {
         let token = await GetTokenUserFirebase();
         // console.log('data=>', data);
 
-        const result = await Actions.create(`/api/events?token=${token}`, data);
+        // const result = await Actions.create(`/api/events?&token=${token}`, data);
+
+        //Creacion mediante Ceta
+        const result = await Actions.create(`/api/events?add_user_admins=true&token=${token}`, data);
+        
         // console.log('result=>', result);
         result._id = result._id ? result._id : result.data?._id;
         if (result._id) {

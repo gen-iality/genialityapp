@@ -1008,19 +1008,23 @@ export const OrganizationApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.getOne(`/api/me/organizations/${orgId}/?token=${token}`, '', true);
   },
+  existeUserByEmail: async (organizationId, email) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`/api/organizations/${organizationId}/validate-user-exists?email=${email}&token=${token}`, true);
+  },
   saveUser: async (org, data, addUserInEvents = false) => {
     return await Actions.post(
       `/api/organizations/${org}/addorganizationuser?createIntoEvents=${addUserInEvents}`,
       data
     );
   },
-  editUser: async (org, member, data) => {
+  editUser: async (org, member, data, validate_change_rol = false) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.edit(`/api/organizations/${org}/organizationusers/${member}?token=${token}`, data, true);
+    return await Actions.edit(`/api/organizations/${org}/organizationusers/${member}?validate_change_rol=${validate_change_rol}&token=${token}`, data, true);
   },
-  deleteUser: async (org, member) => {
+  deleteUser: async (org, member, deleteFromAllOrganizationEvents = false) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.delete(`/api/organizations/${org}/organizationusers`, `/${member}?token=${token}`, true);
+    return await Actions.delete(`/api/organizations/${org}/organizationusers`, `/${member}?delete_attendees=${deleteFromAllOrganizationEvents}token=${token}`, true);
   },
   getEventsStatistics: async (org, order = 'oldest') => {
     return await Actions.get(`/api/organizations/${org}/eventsstadistics?order=${order}`);

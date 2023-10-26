@@ -13,6 +13,8 @@ export async function handleDeleteUser(org, user, fetchEventsStatisticsData) {
       action: 'show',
     });
     await OrganizationApi.deleteUser(org, user);
+    //Eliminar para ceta
+    await OrganizationApi.deleteUser(org, user, true);
     fetchEventsStatisticsData()
 
     DispatchMessageService({
