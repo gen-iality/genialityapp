@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Loading from '@/components/profile/loading';
 import { useSearchList } from '@/hooks/useSearchList';
-import { Badge, Button, Card, Col, Empty, Row, Space, Typography } from 'antd';
+import { Badge, Button, Card, Col, Empty, Row, Skeleton, Space, Typography } from 'antd';
 import { InputSearchEvent } from './InputSearchEvent';
 import EventCard from '@/components/shared/eventCard';
 import { Organization } from '../types';
@@ -75,9 +75,9 @@ export const MyEvents = ({ organization, setIsModalCertificatesOpen, organizatio
     <>
       {myUserOrg && (
         <Card
-          bodyStyle={{ paddingTop: '0px' }}
+          bodyStyle={{ paddingTop: '0px', height:'100%',  overflowY: 'auto' }}
           headStyle={{ border: 'none' }}
-          style={{ width: '100%', borderRadius: 20 }}
+          style={{ width: '100%', borderRadius: 20, height: '600px',overflow:'hidden' }}
           title={
             <Badge offset={[60, 22]} count={`${myAllEvents.length} Eventos`}>
               <Title level={2}>Mis eventos</Title>
@@ -107,7 +107,9 @@ export const MyEvents = ({ organization, setIsModalCertificatesOpen, organizatio
               <Row gutter={[16, 16]}>
                 {isLoadingEventsFreeToOneOreUs ? (
                   <div style={{ width: '100vw', height: '100vh', textAlign: 'center' }}>
-                    <Loading />
+                    <Col xs={24} sm={12} md={12} lg={8} xl={6} xxl={4}>
+                      <Skeleton.Avatar active={true} size={300} shape={'square'} />
+                    </Col>
                   </div>
                 ) : (
                   <>

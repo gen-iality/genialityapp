@@ -14,7 +14,7 @@ export const NextEvents = ({ events }: Props) => {
 
 	return (
 		<Card
-			bodyStyle={{ paddingTop: '0px' }}
+			bodyStyle={{ paddingTop: '0px', height:'100%',  overflowY: 'auto' }}
 			headStyle={{ border: 'none' }}
 			title={
 				<Badge offset={[60, 22]} count={`${events.length} Eventos`}>
@@ -22,7 +22,7 @@ export const NextEvents = ({ events }: Props) => {
 				</Badge>
 			}
 			extra={<Space>{events.length > 0 && <InputSearchEvent onHandled={setSearchTerm} />}</Space>}
-			style={{ width: '100%', borderRadius: 20 }}>
+			style={{ width: '100%', borderRadius: 20, height: '600px',overflow:'hidden' }}>
 			<Row gutter={[0, 32]}>
 				<Col span={24}>
 					<Row gutter={[16, 16]}>
