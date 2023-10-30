@@ -5,11 +5,11 @@ import {
   AvailableContentType,
   typeMap,
 } from './ActivityContentSelector2'
-import EviusReactQuill from '@components/shared/eviusReactQuill'
 import { Alert, Button, Form, Input, Select, Typography } from 'antd'
 import Document from '@components/documents/Document'
 import QuizCMS from '@components/quiz/QuizCMS'
 import SurveyCMS from '@components/survey/SurveyCMS'
+import RichTextEditor from '@components/trivia/RichTextEditor'
 
 type ActivityContentManagerRebornProps = {
   activity: ExtendedAgendaType
@@ -63,10 +63,9 @@ const ActivityContentManagerReborn: FunctionComponent<
               >
                 Forzar actualizar
               </Button>
-              <EviusReactQuill
-                name="html"
-                data={reference}
-                handleChange={(value: string) => onReferenceChange(value)}
+              <RichTextEditor
+                value={reference}
+                onChange={(value) => onReferenceChange(value)}
               />
             </>
           ) : contentType === 'html_url' ? (
