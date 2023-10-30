@@ -1,5 +1,12 @@
 import { ExtendedAgendaType } from '@Utilities/types/AgendaType'
-import { FunctionComponent, useCallback, useContext, useEffect, useState } from 'react'
+import {
+  FunctionComponent,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import {
   AvailableActivityType,
   AvailableContentType,
@@ -14,6 +21,7 @@ import {
   Col,
   Divider,
   Form,
+  Grid,
   Input,
   Row,
   Select,
@@ -32,6 +40,7 @@ import { TypeDisplayment } from '@context/activityType/constants/enum'
 import { CheckOutlined, DownloadOutlined, ExclamationOutlined } from '@ant-design/icons'
 import ActivityExternalUrlField from './components/ActivityExternalUrlField'
 import AgendaContext from '@context/AgendaContext'
+import ReactPlayer from 'react-player'
 
 type ActivityContentManagerRebornProps = {
   activity: ExtendedAgendaType
@@ -66,6 +75,8 @@ const ActivityContentManagerReborn: FunctionComponent<
 
   const [temporalReference, setTemporalReference] = useState(reference ?? '')
 
+  const screen = Grid.useBreakpoint()
+
   const { roomStatus, setRoomStatus, saveConfig } = useContext(AgendaContext)
 
   const contentTypeOptions: { label: string; value: AvailableContentType }[] =
@@ -75,6 +86,22 @@ const ActivityContentManagerReborn: FunctionComponent<
           label: humanizedContentTypeMap[value] ?? value.toUpperCase(),
           value,
         }))
+
+  const looksLikeYouTubeOrVimeoLink = useMemo(() => {
+    const finalUrl = temporalReference ?? reference
+    if (!finalUrl) return false
+    if (!activity.content?.reference) return false
+
+    if (
+      finalUrl.toLocaleLowerCase().includes('youtube.com') ||
+      finalUrl.toLocaleLowerCase().includes('youtu.be') ||
+      finalUrl.toLocaleLowerCase().includes('vimeo.com')
+    ) {
+      return true
+    }
+
+    return false
+  }, [reference, temporalReference])
 
   const SavedChangeIndicator = () =>
     temporalReference === reference ? (
@@ -358,46 +385,74 @@ const ActivityContentManagerReborn: FunctionComponent<
       }
     } else if (activityType === 'live') {
       return (
-        <Row>
-          <Col span={24}>
-            <Form.Item style={{ width: '100%' }} label="URL de la transmisión">
-              <Input
-                placeholder="URL de la transmisión: YouTube / Vimeo / Twitch / Zoom / Meet Google / Teams / Phone Call / etc."
-                defaultValue={temporalReference}
-                addonBefore={<SavedChangeIndicator />}
-                onChange={(event) => {
-                  const { value } = event.target
-                  console.debug('will set', value)
-                  setTemporalReference(value)
-                }}
-                addonAfter={<ButtonUpdate />}
+        <Row gutter={[16, 16]}>
+          <Col span={12}>
+            {looksLikeYouTubeOrVimeoLink ? (
+              <ReactPlayer
+                style={{ aspectRatio: '16/9' }}
+                muted={false}
+                playing
+                loop
+                width="100%"
+                height="100%"
+                url={temporalReference}
+                controls={false}
               />
-            </Form.Item>
+            ) : (
+              <div style={{ aspectRatio: screen.xs ? '9/12' : '16/9' }}>
+                <iframe
+                  width="100%"
+                  style={{ height: '100%' }}
+                  allow="autoplay; fullscreen; camera *;microphone *"
+                  allowFullScreen
+                  src={temporalReference}
+                ></iframe>
+              </div>
+            )}
           </Col>
-          <Col span={24}>
-            <Space direction="vertical" style={{ width: '100%' }}>
-              <Typography.Text strong>
-                Estado de la actividad para tus asistentes:{' '}
-              </Typography.Text>
-              <Select
-                value={roomStatus}
-                onChange={(value) => {
-                  console.debug('saves value of RoomStatus:', value)
-                  setRoomStatus(value)
-                  saveConfig({ habilitar_ingreso: value }).then(() =>
-                    console.log('config saved - habilitar_ingreso:', value),
-                  )
-                }}
-                style={{ width: '100%' }}
-              >
-                <Select.Option value="created_meeting_room">
-                  Actividad creada
-                </Select.Option>
-                <Select.Option value="closed_meeting_room">Iniciará pronto</Select.Option>
-                <Select.Option value="open_meeting_room">En vivo</Select.Option>
-                <Select.Option value="ended_meeting_room">Finalizada</Select.Option>
-              </Select>
-            </Space>
+          <Col span={12}>
+            <Col span={24}>
+              <Form.Item style={{ width: '100%' }} label="URL de la transmisión">
+                <Input
+                  placeholder="URL de la transmisión: YouTube / Vimeo / Twitch / Zoom / Meet Google / Teams / Phone Call / etc."
+                  defaultValue={temporalReference}
+                  addonBefore={<SavedChangeIndicator />}
+                  onChange={(event) => {
+                    const { value } = event.target
+                    console.debug('will set', value)
+                    setTemporalReference(value)
+                  }}
+                  addonAfter={<ButtonUpdate />}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Space direction="vertical" style={{ width: '100%' }}>
+                <Typography.Text strong>
+                  Estado de la actividad para tus asistentes:{' '}
+                </Typography.Text>
+                <Select
+                  value={roomStatus}
+                  onChange={(value) => {
+                    console.debug('saves value of RoomStatus:', value)
+                    setRoomStatus(value)
+                    saveConfig({ habilitar_ingreso: value }).then(() =>
+                      console.log('config saved - habilitar_ingreso:', value),
+                    )
+                  }}
+                  style={{ width: '100%' }}
+                >
+                  <Select.Option value="created_meeting_room">
+                    Actividad creada
+                  </Select.Option>
+                  <Select.Option value="closed_meeting_room">
+                    Iniciará pronto
+                  </Select.Option>
+                  <Select.Option value="open_meeting_room">En vivo</Select.Option>
+                  <Select.Option value="ended_meeting_room">Finalizada</Select.Option>
+                </Select>
+              </Space>
+            </Col>
           </Col>
         </Row>
       )
