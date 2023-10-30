@@ -23,7 +23,7 @@ function ActivityExternalUrlField(props: ActivityExternalUrlFieldProps) {
     <Result
       style={{ margin: '0px 100px 0px 100px' }}
       icon={<img width={150} src={iconSrc} />}
-      subTitle={<Paragraph>{subtitle}</Paragraph>}
+      subTitle={subtitle && <Paragraph>{subtitle}</Paragraph>}
       title={
         <Form>
           <Form.Item
