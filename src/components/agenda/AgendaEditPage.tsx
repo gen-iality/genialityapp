@@ -6,14 +6,24 @@ import * as React from 'react'
 
 import { useState, useEffect, useCallback, useContext } from 'react'
 
-import { Form, Tabs, Col, Row, Switch, Modal, BackTop } from 'antd'
+import {
+  Form,
+  Tabs,
+  Col,
+  Row,
+  Switch,
+  Modal,
+  BackTop,
+  Result,
+  Typography,
+  Button,
+} from 'antd'
 
 import Header from '@antdComponents/Header'
-import { RouterPrompt } from '@antdComponents/RoutePrompt'
 import { StateMessage } from '@context/MessageService'
 import Loading from '../profile/loading'
 
-import { redirect, useNavigate, Navigate, useParams } from 'react-router'
+import { useNavigate, Navigate, useParams } from 'react-router'
 
 import AgendaContext from '@context/AgendaContext'
 import { AgendaApi, DocumentsApi } from '@helpers/request'
@@ -50,6 +60,8 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
   const [shouldRedirect, setShouldRedirect] = useState(false)
   const [currentTab, setCurrentTab] = useState('1')
   const [isNeededConfirmRedirection, setIsNeededConfirmRedirection] = useState(false)
+
+  const [isActivityNotFound, setIsActivityNotFound] = useState(false)
 
   const [selectedDocuments, setSelectedDocuments] = useState<string[]>([])
 
@@ -154,7 +166,26 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
       }
 
       // Get the agenda document from current activity_id
-      const agenda: AgendaType = await AgendaApi.getOne(activityId, eventId)
+      let agenda: AgendaType
+
+      try {
+        agenda = await AgendaApi.getOne(activityId, eventId)
+      } catch (err: any) {
+        console.error(err)
+        StateMessage.show(
+          null,
+          'error',
+          `No se ha podido cargar la actividad - estado: ${err.response?.status}`,
+        )
+
+        if (err.response?.status === 404) {
+          setIsActivityNotFound(true)
+        } else {
+          throw err
+        }
+        return
+      }
+
       setSelectedDocuments(agenda.selected_document || [])
 
       // Take the vimeo_id and save in info.
@@ -226,14 +257,34 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
     return () => {
       cAgenda.setActivityEdit(null)
     }
-  }, [props.event, cAgenda])
+  }, [props.event, cAgenda, params.activityId])
 
   useEffect(() => {
     cAgenda.saveConfig()
   }, [cAgenda.isPublished])
 
-  if (shouldRedirect) {
+  if (!params.activityId || shouldRedirect) {
     return <Navigate to=".." />
+  }
+
+  if (isActivityNotFound) {
+    return (
+      <Result
+        title="Actividad no encontrada"
+        subTitle={
+          <Typography.Paragraph>
+            La actividad con ID "{params.activityId}" no fue encontrada. Revise la URL
+            esté correctamente escrita
+          </Typography.Paragraph>
+        }
+        extra={
+          <Button type="primary" onClick={() => navigate('..')}>
+            Volver
+          </Button>
+        }
+        status={'404'}
+      />
+    )
   }
 
   return (
