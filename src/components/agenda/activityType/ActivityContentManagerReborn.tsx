@@ -54,26 +54,28 @@ const ActivityContentManagerReborn: FunctionComponent<
     if (activityType === 'html') {
       return (
         <>
-          <Button
-            onClick={() => {
-              onSaveContent()
-            }}
-          >
-            Forzar actualizar
-          </Button>
           {contentType === 'html_content' ? (
-            <EviusReactQuill
-              name="html"
-              data={reference}
-              handleChange={(value: string) => onReferenceChange(value)}
-            />
-          ) : (
+            <>
+              <Button
+                onClick={() => {
+                  onSaveContent()
+                }}
+              >
+                Forzar actualizar
+              </Button>
+              <EviusReactQuill
+                name="html"
+                data={reference}
+                handleChange={(value: string) => onReferenceChange(value)}
+              />
+            </>
+          ) : contentType === 'html_url' ? (
             <Input
               value={reference}
               placeholder="URL aquí"
               onChange={(event) => onReferenceChange(event.target.value)}
             />
-          )}
+          ) : null}
         </>
       )
     } else if (activityType === 'pdf') {
@@ -147,20 +149,28 @@ const ActivityContentManagerReborn: FunctionComponent<
     }
   }, [activityType, activity, contentType, reference, onSaveContent, onReferenceChange])
 
+  useEffect(() => {
+    if (!contentType) {
+      onContentTypeChange(typeMap[activityType][0])
+    }
+  }, [])
+
   // Autosave
   useEffect(() => {
     onAutoSaveChange(autoSaveTypes.includes(activityType))
   }, [activityType])
   // Save if autosave
   useEffect(() => {
-    if (autoSaveTypes.includes(activityType)) {
+    if (autoSaveTypes.includes(activityType) && contentType && reference) {
       onSaveContent()
     }
-  }, [reference, activityType])
+  }, [reference, activityType, contentType])
 
   return (
     <>
-      <Alert type="warning" message="No activity type" />
+      {!activityType && (
+        <Alert type="warning" message="No se ha definido el tipo de activida" />
+      )}
       <Form.Item label="Tipo de contenido">
         <Select
           value={contentType}
