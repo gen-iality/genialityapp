@@ -62,6 +62,19 @@ export const typeMap: { [key in AvailableActivityType]: AvailableContentType[] }
   html: ['html_content', 'html_url'],
 }
 
+export const humanizedContentTypeMap: { [key in AvailableContentType]: string } = {
+  html_content: 'Contenido HTML',
+  html_url: 'URL a contenido externo HTML',
+  live_url: 'URL a transmisión externa',
+  meeting_id: 'ID de reunión GEN.iality',
+  meeting_url: 'URL a reunión externa',
+  pdf_url: 'URL a PDF externa',
+  survey_id: 'ID de cuestionario',
+  video_url: 'URL a vídeo externo',
+  vimeo_url: 'URL a Vimeo',
+  youtube_url: 'URL a YouTube',
+}
+
 interface IActivityContentSelectorProps {
   event: any
   activity?: ExtendedAgendaType

@@ -3,6 +3,7 @@ import { FunctionComponent, useCallback, useEffect, useState } from 'react'
 import {
   AvailableActivityType,
   AvailableContentType,
+  humanizedContentTypeMap,
   typeMap,
 } from './ActivityContentSelector2'
 import {
@@ -66,7 +67,7 @@ const ActivityContentManagerReborn: FunctionComponent<
     activityType == null
       ? []
       : typeMap[activityType].map((value) => ({
-          label: value.toUpperCase(),
+          label: humanizedContentTypeMap[value] ?? value.toUpperCase(),
           value,
         }))
 
@@ -329,7 +330,6 @@ const ActivityContentManagerReborn: FunctionComponent<
                     console.debug('input is', input)
                     setTemporalReference(input)
                   }}
-                  addonBefore="Enlace:"
                 />
                 <Button
                   onClick={() => {
