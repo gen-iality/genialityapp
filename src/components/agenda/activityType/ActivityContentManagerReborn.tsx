@@ -5,11 +5,14 @@ import {
   AvailableContentType,
   typeMap,
 } from './ActivityContentSelector2'
-import { Alert, Button, Form, Input, Select, Typography } from 'antd'
+import { Alert, Button, Col, Form, Input, Row, Select, Typography } from 'antd'
 import Document from '@components/documents/Document'
 import QuizCMS from '@components/quiz/QuizCMS'
 import SurveyCMS from '@components/survey/SurveyCMS'
 import RichTextEditor from '@components/trivia/RichTextEditor'
+import ShareMeetLinkCard from './components/manager/ShareMeetLinkCard'
+import GoToMeet, { GoToType } from './components/manager/GoToMeet'
+import { Link } from 'react-router-dom'
 
 type ActivityContentManagerRebornProps = {
   activity: ExtendedAgendaType
@@ -142,6 +145,48 @@ const ActivityContentManagerReborn: FunctionComponent<
                 }}
               />
             </>
+          )}
+        </>
+      )
+    } else if (activityType === 'meeting') {
+      return (
+        <>
+          {contentType === 'meeting_id' ? (
+            <Row gutter={[16, 16]}>
+              <Col span={10}>
+                <img
+                  style={{ objectFit: 'cover' }}
+                  height="250px"
+                  src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Freunion.jpg?alt=media&token=79983d40-cb24-4ca2-9a19-794a5eeb825b"
+                />
+              </Col>
+              <Col span={14}>
+                <GoToMeet type={GoToType.MEETING} activityId={activity._id!} />
+                <ShareMeetLinkCard
+                  activityId={activity._id!}
+                  onChange={(finalUrl) => {
+                    onReferenceChange(finalUrl)
+                  }}
+                />
+              </Col>
+            </Row>
+          ) : (
+            <Row gutter={[16, 16]}>
+              <Form.Item label="URL de la reunión externa" style={{ width: '100%' }}>
+                <Input
+                  value={reference}
+                  onChange={(event) => onReferenceChange(event.target.value)}
+                  placeholder="URL de la reunión"
+                />
+              </Form.Item>
+              {reference && (
+                <Button type="primary">
+                  <Link type="primary" to={reference} target="_blank">
+                    Ir a la reunión externa
+                  </Link>
+                </Button>
+              )}
+            </Row>
           )}
         </>
       )
