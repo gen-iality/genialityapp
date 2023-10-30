@@ -23,14 +23,7 @@ export namespace ActivityType {
     | 'pdf'
     | 'html'
 
-  export type Name =
-    | 'liveBroadcast'
-    | 'meeting2'
-    | 'video'
-    | 'quizing2'
-    | 'survey2'
-    | 'pdf2'
-    | 'html2'
+  export type Name = 'live' | 'meeting' | 'video' | 'quizing' | 'survey' | 'pdf' | 'html'
 
   export type ContentValue =
     | ''
