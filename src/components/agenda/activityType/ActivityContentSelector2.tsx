@@ -1,7 +1,7 @@
 import { ExtendedAgendaType } from '@Utilities/types/AgendaType'
 import { StateMessage } from '@context/MessageService'
 import { Activity } from '@helpers/request'
-import { Alert, Button, Card, Col, Divider, Form, Input, Modal, Row, Select } from 'antd'
+import { Alert, Button, Card, Col, Divider, Modal, Row } from 'antd'
 import { FunctionComponent, useEffect, useState } from 'react'
 import InitialSVG from './svg/InitialSVG'
 import ActivityContentManagerReborn from './ActivityContentManagerReborn'
@@ -183,12 +183,15 @@ const ActivityContentSelector: FunctionComponent<IActivityContentSelectorProps> 
 
           <Divider />
 
-          <Card>
+          <Card title="Resumen de la configuración">
             {isNotProd && <small>id: {activity._id}</small>}
             <p>Tipo de actividad: {activityType}</p>
             <p>
               Tipo de contenido:{' '}
               {humanizedContentTypeMap[finalContentType as AvailableContentType] as any}
+            </p>
+            <p>
+              Contenido: <code>{reference}</code>
             </p>
             <Button
               danger
