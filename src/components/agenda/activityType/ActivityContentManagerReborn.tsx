@@ -64,7 +64,7 @@ const ActivityContentManagerReborn: FunctionComponent<
     onAutoSaveChange = () => {},
   } = props
 
-  const [temporalReference, setTemporalReference] = useState('')
+  const [temporalReference, setTemporalReference] = useState(reference ?? '')
 
   const { roomStatus, setRoomStatus, saveConfig } = useContext(AgendaContext)
 
@@ -91,6 +91,9 @@ const ActivityContentManagerReborn: FunctionComponent<
         console.debug('will set url:', temporalReference)
         onReferenceChange(temporalReference)
         // setTemporalReference('')
+        if (activityType === 'live') {
+          saveConfig({ data: temporalReference })
+        }
       }}
       {...props}
     >
