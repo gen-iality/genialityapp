@@ -124,9 +124,6 @@ const StreamingActivityDisplayer: FunctionComponent<IBasicActivityProps> = (prop
     <>
       <HeaderColumnswithContext isVisible activityState={activityState} />
       {ViewTypeStreaming(activityState?.habilitar_ingreso ?? activityState?.roomState)}
-      <Link to={finalUrl ?? ''} target="_blank">
-        {finalUrl}
-      </Link>
     </>
   )
 }
