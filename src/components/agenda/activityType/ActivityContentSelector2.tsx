@@ -141,6 +141,8 @@ const ActivityContentSelector: FunctionComponent<IActivityContentSelectorProps> 
       })
   }
 
+  const finalContentType = activity.content?.type || contentType || '<vacío>'
+
   useEffect(() => {
     if (!activity.content) return
 
@@ -184,7 +186,10 @@ const ActivityContentSelector: FunctionComponent<IActivityContentSelectorProps> 
           <Card>
             {isNotProd && <small>id: {activity._id}</small>}
             <p>Tipo de actividad: {activityType}</p>
-            <p>Tipo de contenido: {activity.content?.type || contentType || '<vacío>'}</p>
+            <p>
+              Tipo de contenido:{' '}
+              {humanizedContentTypeMap[finalContentType as AvailableContentType] as any}
+            </p>
             <Button
               danger
               disabled={!activity._id}
