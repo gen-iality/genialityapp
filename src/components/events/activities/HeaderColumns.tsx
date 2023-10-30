@@ -98,9 +98,7 @@ const HeaderColumns: FunctionComponent<IHeaderColumnsProps> = (props) => {
               <ClockCircleOutlined style={{ fontSize: '30px' }} />
             ) : roomStatus === 'closed_meeting_room' ? (
               <LoadingOutlined style={{ fontSize: '30px' }} />
-            ) : (
-              ''
-            )}
+            ) : null}
           </Col>
         </Row>
         <Row
@@ -122,7 +120,9 @@ const HeaderColumns: FunctionComponent<IHeaderColumnsProps> = (props) => {
             ? 'Terminada'
             : roomStatus === 'closed_meeting_room'
             ? 'Por iniciar'
-            : ''}
+            : roomStatus === 'created_meeting_room'
+            ? 'Actividad recién creada'
+            : 'Estado indefinido'}
         </Row>
       </Col>
 
