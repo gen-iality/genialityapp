@@ -233,7 +233,9 @@ const ActivityContentManagerReborn: FunctionComponent<
                         onClick={() => {
                           const url = encodeURIComponent(reference)
                           window.open(
-                            `https://api.geniality.com.co/api/vimeo/download?vimeo_url=${url}`,
+                            `https://${
+                              import.meta.env.MODE.includes('dev') ? 'devapi' : 'api'
+                            }.geniality.com.co/api/vimeo/download?vimeo_url=${url}`,
                             '_blank',
                           )
                         }}
