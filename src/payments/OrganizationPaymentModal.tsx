@@ -122,7 +122,8 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
           customerData: {
             email: organizationUser.user.email,
             fullName: organizationUser.user.names,
-            ...moreCustomData,
+            // WOMPI is like weirdo
+            // ...moreCustomData,
           },
           collectShipping: 'true',
           shippingAddress: {
