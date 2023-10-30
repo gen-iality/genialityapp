@@ -5,7 +5,18 @@ import {
   AvailableContentType,
   typeMap,
 } from './ActivityContentSelector2'
-import { Alert, Button, Card, Col, Form, Input, Row, Select, Typography } from 'antd'
+import {
+  Alert,
+  Button,
+  Card,
+  Col,
+  Divider,
+  Form,
+  Input,
+  Row,
+  Select,
+  Typography,
+} from 'antd'
 import Document from '@components/documents/Document'
 import QuizCMS from '@components/quiz/QuizCMS'
 import SurveyCMS from '@components/survey/SurveyCMS'
@@ -15,7 +26,7 @@ import GoToMeet, { GoToType } from './components/manager/GoToMeet'
 import { Link } from 'react-router-dom'
 import VideoPreviewerCard from './components/manager/VideoPreviewerCard'
 import { TypeDisplayment } from '@context/activityType/constants/enum'
-import { DownloadOutlined } from '@ant-design/icons'
+import { CheckOutlined, DownloadOutlined, ExclamationOutlined } from '@ant-design/icons'
 import ActivityExternalUrlField from './components/ActivityExternalUrlField'
 
 type ActivityContentManagerRebornProps = {
@@ -88,26 +99,50 @@ const ActivityContentManagerReborn: FunctionComponent<
       )
     } else if (activityType === 'pdf') {
       return (
-        <Document
-          simpleMode
-          notRecordFileInDocuments
-          activityId={activity._id}
-          event={event} // Awful, but who are we
-          // activityId={activityEdit}
-          fromPDFDocumentURL={reference}
-          onSave={(pdfUrl: string) => {
-            console.debug('call onSave from Document. pdfUrl will be', pdfUrl)
-            if (reference !== pdfUrl) {
-              onReferenceChange(pdfUrl)
-            } else {
-              console.info(`Resaving stopped because contentSource = pdfUrl ${pdfUrl}`)
-            }
-          }}
-          onRemoveDocumentContent={() => {
-            console.debug('remove content source...')
-            onRemoveContent()
-          }}
-        />
+        <Row>
+          <Col span={24}>
+            <Form.Item label="URL del PDF" style={{ width: '100%' }}>
+              <Input
+                addonBefore={
+                  temporalReference === reference ? (
+                    <CheckOutlined style={{ color: 'green' }} />
+                  ) : (
+                    <ExclamationOutlined style={{ color: 'red' }} />
+                  )
+                }
+                value={temporalReference}
+                onChange={(event) => setTemporalReference(event.target.value)}
+                placeholder="URL del PDF"
+              />
+            </Form.Item>
+            <Button type="primary" onClick={() => onReferenceChange(temporalReference)}>
+              Actualizar
+            </Button>
+            <Divider />
+            <Document
+              simpleMode
+              notRecordFileInDocuments
+              activityId={activity._id}
+              event={event} // Awful, but who are we
+              // activityId={activityEdit}
+              fromPDFDocumentURL={reference}
+              onSave={(pdfUrl: string) => {
+                console.debug('call onSave from Document. pdfUrl will be', pdfUrl)
+                if (reference !== pdfUrl) {
+                  onReferenceChange(pdfUrl)
+                } else {
+                  console.info(
+                    `Resaving stopped because contentSource = pdfUrl ${pdfUrl}`,
+                  )
+                }
+              }}
+              onRemoveDocumentContent={() => {
+                console.debug('remove content source...')
+                onRemoveContent()
+              }}
+            />
+          </Col>
+        </Row>
       )
     } else if (activityType === 'quizing' || activityType === 'survey') {
       return (
