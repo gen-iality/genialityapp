@@ -302,7 +302,15 @@ const ActivityContentManagerReborn: FunctionComponent<
         }
       }
     }
-  }, [activityType, activity, contentType, reference, onSaveContent, onReferenceChange])
+  }, [
+    activityType,
+    activity,
+    contentType,
+    reference,
+    onSaveContent,
+    onReferenceChange,
+    temporalReference,
+  ])
 
   useEffect(() => {
     if (!contentType) {
