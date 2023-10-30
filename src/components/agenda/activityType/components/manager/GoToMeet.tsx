@@ -1,22 +1,28 @@
-import { useMemo } from 'react'
+import { FunctionComponent, useMemo } from 'react'
 
 import { Button, Card, Typography } from 'antd'
 import { useCurrentUser } from '@context/userContext'
-import type { ActivityType } from '@context/activityType/types/activityType'
+
+export enum GoToType {
+  MEETING = 'MEETING',
+  LIVE = 'LIVE',
+}
 
 export interface GoToMeetProps {
   activityId: string
-  type: ActivityType.TypeAsDisplayment
+  type: GoToType
 }
 
 const baseUrl = 'https://meet.evius.co'
+
+// TODO: define when this component should be used. Check that name, the type of link too
 
 /**
  * Crea un componente que permite ir al Meet.
  * @param props Generalmente el ID de actividad y el tipo de contenido (traducido).
  * @returns Un componente de React.
  */
-const GoToMeet = (props: GoToMeetProps) => {
+const GoToMeet: FunctionComponent<GoToMeetProps> = (props) => {
   const user = useCurrentUser()
 
   const urlReunion = useMemo(
@@ -43,14 +49,17 @@ const GoToMeet = (props: GoToMeetProps) => {
           <Button
             onClick={() =>
               window.open(
-                props.type === 'reunión' ? urlReunion : urlEviusTransmision,
+                props.type === GoToType.MEETING ? urlReunion : urlEviusTransmision,
                 '_blank',
               )
             }
             type="primary"
           >
-            {props.type === 'reunión' && 'Entrar a la reunión'}
-            {props.type === 'EviusMeet' && 'Entrar para transmitir'}
+            {props.type === GoToType.MEETING
+              ? 'Entrar a la reunión'
+              : props.type === GoToType.LIVE
+              ? 'Entrar para transmitir'
+              : 'Entrar'}
           </Button>
         }
       />
