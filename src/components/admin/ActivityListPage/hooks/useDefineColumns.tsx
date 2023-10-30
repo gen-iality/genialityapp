@@ -130,10 +130,9 @@ export default function useDefineColumns<T extends object = any>(
       // Options
       {
         title: 'Opciones',
-        dataIndex: 'options',
         fixed: 'right',
         width: 110,
-        render: (val, item) => (
+        render: (item) => (
           <Row wrap gutter={[8, 8]}>
             <Col>
               <Tooltip placement="topLeft" title="Editar">
