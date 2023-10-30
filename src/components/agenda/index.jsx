@@ -1,5 +1,4 @@
 import { Route, Routes } from 'react-router-dom'
-import Agenda from './agenda'
 import AgendaTypeCat from './typecat'
 import AgendaTypeCatCE from './AgendaTypeCatCE'
 import ActivityTypeProvider from '@context/activityType/activityTypeProvider'
@@ -13,7 +12,6 @@ function AgendaRoutes(props) {
   return (
     <Routes>
       <Route path="" element={<ActivityListPage event={event} />} />
-      <Route path="old" element={<Agenda event={event} />} />
       <Route
         path="create-activity"
         element={
