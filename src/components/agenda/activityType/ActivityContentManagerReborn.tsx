@@ -57,6 +57,9 @@ type ActivityContentManagerRebornProps = {
 
 const autoSaveTypes: AvailableActivityType[] = ['pdf', 'survey', 'quizing']
 
+const defaultVideo =
+  'https://firebasestorage.googleapis.com/v0/b/geniality-sas.appspot.com/o/public%2Fgeniality-loading-streaming.mp4?alt=media&token=97dc8cbf-dc80-477d-862c-6be0eeb11076'
+
 const ActivityContentManagerReborn: FunctionComponent<
   ActivityContentManagerRebornProps
 > = (props) => {
@@ -88,7 +91,7 @@ const ActivityContentManagerReborn: FunctionComponent<
         }))
 
   const looksLikeYouTubeOrVimeoLink = useMemo(() => {
-    const finalUrl = temporalReference ?? reference
+    const finalUrl = temporalReference ?? reference ?? defaultVideo
     if (!finalUrl) return false
     if (!activity.content?.reference) return false
 
@@ -101,7 +104,7 @@ const ActivityContentManagerReborn: FunctionComponent<
     }
 
     return false
-  }, [reference, temporalReference])
+  }, [reference, temporalReference, defaultVideo])
 
   const SavedChangeIndicator = () =>
     temporalReference === reference ? (
@@ -395,7 +398,7 @@ const ActivityContentManagerReborn: FunctionComponent<
                 loop
                 width="100%"
                 height="100%"
-                url={temporalReference}
+                url={temporalReference || defaultVideo}
                 controls={false}
               />
             ) : (
@@ -405,7 +408,7 @@ const ActivityContentManagerReborn: FunctionComponent<
                   style={{ height: '100%' }}
                   allow="autoplay; fullscreen; camera *;microphone *"
                   allowFullScreen
-                  src={temporalReference}
+                  src={temporalReference || defaultVideo}
                 ></iframe>
               </div>
             )}
