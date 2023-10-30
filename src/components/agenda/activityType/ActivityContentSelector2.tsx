@@ -55,7 +55,7 @@ export const availableContentType: AvailableContentType[] = [
 export const typeMap: { [key in AvailableActivityType]: AvailableContentType[] } = {
   live: ['live_url'],
   meeting: ['meeting_id', 'meeting_url'],
-  video: ['video_url', 'youtube_url', 'vimeo_url'],
+  video: ['vimeo_url', 'video_url', 'youtube_url'],
   survey: ['survey_id'],
   quizing: ['survey_id'],
   pdf: ['pdf_url'],
