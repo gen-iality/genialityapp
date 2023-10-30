@@ -130,11 +130,11 @@ function EventOrganization({ match }: OrganizationProps) {
             </div>
           )}
           {isActive || !cUser?.value ? (
-            <Row justify='center' style={{ paddingTop: '32px', paddingBottom: '32px' }}>
-              <Col span={23}>
-                <Row gutter={[0, 32]}>
+            
+              
+                <Row style={{ padding:'30px' }} gutter={[0, 30]}>
                   {cUser.value?._id && (
-                    <Col style={{ width: '100%' }}>
+                    <Col span={24}>
                       <MyEvents
                           cUser={cUser}
                           organizationId={organizationId}
@@ -155,19 +155,19 @@ function EventOrganization({ match }: OrganizationProps) {
                       )}
                     </Col>
                   )}
-                  <Col style={{ width: '100%' }}>
+                  <Col span={24}>
                     <PassEvents
                       eventsOld={eventsOld}
                       havePaymentEvent={havePaymentEvent}
                       isUserRegisterInEvent={isUserRegisterInEvent}
                     />
                   </Col>
-                  <Col style={{ width: '100%' }}>
+                  <Col span={24}>
                     <NextEvents events={events} />
                   </Col>
                 </Row>
-              </Col>
-            </Row>
+             
+            
           ) : (
             <Row justify='center' style={{ paddingTop: '32px', paddingBottom: '32px' }}>
               <Col xs={24} sm={24} md={20} lg={12} xl={12} xxl={12}>

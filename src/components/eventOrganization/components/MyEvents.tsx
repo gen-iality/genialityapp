@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSearchList } from '@/hooks/useSearchList';
-import { Badge, Button, Card, Col, Empty, Row, Space, Typography } from 'antd';
+import { Badge, Button, Card, Col, Empty, Row, Space, Typography, Grid } from 'antd';
 import { InputSearchEvent } from './InputSearchEvent';
 import EventCard from '@/components/shared/eventCard';
 import { Organization } from '../types';
@@ -11,7 +11,7 @@ import { useGetMyEventsInOrganization } from '../hooks/useGetMyEventsInOrganizat
 import LoadingCard from './LoadingCard';
 
 const { Title } = Typography;
-
+const { useBreakpoint } = Grid;
 interface Props {
 	organization: Organization | null;
 	setIsModalCertificatesOpen: (item: boolean) => void;
@@ -20,6 +20,7 @@ interface Props {
 	cUser: any;
 }
 export const MyEvents = ({ organization, setIsModalCertificatesOpen, organizationId, eventUserId, cUser }: Props) => {
+	const screens = useBreakpoint();
 	const { myUserOrg } = useGetMyOrgUser(organizationId);
 	const {
 		eventsFreeToOneOreUse,
@@ -75,12 +76,12 @@ export const MyEvents = ({ organization, setIsModalCertificatesOpen, organizatio
 		<>
 			{myUserOrg && (
 				<Card
-					bodyStyle={{ paddingTop: '0px', height: '100%', overflowY: 'auto' }}
+					bodyStyle={{ paddingTop: '0px' }}
 					headStyle={{ border: 'none' }}
-					style={{ width: '100%', borderRadius: 20, height: '600px', overflow: 'hidden' }}
+					style={{ width: '100%', borderRadius: 20 }}
 					title={
 						<Badge offset={[60, 22]} count={`${myAllEvents.length} Eventos`}>
-							<Title level={2}>Mis eventos</Title>
+							<Title level={screens.xs ? 4 : 2}>Mis eventos</Title>
 						</Badge>
 					}
 					extra={
@@ -95,7 +96,7 @@ export const MyEvents = ({ organization, setIsModalCertificatesOpen, organizatio
 							</Space>
 						)
 					}>
-					<Row gutter={[0, 32]}>
+					<Row gutter={[0, 8]}>
 						<Col span={24}>
 							{organization?.show_my_certificates && myAllEvents.length > 0 && (
 								<Button size='large' type='default' onClick={() => setIsModalCertificatesOpen(true)}>
@@ -104,7 +105,7 @@ export const MyEvents = ({ organization, setIsModalCertificatesOpen, organizatio
 							)}
 						</Col>
 						<Col span={24}>
-							<Row gutter={[16, 16]}>
+							<Row style={{ overflowY: 'auto', minHeight: '300px', maxHeight: '500px' }} gutter={[16, 16]}>
 								{isLoadingEventsFreeToOneOreUs ? (
 									Array.from({ length: 6 }).map((item) => <LoadingCard />)
 								) : (

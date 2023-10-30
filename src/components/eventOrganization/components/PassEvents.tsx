@@ -1,48 +1,49 @@
-import { Badge, Card, Col, Empty, Row, Space, Typography } from 'antd';
+import { Badge, Card, Col, Empty, Grid, Row, Space, Typography } from 'antd';
 import React from 'react';
 import { InputSearchEvent } from './InputSearchEvent';
 import EventCard from '@/components/shared/eventCard';
 import { useSearchList } from '@/hooks/useSearchList';
 
 const { Title } = Typography;
-
+const { useBreakpoint } = Grid;
 interface Props {
-  eventsOld: any[];
-  isUserRegisterInEvent: (id: string) => boolean;
-  havePaymentEvent: (event: any) => boolean;
+	eventsOld: any[];
+	isUserRegisterInEvent: (id: string) => boolean;
+	havePaymentEvent: (event: any) => boolean;
 }
 export const PassEvents = ({ eventsOld, isUserRegisterInEvent, havePaymentEvent }: Props) => {
-  const { filteredList, setSearchTerm } = useSearchList(eventsOld, 'name');
+	const screens = useBreakpoint();
+	const { filteredList, setSearchTerm } = useSearchList(eventsOld, 'name');
 
-  const getTextButtonBuyOrRegistered = (event: any): string => {
-    if (isUserRegisterInEvent(event._id)) {
-      return 'Ingresar';
-    }
-    if (havePaymentEvent(event)) {
-      if (event.payment.externalPayment) {
-        return 'Comprar';
-      } else {
-        return `Comprar por $ ${event.payment.price} ${event?.payment?.currency}`;
-      }
-    }
+	const getTextButtonBuyOrRegistered = (event: any): string => {
+		if (isUserRegisterInEvent(event._id)) {
+			return 'Ingresar';
+		}
+		if (havePaymentEvent(event)) {
+			if (event.payment.externalPayment) {
+				return 'Comprar';
+			} else {
+				return `Comprar por $ ${event.payment.price} ${event?.payment?.currency}`;
+			}
+		}
 
-    return 'Inscribirse';
-  };
+		return 'Inscribirse';
+	};
 
 	return (
 		<Card
-			bodyStyle={{ paddingTop: '0px', height:'100%',  overflowY: 'auto' }}
+			bodyStyle={{ paddingTop: '0px' }}
 			headStyle={{ border: 'none' }}
 			title={
 				<Badge offset={[60, 22]} count={`${eventsOld.length} Eventos`}>
-					<Title level={2}>Eventos disponibles</Title>
+					<Title level={screens.xs ? 4 : 2}>Eventos disponibles</Title>
 				</Badge>
 			}
 			extra={<Space>{eventsOld.length > 0 && <InputSearchEvent onHandled={setSearchTerm} />}</Space>}
-			style={{ width: '100%', borderRadius: 20, height: '600px',overflow:'hidden' }}>
+			style={{ width: '100%', borderRadius: 20 }}>
 			<Row gutter={[0, 32]}>
 				<Col span={24}>
-					<Row gutter={[16, 16]}>
+					<Row style={{ overflowY: 'auto', minHeight: '300px', maxHeight: '500px' }} gutter={[16, 16]}>
 						{eventsOld && eventsOld.length > 0 ? (
 							<>
 								{filteredList.length > 0 ? (
