@@ -191,7 +191,10 @@ const ActivityContentSelector: FunctionComponent<IActivityContentSelectorProps> 
               {humanizedContentTypeMap[finalContentType as AvailableContentType] as any}
             </p>
             <p>
-              Contenido: <code>{reference}</code>
+              Contenido:{' '}
+              <code>
+                {reference.length < 64 ? reference : reference.slice(0, 64) + '...'}
+              </code>
             </p>
             <Button
               danger
