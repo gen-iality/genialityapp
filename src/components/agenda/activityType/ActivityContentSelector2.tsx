@@ -1,8 +1,11 @@
-import AgendaType from '@Utilities/types/AgendaType'
+import { ExtendedAgendaType } from '@Utilities/types/AgendaType'
 import { StateMessage } from '@context/MessageService'
 import { Activity } from '@helpers/request'
-import { Alert, Button, Card, Divider, Form, Input, Modal, Select } from 'antd'
+import { Alert, Button, Card, Col, Divider, Form, Input, Modal, Row, Select } from 'antd'
 import { FunctionComponent, useEffect, useState } from 'react'
+import InitialSVG from './svg/InitialSVG'
+import ActivityContentManagerReborn from './ActivityContentManagerReborn'
+import useIsDevOrStage from '@/hooks/useIsDevOrStage'
 
 export type AvailableActivityType =
   | 'live' // Unique
@@ -60,22 +63,25 @@ export const typeMap: { [key in AvailableActivityType]: AvailableContentType[] }
 }
 
 interface IActivityContentSelectorProps {
-  activityId?: string
-  activity?: AgendaType
+  event: any
+  activity?: ExtendedAgendaType
 }
 
 const ActivityContentSelector: FunctionComponent<IActivityContentSelectorProps> = (
   props,
 ) => {
-  const { activity, activityId } = props
+  const { activity, event } = props
 
-  if (!activity || !activityId) {
+  if (!activity?._id) {
     return <Alert type="warning" message="No content" />
   }
 
   const [activityType, setActivityType] = useState<AvailableActivityType | null>(null)
   const [contentType, setContentType] = useState<AvailableContentType | null>(null)
   const [reference, setReference] = useState<string>('')
+  const [isAutoSaveType, setIsAutoSaveType] = useState(false)
+
+  const { isNotProd } = useIsDevOrStage()
 
   const activityTypeOptions: { label: string; value: AvailableActivityType }[] =
     availableActivityType.map((type) => ({
@@ -91,6 +97,37 @@ const ActivityContentSelector: FunctionComponent<IActivityContentSelectorProps> 
           value,
         }))
 
+  const onSaveContent = () => {
+    if (!contentType) {
+      StateMessage.show(null, 'error', 'Falta el tipo de contenido')
+      return
+    }
+
+    if (!reference) {
+      StateMessage.show(null, 'error', 'Falta la referencia de contenido')
+      return
+    }
+
+    Activity.Content.update(activity._id!, {
+      type: contentType,
+      reference: reference,
+    })
+      .then(() => StateMessage.show(null, 'success', 'Guardado'))
+      .catch((err) => {
+        console.error(err)
+        StateMessage.show(null, 'error', err.toString())
+      })
+  }
+
+  const onRemoveContent = () => {
+    Activity.Content.delete(activity._id!)
+      .then(() => StateMessage.show(null, 'info', 'Se ha eliminar una actividad'))
+      .catch((err) => {
+        console.error(err)
+        StateMessage.show(null, 'error', err.toString())
+      })
+  }
+
   useEffect(() => {
     if (!activity.content) return
 
@@ -99,98 +136,80 @@ const ActivityContentSelector: FunctionComponent<IActivityContentSelectorProps> 
   }, [activity.content])
 
   useEffect(() => {
-    if (activity?.type?.name in typeMap) {
-      setActivityType(activity?.type?.name)
+    if (activity.type?.name && activity.type?.name in typeMap) {
+      setActivityType(activity.type.name as any)
     }
-  }, [activity?.type?.name])
+  }, [activity.type?.name])
 
   return (
     <>
-      <Card>
-        <small>id: {activity._id}</small>
-        <p>tipo: {activityType}</p>
-        <p>Guardada content-type: {activity.content?.type || '<vacío>'}</p>
-        <p>Guardada content-reference: {activity.content?.reference || '<vacío>'}</p>
-        <Button
-          danger
-          onClick={() => {
-            Modal.confirm({
-              title: 'Eliminar?',
-              content: '¿Eliminar el contenido de esta actividad?',
-              onOk: () => {
-                Activity.Content.delete(activityId)
-                  .then(() =>
-                    StateMessage.show(null, 'info', 'Se ha eliminar una actividad'),
-                  )
-                  .catch((err) => {
-                    console.error(err)
-                    StateMessage.show(null, 'error', err.toString())
-                  })
-              },
-            })
-          }}
-        >
-          Eliminar
-        </Button>
-        <Divider />
-        <Form.Item label="Tipo de actividad">
-          <Select
-            options={activityTypeOptions}
-            onChange={(value) => {
-              setActivityType(value)
-              setContentType(null)
-            }}
-            value={activityType}
-            placeholder="Tipo de actividad"
+      {activityType ? (
+        <Card>
+          <ActivityContentManagerReborn
+            event={event}
+            activity={activity}
+            activityType={activityType}
+            reference={reference}
+            contentType={contentType}
+            onSaveContent={onSaveContent}
+            onRemoveContent={onRemoveContent}
+            onReferenceChange={(newReference) => setReference(newReference)}
+            onContentTypeChange={(newContentType) => setContentType(newContentType)}
+            onAutoSaveChange={setIsAutoSaveType}
           />
-        </Form.Item>
-        <Form.Item label="Tipo de contenido">
-          <Select
-            value={contentType}
-            onChange={(value) => setContentType(value)}
-            placeholder="Tipo de contenido"
-            options={contentTypeOptions}
-          />
-        </Form.Item>
-      </Card>
+          {!isAutoSaveType && (
+            <>
+              <Divider />
+              <Button type="primary" disabled={!activity._id} onClick={onSaveContent}>
+                Guardar
+              </Button>
+            </>
+          )}
 
-      <Divider />
+          <Divider />
 
-      <Card>
-        <Form.Item label="Referencia de contenido">
-          <Input.TextArea
-            value={reference}
-            onChange={(event) => setReference(event.target.value)}
-            placeholder="Referencia del contenido"
-          />
-        </Form.Item>
-        <Button
-          type="primary"
-          onClick={() => {
-            if (!contentType) {
-              StateMessage.show(null, 'error', 'Falta el tipo de contenido')
-              return
-            }
-
-            if (!reference) {
-              StateMessage.show(null, 'error', 'Falta la referencia de contenido')
-              return
-            }
-
-            Activity.Content.update(activityId, {
-              type: contentType,
-              reference: reference,
-            })
-              .then(() => StateMessage.show(null, 'success', 'Guardado'))
-              .catch((err) => {
-                console.error(err)
-                StateMessage.show(null, 'error', err.toString())
-              })
-          }}
-        >
-          Guardar
-        </Button>
-      </Card>
+          <Card>
+            {isNotProd && <small>id: {activity._id}</small>}
+            <p>Tipo de actividad: {activityType}</p>
+            <p>Tipo de contenido: {activity.content?.type || contentType || '<vacío>'}</p>
+            <Button
+              danger
+              disabled={!activity._id}
+              onClick={() => {
+                Modal.confirm({
+                  title: 'Eliminar?',
+                  content: '¿Eliminar el contenido de esta actividad?',
+                  onOk: () => {
+                    onRemoveContent()
+                  },
+                })
+              }}
+            >
+              Eliminar
+            </Button>
+          </Card>
+        </Card>
+      ) : (
+        <Card>
+          <Row align="middle" style={{ textAlign: 'center' }}>
+            <Col span={24} style={{ marginBottom: '1em' }}>
+              <h2>
+                Todavía no has agregado el contenido a la actividad
+                {activityType && ` de "${activityType}"`}
+              </h2>
+            </Col>
+            <Col span={24} style={{ marginBottom: '1em' }}>
+              {/* Button to go to the first tab */}
+              {/* <Button onClick={() => {}} type="primary">
+              Agregar contenido
+            </Button> */}
+            </Col>
+            <Col span={24} style={{ marginBottom: '1em' }}>
+              <InitialSVG style={{ width: '255px', height: '277px' }} />
+            </Col>
+          </Row>
+        </Card>
+      )}
     </>
   )
 }
