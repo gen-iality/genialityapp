@@ -32,6 +32,7 @@ export interface ActivityContentManagerProps {
   activityName: string
 }
 
+/** @deprecated use ActivityContentManagerReborn instead */
 function ActivityContentManager(props: ActivityContentManagerProps) {
   const eventContext = useContext(CurrentEventContext)
   const { activityEdit, dataLive, meeting_id, obtenerDetalleActivity } =

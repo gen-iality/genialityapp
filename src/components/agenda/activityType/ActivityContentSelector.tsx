@@ -18,6 +18,7 @@ export interface SubActivityContentSelectorProps {
   shouldLoad: boolean
 }
 
+/** @deprecated use ActivityContentSelector2 instead */
 function ActivityContentSelector(props: SubActivityContentSelectorProps) {
   const { activityName, shouldLoad } = props
 
