@@ -1,5 +1,5 @@
 import { ExtendedAgendaType } from '@Utilities/types/AgendaType'
-import { FunctionComponent, useCallback, useEffect, useState } from 'react'
+import { FunctionComponent, useCallback, useContext, useEffect, useState } from 'react'
 import {
   AvailableActivityType,
   AvailableContentType,
@@ -17,6 +17,7 @@ import {
   Input,
   Row,
   Select,
+  Space,
   Typography,
 } from 'antd'
 import Document from '@components/documents/Document'
@@ -30,6 +31,7 @@ import VideoPreviewerCard from './components/manager/VideoPreviewerCard'
 import { TypeDisplayment } from '@context/activityType/constants/enum'
 import { CheckOutlined, DownloadOutlined, ExclamationOutlined } from '@ant-design/icons'
 import ActivityExternalUrlField from './components/ActivityExternalUrlField'
+import AgendaContext from '@context/AgendaContext'
 
 type ActivityContentManagerRebornProps = {
   activity: ExtendedAgendaType
@@ -63,6 +65,8 @@ const ActivityContentManagerReborn: FunctionComponent<
   } = props
 
   const [temporalReference, setTemporalReference] = useState('')
+
+  const { roomStatus, setRoomStatus, saveConfig } = useContext(AgendaContext)
 
   const contentTypeOptions: { label: string; value: AvailableContentType }[] =
     activityType == null
@@ -366,6 +370,31 @@ const ActivityContentManagerReborn: FunctionComponent<
                 addonAfter={<ButtonUpdate />}
               />
             </Form.Item>
+          </Col>
+          <Col span={24}>
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <Typography.Text strong>
+                Estado de la actividad para tus asistentes:{' '}
+              </Typography.Text>
+              <Select
+                value={roomStatus}
+                onChange={(value) => {
+                  console.debug('saves value of RoomStatus:', value)
+                  setRoomStatus(value)
+                  saveConfig({ habilitar_ingreso: value }).then(() =>
+                    console.log('config saved - habilitar_ingreso:', value),
+                  )
+                }}
+                style={{ width: '100%' }}
+              >
+                <Select.Option value="created_meeting_room">
+                  Actividad creada
+                </Select.Option>
+                <Select.Option value="closed_meeting_room">Iniciará pronto</Select.Option>
+                <Select.Option value="open_meeting_room">En vivo</Select.Option>
+                <Select.Option value="ended_meeting_room">Finalizada</Select.Option>
+              </Select>
+            </Space>
           </Col>
         </Row>
       )
