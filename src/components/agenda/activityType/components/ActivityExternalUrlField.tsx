@@ -11,12 +11,13 @@ export interface ActivityExternalUrlFieldProps {
   subtitle?: string
   iconSrc?: string
   placeholder?: string
-  addonBefore: ReactNode
+  addonBefore?: ReactNode
+  addonAfter?: ReactNode
   onInput: (input: string) => void
 }
 
 function ActivityExternalUrlField(props: ActivityExternalUrlFieldProps) {
-  const { type, subtitle, iconSrc, placeholder, addonBefore, onInput } = props
+  const { type, subtitle, iconSrc, placeholder, addonBefore, addonAfter, onInput } = props
   const [initialURL, setInitialURL] = useState('')
 
   return (
@@ -37,6 +38,7 @@ function ActivityExternalUrlField(props: ActivityExternalUrlFieldProps) {
             <Input
               type={type === 'vimeo' ? 'number' : 'text'}
               addonBefore={addonBefore}
+              addonAfter={addonAfter}
               placeholder={placeholder}
               value={initialURL}
               size="large"
