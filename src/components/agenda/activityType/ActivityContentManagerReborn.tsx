@@ -318,6 +318,13 @@ const ActivityContentManagerReborn: FunctionComponent<
                 <ActivityExternalUrlField
                   type="url"
                   placeholder="Enlace"
+                  addonBefore={
+                    temporalReference === reference ? (
+                      <CheckOutlined style={{ color: 'green' }} />
+                    ) : (
+                      <ExclamationOutlined style={{ color: 'red' }} />
+                    )
+                  }
                   onInput={(input) => {
                     console.debug('input is', input)
                     setTemporalReference(input)
