@@ -1,11 +1,11 @@
 import { ExtendedAgendaType } from '@Utilities/types/AgendaType'
-import { FunctionComponent, useCallback, useEffect } from 'react'
+import { FunctionComponent, useCallback, useEffect, useState } from 'react'
 import {
   AvailableActivityType,
   AvailableContentType,
   typeMap,
 } from './ActivityContentSelector2'
-import { Alert, Button, Col, Form, Input, Row, Select, Typography } from 'antd'
+import { Alert, Button, Card, Col, Form, Input, Row, Select, Typography } from 'antd'
 import Document from '@components/documents/Document'
 import QuizCMS from '@components/quiz/QuizCMS'
 import SurveyCMS from '@components/survey/SurveyCMS'
@@ -13,6 +13,10 @@ import RichTextEditor from '@components/trivia/RichTextEditor'
 import ShareMeetLinkCard from './components/manager/ShareMeetLinkCard'
 import GoToMeet, { GoToType } from './components/manager/GoToMeet'
 import { Link } from 'react-router-dom'
+import VideoPreviewerCard from './components/manager/VideoPreviewerCard'
+import { TypeDisplayment } from '@context/activityType/constants/enum'
+import { DownloadOutlined } from '@ant-design/icons'
+import ActivityExternalUrlField from './components/ActivityExternalUrlField'
 
 type ActivityContentManagerRebornProps = {
   activity: ExtendedAgendaType
@@ -44,6 +48,8 @@ const ActivityContentManagerReborn: FunctionComponent<
     onRemoveContent = () => {},
     onAutoSaveChange = () => {},
   } = props
+
+  const [temporalReference, setTemporalReference] = useState('')
 
   const contentTypeOptions: { label: string; value: AvailableContentType }[] =
     activityType == null
@@ -190,6 +196,111 @@ const ActivityContentManagerReborn: FunctionComponent<
           )}
         </>
       )
+    } else if (activityType === 'video') {
+      if (reference) {
+        return (
+          <Row gutter={[16, 16]}>
+            <Col span={10}>
+              <VideoPreviewerCard
+                type={TypeDisplayment.VIDEO}
+                activityName={activity.name}
+                presetContent={reference}
+              />
+            </Col>
+
+            <Col span={14}>
+              <Row gutter={[16, 16]}>
+                <Col span={24}>
+                  <Card
+                    title="Video cargado"
+                    bodyStyle={{ padding: '21' }}
+                    style={{ borderRadius: '8px' }}
+                  >
+                    <Alert type="info" message={`URL: ${reference ?? '<vacía>'}`} />
+                    <Button
+                      danger
+                      type="primary"
+                      onClick={() => {
+                        onReferenceChange('')
+                      }}
+                    >
+                      Eliminar contenido (para reasginar)
+                    </Button>
+                    {contentType === 'vimeo_url' && (
+                      <Button
+                        type="primary"
+                        icon={<DownloadOutlined />}
+                        onClick={() => {
+                          const url = encodeURIComponent(reference)
+                          window.open(
+                            `https://api.geniality.com.co/api/vimeo/download?vimeo_url=${url}`,
+                            '_blank',
+                          )
+                        }}
+                      >
+                        Descargar
+                      </Button>
+                    )}
+                  </Card>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        )
+      } else {
+        if (contentType === 'video_url') {
+          return (
+            <Row>
+              <Col span={24}>
+                <Form.Item style={{ width: '100%' }} label="URL del vídeo">
+                  <Input
+                    placeholder="URL del vídeo"
+                    defaultValue={temporalReference}
+                    onChange={(event) => {
+                      const { value } = event.target
+                      console.debug('will set', value)
+                      setTemporalReference(value)
+                    }}
+                  />
+                </Form.Item>
+                <Button
+                  onClick={() => {
+                    onReferenceChange(temporalReference)
+                    setTemporalReference('')
+                  }}
+                >
+                  Actualizar
+                </Button>
+              </Col>
+            </Row>
+          )
+        } else {
+          return (
+            <Row>
+              <Col span={24}>
+                <ActivityExternalUrlField
+                  type="url"
+                  placeholder="Enlace"
+                  onInput={(input) => {
+                    console.debug('input is', input)
+                    setTemporalReference(input)
+                  }}
+                  addonBefore="https://"
+                />
+                <Button
+                  onClick={() => {
+                    console.log('will set', temporalReference, 'as reference')
+                    onReferenceChange(temporalReference)
+                    setTemporalReference('')
+                  }}
+                >
+                  Actualizar
+                </Button>
+              </Col>
+            </Row>
+          )
+        }
+      }
     }
   }, [activityType, activity, contentType, reference, onSaveContent, onReferenceChange])
 
@@ -206,7 +317,9 @@ const ActivityContentManagerReborn: FunctionComponent<
   // Save if autosave
   useEffect(() => {
     if (autoSaveTypes.includes(activityType) && contentType && reference) {
-      onSaveContent()
+      if (contentType !== 'video_url') {
+        onSaveContent()
+      }
     }
   }, [reference, activityType, contentType])
 
