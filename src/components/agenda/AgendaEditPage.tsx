@@ -34,7 +34,6 @@ import { ExclamationCircleOutlined } from '@ant-design/icons'
 import useDeleteActivity from './hooks/useDeleteActivity'
 import AgendaDocumentForm from './components/AgendaDocumentForm'
 import ActivityContentSelector2 from './activityType/ActivityContentSelector2'
-import useIsDevOrStage from '@/hooks/useIsDevOrStage'
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -69,8 +68,6 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
   const [currentAgenda, setCurrentAgenda] = useState<AgendaType | undefined>()
 
   const [savedForm, setSavedForm] = useState<any>({})
-
-  const { isNotProd } = useIsDevOrStage()
 
   const [form] = Form.useForm<FormValues>()
 
@@ -368,7 +365,6 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
               <Tabs.TabPane tab="Contenido" key="2">
                 <Row wrap gutter={12}>
                   <Col span={24}>
-                    {isNotProd && <p>{cAgenda.activityEdit}</p>}
                     <ActivityContentSelector2
                       event={props.event}
                       activity={currentAgenda}
