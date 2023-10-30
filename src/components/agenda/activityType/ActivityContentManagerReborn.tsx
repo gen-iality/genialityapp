@@ -285,7 +285,7 @@ const ActivityContentManagerReborn: FunctionComponent<
                     console.debug('input is', input)
                     setTemporalReference(input)
                   }}
-                  addonBefore="https://"
+                  addonBefore="Enlace:"
                 />
                 <Button
                   onClick={() => {
