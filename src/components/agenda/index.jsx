@@ -15,14 +15,6 @@ function AgendaRoutes(props) {
       <Route path="" element={<ActivityListPage event={event} />} />
       <Route path="old" element={<Agenda event={event} />} />
       <Route
-        path="activity"
-        element={
-          <ActivityTypeProvider>
-            <AgendaEditPage event={event} />
-          </ActivityTypeProvider>
-        }
-      />
-      <Route
         path="create-activity"
         element={
           <ActivityTypeProvider>
@@ -32,7 +24,15 @@ function AgendaRoutes(props) {
       />
       <Route path="tipos" element={<AgendaTypeCat event={event} />} />
       <Route path="categorias" element={<AgendaTypeCat event={event} />} />
-      <Route path=":subject" element={<AgendaTypeCatCE event={event} />} />
+      {/* <Route path=":subject" element={<AgendaTypeCatCE event={event} />} /> */}
+      <Route
+        path=":activityId"
+        element={
+          <ActivityTypeProvider>
+            <AgendaEditPage event={event} />
+          </ActivityTypeProvider>
+        }
+      />
     </Routes>
   )
 }

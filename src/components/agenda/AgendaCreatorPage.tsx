@@ -96,7 +96,7 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
     }
 
     console.debug('redirecting to /activity')
-    navigate('../activity', { state: { edit: currentAgenda._id } })
+    navigate(`../${currentAgenda._id}`)
   }, [shouldRedirect, currentAgenda, cAgenda?.activityEdit])
 
   useEffect(() => {

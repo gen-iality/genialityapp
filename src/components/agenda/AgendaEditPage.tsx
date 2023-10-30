@@ -13,7 +13,7 @@ import { RouterPrompt } from '@antdComponents/RoutePrompt'
 import { StateMessage } from '@context/MessageService'
 import Loading from '../profile/loading'
 
-import { redirect, useNavigate, useLocation, Navigate } from 'react-router'
+import { redirect, useNavigate, Navigate, useParams } from 'react-router'
 
 import AgendaContext from '@context/AgendaContext'
 import { AgendaApi, DocumentsApi } from '@helpers/request'
@@ -30,10 +30,6 @@ const formLayout = {
   wrapperCol: { span: 24 },
 }
 
-interface LocationStateType {
-  edit?: string
-}
-
 interface IAgendaEditPageProps {
   event: any
 }
@@ -41,8 +37,8 @@ interface IAgendaEditPageProps {
 /**
  * Create a page component that enable create/edit an activity.
  *
- * This component needs to check the location state for the prop `edit` to know
- * if it is needed edit an activity. If this location prop is empty, then the
+ * This component needs to check the param `activityId` to know
+ * if it is needed edit an activity. If `activityId` is empty, then the
  * page will config itself to create a new activity.
  *
  * @param props the props.
@@ -64,7 +60,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
   const [form] = Form.useForm<FormValues>()
 
   const navigate = useNavigate()
-  const location = useLocation<LocationStateType>()
+  const params = useParams<{ activityId?: string }>()
 
   const deleteActivity = useDeleteActivity()
 
@@ -98,13 +94,13 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
       )
 
       let _agenda: AgendaType | undefined = undefined
-      if (location.state?.edit || currentAgenda?._id) {
-        const activityId = location.state?.edit || currentAgenda?._id
+      if (params.activityId || currentAgenda?._id) {
+        const activityId = params.activityId || currentAgenda?._id
         await AgendaApi.editOne(values, activityId, props.event._id)
         console.log('agenda edited')
 
         const payloadForDocument = {
-          activity_id: location.state?.edit || currentAgenda?._id,
+          activity_id: params.activityId || currentAgenda?._id,
         }
         console.log(
           'will save',
@@ -141,15 +137,15 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
 
       StateMessage.show(null, 'success', 'Información guardada correctamente!')
     },
-    [currentTab, selectedDocuments, currentAgenda, location.state, props],
+    [currentTab, selectedDocuments, currentAgenda, params.activityId, props],
   )
 
   /**
-   * Load the activity data from the location prop `edit` if this contains an ID.
+   * Load the activity data from the `params.activityId` if this contains an ID.
    */
   const loadActivity = useCallback(async () => {
-    if (location.state?.edit) {
-      const activityId = location.state.edit
+    if (params.activityId) {
+      const activityId = params.activityId
       const eventId = props.event._id
 
       // Update the context
@@ -182,7 +178,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
       console.log('this agenda data is from editing status')
     }
   }, [
-    location,
+    params.activityId,
     cAgenda,
     setSelectedDocuments,
     setCurrentAgenda,
@@ -236,7 +232,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
     cAgenda.saveConfig()
   }, [cAgenda.isPublished])
 
-  if (!location.state || shouldRedirect) {
+  if (shouldRedirect) {
     return <Navigate to=".." />
   }
 
@@ -283,8 +279,8 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
         remove={onRemove}
         customBack=".."
         title={cAgenda.activityName ? `Actividad - ${cAgenda.activityName}` : 'Actividad'}
-        saveName={location.state.edit || cAgenda.activityEdit || isEditing ? '' : 'Crear'}
-        edit={location.state.edit || cAgenda.activityEdit || isEditing}
+        saveName={params.activityId || cAgenda.activityEdit || isEditing ? '' : 'Crear'}
+        edit={params.activityId || cAgenda.activityEdit || isEditing}
         extra={
           isEditing && (
             <Form.Item label="Publicar" labelCol={{ span: 14 }}>

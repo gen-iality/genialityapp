@@ -13,7 +13,6 @@ export default function useDefineColumns<T extends object = any>(
   config?: {
     extraBefore?: ColumnType<T>[]
     extraAfter?: ColumnType<T>[]
-    editUrl?: string
     removeMethod?: (id: string) => void
   },
 ) {
@@ -136,12 +135,7 @@ export default function useDefineColumns<T extends object = any>(
           <Row wrap gutter={[8, 8]}>
             <Col>
               <Tooltip placement="topLeft" title="Editar">
-                <Link
-                  key={`editAction${item.index}`}
-                  id={`editAction${item.index}`}
-                  to={config?.editUrl || ''}
-                  state={{ edit: item._id }}
-                >
+                <Link to={item._id}>
                   <Button icon={<EditOutlined />} type="primary" size="small" />
                 </Link>
               </Tooltip>
