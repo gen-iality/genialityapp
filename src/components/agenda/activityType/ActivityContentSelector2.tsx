@@ -160,6 +160,15 @@ const ActivityContentSelector: FunctionComponent<IActivityContentSelectorProps> 
     <>
       {activityType ? (
         <Card>
+          {!isAutoSaveType && (
+            <>
+              <Button type="primary" disabled={!activity._id} onClick={onSaveContent}>
+                Guardar Contenido
+              </Button>
+              <Divider />
+            </>
+          )}
+
           <ActivityContentManagerReborn
             event={event}
             activity={activity}
@@ -172,14 +181,6 @@ const ActivityContentSelector: FunctionComponent<IActivityContentSelectorProps> 
             onContentTypeChange={(newContentType) => setContentType(newContentType)}
             onAutoSaveChange={setIsAutoSaveType}
           />
-          {!isAutoSaveType && (
-            <>
-              <Divider />
-              <Button type="primary" disabled={!activity._id} onClick={onSaveContent}>
-                Guardar
-              </Button>
-            </>
-          )}
 
           <Divider />
 
