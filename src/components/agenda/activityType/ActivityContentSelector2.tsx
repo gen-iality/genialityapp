@@ -4,7 +4,7 @@ import { Activity } from '@helpers/request'
 import { Alert, Button, Card, Divider, Form, Input, Modal, Select } from 'antd'
 import { FunctionComponent, useEffect, useState } from 'react'
 
-type AvailableActivityType =
+export type AvailableActivityType =
   | 'live' // Unique
   | 'meeting' // Unique
   | 'video' // YouTube or Vimeo, but this is for link, then unique
@@ -13,7 +13,7 @@ type AvailableActivityType =
   | 'pdf' // Unique
   | 'html' // Unique
 
-type AvailableContentType =
+export type AvailableContentType =
   | 'live_url' // Same
   | 'meeting_id' // Same
   | 'meeting_url' // Same
@@ -26,7 +26,7 @@ type AvailableContentType =
   | 'html_content' // Same
   | 'html_url' // Same
 
-const availableActivityType: AvailableActivityType[] = [
+export const availableActivityType: AvailableActivityType[] = [
   'live',
   'meeting',
   'video',
@@ -36,7 +36,7 @@ const availableActivityType: AvailableActivityType[] = [
   'html',
 ]
 
-const availableContentType: AvailableContentType[] = [
+export const availableContentType: AvailableContentType[] = [
   'live_url',
   'meeting_id',
   'meeting_url',
@@ -97,6 +97,12 @@ const ActivityContentSelector: FunctionComponent<IActivityContentSelectorProps> 
     setContentType(activity.content.type as any)
     setReference(activity.content.reference as any)
   }, [activity.content])
+
+  useEffect(() => {
+    if (activity?.type?.name in typeMap) {
+      setActivityType(activity?.type?.name)
+    }
+  }, [activity?.type?.name])
 
   return (
     <>
