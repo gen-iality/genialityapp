@@ -345,6 +345,49 @@ const ActivityContentManagerReborn: FunctionComponent<
           )
         }
       }
+    } else if (activityType === 'live') {
+      return (
+        <Row>
+          <Col span={24}>
+            <Form.Item style={{ width: '100%' }} label="URL de la transmisión">
+              <Input
+                placeholder="URL de la transmisión: YouTube / Vimeo / Twitch / Zoom / Meet Google / Teams / Phone Call / etc."
+                defaultValue={temporalReference}
+                addonBefore={
+                  temporalReference === reference ? (
+                    <CheckOutlined style={{ color: 'green' }} />
+                  ) : (
+                    <ExclamationOutlined
+                      title="Cambios no guardados"
+                      style={{ color: 'red' }}
+                    />
+                  )
+                }
+                onChange={(event) => {
+                  const { value } = event.target
+                  console.debug('will set', value)
+                  setTemporalReference(value)
+                }}
+              />
+            </Form.Item>
+            <Button
+              onClick={() => {
+                onReferenceChange(temporalReference)
+                setTemporalReference('')
+              }}
+            >
+              Actualizar
+            </Button>
+          </Col>
+        </Row>
+      )
+    } else {
+      return (
+        <Alert
+          type="warning"
+          message={`El tipo de actividad ${activityType} es desconocido`}
+        />
+      )
     }
   }, [
     activityType,
