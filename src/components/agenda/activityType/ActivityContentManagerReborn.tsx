@@ -9,6 +9,7 @@ import {
 import {
   Alert,
   Button,
+  ButtonProps,
   Card,
   Col,
   Divider,
@@ -71,6 +72,28 @@ const ActivityContentManagerReborn: FunctionComponent<
           value,
         }))
 
+  const SavedChangeIndicator = () =>
+    temporalReference === reference ? (
+      <CheckOutlined style={{ color: 'green' }} />
+    ) : (
+      <ExclamationOutlined title="Cambios no guardados" style={{ color: 'red' }} />
+    )
+
+  const ButtonUpdate = (props: ButtonProps) => (
+    <Button
+      type="link"
+      style={{ color: temporalReference === reference ? 'green' : 'red' }}
+      onClick={() => {
+        console.debug('will set url:', temporalReference)
+        onReferenceChange(temporalReference)
+        // setTemporalReference('')
+      }}
+      {...props}
+    >
+      {temporalReference === reference ? 'Actualizado' : 'Actualizar'}
+    </Button>
+  )
+
   const switchActivityType = useCallback(() => {
     if (activityType === 'html') {
       return (
@@ -104,21 +127,13 @@ const ActivityContentManagerReborn: FunctionComponent<
           <Col span={24}>
             <Form.Item label="URL del PDF" style={{ width: '100%' }}>
               <Input
-                addonBefore={
-                  temporalReference === reference ? (
-                    <CheckOutlined style={{ color: 'green' }} />
-                  ) : (
-                    <ExclamationOutlined style={{ color: 'red' }} />
-                  )
-                }
+                addonBefore={<SavedChangeIndicator />}
                 value={temporalReference}
                 onChange={(event) => setTemporalReference(event.target.value)}
                 placeholder="URL del PDF"
+                addonAfter={<ButtonUpdate />}
               />
             </Form.Item>
-            <Button type="primary" onClick={() => onReferenceChange(temporalReference)}>
-              Actualizar
-            </Button>
             <Divider />
             <Document
               simpleMode
@@ -294,21 +309,24 @@ const ActivityContentManagerReborn: FunctionComponent<
                   <Input
                     placeholder="URL del vídeo"
                     defaultValue={temporalReference}
+                    addonBefore={
+                      temporalReference === reference ? (
+                        <CheckOutlined style={{ color: 'green' }} />
+                      ) : (
+                        <ExclamationOutlined
+                          title="Cambios no guardados"
+                          style={{ color: 'red' }}
+                        />
+                      )
+                    }
                     onChange={(event) => {
                       const { value } = event.target
                       console.debug('will set', value)
                       setTemporalReference(value)
                     }}
+                    addonAfter={<ButtonUpdate />}
                   />
                 </Form.Item>
-                <Button
-                  onClick={() => {
-                    onReferenceChange(temporalReference)
-                    setTemporalReference('')
-                  }}
-                >
-                  Actualizar
-                </Button>
               </Col>
             </Row>
           )
@@ -319,27 +337,13 @@ const ActivityContentManagerReborn: FunctionComponent<
                 <ActivityExternalUrlField
                   type="url"
                   placeholder="Enlace"
-                  addonBefore={
-                    temporalReference === reference ? (
-                      <CheckOutlined style={{ color: 'green' }} />
-                    ) : (
-                      <ExclamationOutlined style={{ color: 'red' }} />
-                    )
-                  }
+                  addonBefore={<SavedChangeIndicator />}
                   onInput={(input) => {
                     console.debug('input is', input)
                     setTemporalReference(input)
                   }}
+                  addonAfter={<ButtonUpdate />}
                 />
-                <Button
-                  onClick={() => {
-                    console.log('will set', temporalReference, 'as reference')
-                    onReferenceChange(temporalReference)
-                    setTemporalReference('')
-                  }}
-                >
-                  Actualizar
-                </Button>
               </Col>
             </Row>
           )
@@ -353,31 +357,15 @@ const ActivityContentManagerReborn: FunctionComponent<
               <Input
                 placeholder="URL de la transmisión: YouTube / Vimeo / Twitch / Zoom / Meet Google / Teams / Phone Call / etc."
                 defaultValue={temporalReference}
-                addonBefore={
-                  temporalReference === reference ? (
-                    <CheckOutlined style={{ color: 'green' }} />
-                  ) : (
-                    <ExclamationOutlined
-                      title="Cambios no guardados"
-                      style={{ color: 'red' }}
-                    />
-                  )
-                }
+                addonBefore={<SavedChangeIndicator />}
                 onChange={(event) => {
                   const { value } = event.target
                   console.debug('will set', value)
                   setTemporalReference(value)
                 }}
+                addonAfter={<ButtonUpdate />}
               />
             </Form.Item>
-            <Button
-              onClick={() => {
-                onReferenceChange(temporalReference)
-                setTemporalReference('')
-              }}
-            >
-              Actualizar
-            </Button>
           </Col>
         </Row>
       )
@@ -397,11 +385,17 @@ const ActivityContentManagerReborn: FunctionComponent<
     onSaveContent,
     onReferenceChange,
     temporalReference,
+    SavedChangeIndicator,
+    ButtonUpdate,
   ])
 
   useEffect(() => {
     if (!contentType) {
       onContentTypeChange(typeMap[activityType][0])
+    }
+
+    return () => {
+      setTemporalReference('')
     }
   }, [])
 
