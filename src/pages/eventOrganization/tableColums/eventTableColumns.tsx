@@ -3,22 +3,25 @@ import { ColumnsType } from 'antd/lib/table';
 import moment from 'moment';
 import { DATE_FORMAT } from '@/constants/datesformat.constants';
 import { AddEventToGroup } from '../components/addEventToGroup/AddEventToGroup';
+import { eventsGetColumnSearchProps } from '../searchFunctions/membersGetColumnSearchProps';
 
 type GoToEvent = (eventId: string) => void;
 type OpenModal = (event: any) => void;
-export const columns = (goToEvent: GoToEvent, openModal: OpenModal): ColumnsType<any> => [
+export const columns = (goToEvent: GoToEvent, columnsData: any, openModal: OpenModal): ColumnsType<any> => [
   {
     title: 'Nombre del evento',
     dataIndex: 'name',
     ellipsis: true,
     sorter: (a, b) => a.name.localeCompare(b.name),
-    render(val, item) {
+    
+    ...eventsGetColumnSearchProps('name', columnsData, goToEvent),
+   /*  render(val, item) {
       return (
         <Button type='link' onClick={() => goToEvent(item._id)}>
           <span style={{ color: '#2E9AFE' }}>{item.name}</span>
         </Button>
       );
-    },
+    }, */
   },
   {
     title: 'Fecha de inicio',
