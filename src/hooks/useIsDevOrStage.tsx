@@ -1,6 +1,6 @@
 /**
  * An object with flag to check if the running mode is development or staging or neither
- * @returns `{isDev: boolean, isStage: boolean}`
+ * @returns `{isDev: boolean, isStage: boolean, isNotProd: boolean}`
  */
 const useIsDevOrStage = () => {
   const mode = (import.meta.env.MODE || '').toLowerCase()
@@ -16,6 +16,7 @@ const useIsDevOrStage = () => {
   return {
     isDev,
     isStage,
+    isNotProd: isDev || isStage,
   }
 }
 

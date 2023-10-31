@@ -6,14 +6,24 @@ import * as React from 'react'
 
 import { useState, useEffect, useCallback, useContext } from 'react'
 
-import { Form, Tabs, Col, Row, Switch, Modal, BackTop } from 'antd'
+import {
+  Form,
+  Tabs,
+  Col,
+  Row,
+  Switch,
+  Modal,
+  BackTop,
+  Result,
+  Typography,
+  Button,
+} from 'antd'
 
 import Header from '@antdComponents/Header'
-import { RouterPrompt } from '@antdComponents/RoutePrompt'
 import { StateMessage } from '@context/MessageService'
 import Loading from '../profile/loading'
 
-import { redirect, useNavigate, useLocation, Navigate } from 'react-router'
+import { useNavigate, Navigate, useParams } from 'react-router'
 
 import AgendaContext from '@context/AgendaContext'
 import { AgendaApi, DocumentsApi } from '@helpers/request'
@@ -23,15 +33,11 @@ import dayjs from 'dayjs'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import useDeleteActivity from './hooks/useDeleteActivity'
 import AgendaDocumentForm from './components/AgendaDocumentForm'
-import ActivityContentSelector from './activityType/ActivityContentSelector'
+import ActivityContentSelector2 from './activityType/ActivityContentSelector2'
 
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
-}
-
-interface LocationStateType {
-  edit?: string
 }
 
 interface IAgendaEditPageProps {
@@ -41,8 +47,8 @@ interface IAgendaEditPageProps {
 /**
  * Create a page component that enable create/edit an activity.
  *
- * This component needs to check the location state for the prop `edit` to know
- * if it is needed edit an activity. If this location prop is empty, then the
+ * This component needs to check the param `activityId` to know
+ * if it is needed edit an activity. If `activityId` is empty, then the
  * page will config itself to create a new activity.
  *
  * @param props the props.
@@ -55,6 +61,8 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
   const [currentTab, setCurrentTab] = useState('1')
   const [isNeededConfirmRedirection, setIsNeededConfirmRedirection] = useState(false)
 
+  const [isActivityNotFound, setIsActivityNotFound] = useState(false)
+
   const [selectedDocuments, setSelectedDocuments] = useState<string[]>([])
 
   const [currentAgenda, setCurrentAgenda] = useState<AgendaType | undefined>()
@@ -64,7 +72,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
   const [form] = Form.useForm<FormValues>()
 
   const navigate = useNavigate()
-  const location = useLocation<LocationStateType>()
+  const params = useParams<{ activityId?: string }>()
 
   const deleteActivity = useDeleteActivity()
 
@@ -98,13 +106,13 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
       )
 
       let _agenda: AgendaType | undefined = undefined
-      if (location.state?.edit || currentAgenda?._id) {
-        const activityId = location.state?.edit || currentAgenda?._id
+      if (params.activityId || currentAgenda?._id) {
+        const activityId = params.activityId || currentAgenda?._id
         await AgendaApi.editOne(values, activityId, props.event._id)
         console.log('agenda edited')
 
         const payloadForDocument = {
-          activity_id: location.state?.edit || currentAgenda?._id,
+          activity_id: params.activityId || currentAgenda?._id,
         }
         console.log(
           'will save',
@@ -141,15 +149,15 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
 
       StateMessage.show(null, 'success', 'Información guardada correctamente!')
     },
-    [currentTab, selectedDocuments, currentAgenda, location.state, props],
+    [currentTab, selectedDocuments, currentAgenda, params.activityId, props],
   )
 
   /**
-   * Load the activity data from the location prop `edit` if this contains an ID.
+   * Load the activity data from the `params.activityId` if this contains an ID.
    */
   const loadActivity = useCallback(async () => {
-    if (location.state?.edit) {
-      const activityId = location.state.edit
+    if (params.activityId) {
+      const activityId = params.activityId
       const eventId = props.event._id
 
       // Update the context
@@ -158,7 +166,26 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
       }
 
       // Get the agenda document from current activity_id
-      const agenda: AgendaType = await AgendaApi.getOne(activityId, eventId)
+      let agenda: AgendaType
+
+      try {
+        agenda = await AgendaApi.getOne(activityId, eventId)
+      } catch (err: any) {
+        console.error(err)
+        StateMessage.show(
+          null,
+          'error',
+          `No se ha podido cargar la actividad - estado: ${err.response?.status}`,
+        )
+
+        if (err.response?.status === 404) {
+          setIsActivityNotFound(true)
+        } else {
+          throw err
+        }
+        return
+      }
+
       setSelectedDocuments(agenda.selected_document || [])
 
       // Take the vimeo_id and save in info.
@@ -182,7 +209,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
       console.log('this agenda data is from editing status')
     }
   }, [
-    location,
+    params.activityId,
     cAgenda,
     setSelectedDocuments,
     setCurrentAgenda,
@@ -230,14 +257,34 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
     return () => {
       cAgenda.setActivityEdit(null)
     }
-  }, [props.event, cAgenda])
+  }, [props.event, cAgenda, params.activityId])
 
   useEffect(() => {
     cAgenda.saveConfig()
   }, [cAgenda.isPublished])
 
-  if (!location.state || shouldRedirect) {
+  if (!params.activityId || shouldRedirect) {
     return <Navigate to=".." />
+  }
+
+  if (isActivityNotFound) {
+    return (
+      <Result
+        title="Actividad no encontrada"
+        subTitle={
+          <Typography.Paragraph>
+            La actividad con ID "{params.activityId}" no fue encontrada. Revise la URL
+            esté correctamente escrita
+          </Typography.Paragraph>
+        }
+        extra={
+          <Button type="primary" onClick={() => navigate('..')}>
+            Volver
+          </Button>
+        }
+        status={'404'}
+      />
+    )
   }
 
   return (
@@ -283,8 +330,8 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
         remove={onRemove}
         customBack=".."
         title={cAgenda.activityName ? `Actividad - ${cAgenda.activityName}` : 'Actividad'}
-        saveName={location.state.edit || cAgenda.activityEdit || isEditing ? '' : 'Crear'}
-        edit={location.state.edit || cAgenda.activityEdit || isEditing}
+        saveName={params.activityId || cAgenda.activityEdit || isEditing ? '' : 'Crear'}
+        edit={params.activityId || cAgenda.activityEdit || isEditing}
         extra={
           isEditing && (
             <Form.Item label="Publicar" labelCol={{ span: 14 }}>
@@ -318,15 +365,10 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
               <Tabs.TabPane tab="Contenido" key="2">
                 <Row wrap gutter={12}>
                   <Col span={24}>
-                    {currentAgenda?._id && (
-                      <ActivityContentSelector
-                        activityId={currentAgenda?._id}
-                        activityName={currentAgenda.name}
-                        eventId={props.event._id}
-                        shouldLoad={currentTab === '2'}
-                      />
-                    )}
-                    <BackTop />
+                    <ActivityContentSelector2
+                      event={props.event}
+                      activity={currentAgenda}
+                    />
                   </Col>
                 </Row>
               </Tabs.TabPane>

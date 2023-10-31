@@ -30,6 +30,7 @@ interface IDocumentProps {
   /** When the document is removed */
   onRemoveDocumentContent?: () => void
   onSave?: (url: string) => void
+  activityId?: string
 }
 
 const Document: FunctionComponent<IDocumentProps> = (props) => {
@@ -47,7 +48,7 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
   const location = useLocation()
 
   useEffect(() => {
-    if (location.state.edit && !props.simpleMode) {
+    if ((location.state?.edit || props.activityId) && !props.simpleMode) {
       getDocument()
     }
   }, [])
@@ -98,7 +99,10 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
   }, [props.fromPDFDocumentURL])
 
   const getDocument = async () => {
-    const response = await DocumentsApi.getOne(location.state.edit, props.event._id)
+    const response = await DocumentsApi.getOne(
+      location.state?.edit ?? props.activityId,
+      props.event._id,
+    )
     setDocument(response)
     setFolder(response.folder)
     setFiles([response.file])
@@ -137,11 +141,11 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
 
       try {
         if (!props.notRecordFileInDocuments) {
-          if (location.state.edit && !props.simpleMode) {
+          if ((location.state?.edit ?? props.activityId) && !props.simpleMode) {
             console.debug('document editing')
             await DocumentsApi.editOne(
               folder ? { title: document.title, type: 'folder', folder } : document,
-              location.state.edit,
+              location.state?.edit ?? props.activityId,
               props.event._id,
             )
             console.debug('document edited')
@@ -178,7 +182,7 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
       'loading',
       ' Por favor espere mientras se borra la información...',
     )
-    if (location.state.edit) {
+    if (location.state?.edit ?? props.activityId) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
         icon: <ExclamationCircleOutlined />,
@@ -208,7 +212,10 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
                 });
               } */
               if (!props.notRecordFileInDocuments) {
-                await DocumentsApi.deleteOne(location.state.edit, props.event._id)
+                await DocumentsApi.deleteOne(
+                  location.state?.edit ?? props.activityId,
+                  props.event._id,
+                )
                 StateMessage.destroy('loading')
                 StateMessage.show(
                   null,
@@ -357,7 +364,7 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
             remove()
           }
         }}
-        edit={location.state.edit}
+        edit={location.state?.edit ?? props.activityId}
         loadingSave={isLoading}
       />
 

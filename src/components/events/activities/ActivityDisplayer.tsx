@@ -30,6 +30,7 @@ function switchActivity(
     case 'eviusMeet':
     case 'vimeo':
     case 'youTube':
+    case 'live':
       return (
         <StreamingActivityDisplayer
           activity={activity}
@@ -45,6 +46,7 @@ function switchActivity(
       )
     case 'url':
     case 'cargarvideo':
+    case 'video':
       return (
         <VideoActivityDisplayer
           activity={activity}

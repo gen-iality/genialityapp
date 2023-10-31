@@ -2,35 +2,55 @@ import { useState, useEffect, useRef, type FunctionComponent } from 'react'
 import HeaderColumnswithContext from '../HeaderColumns'
 
 import { IBasicActivityProps } from './basicTypes'
+import { Alert } from 'antd'
 
 const HtmlActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
   const { activity, onActivityProgress } = props
-  const [htmlData, setHtmlData] = useState<string>('')
 
-  const ref = useRef<HTMLDivElement>(null)
+  const [htmlContent, setHtmlContent] = useState<string | null>(null)
+  const [htmlUrl, setHtmlUrl] = useState<string | null>(null)
+
+  const htmlContentRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (typeof onActivityProgress === 'function') onActivityProgress(100)
   }, [])
 
   useEffect(() => {
-    if (!activity) return
-    setHtmlData(activity.meeting_id || '<em>Contenido no <b>establecido</b></em>.')
-  }, [activity?.meeting_id])
+    if (!activity.content?.reference) return
+
+    console.debug('will set', activity.content.type, 'content type')
+    switch (activity.content.type) {
+      case 'html_url':
+        setHtmlUrl(activity.content.reference)
+        break
+      case 'html_content':
+        setHtmlContent(activity.content.reference)
+        break
+      default:
+        console.warn('The content type', activity.content.type, 'is unknown')
+    }
+  }, [activity.content])
 
   useEffect(() => {
-    if (!ref.current) return
-    if (!htmlData.trim()) return
-    if (htmlData !== ref.current.innerHTML) {
+    if (!htmlContentRef.current) return
+    if (!htmlContent || !htmlContent.trim()) return
+    if (htmlContent !== htmlContentRef.current.innerHTML) {
       console.debug('Update innerHTML')
-      ref.current.innerHTML = htmlData
+      htmlContentRef.current.innerHTML = htmlContent
     }
-  }, [ref.current, htmlData])
+  }, [htmlContentRef.current, htmlContent])
 
   return (
     <>
       <HeaderColumnswithContext isVisible activityState={activity} />
-      <div ref={ref} style={{ width: '100%' }} />
+      {htmlContent ? (
+        <div ref={htmlContentRef} style={{ width: '100%' }} />
+      ) : htmlUrl ? (
+        <iframe src={htmlUrl} />
+      ) : (
+        <Alert type="warning" message="No se ha configurado un contenido para esto" />
+      )}
     </>
   )
 }

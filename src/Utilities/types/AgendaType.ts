@@ -46,6 +46,10 @@ export default interface AgendaType {
     color: string
     name: string
   }[]
+  content?: {
+    type: string
+    reference: string
+  }
 }
 
 export interface ExtendedAgendaType extends AgendaType {

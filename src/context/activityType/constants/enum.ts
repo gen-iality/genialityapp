@@ -11,13 +11,13 @@ export enum WidgetType {
 }
 
 export enum MainUI {
-  LIVE = 'liveBroadcast',
-  MEETING = 'meeting2',
+  LIVE = 'live',
+  MEETING = 'meeting',
   VIDEO = 'video',
-  QUIZ = 'quizing2',
-  SURVEY = 'survey2',
-  PDF = 'pdf2',
-  HTML = 'html2',
+  QUIZ = 'quizing',
+  SURVEY = 'survey',
+  PDF = 'pdf',
+  HTML = 'html',
 }
 
 export enum DeepUI {

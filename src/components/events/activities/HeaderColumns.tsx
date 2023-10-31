@@ -1,5 +1,5 @@
 /** React's libraries */
-import { useContext, useEffect } from 'react'
+import { FunctionComponent, useContext, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useIntl } from 'react-intl'
 import Moment from 'moment-timezone'
@@ -23,14 +23,18 @@ import { imageUtils } from '../../../Utilities/ImageUtils'
 /** Context */
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { useEventContext } from '@context/eventContext'
-import WithEviusContext from '@context/withContext'
+
 import AgendaContext from '@context/AgendaContext'
 
-const HeaderColumns = (props) => {
+interface IHeaderColumnsProps {
+  isVisible?: boolean
+  activityState?: any
+}
+
+const HeaderColumns: FunctionComponent<IHeaderColumnsProps> = (props) => {
   const { currentActivity } = useHelper()
   const cEvent = useEventContext()
 
-  const getRequestByActivity = () => {} // missing function
   const { setRefActivity, setActivityEdit, typeActivity } = useContext(AgendaContext)
 
   // Se ejecuta cuando tiene una lección para establecer la referencia y obtener los request
@@ -44,11 +48,13 @@ const HeaderColumns = (props) => {
     if (!currentActivity || typeActivity !== 'eviusMeet') return
     const refActivity = `request/${cEvent.value?._id}/activities/${currentActivity?._id}`
     setRefActivity(refActivity)
-    getRequestByActivity(refActivity)
     return () => {
       setActivityEdit(null)
     }
   }, [currentActivity, typeActivity])
+
+  const roomStatus =
+    props.activityState?.habilitar_ingreso ?? props.activityState?.roomState
 
   const intl = useIntl()
   return (
@@ -56,8 +62,8 @@ const HeaderColumns = (props) => {
       <Link
         to={
           cEvent && !cEvent?.isByname
-            ? `/landing/${props.cEvent.value._id}/evento`
-            : `/event/${cEvent?.nameEvent}/agenda`
+            ? `/landing/${cEvent.value._id}/evento`
+            : `/event/${cEvent.nameEvent}/agenda`
         }
       >
         <Button type="primary" shape="round" icon={<ArrowLeftOutlined />} size="small">
@@ -75,28 +81,24 @@ const HeaderColumns = (props) => {
       >
         <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
           <Col>
-            {props.activityState === 'open_meeting_room' ||
-            props.activityState === 'game' ? (
+            {roomStatus === 'open_meeting_room' || roomStatus === 'game' ? (
               <img
                 style={{ height: '4vh', width: '4vh' }}
                 src={imageUtils.EnVivo}
                 alt="React logo"
               />
-            ) : props.activityState === 'ended_meeting_room' &&
+            ) : roomStatus === 'ended_meeting_room' &&
               currentActivity !== null &&
               currentActivity.video ? (
               <CaretRightOutlined style={{ fontSize: '30px' }} />
-            ) : props.activityState === 'ended_meeting_room' &&
-              currentActivity !== null ? (
+            ) : roomStatus === 'ended_meeting_room' && currentActivity !== null ? (
               <CheckCircleOutlined style={{ fontSize: '30px' }} />
-            ) : (props.activityState === '' || props.activityState == null) &&
+            ) : (roomStatus === '' || roomStatus == null) &&
               currentActivity?.type?.name !== ('url' || 'video') ? (
               <ClockCircleOutlined style={{ fontSize: '30px' }} />
-            ) : props.activityState === 'closed_meeting_room' ? (
+            ) : roomStatus === 'closed_meeting_room' ? (
               <LoadingOutlined style={{ fontSize: '30px' }} />
-            ) : (
-              ''
-            )}
+            ) : null}
           </Col>
         </Row>
         <Row
@@ -108,17 +110,19 @@ const HeaderColumns = (props) => {
             justifyContent: 'center',
           }}
         >
-          {props.activityState === 'open_meeting_room' || props.activityState === 'game'
+          {roomStatus === 'open_meeting_room' || roomStatus === 'game'
             ? 'En vivo'
-            : props.activityState === 'ended_meeting_room' &&
+            : roomStatus === 'ended_meeting_room' &&
               currentActivity !== null &&
               currentActivity.video
             ? 'Grabado'
-            : props.activityState === 'ended_meeting_room' && currentActivity !== null
+            : roomStatus === 'ended_meeting_room' && currentActivity !== null
             ? 'Terminada'
-            : props.activityState === 'closed_meeting_room'
+            : roomStatus === 'closed_meeting_room'
             ? 'Por iniciar'
-            : ''}
+            : roomStatus === 'created_meeting_room'
+            ? 'Actividad recién creada'
+            : 'Estado indefinido'}
         </Row>
       </Col>
 
@@ -198,6 +202,4 @@ const HeaderColumns = (props) => {
   )
 }
 
-const HeaderColumnswithContext = WithEviusContext(HeaderColumns)
-
-export default HeaderColumnswithContext
+export default HeaderColumns

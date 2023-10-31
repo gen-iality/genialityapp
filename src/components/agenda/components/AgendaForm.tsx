@@ -36,11 +36,11 @@ import EviusReactQuill from '@components/shared/eviusReactQuill'
 import ImageUploaderDragAndDrop from '@components/imageUploaderDragAndDrop/imageUploaderDragAndDrop'
 import { StateMessage } from '@context/MessageService'
 import BackTop from '@antdComponents/BackTop'
-import ActivityTypeSelector from '../activityType/ActivityTypeSelector'
 
 import { hourWithAdditionalMinutes } from '../hooks/useHourWithAdditionalMinutes'
 import SpeakerEditPage from '@components/speakers/SpeakerEditPage'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
+import ActivityTypeSelectorReborn from '../activityType/ActivityTypeSelectorReborn'
 
 export interface FormValues {
   name: string
@@ -178,7 +178,11 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
 
   return (
     <Row justify="center" wrap gutter={12}>
-      <Col span={20}>{props.activityId && <ActivityTypeSelector />}</Col>
+      <Col span={20}>
+        {props.activityId && props.event?._id && props.agenda && (
+          <ActivityTypeSelectorReborn eventId={props.event._id} activity={props.agenda} />
+        )}
+      </Col>
       <Col span={20}>
         <Form.Item
           label="Nombre"
