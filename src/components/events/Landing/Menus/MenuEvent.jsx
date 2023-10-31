@@ -1,5 +1,5 @@
 import { Badge, Button, Menu, Space } from 'antd';
-import { useRouteMatch, Link, useHistory } from 'react-router-dom';
+import { useRouteMatch, Link, useHistory, useLocation } from 'react-router-dom';
 import * as iconComponents from '@ant-design/icons';
 import { stylesMenuItems } from '../helpers/csshelpers';
 import { UseEventContext } from '../../../../context/eventContext';
@@ -15,7 +15,8 @@ const MenuEvent = ({ isMobile }) => {
   let event = cEvent.value;
   const history = useHistory();
   const intl = useIntl();
-
+  const location = useLocation();
+  const menuActive = location.pathname.replace(`${url}/`, '');
   const redirectToPreLanding = () => {
     sessionStorage.removeItem('session');
     history.push(`/${cEvent.value._id}`);
@@ -33,7 +34,7 @@ const MenuEvent = ({ isMobile }) => {
         //     maxHeight: '100vh',
         //   }}
         // >
-        <Menu style={stylesMenuItems} mode='inline' defaultSelectedKeys={['1']}>
+        <Menu style={stylesMenuItems} mode='inline' selectedKeys={[menuActive]} defaultSelectedKeys={['1']}>
           {event.redirect_landing === true ? null : (
             <Menu.Item className='MenuItem_event' key={'pre-landing'}>
               <Button
@@ -95,35 +96,33 @@ const MenuEvent = ({ isMobile }) => {
                   </Badge>
                 </Menu.Item>
               ) : (
-                key !== 'networking' && (
-                  <>
-                    <Menu.Item key={event.itemsMenu[key].section} className='MenuItem_event'>
-                      <IconoComponente
+                <>
+                  <Menu.Item key={event.itemsMenu[key].section} className='MenuItem_event'>
+                    <IconoComponente
+                      style={{
+                        fontSize: '22px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        color: event.styles.textMenu,
+                        justifyContent: 'center',
+                      }}
+                    />
+                    <Link
+                      className='menuEvent_section-text'
+                      style={{ color: event.styles.textMenu }}
+                      to={`${url}/${event.itemsMenu[key].section}`}>
+                      <span
                         style={{
-                          fontSize: '22px',
                           display: 'flex',
                           alignItems: 'center',
                           color: event.styles.textMenu,
                           justifyContent: 'center',
-                        }}
-                      />
-                      <Link
-                        className='menuEvent_section-text'
-                        style={{ color: event.styles.textMenu }}
-                        to={`${url}/${event.itemsMenu[key].section}`}>
-                        <span
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            color: event.styles.textMenu,
-                            justifyContent: 'center',
-                          }}>
-                          {` ${event.itemsMenu[key].label ? event.itemsMenu[key].label : event.itemsMenu[key].name}`}
-                        </span>
-                      </Link>
-                    </Menu.Item>
-                  </>
-                )
+                        }}>
+                        {` ${event.itemsMenu[key].label ? event.itemsMenu[key].label : event.itemsMenu[key].name}`}
+                      </span>
+                    </Link>
+                  </Menu.Item>
+                </>
               );
             })}
         </Menu>
@@ -131,7 +130,7 @@ const MenuEvent = ({ isMobile }) => {
         // </div>
         isMobile &&
         !eventPrivate.private && (
-          <Menu style={stylesMenuItems} mode='vertical' defaultSelectedKeys={['1']}>
+          <Menu style={stylesMenuItems} mode='vertical' defaultSelectedKeys={['1']} selectedKeys={[menuActive]}>
             <Menu.Item
               style={{
                 position: 'relative',
