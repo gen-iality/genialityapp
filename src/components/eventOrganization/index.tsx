@@ -47,28 +47,27 @@ function EventOrganization({ match }: OrganizationProps) {
 
   const fetchOrganizationUser = async () => {
     try {
-      const response = await OrganizationApi.getMeUser(organization?._id);
-      const user = response.data[0].active ?? true;
+      const response = await OrganizationApi.getMeUser(organizationId);
+      const user = response.data[0]?.active ?? true;
       setIsActive(user);
     } catch (error) {
       console.error('Error al obtener el usuario de la organización:', error);
     }
   };
   useEffect(() => {
-    let orgId = match.params.id;
-    if (orgId) {
-      fetchItem(orgId).then((respuesta) =>
+    if (organizationId) {
+      fetchItem().then((respuesta) =>
         setstate({
           ...state,
-          orgId,
+          orgId: organizationId,
         })
       );
       setLoading(false);
     }
-  }, []);
+  }, [organizationId]);
 
-  const fetchItem = async (orgId: string) => {
-    const events = await OrganizationFuction.getEventsNextByOrg(orgId, 'latest');
+  const fetchItem = async () => {
+    const events = await OrganizationFuction.getEventsNextByOrg(organizationId, 'desc');
     let proximos: any = [];
     let pasados: any = [];
     let fechaActual = moment();
@@ -86,7 +85,7 @@ function EventOrganization({ match }: OrganizationProps) {
       }
     });
 
-    const orga = await OrganizationFuction.obtenerDatosOrganizacion(orgId);
+    const orga = await OrganizationFuction.obtenerDatosOrganizacion(organizationId);
     if (events) {
       setEvents(proximos);
       setEventsOld(pasados);
@@ -130,11 +129,11 @@ function EventOrganization({ match }: OrganizationProps) {
             </div>
           )}
           {isActive || !cUser?.value ? (
-            <Row justify='center' style={{ paddingTop: '32px', paddingBottom: '32px' }}>
-              <Col span={23}>
-                <Row gutter={[0, 32]}>
+            
+              
+                <Row style={{ padding:'30px' }} gutter={[0, 30]}>
                   {cUser.value?._id && (
-                    <Col style={{ width: '100%' }}>
+                    <Col span={24}>
                       <MyEvents
                           cUser={cUser}
                           organizationId={organizationId}
@@ -155,19 +154,19 @@ function EventOrganization({ match }: OrganizationProps) {
                       )}
                     </Col>
                   )}
-                  <Col style={{ width: '100%' }}>
+                  <Col span={24}>
                     <PassEvents
                       eventsOld={eventsOld}
                       havePaymentEvent={havePaymentEvent}
                       isUserRegisterInEvent={isUserRegisterInEvent}
                     />
                   </Col>
-                  <Col style={{ width: '100%' }}>
+                  <Col span={24}>
                     <NextEvents events={events} />
                   </Col>
                 </Row>
-              </Col>
-            </Row>
+             
+            
           ) : (
             <Row justify='center' style={{ paddingTop: '32px', paddingBottom: '32px' }}>
               <Col xs={24} sm={24} md={20} lg={12} xl={12} xxl={12}>

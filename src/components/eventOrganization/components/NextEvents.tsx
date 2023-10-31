@@ -1,16 +1,18 @@
-import { Badge, Card, Col, Empty, Row, Space, Typography } from 'antd';
+import { Badge, Card, Col, Empty, Grid, Row, Space, Typography } from 'antd';
 import React from 'react';
 import { InputSearchEvent } from './InputSearchEvent';
 import { useSearchList } from '@/hooks/useSearchList';
 import EventCard from '@/components/shared/eventCard';
 
 const { Title } = Typography;
+const { useBreakpoint } = Grid;
 
 interface Props {
-  events: any[];
+	events: any[];
 }
 export const NextEvents = ({ events }: Props) => {
-  const { filteredList, searchTerm, setSearchTerm } = useSearchList(events, 'name');
+	const screens = useBreakpoint();
+	const { filteredList, searchTerm, setSearchTerm } = useSearchList(events, 'name');
 
 	return (
 		<Card
@@ -18,14 +20,14 @@ export const NextEvents = ({ events }: Props) => {
 			headStyle={{ border: 'none' }}
 			title={
 				<Badge offset={[60, 22]} count={`${events.length} Eventos`}>
-					<Title level={2}>Próximos eventos</Title>
+					<Title level={screens.xs ? 4 : 2}>Próximos eventos</Title>
 				</Badge>
 			}
 			extra={<Space>{events.length > 0 && <InputSearchEvent onHandled={setSearchTerm} />}</Space>}
 			style={{ width: '100%', borderRadius: 20 }}>
 			<Row gutter={[0, 32]}>
 				<Col span={24}>
-					<Row gutter={[16, 16]}>
+					<Row style={{ overflowY: 'auto', minHeight: '300px', maxHeight: '500px' }} gutter={[16, 16]}>
 						{events && events.length > 0 ? (
 							<>
 								{filteredList.length > 0 ? (
