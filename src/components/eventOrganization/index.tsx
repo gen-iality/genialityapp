@@ -47,28 +47,27 @@ function EventOrganization({ match }: OrganizationProps) {
 
   const fetchOrganizationUser = async () => {
     try {
-      const response = await OrganizationApi.getMeUser(organization?._id);
-      const user = response.data[0].active ?? true;
+      const response = await OrganizationApi.getMeUser(organizationId);
+      const user = response.data[0]?.active ?? true;
       setIsActive(user);
     } catch (error) {
       console.error('Error al obtener el usuario de la organización:', error);
     }
   };
   useEffect(() => {
-    let orgId = match.params.id;
-    if (orgId) {
-      fetchItem(orgId).then((respuesta) =>
+    if (organizationId) {
+      fetchItem().then((respuesta) =>
         setstate({
           ...state,
-          orgId,
+          orgId: organizationId,
         })
       );
       setLoading(false);
     }
-  }, []);
+  }, [organizationId]);
 
-  const fetchItem = async (orgId: string) => {
-    const events = await OrganizationFuction.getEventsNextByOrg(orgId, 'latest');
+  const fetchItem = async () => {
+    const events = await OrganizationFuction.getEventsNextByOrg(organizationId, 'desc');
     let proximos: any = [];
     let pasados: any = [];
     let fechaActual = moment();
@@ -86,7 +85,7 @@ function EventOrganization({ match }: OrganizationProps) {
       }
     });
 
-    const orga = await OrganizationFuction.obtenerDatosOrganizacion(orgId);
+    const orga = await OrganizationFuction.obtenerDatosOrganizacion(organizationId);
     if (events) {
       setEvents(proximos);
       setEventsOld(pasados);
