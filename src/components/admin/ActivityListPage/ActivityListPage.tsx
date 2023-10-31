@@ -47,7 +47,6 @@ const ActivityListPage: FunctionComponent<IActivityListPageProps> = (props) => {
   const { updateOrder } = useOrderUpdater()
 
   const columns = useDefineColumns(event._id, {
-    editUrl: `activity`,
     removeMethod: (id) => {
       deleteActivityById(id, {
         useConfirmation: true,

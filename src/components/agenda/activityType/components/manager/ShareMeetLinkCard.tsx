@@ -1,10 +1,12 @@
 import { Button, Card, Input, Space, Tooltip, Typography } from 'antd'
-import { CopyFilled } from '@ant-design/icons'
+import { CopyFilled, LoadingOutlined } from '@ant-design/icons'
 
 import { StateMessage } from '@context/MessageService'
+import { useEffect, useState } from 'react'
 
 export interface ShareMeetLinkCardProps {
   activityId: string
+  onChange?: (finalLink: string) => void
 }
 
 const copyToClipboard = (data: string) => {
@@ -13,6 +15,24 @@ const copyToClipboard = (data: string) => {
 }
 
 const CardShareLinkEviusMeet = (props: ShareMeetLinkCardProps) => {
+  const [finalUrl, setFinalUrl] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (props.activityId) {
+      setFinalUrl(`https://meet.evius.co/${props.activityId}`)
+    }
+  }, [props.activityId])
+
+  useEffect(() => {
+    if (typeof props.onChange === 'function' && finalUrl) {
+      props.onChange(finalUrl)
+    }
+  }, [finalUrl])
+
+  if (!finalUrl) {
+    return <LoadingOutlined />
+  }
+
   return (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
       <Card.Meta
@@ -33,13 +53,11 @@ const CardShareLinkEviusMeet = (props: ShareMeetLinkCardProps) => {
             <Input
               style={{ width: 'calc(100% - 31px)' }}
               disabled
-              value={`https://meet.evius.co/${props.activityId}`} /* value={linkRolProductor} */
+              value={finalUrl} /* value={linkRolProductor} */
             />
             <Tooltip title="Copiar productor url">
               <Button
-                onClick={() =>
-                  copyToClipboard(`https://meet.evius.co/${props.activityId}`)
-                }
+                onClick={() => copyToClipboard(finalUrl)}
                 icon={<CopyFilled style={{ color: '#0089FF' }} />}
               />
             </Tooltip>
@@ -51,13 +69,11 @@ const CardShareLinkEviusMeet = (props: ShareMeetLinkCardProps) => {
             <Input
               style={{ width: 'calc(100% - 31px)' }}
               disabled
-              value={`https://meet.evius.co/${props.activityId}`} /* value={linkRolProductor} */
+              value={finalUrl} /* value={linkRolProductor} */
             />
             <Tooltip title="Copiar speaker url">
               <Button
-                onClick={() =>
-                  copyToClipboard(`https://meet.evius.co/${props.activityId}`)
-                }
+                onClick={() => copyToClipboard(finalUrl)}
                 icon={<CopyFilled style={{ color: '#0089FF' }} />}
               />
             </Tooltip>

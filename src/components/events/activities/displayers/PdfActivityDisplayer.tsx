@@ -7,13 +7,15 @@ import HeaderColumnswithContext from '../HeaderColumns'
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css'
 
 import { IBasicActivityProps } from './basicTypes'
+import { Alert } from 'antd'
 
 const PdfActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
   const { activity, onActivityProgress } = props
 
-  const [pdfURL, setPdfURL] = useState()
+  const [pdfURL, setPdfURL] = useState<string | null>(null)
 
   const [numPages, setNumPages] = useState<number | undefined>()
+
   const [pageNumber, setPageNumber] = useState(1)
 
   useEffect(() => {
@@ -21,9 +23,9 @@ const PdfActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => 
   }, [])
 
   useEffect(() => {
-    if (!activity) return
-    setPdfURL(activity.meeting_id)
-  }, [activity])
+    if (!activity.content?.reference) return
+    setPdfURL(activity.content.reference)
+  }, [activity.content])
 
   function onDocumentLoadSuccess({ numPages }: any) {
     setNumPages(numPages as number)
@@ -33,10 +35,6 @@ const PdfActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => 
   function changePage(offset: number) {
     setPageNumber((prevPageNumber) => prevPageNumber + offset)
   }
-
-  // function onItemClick({ pageNumber: itemPageNumber }) {
-  //   setPageNumber(itemPageNumber)
-  // }
 
   function previousPage() {
     changePage(-1)
@@ -49,23 +47,39 @@ const PdfActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => 
   return (
     <>
       <HeaderColumnswithContext isVisible activityState={activity} />
-      <a href={pdfURL} target="blank">
-        Descargar PDF
-      </a>
-      <DocumentReactPDF file={pdfURL} onLoadSuccess={onDocumentLoadSuccess}>
-        <Page pageNumber={pageNumber} width={600} />
-      </DocumentReactPDF>
-      <div>
-        <p>
-          Page {pageNumber || (numPages ? 1 : '--')} of {numPages || '--'}
-        </p>
-        <button type="button" disabled={pageNumber <= 1} onClick={previousPage}>
-          Previous
-        </button>
-        <button type="button" disabled={pageNumber >= (numPages || 0)} onClick={nextPage}>
-          Next
-        </button>
-      </div>
+      {pdfURL ? (
+        <>
+          <a href={pdfURL} target="blank">
+            Descargar PDF
+          </a>
+          <DocumentReactPDF file={pdfURL} onLoadSuccess={onDocumentLoadSuccess}>
+            <Page pageNumber={pageNumber} width={600} />
+          </DocumentReactPDF>
+          <div>
+            <p>
+              Page {pageNumber || (numPages ? 1 : '--')} of {numPages || '--'}
+            </p>
+            <button type="button" disabled={pageNumber <= 1} onClick={previousPage}>
+              Previous
+            </button>
+            <button
+              type="button"
+              disabled={pageNumber >= (numPages || 0)}
+              onClick={nextPage}
+            >
+              Next
+            </button>
+          </div>
+          {activity.content?.type != 'pdf_url' && (
+            <Alert
+              type="info"
+              message={`El tipo de contenido ${activity.content?.type} es desconocido o nuevo`}
+            />
+          )}
+        </>
+      ) : (
+        <Alert type="error" message="No se ha definido una URL a un PDF" />
+      )}
     </>
   )
 }

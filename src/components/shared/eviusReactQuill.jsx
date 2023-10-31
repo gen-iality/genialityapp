@@ -16,6 +16,7 @@ Quill.register({
  * a un servidor y se guarda es el src a esa imagen, para no guardar la imagen en la base de datos.
  * También centralizamos la configuración de QUILL para que sea la misma en todo lado donde lo usamos
  * @param {{name?:string, data?: string, handleChange?: (x: string) => void}} props
+ * @deprecated buggy
  */
 function EviusReactQuill(props) {
   const reactQuilllRef = useRef(null)

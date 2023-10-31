@@ -1,15 +1,7 @@
-import {
-  FunctionComponent,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react'
 
 import { Col, Form, Input, Row, Select, TimePicker } from 'antd'
 import { useNavigate } from 'react-router'
-import AgendaContext from '@context/AgendaContext'
 import { hourWithAdditionalMinutes } from './hooks/useHourWithAdditionalMinutes'
 import useAvailableDaysFromEvent from './hooks/useAvailableDaysFromEvent'
 import Header from '@antdComponents/Header'
@@ -22,6 +14,7 @@ import useActivityType from '@context/activityType/hooks/useActivityType'
 import ActivityTypeModalLayout from './activityType/components/ActivityTypeModalLayout'
 import ActivityTypeSelectableCards from './activityType/components/ActivityTypeSelectableCards'
 import { ActivityType } from '@context/activityType/types/activityType'
+import editActivityType from './activityType/utils/editActivityType'
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -33,7 +26,6 @@ interface IAgendaCreatorPageProps {
 }
 
 const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) => {
-  const [shouldRedirect, setShouldRedirect] = useState(false)
   const [currentAgenda, setCurrentAgenda] = useState<AgendaType | undefined>()
   const [selectedActivityType, setSelectedActivityType] =
     useState<ActivityType.Name | null>(null)
@@ -43,9 +35,7 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
 
   const navigate = useNavigate()
 
-  const { formWidgetFlow, saveActivityType, setActivityType } = useActivityType()
-
-  const cAgenda = useContext(AgendaContext)
+  const { formWidgetFlow } = useActivityType()
 
   const somethingWasSelected = useMemo(
     () => selectedActivityType !== null,
@@ -78,8 +68,6 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
 
     const _agenda: AgendaType = await AgendaApi.create(props.event._id, values)
     setCurrentAgenda(_agenda)
-    setShouldRedirect(true)
-    cAgenda.setActivityEdit(_agenda._id)
 
     StateMessage.destroy('loading')
 
@@ -87,21 +75,29 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
   }, [])
 
   useEffect(() => {
-    if (!shouldRedirect) return
-    if (!currentAgenda) return
-    if (!cAgenda.activityEdit) return // To check if we have to set an activity type
-
-    if (selectedActivityType) {
-      saveActivityType()
+    if (!currentAgenda?._id) {
+      return
     }
 
-    console.debug('redirecting to /activity')
-    navigate('../activity', { state: { edit: currentAgenda._id } })
-  }, [shouldRedirect, currentAgenda, cAgenda?.activityEdit])
-
-  useEffect(() => {
-    setActivityType(selectedActivityType)
-  }, [selectedActivityType])
+    // Set activity type if it is defined
+    ;(async () => {
+      if (selectedActivityType) {
+        await editActivityType(props.event._id, currentAgenda._id!, selectedActivityType)
+      }
+    })()
+      .then(() => {
+        console.debug('redirecting to /activity')
+        navigate(`../${currentAgenda._id}`)
+      })
+      .catch((err) => {
+        console.error(err)
+        StateMessage.show(
+          null,
+          'error',
+          'Algo salió mal, no se ha podido terminar de guardar - Vaya atrás',
+        )
+      })
+  }, [currentAgenda, selectedActivityType])
 
   return (
     <Form form={form} onFinish={(values) => onFinish(values)} {...formLayout}>

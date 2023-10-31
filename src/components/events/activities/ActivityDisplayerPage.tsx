@@ -19,10 +19,11 @@ import { PreloaderApp } from '@/PreloaderApp/PreloaderApp'
 import Presence from '@components/presence/Presence'
 import { fireRealtime } from '@helpers/firebase'
 import Logger from '@Utilities/logger'
-import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
+import { ArrowLeftOutlined, ArrowRightOutlined, LoadingOutlined } from '@ant-design/icons'
 import { useEventProgress } from '@context/eventProgressContext'
 import { StateMessage } from '@context/MessageService'
 import { FB } from '@helpers/firestore-request'
+import useIsDevOrStage from '@/hooks/useIsDevOrStage'
 
 const { setHasOpenSurveys } = SurveyActions
 
@@ -81,6 +82,7 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
       setActivity((previous: any) => ({
         ...previous,
         isPublished: snapshot.data()?.isPublished,
+        publishingStatusLoaded: true,
       }))
     })
 
@@ -163,6 +165,17 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
 
   if (!!activity && !activity.isPublished) {
     if (cEventUser.value?.rol?.type !== 'admin') {
+      if (!activity.publishingStatusLoaded) {
+        return (
+          <Result
+            status="info"
+            title="Cargando datos..."
+            subTitle="Esto puede demorar según tu conexión a Internet"
+            icon={<LoadingOutlined />}
+          />
+        )
+      }
+
       return (
         <Result
           status="403"
@@ -173,8 +186,13 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
     }
   }
 
+  const { isNotProd } = useIsDevOrStage()
+
   return (
     <div>
+      {isNotProd &&
+        activity &&
+        JSON.stringify({ content: activity.content, type: activity.type })}
       {!!activity && !activity.isPublished && cEventUser.value?.rol?.type === 'admin' && (
         <Alert
           type="warning"

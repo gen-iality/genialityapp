@@ -11,7 +11,7 @@ import { useEventContext } from '@context/eventContext'
 
 const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
   const { activity, onActivityProgress } = props
-  const urlVideo = activity?.video
+  const urlVideo = activity?.content?.reference
 
   const [activityState] = useState('')
   const [isItAnFrame, setIsItAnFrame] = useState(false)
@@ -29,16 +29,22 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
   }, [])
 
   useEffect(() => {
-    console.log(ref.current, activity?._id, cEventUser.value?._id)
+    console.debug(ref.current, activity?._id, cEventUser.value?._id)
     if (!ref.current) return
     if (!activity?._id) return
     if (!cEventUser.value?._id) return
 
     let unsubscribe: null | (() => void) = null
 
-    if (activity.type.name === 'cargarvideo') {
+    const contentType = activity.content?.type
+
+    if (contentType === 'video_url') {
       setIsItAnFrame(true)
-    } else {
+      // The external videos are marked as viewed because we CANNOT know the progress (for now)
+      if (typeof onActivityProgress === 'function') {
+        onActivityProgress(100)
+      }
+    } else if (contentType === 'vimeo_url' || contentType === 'youtube_url') {
       setIsItAnFrame(false)
 
       // Load the current view progress (with R after the G)
@@ -51,7 +57,7 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
 
           // Some problems
           if (data.viewProgress > 1) {
-            FB.Attendees.ref(activity._id, cEventUser.value._id).set(
+            FB.Attendees.ref(activity._id!, cEventUser.value._id).set(
               {
                 viewProgress: 1,
               },
@@ -67,19 +73,22 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
           setAttendeeRealTime(snapshot.data())
         },
       )
+    } else {
+      console.error('The content type', contentType, 'is unknown')
     }
 
     return () => {
       typeof unsubscribe === 'function' && unsubscribe()
     }
-  }, [activity, cEventUser.value, ref.current])
+  }, [activity, activity.content, cEventUser.value, ref.current])
 
   useEffect(() => {
     if (!viewedVideoProgress) return
-    console.log('vimeo timeupdate', activity, viewedVideoProgress)
+    console.debug('vimeo timeUpdate', activity, viewedVideoProgress)
 
-    if (typeof onActivityProgress === 'function')
+    if (typeof onActivityProgress === 'function') {
       onActivityProgress(viewedVideoProgress * 100)
+    }
   }, [viewedVideoProgress])
 
   useEffect(() => {

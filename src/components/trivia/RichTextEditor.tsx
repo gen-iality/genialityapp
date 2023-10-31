@@ -1,6 +1,12 @@
 import { FunctionComponent, useEffect, useState } from 'react'
 
 import ReactQuill from 'react-quill'
+import htmlEditButton from 'quill-html-edit-button'
+
+const { Quill } = ReactQuill
+Quill.register({
+  'modules/htmlEditButton': htmlEditButton,
+})
 
 interface IRichTextEditorProps {
   value?: string
@@ -22,7 +28,15 @@ const RichTextEditor: FunctionComponent<IRichTextEditorProps> = (props) => {
     }
   }, [incomingValue, isLoaded])
 
-  return <ReactQuill value={content} onChange={(content) => setContent(content)} />
+  return (
+    <ReactQuill
+      value={content}
+      onChange={(content) => setContent(content)}
+      modules={{
+        htmlEditButton: {},
+      }}
+    />
+  )
 }
 
 export default RichTextEditor

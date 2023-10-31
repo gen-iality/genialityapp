@@ -5,6 +5,7 @@ import { firestore } from './firebase'
 import dayjs from 'dayjs'
 import { GetTokenUserFirebase } from './HelperAuth'
 import { StateMessage } from '@context/MessageService'
+import AgendaType from '@Utilities/types/AgendaType'
 
 const publicInstance = axios.create({
   url: ApiUrl,
@@ -1528,6 +1529,14 @@ export const Activity = {
       {},
       true,
     )
+  },
+  Content: {
+    delete: async (activityId: string) => {
+      return await Actions.delete(`api/activities/${activityId}/content`)
+    },
+    update: async (activityId: string, data: AgendaType['content']) => {
+      return await Actions.edit(`api/activities/${activityId}/content`, data)
+    },
   },
 }
 

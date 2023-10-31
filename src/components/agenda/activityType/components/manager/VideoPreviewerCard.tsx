@@ -37,6 +37,7 @@ import { Actions } from '@helpers/request'
 interface VideoPreviewerCardProps {
   type: ActivityType.TypeAsDisplayment
   activityName: string
+  presetContent?: string
 }
 
 const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
@@ -55,7 +56,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
 
   console.debug('VideoPreviewerCard.dataLive:', dataLive)
 
-  if (!data) data = meeting_id
+  if (!data) data = meeting_id ?? props.presetContent
 
   // Render the ifram or gCore component
   const renderPlayer = () => {

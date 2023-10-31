@@ -1,3 +1,5 @@
+import dayjs from 'dayjs'
+
 type WishedT = { order?: number; datetime_start?: any }
 
 /**
@@ -43,6 +45,10 @@ export default function orderActivities<T extends WishedT>(activities: T[]) {
     } else if (typeof a.order === 'number') {
       return -1
     } else if (typeof b.order === 'number') {
+      return 1
+    } else if (typeof a.datetime_start === 'undefined') {
+      return -1
+    } else if (typeof b.datetime_start === 'undefined') {
       return 1
     }
     return b.datetime_start.localeCompare(-a.datetime_start)
