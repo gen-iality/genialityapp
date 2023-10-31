@@ -25,7 +25,19 @@ export const columns = (goToEvent: GoToEvent, columnsData: any, openModal: OpenM
   {
     title: 'Fecha de inicio',
     dataIndex: 'startDate',
+    sorter: (a, b) => {
+      const getDateStart = (item:any) => {
+        if (item?.dates && item.dates.length > 0) {
+          return moment(item.dates[0]?.start);
+        }
+        return moment(item.datetime_from);
+      };
 
+      const dateStartA = getDateStart(a);
+      const dateStartB = getDateStart(b);
+
+      return dateStartA.diff(dateStartB);
+    },
     render(val, item) {
       let dateStart;
       if (item?.dates && Array.isArray(item?.dates) && item?.dates?.length > 0) {
