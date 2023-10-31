@@ -6,6 +6,8 @@ import { WarningOutlined } from '@ant-design/icons'
 import { AvailableActivityType } from './ActivityContentSelector2'
 import editActivityType from './utils/editActivityType'
 import { StateMessage } from '@context/MessageService'
+import useIsDevOrStage from '@/hooks/useIsDevOrStage'
+import { TypesAgendaApi } from '@helpers/request'
 
 type ActivityTypeSelectorRebornProps = {
   eventId: string
@@ -26,6 +28,8 @@ const ActivityTypeSelectorReborn: FunctionComponent<ActivityTypeSelectorRebornPr
     useState<AvailableActivityType | null>(activity?.type?.name ?? null)
   const [confirmedSelection, setConfirmedSelection] =
     useState<AvailableActivityType | null>(null)
+
+  const { isNotProd } = useIsDevOrStage()
 
   const handleSetActivityType = () => {
     setIsModalShown(true)
@@ -89,7 +93,37 @@ const ActivityTypeSelectorReborn: FunctionComponent<ActivityTypeSelectorRebornPr
       />
 
       {activityType !== null ? (
-        <Alert type="info" message={`Actividad de tipo: ${activityType}`} />
+        <Alert
+          type="info"
+          message={`Actividad de tipo: ${activityType}`}
+          onClick={() => {
+            Modal.confirm({
+              title: '¿Borrar tipo de actividad?',
+              content: `¿Desea borrar el tipo de actividad: ${activityType} ¶ aID: ${
+                activity._id
+              } eID: ${eventId} tID: ${(activity.type as any)?._id}`,
+              onOk: () => {
+                TypesAgendaApi.deleteOne((activity.type as any)?._id, eventId)
+                  .then(() => {
+                    StateMessage.show(
+                      null,
+                      'success',
+                      'El tipo de actividad ha sido borrado',
+                    )
+                    setActivityType(null)
+                  })
+                  .catch((err) => {
+                    console.error(err)
+                    StateMessage.show(
+                      null,
+                      'error',
+                      `No se puede borrar el tipo de actividad: ${err}`,
+                    )
+                  })
+              },
+            })
+          }}
+        />
       ) : (
         <Row>
           <Col span={2}>
