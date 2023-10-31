@@ -4,7 +4,6 @@ import dayjs from 'dayjs'
 import momentLocalizer from 'react-widgets-moment'
 import Loading from '../loaders/loading'
 import { EventsApi } from '@helpers/request'
-import ListEventUser_Old from '../event-users/index'
 import ListEventUserPage from '../event-users/ListEventUserPage'
 import { fetchRol } from '../../redux/rols/actions'
 import { fetchPermissions } from '../../redux/permissions/actions'
@@ -309,26 +308,11 @@ class EventAdminRoutes extends Component<
                 path="reportNetworking"
                 element={<ReportNetworking event={event} />}
               />
-              <Route
-                path="assistants.old"
-                element={<ListEventUser_Old shownAll eventId={event._id} event={event} />}
-              />
               <Route path="assistants" element={<ListEventUserPage event={event} />} />
 
               <Route
                 path="chatexport"
                 element={<ChatExport eventId={event._id} event={event} />}
-              />
-              <Route
-                path="checkin.old/:id"
-                element={
-                  <ListEventUser_Old
-                    eventId={event._id}
-                    event={event}
-                    type="activity"
-                    shownAll={false}
-                  />
-                }
               />
               <Route
                 path="checkin/:activityId"

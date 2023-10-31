@@ -26,6 +26,9 @@ export const calcProgress = (current: number, total: number) => {
   return percent
 }
 
+/**
+ * @deprecated The progress is gotten from the property activity_progresses to avoid double requesting
+ */
 const EventProgressWrapper: FunctionComponent<IEventProgressWrapperProps> = (props) => {
   const { event, eventUser, render, onLoading } = props
 
