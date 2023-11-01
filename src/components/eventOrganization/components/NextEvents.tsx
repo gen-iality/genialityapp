@@ -7,10 +7,10 @@ import EventCard from '@/components/shared/eventCard';
 const { Title } = Typography;
 
 interface Props {
-  events: any[];
+	events: any[];
 }
 export const NextEvents = ({ events }: Props) => {
-  const { filteredList, searchTerm, setSearchTerm } = useSearchList(events, 'name');
+	const { filteredList, searchTerm, setSearchTerm } = useSearchList(events, 'name');
 
 	return (
 		<Card
@@ -25,7 +25,7 @@ export const NextEvents = ({ events }: Props) => {
 			style={{ width: '100%', borderRadius: 20 }}>
 			<Row gutter={[0, 32]}>
 				<Col span={24}>
-					<Row gutter={[16, 16]}>
+					<Row style={{ overflowY: 'auto', minHeight: '300px', maxHeight: '500px' }} gutter={[16, 16]}>
 						{events && events.length > 0 ? (
 							<>
 								{filteredList.length > 0 ? (
