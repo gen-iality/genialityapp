@@ -31,7 +31,7 @@ export const columns = (
   columnsData,
   editModalUser,
   extraFields,
-  togglePaymentPlan,
+  paymentPlan,
   organization,
   changeUserToChangePassword,
 ) => {
@@ -110,14 +110,34 @@ export const columns = (
     sorter: (a, b) =>
       (a.payment_plan?.date_until ?? 0) - (b.payment_plan?.date_until ?? 0),
     // ...membersGetColumnSearchProps('payment_plan'),
-    render(payment_plan) {
-      if (!payment_plan) return 'Sin plan'
-      if (!payment_plan.date_until) return 'Indefinido'
-      const date = dayjs(payment_plan.date_until)
-      if (date.isValid()) {
-        return 'Hasta: ' + date.format('YYYY/MM/DD')
-      }
-      return 'Fecha inválida'
+    render(payment_plan, item) {
+      return (
+        <Button
+          type={!payment_plan?.date_until ? 'primary' : undefined}
+          title={payment_plan?.date_until ? 'Quitar premium' : 'Hacer premium'}
+          onClick={() => {
+            Modal.confirm({
+              title: payment_plan?.date_until
+                ? '¿Remover plan de pago?'
+                : '¿Hacer premium?',
+              content: '',
+              onOk: () => {
+                if (payment_plan?.date_until) {
+                  paymentPlan.removePaymentPlan(item)
+                } else {
+                  paymentPlan.makePaymentPlan(item)
+                }
+              },
+            })
+          }}
+        >
+          {!payment_plan
+            ? 'Sin plan'
+            : !payment_plan.date_until
+            ? 'Indefinido'
+            : `Hasta: ${dayjs(payment_plan.date_until).format('YYYY/MM/DD')}`}
+        </Button>
+      )
     },
   }
 
@@ -258,18 +278,6 @@ export const columns = (
               icon={<KeyOutlined />}
             ></Button>
           </Tooltip>
-          {organization.access_settings?.type === 'payment' && (
-            <Tooltip title={item.payment_plan ? 'Quitar premium' : 'Hace premium'}>
-              <Button
-                type={item.payment_plan ? 'ghost' : 'primary'}
-                size="small"
-                onClick={() => {
-                  togglePaymentPlan(item)
-                }}
-                icon={<RiseOutlined />}
-              ></Button>
-            </Tooltip>
-          )}
         </>
       )
     },
