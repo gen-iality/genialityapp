@@ -111,6 +111,7 @@ export const columns = (
       (a.payment_plan?.date_until ?? 0) - (b.payment_plan?.date_until ?? 0),
     // ...membersGetColumnSearchProps('payment_plan'),
     render(payment_plan) {
+      if (!payment_plan) return 'Sin plan'
       if (!payment_plan.date_until) return 'Indefinido'
       const date = dayjs(payment_plan.date_until)
       if (date.isValid()) {
@@ -130,6 +131,7 @@ export const columns = (
       (a.payment_plan?.date_until ?? 0) - (b.payment_plan?.date_until ?? 0),
     // ...membersGetColumnSearchProps('payment_plan'),
     render(payment_plan) {
+      if (!payment_plan) return 'Sin registro'
       if (!payment_plan.date_until) return '~'
       const date = dayjs(payment_plan.date_until)
       if (date.isValid()) {
@@ -149,6 +151,7 @@ export const columns = (
     sorter: (a, b) => (a.payment_plan?.price ?? 0) - (b.payment_plan?.price ?? 0),
     // ...membersGetColumnSearchProps('payment_plan'),
     render(payment_plan) {
+      if (!payment_plan) return '0'
       if (!payment_plan.price) return 'Gratis'
       if (payment_plan.price === 0) return 'Gratis'
       return `$${payment_plan.price}`
@@ -167,6 +170,25 @@ export const columns = (
       if (!payment_plan) return 'Sin datos'
       if (payment_plan.days > 365 * 10) return 'Siempre'
       return payment_plan.days
+    },
+  }
+
+  const payment_plan_updated_at = {
+    title: 'Última actualización del plan',
+    dataIndex: 'payment_plan',
+    key: 'payment_plan_updated_at',
+    width: '140px',
+    ellipsis: true,
+    sorter: (a, b) =>
+      (a.payment_plan?.updated_at ?? 0) - (b.payment_plan?.updated_at ?? 0),
+    // ...membersGetColumnSearchProps('payment_plan'),
+    render(payment_plan) {
+      if (!payment_plan?.updated_at) return 'Sin datos'
+      const date = dayjs(payment_plan.updated_at)
+      if (date.isValid()) {
+        return date.format('YYYY/MM/DD')
+      }
+      return 'Fecha inválida'
     },
   }
 
@@ -258,6 +280,7 @@ export const columns = (
 
     if (organization.access_settings?.type === 'payment') {
       newColumns.push(payment_plan)
+      newColumns.push(payment_plan_updated_at)
       newColumns.push(payment_plan_price)
       newColumns.push(payment_plan_days)
       newColumns.push(payment_plan_days_count)
