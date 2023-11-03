@@ -10,7 +10,7 @@ const useGetPassEvents = (organizationId: string) => {
     try {
       const currentDate = moment().format('YYYY-MM-DD');
 
-      const data = await OrganizationFuction.getEventsNextByOrg(organizationId, 'desc', currentDate, 'past');
+      const data = await OrganizationFuction.getEventsByOrg(organizationId, 'desc', currentDate, 'past');
       return data;
     } catch (error) {
       throw error;

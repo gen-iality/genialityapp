@@ -9,7 +9,7 @@ const useGetNextEvents = (organizationId: string) => {
   const getNextEvents = useCallback(async (): Promise<any[]> => {
     try {
       const currentDate = moment().format('YYYY-MM-DD');
-      const data = await OrganizationFuction.getEventsNextByOrg(organizationId, 'asc', currentDate, 'future');
+      const data = await OrganizationFuction.getEventsByOrg(organizationId, 'asc', currentDate, 'future');
       return data;
     } catch (error) {
       throw error;
