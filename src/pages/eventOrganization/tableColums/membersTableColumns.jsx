@@ -25,12 +25,13 @@ import {
 
 /** Helpers and utils */
 import { membersGetColumnSearchProps } from '../searchFunctions/membersGetColumnSearchProps'
+import dayjs from 'dayjs'
 
 export const columns = (
   columnsData,
   editModalUser,
   extraFields,
-  togglePaymentPlan,
+  paymentPlan,
   organization,
   changeUserToChangePassword,
 ) => {
@@ -106,11 +107,108 @@ export const columns = (
     key: 'payment_plan',
     width: '140px',
     ellipsis: true,
-    sorter: (a, b) => (a.payment_plan?.price ?? 0) - (b.payment_plan?.price ?? 0),
-    ...membersGetColumnSearchProps('payment_plan'),
+    sorter: (a, b) =>
+      (a.payment_plan?.date_until ?? 0) - (b.payment_plan?.date_until ?? 0),
+    // ...membersGetColumnSearchProps('payment_plan'),
+    render(payment_plan, item) {
+      return (
+        <Button
+          type={!payment_plan?.date_until ? 'primary' : undefined}
+          title={payment_plan?.date_until ? 'Quitar premium' : 'Hacer premium'}
+          onClick={() => {
+            Modal.confirm({
+              title: payment_plan?.date_until
+                ? '¿Remover plan de pago?'
+                : '¿Hacer premium?',
+              content: '',
+              onOk: () => {
+                if (payment_plan?.date_until) {
+                  paymentPlan.removePaymentPlan(item)
+                } else {
+                  paymentPlan.makePaymentPlan(item)
+                }
+              },
+            })
+          }}
+        >
+          {!payment_plan
+            ? 'Sin plan'
+            : !payment_plan.date_until
+            ? 'Indefinido'
+            : `Hasta: ${dayjs(payment_plan.date_until).format('YYYY/MM/DD')}`}
+        </Button>
+      )
+    },
+  }
+
+  const payment_plan_days_count = {
+    title: 'Días faltantes',
+    dataIndex: 'payment_plan',
+    key: 'payment_plan_days_count',
+    width: '140px',
+    ellipsis: true,
+    sorter: (a, b) =>
+      (a.payment_plan?.date_until ?? 0) - (b.payment_plan?.date_until ?? 0),
+    // ...membersGetColumnSearchProps('payment_plan'),
     render(payment_plan) {
-      // console.log('payment_plan', payment_plan)
-      return payment_plan?.price ? 'Premium' : 'Free'
+      if (!payment_plan) return 'Sin registro'
+      if (!payment_plan.date_until) return '~'
+      const date = dayjs(payment_plan.date_until)
+      if (date.isValid()) {
+        const days = date.diff(dayjs(Date.now()), 'days')
+        return days !== 1 ? `${days} días` : `${days} día`
+      }
+      return '*'
+    },
+  }
+
+  const payment_plan_price = {
+    title: 'Plan pagado',
+    dataIndex: 'payment_plan',
+    key: 'payment_plan_price',
+    width: '140px',
+    ellipsis: true,
+    sorter: (a, b) => (a.payment_plan?.price ?? 0) - (b.payment_plan?.price ?? 0),
+    // ...membersGetColumnSearchProps('payment_plan'),
+    render(payment_plan) {
+      if (!payment_plan) return '0'
+      if (!payment_plan.price) return 'Gratis'
+      if (payment_plan.price === 0) return 'Gratis'
+      return `$${payment_plan.price}`
+    },
+  }
+
+  const payment_plan_days = {
+    title: 'Días pagados',
+    dataIndex: 'payment_plan',
+    key: 'payment_plan_days',
+    width: '140px',
+    ellipsis: true,
+    sorter: (a, b) => (a.payment_plan?.days ?? 0) - (b.payment_plan?.days ?? 0),
+    // ...membersGetColumnSearchProps('payment_plan'),
+    render(payment_plan) {
+      if (!payment_plan) return 'Sin datos'
+      if (payment_plan.days > 365 * 10) return 'Siempre'
+      return payment_plan.days
+    },
+  }
+
+  const payment_plan_updated_at = {
+    title: 'Última actualización del plan',
+    dataIndex: 'payment_plan',
+    key: 'payment_plan_updated_at',
+    width: '140px',
+    ellipsis: true,
+    sorter: (a, b) =>
+      (a.payment_plan?.updated_at ?? 0) - (b.payment_plan?.updated_at ?? 0),
+    // ...membersGetColumnSearchProps('payment_plan'),
+    render(payment_plan) {
+      if (!payment_plan?.updated_at) return 'Sin datos'
+      const date = dayjs(payment_plan.updated_at)
+      if (date.isValid()) {
+        return date.format('YYYY/MM/DD')
+      }
+      return 'Fecha inválida'
     },
   }
 
@@ -180,18 +278,6 @@ export const columns = (
               icon={<KeyOutlined />}
             ></Button>
           </Tooltip>
-          {organization.access_settings?.type === 'payment' && (
-            <Tooltip title={item.payment_plan ? 'Quitar premium' : 'Hace premium'}>
-              <Button
-                type={item.payment_plan ? 'ghost' : 'primary'}
-                size="small"
-                onClick={() => {
-                  togglePaymentPlan(item)
-                }}
-                icon={<RiseOutlined />}
-              ></Button>
-            </Tooltip>
-          )}
         </>
       )
     },
@@ -200,7 +286,13 @@ export const columns = (
   useEffect(() => {
     const newColumns = [picture, ...dynamicColumns]
 
-    organization.access_settings?.type === 'payment' && newColumns.push(payment_plan)
+    if (organization.access_settings?.type === 'payment') {
+      newColumns.push(payment_plan)
+      newColumns.push(payment_plan_updated_at)
+      newColumns.push(payment_plan_price)
+      newColumns.push(payment_plan_days)
+      newColumns.push(payment_plan_days_count)
+    }
     newColumns.push(created_at)
     newColumns.push(updated_at)
     newColumns.push(editOption)

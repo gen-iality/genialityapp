@@ -315,30 +315,38 @@ const OrganizationMembersPage: FunctionComponent<IOrganizationMembersPageProps> 
     })
   }
 
-  const togglePaymentPlan = async (_organizationMember: any) => {
-    const organizationMember = {
-      ..._organizationMember,
-      payment_plan: _organizationMember.payment_plan
-        ? null
-        : {
-            date_until: dayjs(Date.now())
-              .add(access_settings?.days ?? 15, 'day')
-              .toDate(),
-            price: access_settings?.price ?? 0,
-          },
-    }
-
-    const result = await OrganizationApi.editUser(
-      organizationId,
-      organizationMember._id,
-      organizationMember,
+  const makePaymentPlan = async (organizationUser: any) => {
+    OrganizationApi.createPaymentPlan(
+      organizationUser['_id'],
+      access_settings?.days ?? 15,
+      access_settings?.price ?? 0,
     )
-    console.debug('changing payment plan: ', result)
-    setIsLoading(true)
-    await updateDataMembers()
+      .then(() => {
+        StateMessage.show(
+          null,
+          'success',
+          `usuario ${organizationUser['names']} tiene plan de pago`,
+        )
+      })
+      .catch((err) => {
+        console.error(err)
+        StateMessage.show(null, 'error', err)
+      })
+  }
 
-    const moreInfo = organizationMember.payment_plan ? 'pago' : 'no pago'
-    StateMessage.show(null, 'success', 'Estado del usuario cambiado a: ' + moreInfo)
+  const removePaymentPlan = async (organizationUser: any) => {
+    OrganizationApi.deletePaymentPlan(organizationUser['_id'])
+      .then(() => {
+        StateMessage.show(
+          null,
+          'success',
+          `usuario ${organizationUser['names']} ya NO TIENE plan de pago`,
+        )
+      })
+      .catch((err) => {
+        console.error(err)
+        StateMessage.show(null, 'error', err)
+      })
   }
 
   const columnsData = {
@@ -369,7 +377,10 @@ const OrganizationMembersPage: FunctionComponent<IOrganizationMembersPageProps> 
           columnsData,
           editModalUser,
           extraFields,
-          togglePaymentPlan,
+          {
+            makePaymentPlan,
+            removePaymentPlan,
+          },
           props.org,
           (user: any) => setUserToChangePassword(user),
         )}
