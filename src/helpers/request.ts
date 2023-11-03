@@ -952,6 +952,20 @@ export const OrganizationApi = {
     )
     return certificates as any[]
   },
+  createPaymentPlan: async (organizationUserId: string, days: number, price: number) => {
+    return await Actions.post(
+      `/api/organization_users/${organizationUserId}/payment_plan`,
+      { days, price },
+      true,
+    )
+  },
+  deletePaymentPlan: async (organizationUserId: string) => {
+    return await Actions.delete(
+      `/api/organization_users/${organizationUserId}/payment_plan`,
+      '',
+      true,
+    )
+  },
 }
 export const BadgeApi = {
   create: async (data) => {
