@@ -3,20 +3,20 @@ import { CertsApi, EventsApi, RolAttApi } from '../../helpers/request';
 import { useHistory, withRouter } from 'react-router-dom';
 import { handleRequestError } from '../../helpers/utils';
 import { Row, Col, Form, Input, Modal, Select, Button, Upload, Image } from 'antd';
-import { ExclamationCircleOutlined, UploadOutlined, ExclamationOutlined, ArrowDownOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, UploadOutlined, ExclamationOutlined } from '@ant-design/icons';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import moment from 'moment';
 import { firestore } from '../../helpers/firebase';
 import { DispatchMessageService } from '../../context/MessageService';
 import { ICertificado, CertificatesProps, CertifiRow } from './types';
-import CertificadoRow from './components/CertificadoRows';
+import CertificadoRow_Old from './components/CertificadoRows_old';
 import { ArrayToStringCerti, defaultCertRows, replaceAllTagValues } from './utils';
 import { PropertyTypeUser, imgBackground } from './utils/constants';
 import { UseUserEvent } from '@/context/eventUserContext';
+import RowsCertificate from './components/RowsCertificate';
 
 const { confirm } = Modal;
-const { Option } = Select;
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -86,6 +86,7 @@ const Certificado: FC<CertificatesProps> = (props) => {
       setCertificateRows(uptadeRows);
     }
   };
+
   const onSubmit = async () => {
     if (certificado.name) {
       DispatchMessageService({
@@ -94,7 +95,6 @@ const Certificado: FC<CertificatesProps> = (props) => {
         msj: 'Por favor espere mientras se guarda la información...',
         action: 'show',
       });
-
       try {
         if (locationState.edit) {
           const data = {
@@ -203,11 +203,6 @@ const Certificado: FC<CertificatesProps> = (props) => {
   };
   const selectChange = (data: string[]) => {
     setCertificado((prev) => ({ ...prev, userTypes: data }));
-  };
-
-  const getRoles = async () => {
-    const data = await RolAttApi.byEvent(props.event._id);
-    setRoles(data);
   };
 
   const getTypes = async () => {
@@ -419,9 +414,11 @@ const Certificado: FC<CertificatesProps> = (props) => {
             </Col>
           </Row>
 
-          <Form.Item label={'Certificado'} name={'content'}>
-            <CertificadoRow handleDragEnd={handleDragEnd} rows={certificateRows} onChange={setCertificateRows} />
-          </Form.Item>
+          {/* <Form.Item label={'Certificado'} name={'content'}>
+            <CertificadoRow_Old handleDragEnd={handleDragEnd} rows={certificateRows} onChange={setCertificateRows} />
+          </Form.Item> */}
+
+          <RowsCertificate handleDragEnd={handleDragEnd} certificateRows={certificateRows}/>
         </Col>
       </Row>
       <BackTop />

@@ -5,7 +5,7 @@ import { DefaultOptionType } from 'antd/lib/cascader';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { ColumnType } from 'antd/lib/table';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { lastID } from '../utils';
 import DragIcon from '@2fd/ant-design-icons/lib/DragVertical';
 interface ICertificateRowsProps {
@@ -15,7 +15,10 @@ interface ICertificateRowsProps {
 }
 
 export default function CertificadoRow(props: ICertificateRowsProps) {
+  const [certificateRows, setCertificateRows] = useState<CertifiRow[]>([]);
+
   const { rows, onChange, handleDragEnd } = props;
+
   const [inputCurrent, setinputCurrent] = useState<string| number |null>(null)
   const SortableItem: any = SortableElement((props: any) => <tr {...props} />);
   const SortableBody: any = SortableContainer((props: any) => <tbody {...props} />);
@@ -30,29 +33,29 @@ export default function CertificadoRow(props: ICertificateRowsProps) {
 
 
   const change = (index: number) => {
-    delete rows[index];
-    const newa = rows.filter((item) => item);
-    onChange(newa);
+    delete certificateRows[index];
+    const newa = certificateRows.filter((item) => item);
+    setCertificateRows(newa);
   };
 
   const selectChange = (type: RowCert, index: number) => {
-    const newRows = [...rows];
-    const row = { ...rows[index] };
+    const newRows = [...certificateRows];
+    const row = { ...certificateRows[index] };
     row.type = type;
     row.content = '...';
     row.times = 1;
     newRows[index] = row;
-    onChange(newRows);
+    setCertificateRows(newRows);
   };
 
   const inputChange = (value: string, index: number, type: RowCert) => {
-    const newRows = [...rows];
+    const newRows = [...certificateRows];
     if (type === 'break') {
       newRows[index].times = +value;
     } else if (typeof value === 'string') {
       newRows[index].content = value;
     }
-    onChange(newRows);
+    setCertificateRows(newRows);
   };
   const possibleType: DefaultOptionType[] = [
     {
@@ -131,15 +134,27 @@ export default function CertificadoRow(props: ICertificateRowsProps) {
       )
     }
   ];
+
+  useEffect(() => {
+    setCertificateRows(rows)
+  }, [rows])
+  
   return (
     <>
     <Row style={{ display: 'flex', flexDirection: 'row-reverse' }}>
           <Button
             onClick={() => {
-              onChange([...rows, { id: lastID(rows), type: 'text', content: '...' }]);
+              setCertificateRows([...certificateRows, { id: lastID(certificateRows), type: 'break', content: '...' }]);
             }}
             icon={<PlusCircleFilled />}>
             Agregar
+          </Button>
+          <Button
+            onClick={() => {
+              onChange(certificateRows)
+            }}
+            icon={<PlusCircleFilled />}>
+            Guardar
           </Button>
         </Row>
     <DragDropContext onDragEnd={handleDragEnd}>
@@ -149,7 +164,7 @@ export default function CertificadoRow(props: ICertificateRowsProps) {
           ref={provided.innerRef} 
           tableLayout='auto'
           style={{ padding: '30px 0', cursor: 'pointer' }}
-          dataSource={rows}
+          dataSource={certificateRows}
           columns={columns as ColumnType<CertifiRow>[]}
           pagination={false}
           bordered={false}
