@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { convertUTC } from '@/hooks/useConvertUTC';
 import { useGetOrganizationUsers } from '../../hooks/useGetOrganizationUsers';
-
 export const useGetEventsStatisticsData = (organizationId: string) => {
   const { getDataOrgUser, isLoadingOrgUsers, organizationUsers, pagination } = useGetOrganizationUsers(organizationId);
   const [membersParsed, setMembersParsed] = useState<any[]>([]);

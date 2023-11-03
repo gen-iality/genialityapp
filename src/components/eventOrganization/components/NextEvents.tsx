@@ -3,32 +3,34 @@ import React from 'react';
 import { InputSearchEvent } from './InputSearchEvent';
 import { useSearchList } from '@/hooks/useSearchList';
 import EventCard from '@/components/shared/eventCard';
+import useGetNextEvents from '../hooks/useGetNextEvents';
 
 const { Title } = Typography;
 const { useBreakpoint } = Grid;
 
 interface Props {
-	events: any[];
+	organizationId: string;
 }
-export const NextEvents = ({ events }: Props) => {
+export const NextEvents = ({ organizationId }: Props) => {
 	const screens = useBreakpoint();
-	const { filteredList, searchTerm, setSearchTerm } = useSearchList(events, 'name');
+	const { nextEvents } = useGetNextEvents(organizationId)
+	const { filteredList, setSearchTerm } = useSearchList(nextEvents, 'name');
 
 	return (
 		<Card
 			bodyStyle={{ paddingTop: '0px' }}
 			headStyle={{ border: 'none' }}
 			title={
-				<Badge offset={[60, 22]} count={`${events.length} Eventos`}>
+				<Badge offset={[60, 22]} count={`${nextEvents.length} Eventos`}>
 					<Title level={screens.xs ? 4 : 2}>Próximos eventos</Title>
 				</Badge>
 			}
-			extra={<Space>{events.length > 0 && <InputSearchEvent onHandled={setSearchTerm} />}</Space>}
+			extra={<Space>{nextEvents.length > 0 && <InputSearchEvent onHandled={setSearchTerm} />}</Space>}
 			style={{ width: '100%', borderRadius: 20 }}>
 			<Row gutter={[0, 32]}>
 				<Col span={24}>
 					<Row style={{ overflowY: 'auto', minHeight: '300px', maxHeight: '500px' }} gutter={[16, 16]}>
-						{events && events.length > 0 ? (
+						{nextEvents && nextEvents.length > 0 ? (
 							<>
 								{filteredList.length > 0 ? (
 									filteredList.map((event, index) => (

@@ -8,7 +8,7 @@ import { columns } from './tableColums/membersTableColumns';
 import withContext from '../../context/withContext';
 import Header from '../../antdComponents/Header';
 import { ModalAddAndEditUsers } from './components/ModalAddAndEditUsersOrganization';
-import { useGetEventsStatisticsData } from './tableColums/utils/useGetOrganizations';
+import { useGetEventsStatisticsData } from './tableColums/utils/useGetEventsStatisticsData';
 import { parseMembersColumsExcel, parseDataMembersToExcel } from './tableColums/utils/parseData.utils';
 import { ExportExcel } from '@/components/export-excel/ExportExcel';
 

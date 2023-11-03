@@ -2,8 +2,6 @@ import { DispatchMessageService } from '@/context/MessageService';
 import { OrganizationApi } from '@/helpers/request';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
-// import { useGetEventsStatisticsData } from './useGetOrganizations';
-// const { fetchEventsStatisticsData} = useGetEventsStatisticsData()
 export async function handleDeleteUser(org, user, fetchEventsStatisticsData) {
   try {
     DispatchMessageService({

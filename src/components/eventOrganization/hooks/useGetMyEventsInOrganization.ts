@@ -37,27 +37,30 @@ export const useGetMyEventsInOrganization = (
     );
     return eventsFreeFilter;
   };
+
+  const fetchEventsFree = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const free_events = await getEventsFreeAcces();
+      const eventsFreeToOrgUser = await getEventWithOrgUser();
+      const eventsFreeFilteredByorgUser = filterEventsFreeAccesToOrgUser(free_events, eventsFreeToOrgUser);
+      setEventsFreeToOneOreUse(eventsFreeFilteredByorgUser);
+    } catch (error) {
+      setEventsFreeToOneOreUse([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [getEventsFreeAcces, getEventWithOrgUser]);
+
   useEffect(() => {
-    const fetchEventsFree = async () => {
-      try {
-        setIsLoading(true);
-        const free_events = await getEventsFreeAcces();
-        const eventsFreeToOrgUser = await getEventWithOrgUser();
-        const eventsFreeFilteredByorgUser = filterEventsFreeAccesToOrgUser(free_events, eventsFreeToOrgUser);
-        setEventsFreeToOneOreUse(eventsFreeFilteredByorgUser);
-      } catch (error) {
-        setEventsFreeToOneOreUse([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
     fetchEventsFree();
-  }, [getEventsFreeAcces]);
+  }, [fetchEventsFree]);
 
   return {
     eventsFreeToOneOreUse,
     isLoadingEventsFreeToOneOreUs,
     getEventsFreeAcces,
     eventsWithEventUser,
+    fetchEventsFree
   };
 };
