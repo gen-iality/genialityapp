@@ -1601,8 +1601,8 @@ export const ActivityBySpeaker = {
 
 export const OrganizationFuction = {
   // OBTENER EVENTOS PROXIMOS POR ORGANIZACION
-  getEventsNextByOrg: async (orgId, order = 'asc') => {
-    const events = await Actions.getAll(`api/organizations/${orgId}/events?order=${order}`);
+  getEventsNextByOrg: async (orgId, order = 'asc', date = '', type = '') => {
+    const events = await Actions.getAll(`api/organizations/${orgId}/events?order=${order}&date=${date}&type=${type}`);
     return events;
   },
 
