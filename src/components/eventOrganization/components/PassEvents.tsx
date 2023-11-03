@@ -42,7 +42,7 @@ export const PassEvents = ({ eventsOld, isUserRegisterInEvent, havePaymentEvent 
 			style={{ width: '100%', borderRadius: 20 }}>
 			<Row gutter={[0, 32]}>
 				<Col span={24}>
-					<Row gutter={[16, 16]}>
+					<Row style={{ overflowY: 'auto', minHeight: '300px', maxHeight: '500px' }} gutter={[16, 16]}>
 						{eventsOld && eventsOld.length > 0 ? (
 							<>
 								{filteredList.length > 0 ? (
