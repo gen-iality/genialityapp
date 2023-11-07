@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Checkbox, Modal } from 'antd'
 import { CheckboxChangeEvent } from 'antd/es/checkbox'
-import dayjs from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import { AttendeeCheckInPropsTypes } from '@Utilities/types/types'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { saveCheckInAttendee } from '@/services/checkinServices/checkinServices'
+import { Timestamp } from 'firebase/firestore'
+import { parseFirebaseDate } from '@components/event-users/utils/parseFirebaseDate'
 
 /**
  * This function is a React component that generates a checkBox, which saves the user's checkIn and allows to delete it after making a confirmation to execute the requested action
@@ -60,13 +62,22 @@ const AttendeeCheckInCheckbox = ({
     })
   }
 
+  const processedDate = useMemo(() => {
+    const date = parseFirebaseDate(attemdeeCheckedinAt)
+    if (dayjs.isDayjs(date) && date.isValid()) {
+      return date.format('D/MMM/YYYY H:mm:ss A')
+    }
+
+    return date
+  }, [attemdeeCheckedinAt])
+
   return (
     <>
       {_id && (
         <Checkbox checked={attemdeeCheckIn} onChange={saveAttemdeeCheckIn}>
           <b>
-            {attemdeeCheckIn
-              ? `${dayjs(attemdeeCheckedinAt).format('D/MMM/YYYY H:mm:ss A')}`
+            {attemdeeCheckIn && processedDate
+              ? processedDate.toString()
               : 'Registrar ingreso'}
           </b>
         </Checkbox>

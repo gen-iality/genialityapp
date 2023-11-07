@@ -8,7 +8,6 @@ import { StateMessage } from '@context/MessageService'
 import { uploadImagedummyRequest } from '@/Utilities/imgUtils'
 import { FieldType } from './types'
 
-dayjs.locale('es')
 momentLocalizer()
 
 interface IImportationProps {

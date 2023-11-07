@@ -57,7 +57,8 @@ import EnrollEventUserFromOrganizationMember from './EnrollEventUserFromOrganiza
 import ModalPassword from './ModalPassword'
 import { FilterConfirmProps } from 'antd/lib/table/interface'
 import filterActivitiesByProgressSettings from '@Utilities/filterActivitiesByProgressSettings'
-import { Timestamp } from 'firebase/firestore'
+
+import { parseFirebaseDate } from './utils/parseFirebaseDate'
 
 interface ITimeTrackingStatsProps {
   user: any
@@ -629,18 +630,9 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         const data = result.data()
 
         // Fix the date
-        if (dayjs.isDayjs(data.checkedin_at))
-          data.checkedin_at = dayjs(data.checkedin_at.toDate())
-
-        if (dayjs.isDayjs(data.created_at))
-          data.created_at = dayjs(data.created_at.toDate())
-        else if (data.created_at instanceof Timestamp)
-          data.created_at = dayjs(new Date(data.created_at.seconds * 1000))
-
-        if (dayjs.isDayjs(data.updated_at))
-          data.updated_at = dayjs(data.updated_at.toDate())
-        else if (data.updated_at instanceof Timestamp)
-          data.updated_at = dayjs(new Date(data.updated_at.seconds * 1000))
+        data.checkedin_at = parseFirebaseDate(data.checkedin_at)
+        data.created_at = parseFirebaseDate(data.created_at)
+        data.updated_at = parseFirebaseDate(data.updated_at)
 
         // Ant Design wont calc progresses of non-rendered component, then we have
         // to pre-calc this value in a way non-reactable
