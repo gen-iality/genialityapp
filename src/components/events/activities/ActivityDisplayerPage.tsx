@@ -24,6 +24,7 @@ import { useEventProgress } from '@context/eventProgressContext'
 import { StateMessage } from '@context/MessageService'
 import { FB } from '@helpers/firestore-request'
 import useIsDevOrStage from '@/hooks/useIsDevOrStage'
+import { AvailableContentType } from '@components/agenda/activityType/ActivityContentSelector2'
 
 const { setHasOpenSurveys } = SurveyActions
 
@@ -60,6 +61,12 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
     console.debug('percentajeRequired:', percentajeRequired, 'current:', progress)
 
     if (progress >= percentajeRequired) {
+      console.debug(
+        'call activityProgressCallback with progress:',
+        progress,
+        'and percentajeRequired:',
+        percentajeRequired,
+      )
       checkinAttendeeInActivity(cEventUser.value, params?.activity_id).then((info) => {
         console.log('attendee creating/updating:', info)
         if (!wasNotifiedForProgress) {
@@ -93,6 +100,7 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
 
   useEffect(() => {
     AgendaApi.getOne(params.activity_id, cEvent.value._id).then((result) => {
+      console.debug('AgendaApi.getOne:', result)
       helperDispatch({ type: 'currentActivity', currentActivity: result })
       setActivity((previous: any) => ({ ...previous, ...result }))
       setOrderedHost((result.hosts as any[]).sort((a, b) => a.order - b.order))
@@ -136,11 +144,25 @@ const ActivityDisplayerPage: FunctionComponent = (props) => {
   useEffect(() => {
     if (!currentActivity) return
     if (cEventUser.status == 'LOADED' && cEventUser.value != null) {
-      if (!['url', 'vimeo'].includes(currentActivity.type?.name)) {
+      // ONLY the video type ones which are vimeo_url has the percent progressing system
+      // (Maybe youtube_url too, BUT nobody did load a video from youtube and set a minimum percent yet)
+      if (
+        !['video'].includes(currentActivity.type?.name) &&
+        (currentActivity.content?.type as AvailableContentType) !== 'vimeo_url'
+      ) {
+        console.debug(
+          'auto-call to activityProgressCallback bc activity type:',
+          currentActivity.type,
+          { currentActivity },
+        )
         activityProgressCallback(100)
       }
     }
   }, [currentActivity, cEventUser.status])
+
+  useEffect(() => {
+    console.debug('activity:', activity)
+  }, [activity])
 
   const goToActivityIdPage = async (activityId: string) => {
     navigate(`/landing/${cEvent?.value._id}/activity/${activityId}`)

@@ -11,6 +11,9 @@ import sentry from './helpers/sentry'
 import store from './redux/store'
 import { CurrentUserProvider } from './context/userContext'
 
+import { firestore, app } from '@helpers/firebase'
+import { FB } from '@helpers/firestore-request'
+
 import dayjs from 'dayjs'
 import 'dayjs/locale/es'
 
@@ -50,6 +53,15 @@ dayjs.locale('es')
 
 /* A helper function that will send errors to Sentry.io. */
 sentry()
+
+// @ts-expect-error
+window.dayjs = dayjs
+// @ts-expect-error
+window.firestore = firestore
+// @ts-expect-error
+window.FB = FB
+// @ts-expect-error
+window.appFB = app
 
 const root = createRoot(document.getElementById('root')!)
 root.render(
