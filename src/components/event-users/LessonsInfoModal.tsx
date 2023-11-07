@@ -27,11 +27,9 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
   const [isSending, setIsSending] = useState(false)
 
   const requestAllData = async () => {
-    const existentActivities = await allActivities.map(async (activity) => {
-      const activity_attendee = await FB.Attendees.get(activity._id, watchedUser._id)
-      if (activity_attendee) return activity
-      return null
-    })
+    const existentActivities =
+      (await FB.Attendees.get(event._id, watchedUser._id))?.activity_progresses
+        ?.viewed_activities ?? []
     // Filter non-null result that means that the user attendees them
     const viewedActivities = (await Promise.all(existentActivities)).filter(
       (item) => item !== null,
