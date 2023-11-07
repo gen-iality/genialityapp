@@ -11,6 +11,9 @@ import sentry from './helpers/sentry'
 import store from './redux/store'
 import { CurrentUserProvider } from './context/userContext'
 
+import dayjs from 'dayjs'
+import 'dayjs/locale/es'
+
 const queryClient = new QueryClient()
 const language = (navigator.languages && navigator.languages[0]) || navigator.language
 
@@ -19,6 +22,9 @@ const messages =
   (localeData as any)[languageWithoutRegionCode] ||
   (localeData as any)[language] ||
   localeData.en
+
+// Set the dayjs locale
+dayjs.locale('es')
 
 /* A helper function that will send errors to Sentry.io. */
 sentry()
