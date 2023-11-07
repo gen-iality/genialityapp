@@ -87,9 +87,14 @@ export async function parseData2Excel(data, fields, roles = null) {
   // fields.unshift({ name: "updated_at", type: "text", label: "updated_at" });
 
   data.map((item, key) => {
-    const checkedInAt = item.checkedin_at
-    const updatedAt = item.updated_at ? item.updated_at.toString() : 'No asignado'
-    const createdAt = item.created_at ? item.created_at.toString() : 'No asignado'
+    const updatedAt =
+      item.updated_at && dayjs.isDayjs(item.updated_at)
+        ? dayjs(item.updated_at).format('D/MMM/YY h:mm:ss A ')
+        : 'No asignado'
+    const createdAt =
+      item.created_at && dayjs.isDayjs(item.created_at)
+        ? dayjs(item.created_at).format('D/MMM/YY h:mm:ss A ')
+        : 'No asignado'
     info[key] = {}
     info[key]['_id'] = item._id ? item._id : 'UNDEFINED'
     info[key]['checked'] =
@@ -97,9 +102,10 @@ export async function parseData2Excel(data, fields, roles = null) {
         ? 'TRUE'
         : 'FALSE'
 
-    info[key]['Hora checkIn'] = item.checkedin_at
-      ? dayjs(checkedInAt).format('DD/MM/YYYY H:mm:ss A')
-      : ''
+    info[key]['Hora checkIn'] =
+      item.checkedin_at && dayjs.isDayjs(item.checkedin_at)
+        ? dayjs(item.checkedin_at).format('D/MMM/YY h:mm:ss A ')
+        : ''
     fields.map(({ name, type, label }) => {
       let str
       if (item?.properties) {
