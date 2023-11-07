@@ -73,7 +73,6 @@ const EventsTicket = loadable(() => import('../ticketsEvent'))
 
 // import StillInDeveloping from '@components/StillInDeveloping'
 
-dayjs.locale('es')
 momentLocalizer()
 
 interface IProtected {

@@ -1,8 +1,6 @@
 import { FunctionComponent, useMemo } from 'react'
 /** React's libraries */
 import { FormattedMessage } from 'react-intl'
-import localizedFormat from 'dayjs/plugin/localizedFormat'
-import dayjs from 'dayjs'
 
 /** Antd imports */
 import { Badge, Button, PageHeader, Typography } from 'antd'
@@ -15,8 +13,6 @@ import { useEventContext } from '@context/eventContext'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { useUserEvent } from '@context/eventUserContext'
 import { useCurrentUser } from '@context/userContext'
-
-dayjs.extend(localizedFormat)
 
 const InfoEvent: FunctionComponent = () => {
   const cEvent = useEventContext()

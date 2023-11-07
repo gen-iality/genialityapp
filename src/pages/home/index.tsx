@@ -1,4 +1,3 @@
-import dayjs from 'dayjs'
 import momentLocalizer from 'react-widgets-moment'
 import { useRequest } from '../../services/useRequest'
 import { useEffect, useState } from 'react'
@@ -9,7 +8,6 @@ import ErrorServe from '@components/modal/serverError'
 import EventCard from '@components/shared/eventCard'
 import { useApiMultiple } from '@/services/hooks/useApiMultiple'
 
-dayjs.locale('es')
 momentLocalizer()
 
 const Home = () => {

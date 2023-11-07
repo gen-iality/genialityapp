@@ -2,8 +2,6 @@ import { Tooltip, Button, Tag } from 'antd'
 import { FileAddOutlined } from '@ant-design/icons'
 import { membersGetColumnSearchProps } from '../searchFunctions/membersGetColumnSearchProps'
 import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
-dayjs.extend(relativeTime)
 
 export const columns = (columnsData, extraFields = [], addNewCertificationModal) => {
   const columns = []
