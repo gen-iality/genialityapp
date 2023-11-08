@@ -6,15 +6,15 @@ import { SortableContainer, SortableElement, SortableHandle } from 'react-sortab
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { ColumnType } from 'antd/lib/table';
 import { useEffect, useState } from 'react';
-import { lastID } from '../utils';
 import DragIcon from '@2fd/ant-design-icons/lib/DragVertical';
+import { v4 as uuidv4 } from 'uuid';
 interface ICertificateRowsProps {
   rows: CertifiRow[];
   onChange: (data: any) => void;
   handleDragEnd  : (data: any) => void;
 }
 
-export default function CertificadoRow(props: ICertificateRowsProps) {
+export default function CertificadoRow_old(props: ICertificateRowsProps) {
   const [certificateRows, setCertificateRows] = useState<CertifiRow[]>([]);
 
   const { rows, onChange, handleDragEnd } = props;
@@ -144,7 +144,7 @@ export default function CertificadoRow(props: ICertificateRowsProps) {
     <Row style={{ display: 'flex', flexDirection: 'row-reverse' }}>
           <Button
             onClick={() => {
-              setCertificateRows([...certificateRows, { id: lastID(certificateRows), type: 'break', content: '...' }]);
+              setCertificateRows([...certificateRows, { id: uuidv4() , type: 'break', content: '...' }]);
             }}
             icon={<PlusCircleFilled />}>
             Agregar

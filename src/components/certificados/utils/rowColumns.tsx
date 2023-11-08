@@ -25,7 +25,7 @@ export const columnsRowList: ColumnType<CertifiRow>[] = [
     width: 70,
   },
   {
-    title: 'contenido',
+    title: 'Contenido',
     dataIndex: 'content',
     className: 'drag-visible',
     width: 70,

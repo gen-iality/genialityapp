@@ -181,7 +181,7 @@ export interface ICertificado {
 export  type RowCert = 'break' | 'h1' | 'h2' | 'h3' | 'h4' | 'p'
 
 export interface CertifiRow {
-    id: number
+    id: string
     type: RowCert,
     times?:  number,
     content?: string,

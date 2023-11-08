@@ -1,18 +1,19 @@
 import { useModalLogic } from '@/hooks/useModalLogic';
 import RowConfiguration from './RowConfiguration';
-import { Button, Space, Table } from 'antd';
+import { Button, Space, Table, Tooltip } from 'antd';
 import { CertifiRow } from '@/components/agenda/types';
-import { defaultCertRows } from '../utils';
 import { DeleteOutlined, EditOutlined, PlusCircleFilled } from '@ant-design/icons';
-import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
-import DragIcon from '@2fd/ant-design-icons/lib/DragVertical';
+import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import { columnsRowList } from '../utils/rowColumns';
 
 interface Props {
   handleDragEnd: (data: any) => void;
-  certificateRows?: CertifiRow[];
+  certificateRows: CertifiRow[];
+  handledDelete: (certificateRowId: string) => void;
+  handledEdit: (certificatesRowId: string, newRowCertificate: Partial<CertifiRow>) => void;
+  handledAdd: (newCertificateRowForm: Omit<CertifiRow, 'id'>) => void;
 }
-const RowsCertificate = ({ handleDragEnd, certificateRows }: Props) => {
+const RowsCertificate = ({ handleDragEnd, certificateRows, handledDelete, handledEdit, handledAdd }: Props) => {
   const {
     closeModal: onCloseConfigurationRow,
     handledSelectedItem: handledSelectedRow,
@@ -25,14 +26,14 @@ const RowsCertificate = ({ handleDragEnd, certificateRows }: Props) => {
 
   const SortableItem: any = SortableElement((props: any) => <tr {...props} />);
 
-  const DragHandle = SortableHandle(() => (
+  /* const DragHandle = SortableHandle(() => (
     <DragIcon
       style={{
         cursor: 'move',
         fontSize: '22px',
       }}
     />
-  ));
+  )); */
 
   return (
     <>
@@ -48,7 +49,7 @@ const RowsCertificate = ({ handleDragEnd, certificateRows }: Props) => {
       <Table
         tableLayout='auto'
         style={{ padding: '30px 0', cursor: 'pointer' }}
-        dataSource={certificateRows ?? defaultCertRows}
+        dataSource={certificateRows}
         columns={[
           ...columnsRowList,
           {
@@ -57,15 +58,25 @@ const RowsCertificate = ({ handleDragEnd, certificateRows }: Props) => {
             width: 10,
             render: (text: string, item: CertifiRow, index: number) => (
               <Space>
-                <Button
-                  danger
-                  type='dashed'
-                  onClick={() => {
-                    handledSelectedRow(item);
-                    onOpenConfigurationRow();
-                  }}
-                  icon={<EditOutlined />}></Button>
-                <Button danger type='dashed' onClick={() => console.log('Hola')} icon={<DeleteOutlined />}></Button>
+                <Tooltip title='Editar'>
+                  <Button
+                    size='small'
+                    type='primary'
+                    onClick={() => {
+                      handledSelectedRow(item);
+                      onOpenConfigurationRow();
+                    }}
+                    icon={<EditOutlined />}
+                  />
+                </Tooltip>
+                <Tooltip title='Eliminar'>
+                  <Button
+                    size='small'
+                    type='primary'
+                    onClick={() => handledDelete(item.id)}
+                    icon={<DeleteOutlined />}
+                  />
+                </Tooltip>
               </Space>
             ),
           },
@@ -93,6 +104,8 @@ const RowsCertificate = ({ handleDragEnd, certificateRows }: Props) => {
           onClose={onCloseConfigurationRow}
           visible={isOpenConfigurationRow}
           selectedRow={selectedRow}
+          handledEdit={handledEdit}
+          handledAdd={handledAdd}
         />
       )}
     </>
