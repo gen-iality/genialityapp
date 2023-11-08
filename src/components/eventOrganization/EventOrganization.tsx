@@ -17,7 +17,7 @@ import OrganizationPaymentContext from '@/payments/OrganizationPaymentContext'
 import useIsDevOrStage from '@/hooks/useIsDevOrStage'
 const { Title, Text, Paragraph } = Typography
 
-const EventOrganization = () => {
+const EventOrganizationPage = () => {
   const params = useParams()
   const orgId = params.id
 
@@ -438,7 +438,7 @@ const EventOrganization = () => {
   )
 }
 
-export default EventOrganization
+export default EventOrganizationPage
 
 /**
  * 
