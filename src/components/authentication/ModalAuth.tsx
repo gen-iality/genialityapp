@@ -80,7 +80,7 @@ const ModalAuth = (props) => {
     }
   }
 
-  const isModalVisible = () => {
+  const processModalVisiblility = () => {
     const typeEvent = recordTypeForThisEvent(cEvent)
     switch (typeEvent) {
       case 'PRIVATE_EVENT':
@@ -104,8 +104,8 @@ const ModalAuth = (props) => {
     }
   }
 
-  const isUserAuth = () => {
-    return app.auth().onAuthStateChanged((user) => {
+  const checkIfUserHasAuth = () =>
+    app.auth().onAuthStateChanged((user) => {
       if (user) {
         setModalVisible(false)
 
@@ -116,10 +116,9 @@ const ModalAuth = (props) => {
           window.location.href = `/organization/${cEvent.value.organiser._id}/events`
         }
         console.debug(window.location.href, cEvent.value)
-        isModalVisible()
+        processModalVisiblility()
       }
     })
-  }
 
   /*Cargando la información de la organización esto debería estar en un contexto*/
   useEffect(() => {
@@ -133,7 +132,7 @@ const ModalAuth = (props) => {
   }, [orgId])
 
   useEffect(() => {
-    let unsubscribe = isUserAuth()
+    let unsubscribe = checkIfUserHasAuth()
 
     return () => {
       unsubscribe && unsubscribe()
