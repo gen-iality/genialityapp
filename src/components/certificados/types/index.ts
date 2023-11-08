@@ -181,6 +181,11 @@ export interface ICertificate {
 
 export type ICertificateForm = Omit<ICertificate,'event_id' | 'content' | '_id' >
 
+export interface ITagRow {
+    tag: string;
+    label: string;
+    value: string;
+}
 export  type RowCert = 'break' | 'h1' | 'h2' | 'h3' | 'h4' | 'p'
 
 //toDo: Eliminar esta interface y reemplazar en los lugares que se usa por el 

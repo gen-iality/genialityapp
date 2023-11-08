@@ -4,7 +4,7 @@ import { Row, Col, Form, Input, Select, Button, Upload, Image } from 'antd';
 import { UploadOutlined, ExclamationOutlined } from '@ant-design/icons';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
-import { CertificatesProps, ICertificate, ICertificateForm } from './types';
+import { CertificatesProps, ICertificate, ICertificateForm, ITagRow } from './types';
 import { UseUserEvent } from '@/context/eventUserContext';
 import RowsCertificate from './components/RowsCertificate';
 import { useGetCertificatesRows } from './hooks/useGetCertificatesRows';
@@ -30,7 +30,7 @@ const Certificado: FC<CertificatesProps> = (props) => {
   const { certificatesRow, handleDragEnd, handledDelete, handledEdit, handledAdd } = useGetCertificatesRows(certificateId);
   const { userTypes, isLoadingUserTypes } = useGetUserType(props.event._id);
   const { certificate, isLoadingCertificate, handledAddCertificate, handledEditCertificate, handledDeleteCertificate, handleChangeImage, image, restoreImage } = useCrudCertificate(certificateId);
-  const allTags = getAllEventCertificateTags(properties);
+  const allTags:ITagRow[] = getAllEventCertificateTags(properties);
 
   const onSubmit = async (certificateForm: ICertificateForm) => {
     const data: Omit<ICertificate, '_id'> = {
@@ -113,7 +113,6 @@ const Certificado: FC<CertificatesProps> = (props) => {
                 rules={nameCertificateRules}
                 name={'name'}>
                 <Input
-                  // value={certificado?.name}
                   name={'name'}
                   placeholder={'Nombre del certificado'}
                 />
@@ -131,7 +130,6 @@ const Certificado: FC<CertificatesProps> = (props) => {
                   maxTagCount={'responsive'}
                   style={{ width: '100%' }}
                   placeholder='Seleccione el tipo de usuario'
-                  // defaultValue={certificado.userTypes}
                   options={userTypes}
                   loading={isLoadingUserTypes}
                 />
@@ -188,6 +186,7 @@ const Certificado: FC<CertificatesProps> = (props) => {
             handledDelete={handledDelete}
             handledEdit={handledEdit}
             handledAdd={handledAdd}
+            allTags={allTags}
           />
         </Col>
       </Row>

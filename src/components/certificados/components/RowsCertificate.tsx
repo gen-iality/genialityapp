@@ -5,6 +5,7 @@ import { CertifiRow } from '@/components/agenda/types';
 import { DeleteOutlined, EditOutlined, PlusCircleFilled } from '@ant-design/icons';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import { columnsRowList } from '../utils/rowColumns';
+import { ITagRow } from '../types';
 
 interface Props {
   handleDragEnd: (data: any) => void;
@@ -12,8 +13,9 @@ interface Props {
   handledDelete: (certificateRowId: string) => void;
   handledEdit: (certificatesRowId: string, newRowCertificate: Partial<CertifiRow>) => void;
   handledAdd: (newCertificateRowForm: Omit<CertifiRow, 'id'>) => void;
+  allTags:ITagRow[]
 }
-const RowsCertificate = ({ handleDragEnd, certificateRows, handledDelete, handledEdit, handledAdd }: Props) => {
+const RowsCertificate = ({ handleDragEnd, certificateRows, handledDelete, handledEdit, handledAdd,allTags }: Props) => {
   const {
     closeModal: onCloseConfigurationRow,
     handledSelectedItem: handledSelectedRow,
@@ -106,6 +108,7 @@ const RowsCertificate = ({ handleDragEnd, certificateRows, handledDelete, handle
           selectedRow={selectedRow}
           handledEdit={handledEdit}
           handledAdd={handledAdd}
+          allTags={allTags}
         />
       )}
     </>
