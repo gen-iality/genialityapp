@@ -424,7 +424,7 @@ const HeaderContainer: FunctionComponent<IHeaderContainerProps> = (props) => {
                     />
                   )
                 )}
-                {<ModalLoginHelpers organization={1} />}
+                <ModalLoginHelpers organization={1} />
                 {((currentOrganization?.public_help_message as string) ?? '').trim() && (
                   <div
                     style={{ cursor: 'help', marginLeft: '1rem' }}
