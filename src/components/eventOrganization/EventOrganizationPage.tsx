@@ -317,9 +317,15 @@ const EventOrganizationPage = () => {
                   </Badge>
                 </Col>
                 <Col>
-                  <Button danger type="primary">
-                    Inscribirse
-                  </Button>
+                  {cUser.value && (
+                    <Button
+                      danger
+                      type="primary"
+                      onClick={() => showAuthFormToOnlyAddOrganizationMember()}
+                    >
+                      Inscribirse
+                    </Button>
+                  )}
                 </Col>
               </Row>
               <Row gutter={[16, 16]}>
