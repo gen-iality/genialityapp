@@ -1,6 +1,6 @@
 export interface controllerLoginVisible {
   visible: boolean
-  idOrganization: string
+  organizationId: string
   organization: string
   logo: string
   controllerLoginVisible?: string

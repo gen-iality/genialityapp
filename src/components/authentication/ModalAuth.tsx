@@ -173,7 +173,7 @@ const ModalAuth = (props) => {
         helperDispatch({
           type: 'showLogin',
           visible: true,
-          idOrganization: controllerLoginVisible?.idOrganization,
+          organizationId: controllerLoginVisible?.organizationId,
         })
         break
 
@@ -181,7 +181,7 @@ const ModalAuth = (props) => {
         helperDispatch({
           type: 'showRegister',
           visible: true,
-          idOrganization: controllerLoginVisible?.idOrganization,
+          organizationId: controllerLoginVisible?.organizationId,
         })
         break
 
@@ -442,7 +442,7 @@ const ModalAuth = (props) => {
             <RegisterUserAndEventUser />
           ) : isOrganization() ? (
             <RegisterUserAndOrgMember
-              organizationId={controllerLoginVisible.idOrganization} // New!
+              organizationId={controllerLoginVisible.organizationId} // New!
               defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
               requireAutomaticLogin={true}
             />

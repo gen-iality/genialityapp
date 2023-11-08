@@ -8,7 +8,7 @@ export const helperInitialState: HelperState = {
   currentAuthScreen: 'login',
   controllerLoginVisible: {
     visible: false,
-    idOrganization: '',
+    organizationId: '',
     organization: '',
     logo: '',
     controllerLoginVisible: undefined,
@@ -40,7 +40,7 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
         controllerLoginVisible: {
           ...state.controllerLoginVisible,
           visible: action?.visible,
-          idOrganization: action.idOrganization,
+          organizationId: action.organizationId,
           organization: action.organization,
           logo: action.logo,
           customPasswordLabel: action.customPasswordLabel,
@@ -58,7 +58,7 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
         controllerLoginVisible: {
           ...state.controllerLoginVisible,
           visible: action?.visible,
-          idOrganization: action.idOrganization,
+          organizationId: action.organizationId,
           organization: action.organization,
           logo: action.logo,
           ...defaultPositionIdMod,

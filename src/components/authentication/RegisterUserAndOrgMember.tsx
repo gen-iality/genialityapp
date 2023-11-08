@@ -190,7 +190,7 @@ const RegisterUserAndOrgMember = (props: RegisterUserAndOrgMemberProps) => {
         'error',
         'No se puede proceder, recargue la página e intente nuevamente',
       )
-      throw new Error(`The value of idOrganization is ${organizationId}`)
+      throw new Error(`The value of organizationId is ${organizationId}`)
     }
 
     try {
@@ -433,7 +433,7 @@ const RegisterUserAndOrgMember = (props: RegisterUserAndOrgMemberProps) => {
                 <Button
                   style={{ padding: 4, color: '#333F44', fontWeight: 'bold' }}
                   onClick={() =>
-                    helperDispatch({ type: 'showLogin', idOrganization: organizationId })
+                    helperDispatch({ type: 'showLogin', organizationId: organizationId })
                   }
                   type="link"
                 >

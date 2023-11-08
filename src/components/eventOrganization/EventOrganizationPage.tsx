@@ -80,7 +80,7 @@ const EventOrganizationPage = () => {
       helperDispatch({
         type: 'showRegister',
         visible: true,
-        idOrganization: orgId,
+        organizationId: orgId,
         defaultPositionId: positionId,
         customPasswordLabel: organization.access_settings?.custom_password_label,
       })
