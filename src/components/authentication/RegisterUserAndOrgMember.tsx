@@ -25,15 +25,19 @@ import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { StateMessage } from '@context/MessageService'
 import OrganizationPropertiesForm from '@components/organization/forms/OrganizationPropertiesForm'
 import { ValidationStatusType } from './types'
+import { stylePaddingDesktop, stylePaddingMobile } from './constants'
 
-const RegisterUserAndOrgMember = ({
-  stylePaddingMobile,
-  stylePaddingDesktop,
-  organizationId,
-  defaultPositionId,
-  requireAutomaticLogin,
-  startingComponent,
-}: any) => {
+type RegisterUserAndOrgMemberProps = {
+  organizationId?: string
+  defaultPositionId?: string
+  requireAutomaticLogin?: boolean
+  startingComponent?: () => void
+}
+
+const RegisterUserAndOrgMember = (props: RegisterUserAndOrgMemberProps) => {
+  const { organizationId, defaultPositionId, requireAutomaticLogin, startingComponent } =
+    props
+
   const intl = useIntl()
   const screens = Grid.useBreakpoint()
   const [form] = Form.useForm()

@@ -36,19 +36,10 @@ import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBe
 import RegisterUserAndOrgMember from './RegisterUserAndOrgMember'
 import { isOrganization } from '@helpers/helperOrg'
 import { OrganizationFuction } from '@helpers/request'
+import { stylePaddingDesktop, stylePaddingMobile } from './constants'
+
 const { TabPane } = Tabs
 const { useBreakpoint } = Grid
-
-const stylePaddingDesktop = {
-  paddingLeft: '30px',
-  paddingRight: '30px',
-  textAlign: 'center',
-}
-const stylePaddingMobile = {
-  paddingLeft: '10px',
-  paddingRight: '10px',
-  textAlign: 'center',
-}
 
 const ModalAuth = (props) => {
   const screens = useBreakpoint()
@@ -448,25 +439,17 @@ const ModalAuth = (props) => {
           {isHome() ? (
             <>
               <RegisterUser
-                stylePaddingMobile={stylePaddingMobile}
-                stylePaddingDesktop={stylePaddingDesktop}
                 idOrganization={controllerLoginVisible.idOrganization} // New!
                 defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
               />
             </>
           ) : isEvent() ? (
             <>
-              <RegisterUserAndEventUser
-                stylePaddingMobile={stylePaddingMobile}
-                stylePaddingDesktop={stylePaddingDesktop}
-                requireAutomaticLogin={true}
-              />
+              <RegisterUserAndEventUser requireAutomaticLogin={true} />
             </>
           ) : isOrganization() ? (
             <>
               <RegisterUserAndOrgMember
-                stylePaddingMobile={stylePaddingMobile}
-                stylePaddingDesktop={stylePaddingDesktop}
                 organizationId={controllerLoginVisible.idOrganization} // New!
                 defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
                 requireAutomaticLogin={true}

@@ -12,10 +12,13 @@ import createNewUser, { CREATE_NEW_USER_SUCCESS } from './ModalsFunctions/create
 import { useIntl } from 'react-intl'
 import { useEventContext } from '@context/eventContext'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
+import { stylePaddingDesktop, stylePaddingMobile } from './constants'
 
 const { Step } = Steps
 
-const RegisterUserAndEventUser = ({ stylePaddingMobile, stylePaddingDesktop }: any) => {
+type RegisterUserAndEventUserProps = {}
+
+const RegisterUserAndEventUser = (props: RegisterUserAndEventUserProps) => {
   const intl = useIntl()
   const screens = Grid.useBreakpoint()
   const [form] = Form.useForm()

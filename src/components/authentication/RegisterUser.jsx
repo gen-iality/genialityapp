@@ -17,8 +17,9 @@ import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { useIntl } from 'react-intl'
 import { StateMessage } from '@context/MessageService'
 import { uploadImagedummyRequest } from '@Utilities/imgUtils'
+import { stylePaddingDesktop, stylePaddingMobile } from './constants'
 
-const RegisterUser = ({ stylePaddingMobile, stylePaddingDesktop }) => {
+const RegisterUser = () => {
   const intl = useIntl()
   const screens = Grid.useBreakpoint()
   const { handleChangeTypeModal } = useHelper()
