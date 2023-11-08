@@ -80,6 +80,47 @@ const ModalAuth = (props) => {
     }
   }
 
+  const isModalVisible = () => {
+    const typeEvent = recordTypeForThisEvent(cEvent)
+    switch (typeEvent) {
+      case 'PRIVATE_EVENT':
+        setModalVisible(true)
+        helperDispatch({ type: 'showLogin', visible: true })
+        break
+
+      case 'PUBLIC_EVENT_WITH_REGISTRATION':
+        setModalVisible(true)
+        helperDispatch({ type: 'showRegister', visible: true })
+        break
+
+      case 'UN_REGISTERED_PUBLIC_EVENT':
+        setModalVisible(true)
+        helperDispatch({ type: 'showLogin', visible: false })
+        break
+
+      default:
+        setModalVisible(true)
+        break
+    }
+  }
+
+  const isUserAuth = () => {
+    return app.auth().onAuthStateChanged((user) => {
+      if (user) {
+        setModalVisible(false)
+
+        helperDispatch({ type: 'showLogin', visible: false })
+      } else {
+        if (cEvent.value?.organiser?._id) {
+          console.log('Vaaaaamonos')
+          window.location.href = `/organization/${cEvent.value.organiser._id}/events`
+        }
+        console.debug(window.location.href, cEvent.value)
+        isModalVisible()
+      }
+    })
+  }
+
   /*Cargando la información de la organización esto debería estar en un contexto*/
   useEffect(() => {
     if (!orgId) return
@@ -92,49 +133,7 @@ const ModalAuth = (props) => {
   }, [orgId])
 
   useEffect(() => {
-    let unsubscribe
-    async function isModalVisible() {
-      const typeEvent = recordTypeForThisEvent(cEvent)
-      switch (typeEvent) {
-        case 'PRIVATE_EVENT':
-          setModalVisible(true)
-          helperDispatch({ type: 'showLogin', visible: true })
-          break
-
-        case 'PUBLIC_EVENT_WITH_REGISTRATION':
-          setModalVisible(true)
-          helperDispatch({ type: 'showRegister', visible: true })
-          break
-
-        case 'UN_REGISTERED_PUBLIC_EVENT':
-          setModalVisible(true)
-          helperDispatch({ type: 'showLogin', visible: false })
-          break
-
-        default:
-          setModalVisible(true)
-          break
-      }
-    }
-
-    async function isUserAuth() {
-      unsubscribe = app.auth().onAuthStateChanged((user) => {
-        if (user) {
-          setModalVisible(false)
-
-          helperDispatch({ type: 'showLogin', visible: false })
-        } else {
-          if (cEvent.value?.organiser?._id) {
-            console.log('Vaaaaamonos')
-            window.location.href = `/organization/${cEvent.value.organiser._id}/events`
-          }
-          console.debug(window.location.href, cEvent.value)
-          isModalVisible()
-        }
-      })
-    }
-
-    isUserAuth()
+    let unsubscribe = isUserAuth()
 
     return () => {
       unsubscribe && unsubscribe()
