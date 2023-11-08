@@ -190,16 +190,6 @@ const EventOrganizationPage = () => {
         </div>
       )}
       <ModalLoginHelpers />
-      {/* <RegisterMemberFromOrganizationUserModal
-        organization={organization}
-        orgMember={organizationUser}
-        user={cUser.value}
-        visible={isVisibleRegister}
-        setVisible={(b) => setIsVisibleRegister(b)}
-        onRegister={() => {
-          console.log('registed')
-        }}
-      />*/}
 
       {!isLoading && orgId ? (
         <>
