@@ -314,9 +314,24 @@ const EventOrganization = () => {
                 borderRadius: '20px',
               }}
             >
-              <Badge offset={[60, 22]} count={`${lastEvents.length} Cursos`}>
-                <Title level={2}>Disponibles</Title>
-              </Badge>
+              <Row
+                style={{
+                  display: 'flex',
+                  width: '100%',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Col>
+                  <Badge offset={[60, 22]} count={`${lastEvents.length} Cursos`}>
+                    <Title level={2}>Disponibles</Title>
+                  </Badge>
+                </Col>
+                <Col>
+                  <Button danger type="primary">
+                    Inscribirse
+                  </Button>
+                </Col>
+              </Row>
               <Row gutter={[16, 16]}>
                 {lastEvents?.length > 0 ? (
                   lastEvents.map((event, index) => (
