@@ -1,3 +1,4 @@
+import { CertifiRow as CertifiRowPrincipal} from "@/components/agenda/types";
 
 export interface CertificatesProps {
     event:         Event;
@@ -169,22 +170,26 @@ export interface State {
     edit?: string
 }
 
-export interface ICertificado {
-    imageFile: any;
-    imageData: any;
-    image: any
-    rol?: any ;
-    name?: string;
-    userTypes?: string[]
+export interface ICertificate {
+    name:string;
+    userTypes:string[]
+    background:any
+    content:CertifiRow[]
+    _id:string
+    event_id:string;
 }
 
+export type ICertificateForm = Omit<ICertificate,'event_id' | 'content' | '_id' >
+
+export interface ITagRow {
+    tag: string;
+    label: string;
+    value: string;
+}
 export  type RowCert = 'break' | 'h1' | 'h2' | 'h3' | 'h4' | 'p'
 
-export interface CertifiRow {
-    id: number
-    type: RowCert,
-    times?:  number,
-    content?: string,
+//toDo: Eliminar esta interface y reemplazar en los lugares que se usa por el 
+export interface CertifiRow extends CertifiRowPrincipal{
 }
 
 export interface Certificates {
@@ -197,3 +202,10 @@ export interface Certificates {
     created_at: string;
     userTypes?: string[]
 }
+
+
+export interface IImageData {
+    data: string;
+    full: any;
+    type: string;
+  }

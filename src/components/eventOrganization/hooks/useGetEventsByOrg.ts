@@ -9,7 +9,7 @@ export const useGetEventsByOrg = (organizationId: string) => {
     const getEventsByOrg = async () => {
       try {
         setIsLoadingEventsByOrg(true);
-        const data = await OrganizationFuction.getEventsNextByOrg(organizationId);
+        const data = await OrganizationFuction.getEventsByOrg(organizationId);
         setEventsByOrg(data);
         setIsLoadingEventsByOrg(false);
       } catch (error) {

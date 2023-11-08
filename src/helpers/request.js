@@ -962,7 +962,7 @@ export const OrganizationApi = {
     });
     return data;
   },
-  getEventsWithUserOrg: async (organizationId, organizarionUserId, event_user = false, order = 'oldest') => {
+  getEventsWithUserOrg: async (organizationId, organizarionUserId, event_user = false, order = 'desc') => {
     let token = await GetTokenUserFirebase();
     return await Actions.get(
       `/api/organizations/${organizationId}/user/${organizarionUserId}/events?event_user=${event_user}&order=${order}&token=${token}`,
@@ -1601,7 +1601,7 @@ export const ActivityBySpeaker = {
 
 export const OrganizationFuction = {
   // OBTENER EVENTOS PROXIMOS POR ORGANIZACION
-  getEventsNextByOrg: async (orgId, order = 'asc', date = '', type = '') => {
+  getEventsByOrg: async (orgId, order = 'asc', date = '', type = '') => {
     const events = await Actions.getAll(`api/organizations/${orgId}/events?order=${order}&date=${date}&type=${type}`);
     return events;
   },

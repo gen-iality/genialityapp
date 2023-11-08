@@ -21,7 +21,7 @@ export const useGetMyEventsInOrganization = (
 
   const getEventWithOrgUser = useCallback(async () => {
     try {
-      const { data } = await OrganizationApi.getEventsWithUserOrg(organizationId, eventUserId, eventUser, 'latest');
+      const { data } = await OrganizationApi.getEventsWithUserOrg(organizationId, eventUserId, eventUser, 'desc');
       const eventsFromOrgByUser = data.map((item: any) => item.event);
       setEventsWithEventUser(eventsFromOrgByUser);
       return eventsFromOrgByUser;
