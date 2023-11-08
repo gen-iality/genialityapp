@@ -21,13 +21,13 @@ const EventOrganizationPage = () => {
   const params = useParams()
   const orgId = params.id
 
-  const [upcomingEvents, setUpcomingEvents] = useState([])
-  const [lastEvents, setLastEvents] = useState([])
-  const [organization, setOrganization] = useState(null)
+  const [upcomingEvents, setUpcomingEvents] = useState<any[]>([])
+  const [lastEvents, setLastEvents] = useState<any[]>([])
+  const [organization, setOrganization] = useState<any | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isVisibleRegister, setIsVisibleRegister] = useState(false)
-  const [organizationUser, setOrganizationUser] = useState(null)
-  const [myEvents, setMyEvents] = useState([])
+  const [organizationUser, setOrganizationUser] = useState<any | null>(null)
+  const [myEvents, setMyEvents] = useState<any[]>([])
 
   const [isAdminUser, setIsAdminUser] = useState(false)
 
@@ -39,6 +39,29 @@ const EventOrganizationPage = () => {
   )
 
   const { isNotProd } = useIsDevOrStage()
+
+  // Obtener los datos necesarios de la organización
+  const fetchItem = async (orgId: string) => {
+    const events: any[] = await OrganizationFuction.getEventsNextByOrg(orgId)
+    const _upcomingEvents: any[] = []
+    const _lastEvents: any[] = []
+    const currentDateNow = dayjs()
+    events.forEach((event) => {
+      if (dayjs(event.datetime_from).isAfter(currentDateNow)) {
+        _upcomingEvents.push(event)
+      } else {
+        _lastEvents.push(event)
+      }
+    })
+
+    const _organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId)
+    if (events) {
+      setUpcomingEvents(_upcomingEvents)
+      setLastEvents(_lastEvents) // Reverse that list to show older events as first ._.
+      setOrganization(_organization)
+      setIsLoading(false)
+    }
+  }
 
   useEffect(() => {
     if (orgId) {
@@ -94,29 +117,6 @@ const EventOrganizationPage = () => {
     }
     load_minetickets()
   }, [cUser.value, orgId])
-
-  // Obtener los datos necesarios de la organización
-  const fetchItem = async (orgId) => {
-    const events = await OrganizationFuction.getEventsNextByOrg(orgId)
-    const _upcomingEvents = []
-    const _lastEvents = []
-    const currentDateNow = dayjs()
-    events.forEach((event) => {
-      if (dayjs(event.datetime_from).isAfter(currentDateNow)) {
-        _upcomingEvents.push(event)
-      } else {
-        _lastEvents.push(event)
-      }
-    })
-
-    const _organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId)
-    if (events) {
-      setUpcomingEvents(_upcomingEvents)
-      setLastEvents(_lastEvents) // Reverse that list to show older events as first ._.
-      setOrganization(_organization)
-      setIsLoading(false)
-    }
-  }
 
   useEffect(() => {
     if (!organization || !organizationUser) return
@@ -439,123 +439,3 @@ const EventOrganizationPage = () => {
 }
 
 export default EventOrganizationPage
-
-/**
- * 
- * import { FunctionComponent, useState } from 'react';
-
-import { Modal, Form, Input, Button, Card, Alert } from 'antd';
-
-import { WarningOutlined } from '@ant-design/icons';
-import { OrganizationApi } from '@helpers/request';
-
-type FormOrganizationUser = {
-  name: string;
-  email: string;
-};
-
-export interface RegisterMemberFromOrganizationUserModalProps {
-  orgMember?: any;
-  user?: any;
-  visible?: boolean;
-  organization: any;
-  onRegister?: (orgUserData: any) => void;
-}
-
-const RegisterMemberFromOrganizationUserModal: FunctionComponent<RegisterMemberFromOrganizationUserModalProps> = (
-  props,
-) => {
-  const { organization, orgMember, user, visible, onRegister } = props;
-
-  const [isModalOpened, setIsModalOpened] = useState(visible);
-
-  const [form] = Form.useForm<FormOrganizationUser>();
-
-  const onFormSubmit = (values: FormOrganizationUser) => {
-    if (!organization?._id) {
-      Modal.error({
-        title: 'No ha cargado la organización',
-        content: 'No se ha cargado la información de la organización aún',
-        icon: <WarningOutlined />,
-        onOk: () => setIsModalOpened(false),
-      });
-      return;
-    }
-
-    let data: any = {};
-
-    if (user) {
-      // Take data from the user, I think
-      // some data are: user.names, user.email
-      data = {
-        properties: {
-          names: user.names,
-          email: user.email,
-        },
-      }; // TODO: fill that data for the organization user
-      console.log('Register Organization User from current user');
-    } else {
-      // Take data from the form
-      const { name, email } = values;
-      // TODO: do the register
-      data = {
-        properties: {
-          names: name,
-          email: email,
-        },
-      }; // TODO: fill that data for the organization user
-      console.log('Register Organization User', data);
-    }
-
-    if (onRegister) {
-      onRegister(data);
-    }
-
-    // OrganizationApi.saveUser(organization._id, data)
-    //   .finally(() => {
-    //     setIsModalOpened(false)
-    //   })
-  };
-
-  if (orgMember) {
-    return (
-      <Modal
-        visible={isModalOpened}
-        title="Usuario ya inscrito"
-        onOk={() => setIsModalOpened(false)}
-        onCancel={() => setIsModalOpened(false)}
-      >
-        El usuario ya está inscrito como miembro
-      </Modal>
-    );
-  }
-
-  return (
-    <Modal
-      visible={isModalOpened}
-      title="Registrarse como miembro de esta organización"
-      okText="Inscribirse"
-      onOk={() => form.submit()}
-    >
-      <Form form={form} onFinish={onFormSubmit}>
-        {user ? (
-          <Alert message="No se requieren más datos" />
-        ) : (
-          <>
-            <Form.Item label="Nombre" name="name" rules={[{ required: true, message: 'Falta el nombre' }]}>
-              <Input />
-            </Form.Item>
-
-            <Form.Item label="Correo" name="email" rules={[{ required: true, message: 'Falta el correo' }]}>
-              <Input />
-            </Form.Item>
-          </>
-        )}
-      </Form>
-    </Modal>
-  );
-};
-
-export default RegisterMemberFromOrganizationUserModal;
-
- */
