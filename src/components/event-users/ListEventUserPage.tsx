@@ -642,9 +642,6 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         }
         const { activities, viewed_activities }: ActivityProgressesType =
           data.activity_progresses ?? {}
-        if (data?.properties?.email === 'jpablorua@gmail.com') {
-          console.log({ data, progress: data.activity_progresses })
-        }
         // Use % or n/N? ... use n/N for now
         data.postprocess_progress = `${(viewed_activities ?? []).length}/${Math.max(
           (activities ?? []).length,
