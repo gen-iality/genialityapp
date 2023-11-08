@@ -116,7 +116,7 @@ const VirtualConference = () => {
                               className="ultrasmall-mobile"
                               style={{ textAlign: 'center' }}
                             >
-                              {<FormattedMessage id="live" defaultMessage="En vivo" />}
+                              <FormattedMessage id="live" defaultMessage="En vivo" />
                             </span>
                           </>
                         ) : item.habilitar_ingreso == 'closed_meeting_room' ? (

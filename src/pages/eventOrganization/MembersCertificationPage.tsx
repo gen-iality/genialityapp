@@ -354,12 +354,10 @@ function MembersCertificationPage(props: MembersCertificationPageProps) {
     <>
       <Header
         title={
-          <>
-            {`Certificados de `}
-            {currentUser ? <>{currentUser.names}</> : <Spin />}
-            {` en el cargo de `}
-            {currentPosition ? <>{currentPosition.position_name}</> : <Spin />}
-          </>
+          <span>
+            Certificados de {currentUser?.names ?? <Spin />} en el cargo de{' '}
+            {currentPosition?.position_name ?? <Spin />}
+          </span>
         }
       />
       <Typography.Paragraph>

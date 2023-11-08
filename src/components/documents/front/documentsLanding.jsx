@@ -188,7 +188,9 @@ class DocumentsDetail extends Component {
                 <Row>
                   <Space direction="vertical">
                     <Row>
-                      {`Hola ${this.props.cEventUser?.value?.properties?.displayName} tienes ${this.props.cEventUser?.value?.properties?.documents_user.length} cartones, por favor descarga el archivo para verlos`}
+                      Hola {this.props.cEventUser?.value?.properties?.displayName}, tienes{' '}
+                      {this.props.cEventUser?.value?.properties?.documents_user.length}{' '}
+                      cartones, por favor descarga el archivo para verlos
                     </Row>
                     <Row>
                       <Button

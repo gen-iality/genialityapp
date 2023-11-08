@@ -161,7 +161,7 @@ const OrganizationAdminRoutes: FunctionComponent = () => {
                 target="_blank"
                 href={`${window.location.origin}/organization/${organization._id}/events`}
               >
-                {`Ir al landing de la organización: ${organization.name}`}
+                Ir al landing de la organización: {organization.name}
               </a>
             </Tag>
 

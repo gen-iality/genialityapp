@@ -288,12 +288,10 @@ function MemberCertificationLogsPage(props: MemberCertificationLogsPageProps) {
     <>
       <Header
         title={
-          <>
-            {`Historial de certificados de `}
-            {currentUser ? <>{currentUser.names}</> : <Spin />}
-            {` en el cargo de `}
-            {currentPosition ? <>{currentPosition.position_name}</> : <Spin />}
-          </>
+          <span>
+            Historial de certificados de {currentUser?.names ?? <Spin />} en el cargo de{' '}
+            {currentPosition?.position_name ?? <Spin />}
+          </span>
         }
       />
       <Typography.Paragraph>

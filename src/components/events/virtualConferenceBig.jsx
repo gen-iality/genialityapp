@@ -182,7 +182,7 @@ const VirtualConference = () => {
                           style={{ fontSize: '24px' }}
                         />
                         <span style={{ textAlign: 'center', fontSize: '15px' }}>
-                          {<FormattedMessage id="live" defaultMessage="En vivo" />}
+                          <FormattedMessage id="live" defaultMessage="En vivo" />
                         </span>
                       </Space>
                     ) : (
