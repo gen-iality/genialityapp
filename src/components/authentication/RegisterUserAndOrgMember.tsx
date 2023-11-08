@@ -175,56 +175,53 @@ const RegisterUserAndOrgMember = ({
     }
   }
 
+  async function createOrgMember() {
+    const propertiesOrgMember = { properties: { ...basicDataUser, ...dataOrgMember } }
+    delete propertiesOrgMember.properties.password
+    delete propertiesOrgMember.properties.picture
+
+    if (!idOrganization) {
+      StateMessage.show(
+        null,
+        'error',
+        'No se puede proceder, recargue la página e intente nuevamente',
+      )
+      throw new Error(`The value of idOrganization is ${idOrganization}`)
+    }
+
+    try {
+      const respUser = await OrganizationApi.saveUser(idOrganization, propertiesOrgMember)
+      console.debug('RegisterUser: has default position Id', { defaultPositionId })
+      if (defaultPositionId === undefined) {
+        console.warn('This organization has no default position. Eh!')
+      } else {
+        await PositionsApi.Organizations.addUser(
+          idOrganization,
+          defaultPositionId,
+          respUser.account_id,
+        )
+      }
+      if (respUser && respUser.account_id) {
+        setValidationStatus({
+          error: false,
+          isLoading: false,
+          message: intl.formatMessage({
+            id: 'text_error.organization_successfully_registered',
+            defaultMessage: 'Te has inscrito correctamente a esta organización',
+          }),
+        })
+        // setBasicDataUser({ email: '', names: '', password: '', picture: '' })
+        setDataOrgMember(undefined)
+        startingComponent && startingComponent()
+      }
+    } catch (err) {
+      console.error(err)
+      StateMessage.show(null, 'error', 'Ha ocurrido un error')
+    }
+  }
+
   const handleSubmit = () => {
     setCurrent(current + 1)
-
-    async function createOrgMember() {
-      const propertiesOrgMember = { properties: { ...basicDataUser, ...dataOrgMember } }
-      delete propertiesOrgMember.properties.password
-      delete propertiesOrgMember.properties.picture
-
-      if (!idOrganization) {
-        StateMessage.show(
-          null,
-          'error',
-          'No se puede proceder, recargue la página e intente nuevamente',
-        )
-        throw new Error(`The value of idOrganization is ${idOrganization}`)
-      }
-
-      try {
-        const respUser = await OrganizationApi.saveUser(
-          idOrganization,
-          propertiesOrgMember,
-        )
-        console.debug('RegisterUser: has default position Id', { defaultPositionId })
-        if (defaultPositionId === undefined) {
-          console.warn('This organization has no default position. Eh!')
-        } else {
-          await PositionsApi.Organizations.addUser(
-            idOrganization,
-            defaultPositionId,
-            respUser.account_id,
-          )
-        }
-        if (respUser && respUser.account_id) {
-          setValidationStatus({
-            error: false,
-            isLoading: false,
-            message: intl.formatMessage({
-              id: 'text_error.organization_successfully_registered',
-              defaultMessage: 'Te has inscrito correctamente a esta organización',
-            }),
-          })
-          // setBasicDataUser({ email: '', names: '', password: '', picture: '' })
-          setDataOrgMember(undefined)
-          startingComponent && startingComponent()
-        }
-      } catch (err) {
-        console.error(err)
-        StateMessage.show(null, 'error', 'Ha ocurrido un error')
-      }
-    }
 
     if (existGenialialityUser) {
       createOrgMember()
