@@ -437,24 +437,15 @@ const ModalAuth = (props) => {
           }}
         >
           {isHome() ? (
-            <>
-              <RegisterUser
-                idOrganization={controllerLoginVisible.idOrganization} // New!
-                defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
-              />
-            </>
+            <RegisterUser />
           ) : isEvent() ? (
-            <>
-              <RegisterUserAndEventUser requireAutomaticLogin={true} />
-            </>
+            <RegisterUserAndEventUser />
           ) : isOrganization() ? (
-            <>
-              <RegisterUserAndOrgMember
-                organizationId={controllerLoginVisible.idOrganization} // New!
-                defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
-                requireAutomaticLogin={true}
-              />
-            </>
+            <RegisterUserAndOrgMember
+              organizationId={controllerLoginVisible.idOrganization} // New!
+              defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
+              requireAutomaticLogin={true}
+            />
           ) : (
             <Spin />
           )}
