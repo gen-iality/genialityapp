@@ -50,7 +50,7 @@ const RegistrationResult: FunctionComponent<RegistrationResultProps> = (props) =
     return () => {
       clearInterval(intervalFrase)
     }
-  })
+  }, [])
 
   if (validationGeneral.isLoading) {
     return (
