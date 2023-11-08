@@ -21,7 +21,7 @@ import { NewEventProvider } from '@context/newEventContext'
 import { HelperContextProvider } from '@context/helperContext/helperProvider'
 import { AgendaContextProvider } from '@context/AgendaContext'
 
-import EventOrganizationPage from '@components/eventOrganization/EventOrganization'
+import EventOrganizationPage from '@components/eventOrganization/EventOrganizationPage'
 import OrganizationAdminRoutes from '@/pages/eventOrganization/OrganizationAdminRoutes'
 import MainProfile from '@components/profile/main'
 
