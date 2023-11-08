@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl'
 import { useLocation } from 'react-router'
 
 /** Antd imports */
-import { Steps, Button, Alert, Form } from 'antd'
+import { Steps, Button, Alert, Form, Grid, Typography } from 'antd'
 import { ScheduleOutlined } from '@ant-design/icons'
 import { LoadingOutlined } from '@ant-design/icons'
 import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline'
@@ -25,29 +25,42 @@ import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { StateMessage } from '@context/MessageService'
 import OrganizationPropertiesForm from '@components/organization/forms/OrganizationPropertiesForm'
 import { ValidationStatusType } from './types'
+import { stylePaddingDesktop, stylePaddingMobile } from './constants'
+import { useCurrentUser } from '@context/userContext'
 
-const RegisterUserAndOrgMember = ({
-  screens,
-  stylePaddingMobile,
-  stylePaddingDesktop,
-  idOrganization,
-  defaultPositionId,
-  requireAutomaticLogin,
-  startingComponent,
-}: any) => {
+type RegisterUserAndOrgMemberProps = {
+  organizationId?: string
+  defaultPositionId?: string
+  requireAutomaticLogin?: boolean
+  startingComponent?: () => void
+  onlyAddOrganizationMember?: boolean
+}
+
+const RegisterUserAndOrgMember = (props: RegisterUserAndOrgMemberProps) => {
+  const {
+    organizationId,
+    defaultPositionId,
+    requireAutomaticLogin,
+    startingComponent,
+    onlyAddOrganizationMember,
+  } = props
+
   const intl = useIntl()
+  const screens = Grid.useBreakpoint()
   const [form] = Form.useForm()
   const { helperDispatch, currentAuthScreen } = useHelper()
   const location = useLocation()
 
+  const cUser = useCurrentUser()
+
   const [current, setCurrent] = useState(0)
-  const [basicDataUser, setBasicDataUser] = useState({
+  const [basicUserData, setBasicUserData] = useState({
     names: '',
     email: '',
     password: '',
     picture: '',
   })
-  const [dataOrgMember, setDataOrgMember] = useState<any | undefined>(undefined)
+  const [orgMemberData, setOrgMemberData] = useState<any | undefined>(undefined)
   const [buttonStatus, setButtonStatus] = useState(true)
   const [validationStatus, setValidationStatus] = useState<ValidationStatusType>({
     error: false,
@@ -69,21 +82,21 @@ const RegisterUserAndOrgMember = ({
   const formDataHandler = (e: any, fieldName: string, picture: any) => {
     const value = fieldName === 'picture' ? picture : e.target.value
 
-    setBasicDataUser((previous: any) => ({
+    setBasicUserData((previous: any) => ({
       ...previous,
       [fieldName]: value,
     }))
   }
 
   const onSubmit = (values: any) => {
-    setDataOrgMember(values)
+    setOrgMemberData(values)
   }
 
   const steps = [
     {
       title: 'Básico',
       content: (
-        <RegisterFast userData={basicDataUser} formDataHandler={formDataHandler} />
+        <RegisterFast userData={basicUserData} formDataHandler={formDataHandler} />
       ),
       icon: <AccountOutlineIcon style={{ fontSize: '32px' }} />,
     },
@@ -92,7 +105,7 @@ const RegisterUserAndOrgMember = ({
       content: (
         <OrganizationPropertiesForm
           form={form}
-          basicDataUser={basicDataUser}
+          basicDataUser={basicUserData}
           organization={organization}
           onSubmit={onSubmit}
           noSubmitButton
@@ -105,8 +118,9 @@ const RegisterUserAndOrgMember = ({
       content: (
         <RegistrationResult
           validationGeneral={validationStatus}
-          basicDataUser={basicDataUser}
+          basicDataUser={basicUserData}
           requireAutomaticLogin={requireAutomaticLogin}
+          onlyAddOrganizationMember={onlyAddOrganizationMember}
         />
       ),
       icon: <ScheduleOutlined style={{ fontSize: '32px' }} />,
@@ -115,7 +129,7 @@ const RegisterUserAndOrgMember = ({
 
   const handleValidateAccountGeniality = async () => {
     try {
-      const validateEmail = await UsersApi.validateEmail({ email: basicDataUser.email })
+      const validateEmail = await UsersApi.validateEmail({ email: basicUserData.email })
       if (validateEmail?.message === 'Email valid') {
         setValidationStatus({
           isLoading: false,
@@ -175,61 +189,60 @@ const RegisterUserAndOrgMember = ({
     }
   }
 
+  async function createOrgMember() {
+    const propertiesOrgMember = { properties: { ...basicUserData, ...orgMemberData } }
+    delete propertiesOrgMember.properties.password
+    delete propertiesOrgMember.properties.picture
+
+    if (!organizationId) {
+      StateMessage.show(
+        null,
+        'error',
+        'No se puede proceder, recargue la página e intente nuevamente',
+      )
+      throw new Error(`The value of organizationId is ${organizationId}`)
+    }
+
+    try {
+      const respUser = await OrganizationApi.saveUser(organizationId, propertiesOrgMember)
+      console.debug('RegisterUser: has default position Id', { defaultPositionId })
+      if (defaultPositionId === undefined) {
+        console.warn('This organization has no default position. Eh!')
+      } else {
+        await PositionsApi.Organizations.addUser(
+          organizationId,
+          defaultPositionId,
+          respUser.account_id,
+        )
+      }
+      if (respUser && respUser.account_id) {
+        setValidationStatus({
+          error: false,
+          isLoading: false,
+          message: intl.formatMessage({
+            id: 'text_error.organization_successfully_registered',
+            defaultMessage: 'Te has inscrito correctamente a esta organización',
+          }),
+        })
+        // setBasicDataUser({ email: '', names: '', password: '', picture: '' })
+        setOrgMemberData(undefined)
+        startingComponent && startingComponent()
+      }
+    } catch (err) {
+      console.error(err)
+      StateMessage.show(null, 'error', 'Ha ocurrido un error')
+    }
+  }
+
   const handleSubmit = () => {
-    setCurrent(current + 1)
-
-    async function createOrgMember() {
-      const propertiesOrgMember = { properties: { ...basicDataUser, ...dataOrgMember } }
-      delete propertiesOrgMember.properties.password
-      delete propertiesOrgMember.properties.picture
-
-      if (!idOrganization) {
-        StateMessage.show(
-          null,
-          'error',
-          'No se puede proceder, recargue la página e intente nuevamente',
-        )
-        throw new Error(`The value of idOrganization is ${idOrganization}`)
-      }
-
-      try {
-        const respUser = await OrganizationApi.saveUser(
-          idOrganization,
-          propertiesOrgMember,
-        )
-        console.debug('RegisterUser: has default position Id', { defaultPositionId })
-        if (defaultPositionId === undefined) {
-          console.warn('This organization has no default position. Eh!')
-        } else {
-          await PositionsApi.Organizations.addUser(
-            idOrganization,
-            defaultPositionId,
-            respUser.account_id,
-          )
-        }
-        if (respUser && respUser.account_id) {
-          setValidationStatus({
-            error: false,
-            isLoading: false,
-            message: intl.formatMessage({
-              id: 'text_error.organization_successfully_registered',
-              defaultMessage: 'Te has inscrito correctamente a esta organización',
-            }),
-          })
-          // setBasicDataUser({ email: '', names: '', password: '', picture: '' })
-          setDataOrgMember(undefined)
-          startingComponent && startingComponent()
-        }
-      } catch (err) {
-        console.error(err)
-        StateMessage.show(null, 'error', 'Ha ocurrido un error')
-      }
+    if (current < 3) {
+      setCurrent(current + 1)
     }
 
     if (existGenialialityUser) {
       createOrgMember()
     } else {
-      createNewUser(basicDataUser)
+      createNewUser(basicUserData)
         .then((createdUserInfo) => {
           console.log('createdUserInfo returned:', { createdUserInfo })
           const { status } = createdUserInfo
@@ -279,6 +292,10 @@ const RegisterUserAndOrgMember = ({
   }
 
   const goTopreviousStep = () => {
+    if (current == 2 && onlyAddOrganizationMember) {
+      // don't go to basic form
+      return false
+    }
     setCurrent(current - 1)
     setButtonStatus(false)
   }
@@ -288,12 +305,17 @@ const RegisterUserAndOrgMember = ({
     return re.test(email)
   }
 
-  const ValidateGeneralFields = () => {
-    if (basicDataUser.email && basicDataUser.password && basicDataUser.names) {
+  const validateGeneralFields = () => {
+    if (
+      basicUserData.email &&
+      (basicUserData.password || onlyAddOrganizationMember) &&
+      basicUserData.names
+    ) {
+      const goodPassword =
+        basicUserData.password.length >= 6 && basicUserData.password.length <= 18
       if (
-        validateEmail(basicDataUser.email) &&
-        basicDataUser.password.length >= 6 &&
-        basicDataUser.password.length <= 18
+        validateEmail(basicUserData.email) &&
+        (goodPassword || onlyAddOrganizationMember)
       ) {
         setButtonStatus(false)
         setValidationStatus({
@@ -327,23 +349,42 @@ const RegisterUserAndOrgMember = ({
   }
 
   useEffect(() => {
-    if (dataOrgMember !== undefined) {
-      handleSubmit()
+    if (current === 0 && onlyAddOrganizationMember) {
+      setCurrent(1)
     }
-  }, [dataOrgMember])
+
+    if (cUser.value && current != 0 && onlyAddOrganizationMember) {
+      // Load basic user data to visualization only
+      setButtonStatus(false)
+      setExistGenialialityUser(true)
+      setBasicUserData({
+        email: cUser.value.email,
+        names: cUser.value.names,
+        password: '',
+        picture: '',
+      })
+    }
+  }, [onlyAddOrganizationMember, current, cUser.value])
 
   useEffect(() => {
-    OrganizationApi.getOne(idOrganization).then((response) => {
+    if (orgMemberData !== undefined) {
+      handleSubmit()
+    }
+  }, [orgMemberData])
+
+  useEffect(() => {
+    if (!organizationId) return
+    OrganizationApi.getOne(organizationId).then((response) => {
       console.log('response', response)
       setOrganization(response)
     })
-  }, [])
+  }, [organizationId])
 
   useEffect(() => {
     if (current == 0) {
-      ValidateGeneralFields()
+      validateGeneralFields()
     }
-  }, [basicDataUser, current])
+  }, [basicUserData, current])
 
   useEffect(() => {
     if (currentAuthScreen === 'login') setCurrent(0)
@@ -363,10 +404,19 @@ const RegisterUserAndOrgMember = ({
           icon: item.icon,
         }))}
       />
+      {onlyAddOrganizationMember && (
+        <Typography.Paragraph type="danger">
+          Sólo registrarse a la organización
+        </Typography.Paragraph>
+      )}
+      {existGenialialityUser && (
+        <Typography.Paragraph type="secondary">Usuario conocido</Typography.Paragraph>
+      )}
       <div style={{ marginTop: '30px' }}>{steps[current].content}</div>
       <div style={{ marginTop: '30px' }}>
         {current > 0 && current < 2 && (
           <Button
+            disabled={onlyAddOrganizationMember}
             onClick={() => {
               hookValidations(false, '')
               goTopreviousStep()
@@ -411,7 +461,6 @@ const RegisterUserAndOrgMember = ({
           </>
         )}
       </div>
-
       {typeof validationStatus.message === 'string' && (
         <Alert
           showIcon
@@ -432,7 +481,7 @@ const RegisterUserAndOrgMember = ({
                 <Button
                   style={{ padding: 4, color: '#333F44', fontWeight: 'bold' }}
                   onClick={() =>
-                    helperDispatch({ type: 'showLogin', idOrganization: idOrganization })
+                    helperDispatch({ type: 'showLogin', organizationId: organizationId })
                   }
                   type="link"
                 >

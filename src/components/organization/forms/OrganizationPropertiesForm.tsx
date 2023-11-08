@@ -51,9 +51,7 @@ const OrganizationPropertiesForm: React.FunctionComponent<
 
   const [isSubmiting, setIsSubmiting] = useState(false)
   const [form, setForm] = useState<FormInstance | undefined>(props.form)
-  const [dynamicFields] = useState<IDynamicFieldData[]>(
-    props.organization.user_properties || otherFields,
-  )
+  const [dynamicFields, setDynamicFields] = useState<IDynamicFieldData[]>([])
   // This state will be used for the form
   const [initialValues, setInitialValues] = useState<FormValuesType>({})
 
@@ -80,6 +78,10 @@ const OrganizationPropertiesForm: React.FunctionComponent<
     },
     [props.onProperyChange],
   )
+
+  useEffect(() => {
+    setDynamicFields(props.organization.user_properties || otherFields)
+  }, [props.organization?.user_properties, otherFields])
 
   useEffect(() => {
     setInitialValues((previous: any) => ({

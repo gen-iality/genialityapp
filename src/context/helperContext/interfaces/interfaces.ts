@@ -1,16 +1,17 @@
-export interface controllerLoginVisible {
+export interface ControllerLoginVisible {
   visible: boolean
-  idOrganization: string
+  organizationId: string
   organization: string
   logo: string
   controllerLoginVisible?: string
+  onlyAddOrganizationMember?: boolean
 }
 
 export interface HelperState {
   reloadTemplatesCms: boolean
   tabsGenerals: object
   currentAuthScreen: string
-  controllerLoginVisible: controllerLoginVisible
+  controllerLoginVisible: ControllerLoginVisible
   currentActivity: object | null
   showNotification: boolean
   params: object

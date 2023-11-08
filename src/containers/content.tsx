@@ -21,7 +21,7 @@ import { NewEventProvider } from '@context/newEventContext'
 import { HelperContextProvider } from '@context/helperContext/helperProvider'
 import { AgendaContextProvider } from '@context/AgendaContext'
 
-import EventOrganization from '@components/eventOrganization'
+import EventOrganizationPage from '@components/eventOrganization/EventOrganizationPage'
 import OrganizationAdminRoutes from '@/pages/eventOrganization/OrganizationAdminRoutes'
 import MainProfile from '@components/profile/main'
 
@@ -140,7 +140,7 @@ const ContentContainer = () => {
               path="/organization/:id"
               element={
                 <OrganizationPaymentProvider>
-                  <EventOrganization />
+                  <EventOrganizationPage />
                 </OrganizationPaymentProvider>
               }
             />
@@ -148,7 +148,7 @@ const ContentContainer = () => {
               path="/organization/:id/events"
               element={
                 <OrganizationPaymentProvider>
-                  <EventOrganization />
+                  <EventOrganizationPage />
                 </OrganizationPaymentProvider>
               }
             />
