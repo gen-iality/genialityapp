@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl'
 import { useLocation } from 'react-router'
 
 /** Antd imports */
-import { Steps, Button, Alert, Form } from 'antd'
+import { Steps, Button, Alert, Form, Grid } from 'antd'
 import { ScheduleOutlined } from '@ant-design/icons'
 import { LoadingOutlined } from '@ant-design/icons'
 import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline'
@@ -27,7 +27,6 @@ import OrganizationPropertiesForm from '@components/organization/forms/Organizat
 import { ValidationStatusType } from './types'
 
 const RegisterUserAndOrgMember = ({
-  screens,
   stylePaddingMobile,
   stylePaddingDesktop,
   idOrganization,
@@ -36,6 +35,7 @@ const RegisterUserAndOrgMember = ({
   startingComponent,
 }: any) => {
   const intl = useIntl()
+  const screens = Grid.useBreakpoint()
   const [form] = Form.useForm()
   const { helperDispatch, currentAuthScreen } = useHelper()
   const location = useLocation()

@@ -448,7 +448,6 @@ const ModalAuth = (props) => {
           {isHome() ? (
             <>
               <RegisterUser
-                screens={screens}
                 stylePaddingMobile={stylePaddingMobile}
                 stylePaddingDesktop={stylePaddingDesktop}
                 idOrganization={controllerLoginVisible.idOrganization} // New!
@@ -458,7 +457,6 @@ const ModalAuth = (props) => {
           ) : isEvent() ? (
             <>
               <RegisterUserAndEventUser
-                screens={screens}
                 stylePaddingMobile={stylePaddingMobile}
                 stylePaddingDesktop={stylePaddingDesktop}
                 requireAutomaticLogin={true}
@@ -467,7 +465,6 @@ const ModalAuth = (props) => {
           ) : isOrganization() ? (
             <>
               <RegisterUserAndOrgMember
-                screens={screens}
                 stylePaddingMobile={stylePaddingMobile}
                 stylePaddingDesktop={stylePaddingDesktop}
                 idOrganization={controllerLoginVisible.idOrganization} // New!

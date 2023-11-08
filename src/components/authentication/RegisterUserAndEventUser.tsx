@@ -1,5 +1,5 @@
 import { useState, useEffect, ReactNode } from 'react'
-import { Steps, Button, Alert, Form, Checkbox } from 'antd'
+import { Steps, Button, Alert, Form, Checkbox, Grid } from 'antd'
 import RegisterFast from './Content/RegisterFast'
 import RegistrationResult from './Content/RegistrationResult'
 import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline'
@@ -15,12 +15,9 @@ import { useHelper } from '@context/helperContext/hooks/useHelper'
 
 const { Step } = Steps
 
-const RegisterUserAndEventUser = ({
-  screens,
-  stylePaddingMobile,
-  stylePaddingDesktop,
-}: any) => {
+const RegisterUserAndEventUser = ({ stylePaddingMobile, stylePaddingDesktop }: any) => {
   const intl = useIntl()
+  const screens = Grid.useBreakpoint()
   const [form] = Form.useForm()
   const cEvent = useEventContext()
   const [current, setCurrent] = useState(0)
