@@ -6,6 +6,7 @@ export type HelperAction = {
   organizationId?: string
   defaultPositionId?: string
   organization?: string
+  onlyAddOrganizationMember?: boolean
   logo?: string
   currentActivity?: object
   showNotification?: boolean | any

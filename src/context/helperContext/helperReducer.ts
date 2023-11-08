@@ -12,6 +12,7 @@ export const helperInitialState: HelperState = {
     organization: '',
     logo: '',
     controllerLoginVisible: undefined,
+    onlyAddOrganizationMember: false,
   },
   currentActivity: null,
   showNotification: false,
@@ -61,6 +62,7 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
           organizationId: action.organizationId,
           organization: action.organization,
           logo: action.logo,
+          onlyAddOrganizationMember: action.onlyAddOrganizationMember,
           ...defaultPositionIdMod,
         },
       }

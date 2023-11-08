@@ -40,6 +40,20 @@ const EventOrganizationPage = () => {
 
   const { isNotProd } = useIsDevOrStage()
 
+  const showAuthFormToOnlyAddOrganizationMember = () => {
+    console.debug('calling showAuthFormToOnlyAddOrganizationMember', { orgId })
+    let positionId = organization.default_position_id || undefined
+
+    helperDispatch({
+      type: 'showRegister',
+      visible: true,
+      organizationId: orgId,
+      defaultPositionId: positionId,
+      customPasswordLabel: organization.access_settings?.custom_password_label,
+      onlyAddOrganizationMember: true,
+    })
+  }
+
   // Obtener los datos necesarios de la organización
   const fetchItem = async (orgId: string) => {
     const events: any[] = await OrganizationFuction.getEventsNextByOrg(orgId)
@@ -72,10 +86,8 @@ const EventOrganizationPage = () => {
   useEffect(() => {
     if (cUser.value || !organization || !orgId) return
     if (!cUser.value && organization) {
-      let positionId
-      if (organization.default_position_id) {
-        positionId = organization.default_position_id
-      }
+      let positionId = organization.default_position_id || undefined
+
       console.log('5. positionId', positionId, 'orgId', orgId)
       helperDispatch({
         type: 'showRegister',
@@ -317,7 +329,7 @@ const EventOrganizationPage = () => {
                   </Badge>
                 </Col>
                 <Col>
-                  {cUser.value && (
+                  {cUser.value && !organizationUser && (
                     <Button
                       danger
                       type="primary"

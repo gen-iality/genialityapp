@@ -106,7 +106,18 @@ const ModalAuth = (props) => {
 
   const checkIfUserHasAuth = () =>
     app.auth().onAuthStateChanged((user) => {
-      if (user) {
+      if (user && controllerLoginVisible.onlyAddOrganizationMember) {
+        setModalVisible(true)
+        helperDispatch({
+          type: 'showRegister',
+          visible: true,
+          organizationId: controllerLoginVisible.organizationId,
+          onlyAddOrganizationMember: controllerLoginVisible.onlyAddOrganizationMember,
+
+          defaultPositionId: controllerLoginVisible.defaultPositionId,
+          customPasswordLabel: controllerLoginVisible.customPasswordLabel,
+        })
+      } else if (user) {
         setModalVisible(false)
 
         helperDispatch({ type: 'showLogin', visible: false })
@@ -137,7 +148,7 @@ const ModalAuth = (props) => {
     return () => {
       unsubscribe && unsubscribe()
     }
-  }, [cEvent, cUser])
+  }, [cEvent, cUser, controllerLoginVisible.onlyAddOrganizationMember])
 
   useEffect(() => {
     form1.resetFields()
@@ -416,7 +427,8 @@ const ModalAuth = (props) => {
     },
   ]
 
-  if (isVisibleRegister) {
+  if (isVisibleRegister()) {
+    console.info('add more tabs')
     tabItems.push({
       key: 'register',
       label: intl.formatMessage({
@@ -443,6 +455,7 @@ const ModalAuth = (props) => {
               organizationId={controllerLoginVisible.organizationId} // New!
               defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
               requireAutomaticLogin={true}
+              onlyAddOrganizationMember={controllerLoginVisible.onlyAddOrganizationMember}
             />
           ) : (
             <Spin />

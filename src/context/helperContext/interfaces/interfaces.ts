@@ -4,6 +4,7 @@ export interface ControllerLoginVisible {
   organization: string
   logo: string
   controllerLoginVisible?: string
+  onlyAddOrganizationMember?: boolean
 }
 
 export interface HelperState {
