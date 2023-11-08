@@ -1,9 +1,8 @@
 import { CertifiRow } from '@/components/agenda/types';
-import { Button, Drawer, DrawerProps, Form, Input, Select } from 'antd';
+import { Button, Drawer, DrawerProps, Form, Select } from 'antd';
 import { typeRowOptions } from '../utils/typeRow.options';
 import { useEffect, useState } from 'react';
 import { SaveFilled } from '@ant-design/icons';
-import { contentRules } from '../utils/rowForm.rules';
 import { RowCert } from '../types';
 import { InputRowConfig } from './InputRowConfig';
 interface Props extends DrawerProps {
@@ -51,7 +50,7 @@ const RowConfiguration = ({ onClose, selectedRow, handledEdit, handledAdd, ...dr
 
   return (
     <Drawer onClose={onClose} title={selectedRow ? 'Editar de fila' : 'Agregar fila'} {...drawerProps}>
-      <Form onFinish={onFinishForm} form={form} layout='vertical' onValuesChange={handleFormChange}>
+      <Form onFinish={onFinishForm} form={form} layout='vertical' onValuesChange={handleFormChange} size='large'>
         <Form.Item label='Tipo' name={'type'}>
           <Select options={typeRowOptions} onChange={onChange} />
         </Form.Item>

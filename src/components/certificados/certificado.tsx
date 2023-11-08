@@ -1,25 +1,20 @@
-import { FC, useEffect, useState } from 'react';
-import { CertsApi } from '../../helpers/request';
+import { FC, useEffect } from 'react';
 import { useHistory, withRouter } from 'react-router-dom';
-import { handleRequestError } from '../../helpers/utils';
-import { Row, Col, Form, Input, Modal, Select, Button, Upload, Image } from 'antd';
-import { ExclamationCircleOutlined, UploadOutlined, ExclamationOutlined } from '@ant-design/icons';
+import { Row, Col, Form, Input, Select, Button, Upload, Image } from 'antd';
+import { UploadOutlined, ExclamationOutlined } from '@ant-design/icons';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
-import { DispatchMessageService } from '../../context/MessageService';
-import { CertificatesProps, ICertificate } from './types';
-import { imgBackground } from './utils/constants';
+import { CertificatesProps, ICertificate, ICertificateForm } from './types';
 import { UseUserEvent } from '@/context/eventUserContext';
 import RowsCertificate from './components/RowsCertificate';
 import { useGetCertificatesRows } from './hooks/useGetCertificatesRows';
 import { nameCertificateRules, typeUserCertificateRules } from './utils/certificateFormRules';
 import { useGetUserType } from './hooks/useGetUserType';
 import { getAllEventCertificateTags } from './utils/propertiesTagsCerificate';
-import { useGetCertificate } from './hooks/useGetCertificate';
-import { useImageCertificate } from './hooks/useImageCertificate';
+import { useCrudCertificate } from './hooks/useCrudCertificate';
 import { generate } from './utils/generateCertificate';
+import Loading from '../profile/loading';
 
-const { confirm } = Modal;
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -30,118 +25,41 @@ const Certificado: FC<CertificatesProps> = (props) => {
   const [form] = Form.useForm<ICertificate>();
   const history = useHistory();
   let cEventUser = UseUserEvent();
-  const locationState = props.location.state; //si viene new o edit en el state, si es edit es un id
-  const { image, restoreImage, handleChangeImage, onChangeCertificateImage } = useImageCertificate();
+  const certificateId = props.location.state?.edit ?? ''; 
   const properties = cEventUser.value.properties || {};
-  const { certificatesRow, handleDragEnd, handledDelete, handledEdit, handledAdd } = useGetCertificatesRows(
-    locationState?.edit ?? ''
-  );
+  const { certificatesRow, handleDragEnd, handledDelete, handledEdit, handledAdd } = useGetCertificatesRows(certificateId);
   const { userTypes, isLoadingUserTypes } = useGetUserType(props.event._id);
-  const { certificate, isLoadingCertificate} = useGetCertificate(locationState.edit ?? '');
+  const { certificate, isLoadingCertificate, handledAddCertificate, handledEditCertificate, handledDeleteCertificate, handleChangeImage, image, restoreImage } = useCrudCertificate(certificateId);
   const allTags = getAllEventCertificateTags(properties);
 
-  const onSubmit = async (certificateForm: ICertificate) => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se guarda la información...',
-      action: 'show',
-    });
-    try {
-      const data = {
-        name: certificateForm.name,
-        userTypes: certificateForm.userTypes,
-        content: certificatesRow,
-        event_id: props.event._id,
-        background: image,
-        rol_id: certificate?.rol?._id,
-        rol: certificate?.rol,
-      };
-      return console.log('data',data)
-      if (locationState.edit) {
-        await CertsApi.editOne(data, locationState.edit);
-      } else {
-        await CertsApi.create(data);
-      }
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      });
-      DispatchMessageService({
-        type: 'success',
-        msj: 'Información guardada correctamente!',
-        action: 'show',
-      });
-      history.push(`${props.matchUrl}`);
-    } catch (e) {
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      });
-      DispatchMessageService({
-        type: 'error',
-        msj: handleRequestError(e).message,
-        action: 'show',
-      });
+  const onSubmit = async (certificateForm: ICertificateForm) => {
+    const data: Omit<ICertificate, '_id'> = {
+      name: certificateForm.name,
+      userTypes: certificateForm.userTypes,
+      content: certificatesRow,
+      event_id: props.event._id,
+      background: image,
+    };
+    if (certificateId) {
+      await handledEditCertificate(data)
+    } else {
+      await handledAddCertificate(data);
     }
+    history.push(`${props.matchUrl}`);
+
   };
 
-  const onRemoveId = () => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se borra la información...',
-      action: 'show',
-    });
-    if (locationState.edit) {
-      confirm({
-        title: `¿Está seguro de eliminar la información?`,
-        //@ts-ignore
-        icon: <ExclamationCircleOutlined />,
-        content: 'Una vez eliminado, no lo podrá recuperar',
-        okText: 'Borrar',
-        okType: 'danger',
-        cancelText: 'Cancelar',
-        onOk() {
-          const onHandlerRemove = async () => {
-            try {
-              await CertsApi.deleteOne(locationState.edit);
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              });
-              DispatchMessageService({
-                type: 'success',
-                msj: 'Se eliminó la información correctamente!',
-                action: 'show',
-              });
-              history.push(`${props.matchUrl}`);
-            } catch (e) {
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              });
-              DispatchMessageService({
-                type: 'error',
-                msj: handleRequestError(e).message,
-                action: 'show',
-              });
-            }
-          };
-          onHandlerRemove();
-        },
-      });
-    }
-  };
-
-
+  const onDeleteCertificate = async()=>{
+    await handledDeleteCertificate()
+    history.push(`${props.matchUrl}`);
+  }
   useEffect(() => {
     form.setFieldsValue({name:certificate?.name ?? '', userTypes:certificate?.userTypes ?? []})
-    if(certificate?.background) onChangeCertificateImage(certificate?.background)
-  }, [certificate])
+  }, [certificate, form])
   
+  //toDo: Style - Add a loader component
+  if(isLoadingCertificate)return <Row style={{height:'500px'} } align='middle' justify='center'><Loading/></Row>
 
-  if(isLoadingCertificate)return <>Cargando</>
   return (
     <Form form={form} onFinish={onSubmit} {...formLayout} >
       <Header
@@ -160,8 +78,8 @@ const Certificado: FC<CertificatesProps> = (props) => {
         back
         save
         form
-        remove={onRemoveId}
-        edit={locationState.edit}
+        remove={onDeleteCertificate}
+        edit={certificateId}
         extra={
           <Form.Item>
             <Row wrap gutter={[16, 8]}>
@@ -237,7 +155,7 @@ const Certificado: FC<CertificatesProps> = (props) => {
             <Col span={8}>
               <Form.Item
                 label={'Imagen de Fondo'}
-                name={'imgBackground'}
+                name={'background'}
                 tooltip={
                   <>
                     {'Si desea volver a tener la imagen anterior presione el siguiente botón'}

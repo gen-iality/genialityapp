@@ -1,10 +1,17 @@
 import { Rule } from 'antd/lib/form';
 
 export const contentRules: Rule[] = [
-  { min: 0, message: 'Debe ser mayor o igual a uno' },
-  { max: 10, message: 'Maximo 10' },
+  { type: 'number', min: 1, max: 10, message: 'Solo se permite saltos entre 1 y 10' },
+];
+
+export const timesRules: Rule[] = [
   {
     required: true,
     message: 'El contenido es obligatorio',
   },
 ];
+
+export const rulesType = {
+  text: timesRules,
+  number: contentRules,
+};

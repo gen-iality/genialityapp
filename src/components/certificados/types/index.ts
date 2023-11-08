@@ -170,22 +170,16 @@ export interface State {
     edit?: string
 }
 
-export interface ICertificado {
-    rol?: any ;
-    name?: string;
-    userTypes?: string[]
-    background:string;
+export interface ICertificate {
+    name:string;
+    userTypes:string[]
+    background:any
     content:CertifiRow[]
     _id:string
     event_id:string;
 }
 
-export interface ICertificate {
-    name:string;
-    userTypes:string[]
-    rol:string
-    imgBackground:any
-}
+export type ICertificateForm = Omit<ICertificate,'event_id' | 'content' | '_id' >
 
 export  type RowCert = 'break' | 'h1' | 'h2' | 'h3' | 'h4' | 'p'
 
