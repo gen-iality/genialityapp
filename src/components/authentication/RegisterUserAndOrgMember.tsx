@@ -41,13 +41,13 @@ const RegisterUserAndOrgMember = ({
   const location = useLocation()
 
   const [current, setCurrent] = useState(0)
-  const [basicDataUser, setBasicDataUser] = useState({
+  const [basicUserData, setBasicUserData] = useState({
     names: '',
     email: '',
     password: '',
     picture: '',
   })
-  const [dataOrgMember, setDataOrgMember] = useState<any | undefined>(undefined)
+  const [orgMemberData, setOrgMemberData] = useState<any | undefined>(undefined)
   const [buttonStatus, setButtonStatus] = useState(true)
   const [validationStatus, setValidationStatus] = useState<ValidationStatusType>({
     error: false,
@@ -69,21 +69,21 @@ const RegisterUserAndOrgMember = ({
   const formDataHandler = (e: any, fieldName: string, picture: any) => {
     const value = fieldName === 'picture' ? picture : e.target.value
 
-    setBasicDataUser((previous: any) => ({
+    setBasicUserData((previous: any) => ({
       ...previous,
       [fieldName]: value,
     }))
   }
 
   const onSubmit = (values: any) => {
-    setDataOrgMember(values)
+    setOrgMemberData(values)
   }
 
   const steps = [
     {
       title: 'Básico',
       content: (
-        <RegisterFast userData={basicDataUser} formDataHandler={formDataHandler} />
+        <RegisterFast userData={basicUserData} formDataHandler={formDataHandler} />
       ),
       icon: <AccountOutlineIcon style={{ fontSize: '32px' }} />,
     },
@@ -92,7 +92,7 @@ const RegisterUserAndOrgMember = ({
       content: (
         <OrganizationPropertiesForm
           form={form}
-          basicDataUser={basicDataUser}
+          basicDataUser={basicUserData}
           organization={organization}
           onSubmit={onSubmit}
           noSubmitButton
@@ -105,7 +105,7 @@ const RegisterUserAndOrgMember = ({
       content: (
         <RegistrationResult
           validationGeneral={validationStatus}
-          basicDataUser={basicDataUser}
+          basicDataUser={basicUserData}
           requireAutomaticLogin={requireAutomaticLogin}
         />
       ),
@@ -115,7 +115,7 @@ const RegisterUserAndOrgMember = ({
 
   const handleValidateAccountGeniality = async () => {
     try {
-      const validateEmail = await UsersApi.validateEmail({ email: basicDataUser.email })
+      const validateEmail = await UsersApi.validateEmail({ email: basicUserData.email })
       if (validateEmail?.message === 'Email valid') {
         setValidationStatus({
           isLoading: false,
@@ -176,7 +176,7 @@ const RegisterUserAndOrgMember = ({
   }
 
   async function createOrgMember() {
-    const propertiesOrgMember = { properties: { ...basicDataUser, ...dataOrgMember } }
+    const propertiesOrgMember = { properties: { ...basicUserData, ...orgMemberData } }
     delete propertiesOrgMember.properties.password
     delete propertiesOrgMember.properties.picture
 
@@ -211,7 +211,7 @@ const RegisterUserAndOrgMember = ({
           }),
         })
         // setBasicDataUser({ email: '', names: '', password: '', picture: '' })
-        setDataOrgMember(undefined)
+        setOrgMemberData(undefined)
         startingComponent && startingComponent()
       }
     } catch (err) {
@@ -226,7 +226,7 @@ const RegisterUserAndOrgMember = ({
     if (existGenialialityUser) {
       createOrgMember()
     } else {
-      createNewUser(basicDataUser)
+      createNewUser(basicUserData)
         .then((createdUserInfo) => {
           console.log('createdUserInfo returned:', { createdUserInfo })
           const { status } = createdUserInfo
@@ -286,11 +286,11 @@ const RegisterUserAndOrgMember = ({
   }
 
   const ValidateGeneralFields = () => {
-    if (basicDataUser.email && basicDataUser.password && basicDataUser.names) {
+    if (basicUserData.email && basicUserData.password && basicUserData.names) {
       if (
-        validateEmail(basicDataUser.email) &&
-        basicDataUser.password.length >= 6 &&
-        basicDataUser.password.length <= 18
+        validateEmail(basicUserData.email) &&
+        basicUserData.password.length >= 6 &&
+        basicUserData.password.length <= 18
       ) {
         setButtonStatus(false)
         setValidationStatus({
@@ -324,10 +324,10 @@ const RegisterUserAndOrgMember = ({
   }
 
   useEffect(() => {
-    if (dataOrgMember !== undefined) {
+    if (orgMemberData !== undefined) {
       handleSubmit()
     }
-  }, [dataOrgMember])
+  }, [orgMemberData])
 
   useEffect(() => {
     OrganizationApi.getOne(organizationId).then((response) => {
@@ -340,7 +340,7 @@ const RegisterUserAndOrgMember = ({
     if (current == 0) {
       ValidateGeneralFields()
     }
-  }, [basicDataUser, current])
+  }, [basicUserData, current])
 
   useEffect(() => {
     if (currentAuthScreen === 'login') setCurrent(0)
