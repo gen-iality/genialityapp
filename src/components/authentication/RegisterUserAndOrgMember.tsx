@@ -289,7 +289,7 @@ const RegisterUserAndOrgMember = (props: RegisterUserAndOrgMemberProps) => {
     return re.test(email)
   }
 
-  const ValidateGeneralFields = () => {
+  const validateGeneralFields = () => {
     if (basicUserData.email && basicUserData.password && basicUserData.names) {
       if (
         validateEmail(basicUserData.email) &&
@@ -342,7 +342,7 @@ const RegisterUserAndOrgMember = (props: RegisterUserAndOrgMemberProps) => {
 
   useEffect(() => {
     if (current == 0) {
-      ValidateGeneralFields()
+      validateGeneralFields()
     }
   }, [basicUserData, current])
 
