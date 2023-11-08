@@ -38,7 +38,7 @@ const EventOrganizationPage = () => {
     OrganizationPaymentContext,
   )
 
-  const { isDev, isStage } = useIsDevOrStage()
+  const { isNotProd } = useIsDevOrStage()
 
   useEffect(() => {
     if (orgId) {
@@ -172,7 +172,7 @@ const EventOrganizationPage = () => {
         organizationUser={organizationUser}
         organization={organization}
       />
-      {(isDev || isStage) && (
+      {isNotProd && (
         <div>
           <Button onClick={() => paymentDispatch({ type: 'REQUIRE_PAYMENT' })}>
             REQUIRE_PAYMENT
