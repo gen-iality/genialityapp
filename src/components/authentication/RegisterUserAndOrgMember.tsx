@@ -29,7 +29,7 @@ import { ValidationStatusType } from './types'
 const RegisterUserAndOrgMember = ({
   stylePaddingMobile,
   stylePaddingDesktop,
-  idOrganization,
+  organizationId,
   defaultPositionId,
   requireAutomaticLogin,
   startingComponent,
@@ -180,23 +180,23 @@ const RegisterUserAndOrgMember = ({
     delete propertiesOrgMember.properties.password
     delete propertiesOrgMember.properties.picture
 
-    if (!idOrganization) {
+    if (!organizationId) {
       StateMessage.show(
         null,
         'error',
         'No se puede proceder, recargue la página e intente nuevamente',
       )
-      throw new Error(`The value of idOrganization is ${idOrganization}`)
+      throw new Error(`The value of idOrganization is ${organizationId}`)
     }
 
     try {
-      const respUser = await OrganizationApi.saveUser(idOrganization, propertiesOrgMember)
+      const respUser = await OrganizationApi.saveUser(organizationId, propertiesOrgMember)
       console.debug('RegisterUser: has default position Id', { defaultPositionId })
       if (defaultPositionId === undefined) {
         console.warn('This organization has no default position. Eh!')
       } else {
         await PositionsApi.Organizations.addUser(
-          idOrganization,
+          organizationId,
           defaultPositionId,
           respUser.account_id,
         )
@@ -330,7 +330,7 @@ const RegisterUserAndOrgMember = ({
   }, [dataOrgMember])
 
   useEffect(() => {
-    OrganizationApi.getOne(idOrganization).then((response) => {
+    OrganizationApi.getOne(organizationId).then((response) => {
       console.log('response', response)
       setOrganization(response)
     })
@@ -429,7 +429,7 @@ const RegisterUserAndOrgMember = ({
                 <Button
                   style={{ padding: 4, color: '#333F44', fontWeight: 'bold' }}
                   onClick={() =>
-                    helperDispatch({ type: 'showLogin', idOrganization: idOrganization })
+                    helperDispatch({ type: 'showLogin', idOrganization: organizationId })
                   }
                   type="link"
                 >

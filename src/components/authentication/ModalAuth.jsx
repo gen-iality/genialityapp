@@ -467,7 +467,7 @@ const ModalAuth = (props) => {
               <RegisterUserAndOrgMember
                 stylePaddingMobile={stylePaddingMobile}
                 stylePaddingDesktop={stylePaddingDesktop}
-                idOrganization={controllerLoginVisible.idOrganization} // New!
+                organizationId={controllerLoginVisible.idOrganization} // New!
                 defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
                 requireAutomaticLogin={true}
               />
