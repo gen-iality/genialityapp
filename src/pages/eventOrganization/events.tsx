@@ -18,6 +18,10 @@ function OrgEvents(props: any) {
   const { eventData, isLoading, pagination } = useGetEventWithStatistics(organizationId);
   const [openModal, setOpenModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState();
+
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+
   const onCloseModal = () => {
     setOpenModal(false);
   };
@@ -42,6 +46,7 @@ function OrgEvents(props: any) {
   const goToEvent = (eventId: string) => {
     const url = `/eventadmin/${eventId}/agenda`;
     history.replace({ pathname: url });
+    // return url
   };
 
   const linkToTheMenuRouteS = (menuRoute: string) => {
@@ -64,11 +69,18 @@ function OrgEvents(props: any) {
     </Row>
   );
 
+  const columnsData = {
+    searchedColumn,
+    setSearchedColumn,
+    searchText,
+    setSearchText,
+  };
+
   return (
     <>
       <Header title='Eventos' />
       <Table
-        columns={columns(goToEvent, onSelectedEvent)}
+        columns={columns(goToEvent, columnsData, onSelectedEvent)}
         dataSource={eventData}
         loading={isLoading}
         size='small'
