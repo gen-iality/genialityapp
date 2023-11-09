@@ -118,7 +118,7 @@ const EventOrganizationPage = () => {
     OrganizationApi.getMeUser(orgId).then(({ data }) => {
       const [orgUser] = data
       setOrganizationUser(orgUser)
-      console.debug('EventOrganization member rol:', orgUser?.rol)
+      console.debug('EventOrganization member rol:', orgUser, orgUser?.rol)
       setIsAdminUser(orgUser?.rol?.type === 'admin')
     })
 
@@ -329,15 +329,17 @@ const EventOrganizationPage = () => {
                   </Badge>
                 </Col>
                 <Col>
-                  {cUser.value && !organizationUser && (
-                    <Button
-                      danger
-                      type="primary"
-                      onClick={() => showAuthFormToOnlyAddOrganizationMember()}
-                    >
-                      Inscribirse
-                    </Button>
-                  )}
+                  {cUser.value &&
+                    !organizationUser &&
+                    organization?.access_settings?.type === 'payment' && (
+                      <Button
+                        danger
+                        type="primary"
+                        onClick={() => showAuthFormToOnlyAddOrganizationMember()}
+                      >
+                        Inscribirse
+                      </Button>
+                    )}
                 </Col>
               </Row>
               <Row gutter={[16, 16]}>
