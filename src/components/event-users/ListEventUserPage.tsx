@@ -1,4 +1,5 @@
 import {
+  Actions,
   AgendaApi,
   AttendeeApi,
   BadgeApi,
@@ -40,6 +41,7 @@ import {
   DeleteOutlined,
   DownloadOutlined,
   EditOutlined,
+  LoadingOutlined,
   PlusCircleOutlined,
   SearchOutlined,
   StarOutlined,
@@ -122,6 +124,9 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
   const [watchedUserInProgressingModal, setWatchedUserInProgressingModal] =
     useState<any>()
   const [nonPublishedActivityIDs, setNonPublishedActivityIDs] = useState<string[]>([])
+
+  const [fullDataToExport, setFullDataToExport] = useState<any[]>([])
+  const [isRequestingFullData, setIsRequestingFullData] = useState(false)
 
   const eventIdSearch = activityId ?? event._id
 
@@ -600,6 +605,18 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
     ])
   }
 
+  const requestAllEventUsersWithOrganizationMemberProperties = async () => {
+    setIsRequestingFullData(true)
+    Actions.get(`/api/events/${event._id}/eventusers-full`, true)
+      .then((dataList: any[]) => {
+        console.log(dataList.length, 'records')
+        setFullDataToExport(dataList)
+      })
+      .finally(() => {
+        setIsRequestingFullData(false)
+      })
+  }
+
   const getAllAttendees = async () => {
     const orgId = event.organizer._id
     const org = await OrganizationApi.getOne(orgId)
@@ -614,6 +631,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
     const newRolesList: any[] = await RolAttApi.byEventRolsGeneral()
     const newBadgeEvent = await BadgeApi.get(event._id)
 
+    console.log('newSimplifyOrgProperties', newSimplifyOrgProperties)
     setSimplifyOrgProperties(newSimplifyOrgProperties)
     setRolesList(newRolesList)
     setBadgeEvent(newBadgeEvent)
@@ -711,10 +729,22 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
 
   const handleExportFile = async () => {
     // To take filtered data source when user use filters or sort the content
-    const source =
+    let source =
       Array.isArray(filteredDataSource) && filteredDataSource.length > 0
         ? filteredDataSource
         : dataSource || []
+
+    // If the user wants the full report, take the data and clear the state
+    if (fullDataToExport.length > 0) {
+      source = [...fullDataToExport].map((data) => {
+        data.checkedin_at = parseFirebaseDate(data.checkedin_at)
+        data.created_at = parseFirebaseDate(data.created_at)
+        data.updated_at = parseFirebaseDate(data.updated_at)
+        return data
+      })
+      setFilteredDataSource([])
+    }
+
     let attendees = [...source].sort((a, b) => b.created_at - a.created_at)
 
     console.info('raw attendees', attendees)
@@ -807,6 +837,12 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
     })
   }, [allActivities])
 
+  useEffect(() => {
+    if (fullDataToExport.length > 0) {
+      handleExportFile()
+    }
+  }, [fullDataToExport])
+
   return (
     <>
       <LessonsInfoModal
@@ -881,6 +917,21 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
                 }}
               >
                 Exportar
+              </Button>
+            </Col>
+
+            <Col>
+              <Button
+                type="primary"
+                icon={isRequestingFullData ? <LoadingOutlined /> : <DownloadOutlined />}
+                disabled={isRequestingFullData}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  requestAllEventUsersWithOrganizationMemberProperties()
+                }}
+              >
+                Exportar Completo
               </Button>
             </Col>
 
