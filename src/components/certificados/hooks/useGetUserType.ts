@@ -20,7 +20,7 @@ export const useGetUserType = (eventId: string) => {
       setIsLoadingUserTypes(true);
       const data = await getTypes();
       setUserTypes(data);
-      setIsLoadingUserTypes(true);
+      setIsLoadingUserTypes(false);
     } catch (error) {
       setIsLoadingUserTypes(false);
     }
