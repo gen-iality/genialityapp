@@ -5,7 +5,7 @@ import {
   LockOutlined,
   UserOutlined,
 } from '@ant-design/icons'
-import { Form, Input, Button, Space, Upload, Alert } from 'antd'
+import { Form, Input, Button, Space, Upload, Alert, Grid } from 'antd'
 import ImgCrop from 'antd-img-crop'
 import createNewUser, {
   CREATE_NEW_USER_FAIL,
@@ -17,9 +17,11 @@ import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { useIntl } from 'react-intl'
 import { StateMessage } from '@context/MessageService'
 import { uploadImagedummyRequest } from '@Utilities/imgUtils'
+import { stylePaddingDesktop, stylePaddingMobile } from './constants'
 
-const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
+const RegisterUser = () => {
   const intl = useIntl()
+  const screens = Grid.useBreakpoint()
   const { handleChangeTypeModal } = useHelper()
   const [isErrorBecauseEmail, setIsErrorBecauseEmail] = useState(false)
 

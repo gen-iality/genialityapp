@@ -1,3 +1,4 @@
+import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { IntlProvider } from 'react-intl'
@@ -65,15 +66,21 @@ window.appFB = app
 
 const root = createRoot(document.getElementById('root')!)
 root.render(
-  <IntlProvider locale={languageWithoutRegionCode} messages={messages} defaultLocale="es">
-    <QueryClientProvider client={queryClient}>
-      <CurrentUserProvider>
-        <Provider store={store}>
-          <App />
-        </Provider>
-      </CurrentUserProvider>
-    </QueryClientProvider>
-  </IntlProvider>,
+  <StrictMode>
+    <IntlProvider
+      locale={languageWithoutRegionCode}
+      messages={messages}
+      defaultLocale="es"
+    >
+      <QueryClientProvider client={queryClient}>
+        <CurrentUserProvider>
+          <Provider store={store}>
+            <App />
+          </Provider>
+        </CurrentUserProvider>
+      </QueryClientProvider>
+    </IntlProvider>
+  </StrictMode>,
 )
 
 unregisterServiceWorker()

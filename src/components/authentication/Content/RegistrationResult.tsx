@@ -16,10 +16,16 @@ interface RegistrationResultProps {
   validationGeneral: ValidationStatusType
   basicDataUser: any
   requireAutomaticLogin: any
+  onlyAddOrganizationMember?: boolean
 }
 
 const RegistrationResult: FunctionComponent<RegistrationResultProps> = (props) => {
-  const { validationGeneral, basicDataUser, requireAutomaticLogin } = props
+  const {
+    validationGeneral,
+    basicDataUser,
+    requireAutomaticLogin,
+    onlyAddOrganizationMember,
+  } = props
 
   const [fraseLoading, setFraseLoading] = useState('')
 
@@ -50,7 +56,15 @@ const RegistrationResult: FunctionComponent<RegistrationResultProps> = (props) =
     return () => {
       clearInterval(intervalFrase)
     }
-  })
+  }, [])
+
+  useEffect(() => {
+    if (onlyAddOrganizationMember) {
+      setTimeout(() => {
+        window.location.reload()
+      }, 3000)
+    }
+  }, [onlyAddOrganizationMember])
 
   if (validationGeneral.isLoading) {
     return (
@@ -71,7 +85,9 @@ const RegistrationResult: FunctionComponent<RegistrationResultProps> = (props) =
             (basicDataUser ? basicDataUser?.email : '') + ' ' + validationGeneral.message
           }
         />
-        {requireAutomaticLogin && <RedirectUser basicDataUser={basicDataUser} />}
+        {requireAutomaticLogin && !onlyAddOrganizationMember && (
+          <RedirectUser basicDataUser={basicDataUser} />
+        )}
       </>
     )
   }

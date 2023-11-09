@@ -3,9 +3,10 @@ export type HelperAction = {
   tabs?: any
   currentAuthScreen?: string
   visible?: boolean
-  idOrganization?: string
+  organizationId?: string
   defaultPositionId?: string
   organization?: string
+  onlyAddOrganizationMember?: boolean
   logo?: string
   currentActivity?: object
   showNotification?: boolean | any

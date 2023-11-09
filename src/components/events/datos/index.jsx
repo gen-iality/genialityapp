@@ -634,9 +634,8 @@ class Datos extends Component {
               <Fragment>
                 <Header title="Interacción con la plataforma" back />
                 <small>
-                  {`Configure los datos que desea recolectar de los asistentes ${
-                    this.organization ? 'de la organización' : 'del curso'
-                  }`}
+                  Configure los datos que desea recolectar de los asistentes{' '}
+                  {this.organization ? 'de la organización' : 'del curso'}
                 </small>
 
                 <Table
@@ -749,9 +748,8 @@ class Datos extends Component {
                     }
                   />
                   <small>
-                    {`Configure los datos que desea recolectar de los asistentes ${
-                      this.organization ? 'de la organización' : 'del curso'
-                    }`}
+                    Configure los datos que desea recolectar de los asistentes $
+                    {this.organization ? 'de la organización' : 'del curso'}
                   </small>
 
                   <Table

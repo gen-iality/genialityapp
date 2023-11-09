@@ -17,17 +17,17 @@ import OrganizationPaymentContext from '@/payments/OrganizationPaymentContext'
 import useIsDevOrStage from '@/hooks/useIsDevOrStage'
 const { Title, Text, Paragraph } = Typography
 
-const EventOrganization = () => {
+const EventOrganizationPage = () => {
   const params = useParams()
   const orgId = params.id
 
-  const [upcomingEvents, setUpcomingEvents] = useState([])
-  const [lastEvents, setLastEvents] = useState([])
-  const [organization, setOrganization] = useState(null)
+  const [upcomingEvents, setUpcomingEvents] = useState<any[]>([])
+  const [lastEvents, setLastEvents] = useState<any[]>([])
+  const [organization, setOrganization] = useState<any | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isVisibleRegister, setIsVisibleRegister] = useState(false)
-  const [organizationUser, setOrganizationUser] = useState(null)
-  const [myEvents, setMyEvents] = useState([])
+  const [organizationUser, setOrganizationUser] = useState<any | null>(null)
+  const [myEvents, setMyEvents] = useState<any[]>([])
 
   const [isAdminUser, setIsAdminUser] = useState(false)
 
@@ -38,7 +38,44 @@ const EventOrganization = () => {
     OrganizationPaymentContext,
   )
 
-  const { isDev, isStage } = useIsDevOrStage()
+  const { isNotProd } = useIsDevOrStage()
+
+  const showAuthFormToOnlyAddOrganizationMember = () => {
+    console.debug('calling showAuthFormToOnlyAddOrganizationMember', { orgId })
+    let positionId = organization.default_position_id || undefined
+
+    helperDispatch({
+      type: 'showRegister',
+      visible: true,
+      organizationId: orgId,
+      defaultPositionId: positionId,
+      customPasswordLabel: organization.access_settings?.custom_password_label,
+      onlyAddOrganizationMember: true,
+    })
+  }
+
+  // Obtener los datos necesarios de la organización
+  const fetchItem = async (orgId: string) => {
+    const events: any[] = await OrganizationFuction.getEventsNextByOrg(orgId)
+    const _upcomingEvents: any[] = []
+    const _lastEvents: any[] = []
+    const currentDateNow = dayjs()
+    events.forEach((event) => {
+      if (dayjs(event.datetime_from).isAfter(currentDateNow)) {
+        _upcomingEvents.push(event)
+      } else {
+        _lastEvents.push(event)
+      }
+    })
+
+    const _organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId)
+    if (events) {
+      setUpcomingEvents(_upcomingEvents)
+      setLastEvents(_lastEvents) // Reverse that list to show older events as first ._.
+      setOrganization(_organization)
+      setIsLoading(false)
+    }
+  }
 
   useEffect(() => {
     if (orgId) {
@@ -49,15 +86,13 @@ const EventOrganization = () => {
   useEffect(() => {
     if (cUser.value || !organization || !orgId) return
     if (!cUser.value && organization) {
-      let positionId
-      if (organization.default_position_id) {
-        positionId = organization.default_position_id
-      }
+      let positionId = organization.default_position_id || undefined
+
       console.log('5. positionId', positionId, 'orgId', orgId)
       helperDispatch({
         type: 'showRegister',
         visible: true,
-        idOrganization: orgId,
+        organizationId: orgId,
         defaultPositionId: positionId,
         customPasswordLabel: organization.access_settings?.custom_password_label,
       })
@@ -83,7 +118,7 @@ const EventOrganization = () => {
     OrganizationApi.getMeUser(orgId).then(({ data }) => {
       const [orgUser] = data
       setOrganizationUser(orgUser)
-      console.debug('EventOrganization member rol:', orgUser?.rol)
+      console.debug('EventOrganization member rol:', orgUser, orgUser?.rol)
       setIsAdminUser(orgUser?.rol?.type === 'admin')
     })
 
@@ -94,29 +129,6 @@ const EventOrganization = () => {
     }
     load_minetickets()
   }, [cUser.value, orgId])
-
-  // Obtener los datos necesarios de la organización
-  const fetchItem = async (orgId) => {
-    const events = await OrganizationFuction.getEventsNextByOrg(orgId)
-    const _upcomingEvents = []
-    const _lastEvents = []
-    const currentDateNow = dayjs()
-    events.forEach((event) => {
-      if (dayjs(event.datetime_from).isAfter(currentDateNow)) {
-        _upcomingEvents.push(event)
-      } else {
-        _lastEvents.push(event)
-      }
-    })
-
-    const _organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId)
-    if (events) {
-      setUpcomingEvents(_upcomingEvents)
-      setLastEvents(_lastEvents) // Reverse that list to show older events as first ._.
-      setOrganization(_organization)
-      setIsLoading(false)
-    }
-  }
 
   useEffect(() => {
     if (!organization || !organizationUser) return
@@ -172,7 +184,7 @@ const EventOrganization = () => {
         organizationUser={organizationUser}
         organization={organization}
       />
-      {(isDev || isStage) && (
+      {isNotProd && (
         <div>
           <Button onClick={() => paymentDispatch({ type: 'REQUIRE_PAYMENT' })}>
             REQUIRE_PAYMENT
@@ -190,16 +202,6 @@ const EventOrganization = () => {
         </div>
       )}
       <ModalLoginHelpers />
-      {/* <RegisterMemberFromOrganizationUserModal
-        organization={organization}
-        orgMember={organizationUser}
-        user={cUser.value}
-        visible={isVisibleRegister}
-        setVisible={(b) => setIsVisibleRegister(b)}
-        onRegister={() => {
-          console.log('registed')
-        }}
-      />*/}
 
       {!isLoading && orgId ? (
         <>
@@ -314,9 +316,32 @@ const EventOrganization = () => {
                 borderRadius: '20px',
               }}
             >
-              <Badge offset={[60, 22]} count={`${lastEvents.length} Cursos`}>
-                <Title level={2}>Disponibles</Title>
-              </Badge>
+              <Row
+                style={{
+                  display: 'flex',
+                  width: '100%',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Col>
+                  <Badge offset={[60, 22]} count={`${lastEvents.length} Cursos`}>
+                    <Title level={2}>Disponibles</Title>
+                  </Badge>
+                </Col>
+                <Col>
+                  {cUser.value &&
+                    !organizationUser &&
+                    organization?.access_settings?.type === 'payment' && (
+                      <Button
+                        danger
+                        type="primary"
+                        onClick={() => showAuthFormToOnlyAddOrganizationMember()}
+                      >
+                        Inscribirse
+                      </Button>
+                    )}
+                </Col>
+              </Row>
               <Row gutter={[16, 16]}>
                 {lastEvents?.length > 0 ? (
                   lastEvents.map((event, index) => (
@@ -423,124 +448,4 @@ const EventOrganization = () => {
   )
 }
 
-export default EventOrganization
-
-/**
- * 
- * import { FunctionComponent, useState } from 'react';
-
-import { Modal, Form, Input, Button, Card, Alert } from 'antd';
-
-import { WarningOutlined } from '@ant-design/icons';
-import { OrganizationApi } from '@helpers/request';
-
-type FormOrganizationUser = {
-  name: string;
-  email: string;
-};
-
-export interface RegisterMemberFromOrganizationUserModalProps {
-  orgMember?: any;
-  user?: any;
-  visible?: boolean;
-  organization: any;
-  onRegister?: (orgUserData: any) => void;
-}
-
-const RegisterMemberFromOrganizationUserModal: FunctionComponent<RegisterMemberFromOrganizationUserModalProps> = (
-  props,
-) => {
-  const { organization, orgMember, user, visible, onRegister } = props;
-
-  const [isModalOpened, setIsModalOpened] = useState(visible);
-
-  const [form] = Form.useForm<FormOrganizationUser>();
-
-  const onFormSubmit = (values: FormOrganizationUser) => {
-    if (!organization?._id) {
-      Modal.error({
-        title: 'No ha cargado la organización',
-        content: 'No se ha cargado la información de la organización aún',
-        icon: <WarningOutlined />,
-        onOk: () => setIsModalOpened(false),
-      });
-      return;
-    }
-
-    let data: any = {};
-
-    if (user) {
-      // Take data from the user, I think
-      // some data are: user.names, user.email
-      data = {
-        properties: {
-          names: user.names,
-          email: user.email,
-        },
-      }; // TODO: fill that data for the organization user
-      console.log('Register Organization User from current user');
-    } else {
-      // Take data from the form
-      const { name, email } = values;
-      // TODO: do the register
-      data = {
-        properties: {
-          names: name,
-          email: email,
-        },
-      }; // TODO: fill that data for the organization user
-      console.log('Register Organization User', data);
-    }
-
-    if (onRegister) {
-      onRegister(data);
-    }
-
-    // OrganizationApi.saveUser(organization._id, data)
-    //   .finally(() => {
-    //     setIsModalOpened(false)
-    //   })
-  };
-
-  if (orgMember) {
-    return (
-      <Modal
-        visible={isModalOpened}
-        title="Usuario ya inscrito"
-        onOk={() => setIsModalOpened(false)}
-        onCancel={() => setIsModalOpened(false)}
-      >
-        El usuario ya está inscrito como miembro
-      </Modal>
-    );
-  }
-
-  return (
-    <Modal
-      visible={isModalOpened}
-      title="Registrarse como miembro de esta organización"
-      okText="Inscribirse"
-      onOk={() => form.submit()}
-    >
-      <Form form={form} onFinish={onFormSubmit}>
-        {user ? (
-          <Alert message="No se requieren más datos" />
-        ) : (
-          <>
-            <Form.Item label="Nombre" name="name" rules={[{ required: true, message: 'Falta el nombre' }]}>
-              <Input />
-            </Form.Item>
-
-            <Form.Item label="Correo" name="email" rules={[{ required: true, message: 'Falta el correo' }]}>
-              <Input />
-            </Form.Item>
-          </>
-        )}
-      </Form>
-    </Modal>
-  );
-};
-
-export default RegisterMemberFromOrganizationUserModal;
-
- */
+export default EventOrganizationPage

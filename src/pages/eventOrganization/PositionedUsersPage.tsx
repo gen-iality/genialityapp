@@ -173,10 +173,11 @@ function PositionedUsersPage(props: PositionedUsersPageProps) {
     <>
       <Header
         title={
-          <>
-            {`Miembros en el cargo: `}
-            {currentPosition ? <>{currentPosition.position_name}</> : <Spin />}
-          </>
+          currentPosition ? (
+            <span>Miembros en el cargo: {currentPosition.position_name}</span>
+          ) : (
+            <Spin />
+          )
         }
       />
       <Typography.Paragraph>

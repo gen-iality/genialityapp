@@ -36,19 +36,10 @@ import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBe
 import RegisterUserAndOrgMember from './RegisterUserAndOrgMember'
 import { isOrganization } from '@helpers/helperOrg'
 import { OrganizationFuction } from '@helpers/request'
+import { stylePaddingDesktop, stylePaddingMobile } from './constants'
+
 const { TabPane } = Tabs
 const { useBreakpoint } = Grid
-
-const stylePaddingDesktop = {
-  paddingLeft: '30px',
-  paddingRight: '30px',
-  textAlign: 'center',
-}
-const stylePaddingMobile = {
-  paddingLeft: '10px',
-  paddingRight: '10px',
-  textAlign: 'center',
-}
 
 const ModalAuth = (props) => {
   const screens = useBreakpoint()
@@ -89,6 +80,57 @@ const ModalAuth = (props) => {
     }
   }
 
+  const processModalVisiblility = () => {
+    const typeEvent = recordTypeForThisEvent(cEvent)
+    switch (typeEvent) {
+      case 'PRIVATE_EVENT':
+        setModalVisible(true)
+        helperDispatch({ type: 'showLogin', visible: true })
+        break
+
+      case 'PUBLIC_EVENT_WITH_REGISTRATION':
+        setModalVisible(true)
+        helperDispatch({ type: 'showRegister', visible: true })
+        break
+
+      case 'UN_REGISTERED_PUBLIC_EVENT':
+        setModalVisible(true)
+        helperDispatch({ type: 'showLogin', visible: false })
+        break
+
+      default:
+        setModalVisible(true)
+        break
+    }
+  }
+
+  const checkIfUserHasAuth = () =>
+    app.auth().onAuthStateChanged((user) => {
+      if (user && controllerLoginVisible.onlyAddOrganizationMember) {
+        setModalVisible(true)
+        helperDispatch({
+          type: 'showRegister',
+          visible: true,
+          organizationId: controllerLoginVisible.organizationId,
+          onlyAddOrganizationMember: controllerLoginVisible.onlyAddOrganizationMember,
+
+          defaultPositionId: controllerLoginVisible.defaultPositionId,
+          customPasswordLabel: controllerLoginVisible.customPasswordLabel,
+        })
+      } else if (user) {
+        setModalVisible(false)
+
+        helperDispatch({ type: 'showLogin', visible: false })
+      } else {
+        if (cEvent.value?.organiser?._id) {
+          console.log('Vaaaaamonos')
+          window.location.href = `/organization/${cEvent.value.organiser._id}/events`
+        }
+        console.debug(window.location.href, cEvent.value)
+        processModalVisiblility()
+      }
+    })
+
   /*Cargando la información de la organización esto debería estar en un contexto*/
   useEffect(() => {
     if (!orgId) return
@@ -101,54 +143,12 @@ const ModalAuth = (props) => {
   }, [orgId])
 
   useEffect(() => {
-    let unsubscribe
-    async function isModalVisible() {
-      const typeEvent = recordTypeForThisEvent(cEvent)
-      switch (typeEvent) {
-        case 'PRIVATE_EVENT':
-          setModalVisible(true)
-          helperDispatch({ type: 'showLogin', visible: true })
-          break
-
-        case 'PUBLIC_EVENT_WITH_REGISTRATION':
-          setModalVisible(true)
-          helperDispatch({ type: 'showRegister', visible: true })
-          break
-
-        case 'UN_REGISTERED_PUBLIC_EVENT':
-          setModalVisible(true)
-          helperDispatch({ type: 'showLogin', visible: false })
-          break
-
-        default:
-          setModalVisible(true)
-          break
-      }
-    }
-
-    async function isUserAuth() {
-      unsubscribe = app.auth().onAuthStateChanged((user) => {
-        if (user) {
-          setModalVisible(false)
-
-          helperDispatch({ type: 'showLogin', visible: false })
-        } else {
-          if (cEvent.value?.organiser?._id) {
-            console.log('Vaaaaamonos')
-            window.location.href = `/organization/${cEvent.value.organiser._id}/events`
-          }
-          console.debug(window.location.href, cEvent.value)
-          isModalVisible()
-        }
-      })
-    }
-
-    isUserAuth()
+    let unsubscribe = checkIfUserHasAuth()
 
     return () => {
       unsubscribe && unsubscribe()
     }
-  }, [cEvent, cUser])
+  }, [cEvent, cUser, controllerLoginVisible.onlyAddOrganizationMember])
 
   useEffect(() => {
     form1.resetFields()
@@ -182,7 +182,7 @@ const ModalAuth = (props) => {
         helperDispatch({
           type: 'showLogin',
           visible: true,
-          idOrganization: controllerLoginVisible?.idOrganization,
+          organizationId: controllerLoginVisible?.organizationId,
         })
         break
 
@@ -190,7 +190,7 @@ const ModalAuth = (props) => {
         helperDispatch({
           type: 'showRegister',
           visible: true,
-          idOrganization: controllerLoginVisible?.idOrganization,
+          organizationId: controllerLoginVisible?.organizationId,
         })
         break
 
@@ -427,7 +427,8 @@ const ModalAuth = (props) => {
     },
   ]
 
-  if (isVisibleRegister) {
+  if (isVisibleRegister()) {
+    console.info('add more tabs')
     tabItems.push({
       key: 'register',
       label: intl.formatMessage({
@@ -446,35 +447,16 @@ const ModalAuth = (props) => {
           }}
         >
           {isHome() ? (
-            <>
-              <RegisterUser
-                screens={screens}
-                stylePaddingMobile={stylePaddingMobile}
-                stylePaddingDesktop={stylePaddingDesktop}
-                idOrganization={controllerLoginVisible.idOrganization} // New!
-                defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
-              />
-            </>
+            <RegisterUser />
           ) : isEvent() ? (
-            <>
-              <RegisterUserAndEventUser
-                screens={screens}
-                stylePaddingMobile={stylePaddingMobile}
-                stylePaddingDesktop={stylePaddingDesktop}
-                requireAutomaticLogin={true}
-              />
-            </>
+            <RegisterUserAndEventUser />
           ) : isOrganization() ? (
-            <>
-              <RegisterUserAndOrgMember
-                screens={screens}
-                stylePaddingMobile={stylePaddingMobile}
-                stylePaddingDesktop={stylePaddingDesktop}
-                idOrganization={controllerLoginVisible.idOrganization} // New!
-                defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
-                requireAutomaticLogin={true}
-              />
-            </>
+            <RegisterUserAndOrgMember
+              organizationId={controllerLoginVisible.organizationId} // New!
+              defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
+              requireAutomaticLogin={true}
+              onlyAddOrganizationMember={controllerLoginVisible.onlyAddOrganizationMember}
+            />
           ) : (
             <Spin />
           )}
