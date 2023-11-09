@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { firestore } from '../../../helpers/firebase';
 import RankingList from './rankingList';
 import RankingMyScore from './rankingMyScore';
@@ -7,9 +7,11 @@ import { UseSurveysContext } from '../../../context/surveysContext';
 import { UseCurrentUser } from '../../../context/userContext';
 import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { UseEventContext } from '../../../context/eventContext';
+import Loading from '@/components/profile/loading';
 
 export default function RankingTrivia(props: any) {
-  const { setGameRanking, setMyScore } = useHelper();
+  const { setGameRanking, setMyScore,  } = useHelper();
+  const [isLoadingGameRancking, setIsLoadingGameRancking] = useState(true)
   let cSurveys: any = UseSurveysContext();
   let cUser = UseCurrentUser();
   let eventContext = UseEventContext();
@@ -50,6 +52,7 @@ export default function RankingTrivia(props: any) {
     let unsubscribe: Function;
     if (!(Object.keys(currentUser).length === 0)) {
       if (!currentSurvey) return;
+      setIsLoadingGameRancking(true)
       unsubscribe = firestore
         .collection('surveys')
         .doc(currentSurvey._id)
@@ -84,14 +87,14 @@ export default function RankingTrivia(props: any) {
             return { ...item, index: index + 1 };
           });
           setGameRanking(positionScoresByScore.slice(0, 10));
-
           /** Puntaje individual */
           const cUserId = cUser.value?._id;
           const filterForRankingUserId = positionScoresByScore.filter(
             (rankingUsers: any) => rankingUsers.userId === cUserId
-          );
-
-          if (filterForRankingUserId?.length > 0) setMyScore(filterForRankingUserId);
+            );
+            
+            if (filterForRankingUserId?.length > 0) setMyScore(filterForRankingUserId);
+            setIsLoadingGameRancking(false)
         });
     }
     return () => {
@@ -120,9 +123,15 @@ export default function RankingTrivia(props: any) {
     <>
       {!(Object.keys(currentUser).length === 0) && (
         <>
-          <RankingMyScore />
-          <Divider />
-          <RankingList />
+          {isLoadingGameRancking ? (
+            <Loading />
+          ) : (
+            <>
+              <RankingMyScore />
+              <Divider />
+              <RankingList />
+            </>
+          )}
         </>
       )}
     </>
