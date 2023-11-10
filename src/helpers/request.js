@@ -962,7 +962,7 @@ export const OrganizationApi = {
     });
     return data;
   },
-  getEventsWithUserOrg: async (organizationId, organizarionUserId, event_user = false, order = 'oldest') => {
+  getEventsWithUserOrg: async (organizationId, organizarionUserId, event_user = false, order = 'desc') => {
     let token = await GetTokenUserFirebase();
     return await Actions.get(
       `/api/organizations/${organizationId}/user/${organizarionUserId}/events?event_user=${event_user}&order=${order}&token=${token}`,
@@ -990,9 +990,13 @@ export const OrganizationApi = {
   events: async (id) => {
     return await Actions.getOne(`/api/organizations/${id}/`, 'events');
   },
-  getUsers: async (id) => {
+  getUsers: async (id, page = -1) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.get(`/api/organizations/${id}/organizationusers?token=${token}`);
+    return await Actions.get(`/api/organizations/${id}/organizationusers?${page !== -1 ? `page=${page}&`:''}token=${token}`);
+  },
+  existeUserByEmail: async (organizationId, email) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`/api/organizations/${organizationId}/validate-user-exists?email=${email}&token=${token}`, true);
   },
   getUsersWithStatusInEvent: async (id, eventId) => {
     let token = await GetTokenUserFirebase();
@@ -1597,8 +1601,8 @@ export const ActivityBySpeaker = {
 
 export const OrganizationFuction = {
   // OBTENER EVENTOS PROXIMOS POR ORGANIZACION
-  getEventsNextByOrg: async (orgId, order = 'asc') => {
-    const events = await Actions.getAll(`api/organizations/${orgId}/events?order=${order}`);
+  getEventsByOrg: async (orgId, order = 'asc', date = '', type = '') => {
+    const events = await Actions.getAll(`api/organizations/${orgId}/events?order=${order}&date=${date}&type=${type}`);
     return events;
   },
 

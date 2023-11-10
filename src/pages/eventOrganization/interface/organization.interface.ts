@@ -9,7 +9,7 @@ export interface FormUserOrganization {
   group?: string[];
 }
 
-export interface UserToOrganization extends FormUserOrganization {
+export interface IUserToOrganization extends FormUserOrganization {
   [key: string]: any;
   active: boolean | undefined;
 }
