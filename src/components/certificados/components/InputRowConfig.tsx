@@ -10,7 +10,7 @@ interface Props {
 export const InputRowConfig = ({ typeSelected, onChangeInput }: Props) => {
   const conentFieldDinamic = {
     times: (
-      <Form.Item label='Contenido' name={'times'} rules={rulesType.number}>
+      <Form.Item initialValue={1} label='Cantidad de saltos' name={'times'} rules={rulesType.number}>
         <InputNumber
           style={{ width: '100%' }}
          
