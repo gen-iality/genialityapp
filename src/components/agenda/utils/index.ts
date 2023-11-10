@@ -1,21 +1,6 @@
 import { CertifiRow } from '@/components/certificados/types';
 import { availableTags } from './constants';
 
-export const defaultCertRows: CertifiRow[] = [
-  { id: 1, type: 'break', times: 2 },
-  { id: 2, type: 'h4', content: 'Certificamos que' },
-  { id: 3, type: 'h2', content: '[user.names]' },
-  { id: 4, type: 'h4', content: 'participo con éxito el curso' },
-  { id: 5, type: 'h2', content: '[event.name]' },
-  { id: 6, type: 'h4', content: 'realizado del [event.start] al [event.end]' },
-];
-export function lastID(data: CertifiRow[]) {
-  let maxid = 0;
-  data.forEach((item) => {
-    if (item.id > maxid) maxid = item.id;
-  });
-  return maxid + 1;
-}
 export function replaceAllTagValues(event: any, userData: any, roles: any[] = [], certRows: CertifiRow[] = []) {
   const propertyKeys = Object.keys(userData.properties);
 
