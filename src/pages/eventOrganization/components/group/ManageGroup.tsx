@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 import { Form, Modal, ModalProps, Transfer } from 'antd';
 import { GroupEvent, GroupEventMongo } from '../../interface/group.interfaces';
 import { DispatchMessageService } from '@/context/MessageService';
-import { useGetEventsByOrg } from '@/components/eventOrganization/hooks/useGetEventsByOrg';
 import { useTransfer } from '@/hooks/useTransfer';
-import { useGetOrganizationUsers } from '../../hooks/useGetOrganizationUsers';
 import { TransferDirection } from 'antd/lib/transfer';
 import { confirmDeleteSync } from '@/components/ModalConfirm/confirmDelete';
+import { useGetEventsByOrgOnlyName } from '@/components/eventOrganization/hooks/useGetEventsByOrgOnlyName';
+import { useGetOrganizationUsersOnlyName } from '../../hooks/useGetOrganizationUsersOnlyName';
 
 interface Props extends ModalProps {
   onCancel: () => void;
@@ -28,8 +28,8 @@ export const ManageGroup = ({
   handledDelteOrgUser,
   ...modalProps
 }: Props) => {
-  const { eventsByOrg, isLoadingEventsByOrg } = useGetEventsByOrg(organizationId);
-  const { organizationUsers, isLoadingOrgUsers } = useGetOrganizationUsers(organizationId);
+  const { eventsByOrg, isLoadingEventsByOrg } = useGetEventsByOrgOnlyName(organizationId);
+  const { organizationUsers, isLoadingOrgUsers } = useGetOrganizationUsersOnlyName(organizationId);
   const {
     onChange: onChangeTransferEvents,
     onSelectChange: onSelectChangeEvents,
@@ -144,8 +144,9 @@ export const ManageGroup = ({
       <Form layout='vertical'>
         <Form.Item label={'Eventos'} name={'event_ids'}>
           <Transfer
+            pagination
             disabled={isLoadingEventsByOrg}
-            listStyle={{ width: '100%' }}
+            listStyle={{ width: '100%', height:'250px'  }}
             oneWay={true}
             showSearch
             dataSource={eventsByOrg.map((event) => ({ ...event, title: event.name, key: event._id }))}
@@ -166,8 +167,9 @@ export const ManageGroup = ({
         </Form.Item>
         <Form.Item label={'Usuarios'} name={'organization_user_ids'}>
           <Transfer
+            pagination
             disabled={isLoadingOrgUsers}
-            listStyle={{ width: '100%' }}
+            listStyle={{ width: '100%', height:'250px'  }}
             oneWay={true}
             showSearch
             dataSource={organizationUsers.map((orgUser) => ({

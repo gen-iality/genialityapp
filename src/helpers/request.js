@@ -994,6 +994,10 @@ export const OrganizationApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.get(`/api/organizations/${id}/organizationusers?${page !== -1 ? `page=${page}&`:''}token=${token}`);
   },
+  getUsersOnlyName: async (organizationId, page = -1) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`/api/organizations/${organizationId}/organizationusers/get-names?token=${token}`);
+  },
   existeUserByEmail: async (organizationId, email) => {
     let token = await GetTokenUserFirebase();
     return await Actions.get(`/api/organizations/${organizationId}/validate-user-exists?email=${email}&token=${token}`, true);
@@ -1605,7 +1609,10 @@ export const OrganizationFuction = {
     const events = await Actions.getAll(`api/organizations/${orgId}/events?order=${order}&date=${date}&type=${type}`);
     return events;
   },
-
+  getEventsByOrgOnlyName: async (orgId, order = 'asc', date = '', type = '') => {
+    const events = await Actions.getAll(`api/organizations/${orgId}/events/get-names?order=${order}&date=${date}&type=${type}`);
+    return events;
+  },
   // OBTENER DATOS DE LA ORGANIZACION
   obtenerDatosOrganizacion: async (orgId) => {
     const organization = await OrganizationApi.getOne(orgId);
