@@ -40,7 +40,7 @@ export const columns = (membersAll, columnsData, editModalUser, organizationId, 
     /* align: 'center', */
     ellipsis: true,
     sorter: (a, b) => a.names.localeCompare(b.names),
-    ...membersGetColumnSearchProps('name', columnsData),
+    ...membersGetColumnSearchProps('names', columnsData),
   },
   {
     title: 'Correo',
@@ -57,7 +57,7 @@ export const columns = (membersAll, columnsData, editModalUser, organizationId, 
     dataIndex: 'position',
     /* align: 'center', */
     ellipsis: true,
-    /* sorter: (a, b) => a.position?.localeCompare(b.position), */
+    sorter: (a, b) => a.position?.localeCompare(b.position), 
     ...membersGetColumnSearchProps('position', columnsData),
   },
   {

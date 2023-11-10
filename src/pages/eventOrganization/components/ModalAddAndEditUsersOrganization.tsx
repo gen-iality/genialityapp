@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Grid, Modal, ModalProps, Result, Space, Spin, Steps } from 'antd';
 import { stylePaddingDesktop, stylePaddingMobile } from '../styles/user-organization.style';
-import { FormUserOrganization, UserToOrganization } from '../interface/organization.interface';
+import { FormUserOrganization, IUserToOrganization } from '../interface/organization.interface';
 import { UserOrganizationForm } from './UserOrganizationForm';
 import { UploadFile } from 'antd/lib/upload/interface';
 import OrganizationPropertiesForm from './OrganizationPropertiesForm';
@@ -26,7 +26,7 @@ const initialForm: FormUserOrganization = {
 };
 
 interface Props extends ModalProps {
-  selectedUser?: Omit<UserToOrganization, 'password'>;
+  selectedUser?: Omit<IUserToOrganization, 'password'>;
   organizationId: string;
   onCancel: () => void;
   getEventsStatisticsData: () => void;
@@ -89,7 +89,7 @@ export const ModalAddAndEditUsers = ({
   const onCreateUser = async (dataDinamic: any) => {
     setLoadingRequest(true);
     const nuewUserPicture = await saveImageStorage(imageFile?.thumbUrl);
-    const newUser: UserToOrganization = {
+    const newUser: IUserToOrganization = {
       names: dataBasic?.names,
       email: dataBasic?.email,
       urlImage: nuewUserPicture,
@@ -122,7 +122,7 @@ export const ModalAddAndEditUsers = ({
     setLoadingRequest(true);
     const currentDatas = { ...selectedUser };
     delete currentDatas.position;
-    const updateUser: UserToOrganization = {
+    const updateUser: IUserToOrganization = {
       ...currentDatas,
       ...dataDinamic,
     };
@@ -151,11 +151,15 @@ export const ModalAddAndEditUsers = ({
   };
 
   const alreadyExistUserInOrganization = async (email: string): Promise<boolean> => {
-    const { data } = await OrganizationApi.getUsers(organizationId);
-    return data.filter((userOrganization: any) => userOrganization.properties.email === email).length > 0;
+    try {
+      await OrganizationApi.existeUserByEmail(organizationId, email);
+      return true;
+    } catch (error) {
+      return false;
+    }
   };
 
-  const onAddUserToOrganization = async (newUser: UserToOrganization): Promise<void> => {
+  const onAddUserToOrganization = async (newUser: IUserToOrganization): Promise<void> => {
     setLoadingRequest(true);
     const { picture, password, ...userToOrganization } = newUser;
     const alreadyExistUser = await alreadyExistUserInOrganization(newUser.email);
@@ -183,7 +187,7 @@ export const ModalAddAndEditUsers = ({
     }
   };
 
-  const onEditUserToOrganization = async ({ rol_id, ...updateUser }: UserToOrganization) => {
+  const onEditUserToOrganization = async ({ rol_id, ...updateUser }: IUserToOrganization) => {
     const { picture, password, ...userToOrganization } = updateUser;
     return await OrganizationApi.editUser(organizationId, selectedUser?._id, {
       properties: { ...userToOrganization, rol_id },

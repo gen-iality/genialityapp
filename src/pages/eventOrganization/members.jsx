@@ -1,6 +1,4 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FormattedDate, FormattedTime } from 'react-intl';
 import { Table, Button, Row, Col, Tag } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
@@ -8,40 +6,30 @@ import { columns } from './tableColums/membersTableColumns';
 import withContext from '../../context/withContext';
 import Header from '../../antdComponents/Header';
 import { ModalAddAndEditUsers } from './components/ModalAddAndEditUsersOrganization';
-import { useGetEventsStatisticsData } from './tableColums/utils/useGetOrganizations';
+import { useGetEventsStatisticsData } from './tableColums/utils/useGetEventsStatisticsData';
 import { parseMembersColumsExcel, parseDataMembersToExcel } from './tableColums/utils/parseData.utils';
 import { ExportExcel } from '@/components/export-excel/ExportExcel';
+import { useModalLogic } from '@/hooks/useModalLogic';
 
 const OrgMembers = (props) => {
-  const [lastUpdate, setLastUpdate] = useState();
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
-  const [addOrEditUser, setAddOrEditUser] = useState(false);
-  const [selectedUser, setSelectedUser] = useState();
-  let { _id: organizationId, user_properties: userPropertiesOrg } = props.org;
+  const { isOpenModal, closeModal, openModal, selectedItem, handledSelectedItem } = useModalLogic();
+  const { _id: organizationId, user_properties: userPropertiesOrg } = props.org;
 
-  const {membersAll, membersDat, isLoading, fetchEventsStatisticsData } = useGetEventsStatisticsData(organizationId);
-  function startingComponent() {
-    fetchEventsStatisticsData();
-    setLastUpdate(new Date());
-  }
-  useEffect(() => {
-    startingComponent();
-  }, [props.org.user_properties]);
+  const { getDataOrgUser, isLoadingMembersParsed, membersParsed, pagination, lastUpdate } = useGetEventsStatisticsData(
+    organizationId
+  );
 
-  const closeOrOpenModalMembers = () => {
-    setAddOrEditUser((prevState) => {
-      return !prevState;
-    });
-  };
+
 
   const addUser = () => {
-    setSelectedUser(undefined);
-    closeOrOpenModalMembers();
+    openModal()
   };
+
   const editModalUser = (item) => {
-    setSelectedUser(item);
-    closeOrOpenModalMembers();
+    handledSelectedItem(item);
+    openModal();
   };
 
   const columnsData = {
@@ -51,7 +39,7 @@ const OrgMembers = (props) => {
     setSearchText,
   };
 
-  const columsMembersView = columns(membersAll, columnsData, editModalUser, organizationId, fetchEventsStatisticsData);
+  const columsMembersView = columns(membersParsed, columnsData, editModalUser, organizationId, getDataOrgUser);
   const columsMembersExcel = parseMembersColumsExcel(userPropertiesOrg);
 
   return (
@@ -65,26 +53,21 @@ const OrgMembers = (props) => {
       </p>
 
       <p>
-        <Tag>Inscritos: {membersDat.length || 0}</Tag>
+        <Tag>Inscritos: {membersParsed.length || 0}</Tag>
       </p>
       <Table
         columns={columsMembersView}
-        dataSource={membersDat}
+        dataSource={membersParsed}
         size='small'
         rowKey='index'
-        pagination={false}
-        loading={isLoading}
+        pagination={pagination}
+        loading={isLoadingMembersParsed}
         scroll={{ x: 'auto' }}
         title={() => (
           <Row wrap justify='end' gutter={[8, 8]}>
             <Col>
-              {/* {membersDat.length > 0 && (
-                <Button type='primary' icon={<DownloadOutlined />} onClick={exportFile}>
-                  Exportar
-                </Button>
-              )} */}
               <ExportExcel
-                list={parseDataMembersToExcel(membersDat, columsMembersExcel)}
+                list={parseDataMembersToExcel(membersParsed, columsMembersExcel)}
                 fileName={'memberReport'}
                 columns={columsMembersExcel}
               />
@@ -97,16 +80,13 @@ const OrgMembers = (props) => {
           </Row>
         )}
       />
-      {addOrEditUser && (
+      {isOpenModal && (
         <ModalAddAndEditUsers
-          visible={addOrEditUser}
-          onCancel={() => {
-            setAddOrEditUser(false);
-            setSelectedUser(undefined);
-          }}
+          visible={isOpenModal}
+          onCancel={closeModal}
           organizationId={organizationId}
-          selectedUser={selectedUser}
-          getEventsStatisticsData={fetchEventsStatisticsData}
+          selectedUser={selectedItem}
+          getEventsStatisticsData={getDataOrgUser}
         />
       )}
     </>
