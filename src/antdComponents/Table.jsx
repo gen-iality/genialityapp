@@ -17,6 +17,7 @@ import moment from 'moment';
 import { Suspense } from 'react';
 // import { ExportExcel } from '../components/newComponent/ExportExcel';
 import { useHelper } from '@/context/helperContext/hooks/useHelper';
+import { ExportExcel } from '@/components/export-excel/ExportExcel';
 //import { UseCurrentUser } from '../context/userContext';
 
 const SortableItem = sortableElement((props) => <tr {...props} />);
@@ -307,6 +308,37 @@ const Table = (props) => {
     return <SortableItem index={index} {...restProps} />;
   };
 
+  const columsRenderExcel = [
+    {
+      title: 'Preguntas totales',
+      dataIndex: 'totalQuestions',
+    },
+    {
+      title: 'Email de usuario',
+      dataIndex: 'userEmail',
+    },
+    {
+      title: 'Fecha de registro',
+      dataIndex: 'registerDate',
+    },
+    {
+      title: 'Respuestas correctas',
+      dataIndex: 'correctAnswers',
+    },
+    {
+      title: 'Tiempo (s)',
+      dataIndex: 'timeSpent',
+    },
+    {
+      title: 'Nombre de usuario',
+      dataIndex: 'userName',
+    },
+    {
+      title: 'Id de usuario',
+      dataIndex: 'userId',
+    },
+    
+  ]
   return (
     <Suspense fallback={<h1>Cargando ...</h1>}>
       <TableAnt
@@ -321,7 +353,7 @@ const Table = (props) => {
           <Row wrap justify='end' gutter={[8, 8]}>
             {exportData && (
               <Col>
-                {/* <ExportExcel list={list} fileName={`${fileName}${moment(new Date()).format('YYYY-DD-MM')}`} /> */}
+                <ExportExcel list={list} fileName={`${fileName}${moment(new Date()).format('YYYY-DD-MM')}`} columns={columsRenderExcel}/>
               </Col>
             )}
             {titleTable && <Col>{titleTable}</Col>}
