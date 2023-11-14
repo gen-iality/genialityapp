@@ -14,7 +14,7 @@ export const useGetEventsWithUser = (organizationId: string, eventUserId: string
         setIsLoading(false);
         return;
       }
-      const { data } = await OrganizationApi.getEventsWithUserOrg(organizationId, eventUserId, eventUser, 'latest');
+      const { data } = await OrganizationApi.getEventsWithUserOrg(organizationId, eventUserId, eventUser, 'desc');
       setEventsWithEventUser(data.map((item: any) => item.event));
       if (eventUser) {
         setEventUsers(data.map((item: any) => item.event_user));
