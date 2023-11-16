@@ -12,7 +12,6 @@ import {
 	updateValueBingo,
 	createValueBingo,
 	UpdateBingoDimension,
-	getListUsersWithOrWithoutBingo,
 	generateBingoForExclusiveUsers,
 	generateBingoForAllUsers,
 } from '@/components/games/bingo/services';

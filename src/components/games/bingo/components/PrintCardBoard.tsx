@@ -34,8 +34,6 @@ export default function PrintCardBoard({ bingoCardRef, cardboardCode }: { bingoC
           useCORS: true,
         });
         const data = canvas.toDataURL('image/png');
-        console.log('base64', data);
-        // pdf.output('dataurlnewwindow');
       }
     },
   });

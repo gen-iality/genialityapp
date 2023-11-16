@@ -3,12 +3,14 @@ import { DispatchMessageService } from '@/context/MessageService';
 import {
   BingoGame,
   CreateBingoGameDto,
+  IBingoUser,
   SaveCurrentStateOfBingoInterface,
   UpdateBingoGameDto,
 } from '../interfaces/bingo';
 import { firestore, firestoreeviuschat } from '@/helpers/firebase';
 import firebase from 'firebase/compat';
 import { IConfigChat, IMessage } from '@/components/events/ChatExport/interface/message.interface';
+import { IResultGet } from '@/types/';
 
 // --------------------- Api Bingo Services ---------------------
 export const CreateBingo = async (event: string, data: { name: string }) => {
@@ -353,15 +355,35 @@ export const addWinnerBadgeToBingoNotification = async ({
     .set({ hasWon: true }, { merge: true });
 };
 
-export const getListUsersWithOrWithoutBingo = async (eventId: string, numberItems: number, page: number) => {
+export const getListUsersWithOrWithoutBingo = async (eventId: string, numberItems: number, page: number): Promise<IResultGet<IBingoUser[]>> => {
   try {
     //console.log("getListUsersWithOrWithoutBingo", eventId, numberItems, page);
     const response = await BingoApi.getListUsersWithOrWithoutBingo(eventId, numberItems, page);
-    //console.log("SERVICES", response);
-    return response;
+    console.log("SERVICES", response);
+    const bingoUsers = response.data.map((bingoUser: any) => ({
+      bingo: bingoUser.bingo,
+      _id: bingoUser._id,
+      names: bingoUser.properties.names,
+      email: bingoUser.properties.email,
+      picture: bingoUser.properties.picture,
+      bingo_card: bingoUser.bingo_card
+    }));
+    return {
+      pagination:{
+        current_page:response.current_page,
+        total:response.total,
+      },
+      data:bingoUsers,
+      ok:true,
+      error:null
+    };
   } catch (error) {
     DispatchMessageService({ type: 'error', msj: 'Error al eliminar el dato', action: 'show' });
-    return null;
+    return {
+      ok:false,
+      data:[],
+      error:error
+    };
   }
 };
 export const generateBingoForAllUsers = async (eventId: string, bingo: any) => {

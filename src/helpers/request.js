@@ -484,7 +484,21 @@ export const BingoApi = {
       true
     );
   },
-
+  getBingoCartons: async (bingoid, numberItems = 10, page = 1) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(
+      `api/bingos/${bingoid}/bingocards?numberItems=${numberItems}&page=${page}&token=${token}`,
+      true
+    );
+  },
+  postBingoCartons: async (bingoid, cartonNumber) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`api/bingos/${bingoid}/bingocards?token=${token}`, { qty_bingo_cards: cartonNumber });
+  },
+  deleteBingoCartons: async (bingoid, bingocard) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/bingos/${bingoid}/bingocards/${bingocard}?token=${token}`);
+  },
   getTemplates: async (format) => {
     let token = await GetTokenUserFirebase();
     return await Actions.get(`api/bingotemplates/format/${format}?token=${token}`, true);
