@@ -3,7 +3,7 @@ import { useSearchList } from '@/hooks/useSearchList';
 import { Badge, Button, Card, Col, Empty, Row, Space, Typography, Grid } from 'antd';
 import { InputSearchEvent } from './InputSearchEvent';
 import EventCard from '@/components/shared/eventCard';
-import { Organization } from '../types';
+import { IOrganization } from '../types';
 import { createEventUserFree } from '@/components/authentication/services/RegisterUserToEvent';
 import { DispatchMessageService } from '@/context/MessageService';
 import { useGetMyEventsInOrganization } from '../hooks/useGetMyEventsInOrganization';
@@ -12,7 +12,7 @@ import LoadingCard from './LoadingCard';
 const { Title } = Typography;
 const { useBreakpoint } = Grid;
 interface Props {
-  organization: Organization | null;
+  organization: IOrganization | null;
   openCertificates: () => void;
   organizationId: string;
   eventUserId: string;
@@ -26,6 +26,7 @@ export const MyEvents = ({ organization, openCertificates, myOrgUser, organizati
     isLoadingEventsFreeToOneOreUs,
     getEventsFreeAcces,
     eventsWithEventUser,
+    isLoadingEventsWithEventUser
   } = useGetMyEventsInOrganization(organizationId, eventUserId);
   const myAllEvents = [...eventsWithEventUser, ...eventsFreeToOneOreUse];
   const { filteredList: eventsWithUserfiltered, setSearchTerm: setSearchTermEventWithUser } = useSearchList(

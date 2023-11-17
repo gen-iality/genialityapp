@@ -6,7 +6,7 @@ import Moment from 'moment';
 import { GetTokenUserFirebase } from './HelperAuth';
 import { DispatchMessageService } from '../context/MessageService';
 import { async } from 'ramda-adjunct';
-import { ROLS_USER } from '@/constants/rols.constants';
+import { ROLS_USER_ID } from '@/constants/rols.constants';
 
 const publicInstance = axios.create({
   url: ApiUrl,
@@ -1237,8 +1237,8 @@ export const RolAttApi = {
 
     const rollsByEventFiltered = rollsByEvent.filter(
       (rol) =>
-        rol._id !== ROLS_USER.ADMINISTRATOR_ID /* '5c1a59b2f33bd40bb67f2322' */ &&
-        rol._id !== ROLS_USER.ATTENDEE_ID /* '60e8a7e74f9fb74ccd00dc22' */
+        rol._id !== ROLS_USER_ID.ADMINISTRATOR_ID /* '5c1a59b2f33bd40bb67f2322' */ &&
+        rol._id !== ROLS_USER_ID.ATTENDEE_ID /* '60e8a7e74f9fb74ccd00dc22' */
     );
     return rollsByEventFiltered;
   },
