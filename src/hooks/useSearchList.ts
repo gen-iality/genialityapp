@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 
 export const useSearchList = <T>(list: T[], fieldCondition: keyof T | (keyof T)[]) => {
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredList, setFilteredList] = useState<T[]>([]);
-
   const getFilteredList = useCallback(() => {
     if (Array.isArray(fieldCondition)) {
       const filteredList = list.filter((item) => {

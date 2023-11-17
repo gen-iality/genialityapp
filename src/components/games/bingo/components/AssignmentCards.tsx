@@ -7,12 +7,16 @@ import PrintComponent from './PrintComponent';
 import PrintCardBoard from './PrintCardBoard';
 import { CartonsList } from './cartons/CartonsList';
 import { useGetBingoUsers } from '../hooks/useGetBingoUsers';
+import { useSearchList } from '@/hooks/useSearchList';
 
 const AssignmentCards = ({ generateBingoForAllUsers, generateBingoForExclusiveUsers, bingo }: AssignmentCardsProps) => {
   const bingoCardRef = useRef();
-  const { isLoadingBingoUser, pagination, filteredList: bingoUsers, setSearchTerm, searchTerm } = useGetBingoUsers(
-    bingo.event_id
-  );
+  const { isLoadingBingoUser, pagination, bingoUsers } = useGetBingoUsers(bingo.event_id);
+  const { filteredList: bingoUsersFiltered, setSearchTerm, searchTerm } = useSearchList(bingoUsers, [
+    'email',
+    'names',
+    '_id',
+  ]);
 
   const handleChange = (event: any) => {
     setSearchTerm(event.target.value);
@@ -45,24 +49,22 @@ const AssignmentCards = ({ generateBingoForAllUsers, generateBingoForExclusiveUs
               </Button>
             </Space>
             {bingo.bingo_values.length >= bingo.dimensions.minimun_values && (
-              <PrintCardBoard bingoCardRef={bingoCardRef} cardboardCode='AlUserBingo' />
+              <PrintCardBoard bingoCardRef={bingoCardRef} cardboardCode='AlUserBingo' listCartons />
             )}
           </Row>
           <br />
           <SearchUser onSubmit={onSubmitSearchUser} handleChange={handleChange} keyboard={searchTerm} />
           <br />
-          {bingoUsers.length > 0 && (
-            <List
-              loading={isLoadingBingoUser}
-              dataSource={bingoUsers}
-              className='desplazar'
-              style={{ marginTop: '10px', minHeight: '100%', maxHeight: '60vh', overflowY: 'scroll' }}
-              pagination={pagination}
-              renderItem={(user, index) => {
-                return <AssignmentCard bingoUser={user} key={index} bingo={bingo} index={index} />;
-              }}
-            />
-          )}
+          <List
+            loading={isLoadingBingoUser}
+            dataSource={bingoUsersFiltered}
+            className='desplazar'
+            style={{ marginTop: '10px', minHeight: '100%', maxHeight: '60vh', overflowY: 'scroll' }}
+            pagination={pagination}
+            renderItem={(user, index) => {
+              return <AssignmentCard bingoUser={user} key={index} bingo={bingo} index={index} />;
+            }}
+          />
         </Card>
       </Col>
       <Col span={12}>

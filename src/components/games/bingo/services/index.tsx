@@ -359,7 +359,6 @@ export const getListUsersWithOrWithoutBingo = async (eventId: string, numberItem
   try {
     //console.log("getListUsersWithOrWithoutBingo", eventId, numberItems, page);
     const response = await BingoApi.getListUsersWithOrWithoutBingo(eventId, numberItems, page);
-    console.log("SERVICES", response);
     const bingoUsers = response.data.map((bingoUser: any) => ({
       bingo: bingoUser.bingo,
       _id: bingoUser._id,
@@ -374,13 +373,11 @@ export const getListUsersWithOrWithoutBingo = async (eventId: string, numberItem
         total:response.total,
       },
       data:bingoUsers,
-      ok:true,
       error:null
     };
   } catch (error) {
     DispatchMessageService({ type: 'error', msj: 'Error al eliminar el dato', action: 'show' });
     return {
-      ok:false,
       data:[],
       error:error
     };

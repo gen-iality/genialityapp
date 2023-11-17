@@ -1,22 +1,21 @@
 import { IPagination } from '@/components/assembly/types';
 
 export interface IResultGet<T = any> {
-  ok: boolean;
   error: any | null;
   data: T;
   pagination?: IPagination;
 }
 
 export interface IResultPost<T = any> {
-  ok: boolean;
+  error: null | any;
 
   data?: T;
 }
 
 export interface IResultDelete {
-  ok: boolean;
+  error: null | any;
 }
 
-export type TErrorsServiceCartons = 'get' | 'add' | 'update' | 'delete';
+export type TErrorsService = 'get' | 'add' | 'update' | 'delete';
 
-export type TSuccesServiceCartons = 'add' | 'update' | 'delete';
+export type TSuccesService = 'add' | 'update' | 'delete';

@@ -1,16 +1,24 @@
 import { useRef } from 'react';
-import { List, Space } from 'antd';
+import { Button, List, Space } from 'antd';
 import { Bingo, BingoCarton } from '../../interfaces/bingo';
 import PrintComponent from '../PrintComponent';
 import PrintCardBoard from '../PrintCardBoard';
+import { useModalLogic } from '@/hooks/useModalLogic';
+import { deleteBingoCarton } from '../../services/bingo-cartons.service';
 
 interface Props {
   bingoCartonItem: BingoCarton;
   bingo: Bingo;
+  fetchBingoCartons: () => Promise<void>;
 }
-export const CartonItem = ({ bingoCartonItem, bingo }: Props) => {
+export const CartonItem = ({ bingoCartonItem, bingo, fetchBingoCartons }: Props) => {
   const bingoUserRef = useRef(null);
-  // const { closeModal, isOpenModal, openModal } = useModalLogic();
+  const { closeModal, isOpenModal, openModal } = useModalLogic();
+  const onDeleteCarton = async () => {
+    const { error } = await deleteBingoCarton(bingoCartonItem.bingo_id, bingoCartonItem._id);
+    if (!error) fetchBingoCartons();
+  };
+
   return (
     <>
       <List.Item
@@ -18,8 +26,11 @@ export const CartonItem = ({ bingoCartonItem, bingo }: Props) => {
         actions={[
           <Space align='center'>
             <PrintCardBoard cardboardCode={bingoCartonItem?._id} bingoCardRef={bingoUserRef} />
+            <Button type='dashed' onClick={onDeleteCarton}>
+              Eliminar
+            </Button>
             {/* {bingoCartonItem.event_user_id ? (
-              <Tag color='error' style={{ padding: '4px 8px', fontSize: '14px' }}>
+              <Tag color='green' style={{ padding: '4px 8px', fontSize: '14px' }}>
                 Asignado
               </Tag>
             ) : (
@@ -27,18 +38,8 @@ export const CartonItem = ({ bingoCartonItem, bingo }: Props) => {
             )} */}
           </Space>,
         ]}>
-        <List.Item.Meta
-          /* avatar={
-          user?.properties?.picture ? (
-            <Avatar src={user?.properties?.picture} size={47} />
-          ) : (
-            <Avatar icon={<UserOutlined />} size={47} />
-          )
-        } */
-          title={bingoCartonItem.code}
-          // description={}
-        />
-        {/* {isOpenModal && (
+        <List.Item.Meta title={bingoCartonItem.code} />
+        {/*  {isOpenModal && (
           <AssignCardsToUser
             bingoCartonId={bingoCartonItem._id}
             visible={isOpenModal}

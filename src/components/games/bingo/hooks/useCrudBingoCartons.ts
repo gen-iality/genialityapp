@@ -5,7 +5,7 @@ import { BingoCarton } from '../interfaces/bingo';
 import { usePaginationListLocal } from '@/hooks/usePaginationListLocal';
 import { handledErrorBingoCarton } from '../services/bingo-cartons.service';
 
-export const useCrudBingoCartons = (bingoId: string) => {
+export const useGetBingoCartons = (bingoId: string, withowAsigmed: boolean | undefined) => {
   const [bingoCartons, setBingoCartons] = useState<BingoCarton[]>([]);
   const [totalBingoCartons, setTotalBingoCartons] = useState(0);
   const { pagination } = usePaginationListLocal(totalBingoCartons);
@@ -15,9 +15,8 @@ export const useCrudBingoCartons = (bingoId: string) => {
   const getBingoCartons = useCallback(
     async (numberItems: number = 10, page: number = 1): Promise<IResultGet<BingoCarton[]>> => {
       try {
-        const bingoCartons = await BingoApi.getBingoCartons(bingoId, numberItems, page);
+        const bingoCartons = await BingoApi.getBingoCartons(bingoId, numberItems, page, withowAsigmed);
         return {
-          ok: true,
           error: null,
           data: bingoCartons.data,
           pagination: {
@@ -26,7 +25,7 @@ export const useCrudBingoCartons = (bingoId: string) => {
           },
         };
       } catch (error) {
-        return { data: [], error, ok: false };
+        return { data: [], error };
       }
     },
     [bingoId]
@@ -44,7 +43,7 @@ export const useCrudBingoCartons = (bingoId: string) => {
         return;
       }
       setBingoCartons(bingoCartons.data);
-      if (bingoCartons.pagination?.total) setTotalBingoCartons(bingoCartons.pagination?.total);
+      if (bingoCartons.pagination?.total !== undefined) setTotalBingoCartons(bingoCartons.pagination?.total);
     } catch (error) {
       setIsLoadingBingoCartons(false);
       setBingoCartons([]);
@@ -61,5 +60,6 @@ export const useCrudBingoCartons = (bingoId: string) => {
     error,
     pagination,
     fetchData,
+    getBingoCartons,
   };
 };

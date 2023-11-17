@@ -484,10 +484,10 @@ export const BingoApi = {
       true
     );
   },
-  getBingoCartons: async (bingoid, numberItems = 10, page = 1) => {
+  getBingoCartons: async (bingoid, numberItems = 10, page = 1, free_cards) => {
     let token = await GetTokenUserFirebase();
     return await Actions.get(
-      `api/bingos/${bingoid}/bingocards?numberItems=${numberItems}&page=${page}&token=${token}`,
+      `api/bingos/${bingoid}/bingocards?numberItems=${numberItems}&page=${page}&free_cards=${free_cards}&token=${token}`,
       true
     );
   },

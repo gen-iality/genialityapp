@@ -1,9 +1,9 @@
-import { IResultDelete, IResultPost, TErrorsServiceCartons, TSuccesServiceCartons } from '@/types';
+import { IResultDelete, IResultPost, TErrorsService, TSuccesService } from '@/types';
 import { BingoCarton } from '../interfaces/bingo';
 import { BingoApi } from '@/helpers/request';
 import { DispatchMessageService } from '@/context/MessageService';
 
-export const handledErrorBingoCarton = (typeError: TErrorsServiceCartons) => {
+export const handledErrorBingoCarton = (typeError: TErrorsService) => {
   switch (typeError) {
     case 'get':
       DispatchMessageService({ action: 'show', type: 'error', msj: 'No se pudo obtener los cartones' });
@@ -17,7 +17,7 @@ export const handledErrorBingoCarton = (typeError: TErrorsServiceCartons) => {
   }
 };
 
-export const handledSuccesBingoCarton = (typeSucces: TSuccesServiceCartons) => {
+export const handledSuccesBingoCarton = (typeSucces: TSuccesService) => {
   switch (typeSucces) {
     case 'add':
       DispatchMessageService({ action: 'show', type: 'success', msj: 'Se generaron correctamente los cartones' });
@@ -37,27 +37,44 @@ export const createBingoCartons = async (
     handledSuccesBingoCarton('add');
     return {
       data: res,
-      ok: true,
+      error: null,
     };
   } catch (error) {
     handledErrorBingoCarton('add');
     return {
-      ok: false,
+      error,
     };
   }
 };
 
 export const deleteBingoCarton = async (bingoId: string, cartonId: string): Promise<IResultDelete> => {
   try {
-    await BingoApi.deleteBingoCartons(bingoId);
+    await BingoApi.deleteBingoCartons(bingoId, cartonId);
     handledSuccesBingoCarton('delete');
     return {
-      ok: true,
+      error: null,
     };
   } catch (error) {
     handledErrorBingoCarton('delete');
     return {
-      ok: false,
+      error,
+    };
+  }
+};
+
+export const deleteBingoCartonList = async (bingoId: string, cartonIds: string[]): Promise<IResultDelete> => {
+  try {
+    let requestList: Promise<IResultDelete>[] = [];
+    cartonIds.forEach((cartonId) => {
+      requestList.push(deleteBingoCarton(bingoId, cartonId));
+    });
+    await Promise.all(requestList);
+    return {
+      error: null,
+    };
+  } catch (error) {
+    return {
+      error,
     };
   }
 };

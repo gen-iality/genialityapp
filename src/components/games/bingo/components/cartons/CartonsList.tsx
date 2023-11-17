@@ -1,24 +1,40 @@
 import { Button, List, Row, Space, Typography } from 'antd';
 import { Bingo } from '../../interfaces/bingo';
-import { useCrudBingoCartons } from '../../hooks';
+import { useGetBingoCartons } from '../../hooks';
 import { useModalLogic } from '@/hooks/useModalLogic';
 import { GenerateCartons } from '../GenerateCartons';
 import { CartonItem } from './CartonItem';
-import PrintComponent from '../PrintComponent';
 import { useRef } from 'react';
 import PrintCardBoard from '../PrintCardBoard';
 import RenderBingoCarton from './RenderBingoCarton';
+import { convertLegacyProps } from 'antd/lib/button/button';
+import { deleteBingoCartonList } from '../../services/bingo-cartons.service';
+import { confirmDeleteSync } from '@/components/ModalConfirm/confirmDelete';
 
 interface Props {
   bingo: Bingo;
 }
+
+const NO_CARTONS = 0;
 export const CartonsList = ({ bingo }: Props) => {
   const bingoCardRef = useRef();
-  const { bingoCartons, isLoadingBingoCartons, pagination, fetchData: fetchBingoCartons } = useCrudBingoCartons(
-    bingo._id
+  const { bingoCartons, isLoadingBingoCartons, pagination, fetchData: fetchBingoCartons } = useGetBingoCartons(
+    bingo._id,
+    true
   );
   const { isOpenModal, closeModal, openModal } = useModalLogic();
 
+  const onDeleteAllCartons = async () => {
+    confirmDeleteSync({
+      descriptionConfirm: `Esto eliminara todos los cartones (${pagination.total}) que existen actualmente`,
+      onOk: async () => {
+        const cartonsId = bingoCartons.map((carton) => carton._id);
+        const { error } = await deleteBingoCartonList(bingo._id, cartonsId);
+        if (!error) fetchBingoCartons();
+      },
+      titleConfirm: 'Eliminar todos los cartones',
+    });
+  };
   return (
     <>
       <Row justify='space-between'>
@@ -27,9 +43,21 @@ export const CartonsList = ({ bingo }: Props) => {
           <Button type='primary' style={{ minWidth: '250px' }} onClick={openModal}>
             Generar cartones
           </Button>
+
           {bingo.bingo_values.length >= bingo.dimensions.minimun_values && (
-            <PrintCardBoard bingoCardRef={bingoCardRef} cardboardCode='AlUserBingo' />
+            <PrintCardBoard
+              bingoCardRef={bingoCardRef}
+              cardboardCode={`ListCartons_Page_${pagination.current}`}
+              listCartons
+            />
           )}
+          <Button
+            disabled={pagination.total === NO_CARTONS}
+            danger
+            style={{ minWidth: '250px' }}
+            onClick={onDeleteAllCartons}>
+            Eliminar todos los cartones
+          </Button>
         </Space>
 
         {isOpenModal && (
@@ -49,7 +77,7 @@ export const CartonsList = ({ bingo }: Props) => {
         style={{ marginTop: '10px', minHeight: '100%', maxHeight: '60vh', overflowY: 'scroll' }}
         pagination={{ ...pagination, position: 'both', showTotal: (total) => <p>Total: {total}</p> }}
         renderItem={(bingoCartonItem) => {
-          return <CartonItem bingoCartonItem={bingoCartonItem} bingo={bingo} />;
+          return <CartonItem bingoCartonItem={bingoCartonItem} bingo={bingo} fetchBingoCartons={fetchBingoCartons} />;
         }}
       />
 

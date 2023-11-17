@@ -21,8 +21,8 @@ export const GenerateCartons = ({ fetchBingoCartons, bingoId, closeModal, ...mod
         layout='vertical'
         onFinish={async (value: { cartonNumber: number }) => {
           setIsGenerating(true);
-          const { ok } = await createBingoCartons(bingoId, value.cartonNumber);
-          if (ok) fetchBingoCartons();
+          const { error } = await createBingoCartons(bingoId, value.cartonNumber);
+          if (!error) fetchBingoCartons();
           setIsGenerating(false);
           closeModal();
         }}>
