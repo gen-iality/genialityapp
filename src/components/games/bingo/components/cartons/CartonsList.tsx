@@ -7,8 +7,11 @@ import { CartonItem } from './CartonItem';
 import { useRef } from 'react';
 import PrintCardBoard from '../PrintCardBoard';
 import RenderBingoCarton from './RenderBingoCarton';
-import { convertLegacyProps } from 'antd/lib/button/button';
-import { deleteBingoCartonList } from '../../services/bingo-cartons.service';
+import {
+  deleteBingoCartonList,
+  handledErrorBingoCarton,
+  handledSuccesBingoCarton,
+} from '../../services/bingo-cartons.service';
 import { confirmDeleteSync } from '@/components/ModalConfirm/confirmDelete';
 
 interface Props {
@@ -30,7 +33,12 @@ export const CartonsList = ({ bingo }: Props) => {
       onOk: async () => {
         const cartonsId = bingoCartons.map((carton) => carton._id);
         const { error } = await deleteBingoCartonList(bingo._id, cartonsId);
-        if (!error) fetchBingoCartons();
+        if (!error) {
+          handledSuccesBingoCarton('delete', { plural: true });
+          fetchBingoCartons();
+        } else {
+          handledErrorBingoCarton('delete');
+        }
       },
       titleConfirm: 'Eliminar todos los cartones',
     });

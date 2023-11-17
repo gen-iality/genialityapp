@@ -19,3 +19,11 @@ export interface IResultDelete {
 export type TErrorsService = 'get' | 'add' | 'update' | 'delete';
 
 export type TSuccesService = 'add' | 'update' | 'delete';
+
+export interface IOptionsFeedbacks {
+  overrideTitle?: string;
+  plural?: boolean;
+}
+
+export interface IOptionsError extends IOptionsFeedbacks {}
+export interface IOptionsSucces extends IOptionsFeedbacks {}

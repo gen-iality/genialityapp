@@ -499,6 +499,10 @@ export const BingoApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.delete(`api/bingos/${bingoid}/bingocards/${bingocard}?token=${token}`);
   },
+  deleteBingoCartonsList: async (bingoid) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/bingos/${bingoid}/bingocards/?token=${token}`);
+  },
   getTemplates: async (format) => {
     let token = await GetTokenUserFirebase();
     return await Actions.get(`api/bingotemplates/format/${format}?token=${token}`, true);
