@@ -9,6 +9,7 @@ export const useGetMyEventsInOrganization = (
   const [eventsFreeToOneOreUse, setEventsFreeToOneOreUse] = useState<any[]>([]);
   const [isLoadingEventsFreeToOneOreUs, setIsLoading] = useState(true);
   const [eventsWithEventUser, setEventsWithEventUser] = useState<any[]>([]);
+  const [isLoadingEventsWithEventUser, setIsLoadingEventsWithEventUser] = useState(true);
   const getEventsFreeAcces = useCallback(async (): Promise<any[]> => {
     try {
       const free_events = await OrganizationApi.getEventsInGroups(organizationId, true);
@@ -21,11 +22,14 @@ export const useGetMyEventsInOrganization = (
 
   const getEventWithOrgUser = useCallback(async () => {
     try {
+      setIsLoadingEventsWithEventUser(true);
       const { data } = await OrganizationApi.getEventsWithUserOrg(organizationId, eventUserId, eventUser, 'desc');
       const eventsFromOrgByUser = data.map((item: any) => item.event);
       setEventsWithEventUser(eventsFromOrgByUser);
+      setIsLoadingEventsWithEventUser(false);
       return eventsFromOrgByUser;
     } catch (error) {
+      setIsLoadingEventsWithEventUser(false);
       setEventsWithEventUser([]);
       return [];
     }
@@ -61,6 +65,7 @@ export const useGetMyEventsInOrganization = (
     isLoadingEventsFreeToOneOreUs,
     getEventsFreeAcces,
     eventsWithEventUser,
-    fetchEventsFree
+    fetchEventsFree,
+    isLoadingEventsWithEventUser
   };
 };

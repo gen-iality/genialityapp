@@ -24,9 +24,9 @@ import AccountCircleIcon from '@2fd/ant-design-icons/lib/AccountCircle';
 import { useIntl } from 'react-intl';
 import { getCorrectColor } from '@/helpers/utils';
 import { isOrganizationCETA } from '@/components/user-organization-to-event/helpers/helper';
-import { Organization } from '@/components/eventOrganization/types';
+import { IOrganization } from '@/components/eventOrganization/types';
 import { OrganizationApi, OrganizationFuction } from '@/helpers/request';
-import MenuItem from 'antd/lib/menu/MenuItem';
+import { isOrgUserAdmin } from '@/pages/eventOrganization/utils/isOrgUserAdmin';
 
 const { useBreakpoint } = Grid;
 
@@ -74,8 +74,8 @@ const Headers = (props: Props) => {
   const { helperDispatch } = cHelper;
   const [headerIsLoading, setHeaderIsLoading] = useState(true);
   const [dataGeneral, setdataGeneral] = useState(initialDataGeneral);
-  const [currentOrganization, setCurrentOrganization] = useState<Organization | null>(null);
-  const [myOrganizations, setMyorganizations] = useState<any[]>([]);
+  const [currentOrganization, setCurrentOrganization] = useState<IOrganization | null>(null);
+  const [myOrganization, setMyOrganization] = useState<IOrganization | null>(null);
   const { id: paramsId } = useParams<{ id: string }>();
   const [showButtons, setshowButtons] = useState({
     buttonregister: true,
@@ -277,9 +277,11 @@ const Headers = (props: Props) => {
 
   const getMyOrganizations = async () => {
     try {
-      const organizations: Organization[] = await OrganizationApi.mine();
+      const organizations: IOrganization[] = await OrganizationApi.mine();
       if (organizations?.length > 0) {
-        setMyorganizations(organizations.map((item) => item.id));
+        const myOrganization = organizations.find(org=>org.id === paramsId);
+
+        if( myOrganization )setMyOrganization(myOrganization);
       }
     } catch (error) {
       console.log('[debug] organization not found');
@@ -290,7 +292,7 @@ const Headers = (props: Props) => {
     if (cUser.value && validatorOrg) {
       getMyOrganizations();
     } else {
-      setMyorganizations([]);
+      setMyOrganization(null);
     }
   }, [cUser.value, validatorOrg]);
   return (
@@ -345,7 +347,7 @@ const Headers = (props: Props) => {
                     backgroundColor: '#FFFFFF;',
                   }}
                 />
-                {cUser?.value && myOrganizations.includes(paramsId) ? (
+                {cUser?.value && myOrganization && isOrgUserAdmin(myOrganization) ? (
                   <Dropdown overlay={organizationMenu} trigger={['click']}>
                     <Typography.Title style={{ cursor: 'pointer' }} level={5}>
                       {`${!screens.xs ? 'Bienvenidos a ' : ''}  ${organizationName}`} <DownOutlined />

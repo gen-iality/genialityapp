@@ -37,7 +37,7 @@ export interface contactOrg {
     email: string;
     celular: string;
 }
-export interface Organization {
+export interface IOrganization {
     _id:            string;
     id:             string;
     name:           string;
@@ -48,6 +48,10 @@ export interface Organization {
     show_my_certificates?:boolean
     social_networks?:SocialNetworksOrg,
     contact?: contactOrg
+    rolInOrganization: {
+        _id:string;
+        name:string;
+    }
 }
 
 export interface SocialNetworksOrg {

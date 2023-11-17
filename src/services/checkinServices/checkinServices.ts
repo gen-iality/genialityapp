@@ -1,4 +1,4 @@
-import { ROLS_USER } from '@/constants/rols.constants';
+import { ROLS_USER_ID } from '@/constants/rols.constants';
 import { DispatchMessageService } from '@/context/MessageService';
 import { firestore } from '@/helpers/firebase';
 import { Activity, TicketsApi } from '@/helpers/request';
@@ -119,7 +119,7 @@ export const getAttendeeByParameter = ({
               bloodtype,
               birthdate,
               gender,
-              rol_id: ROLS_USER.ATTENDEE_ID/* '60e8a7e74f9fb74ccd00dc22' */,
+              rol_id: ROLS_USER_ID.ATTENDEE_ID/* '60e8a7e74f9fb74ccd00dc22' */,
               checked_in: false,
             },
           };

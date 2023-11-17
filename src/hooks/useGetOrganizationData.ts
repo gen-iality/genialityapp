@@ -1,9 +1,9 @@
-import { Organization } from '@/components/eventOrganization/types';
+import { IOrganization } from '@/components/eventOrganization/types';
 import { OrganizationApi } from '@/helpers/request';
 import { useCallback, useEffect, useState } from 'react';
 
 const useGetOrganizationData = (organizationId: string) => {
-  const [organizationData, setOrganizationData] = useState<Organization | null>(null);
+  const [organizationData, setOrganizationData] = useState<IOrganization | null>(null);
   const [isLoadingOrganizationData, setIsLoadingOrganizationData] = useState(true);
 
   const getOrganizationData = useCallback(async () => {

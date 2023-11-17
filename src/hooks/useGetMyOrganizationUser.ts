@@ -2,7 +2,7 @@ import { OrganizationApi } from '@/helpers/request';
 import { useCallback, useEffect, useState } from 'react';
 
 const useGetMyOrganizationUser = (organizationId: string) => {
-  const [myOrgUser, setMyOrgUser] = useState<any | null>();
+  const [myOrgUser, setMyOrgUser] = useState<any | null>(null);
   const [isLoadingMyOrgUser, setIsLoadingMyOrgUser] = useState(true);
 
   const getMyOrgUser = useCallback(async () => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Organization } from '../types';
+import { IOrganization } from '../types';
 import FacebookIcon from '@2fd/ant-design-icons/lib/Facebook';
 import TwitterIcon from '@2fd/ant-design-icons/lib/Twitter';
 import InstagramIcon from '@2fd/ant-design-icons/lib/Instagram';
@@ -10,7 +10,7 @@ import { Avatar, Space, Tooltip } from 'antd';
 import { getCorrectColor } from '@/helpers/utils';
 
 interface Props {
-  organization: Organization | null;
+  organization: IOrganization | null;
 }
 
 export const SocialNetworks = ({ organization }: Props) => {
