@@ -23,8 +23,8 @@ export interface CreateBingoProps {
   changeBingoDimensionsNew: (dimensions: DimensionInterface) => Promise<void>;
 }
 export interface AssignmentCardsProps {
-  generateBingoForAllUsers: () => void;
-  generateBingoForExclusiveUsers: () => void;
+  generateBingoForAllUsers: (callback?: (error: null | any)=>void) => void;
+  generateBingoForExclusiveUsers: (callback?: (error: null | any)=>void) => void;
   //listUsers: listUsers[];
   bingo: Bingo;
   //bingoPrint: BingoPrintProps[];

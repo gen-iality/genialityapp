@@ -517,7 +517,7 @@ export const useBingo = () => {
 	// };
 
 	//Generate bingo for all users
-	const onGenerateBingoForAllUsers = async () => {
+	const onGenerateBingoForAllUsers = async (callback?:(error:any | null)=> void) => {
 		Modal.confirm({
 			title: `¿Está seguro de que desea generar de nuevo los cartones de bingo para todos los usuarios?`,
 			icon: <ExclamationCircleOutlined />,
@@ -543,6 +543,7 @@ export const useBingo = () => {
 							msj: '¡Se generaron correctamente los cartones de bingos para todos los usuarios!',
 							action: 'show',
 						});
+						if(callback)callback(null)
 					} catch (e) {
 						DispatchMessageService({
 							key: 'loading',
@@ -553,6 +554,7 @@ export const useBingo = () => {
 							msj: '¡Error generando los cartones de bingos para todos los usuarios!',
 							action: 'show',
 						});
+						if(callback)callback(e)
 					}
 				};
 				onGenerate();
@@ -561,7 +563,7 @@ export const useBingo = () => {
 	};
 
 	//Generate bingo for exclusive users
-	const onGenerateBingoForExclusiveUsers = async () => {
+	const onGenerateBingoForExclusiveUsers = async (callback?:(error:any | null)=> void) => {
 		Modal.confirm({
 			title: `¿Está seguro de que desea generar cartones de bingo para los usuarios restantes?`,
 			icon: <ExclamationCircleOutlined />,
@@ -587,6 +589,7 @@ export const useBingo = () => {
 							msj: '¡Se generaron correctamente los cartones de bingos para los usuarios restantes!',
 							action: 'show',
 						});
+						if(callback)callback(null)
 					} catch (e) {
 						DispatchMessageService({
 							key: 'loading',
@@ -597,6 +600,7 @@ export const useBingo = () => {
 							msj: '¡Error generando los cartones de bingos para los usuarios restantes!',
 							action: 'show',
 						});
+						if(callback)callback(e)
 					}
 				};
 				onGenerate();
