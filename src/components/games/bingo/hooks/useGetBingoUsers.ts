@@ -6,15 +6,17 @@ import { IBingoUser } from '../interfaces/bingo';
 export const useGetBingoUsers = (eventId: string) => {
   const [bingoUsers, setBingoUsers] = useState<IBingoUser[]>([]);
   const [totalBingoUser, setTotalBingoUser] = useState(0);
-  const { pagination } = usePaginationListLocal(totalBingoUser);
+  const {
+    pagination: { pageSize, current, ...restPagination },
+  } = usePaginationListLocal(totalBingoUser);
   const [isLoadingBingoUser, setIsLoadingBingoUser] = useState(true);
-  
+
   const fetchData = useCallback(async () => {
     setIsLoadingBingoUser(true);
     const { data: bingoUser, pagination: paginationRes, error } = await getListUsersWithOrWithoutBingo(
       eventId,
-      pagination.pageSize,
-      pagination.current
+      pageSize,
+      current
     );
     if (!error) {
       setBingoUsers(bingoUser);
@@ -24,11 +26,11 @@ export const useGetBingoUsers = (eventId: string) => {
       setBingoUsers([]);
       setIsLoadingBingoUser(false);
     }
-  }, [eventId]);
+  }, [eventId, current, pageSize]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  return { bingoUsers, isLoadingBingoUser, pagination };
+  return { bingoUsers, isLoadingBingoUser, pagination: { ...restPagination, current, pageSize } };
 };

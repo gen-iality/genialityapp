@@ -1,7 +1,8 @@
 import { IOptionsError, IOptionsSucces, IResultDelete, IResultPost, TErrorsService, TSuccesService } from '@/types';
 import { BingoCarton } from '../interfaces/bingo';
-import { BingoApi } from '@/helpers/request';
+import privateInstance, { BingoApi } from '@/helpers/request';
 import { DispatchMessageService } from '@/context/MessageService';
+import { GetTokenUserFirebase } from '@/helpers/HelperAuth';
 
 export const handledErrorBingoCarton = (typeError: TErrorsService, options?: IOptionsError) => {
   switch (typeError) {
@@ -86,9 +87,10 @@ export const deleteBingoCarton = async (bingoId: string, cartonId: string): Prom
   }
 };
 
-export const deleteBingoCartonList = async (bingoId: string, cartonIds: string[]): Promise<IResultDelete> => {
+export const deleteBingoCartonList = async (bingoId: string, notAssociated: boolean): Promise<IResultDelete> => {
   try {
-    await BingoApi.deleteBingoCartonsList(bingoId);
+    let token = await GetTokenUserFirebase();
+    await privateInstance.delete(`api/bingos/${bingoId}/bingocards/?not_associated=${notAssociated}&token=${token}`);
     return {
       error: null,
     };

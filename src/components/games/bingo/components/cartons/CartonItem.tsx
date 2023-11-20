@@ -5,6 +5,7 @@ import PrintComponent from '../PrintComponent';
 import PrintCardBoard from '../PrintCardBoard';
 import { useModalLogic } from '@/hooks/useModalLogic';
 import { deleteBingoCarton } from '../../services/bingo-cartons.service';
+import { confirmDeleteAsync, confirmDeleteSync } from '@/components/ModalConfirm/confirmDelete';
 
 interface Props {
   bingoCartonItem: BingoCarton;
@@ -15,8 +16,14 @@ export const CartonItem = ({ bingoCartonItem, bingo, fetchBingoCartons }: Props)
   const bingoUserRef = useRef(null);
   const { closeModal, isOpenModal, openModal } = useModalLogic();
   const onDeleteCarton = async () => {
-    const { error } = await deleteBingoCarton(bingoCartonItem.bingo_id, bingoCartonItem._id);
-    if (!error) fetchBingoCartons();
+    confirmDeleteSync({
+      titleConfirm: '¿Desea eliminar el carton?',
+      descriptionConfirm: 'Al confirmar, se borrara permanentemente el carton.',
+      onOk: async () => {
+        const { error } = await deleteBingoCarton(bingoCartonItem.bingo_id, bingoCartonItem._id);
+        if (!error) fetchBingoCartons();
+      },
+    });
   };
 
   return (
@@ -26,7 +33,7 @@ export const CartonItem = ({ bingoCartonItem, bingo, fetchBingoCartons }: Props)
         actions={[
           <Space align='center'>
             <PrintCardBoard cardboardCode={bingoCartonItem?._id} bingoCardRef={bingoUserRef} />
-            <Button type='dashed' onClick={onDeleteCarton}>
+            <Button danger onClick={onDeleteCarton}>
               Eliminar
             </Button>
             {/* {bingoCartonItem.event_user_id ? (

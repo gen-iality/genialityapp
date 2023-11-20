@@ -15,7 +15,7 @@ export const MessageConfirmDelete = ({ titleConfirm, descriptionConfirm }: Props
         </Typography.Text>
       }
       subTitle={
-        <Space style={{ textAlign: 'justify' }} direction='vertical'>
+        <Space style={{ textAlign: 'left' }} direction='vertical'>
           <Typography.Paragraph>{descriptionConfirm}</Typography.Paragraph>
         </Space>
       }

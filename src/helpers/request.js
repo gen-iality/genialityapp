@@ -8,13 +8,13 @@ import { DispatchMessageService } from '../context/MessageService';
 import { async } from 'ramda-adjunct';
 import { ROLS_USER } from '@/constants/rols.constants';
 
-const publicInstance = axios.create({
+export const publicInstance = axios.create({
   url: ApiUrl,
   baseURL: ApiUrl,
   pushURL: 'https://104.248.125.133:6477/pushNotification',
 });
 
-const privateInstance = axios.create({
+export const privateInstance = axios.create({
   url: ApiUrl,
   baseURL: ApiUrl,
   withCredentials: true,
@@ -498,10 +498,6 @@ export const BingoApi = {
   deleteBingoCartons: async (bingoid, bingocard) => {
     let token = await GetTokenUserFirebase();
     return await Actions.delete(`api/bingos/${bingoid}/bingocards/${bingocard}?token=${token}`);
-  },
-  deleteBingoCartonsList: async (bingoid) => {
-    let token = await GetTokenUserFirebase();
-    return await Actions.delete(`api/bingos/${bingoid}/bingocards/?token=${token}`);
   },
   getTemplates: async (format) => {
     let token = await GetTokenUserFirebase();
