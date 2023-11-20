@@ -1,12 +1,14 @@
 import { useReactToPrint } from 'react-to-print';
 import { Button, Space } from 'antd';
-import DownloadIcon from '@2fd/ant-design-icons/lib/Download';
-import PrinterIcon from '@2fd/ant-design-icons/lib/Printer';
 import { useState } from 'react';
-import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
-import html2pdf from 'html2pdf';
-export default function PrintCardBoard({ bingoCardRef, cardboardCode }: { bingoCardRef: any; cardboardCode: string }) {
+
+interface Props { 
+  bingoCardRef: any; 
+  cardboardCode: string 
+  listCartons?: boolean;
+}
+export default function PrintCardBoard({ bingoCardRef, cardboardCode, listCartons = false }: Props) {
   const [loading, setLoading] = useState(false);
   const handlePrintHook = useReactToPrint({
     content: () => bingoCardRef.current,
@@ -34,8 +36,6 @@ export default function PrintCardBoard({ bingoCardRef, cardboardCode }: { bingoC
           useCORS: true,
         });
         const data = canvas.toDataURL('image/png');
-        console.log('base64', data);
-        // pdf.output('dataurlnewwindow');
       }
     },
   });
@@ -46,7 +46,7 @@ export default function PrintCardBoard({ bingoCardRef, cardboardCode }: { bingoC
         </Button> */}
       <Button loading={loading} disabled={loading} onClick={() => onHandlePrint()}>
         <Space split='/'>
-          Descargar cartón
+          {listCartons ? 'Descargar cartones':'Descargar cartón'}
           {/* <DownloadIcon />
           <PrinterIcon /> */}
         </Space>

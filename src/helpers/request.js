@@ -8,13 +8,13 @@ import { DispatchMessageService } from '../context/MessageService';
 import { async } from 'ramda-adjunct';
 import { ROLS_USER } from '@/constants/rols.constants';
 
-const publicInstance = axios.create({
+export const publicInstance = axios.create({
   url: ApiUrl,
   baseURL: ApiUrl,
   pushURL: 'https://104.248.125.133:6477/pushNotification',
 });
 
-const privateInstance = axios.create({
+export const privateInstance = axios.create({
   url: ApiUrl,
   baseURL: ApiUrl,
   withCredentials: true,
@@ -484,7 +484,21 @@ export const BingoApi = {
       true
     );
   },
-
+  getBingoCartons: async (bingoid, numberItems = 10, page = 1, free_cards) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(
+      `api/bingos/${bingoid}/bingocards?numberItems=${numberItems}&page=${page}&free_cards=${free_cards}&token=${token}`,
+      true
+    );
+  },
+  postBingoCartons: async (bingoid, cartonNumber) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`api/bingos/${bingoid}/bingocards?token=${token}`, { qty_bingo_cards: cartonNumber });
+  },
+  deleteBingoCartons: async (bingoid, bingocard) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/bingos/${bingoid}/bingocards/${bingocard}?token=${token}`);
+  },
   getTemplates: async (format) => {
     let token = await GetTokenUserFirebase();
     return await Actions.get(`api/bingotemplates/format/${format}?token=${token}`, true);

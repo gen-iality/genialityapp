@@ -1,3 +1,5 @@
+import { Meta } from "@/components/assembly/types";
+
 export interface EventBingo {
   name?: string;
   _id?: string;
@@ -35,6 +37,15 @@ export interface listUsers {
     email: string;
     picture: string;
   };
+}
+
+export interface IBingoUser {
+  bingo: boolean;
+  _id: string;
+  names: string;
+  email: string;
+   picture: string;
+   bingo_card?:any;
 }
 
 export interface BingoAppearance {
@@ -188,6 +199,10 @@ export interface BingoByUserInterface {
   name_owner: string;
   bingo_card: any;
   code: string;
+}
+
+export interface BingoCarton extends Omit<BingoByUserInterface,'event_user_id'> {
+  event_user_id: string | undefined
 }
 
 export interface ValuesBingoCard {
