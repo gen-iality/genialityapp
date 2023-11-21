@@ -39,6 +39,14 @@ interface IDataNewEventUser {
 export async function createEventUserFree(dataNewEventUser: IDataNewEventUser, eventId: string) {
   let response = null;
 
+  const VALUE_TYPE_USER_CETA = {
+    MIXTO:'Mixto',
+    DIFERIDO:'Diferido',
+    EN_VIVO:'En vivo'
+  }
+
+  dataNewEventUser.list_type_user = VALUE_TYPE_USER_CETA.DIFERIDO;
+  
   try {
     let respUser = await UsersApi.createOne({ properties: { ...dataNewEventUser } }, eventId, true);
     if (respUser && respUser._id) {

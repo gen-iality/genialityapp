@@ -200,6 +200,8 @@ class General extends Component {
         });
       }
     }
+    const initialCategories = Array.isArray(this.state.event.category_ids)? this.state.event.category_ids : null;
+    if(initialCategories) this.setState({ selectedCategories: initialCategories }); 
 
     //Esto es para la configuración de autenticación. Nuevo flujo de Login
     if (
