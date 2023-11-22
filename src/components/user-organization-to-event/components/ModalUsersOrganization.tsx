@@ -13,12 +13,11 @@ interface Props extends ModalProps {
 }
 
 const ModalUsersOrganization = ({ onCancel, organizationId = '', usersEvent, eventId, ...modalProps }: Props) => {
-  const [flagState, setFlagState] = useState(false);
-  const { error, membersData, isLoading } = useGetUsersOrgToEvent(organizationId, eventId, flagState);
+  const { error, membersData, isLoading, fetchData } = useGetUsersOrgToEvent(organizationId, eventId);
   const { filteredList: membersDataFiltered, setSearchTerm } = useSearchList(membersData, 'name');
   //no hagan esto en casa
   const getNewUsersOrgList = () => {
-    setFlagState((current) => !current);
+    fetchData()
   };
 
   const handledSearchText = (termSearch: string) => {
