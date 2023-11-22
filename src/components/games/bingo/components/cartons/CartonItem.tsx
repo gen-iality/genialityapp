@@ -14,11 +14,11 @@ interface Props {
 }
 export const CartonItem = ({ bingoCartonItem, bingo, fetchBingoCartons }: Props) => {
   const bingoUserRef = useRef(null);
-  const { closeModal, isOpenModal, openModal } = useModalLogic();
+  
   const onDeleteCarton = async () => {
     confirmDeleteSync({
       titleConfirm: '¿Desea eliminar el carton?',
-      descriptionConfirm: 'Al confirmar, se borrara permanentemente el carton.',
+      descriptionConfirm: 'Al confirmar, se borrara de forma permanente el cartón.',
       onOk: async () => {
         const { error } = await deleteBingoCarton(bingoCartonItem.bingo_id, bingoCartonItem._id);
         if (!error) fetchBingoCartons();
