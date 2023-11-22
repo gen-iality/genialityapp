@@ -29,7 +29,7 @@ export const CartonsList = ({ bingo }: Props) => {
 
   const onDeleteAllCartons = async () => {
     confirmDeleteSync({
-      descriptionConfirm: `Esto eliminara todos los cartones de la actual pagina (${pagination.pageSize} cartones)`,
+      descriptionConfirm: `Esto eliminara todos los cartones de la actual pagina (${bingoCartons.length} cartones)`,
       onOk: async () => {
         const DELETE_ONLY_CARTONS_ASSOCIATED = true;
         const { error } = await deleteBingoCartonList(bingo._id, DELETE_ONLY_CARTONS_ASSOCIATED);

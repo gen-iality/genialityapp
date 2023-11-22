@@ -48,6 +48,13 @@ export default function index(props: any) {
 	);
 }
 
+const KEY_TAPS = {
+	BINGO_CONFIG:'1',
+	BINGO_APPEARANCE:"2",
+	BINGO_CARTONGS:'3',
+	PLAY_BINGO:'4'
+}
+
 function BingoInCMS({ event }: { event: {} }) {
 	const {
 		bingo,
@@ -127,7 +134,7 @@ function BingoInCMS({ event }: { event: {} }) {
 				) : (
 					<>
 						{bingo && (
-							<Tabs defaultActiveKey={dataFirebaseBingo?.startGame ? '3' : '1'}>
+							<Tabs defaultActiveKey={dataFirebaseBingo?.startGame ? KEY_TAPS.PLAY_BINGO : KEY_TAPS.BINGO_CONFIG}>
 								<ImportModal
 									getBingo={getBingo}
 									event={event}
@@ -138,7 +145,7 @@ function BingoInCMS({ event }: { event: {} }) {
 									setFormData={setFormDataBingo}
 									bingo={bingo}
 								/>
-								<Tabs.TabPane tab='Configurar Bingo' key='1' disabled={dataFirebaseBingo?.startGame}>
+								<Tabs.TabPane tab='Configurar Bingo' key={KEY_TAPS.BINGO_CONFIG} disabled={dataFirebaseBingo?.startGame}>
 									<Row gutter={[16, 16]} style={{ padding: '40px' }}>
 										<Col span={24} style={{ textAlign: 'right' }}></Col>
 										<Col span={10}>
@@ -215,7 +222,7 @@ function BingoInCMS({ event }: { event: {} }) {
 										</Col>
 									</Row>
 								</Tabs.TabPane>
-								<Tabs.TabPane tab='Apariencia del cartón' key='2' disabled={dataFirebaseBingo?.startGame}>
+								<Tabs.TabPane tab='Apariencia del cartón' key={KEY_TAPS.BINGO_APPEARANCE} disabled={dataFirebaseBingo?.startGame}>
 									<Row gutter={[16, 16]} style={{ padding: '40px' }}>
 										<Col span={24}>
 											<InputColor
@@ -256,7 +263,7 @@ function BingoInCMS({ event }: { event: {} }) {
 									</Row>
 								</Tabs.TabPane>
 
-								<Tabs.TabPane tab='Asignación de cartones' key='3' disabled={dataFirebaseBingo?.startGame}>
+								<Tabs.TabPane tab='Asignación de cartones' key={KEY_TAPS.BINGO_CARTONGS} disabled={dataFirebaseBingo?.startGame}>
 									<AssignmentCards
 										generateBingoForExclusiveUsers={onGenerateBingoForExclusiveUsers}
 										generateBingoForAllUsers={onGenerateBingoForAllUsers}
@@ -266,7 +273,7 @@ function BingoInCMS({ event }: { event: {} }) {
 									/>
 								</Tabs.TabPane>
 
-								<Tabs.TabPane tab='Jugar Bingo' key='4'>
+								<Tabs.TabPane tab='Jugar Bingo' key={KEY_TAPS.PLAY_BINGO}>
 									<PlayBingo
 										bingoValues={formDataBingo.bingo_values}
 										event={event}
