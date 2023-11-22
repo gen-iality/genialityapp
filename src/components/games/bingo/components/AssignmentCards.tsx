@@ -11,7 +11,7 @@ import { useSearchList } from '@/hooks/useSearchList';
 
 const AssignmentCards = ({ generateBingoForAllUsers, generateBingoForExclusiveUsers, bingo }: AssignmentCardsProps) => {
   const bingoCardRef = useRef();
-  const { isLoadingBingoUser, pagination, bingoUsers } = useGetBingoUsers(bingo.event_id);
+  const { isLoadingBingoUser, pagination, bingoUsers, fetchData: reLoadBingoUsers } = useGetBingoUsers(bingo.event_id);
   const { filteredList: bingoUsersFiltered, setSearchTerm, searchTerm } = useSearchList(bingoUsers, [
     'email',
     'names',
@@ -37,14 +37,22 @@ const AssignmentCards = ({ generateBingoForAllUsers, generateBingoForExclusiveUs
                 type='primary'
                 disabled={bingo.bingo_values.length < bingo.dimensions.minimun_values}
                 style={{ minWidth: '250px' }}
-                onClick={generateBingoForAllUsers}>
+                onClick={() =>
+                  generateBingoForAllUsers((error) => {
+                    if (!error) reLoadBingoUsers();
+                  })
+                }>
                 Generar cartones a todos
               </Button>
               <Button
                 disabled={bingo.bingo_values.length < bingo.dimensions.minimun_values}
                 type='primary'
                 style={{ minWidth: '250px' }}
-                onClick={generateBingoForExclusiveUsers}>
+                onClick={() =>
+                  generateBingoForExclusiveUsers((error) => {
+                    if (!error) reLoadBingoUsers();
+                  })
+                }>
                 Generar cartones faltantes
               </Button>
             </Space>

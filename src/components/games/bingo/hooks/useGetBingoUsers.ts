@@ -32,5 +32,5 @@ export const useGetBingoUsers = (eventId: string) => {
     fetchData();
   }, [fetchData]);
 
-  return { bingoUsers, isLoadingBingoUser, pagination: { ...restPagination, current, pageSize } };
+  return { bingoUsers, isLoadingBingoUser, pagination: { ...restPagination, current, pageSize }, fetchData };
 };
