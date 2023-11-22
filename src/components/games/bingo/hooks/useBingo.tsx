@@ -115,25 +115,26 @@ export const useBingo = () => {
 		id: '',
 	});
 	const { value } = eventContext;
-	useEffect(() => {
-		const getBingo = async () => {
-			setLoading(true);
-			const bingo = await GetBingo(value._id);
-			if (bingo) {
-				setBingo(bingo);
-				setFormDataBingo(prev => ({
-					...prev,
-					name: bingo.name,
-					amount_of_bingo: bingo.amount_of_bingo,
-					regulation: bingo.regulation,
-					bingo_appearance: bingo.bingo_appearance,
-					bingo_values: bingo.bingo_values || [],
-					dimensions: bingo.dimensions,
-				}));
-			}
 
-			setLoading(false);
-		};
+	const getBingo = async () => {
+		setLoading(true);
+		const bingo = await GetBingo(value._id);
+		if (bingo) {
+			setBingo(bingo);
+			setFormDataBingo(prev => ({
+				...prev,
+				name: bingo.name,
+				amount_of_bingo: bingo.amount_of_bingo,
+				regulation: bingo.regulation,
+				bingo_appearance: bingo.bingo_appearance,
+				bingo_values: bingo.bingo_values || [],
+				dimensions: bingo.dimensions,
+			}));
+		}
+
+		setLoading(false);
+	};
+	useEffect(() => {
 		getBingo();
 		return () => {
 			setBingo(undefined);
@@ -638,5 +639,6 @@ export const useBingo = () => {
 		listUsers,
 		setListUsers,
 		bingoPrint,
+		getBingo
 	};
 };

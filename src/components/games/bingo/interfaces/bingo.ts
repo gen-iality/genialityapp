@@ -97,6 +97,7 @@ export interface extraFields {
   render?: (text: string, record: any, index: any) => React.ReactNode;
 }
 export interface ImportModalInterface {
+  getBingo?:() => void;
   event: { name?: string; _id?: string };
   openAndCloseImportModal: boolean;
   setOpenAndCloseImportModal: (state: boolean) => void;

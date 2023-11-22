@@ -78,6 +78,7 @@ function BingoInCMS({ event }: { event: {} }) {
 		listUsers,
 		setListUsers,
 		bingoPrint,
+		getBingo
 	} = useBingo();
 	const [openAndCloseImportModal, setOpenAndCloseImportModal] = useState(false);
 	const formLayout = {
@@ -128,6 +129,7 @@ function BingoInCMS({ event }: { event: {} }) {
 						{bingo && (
 							<Tabs defaultActiveKey={dataFirebaseBingo?.startGame ? '3' : '1'}>
 								<ImportModal
+									getBingo={getBingo}
 									event={event}
 									openAndCloseImportModal={openAndCloseImportModal}
 									setOpenAndCloseImportModal={setOpenAndCloseImportModal}
