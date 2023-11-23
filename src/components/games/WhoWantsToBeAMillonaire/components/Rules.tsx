@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Modal, Typography } from 'antd';
+import { getCorrectColor } from '@/helpers/utils';
 
 const { Title, Paragraph } = Typography;
-export default function Rules({ rules }: { rules: string }) {
+export default function Rules({ rules, bgColor }: { rules: string, bgColor?: string}) {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const onHandleModal = () => {
     setIsVisible(!isVisible);
@@ -10,8 +11,8 @@ export default function Rules({ rules }: { rules: string }) {
 
   return (
     <>
-      <Button block size='large' onClick={() => setIsVisible(!isVisible)}>
-        <Typography.Text strong> Reglas</Typography.Text>
+      <Button style={{backgroundColor: bgColor}} block size='large' onClick={() => setIsVisible(!isVisible)}>
+        <Typography.Text style={{color:getCorrectColor(bgColor)}} strong>Reglas</Typography.Text>
       </Button>
       <Modal title='Reglas de la dinamica' onCancel={onHandleModal} visible={isVisible} onOk={onHandleModal}>
         <Paragraph>{rules}</Paragraph>

@@ -2,10 +2,13 @@ import { Button, Space, Modal, Spin, Row, Col, Image, Typography, Card, Grid, To
 import Rules from './Rules';
 import { useMillonaireLanding } from '../hooks/useMillonaireLanding';
 import Stages from './Stages';
+import { getCorrectColor } from '@/helpers/utils';
 const { useBreakpoint } = Grid;
 export default function MenuGame() {
   const { millonaire, loading, onAnnouncement, onChangeStatusGame, scores, scoreUser } = useMillonaireLanding();
   const screens = useBreakpoint();
+  const backgroundMillonaire = millonaire.appearance.background_color || '#120754'
+  const primaryMillonaire = millonaire.appearance.primary_color || '#FFFFFFCC'
   const userExits = scores?.find((score) => score?.uid === scoreUser?.uid);
   if (loading) return <Spin />;
   return (
@@ -18,7 +21,7 @@ export default function MenuGame() {
       <Card
         style={{
           border: 'none',
-          backgroundColor: '#FFFFFFCC',
+          backgroundColor: primaryMillonaire,
           backdropFilter: 'blur(8px)',
           maxWidth: screens.xs ? '95vw' : 'auto',
         }}>
@@ -44,21 +47,21 @@ export default function MenuGame() {
                 alt='logo.png'
               />
             )}
-            <Typography.Title level={4} style={{ textAlign: 'center' }}>
+            <Typography.Title level={4} style={{ textAlign: 'center', color: getCorrectColor(primaryMillonaire) }}>
               {millonaire.name}
             </Typography.Title>
           </Space>
           <Space size={'middle'} direction='vertical' style={{ width: '100%' }}>
             <Tooltip placement='top' title={userExits ? 'No puedes volver a jugar.' : null}>
-              <Button block size='large' disabled={userExits ? true : false} onClick={() => onAnnouncement()}>
-                <Typography.Text strong>{userExits ? 'Ya participaste' : 'Jugar'}</Typography.Text>
+              <Button style={{backgroundColor:backgroundMillonaire}} block size='large' disabled={userExits ? true : false} onClick={() => onAnnouncement()}>
+                <Typography.Text style={{color:getCorrectColor(backgroundMillonaire)}} strong>{userExits ? 'Ya participaste' : 'Jugar'}</Typography.Text>
               </Button>
             </Tooltip>
 
-            <Button block size='large' onClick={() => onChangeStatusGame('GAME_OVER')}>
-              <Typography.Text strong>Ranking</Typography.Text>
+            <Button style={{backgroundColor:backgroundMillonaire}} block size='large' onClick={() => onChangeStatusGame('GAME_OVER')}>
+              <Typography.Text style={{color:getCorrectColor(backgroundMillonaire)}} strong>Ranking</Typography.Text>
             </Button>
-            <Rules rules={millonaire.rules} />
+            <Rules bgColor={backgroundMillonaire} rules={millonaire.rules} />
             <Stages />
           </Space>
         </Row>
