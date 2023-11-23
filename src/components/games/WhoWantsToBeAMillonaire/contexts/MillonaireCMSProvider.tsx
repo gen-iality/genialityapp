@@ -883,7 +883,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
         return questionsInStage.push(question);
       }
     });
-    if (preserveInformation === true && millonaire.questions === undefined) {
+    if (preserveInformation === true && (millonaire.questions === undefined || millonaire.questions?.length === 0)) {
       setMillonaire({
         ...millonaire,
         questions: [...questionResponseAdapter],
