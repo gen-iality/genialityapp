@@ -372,6 +372,10 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     }
     const response = await DeleteQuestionMillonairApi(id!, question.id!);
     if (response) {
+      setMillonaire((prevState) => ({
+        ...prevState,
+        questions: prevState.questions.filter(itemQuestion=>itemQuestion.id !== question.id),
+      }));
       DispatchMessageService({
         type: 'success',
         msj: 'Se elimino la pregunta correctamente, verifique que no este en uso',
