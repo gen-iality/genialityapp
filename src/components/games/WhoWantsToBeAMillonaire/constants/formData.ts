@@ -1,3 +1,5 @@
+import { IMillonaire } from "../interfaces/Millonaire";
+
 export const VALUES_TIME_PER_ANSWERS = [
   {
     label: '10 segundos',
@@ -60,7 +62,7 @@ export const INITIAL_STATE_STAGE = {
   score: 100,
 };
 
-export const INITIAL_STATE_MILLONAIRE = {
+export const INITIAL_STATE_MILLONAIRE: IMillonaire = {
   name: '',
   numberOfQuestions: null,
   timeForQuestions: 30,
@@ -68,8 +70,8 @@ export const INITIAL_STATE_MILLONAIRE = {
   id: '',
   appearance: {
     logo: '',
-    background_image: '',
     background_color: '',
+    primary_color: ''
   },
   questions: [],
   stages: [],
