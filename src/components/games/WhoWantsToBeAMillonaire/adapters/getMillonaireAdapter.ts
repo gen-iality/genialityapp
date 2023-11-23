@@ -20,7 +20,7 @@ const getMillonaireAdapter = (data: IMillonaireApi) => {
         isTrueOrFalse: answerItem?.is_true_or_false || true,
         type: answerItem?.type || 'text',
       })) || [],
-  }));
+  })) ?? [];
 
   return {
     name: data.name,

@@ -372,6 +372,10 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     }
     const response = await DeleteQuestionMillonairApi(id!, question.id!);
     if (response) {
+      setMillonaire((prevState) => ({
+        ...prevState,
+        questions: prevState.questions.filter(itemQuestion=>itemQuestion.id !== question.id),
+      }));
       DispatchMessageService({
         type: 'success',
         msj: 'Se elimino la pregunta correctamente, verifique que no este en uso',
@@ -468,7 +472,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
       ...prevQuestion,
       answers: [...answers],
     }));
-    setAnswers(INITIAL_ANSWER_TO_RENDER);
+    // setAnswers(INITIAL_ANSWER_TO_RENDER);
   };
 
   //---------------------- FUNCION PARA CREAR O ACTUALIZAR RESPUESTA --------------------------//
@@ -648,6 +652,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     setQuestion(INITIAL_STATE_QUESTION);
     setIsEditQuestion(INITIAL_STATE_EDIT_MODAL);
     setIsEditAnswer(INITIAL_STATE_EDIT_MODAL);
+    setAnswers(INITIAL_ANSWER_TO_RENDER);
   };
 
   const onCancelModalStage = () => {
@@ -878,7 +883,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
         return questionsInStage.push(question);
       }
     });
-    if (preserveInformation === true && millonaire.questions === undefined) {
+    if (preserveInformation === true && (millonaire.questions === undefined || millonaire.questions?.length === 0)) {
       setMillonaire({
         ...millonaire,
         questions: [...questionResponseAdapter],
