@@ -468,7 +468,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
       ...prevQuestion,
       answers: [...answers],
     }));
-    setAnswers(INITIAL_ANSWER_TO_RENDER);
+    // setAnswers(INITIAL_ANSWER_TO_RENDER);
   };
 
   //---------------------- FUNCION PARA CREAR O ACTUALIZAR RESPUESTA --------------------------//
@@ -648,6 +648,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     setQuestion(INITIAL_STATE_QUESTION);
     setIsEditQuestion(INITIAL_STATE_EDIT_MODAL);
     setIsEditAnswer(INITIAL_STATE_EDIT_MODAL);
+    setAnswers(INITIAL_ANSWER_TO_RENDER);
   };
 
   const onCancelModalStage = () => {

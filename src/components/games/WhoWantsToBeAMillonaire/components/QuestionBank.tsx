@@ -1,12 +1,8 @@
 import Header from '@/antdComponents/Header';
-import { Button, Card, Modal, Space, Table, Typography, Form, Select, Input, Divider, Checkbox, List } from 'antd';
+import { Button, Card, Modal, Space, Table, Typography, Form, Select, Input, Divider } from 'antd';
 import generateColumnsQuestion from '../functions/genereteColumnsQuestions';
-import { useState } from 'react';
-import ImageUploaderDragAndDrop from '@/components/imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import { useMillonaireCMS } from '../hooks/useMillonaireCMS';
 import { VALUES_TIME_PER_ANSWERS } from '../constants/formData';
-import { CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import Answers from './Answers';
 import CreateAnswers from './CreateAnswers';
 import ImportBankQuestions from './ImportBankQuestions';
 
@@ -16,20 +12,14 @@ export default function QuestionBank() {
   const columns = generateColumnsQuestion();
   const {
     question,
-    answer,
     millonaire,
-    isEditAnswer,
     isEditQuestion,
     onCancelModalQuestion,
     isVisibleModalQuestion,
     setIsVisibleModalQuestion,
     onChangeQuestion,
-    onChangeAnswer,
     onSubmitQuestion,
-    onSubmitAnswer,
     loading,
-    onActionEditAnwser,
-    onDeleteAnswer,
   } = useMillonaireCMS();
   return (
     <>
@@ -49,7 +39,6 @@ export default function QuestionBank() {
         }}
         visible={isVisibleModalQuestion}
         maskClosable={false}
-        onOk={() => console.log('OK', question)}
         onCancel={() => onCancelModalQuestion()}
         destroyOnClose={true}
         footer={[
@@ -104,7 +93,6 @@ export default function QuestionBank() {
           <Divider />
           <Space>
             <CreateAnswers />
-            {/* {question.answers && question.answers.length > 0 && <Answers />} */}
           </Space>
         </>
       </Modal>
