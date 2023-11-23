@@ -8,19 +8,20 @@ interface Props {
 	scores: Score[];
 	type: 'time' | 'points';
 	withMyScore?: boolean;
+	currentColor?: string;
 }
 
 export default function Ranking(props: Props) {
-	const { myScore, scores, type, withMyScore } = props;
+	const { myScore, scores, type, withMyScore, currentColor  } = props;
 	return (
 		<>
 			{!!withMyScore && myScore && (
 				<>
-					<RankingMyScore myScore={myScore} type={type} />
+					<RankingMyScore myScore={myScore} type={type} currentColor={currentColor} />
 					<Divider />
 				</>
 			)}
-			<RankingList scores={scores} type={type} />
+			<RankingList scores={scores} type={type} currentColor={currentColor} />
 		</>
 	);
 }

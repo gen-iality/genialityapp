@@ -1,11 +1,10 @@
-import { Button, Form, Modal, Space, Tag, Typography, Card, Row, Col } from 'antd';
-import React from 'react';
+import { Button, Form, Modal, Space, Typography, Card, Row, Col } from 'antd';
 import { SketchPicker, CirclePicker } from 'react-color';
 import { useState } from 'react';
 import { DispatchMessageService } from '@/context/MessageService';
 import { getCorrectColor } from '@/helpers/utils';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 type Props = {
   color: string;
@@ -61,12 +60,15 @@ export default function InputColor({ color, onChange, isVisible, setIsVisible, l
       setIsVisibleModalColor(!isVisibleModalColor);
     }
   };
+
+  
   return (
     <>
       <Modal
+      onCancel={onChangeVisibility}
         width={600}
         style={{ borderRadius: '20px' }}
-        closable={false}
+        closable={true}
         footer={[
           <Button key='ok' type='primary' onClick={() => onChangeVisibility()}>
             Aceptar

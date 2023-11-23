@@ -3,14 +3,16 @@ import { UseEventContext } from '@/context/eventContext';
 import { Divider, List, Row, Typography } from 'antd';
 import { useState } from 'react';
 import { Score } from './types';
+import { getCorrectColor } from '@/helpers/utils';
 
 interface Props {
   myScore: Score;
   type: 'time' | 'points';
+  currentColor?: string;
 }
 
 export default function RankingMyScore(props: Props) {
-  const { myScore, type } = props;
+  const { myScore, type, currentColor } = props;
   const cEvent = UseEventContext();
   const { styles } = cEvent;
   const [loading, setloading] = useState(false);
@@ -22,7 +24,7 @@ export default function RankingMyScore(props: Props) {
           <Typography.Title
             level={3}
             style={{
-              color: `${styles && styles.textMenu}`,
+              color: `${currentColor ? getCorrectColor(currentColor) : styles?.textMenu}`,
             }}>
             Mi Puntaje
           </Typography.Title>

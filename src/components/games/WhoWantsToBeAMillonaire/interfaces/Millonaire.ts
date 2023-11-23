@@ -8,8 +8,9 @@ export interface IMillonaire {
   rules?: string;
   appearance: {
     logo: string;
-    background_image: string;
+    // background_image: string;
     background_color: string;
+    primary_color:string;
   };
   id?: string;
   stages: IStages[] | any[];
