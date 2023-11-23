@@ -12,5 +12,6 @@ export const useTimer = (seconds: number) => {
 
 	return {
 		timeRemaining,
+        percentage: (timeRemaining / seconds) * 100,
 	};
 };
