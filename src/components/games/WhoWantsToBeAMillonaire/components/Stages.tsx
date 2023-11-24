@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Drawer, List, Avatar, Button, Typography, Tooltip } from 'antd';
+import { Drawer, List, Avatar, Button, Typography, Tooltip, Space } from 'antd';
 import { useMillonaireLanding } from '../hooks/useMillonaireLanding';
 import FlagVariantIcon from '@2fd/ant-design-icons/lib/FlagVariant';
 import { CloseOutlined } from '@ant-design/icons';
 import ProgressStarIcon from '@2fd/ant-design-icons/lib/ProgressStar';
 import { getCorrectColor } from '@/helpers/utils';
+import CheckIcon from '@2fd/ant-design-icons/lib/Check';
 
 export default function Stages() {
 	const { stages, currentStage, stage, statusGame, millonaire } = useMillonaireLanding();
@@ -26,7 +27,7 @@ export default function Stages() {
 								background: `radial-gradient(129.07% 129.07% at 50% 56.98%, ${backgroundMillonaire} 0%, ${backgroundMillonaire} 100%)`,
 								borderColor: getCorrectColor(backgroundMillonaire),
 						  }
-						: { backgroundColor: backgroundMillonaire, color:getCorrectColor(backgroundMillonaire), border:'none' }
+						: { backgroundColor: backgroundMillonaire, color: getCorrectColor(backgroundMillonaire), border: 'none' }
 				}
 				onClick={() => setIsVisible(!isVisible)}>
 				{statusGame === 'ANNOUNCEMENT' || statusGame === 'STARTED' ? (
@@ -39,7 +40,7 @@ export default function Stages() {
 			</Button>
 			<Drawer
 				className='editAnt'
-				closeIcon={<CloseOutlined style={{ color: '#FFFFFF' }} />}
+				closeIcon={<CloseOutlined style={{ color: getCorrectColor(backgroundMillonaire) }} />}
 				headerStyle={{
 					border: 'none',
 					backgroundColor: backgroundMillonaire,
@@ -63,12 +64,13 @@ export default function Stages() {
 							extra={
 								stage.lifeSaver && (
 									<Tooltip title='Seguro'>
-										<FlagVariantIcon
+										<Space
 											style={{
-												fontSize: '25px',
 												color: currentStage.stage === stage.stage ? backgroundMillonaire : primaryMillonaire,
-											}}
-										/>
+											}}>
+											{currentStage.stage > stage.stage && <CheckIcon />}
+											<FlagVariantIcon style={{ fontSize: '25px' }} />
+										</Space>
 									</Tooltip>
 								)
 							}>
@@ -87,8 +89,11 @@ export default function Stages() {
 									<Typography.Text
 										strong
 										style={{
-											color: currentStage.stage === stage.stage ? backgroundMillonaire : '#FFFFFF',
-											fontSize: '18px',
+											color:
+												currentStage.stage === stage.stage
+													? backgroundMillonaire
+													: getCorrectColor(backgroundMillonaire),
+											fontSize: '20px',
 										}}>
 										<ProgressStarIcon style={{ fontSize: '20px' }} /> {stage.score}
 									</Typography.Text>

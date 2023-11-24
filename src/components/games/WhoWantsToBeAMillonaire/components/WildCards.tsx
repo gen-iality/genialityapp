@@ -62,6 +62,7 @@ export default function WildCards({ isTitle }: ButtonMillonaire) {
 						shape='round'
 						style={{
 							background: `radial-gradient(129.07% 129.07% at 50% 56.98%, ${primaryMillonaire} 0%, ${primaryMillonaire} 100%)`,
+							color:getCorrectColor(primaryMillonaire),
 							border:'none'
 						}}
 						onClick={() => showPropsConfirm()}>
