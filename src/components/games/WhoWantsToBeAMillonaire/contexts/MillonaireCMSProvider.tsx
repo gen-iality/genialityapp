@@ -353,6 +353,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
       });
       setIsVisibleModalQuestion(!isVisibleModalQuestion);
       setAnswer(INITIAL_STATE_ANSWER);
+      setAnswers(INITIAL_ANSWER_TO_RENDER)
       setQuestion(INITIAL_STATE_QUESTION);
     }
     setLoading(false);
