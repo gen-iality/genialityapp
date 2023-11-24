@@ -76,7 +76,7 @@ export default function Millonaire() {
 								<Tag
 									icon={<ProgressStarIcon style={{ fontSize: '20px' }} />}
 									color={primaryMillonaire}
-									style={{ fontSize: '20px', padding: '10px 10px' }}>
+									style={{ fontSize: '20px', padding: '10px 10px', color:getCorrectColor(primaryMillonaire) }}>
 									{currentStage.score}
 								</Tag>
 							</Col>

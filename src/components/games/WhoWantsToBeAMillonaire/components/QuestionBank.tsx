@@ -1,5 +1,5 @@
 import Header from '@/antdComponents/Header';
-import { Button, Card, Modal, Space, Table, Typography, Form, Select, Input, Divider } from 'antd';
+import { Button, Card, Modal, Space, Table, Typography, Form, Select, Input, Divider, Tag, Col, Row, Alert } from 'antd';
 import generateColumnsQuestion from '../functions/genereteColumnsQuestions';
 import { useMillonaireCMS } from '../hooks/useMillonaireCMS';
 import { VALUES_TIME_PER_ANSWERS } from '../constants/formData';
@@ -21,6 +21,8 @@ export default function QuestionBank() {
     onSubmitQuestion,
     loading,
   } = useMillonaireCMS();
+
+  const MIN_COUNT_QUESTION = 15
   return (
     <>
       <Card hoverable={true} style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px', height: '100%' }}>
@@ -30,7 +32,26 @@ export default function QuestionBank() {
             extra={<ImportBankQuestions />}
             addFn={() => setIsVisibleModalQuestion(!isVisibleModalQuestion)}
           />
-          <Table size='small' columns={columns} dataSource={millonaire.questions} />
+          <Table
+            title={() => (
+              <Row gutter={[6, 6]}>
+                <Col span={24}>
+                  <Tag
+                    style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
+                    color='lightgrey'
+                    // icon={<UsergroupAddOutlined />}
+                  >
+                    <strong>Total preguntas: </strong>
+                    <span style={{ fontSize: '13px' }}>{millonaire.questions.length}</span>
+                  </Tag>
+                </Col>
+                {(millonaire.questions === undefined || millonaire.questions.length < MIN_COUNT_QUESTION) && <Col span={24}><Alert type='warning' description='Minimo de preguntas: 15'/></Col>}
+              </Row>
+            )}
+            size='small'
+            columns={columns}
+            dataSource={millonaire.questions}
+          />
         </Space>
       </Card>
       <Modal

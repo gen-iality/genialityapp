@@ -25,8 +25,11 @@ const StageSettings = () => {
     onActiveModalStage,
     onChangeTab,
   } = useMillonaireCMS();
-  console.log('🚀 ~ file: StageSettings.tsx:28 ~ StageSettings ~ previusStage', previusStage, laterStage, stage);
 
+  const isTakenQuestion = (questionId: string) => {
+    // if(questionId === stage.question)return false
+    return millonaire?.stages?.find((stageToFind) => stageToFind.question === questionId)
+  };
   return (
     <>
       <Card hoverable={true} style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px', height: '100%' }}>
@@ -96,9 +99,10 @@ const StageSettings = () => {
           <Form.Item label='Pregunta'>
             <Select value={stage.question} onChange={(e) => onChangeStage('question', String(e))}>
               {millonaire?.questions?.map((questions) => {
+                // if(isTakenQuestion(questions.id))return null
                 return (
                   <Select.Option
-                    disabled={millonaire?.stages?.find((stageToFind) => stageToFind.question === questions.id)}
+                    disabled={isTakenQuestion(questions.id)}
                     value={questions.id}>
                     {questions.question}
                   </Select.Option>
