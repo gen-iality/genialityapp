@@ -22,7 +22,7 @@ export default function WildCards({ isTitle }: ButtonMillonaire) {
 	const { used50 } = usedWildCards;
 	const backgroundMillonaire = millonaire.appearance.background_color || '#120754';
 	const primaryMillonaire = millonaire.appearance.primary_color || '#FFB500';
-	const showPropsConfirm = () => {
+	const showPropsConfirm = (prevScore: string) => {
 		confirm({
 			centered: true,
 			title: '¿Está seguro que desea retirarse?',
@@ -33,7 +33,7 @@ export default function WildCards({ isTitle }: ButtonMillonaire) {
 			okType: 'danger',
 			cancelText: 'Seguir jugando',
 			onOk() {
-				onFinishedGame();
+				onFinishedGame(prevScore);
 			},
 		});
 	};
@@ -65,7 +65,7 @@ export default function WildCards({ isTitle }: ButtonMillonaire) {
 							color:getCorrectColor(primaryMillonaire),
 							border:'none'
 						}}
-						onClick={() => showPropsConfirm()}>
+						onClick={() => showPropsConfirm(String(prevScore))}>
 						{/* <ExitRunIcon style={{ fontSize: '25px' }} /> */}
 						{currentStage.stage === 1 && 'Retirarme'}
 						{currentStage && currentStage.stage !== 1 && 'Retirarme con' + ' ' + prevScore + ' ' + 'puntos'}

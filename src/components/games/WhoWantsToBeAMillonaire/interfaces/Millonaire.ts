@@ -148,7 +148,7 @@ export interface TMillonaireContextPropLanding {
   prevScore: number;
   onChangeVisibilityDrawer: () => void;
   onStartGame: () => void;
-  onFinishedGame: () => void;
+  onFinishedGame: (prevScore: string) => void;
   onFiftyOverFifty: () => void;
   onSaveAnswer: (question: IQuestions, answer: IAnswers) => void;
   onAnnouncement: () => void;
