@@ -2,20 +2,13 @@ import { CertifiRow } from '../types';
 import { availableTags } from './constants';
 
 export const defaultCertRows: CertifiRow[] = [
-  { id: 1, type: 'break', times: 2 },
-  { id: 2, type: 'h4', content: 'Certificamos que' },
-  { id: 3, type: 'h2', content: '[user.names]' },
-  { id: 4, type: 'h4', content: 'participo con éxito el curso' },
-  { id: 5, type: 'h2', content: '[event.name]' },
-  { id: 6, type: 'h4', content: 'realizado del [event.start] al [event.end]' },
+  { id: 'b64c746d-d4e0-46c2-87d8-d9038bddc4b5', type: 'break', times: 2 },
+  { id: '7021df1b-57af-491f-a443-b3dc6ff6aeb3', type: 'h4', content: 'Certificamos que' },
+  { id: 'de5cf5a7-54a1-4d8d-88f4-305710ce9361', type: 'h2', content: '[user.names]' },
+  { id: 'e085e667-28c6-442f-8513-9d7295f2011e', type: 'h4', content: 'participo con éxito el curso' },
+  { id: '3ca83cd6-85d0-4e51-993f-4c2ed447633c', type: 'h2', content: '[event.name]' },
+  { id: '1a3949ea-fa72-401f-9e67-69f000e083d4', type: 'h4', content: 'realizado del [event.start] al [event.end]' },
 ];
-export function lastID(data: CertifiRow[]) {
-  let maxid = 0;
-  data.forEach((item) => {
-    if (item.id > maxid) maxid = item.id;
-  });
-  return maxid + 1;
-}
 export function replaceAllTagValues(event: any, userData: any, roles: any[] = [], certRows: CertifiRow[] = []) {
   const propertyKeys = Object.keys(userData.properties);
 

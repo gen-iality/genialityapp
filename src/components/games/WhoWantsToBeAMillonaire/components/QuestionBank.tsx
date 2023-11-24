@@ -1,12 +1,8 @@
 import Header from '@/antdComponents/Header';
-import { Button, Card, Modal, Space, Table, Typography, Form, Select, Input, Divider, Checkbox, List } from 'antd';
+import { Button, Card, Modal, Space, Table, Typography, Form, Select, Input, Divider, Tag, Col, Row, Alert } from 'antd';
 import generateColumnsQuestion from '../functions/genereteColumnsQuestions';
-import { useState } from 'react';
-import ImageUploaderDragAndDrop from '@/components/imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import { useMillonaireCMS } from '../hooks/useMillonaireCMS';
 import { VALUES_TIME_PER_ANSWERS } from '../constants/formData';
-import { CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import Answers from './Answers';
 import CreateAnswers from './CreateAnswers';
 import ImportBankQuestions from './ImportBankQuestions';
 
@@ -16,21 +12,17 @@ export default function QuestionBank() {
   const columns = generateColumnsQuestion();
   const {
     question,
-    answer,
     millonaire,
-    isEditAnswer,
     isEditQuestion,
     onCancelModalQuestion,
     isVisibleModalQuestion,
     setIsVisibleModalQuestion,
     onChangeQuestion,
-    onChangeAnswer,
     onSubmitQuestion,
-    onSubmitAnswer,
     loading,
-    onActionEditAnwser,
-    onDeleteAnswer,
   } = useMillonaireCMS();
+
+  const MIN_COUNT_QUESTION = 15
   return (
     <>
       <Card hoverable={true} style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px', height: '100%' }}>
@@ -40,7 +32,26 @@ export default function QuestionBank() {
             extra={<ImportBankQuestions />}
             addFn={() => setIsVisibleModalQuestion(!isVisibleModalQuestion)}
           />
-          <Table size='small' columns={columns} dataSource={millonaire.questions} />
+          <Table
+            title={() => (
+              <Row gutter={[6, 6]}>
+                <Col span={24}>
+                  <Tag
+                    style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
+                    color='lightgrey'
+                    // icon={<UsergroupAddOutlined />}
+                  >
+                    <strong>Total preguntas: </strong>
+                    <span style={{ fontSize: '13px' }}>{millonaire.questions.length}</span>
+                  </Tag>
+                </Col>
+                {(millonaire.questions === undefined || millonaire.questions.length < MIN_COUNT_QUESTION) && <Col span={24}><Alert type='warning' description='Minimo de preguntas: 15'/></Col>}
+              </Row>
+            )}
+            size='small'
+            columns={columns}
+            dataSource={millonaire.questions}
+          />
         </Space>
       </Card>
       <Modal
@@ -49,7 +60,6 @@ export default function QuestionBank() {
         }}
         visible={isVisibleModalQuestion}
         maskClosable={false}
-        onOk={() => console.log('OK', question)}
         onCancel={() => onCancelModalQuestion()}
         destroyOnClose={true}
         footer={[
@@ -104,7 +114,6 @@ export default function QuestionBank() {
           <Divider />
           <Space>
             <CreateAnswers />
-            {/* {question.answers && question.answers.length > 0 && <Answers />} */}
           </Space>
         </>
       </Modal>

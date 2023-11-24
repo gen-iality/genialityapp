@@ -1,26 +1,26 @@
 import { useState } from 'react';
-import Loading from '@/components/profile/loading';
 import { useSearchList } from '@/hooks/useSearchList';
-import { Badge, Button, Card, Col, Empty, Row, Space, Typography } from 'antd';
+import { Badge, Button, Card, Col, Empty, Row, Space, Typography, Grid } from 'antd';
 import { InputSearchEvent } from './InputSearchEvent';
 import EventCard from '@/components/shared/eventCard';
 import { Organization } from '../types';
 import { createEventUserFree } from '@/components/authentication/services/RegisterUserToEvent';
-import { useGetMyOrgUser } from '@/hooks/useGetMyOrgUser';
 import { DispatchMessageService } from '@/context/MessageService';
 import { useGetMyEventsInOrganization } from '../hooks/useGetMyEventsInOrganization';
+import LoadingCard from './LoadingCard';
 
 const { Title } = Typography;
-
+const { useBreakpoint } = Grid;
 interface Props {
   organization: Organization | null;
-  setIsModalCertificatesOpen: (item: boolean) => void;
+  openCertificates: () => void;
   organizationId: string;
   eventUserId: string;
   cUser: any;
+  myOrgUser: any;
 }
-export const MyEvents = ({ organization, setIsModalCertificatesOpen, organizationId, eventUserId, cUser }: Props) => {
-  const { myUserOrg } = useGetMyOrgUser(organizationId);
+export const MyEvents = ({ organization, openCertificates, myOrgUser, organizationId, eventUserId, cUser }: Props) => {
+  const screens = useBreakpoint();
   const {
     eventsFreeToOneOreUse,
     isLoadingEventsFreeToOneOreUs,
@@ -38,6 +38,7 @@ export const MyEvents = ({ organization, setIsModalCertificatesOpen, organizatio
   );
   const [isRegisteringEventUser, setIsRegisteringEventUser] = useState(false);
 
+  //ToDo: Luis - Validar esto en backend, no en frontend consultando todos los eventos free acces
   const redirectToEventFreeAcces = async (event: any) => {
     try {
       const lastEventsFreeAcces = await getEventsFreeAcces();
@@ -53,7 +54,7 @@ export const MyEvents = ({ organization, setIsModalCertificatesOpen, organizatio
       const dataNewUser = {
         names: cUser.value?.names,
         email: cUser.value?.email,
-        ...myUserOrg?.properties,
+        ...myOrgUser?.properties,
       };
       const resUser = await createEventUserFree(dataNewUser, event._id);
 
@@ -73,14 +74,14 @@ export const MyEvents = ({ organization, setIsModalCertificatesOpen, organizatio
 
   return (
     <>
-      {myUserOrg && (
+      {myOrgUser && (
         <Card
           bodyStyle={{ paddingTop: '0px' }}
           headStyle={{ border: 'none' }}
           style={{ width: '100%', borderRadius: 20 }}
           title={
             <Badge offset={[60, 22]} count={`${myAllEvents.length} Eventos`}>
-              <Title level={2}>Mis eventos</Title>
+              <Title level={screens.xs ? 4 : 2}>Mis eventos</Title>
             </Badge>
           }
           extra={
@@ -95,20 +96,18 @@ export const MyEvents = ({ organization, setIsModalCertificatesOpen, organizatio
               </Space>
             )
           }>
-          <Row gutter={[0, 32]}>
+          <Row gutter={[0, 8]}>
             <Col span={24}>
               {organization?.show_my_certificates && myAllEvents.length > 0 && (
-                <Button size='large' type='default' onClick={() => setIsModalCertificatesOpen(true)}>
+                <Button size='large' type='default' onClick={() => openCertificates()}>
                   Mis certificados
                 </Button>
               )}
             </Col>
             <Col span={24}>
-              <Row gutter={[16, 16]}>
+              <Row style={{ overflowY: 'auto', minHeight: '300px', maxHeight: '500px' }} gutter={[16, 16]}>
                 {isLoadingEventsFreeToOneOreUs ? (
-                  <div style={{ width: '100vw', height: '100vh', textAlign: 'center' }}>
-                    <Loading />
-                  </div>
+                  Array.from({ length: 6 }).map((item) => <LoadingCard />)
                 ) : (
                   <>
                     {eventsFreeToOneOreUse.length > 0 || eventsWithEventUser.length > 0 ? (

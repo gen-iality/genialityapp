@@ -1,7 +1,5 @@
-import { Modal, Typography, Form, Input, Checkbox, Select, Button } from 'antd';
+import {Typography, Form, Input, Checkbox,  } from 'antd';
 import { useMillonaireCMS } from '../hooks/useMillonaireCMS';
-import { useState } from 'react';
-import { IAnswers } from '../interfaces/Millonaire';
 const { Title } = Typography;
 
 const answerLetter: { 0: string; 1: string; 2: string; 3: string } = {

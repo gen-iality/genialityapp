@@ -8,13 +8,13 @@ import { DispatchMessageService } from '../context/MessageService';
 import { async } from 'ramda-adjunct';
 import { ROLS_USER } from '@/constants/rols.constants';
 
-const publicInstance = axios.create({
+export const publicInstance = axios.create({
   url: ApiUrl,
   baseURL: ApiUrl,
   pushURL: 'https://104.248.125.133:6477/pushNotification',
 });
 
-const privateInstance = axios.create({
+export const privateInstance = axios.create({
   url: ApiUrl,
   baseURL: ApiUrl,
   withCredentials: true,
@@ -484,7 +484,21 @@ export const BingoApi = {
       true
     );
   },
-
+  getBingoCartons: async (bingoid, numberItems = 10, page = 1, free_cards) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(
+      `api/bingos/${bingoid}/bingocards?numberItems=${numberItems}&page=${page}&free_cards=${free_cards}&token=${token}`,
+      true
+    );
+  },
+  postBingoCartons: async (bingoid, cartonNumber) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`api/bingos/${bingoid}/bingocards?token=${token}`, { qty_bingo_cards: cartonNumber });
+  },
+  deleteBingoCartons: async (bingoid, bingocard) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/bingos/${bingoid}/bingocards/${bingocard}?token=${token}`);
+  },
   getTemplates: async (format) => {
     let token = await GetTokenUserFirebase();
     return await Actions.get(`api/bingotemplates/format/${format}?token=${token}`, true);
@@ -962,7 +976,7 @@ export const OrganizationApi = {
     });
     return data;
   },
-  getEventsWithUserOrg: async (organizationId, organizarionUserId, event_user = false, order = 'oldest') => {
+  getEventsWithUserOrg: async (organizationId, organizarionUserId, event_user = false, order = 'desc') => {
     let token = await GetTokenUserFirebase();
     return await Actions.get(
       `/api/organizations/${organizationId}/user/${organizarionUserId}/events?event_user=${event_user}&order=${order}&token=${token}`,
@@ -990,9 +1004,17 @@ export const OrganizationApi = {
   events: async (id) => {
     return await Actions.getOne(`/api/organizations/${id}/`, 'events');
   },
-  getUsers: async (id) => {
+  getUsers: async (id, page = -1) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.get(`/api/organizations/${id}/organizationusers?token=${token}`);
+    return await Actions.get(`/api/organizations/${id}/organizationusers?${page !== -1 ? `page=${page}&`:''}token=${token}`);
+  },
+  getUsersOnlyName: async (organizationId, page = -1) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`/api/organizations/${organizationId}/organizationusers/get-names?token=${token}`);
+  },
+  existeUserByEmail: async (organizationId, email) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`/api/organizations/${organizationId}/validate-user-exists?email=${email}&token=${token}`, true);
   },
   getUsersWithStatusInEvent: async (id, eventId) => {
     let token = await GetTokenUserFirebase();
@@ -1597,11 +1619,14 @@ export const ActivityBySpeaker = {
 
 export const OrganizationFuction = {
   // OBTENER EVENTOS PROXIMOS POR ORGANIZACION
-  getEventsNextByOrg: async (orgId, order = 'asc') => {
-    const events = await Actions.getAll(`api/organizations/${orgId}/events?order=${order}`);
+  getEventsByOrg: async (orgId, order = 'asc', date = '', type = '') => {
+    const events = await Actions.getAll(`api/organizations/${orgId}/events?order=${order}&date=${date}&type=${type}`);
     return events;
   },
-
+  getEventsByOrgOnlyName: async (orgId, order = 'asc', date = '', type = '') => {
+    const events = await Actions.getAll(`api/organizations/${orgId}/events/get-names?order=${order}&date=${date}&type=${type}`);
+    return events;
+  },
   // OBTENER DATOS DE LA ORGANIZACION
   obtenerDatosOrganizacion: async (orgId) => {
     const organization = await OrganizationApi.getOne(orgId);

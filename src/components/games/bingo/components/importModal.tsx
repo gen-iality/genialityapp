@@ -14,6 +14,7 @@ const ImportModal = ({
   setFormData,
   formData,
   bingo,
+  getBingo
 }: ImportModalInterface) => {
   const [enableSaveButton, setEnableSaveButton] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
@@ -144,6 +145,7 @@ const ImportModal = ({
 
     setOpenAndCloseImportModal(false);
     setEnableSaveButton(true);
+    if(getBingo) getBingo()
   };
   const onChangeCheckbox = (e:CheckboxChangeEvent) => {
     setPreserveInformation(e.target.checked)

@@ -361,6 +361,13 @@ export interface Meta {
   total:        number;
 }
 
+export interface IPagination {
+  current_page: number;
+  last_page_url?: string;
+  next_page_url?: string;
+  prev_page_url?: string;
+  total: number;
+}
 
 export interface Question {
   title:   string;

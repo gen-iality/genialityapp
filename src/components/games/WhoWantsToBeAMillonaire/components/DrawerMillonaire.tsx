@@ -11,6 +11,7 @@ import UsersRanking from './UsersRanking';
 import { CloseOutlined } from '@ant-design/icons';
 import Stages from './Stages';
 import GameAnnoucement from './GameAnnoucement';
+import { getCorrectColor } from '@/helpers/utils';
 
 export default function DrawerMillonaire() {
 	const {
@@ -28,6 +29,8 @@ export default function DrawerMillonaire() {
 		ANNOUNCEMENT: <GameStartAnnoucement />,
 	};
 
+	const backgroundMillonaire = millonaire.appearance.background_color || '#120754'
+
 	return (
 		<>
 			{!!visibilityControl && visibilityControl?.published && (
@@ -38,19 +41,19 @@ export default function DrawerMillonaire() {
 				</Row>
 			)}
 			<Drawer
-				closeIcon={<CloseOutlined style={{ color: '#FFFFFF' }} />}
+				closeIcon={<CloseOutlined style={{ color: getCorrectColor(backgroundMillonaire) }} />}
 				headerStyle={{
 					border: 'none',
-					background: '#120754',
+					background: backgroundMillonaire,
 				}}
 				bodyStyle={{
 					padding: '0px',
-					background: 'linear-gradient(180deg, #120754 0%, #382485 51.04%, #120754 100%)',
+					background: backgroundMillonaire ,
 					/* backgroundImage: `url(${millonaire.appearance?.background_image})`, */
 				}}
 				footerStyle={{
 					border: 'none',
-					background: '#120754',
+					background: backgroundMillonaire,
 				}}
 				width={'100vw'}
 				onClose={onChangeVisibilityDrawer}

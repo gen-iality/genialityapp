@@ -1,3 +1,5 @@
+import { Meta } from "@/components/assembly/types";
+
 export interface EventBingo {
   name?: string;
   _id?: string;
@@ -21,8 +23,8 @@ export interface CreateBingoProps {
   changeBingoDimensionsNew: (dimensions: DimensionInterface) => Promise<void>;
 }
 export interface AssignmentCardsProps {
-  generateBingoForAllUsers: () => void;
-  generateBingoForExclusiveUsers: () => void;
+  generateBingoForAllUsers: (callback?: (error: null | any)=>void) => void;
+  generateBingoForExclusiveUsers: (callback?: (error: null | any)=>void) => void;
   //listUsers: listUsers[];
   bingo: Bingo;
   //bingoPrint: BingoPrintProps[];
@@ -35,6 +37,15 @@ export interface listUsers {
     email: string;
     picture: string;
   };
+}
+
+export interface IBingoUser {
+  bingo: boolean;
+  _id: string;
+  names: string;
+  email: string;
+   picture: string;
+   bingo_card?:any;
 }
 
 export interface BingoAppearance {
@@ -86,6 +97,7 @@ export interface extraFields {
   render?: (text: string, record: any, index: any) => React.ReactNode;
 }
 export interface ImportModalInterface {
+  getBingo?:() => void;
   event: { name?: string; _id?: string };
   openAndCloseImportModal: boolean;
   setOpenAndCloseImportModal: (state: boolean) => void;
@@ -188,6 +200,10 @@ export interface BingoByUserInterface {
   name_owner: string;
   bingo_card: any;
   code: string;
+}
+
+export interface BingoCarton extends Omit<BingoByUserInterface,'event_user_id'> {
+  event_user_id: string | undefined
 }
 
 export interface ValuesBingoCard {

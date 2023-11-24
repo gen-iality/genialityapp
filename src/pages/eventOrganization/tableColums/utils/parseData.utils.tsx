@@ -7,7 +7,7 @@ export const parseEventsDataToExcel = (events: any[]): DataEvent[] => {
       _id: event._id,
       name: event.name,
       startDate,
-      count: event.count,
+      count: event.amount_attendees,
       speaker: event.hosts.map((speaker: any) => speaker.name),
       documentsUrls: event.documents.map((document: any) => document.file),
       videoUrls: event.url_videos,

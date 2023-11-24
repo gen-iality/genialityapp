@@ -8,8 +8,9 @@ export interface IMillonaire {
   rules?: string;
   appearance: {
     logo: string;
-    background_image: string;
+    // background_image: string;
     background_color: string;
+    primary_color:string;
   };
   id?: string;
   stages: IStages[] | any[];
@@ -147,7 +148,7 @@ export interface TMillonaireContextPropLanding {
   prevScore: number;
   onChangeVisibilityDrawer: () => void;
   onStartGame: () => void;
-  onFinishedGame: () => void;
+  onFinishedGame: (prevScore: string) => void;
   onFiftyOverFifty: () => void;
   onSaveAnswer: (question: IQuestions, answer: IAnswers) => void;
   onAnnouncement: () => void;

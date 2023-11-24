@@ -1,14 +1,10 @@
 import { Tabs } from 'antd';
 import GeneralConfiguration from './GeneralConfiguration';
 import AppearanceSettings from './AppearanceSettings';
-import PlayMillonaire from './PlayMillonaire';
 import QuestionBank from './QuestionBank';
-import React from 'react';
 import PlayMillonaireCMS from './PlayMillonaireCMS';
-import { useMillonaireCMS } from '../hooks/useMillonaireCMS';
 import GeneratedData from './GeneratedData';
 export default function UpdateMillonaire() {
-  const { tab } = useMillonaireCMS();
   return (
     <Tabs>
       <Tabs.TabPane tab='Configuracion general' key='1'>

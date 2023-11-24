@@ -253,7 +253,7 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
 		setUsedWildCards(INITIAL_STATE_USED_WILDCARD);
 	};
 
-	const onFinishedGame = () => {
+	const onFinishedGame = (prevScore: string) => {
 		const prevStage = stages.find(stageFind => stageFind.stage === stage - 1) || INITIAL_STATE_STAGE;
 		setLoading(true);
 		setStartGame(false);
@@ -261,6 +261,7 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
 		setStage(0);
 		setCurrentStage(stagesReset!);
 		setQuestion(questionReset);
+		setScoreUser((current)=>({...current, score:prevScore}))
 		saveScoreUser(
 			eventId,
 			currentUser.user.uid!,

@@ -1,40 +1,43 @@
-import { Progress } from 'antd';
+import { Progress, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { TimerM } from '../interfaces/Millonaire';
+import { useMillonaireLanding } from '../hooks/useMillonaireLanding';
 
 const Timer = ({ countdown, timer }: TimerM) => {
-  const [percent, setPercent] = useState(100);
-  /* const [time, setTime] = useState(timer); */
+	const { millonaire } = useMillonaireLanding();
+	const [percent, setPercent] = useState(100);
+	/* const [time, setTime] = useState(timer); */
+	const backgroundMillonaire = millonaire.appearance.background_color || '#120754';
+	const primaryMillonaire = millonaire.appearance.primary_color || '#FFB500';
 
-  const decrease = () => {
-    let newPercent = valueTime(countdown);
-    setPercent(newPercent);
-  };
+	const decrease = () => {
+		let newPercent = valueTime(countdown);
+		setPercent(newPercent);
+	};
 
-  useEffect(() => {
-    decrease();
-  }, [countdown]);
+	useEffect(() => {
+		decrease();
+	}, [countdown]);
 
-  const valueTime = (countdown: number) => {
-    let result = (countdown * 100) / timer;
-    return result;
-  };
+	const valueTime = (countdown: number) => {
+		let result = (countdown * 100) / timer;
+		return result;
+	};
 
-  return (
-    <Progress
-      className={
-        countdown <= 10 && countdown > 0 ? 'animate__animated animate__heartBeat animate__infinite animate__fast' : ''
-      }
-      status={countdown > 10 ? 'success' : 'exception'}
-      trailColor='#120754'
-      strokeLinecap='round'
-      width={90}
-      strokeColor={countdown > 10 ? '#52C41A' : '#FF4D4F'}
-      type='circle'
-      percent={percent}
-      format={(percent) => `${countdown}s`}
-    />
-  );
+	return (
+		<Progress
+			className={
+				countdown <= 10 && countdown > 0 ? 'animate__animated animate__heartBeat animate__infinite animate__fast' : ''
+			}
+			trailColor={backgroundMillonaire}
+			strokeLinecap='round'
+			width={90}
+			strokeColor={primaryMillonaire}
+			type='circle'
+			percent={percent}
+			format={(percent) => <Typography.Text style={{ color: primaryMillonaire }}>{`${countdown}s`}</Typography.Text>}
+		/>
+	);
 };
 
 export default Timer;

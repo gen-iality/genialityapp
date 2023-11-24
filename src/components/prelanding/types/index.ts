@@ -1,3 +1,4 @@
+import { Meta } from "@/components/assembly/types";
 import { Moment } from "moment";
 
 export interface LandingBlock {
@@ -67,16 +68,6 @@ export interface Links {
 	last:  string;
 	prev:  null;
 	next:  null;
-}
-
-export interface Meta {
-	current_page: number;
-	from:         number;
-	last_page:    number;
-	path:         string;
-	per_page:     number;
-	to:           number;
-	total:        number;
 }
 
 

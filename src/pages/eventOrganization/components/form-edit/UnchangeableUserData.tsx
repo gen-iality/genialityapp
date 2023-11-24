@@ -2,10 +2,10 @@ import { Card, Col, Comment, Row, Typography } from 'antd';
 import Avatar from 'antd/lib/avatar/avatar';
 import React from 'react';
 import { useIntl } from 'react-intl';
-import { UserToOrganization } from '../../interface/organization.interface';
+import { IUserToOrganization } from '../../interface/organization.interface';
 
 interface Props {
-  selectedUser: Omit<UserToOrganization, 'password'>;
+  selectedUser: Omit<IUserToOrganization, 'password'>;
 }
 
 export const UnchangeableUserData = ({ selectedUser: userOrganization }: Props) => {

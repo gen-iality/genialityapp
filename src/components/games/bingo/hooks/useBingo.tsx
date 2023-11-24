@@ -12,7 +12,6 @@ import {
 	updateValueBingo,
 	createValueBingo,
 	UpdateBingoDimension,
-	getListUsersWithOrWithoutBingo,
 	generateBingoForExclusiveUsers,
 	generateBingoForAllUsers,
 } from '@/components/games/bingo/services';
@@ -116,25 +115,26 @@ export const useBingo = () => {
 		id: '',
 	});
 	const { value } = eventContext;
-	useEffect(() => {
-		const getBingo = async () => {
-			setLoading(true);
-			const bingo = await GetBingo(value._id);
-			if (bingo) {
-				setBingo(bingo);
-				setFormDataBingo(prev => ({
-					...prev,
-					name: bingo.name,
-					amount_of_bingo: bingo.amount_of_bingo,
-					regulation: bingo.regulation,
-					bingo_appearance: bingo.bingo_appearance,
-					bingo_values: bingo.bingo_values || [],
-					dimensions: bingo.dimensions,
-				}));
-			}
 
-			setLoading(false);
-		};
+	const getBingo = async () => {
+		setLoading(true);
+		const bingo = await GetBingo(value._id);
+		if (bingo) {
+			setBingo(bingo);
+			setFormDataBingo(prev => ({
+				...prev,
+				name: bingo.name,
+				amount_of_bingo: bingo.amount_of_bingo,
+				regulation: bingo.regulation,
+				bingo_appearance: bingo.bingo_appearance,
+				bingo_values: bingo.bingo_values || [],
+				dimensions: bingo.dimensions,
+			}));
+		}
+
+		setLoading(false);
+	};
+	useEffect(() => {
 		getBingo();
 		return () => {
 			setBingo(undefined);
@@ -518,7 +518,7 @@ export const useBingo = () => {
 	// };
 
 	//Generate bingo for all users
-	const onGenerateBingoForAllUsers = async () => {
+	const onGenerateBingoForAllUsers = async (callback?:(error:any | null)=> void) => {
 		Modal.confirm({
 			title: `¿Está seguro de que desea generar de nuevo los cartones de bingo para todos los usuarios?`,
 			icon: <ExclamationCircleOutlined />,
@@ -544,6 +544,7 @@ export const useBingo = () => {
 							msj: '¡Se generaron correctamente los cartones de bingos para todos los usuarios!',
 							action: 'show',
 						});
+						if(callback)callback(null)
 					} catch (e) {
 						DispatchMessageService({
 							key: 'loading',
@@ -554,6 +555,7 @@ export const useBingo = () => {
 							msj: '¡Error generando los cartones de bingos para todos los usuarios!',
 							action: 'show',
 						});
+						if(callback)callback(e)
 					}
 				};
 				onGenerate();
@@ -562,7 +564,7 @@ export const useBingo = () => {
 	};
 
 	//Generate bingo for exclusive users
-	const onGenerateBingoForExclusiveUsers = async () => {
+	const onGenerateBingoForExclusiveUsers = async (callback?:(error:any | null)=> void) => {
 		Modal.confirm({
 			title: `¿Está seguro de que desea generar cartones de bingo para los usuarios restantes?`,
 			icon: <ExclamationCircleOutlined />,
@@ -588,6 +590,7 @@ export const useBingo = () => {
 							msj: '¡Se generaron correctamente los cartones de bingos para los usuarios restantes!',
 							action: 'show',
 						});
+						if(callback)callback(null)
 					} catch (e) {
 						DispatchMessageService({
 							key: 'loading',
@@ -598,6 +601,7 @@ export const useBingo = () => {
 							msj: '¡Error generando los cartones de bingos para los usuarios restantes!',
 							action: 'show',
 						});
+						if(callback)callback(e)
 					}
 				};
 				onGenerate();
@@ -635,5 +639,6 @@ export const useBingo = () => {
 		listUsers,
 		setListUsers,
 		bingoPrint,
+		getBingo
 	};
 };
