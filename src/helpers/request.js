@@ -8,13 +8,13 @@ import { DispatchMessageService } from '../context/MessageService';
 import { async } from 'ramda-adjunct';
 import { ROLS_USER_ID } from '@/constants/rols.constants';
 
-const publicInstance = axios.create({
+export const publicInstance = axios.create({
   url: ApiUrl,
   baseURL: ApiUrl,
   pushURL: 'https://104.248.125.133:6477/pushNotification',
 });
 
-const privateInstance = axios.create({
+export const privateInstance = axios.create({
   url: ApiUrl,
   baseURL: ApiUrl,
   withCredentials: true,

@@ -371,6 +371,14 @@ export interface Question {
   points:  string;
 }
 
+export interface IPagination {
+  current_page: number;
+  last_page_url?: string;
+  next_page_url?: string;
+  prev_page_url?: string;
+  total: number;
+}
+
 
 export type GraphicTypeResponse = 'x' | 'y' | 'pie'
 

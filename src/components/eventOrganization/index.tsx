@@ -2,7 +2,7 @@ import { Col, Row, Grid, Card } from 'antd';
 import { withRouter } from 'react-router-dom';
 import ModalLoginHelpers from '../authentication/ModalLoginHelpers';
 import Loading from '../profile/loading';
-import {  OrganizationProps } from './types';
+import { OrganizationProps } from './types';
 import { UseCurrentUser } from '@/context/userContext';
 import { ModalCertificatesByOrganizacionAndUser } from './components/ModalCertificatesByOrganizacionAndUser';
 import { SocialNetworks } from './components/SocialNetworks';
@@ -21,25 +21,21 @@ function EventOrganization({ match }: OrganizationProps) {
   const cUser = UseCurrentUser();
   const organizationId = match.params.id;
   const currentUserId = cUser.value?._id;
-  const { organizationData } = useGetOrganizationData(organizationId)
-  const { myOrgUser, isLoadingMyOrgUser }  = useGetMyOrganizationUser(cUser.value?._id? organizationId:'')
+  const { organizationData } = useGetOrganizationData(organizationId);
+  const { myOrgUser, isLoadingMyOrgUser } = useGetMyOrganizationUser(cUser.value?._id ? organizationId : '');
   const screens = useBreakpoint();
   const {
     closeModal: closeCertificates,
     openModal: openCertificates,
     isOpenModal: isOpenCertificates,
   } = useModalLogic();
-  
-
 
   const showBlockEvents = useCallback(() => {
-    if (cUser?.value) {
-      const isUserActive = myOrgUser !== null ? myOrgUser?.active ?? true : false;
-      return isUserActive;
-    } else {
-      return true;
-    }
-  }, [myOrgUser, cUser]);
+    //Si tiene org user y esta bloqueado se devuelve false, cualquier caso contrario se devuelve SHOW_BLOCK_EVENTS
+    const SHOW_BLOCK_EVENTS = true;
+    return (cUser?.value && myOrgUser !== null) ? myOrgUser?.active ?? SHOW_BLOCK_EVENTS : SHOW_BLOCK_EVENTS;
+  }, [myOrgUser, cUser?.value]);
+  
 
   return (
     <div
@@ -49,7 +45,7 @@ function EventOrganization({ match }: OrganizationProps) {
       }}>
       <SocialNetworks organization={organizationData} />
       <ModalLoginHelpers />
-      { organizationData && !isLoadingMyOrgUser ? (
+      {organizationData && !isLoadingMyOrgUser ? (
         <>
           {organizationData !== null && (
             <div style={{ width: '100%' }}>
@@ -65,40 +61,36 @@ function EventOrganization({ match }: OrganizationProps) {
             </div>
           )}
           {showBlockEvents() ? (
-                <Row style={{ padding:'30px' }} gutter={[0, 30]}>
-                  {cUser.value?._id && (
-                    <Col span={24}>
-                      <MyEvents
-                          myOrgUser={myOrgUser}
-                          cUser={cUser}
-                          organizationId={organizationId}
-                          eventUserId={currentUserId}
-                          organization={organizationData}
-                          openCertificates={openCertificates}
-                        />
-                      {isOpenCertificates && (
-                        <ModalCertificatesByOrganizacionAndUser
-                          destroyOnClose
-                          visible={isOpenCertificates}
-                          onCloseDrawer={closeCertificates}
-                          eventUserId={cUser.value?._id}
-                          organizationId={match.params.id}
-                          orgContainerBg={organizationData?.styles?.containerBgColor}
-                          orgTextColor={organizationData?.styles?.textMenu}
-                        />
-                      )}
-                    </Col>
-                  )}
-                  <Col span={24}>
-                    <PassEvents
-                      organizationId={organizationId}
-                      currentUserId={currentUserId}
+            <Row style={{ padding: '30px' }} gutter={[0, 30]}>
+              {cUser.value?._id && (
+                <Col span={24}>
+                  <MyEvents
+                    myOrgUser={myOrgUser}
+                    cUser={cUser}
+                    organizationId={organizationId}
+                    organization={organizationData}
+                    openCertificates={openCertificates}
+                  />
+                  {isOpenCertificates && (
+                    <ModalCertificatesByOrganizacionAndUser
+                      destroyOnClose
+                      visible={isOpenCertificates}
+                      onCloseDrawer={closeCertificates}
+                      eventUserId={cUser.value?._id}
+                      organizationId={match.params.id}
+                      orgContainerBg={organizationData?.styles?.containerBgColor}
+                      orgTextColor={organizationData?.styles?.textMenu}
                     />
-                  </Col>
-                  <Col span={24}>
-                    <NextEvents organizationId={organizationId} />
-                  </Col>
-                </Row>
+                  )}
+                </Col>
+              )}
+              <Col span={24}>
+                <PassEvents organizationId={organizationId} currentUserId={currentUserId} />
+              </Col>
+              <Col span={24}>
+                <NextEvents organizationId={organizationId} />
+              </Col>
+            </Row>
           ) : (
             <Row justify='center' style={{ paddingTop: '32px', paddingBottom: '32px' }}>
               <Col xs={24} sm={24} md={20} lg={12} xl={12} xxl={12}>
