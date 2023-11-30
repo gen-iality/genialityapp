@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from 'react';
 const useGetMyOrganizationUser = (organizationId: string) => {
   const [myOrgUser, setMyOrgUser] = useState<any | null>(null);
   const [isLoadingMyOrgUser, setIsLoadingMyOrgUser] = useState(true);
-
   const getMyOrgUser = useCallback(async () => {
     try {
       const { data } = await OrganizationApi.getMeUser(organizationId);
@@ -18,7 +17,10 @@ const useGetMyOrganizationUser = (organizationId: string) => {
     try {
       setIsLoadingMyOrgUser(true);
       const myOrgUser = await getMyOrgUser();
-      setMyOrgUser(myOrgUser);
+
+      if (myOrgUser) {
+        setMyOrgUser(myOrgUser);
+      }
       setIsLoadingMyOrgUser(false);
     } catch (error) {
       setMyOrgUser(null);

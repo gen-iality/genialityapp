@@ -4,10 +4,10 @@ import { Badge, Button, Card, Col, Empty, Row, Space, Typography, Grid } from 'a
 import { InputSearchEvent } from './InputSearchEvent';
 import EventCard from '@/components/shared/eventCard';
 import { IOrganization } from '../types';
-import { createEventUserFree } from '@/components/authentication/services/RegisterUserToEvent';
 import { DispatchMessageService } from '@/context/MessageService';
-import { useGetMyEventsInOrganization } from '../hooks/useGetMyEventsInOrganization';
 import LoadingCard from './LoadingCard';
+import { useGetMyEventsIntoOrganization } from '../hooks/useGetMyEventsIntoOrganization';
+import { createEventUserFree } from '../services/landing-organizations.service';
 
 const { Title } = Typography;
 const { useBreakpoint } = Grid;
@@ -15,42 +15,22 @@ interface Props {
   organization: IOrganization | null;
   openCertificates: () => void;
   organizationId: string;
-  eventUserId: string;
   cUser: any;
   myOrgUser: any;
 }
-export const MyEvents = ({ organization, openCertificates, myOrgUser, organizationId, eventUserId, cUser }: Props) => {
+export const MyEvents = ({ organization, openCertificates, myOrgUser, organizationId, cUser }: Props) => {
   const screens = useBreakpoint();
+  const { isLoadingMyEvents, myEventsIntoOrganization } = useGetMyEventsIntoOrganization({ organizationId });
+
   const {
-    eventsFreeToOneOreUse,
-    isLoadingEventsFreeToOneOreUs,
-    getEventsFreeAcces,
-    eventsWithEventUser,
-    isLoadingEventsWithEventUser
-  } = useGetMyEventsInOrganization(organizationId, eventUserId);
-  const myAllEvents = [...eventsWithEventUser, ...eventsFreeToOneOreUse];
-  const { filteredList: eventsWithUserfiltered, setSearchTerm: setSearchTermEventWithUser } = useSearchList(
-    eventsWithEventUser,
-    'name'
-  );
-  const { filteredList: eventsFreeFiltered, setSearchTerm: setSearchTermEventsFree } = useSearchList(
-    eventsFreeToOneOreUse,
-    'name'
-  );
+    filteredList: myEventsIntoOrganizationfiltered,
+    setSearchTerm: setSearchTermMyEventsIntoOrganization,
+  } = useSearchList(myEventsIntoOrganization, 'name');
+
   const [isRegisteringEventUser, setIsRegisteringEventUser] = useState(false);
 
-  //ToDo: Luis - Validar esto en backend, no en frontend consultando todos los eventos free acces
   const redirectToEventFreeAcces = async (event: any) => {
     try {
-      const lastEventsFreeAcces = await getEventsFreeAcces();
-      const accesToEvent = !!lastEventsFreeAcces.find((eventItem) => eventItem._id === event._id);
-      if (!accesToEvent) {
-        return DispatchMessageService({
-          action: 'show',
-          msj: 'Se le ha denegado el acceso al evento, pongase en contacto con el administrador',
-          type: 'warning',
-        });
-      }
       setIsRegisteringEventUser(true);
       const dataNewUser = {
         names: cUser.value?.names,
@@ -81,17 +61,16 @@ export const MyEvents = ({ organization, openCertificates, myOrgUser, organizati
           headStyle={{ border: 'none' }}
           style={{ width: '100%', borderRadius: 20 }}
           title={
-            <Badge offset={[60, 22]} count={`${myAllEvents.length} Eventos`}>
+            <Badge offset={[60, 22]} count={`${myEventsIntoOrganization.length} Eventos`}>
               <Title level={screens.xs ? 4 : 2}>Mis eventos</Title>
             </Badge>
           }
           extra={
-            myAllEvents.length > 0 && (
+            myEventsIntoOrganization.length > 0 && (
               <Space>
                 <InputSearchEvent
                   onHandled={(serchTerm) => {
-                    setSearchTermEventWithUser(serchTerm);
-                    setSearchTermEventsFree(serchTerm);
+                    setSearchTermMyEventsIntoOrganization(serchTerm);
                   }}
                 />
               </Space>
@@ -99,7 +78,7 @@ export const MyEvents = ({ organization, openCertificates, myOrgUser, organizati
           }>
           <Row gutter={[0, 8]}>
             <Col span={24}>
-              {organization?.show_my_certificates && myAllEvents.length > 0 && (
+              {organization?.show_my_certificates && myEventsIntoOrganization.length > 0 && (
                 <Button size='large' type='default' onClick={() => openCertificates()}>
                   Mis certificados
                 </Button>
@@ -107,47 +86,52 @@ export const MyEvents = ({ organization, openCertificates, myOrgUser, organizati
             </Col>
             <Col span={24}>
               <Row style={{ overflowY: 'auto', minHeight: '300px', maxHeight: '500px' }} gutter={[16, 16]}>
-                {isLoadingEventsFreeToOneOreUs ? (
+                {isLoadingMyEvents ? (
                   Array.from({ length: 6 }).map((item) => <LoadingCard />)
                 ) : (
                   <>
-                    {eventsFreeToOneOreUse.length > 0 || eventsWithEventUser.length > 0 ? (
+                    {myEventsIntoOrganization.length > 0 ? (
                       <>
-                        {eventsWithUserfiltered.length > 0 || eventsFreeFiltered.length > 0 ? (
+                        {myEventsIntoOrganizationfiltered.length > 0 ? (
                           <>
-                            {eventsWithUserfiltered.map((event, index) => (
-                              <Col key={event._id} xs={24} sm={12} md={12} lg={8} xl={6} xxl={4}>
-                                <EventCard
-                                  bordered={false}
-                                  key={event._id}
-                                  event={event}
-                                  action={{ name: 'Ver', url: `landing/${event._id}` }}
-                                />
-                              </Col>
-                            ))}
-                            {eventsFreeFiltered.map((event, index) => (
-                              <Col
-                                key={event._id}
-                                xs={24}
-                                sm={12}
-                                md={12}
-                                lg={8}
-                                xl={6}
-                                xxl={4}
-                                style={{ cursor: 'pointer' }}
-                                onClick={() => {
-                                  if (!isRegisteringEventUser) redirectToEventFreeAcces(event);
-                                }}>
-                                <div style={{ pointerEvents: 'none' }}>
-                                  <EventCard
-                                    bordered={false}
+                            {myEventsIntoOrganizationfiltered.map((event, index) => {
+                              if (event.free_acces) {
+                                return (
+                                  <Col
                                     key={event._id}
-                                    event={event}
-                                    action={{ name: 'Ver', url: `landing/${event._id}` }}
-                                  />
-                                </div>
-                              </Col>
-                            ))}
+                                    xs={24}
+                                    sm={12}
+                                    md={12}
+                                    lg={8}
+                                    xl={6}
+                                    xxl={4}
+                                    style={{ cursor: 'pointer' }}
+                                    onClick={() => {
+                                      if (!isRegisteringEventUser) redirectToEventFreeAcces(event);
+                                    }}>
+                                    <div style={{ pointerEvents: 'none' }}>
+                                      <EventCard
+                                        bordered={false}
+                                        key={event._id}
+                                        event={event}
+                                        action={{ name: 'Ver', url: `landing/${event._id}` }}
+                                      />
+                                    </div>
+                                  </Col>
+                                );
+                              } else {
+                                return (
+                                  <Col key={event._id} xs={24} sm={12} md={12} lg={8} xl={6} xxl={4}>
+                                    <EventCard
+                                      bordered={false}
+                                      key={event._id}
+                                      event={event}
+                                      action={{ name: 'Ver', url: `landing/${event._id}` }}
+                                    />
+                                  </Col>
+                                );
+                              }
+                            })}
                           </>
                         ) : (
                           <div
