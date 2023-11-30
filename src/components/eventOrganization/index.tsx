@@ -31,13 +31,11 @@ function EventOrganization({ match }: OrganizationProps) {
   } = useModalLogic();
 
   const showBlockEvents = useCallback(() => {
-    if (cUser?.value) {
-      const isUserActive = myOrgUser !== null ? myOrgUser?.active ?? true : false;
-      return isUserActive;
-    } else {
-      return true;
-    }
-  }, [myOrgUser, cUser]);
+    //Si tiene org user y esta bloqueado se devuelve false, cualquier caso contrario se devuelve SHOW_BLOCK_EVENTS
+    const SHOW_BLOCK_EVENTS = true;
+    return (cUser?.value && myOrgUser !== null) ? myOrgUser?.active ?? SHOW_BLOCK_EVENTS : SHOW_BLOCK_EVENTS;
+  }, [myOrgUser, cUser?.value]);
+  
 
   return (
     <div

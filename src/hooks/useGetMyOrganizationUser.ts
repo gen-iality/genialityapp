@@ -7,6 +7,7 @@ const useGetMyOrganizationUser = (organizationId: string) => {
   const getMyOrgUser = useCallback(async () => {
     try {
       const { data } = await OrganizationApi.getMeUser(organizationId);
+      if (data.length > 1) return undefined;
       return data[0];
     } catch (error) {
       throw error;
@@ -17,7 +18,6 @@ const useGetMyOrganizationUser = (organizationId: string) => {
     try {
       setIsLoadingMyOrgUser(true);
       const myOrgUser = await getMyOrgUser();
-
       if (myOrgUser) {
         setMyOrgUser(myOrgUser);
       }

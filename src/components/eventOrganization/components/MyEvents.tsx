@@ -21,7 +21,6 @@ interface Props {
 export const MyEvents = ({ organization, openCertificates, myOrgUser, organizationId, cUser }: Props) => {
   const screens = useBreakpoint();
   const { isLoadingMyEvents, myEventsIntoOrganization } = useGetMyEventsIntoOrganization({ organizationId });
-
   const {
     filteredList: myEventsIntoOrganizationfiltered,
     setSearchTerm: setSearchTermMyEventsIntoOrganization,
