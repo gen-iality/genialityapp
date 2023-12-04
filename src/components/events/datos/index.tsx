@@ -23,6 +23,7 @@ import arrayMove from 'array-move';
 import CMS from '../../newComponent/CMS';
 import Header from '../../../antdComponents/Header';
 import ModalCreateTemplate from '../../shared/modalCreateTemplate';
+import { ConditionalFields } from './components/ConditionalFields';
 const { confirm } = Modal;
 const { TabPane } = Tabs;
 const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
@@ -582,58 +583,6 @@ export default function Datos(props: any) {
 		},
 	];
 
-	const columnsConditionalFields = [
-		{
-			title: 'Campo validador',
-			dataIndex: 'fieldToValidate',
-		},
-		{
-			title: 'Valor',
-			dataIndex: 'value',
-		},
-		{
-			title: 'Campos condicionados',
-			dataIndex: 'fields',
-		},
-		{
-			title: 'Estado',
-			dataIndex: 'state',
-		},
-		{
-			title: 'Opciones',
-			dataIndex: '',
-			render: (key: any) => {
-				return (
-					<Row wrap gutter={[8, 8]}>
-						<Col>
-							<Tooltip placement='topLeft' title='Editar'>
-								<Button
-									key={``}
-									id={`edit`}
-									onClick={() => console.log('Editar')}
-									icon={<EditOutlined />}
-									type='primary'
-									size='small'
-								/>
-							</Tooltip>
-						</Col>
-						<Col>
-							<Tooltip placement='topLeft' title='Eliminar'>
-								<Button
-									key={``}
-									id={`delete`}
-									onClick={() => console.log('Eliminar')}
-									icon={<DeleteOutlined />}
-									danger
-									size='small'
-								/>
-							</Tooltip>
-						</Col>
-					</Row>
-				);
-			},
-		},
-	];
 
 	const colsPlant = [
 		{
@@ -752,38 +701,7 @@ export default function Datos(props: any) {
 				)}
 				{props.type !== 'organization' && (
 					<TabPane tab='Campos condicionales' key='2'>
-						<Fragment>
-							<Table
-								columns={columnsConditionalFields}
-								dataSource={[]}
-								pagination={false}
-								rowKey='index'
-								size='small'
-								title={() => (
-									<Row justify='end' wrap gutter={[8, 8]}>
-										<Col>
-											<Button
-												type='primary'
-												icon={<PlusCircleOutlined />}
-												size='middle'
-												onClick={() => console.log('nuevo')}>
-												{'Nuevo campo condicional'}
-											</Button>
-										</Col>
-									</Row>
-								)}
-							/>
-							{state.modal && (
-								<Modal
-									visible={state.modal}
-									title={state.edit ? 'Editar Dato' : 'Agregar Dato'}
-									footer={false}
-									onCancel={closeModal2}
-									okText={'Guardar'}>
-									<DatosModal cancel={closeModal2} edit={state.edit} info={state.info} action={saveField} />
-								</Modal>
-							)}
-						</Fragment>
+						<ConditionalFields/>
 					</TabPane>
 				)}
 				{props.type == 'organization' && (
