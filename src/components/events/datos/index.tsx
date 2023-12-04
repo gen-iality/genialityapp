@@ -45,8 +45,8 @@ export default function Datos(props: any) {
 		visibleModal: false,
 		isEditTemplate: { status: false, datafields: [], template: null },
 		checkInExists: false,
-		checkInByUserType : false,
-		checkInByUserTypeFields : [],
+		checkInByUserType: false,
+		checkInByUserTypeFields: [],
 		checkInFieldsIds: [],
 		checkInByAssembly: false,
 		checkInByAssemblyFields: [],
@@ -63,7 +63,7 @@ export default function Datos(props: any) {
 	const updateTable = (fields: any) => {
 		let fieldsorder = orderFieldsByWeight(fields);
 		fieldsorder = updateIndex(fieldsorder);
-		setState(prev => ({ ...prev, isEditTemplate: { ...prev.isEditTemplate, datafields: fieldsorder } }));
+		setState((prev) => ({ ...prev, isEditTemplate: { ...prev.isEditTemplate, datafields: fieldsorder } }));
 	};
 
 	const orderFieldsByWeight = (extraFields: any) => {
@@ -95,13 +95,13 @@ export default function Datos(props: any) {
 				fields = orderFieldsByWeight(fieldsReplace);
 				fields = updateIndex(fieldsReplace);
 			} else if (!props.edittemplate) {
-				setState(prev => ({ ...prev, checkInExists: false, checkInFieldsIds: [] }));
-				setState(prev => ({ ...prev, checkInByAssembly: false, checkInByAssemblyFields: [] }));
+				setState((prev) => ({ ...prev, checkInExists: false, checkInFieldsIds: [] }));
+				setState((prev) => ({ ...prev, checkInByAssembly: false, checkInByAssemblyFields: [] }));
 				fields = await EventFieldsApi.getAll(props.eventId);
 				//Realizado con la finalidad de no mostrar la contraseña ni el avatar
 				//Comentado la parte de password y contrasena para dejar habilitado solo en el administrador
-				console.log('fields',fields);
-				
+				console.log('fields', fields);
+
 				fields.map((field: any) => {
 					if (field.name !== 'avatar') {
 						fieldsReplace.push(field);
@@ -113,22 +113,28 @@ export default function Datos(props: any) {
 						field.name === 'gender'
 					) {
 						checkInFieldsIds.push(field._id);
-						setState(prev => ({ ...prev, checkInExists: true, checkInFieldsIds: checkInFieldsIds }));
+						setState((prev) => ({ ...prev, checkInExists: true, checkInFieldsIds: checkInFieldsIds }));
 					}
 					if (field.type === 'voteWeight') {
 						checkInByAssemblyFields.push(field._id);
-						setState(prev => ({
+						setState((prev) => ({
 							...prev,
 							checkInByAssembly: true,
 							checkInByAssemblyFields,
 						}));
 					}
-					if (field.type === 'list_type_user') checkInByUserTypeFields.push(field._id)
+					if (field.type === 'list_type_user') checkInByUserTypeFields.push(field._id);
 				});
 				fields = orderFieldsByWeight(fieldsReplace);
 				fields = updateIndex(fieldsReplace);
 			}
-			setState(prev => ({ ...prev, fields, loading: false ,checkInByUserType : checkInByUserTypeFields.length > 0 ,checkInByUserTypeFields }));
+			setState((prev) => ({
+				...prev,
+				fields,
+				loading: false,
+				checkInByUserType: checkInByUserTypeFields.length > 0,
+				checkInByUserTypeFields,
+			}));
 		} catch (e) {
 			showError(e);
 		}
@@ -143,7 +149,7 @@ export default function Datos(props: any) {
 	};
 
 	const addField = () => {
-		setState(prev => ({ ...prev, edit: false, modal: true }));
+		setState((prev) => ({ ...prev, edit: false, modal: true }));
 	};
 
 	//Guardar campo en el evento
@@ -155,7 +161,7 @@ export default function Datos(props: any) {
 			action: 'show',
 		});
 		try {
-      // @ts-ignore
+			// @ts-ignore
 			let totaluser: firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>;
 			const organizationId = organization?._id;
 			if (organizationId) {
@@ -178,9 +184,9 @@ export default function Datos(props: any) {
 				firestore
 					.collection(`${eventId}_event_attendees`)
 					.get()
-					.then(resp => {
+					.then((resp) => {
 						if (resp.docs.length > 0) {
-							resp.docs.map(doc => {
+							resp.docs.map((doc) => {
 								var datos = doc.data();
 								var objectP = datos.properties;
 								var properties = objectP;
@@ -195,7 +201,7 @@ export default function Datos(props: any) {
 					});
 			}
 			await fetchFields();
-			setState(prev => ({ ...prev, modal: false, edit: false, newField: false }));
+			setState((prev) => ({ ...prev, modal: false, edit: false, newField: false }));
 			DispatchMessageService({
 				key: 'loading',
 				action: 'destroy',
@@ -205,7 +211,7 @@ export default function Datos(props: any) {
 				msj: 'Información guardada correctamente!',
 				action: 'show',
 			});
-		} catch (e: any) {
+		} catch (e) {
 			showError(e.response.data.message || e.response.status);
 			DispatchMessageService({
 				key: 'loading',
@@ -247,7 +253,7 @@ export default function Datos(props: any) {
 				msj: 'El orden de la recopilación de datos se ha guardado',
 				action: 'show',
 			});
-		} catch (e: any) {
+		} catch (e) {
 			DispatchMessageService({
 				key: 'loading',
 				action: 'destroy',
@@ -263,11 +269,11 @@ export default function Datos(props: any) {
 
 	//Abrir modal para editar dato
 	const editField = (info: any) => {
-		setState(prev => ({ ...prev, info, modal: true, edit: true }));
+		setState((prev) => ({ ...prev, info, modal: true, edit: true }));
 	};
 
 	const closeModal2 = () => {
-		setState(prev => ({ ...prev, info: null, modal: false, edit: false }));
+		setState((prev) => ({ ...prev, info: null, modal: false, edit: false }));
 	};
 	//Borrar dato de la lista
 	const removeField = async (item: any, checkInFieldsDelete?: any) => {
@@ -289,7 +295,7 @@ export default function Datos(props: any) {
 					action: 'show',
 				});
 				await fetchFields();
-			} catch (e: any) {
+			} catch (e) {
 				DispatchMessageService({
 					key: 'loading',
 					action: 'destroy',
@@ -327,11 +333,11 @@ export default function Datos(props: any) {
 	};
 
 	const closeDelete = () => {
-		setState(prev => ({ ...prev, deleteModal: false }));
+		setState((prev) => ({ ...prev, deleteModal: false }));
 	};
 
 	const closeModal = () => {
-		setState(prev => ({ ...prev, inputValue: '', modal: false, info: null, edit: false }));
+		setState((prev) => ({ ...prev, inputValue: '', modal: false, info: null, edit: false }));
 	};
 
 	const showError = (error: any) => {
@@ -342,20 +348,23 @@ export default function Datos(props: any) {
 		});
 		if (error.response) {
 			const { status, data } = error.response;
-			if (status === 401) setState(prev => ({ ...prev, timeout: true, loader: false }));
-			else setState(prev => ({ ...prev, serverError: true, loader: false, errorData: data }));
+			if (status === 401) setState((prev) => ({ ...prev, timeout: true, loader: false }));
+			else setState((prev) => ({ ...prev, serverError: true, loader: false, errorData: data }));
 		} else {
 			let errorData = error.message;
 			if (error.request) {
 				errorData = error.request;
 			}
 			errorData.status = 708;
-			setState(prev => ({ ...prev, serverError: true, loader: false, errorData }));
+			setState((prev) => ({ ...prev, serverError: true, loader: false, errorData }));
 		}
 	};
 
-	const changeCheckBoxEffect = async (field: Field, key: keyof typeof field, key2: keyof typeof field | null = null) => {
-		
+	const changeCheckBoxEffect = async (
+		field: Field,
+		key: keyof typeof field,
+		key2: keyof typeof field | null = null
+	) => {
 		try {
 			// This logic is for select just visible for contacts or visible for admin
 			let fieldCopy = { ...field };
@@ -366,7 +375,7 @@ export default function Datos(props: any) {
 				fieldCopy[key2] = fieldCopy[key2] == true ? false : fieldCopy[key2];
 			}
 			// This logic is for select just visible for contacts or visible for admin
-			saveField(fieldCopy, true).then(resp => {
+			saveField(fieldCopy, true).then((resp) => {
 				DispatchMessageService({
 					key: 'loading',
 					action: 'destroy',
@@ -391,7 +400,7 @@ export default function Datos(props: any) {
 	};
 
 	const changeCheckBox = async (field: Field, key: any, key2: any = null) => {
-		setState(prev => ({ ...prev, edit: true }));
+		setState((prev) => ({ ...prev, edit: true }));
 		await changeCheckBoxEffect(field, key, key2);
 	};
 	//Contenedor draggable
@@ -423,10 +432,10 @@ export default function Datos(props: any) {
 				: [];
 
 		if (oldIndex !== newIndex) {
-			let newData: Field[] = arrayMove(([] as Field[]).concat(fields), oldIndex, newIndex).filter(el => !!el);
+			let newData: Field[] = arrayMove(([] as Field[]).concat(fields), oldIndex, newIndex).filter((el) => !!el);
 			newData = updateIndex(newData);
 			user_properties = newData;
-			setState(prev => ({
+			setState((prev) => ({
 				...prev,
 				fields: newData,
 				user_properties,
@@ -438,17 +447,15 @@ export default function Datos(props: any) {
 	};
 
 	const onChange1 = async (e: any, plantId: any) => {
-		
-		setState(prev => ({ ...prev, value: '' }));
+		setState((prev) => ({ ...prev, value: '' }));
 		await OrganizationPlantillaApi.putOne(props.eventId, plantId);
 	};
 
 	const handlevisibleModal = () => {
-		setState(prev => ({ ...prev, visibleModal: !state.visibleModal }));
+		setState((prev) => ({ ...prev, visibleModal: !state.visibleModal }));
 	};
 
-
-	const columns: ColumnsType<Field> = [
+	const columnsFields: ColumnsType<Field> = [
 		{
 			title: '',
 			dataIndex: 'sort',
@@ -496,7 +503,7 @@ export default function Datos(props: any) {
 					onChange={() => changeCheckBox(key, 'visibleByContacts', 'visibleByAdmin')}
 					checked={record}
 					disabled={
-						key.type === 'checkInField' || key.name === 'birthdate' || key.name === 'bloodtype' || key.name === 'gender' 
+						key.type === 'checkInField' || key.name === 'birthdate' || key.name === 'bloodtype' || key.name === 'gender'
 					}
 				/>
 			),
@@ -575,6 +582,59 @@ export default function Datos(props: any) {
 		},
 	];
 
+	const columnsConditionalFields = [
+		{
+			title: 'Campo validador',
+			dataIndex: 'fieldToValidate',
+		},
+		{
+			title: 'Valor',
+			dataIndex: 'value',
+		},
+		{
+			title: 'Campos condicionados',
+			dataIndex: 'fields',
+		},
+		{
+			title: 'Estado',
+			dataIndex: 'state',
+		},
+		{
+			title: 'Opciones',
+			dataIndex: '',
+			render: (key: any) => {
+				return (
+					<Row wrap gutter={[8, 8]}>
+						<Col>
+							<Tooltip placement='topLeft' title='Editar'>
+								<Button
+									key={``}
+									id={`edit`}
+									onClick={() => console.log('Editar')}
+									icon={<EditOutlined />}
+									type='primary'
+									size='small'
+								/>
+							</Tooltip>
+						</Col>
+						<Col>
+							<Tooltip placement='topLeft' title='Eliminar'>
+								<Button
+									key={``}
+									id={`delete`}
+									onClick={() => console.log('Eliminar')}
+									icon={<DeleteOutlined />}
+									danger
+									size='small'
+								/>
+							</Tooltip>
+						</Col>
+					</Row>
+				);
+			},
+		},
+	];
+
 	const colsPlant = [
 		{
 			title: 'Nombre',
@@ -606,7 +666,7 @@ export default function Datos(props: any) {
 							</small>
 
 							<Table
-								columns={columns}
+								columns={columnsFields}
 								dataSource={state.fields}
 								pagination={false}
 								rowKey='index'
@@ -622,7 +682,7 @@ export default function Datos(props: any) {
 										<Col>
 											<Checkbox
 												name='checkInByUserType'
-												onChange={value =>
+												onChange={(value) =>
 													createTypeUserFild({
 														value,
 														checkInFieldsIds: state.checkInByUserTypeFields,
@@ -637,7 +697,7 @@ export default function Datos(props: any) {
 										<Col>
 											<Checkbox
 												name='checkInByAssembly'
-												onChange={value =>
+												onChange={(value) =>
 													createFieldForAssembly({
 														value,
 														checkInByAssemblyFields: state.checkInByAssemblyFields,
@@ -652,7 +712,7 @@ export default function Datos(props: any) {
 										<Col>
 											<Checkbox
 												name='checkInByDocument'
-												onChange={value =>
+												onChange={(value) =>
 													createFieldForCheckInPerDocument({
 														value,
 														checkInFieldsIds: state.checkInFieldsIds,
@@ -690,6 +750,42 @@ export default function Datos(props: any) {
 						</Fragment>
 					</TabPane>
 				)}
+				{props.type !== 'organization' && (
+					<TabPane tab='Campos condicionales' key='2'>
+						<Fragment>
+							<Table
+								columns={columnsConditionalFields}
+								dataSource={[]}
+								pagination={false}
+								rowKey='index'
+								size='small'
+								title={() => (
+									<Row justify='end' wrap gutter={[8, 8]}>
+										<Col>
+											<Button
+												type='primary'
+												icon={<PlusCircleOutlined />}
+												size='middle'
+												onClick={() => console.log('nuevo')}>
+												{'Nuevo campo condicional'}
+											</Button>
+										</Col>
+									</Row>
+								)}
+							/>
+							{state.modal && (
+								<Modal
+									visible={state.modal}
+									title={state.edit ? 'Editar Dato' : 'Agregar Dato'}
+									footer={false}
+									onCancel={closeModal2}
+									okText={'Guardar'}>
+									<DatosModal cancel={closeModal2} edit={state.edit} info={state.info} action={saveField} />
+								</Modal>
+							)}
+						</Fragment>
+					</TabPane>
+				)}
 				{props.type == 'organization' && (
 					<TabPane tab={props.type === 'configMembers' ? 'Configuración Miembros' : 'Plantillas'} key='3'>
 						{state.isEditTemplate.status || props.type === 'configMembers' ? (
@@ -703,7 +799,7 @@ export default function Datos(props: any) {
 													type='link'
 													style={{ color: 'blue' }}
 													onClick={() =>
-														setState(prev => ({
+														setState((prev) => ({
 															...prev,
 															isEditTemplate: { ...state.isEditTemplate, status: false, datafields: [] },
 														}))
@@ -721,7 +817,7 @@ export default function Datos(props: any) {
 								</small>
 
 								<Table
-									columns={columns}
+									columns={columnsFields}
 									dataSource={props.type === 'configMembers' ? state.fields : state.isEditTemplate.datafields}
 									pagination={false}
 									rowKey='index'
@@ -763,12 +859,12 @@ export default function Datos(props: any) {
 								API={OrganizationPlantillaApi}
 								eventId={props.event?.organizer_id ? props.event?.organizer_id : props.eventId}
 								title={'Plantillas de recoleccion de datos'}
-								addFn={() => setState(prev => ({ ...prev, visibleModal: true }))}
+								addFn={() => setState((prev) => ({ ...prev, visibleModal: true }))}
 								columns={colsPlant}
 								editFn={(values: any) => {
 									let fields = orderFieldsByWeight(values.user_properties);
 									fields = updateIndex(fields);
-									setState(prev => ({
+									setState((prev) => ({
 										...prev,
 										isEditTemplate: {
 											...prev.isEditTemplate,
