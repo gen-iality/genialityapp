@@ -1,6 +1,5 @@
 import { IConditionalField } from '@/components/events/datos/types/conditional-form.types';
 import { ConditionalFieldsEndpoint, conditionalFieldsEndpoint } from '@/endpoints/conditional-fields.endpoints';
-import { IResultPost } from '@/types';
 
 class ConditionalFieldsFacade {
   constructor(private readonly endpoint: ConditionalFieldsEndpoint) {}
