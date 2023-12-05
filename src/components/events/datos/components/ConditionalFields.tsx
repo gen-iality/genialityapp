@@ -41,7 +41,7 @@ export const ConditionalFields = () => {
       fetchConditionalFields()
     } catch (error) {
     } finally {
-      setIsDeleting(true);
+      setIsDeleting(false);
     }
   };
 

@@ -12,7 +12,6 @@ export const useFieldConditionalForm = ({ fields, eventId }: IOptions) => {
   const [selectedField, setSelectedField] = useState<Field | null>(null);
   const [typeFieldToValidate, setTypeFieldToValidate] = useState<TTypeFieldConditional | null>(null);
   const [valueConditional, setValueConditional] = useState<string | boolean | null>(null);
-
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -88,7 +87,7 @@ export const useFieldConditionalForm = ({ fields, eventId }: IOptions) => {
     isUpdating,
     onCreate,
     onUpdate,
-    fieldsFromCondition: fields.filter((item) =>  !['email', 'names'].includes(item.name)).map((item) => ({ value: item.name, label: item.label })),
+    fieldsFromCondition: fields.filter((item) =>  !['email', 'names'].includes(item.name) && selectedField?.name!==item.name).map((item) => ({ value: item.name, label: item.label })),
     fieldsParsedToSelect: fields
       .filter((item) => ['list', 'boolean'].includes(item.type) && !['email', 'names'].includes(item.name))
       .map((item) => ({ value: item.name, label: item.label })),
