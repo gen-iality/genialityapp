@@ -1,5 +1,5 @@
 export interface IConditionalField {
-  _id?: string;
+  id?: string;
   fieldToValidate: string;
   value: string | boolean;
   fields: string[];

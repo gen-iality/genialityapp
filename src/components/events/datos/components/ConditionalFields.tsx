@@ -1,5 +1,5 @@
 import { Button, Col, Modal, Row, Table, Tooltip } from 'antd';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { columnsConditionalFields } from '../utils/conditional-fields.colums';
 import { useModalLogic } from '@/hooks/useModalLogic';
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
@@ -7,22 +7,43 @@ import { ConditionalFieldForm } from './ConditionalFieldForm';
 import { UseEventContext } from '@/context/eventContext';
 import { IConditionalField } from '../types/conditional-form.types';
 import { useGetConditionalFields } from '../hooks/useGetConditionalFields';
+import { conditionalFieldsFacade } from '@/facades/conditionalFields.facode';
+import { DispatchMessageService } from '@/context/MessageService';
 
 export const ConditionalFields = () => {
   const { isOpenModal, closeModal, openModal, handledSelectedItem, selectedItem } = useModalLogic<IConditionalField>();
   const cEvent = UseEventContext();
   const eventId = cEvent.value._id;
-  const { conditionalFieldsTable, isLoadingConditionalFields } = useGetConditionalFields({ eventId });
+  const { conditionalFieldsTable, isLoadingConditionalFields, fetchConditionalFields } = useGetConditionalFields({ eventId });
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const onOpenModal = (selectedItem?: any) => {
     handledSelectedItem(selectedItem);
     openModal();
   };
+
   const onCloseModal = () => {
     closeModal();
     handledSelectedItem(undefined);
   };
-  const onDeleteConditionalField = (conditionalFieldId: string) => {};
+
+  const onDeleteConditionalField = async (conditionalFieldId: string | undefined) => {
+    try {
+      if (!conditionalFieldId) {
+        return DispatchMessageService({
+          action: 'show',
+          type: 'error',
+          msj: 'No se puede eliminar este evento ya que ya no existe',
+        });
+      }
+      setIsDeleting(true);
+      const { data, status } = await conditionalFieldsFacade.delete(eventId, conditionalFieldId);
+      fetchConditionalFields()
+    } catch (error) {
+    } finally {
+      setIsDeleting(true);
+    }
+  };
 
   return (
     <Fragment>
@@ -52,9 +73,10 @@ export const ConditionalFields = () => {
                   <Col>
                     <Tooltip placement='topLeft' title='Eliminar'>
                       <Button
+                        loading={isDeleting}
                         key={``}
                         id={`delete`}
-                        onClick={() => onDeleteConditionalField(item.fieldToValidate)}
+                        onClick={() => onDeleteConditionalField(item.id)}
                         icon={<DeleteOutlined />}
                         danger
                         size='small'
@@ -86,7 +108,7 @@ export const ConditionalFields = () => {
           title={selectedItem ? 'Editar Dato' : 'Agregar Dato'}
           footer={false}
           onCancel={onCloseModal}>
-          <ConditionalFieldForm selectedConditionalField={selectedItem} eventId={eventId} onCloseModal={onCloseModal} />
+          <ConditionalFieldForm selectedConditionalField={selectedItem} eventId={eventId} onCloseModal={onCloseModal} fetchConditionalFields={fetchConditionalFields}/>
         </Modal>
       )}
     </Fragment>

@@ -15,7 +15,6 @@ export const useFieldConditionalForm = ({ fields, eventId }: IOptions) => {
 
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   const onCreate = async (conditionalField: IConditionalField): Promise<IResultPost<IConditionalField>> => {
     try {
@@ -69,15 +68,6 @@ export const useFieldConditionalForm = ({ fields, eventId }: IOptions) => {
     }
   };
 
-  const onDelete = () => {
-    try {
-      setIsDeleting(true);
-    } catch (error) {
-    } finally {
-      setIsDeleting(false);
-    }
-  };
-
   const onChangeField = (fieldName: string) => {
     const selectedField = fields.find((item) => item.name === fieldName) ?? null;
     setSelectedField(selectedField);
@@ -88,7 +78,6 @@ export const useFieldConditionalForm = ({ fields, eventId }: IOptions) => {
   const onChangeValueConditional = (valueConditional: string | boolean) => {
     setValueConditional(valueConditional);
   };
-
   return {
     selectedField,
     onChangeField,
@@ -97,13 +86,11 @@ export const useFieldConditionalForm = ({ fields, eventId }: IOptions) => {
     valueConditional,
     isCreating,
     isUpdating,
-    isDeleting,
     onCreate,
     onUpdate,
-    onDelete,
-    fieldsFromCondition: fields.map((item) => ({ value: item.name, label: item.label })),
+    fieldsFromCondition: fields.filter((item) =>  !['email', 'names'].includes(item.name)).map((item) => ({ value: item.name, label: item.label })),
     fieldsParsedToSelect: fields
-      .filter((item) => ['list', 'boolean'].includes(item.type))
+      .filter((item) => ['list', 'boolean'].includes(item.type) && !['email', 'names'].includes(item.name))
       .map((item) => ({ value: item.name, label: item.label })),
   };
 };

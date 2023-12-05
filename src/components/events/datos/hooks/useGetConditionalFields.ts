@@ -1,28 +1,26 @@
 import { EventFieldsApi } from '@/helpers/request';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Field } from '../types';
 import { IConditionalField, IConditionalFieldTable } from '../types/conditional-form.types';
-import { UseEventContext } from '@/context/eventContext';
+import { eventFacade } from '@/facades/event.facade';
 
 interface IOptions {
   eventId: string;
 }
 
 export const useGetConditionalFields = ({ eventId }: IOptions) => {
-  const conditionalFieldsEvents = UseEventContext()?.value?.fields_conditions as IConditionalField[];
   const [conditionalFields, setConditionalFields] = useState<IConditionalField[]>([]);
   const [conditionalFieldsTable, setConditionalFieldsTable] = useState<IConditionalFieldTable[]>([]);
   const [isLoadingConditionalFields, setIsLoadingConditionalFields] = useState(true);
   const [error, setError] = useState<any | null>(null);
 
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchData = async () => {
+  const fetchConditionalFields = useCallback(
+    async (/* isMounted: boolean */) => {
       try {
         setIsLoadingConditionalFields(true);
-
         const fields = (await EventFieldsApi.getAll(eventId)) as Field[];
+        const { data } = await eventFacade.getById(eventId);
+        const conditionalFieldsEvents = data.fields_conditions as IConditionalField[];
         const conditionalFieldsTable = conditionalFieldsEvents.map((conditionalField) => {
           const currentField = fields.find((field) => field.name === conditionalField.fieldToValidate);
           const fieldToValidateLabel = currentField?.label ?? conditionalField.fieldToValidate;
@@ -38,23 +36,29 @@ export const useGetConditionalFields = ({ eventId }: IOptions) => {
           };
         });
 
-        if (isMounted) {
+        /*  if (isMounted) {
           setConditionalFields(conditionalFieldsEvents);
           setConditionalFieldsTable(conditionalFieldsTable);
-        }
+        } */
+
+        setConditionalFields(conditionalFieldsEvents);
+        setConditionalFieldsTable(conditionalFieldsTable);
       } catch (err) {
         setError(err);
       } finally {
         setIsLoadingConditionalFields(false);
       }
-    };
+    },
+    [eventId]
+  );
+  useEffect(() => {
+    // let isMounted = true;
+    fetchConditionalFields(/* isMounted */);
 
-    fetchData();
-
-    return () => {
+    /* return () => {
       isMounted = false;
-    };
-  }, [eventId, conditionalFieldsEvents]);
+    }; */
+  }, [fetchConditionalFields]);
 
-  return { conditionalFields, isLoadingConditionalFields, error, conditionalFieldsTable };
+  return { conditionalFields, isLoadingConditionalFields, error, conditionalFieldsTable, fetchConditionalFields };
 };

@@ -9,7 +9,7 @@ import { fieldToValidateRules, fieldsRules, valueRules } from '../utils/formCond
 interface Props {
   selectedConditionalField?: IConditionalField;
   eventId: string;
-
+  fetchConditionalFields: () => Promise<void>;
   onCloseModal: () => void;
 }
 
@@ -23,7 +23,7 @@ const OPTIONS_BOOLEAN_SELECT = [
     value: false,
   },
 ];
-export const ConditionalFieldForm = ({ selectedConditionalField, onCloseModal, eventId }: Props) => {
+export const ConditionalFieldForm = ({ selectedConditionalField, onCloseModal, eventId, fetchConditionalFields }: Props) => {
   const [form] = Form.useForm<IConditionalFieldForm>();
   const { fields, isLoadingEventsFields } = useGetEventsFields({ eventId });
   const {
@@ -47,17 +47,19 @@ export const ConditionalFieldForm = ({ selectedConditionalField, onCloseModal, e
       return DispatchMessageService({
         action: 'show',
         type: 'error',
-        msj: 'Debe definir un valor de condicion',
+        msj: 'Debe definir un valor de condición',
       });
     }
-    if (selectedConditionalField && selectedConditionalField._id) {
-      const { error } = await onUpdate(selectedConditionalField?._id, { ...values, state: 'enabled' });
+    if (selectedConditionalField && selectedConditionalField.id) {
+      const { error } = await onUpdate(selectedConditionalField?.id, { ...values, state: 'enabled' });
       if (!error) {
+        fetchConditionalFields()
         onCloseModal();
       }
     } else {
       const { error } = await onCreate({ ...values, state: 'enabled' });
       if (!error) {
+        fetchConditionalFields()
         onCloseModal();
       }
     }
