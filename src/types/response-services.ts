@@ -10,6 +10,12 @@ export interface IResultPost<T = any> {
   error: null | any;
 
   data?: T;
+  status?: number;
+}
+export interface IResultPut<T = any> {
+  error: null | any;
+  data?: T;
+  status?: number;
 }
 
 export interface IResultDelete {

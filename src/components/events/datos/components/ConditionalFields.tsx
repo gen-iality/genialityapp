@@ -13,6 +13,7 @@ export const ConditionalFields = () => {
   const cEvent = UseEventContext();
   const eventId = cEvent.value._id;
   const { conditionalFieldsTable, isLoadingConditionalFields } = useGetConditionalFields({ eventId });
+
   const onOpenModal = (selectedItem?: any) => {
     handledSelectedItem(selectedItem);
     openModal();
@@ -27,6 +28,7 @@ export const ConditionalFields = () => {
     <Fragment>
       <Table
         loading={isLoadingConditionalFields}
+        dataSource={conditionalFieldsTable}
         columns={[
           ...columnsConditionalFields,
           {
@@ -64,7 +66,6 @@ export const ConditionalFields = () => {
             },
           },
         ]}
-        dataSource={conditionalFieldsTable}
         pagination={false}
         rowKey='index'
         size='small'
@@ -85,7 +86,7 @@ export const ConditionalFields = () => {
           title={selectedItem ? 'Editar Dato' : 'Agregar Dato'}
           footer={false}
           onCancel={onCloseModal}>
-          <ConditionalFieldForm selectedConditionalField={selectedItem} eventId={eventId} />
+          <ConditionalFieldForm selectedConditionalField={selectedItem} eventId={eventId} onCloseModal={onCloseModal} />
         </Modal>
       )}
     </Fragment>

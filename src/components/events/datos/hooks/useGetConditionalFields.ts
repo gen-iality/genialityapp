@@ -23,11 +23,9 @@ export const useGetConditionalFields = ({ eventId }: IOptions) => {
         setIsLoadingConditionalFields(true);
 
         const fields = (await EventFieldsApi.getAll(eventId)) as Field[];
-
         const conditionalFieldsTable = conditionalFieldsEvents.map((conditionalField) => {
           const currentField = fields.find((field) => field.name === conditionalField.fieldToValidate);
           const fieldToValidateLabel = currentField?.label ?? conditionalField.fieldToValidate;
-
           const fieldLabels = conditionalField.fields.map((fieldName) => {
             const currentField = fields.find((field) => field.name === fieldName);
             return currentField?.label ?? fieldName;

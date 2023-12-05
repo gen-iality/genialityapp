@@ -1,13 +1,82 @@
 import { useState } from 'react';
 import { Field } from '../types';
-import { TTypeFieldConditional } from '../types/conditional-form.types';
+import { IConditionalField, TTypeFieldConditional } from '../types/conditional-form.types';
+import { conditionalFieldsFacade } from '@/facades/conditionalFields.facode';
+import { IResultPost, IResultPut } from '@/types';
+import { DispatchMessageService } from '@/context/MessageService';
 interface IOptions {
   fields: Field[];
+  eventId: string;
 }
-export const useFieldConditionalForm = ({ fields }: IOptions) => {
+export const useFieldConditionalForm = ({ fields, eventId }: IOptions) => {
   const [selectedField, setSelectedField] = useState<Field | null>(null);
   const [typeFieldToValidate, setTypeFieldToValidate] = useState<TTypeFieldConditional | null>(null);
-  const [valueConditional, setValueConditional] = useState<string | null>(null);
+  const [valueConditional, setValueConditional] = useState<string | boolean | null>(null);
+
+  const [isCreating, setIsCreating] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const onCreate = async (conditionalField: IConditionalField): Promise<IResultPost<IConditionalField>> => {
+    try {
+      setIsCreating(true);
+      const { data, status } = await conditionalFieldsFacade.create(eventId, conditionalField);
+      DispatchMessageService({
+        action: 'show',
+        type: 'success',
+        msj: 'Se creó con éxito el campo condicional',
+      });
+      return {
+        error: null,
+        data,
+        status,
+      };
+    } catch (error) {
+      DispatchMessageService({
+        action: 'show',
+        type: 'error',
+        msj: 'Ocurrió un error al guardar el campo condicional',
+      });
+      return {
+        error,
+      };
+    } finally {
+      setIsCreating(false);
+    }
+  };
+  const onUpdate = async (
+    fieldId: string,
+    conditionalField: IConditionalField
+  ): Promise<IResultPut<IConditionalField>> => {
+    try {
+      setIsUpdating(true);
+      const { data, status } = await conditionalFieldsFacade.update(eventId, fieldId, conditionalField);
+      DispatchMessageService({
+        action: 'show',
+        type: 'success',
+        msj: 'Se modificó con éxito el campo condicional',
+      });
+      return { data, status, error: null };
+    } catch (error) {
+      DispatchMessageService({
+        action: 'show',
+        type: 'error',
+        msj: 'Ocurrió un error al modificar el campo condicional',
+      });
+      return { error };
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const onDelete = () => {
+    try {
+      setIsDeleting(true);
+    } catch (error) {
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const onChangeField = (fieldName: string) => {
     const selectedField = fields.find((item) => item.name === fieldName) ?? null;
@@ -16,7 +85,7 @@ export const useFieldConditionalForm = ({ fields }: IOptions) => {
     setValueConditional(null);
   };
 
-  const onChangeValueConditional = (valueConditional: string) => {
+  const onChangeValueConditional = (valueConditional: string | boolean) => {
     setValueConditional(valueConditional);
   };
 
@@ -26,6 +95,13 @@ export const useFieldConditionalForm = ({ fields }: IOptions) => {
     typeFieldToValidate,
     onChangeValueConditional,
     valueConditional,
+    isCreating,
+    isUpdating,
+    isDeleting,
+    onCreate,
+    onUpdate,
+    onDelete,
+    fieldsFromCondition: fields.map((item) => ({ value: item.name, label: item.label })),
     fieldsParsedToSelect: fields
       .filter((item) => ['list', 'boolean'].includes(item.type))
       .map((item) => ({ value: item.name, label: item.label })),
