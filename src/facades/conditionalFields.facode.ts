@@ -1,5 +1,6 @@
 import { IConditionalField } from '@/components/events/datos/types/conditional-form.types';
 import { ConditionalFieldsEndpoint, conditionalFieldsEndpoint } from '@/endpoints/conditional-fields.endpoints';
+import { IResultDelete } from '@/types';
 
 class ConditionalFieldsFacade {
   constructor(private readonly endpoint: ConditionalFieldsEndpoint) {}
@@ -20,8 +21,20 @@ class ConditionalFieldsFacade {
     return this.endpoint.update(eventId, fieldId, conditionalField);
   }
 
-  async delete(eventId: string, fieldId: string) {
-    return this.endpoint.delete(eventId, fieldId);
+  async delete(eventId: string, fieldId: string): Promise<IResultDelete> {
+    try {
+      const { data, status } = await this.endpoint.delete(eventId, fieldId);
+      return {
+        error: null,
+        data,
+        status,
+      };
+    } catch (error) {
+      return {
+        error,
+        status: error?.response?.status as number,
+      };
+    }
   }
 }
 

@@ -18,8 +18,10 @@ export interface IResultPut<T = any> {
   status?: number;
 }
 
-export interface IResultDelete {
+export interface IResultDelete<T = any> {
+  status?: number;
   error: null | any;
+  data?: T;
 }
 
 export type TErrorsService = 'get' | 'add' | 'update' | 'delete';
