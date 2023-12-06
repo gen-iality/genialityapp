@@ -10,7 +10,7 @@ export interface IConditionalField {
 export interface IConditionalFieldTable extends IConditionalField {
   fieldToValidateLabel?: string;
   fieldLabels: string[];
-  isRepeate?: boolean;
+  isRepeat?: boolean;
 }
 
 export interface IConditionalFieldForm extends Pick<IConditionalField, 'fields' | 'fieldToValidate' | 'value'> {

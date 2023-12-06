@@ -23,7 +23,7 @@ export const useGetConditionalFields = ({ eventId }: IOptions) => {
         .join(',')}`;
 
       if (seen[key]) {
-        conditionalFieldsToTableWithDuplicates.push({ ...conditionalField, isRepeate: true });
+        conditionalFieldsToTableWithDuplicates.push({ ...conditionalField, isRepeat: true });
       } else {
         seen[key] = true;
         conditionalFieldsToTableWithDuplicates.push(conditionalField);

@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Field } from '../types';
 import { IConditionalField, TTypeFieldConditional } from '../types/conditional-form.types';
 import { conditionalFieldsFacade } from '@/facades/conditionalFields.facode';
-import { IResultPost, IResultPut } from '@/types';
+import { IResultPost } from '@/types';
 import { DispatchMessageService } from '@/context/MessageService';
 interface IOptions {
   fields: Field[];
@@ -41,29 +41,24 @@ export const useFieldConditionalForm = ({ fields, eventId }: IOptions) => {
       setIsSaving(false);
     }
   };
-  const onUpdate = async (
-    fieldId: string,
-    conditionalField: IConditionalField
-  ): Promise<IResultPut<IConditionalField>> => {
-    try {
-      setIsSaving(true);
-      const { data, status } = await conditionalFieldsFacade.update(eventId, fieldId, conditionalField);
-      DispatchMessageService({
-        action: 'show',
-        type: 'success',
-        msj: 'Se modificó con éxito el campo condicional',
-      });
-      return { data, status, error: null };
-    } catch (error) {
+  const onUpdate = async (fieldId: string, conditionalField: IConditionalField) => {
+    setIsSaving(true);
+    const { data, status, error } = await conditionalFieldsFacade.update(eventId, fieldId, conditionalField);
+    if (error) {
       DispatchMessageService({
         action: 'show',
         type: 'error',
         msj: 'Ocurrió un error al modificar el campo condicional',
       });
-      return { error };
-    } finally {
-      setIsSaving(false);
+    } else {
+      DispatchMessageService({
+        action: 'show',
+        type: 'success',
+        msj: 'Se modificó con éxito el campo condicional',
+      });
     }
+    setIsSaving(false);
+    return { data, status, error: null };
   };
 
   const onChangeField = (fieldName: string) => {
