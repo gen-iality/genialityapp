@@ -1,6 +1,6 @@
 import { Button, Col, Modal, Row, Table, Tooltip } from 'antd';
 import { Fragment, useState } from 'react';
-import { columnsConditionalFields } from '../utils/conditional-fields.colums';
+import { columnsConditionalFields } from '../utils/conditional-fields.columns';
 import { useModalLogic } from '@/hooks/useModalLogic';
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { ConditionalFieldForm } from './ConditionalFieldForm';
