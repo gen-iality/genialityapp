@@ -1,4 +1,4 @@
-import { Button, Form, Select } from 'antd';
+import { Button, Form, Select, Switch } from 'antd';
 import { IConditionalField, IConditionalFieldForm } from '../types/conditional-form.types';
 import { useEffect } from 'react';
 import { useGetEventsFields } from '../hooks/useGetEventsFields';
@@ -23,7 +23,12 @@ const OPTIONS_BOOLEAN_SELECT = [
     value: false,
   },
 ];
-export const ConditionalFieldForm = ({ selectedConditionalField, onCloseModal, eventId, fetchConditionalFields }: Props) => {
+export const ConditionalFieldForm = ({
+  selectedConditionalField,
+  onCloseModal,
+  eventId,
+  fetchConditionalFields,
+}: Props) => {
   const [form] = Form.useForm<IConditionalFieldForm>();
   const { fields, isLoadingEventsFields } = useGetEventsFields({ eventId });
   const {
@@ -37,6 +42,8 @@ export const ConditionalFieldForm = ({ selectedConditionalField, onCloseModal, e
     fieldsFromCondition,
     onUpdate,
     isSaving,
+    setStatus,
+    status,
   } = useFieldConditionalForm({
     fields,
     eventId,
@@ -51,15 +58,21 @@ export const ConditionalFieldForm = ({ selectedConditionalField, onCloseModal, e
       });
     }
     if (selectedConditionalField && selectedConditionalField.id) {
-      const { error } = await onUpdate(selectedConditionalField?.id, { ...values, state: 'enabled' });
+      const { error } = await onUpdate(selectedConditionalField?.id, {
+        ...values,
+        state: values.state ? 'enabled' : 'disabled',
+      });
       if (!error) {
-        fetchConditionalFields()
+        fetchConditionalFields();
         onCloseModal();
       }
     } else {
-      const { error } = await onCreate({ ...values, state: 'enabled' });
+      const { error } = await onCreate({
+        ...values,
+        state: values.state ? 'enabled' : 'disabled',
+      });
       if (!error) {
-        fetchConditionalFields()
+        fetchConditionalFields();
         onCloseModal();
       }
     }
@@ -67,7 +80,11 @@ export const ConditionalFieldForm = ({ selectedConditionalField, onCloseModal, e
 
   useEffect(() => {
     if (selectedConditionalField) {
-      form.setFieldsValue(selectedConditionalField);
+      form.setFieldsValue({
+        ...selectedConditionalField,
+        state: selectedConditionalField.state === 'enabled' ? true : false,
+      });
+      setStatus(selectedConditionalField.state === 'enabled' ? true : false);
       onChangeField(selectedConditionalField.fieldToValidate);
       onChangeValueConditional(selectedConditionalField.value);
     }
@@ -109,6 +126,9 @@ export const ConditionalFieldForm = ({ selectedConditionalField, onCloseModal, e
           <Select mode='multiple' loading={isLoadingEventsFields} options={fieldsFromCondition} />
         </Form.Item>
       )}
+      <Form.Item label='Estado' name={'state'} initialValue={status}>
+        <Switch checked={status} onChange={setStatus} />
+      </Form.Item>
       <Form.Item>
         <Button htmlType='submit' loading={isSaving}>
           {selectedConditionalField ? 'Guardar' : 'Crear'}
