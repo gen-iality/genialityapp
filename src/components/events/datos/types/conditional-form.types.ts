@@ -1,3 +1,4 @@
+export type TValueState = 'enabled' | 'disabled';
 export interface IConditionalField {
   id?: string;
   fieldToValidate: string;
@@ -7,22 +8,22 @@ export interface IConditionalField {
 }
 
 export interface IConditionalFieldTable extends IConditionalField {
-	fieldToValidateLabel?: string;
-	fieldLabels: string[];
-	isRepeate?: boolean;
+  fieldToValidateLabel?: string;
+  fieldLabels: string[];
+  isRepeate?: boolean;
 }
 
-export interface IConditionalFieldForm extends Pick<IConditionalField, 'fields' | 'fieldToValidate' | 'value'> {}
+export interface IConditionalFieldForm extends Pick<IConditionalField, 'fields' | 'fieldToValidate' | 'value'> {
+  state: boolean;
+}
 
 export type TTypeFieldConditional = 'list' | 'boolean';
 
-export type TValueState = 'enabled' | 'disabled';
-export interface IConditionalStatus {
-	enabled: IState;
-	disabled: IState;
-}
+export type IConditionalStatus = {
+  [Key in TValueState]: IState;
+};
 
 export interface IState {
-	label: string;
-	status: 'green' | 'red';
+  label: string;
+  status: 'green' | 'red';
 }
