@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Field } from '../types';
 import { IConditionalField, TTypeFieldConditional } from '../types/conditional-form.types';
 import { conditionalFieldsFacade } from '@/facades/conditionalFields.facode';
@@ -12,12 +12,11 @@ export const useFieldConditionalForm = ({ fields, eventId }: IOptions) => {
   const [selectedField, setSelectedField] = useState<Field | null>(null);
   const [typeFieldToValidate, setTypeFieldToValidate] = useState<TTypeFieldConditional | null>(null);
   const [valueConditional, setValueConditional] = useState<string | boolean | null>(null);
-  const [isCreating, setIsCreating] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const onCreate = async (conditionalField: IConditionalField): Promise<IResultPost<IConditionalField>> => {
     try {
-      setIsCreating(true);
+      setIsSaving(true);
       const { data, status } = await conditionalFieldsFacade.create(eventId, conditionalField);
       DispatchMessageService({
         action: 'show',
@@ -39,7 +38,7 @@ export const useFieldConditionalForm = ({ fields, eventId }: IOptions) => {
         error,
       };
     } finally {
-      setIsCreating(false);
+      setIsSaving(false);
     }
   };
   const onUpdate = async (
@@ -47,7 +46,7 @@ export const useFieldConditionalForm = ({ fields, eventId }: IOptions) => {
     conditionalField: IConditionalField
   ): Promise<IResultPut<IConditionalField>> => {
     try {
-      setIsUpdating(true);
+      setIsSaving(true);
       const { data, status } = await conditionalFieldsFacade.update(eventId, fieldId, conditionalField);
       DispatchMessageService({
         action: 'show',
@@ -63,7 +62,7 @@ export const useFieldConditionalForm = ({ fields, eventId }: IOptions) => {
       });
       return { error };
     } finally {
-      setIsUpdating(false);
+      setIsSaving(false);
     }
   };
 
@@ -77,19 +76,29 @@ export const useFieldConditionalForm = ({ fields, eventId }: IOptions) => {
   const onChangeValueConditional = (valueConditional: string | boolean) => {
     setValueConditional(valueConditional);
   };
+
+  const fieldsFromCondition = useMemo(() => {
+    return fields
+      .filter((item) => !['email', 'names'].includes(item.name) && selectedField?.name !== item.name)
+      .map((item) => ({ value: item.name, label: item.label }));
+  }, [fields, selectedField?.name]);
+
+  const fieldsParsedToSelect = useMemo(() => {
+    return fields
+      .filter((item) => ['list', 'boolean'].includes(item.type) && !['email', 'names'].includes(item.name))
+      .map((item) => ({ value: item.name, label: item.label }));
+  }, [fields]);
+
   return {
     selectedField,
     onChangeField,
     typeFieldToValidate,
     onChangeValueConditional,
     valueConditional,
-    isCreating,
-    isUpdating,
+    isSaving,
     onCreate,
     onUpdate,
-    fieldsFromCondition: fields.filter((item) =>  !['email', 'names'].includes(item.name) && selectedField?.name!==item.name).map((item) => ({ value: item.name, label: item.label })),
-    fieldsParsedToSelect: fields
-      .filter((item) => ['list', 'boolean'].includes(item.type) && !['email', 'names'].includes(item.name))
-      .map((item) => ({ value: item.name, label: item.label })),
+    fieldsFromCondition,
+    fieldsParsedToSelect,
   };
 };
