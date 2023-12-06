@@ -36,7 +36,7 @@ export const ConditionalFieldForm = ({ selectedConditionalField, onCloseModal, e
     onCreate,
     fieldsFromCondition,
     onUpdate,
-    isCreating,
+    isSaving,
   } = useFieldConditionalForm({
     fields,
     eventId,
@@ -110,7 +110,7 @@ export const ConditionalFieldForm = ({ selectedConditionalField, onCloseModal, e
         </Form.Item>
       )}
       <Form.Item>
-        <Button htmlType='submit' loading={isCreating}>
+        <Button htmlType='submit' loading={isSaving}>
           {selectedConditionalField ? 'Guardar' : 'Crear'}
         </Button>
       </Form.Item>

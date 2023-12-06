@@ -14,7 +14,9 @@ export const ConditionalFields = () => {
   const { isOpenModal, closeModal, openModal, handledSelectedItem, selectedItem } = useModalLogic<IConditionalField>();
   const cEvent = UseEventContext();
   const eventId = cEvent.value._id;
-  const { conditionalFieldsTable, isLoadingConditionalFields, fetchConditionalFields } = useGetConditionalFields({ eventId });
+  const { conditionalFieldsTable, isLoadingConditionalFields, fetchConditionalFields } = useGetConditionalFields({
+    eventId,
+  });
   const [isDeleting, setIsDeleting] = useState(false);
 
   const onOpenModal = (selectedItem?: any) => {
@@ -37,8 +39,8 @@ export const ConditionalFields = () => {
         });
       }
       setIsDeleting(true);
-      const { data, status } = await conditionalFieldsFacade.delete(eventId, conditionalFieldId);
-      fetchConditionalFields()
+      const { error } = await conditionalFieldsFacade.delete(eventId, conditionalFieldId);
+      if (!error) fetchConditionalFields();
     } catch (error) {
     } finally {
       setIsDeleting(false);
@@ -108,7 +110,12 @@ export const ConditionalFields = () => {
           title={selectedItem ? 'Editar Dato' : 'Agregar Dato'}
           footer={false}
           onCancel={onCloseModal}>
-          <ConditionalFieldForm selectedConditionalField={selectedItem} eventId={eventId} onCloseModal={onCloseModal} fetchConditionalFields={fetchConditionalFields}/>
+          <ConditionalFieldForm
+            selectedConditionalField={selectedItem}
+            eventId={eventId}
+            onCloseModal={onCloseModal}
+            fetchConditionalFields={fetchConditionalFields}
+          />
         </Modal>
       )}
     </Fragment>
