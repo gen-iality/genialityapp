@@ -14,6 +14,25 @@ export const useGetConditionalFields = ({ eventId }: IOptions) => {
   const [isLoadingConditionalFields, setIsLoadingConditionalFields] = useState(true);
   const [error, setError] = useState<any | null>(null);
 
+  const findDuplicates = (conditionalFieldsToTable: IConditionalFieldTable[]): IConditionalFieldTable[] => {
+    const seen: Record<string, boolean> = {};
+    const conditionalFieldsToTableWithDuplicates: IConditionalFieldTable[] = [];
+    conditionalFieldsToTable.forEach((conditionalField) => {
+      const key = `${conditionalField.fieldToValidate}-${conditionalField.value}-${conditionalField.fields
+        .sort()
+        .join(',')}`;
+
+      if (seen[key]) {
+        conditionalFieldsToTableWithDuplicates.push({ ...conditionalField, isRepeate: true });
+      } else {
+        seen[key] = true;
+        conditionalFieldsToTableWithDuplicates.push(conditionalField);
+      }
+    });
+
+    return conditionalFieldsToTableWithDuplicates;
+  };
+
   const fetchConditionalFields = useCallback(
     async (/* isMounted: boolean */) => {
       try {
@@ -21,7 +40,7 @@ export const useGetConditionalFields = ({ eventId }: IOptions) => {
         const fields = (await EventFieldsApi.getAll(eventId)) as Field[];
         const { data } = await eventFacade.getById(eventId);
         const conditionalFieldsEvents = data.fields_conditions as IConditionalField[];
-        const conditionalFieldsTable = conditionalFieldsEvents.map((conditionalField) => {
+        const conditionalFieldsTable: IConditionalFieldTable[] = conditionalFieldsEvents.map((conditionalField) => {
           const currentField = fields.find((field) => field.name === conditionalField.fieldToValidate);
           const fieldToValidateLabel = currentField?.label ?? conditionalField.fieldToValidate;
           const fieldLabels = conditionalField.fields.map((fieldName) => {
@@ -35,14 +54,8 @@ export const useGetConditionalFields = ({ eventId }: IOptions) => {
             fieldLabels,
           };
         });
-
-        /*  if (isMounted) {
-          setConditionalFields(conditionalFieldsEvents);
-          setConditionalFieldsTable(conditionalFieldsTable);
-        } */
-
         setConditionalFields(conditionalFieldsEvents);
-        setConditionalFieldsTable(conditionalFieldsTable);
+        setConditionalFieldsTable(findDuplicates(conditionalFieldsTable));
       } catch (err) {
         setError(err);
       } finally {
