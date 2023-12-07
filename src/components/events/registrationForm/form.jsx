@@ -683,8 +683,8 @@ const FormRegister = ({
       let fieldHasCondition = false;
 
       //para cada campo revisamos si se cumplen todas las condiciones para mostrarlo
-
       conditionals.map((conditional) => {
+        if(conditional.state === 'disabled') return;
         let fieldExistInThisCondition = conditional.fields.indexOf(field.name) !== -1;
 
         if (!fieldExistInThisCondition) return;

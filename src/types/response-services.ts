@@ -10,10 +10,18 @@ export interface IResultPost<T = any> {
   error: null | any;
 
   data?: T;
+  status?: number;
+}
+export interface IResultPut<T = any> {
+  error: null | any;
+  data?: T;
+  status?: number;
 }
 
-export interface IResultDelete {
+export interface IResultDelete<T = any> {
+  status?: number;
   error: null | any;
+  data?: T;
 }
 
 export type TErrorsService = 'get' | 'add' | 'update' | 'delete';
