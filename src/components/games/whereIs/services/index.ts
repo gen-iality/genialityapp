@@ -13,6 +13,7 @@ import {
 	WhereIs,
 } from '../types';
 import { fromPlayerToScore } from '../utils/fromPlayerToScore';
+import { collection, deleteDoc, getDocs } from 'firebase/firestore';
 
 // export const get = async (eventId: string): Promise<WhereIs | null> => {
 // 	try {
@@ -254,6 +255,26 @@ export const getScores = async (getScoreDto: GetScoreDto) => {
 		DispatchMessageService({ type: 'error', msj: 'Error al obtener la dinamica', action: 'show' });
 		return null;
 	}
+};
+
+export const restoreScores = async (getScoreDto: GetScoreDto) => {
+  const { event_id } = getScoreDto;
+  const playersCollection = collection(firestore, 'whereIsByEvent', event_id, 'players');
+
+  try {
+    const querySnapshot = await getDocs(playersCollection);
+
+    querySnapshot.forEach(async (doc) => {
+      await deleteDoc(doc.ref);
+    });
+    return {
+      error: false,
+    };
+  } catch (error) {
+    return {
+      error: true,
+    };
+  }
 };
 
 export const getScoresListener = (event_id: string, setScores: React.Dispatch<React.SetStateAction<Score[]>>) => {
