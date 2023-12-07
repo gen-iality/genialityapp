@@ -17,12 +17,14 @@ export const useGetConditionalFields = ({ eventId }: IOptions) => {
   const findDuplicates = (conditionalFieldsToTable: IConditionalFieldTable[]): IConditionalFieldTable[] => {
     const seen: Record<string, boolean> = {};
     const conditionalFieldsToTableWithDuplicates: IConditionalFieldTable[] = [];
+    const duplicates: string[] = [];
     conditionalFieldsToTable.forEach((conditionalField) => {
       const key = `${conditionalField.fieldToValidate}-${conditionalField.value}-${conditionalField.fields
         .sort()
         .join(',')}`;
 
       if (seen[key]) {
+        duplicates.push(key);
         conditionalFieldsToTableWithDuplicates.push({ ...conditionalField, isRepeat: true });
       } else {
         seen[key] = true;
