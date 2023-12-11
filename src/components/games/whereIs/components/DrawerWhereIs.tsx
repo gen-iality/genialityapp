@@ -21,7 +21,7 @@ export default function DrawerWhereIs(props: Props) {
   const { whereIs } = useWhereIs();
   const { goTo, location, ListenerPlayer ,getStatePlayerAndGameAfterRestore, whereIsGame } = useWhereIsInLanding();
 	const [playerRealTime, setPlayerRealTime] = useState<Player>()
-
+console.log('whereIs',whereIs)
 
   const handleOpen = () => {
     setOpen(true);
@@ -45,6 +45,11 @@ export default function DrawerWhereIs(props: Props) {
     }
   }, [playerRealTime]);
   
+useEffect(() => {
+  if(whereIs && !whereIs?.published){
+    setOpen(false);
+  }
+}, [whereIs])
 
   return (
     <>
