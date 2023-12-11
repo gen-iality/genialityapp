@@ -29,7 +29,7 @@ interface WhereIsInLandingType {
   winGame: any
   getPlayer: any
   getScores: any
-  ListenerMyScore:any
+  // ListenerMyScore:any
   ListenerPlayer:any
   getStatePlayerAndGameAfterRestore: () => void
 }
@@ -100,6 +100,7 @@ export default function WhereIsInLandingProvider(props: Props) {
         points: pointsToShow,
       }));
       verifyPlayer();
+      setLocation(prev => ({ ...prev, activeView: 'introduction' }))
   };
   useEffect(() => {
     getInitialStatePlayerAndGame()
@@ -265,7 +266,7 @@ export default function WhereIsInLandingProvider(props: Props) {
     return { scoresFinished, scoresNotFinished };
   };
 
-  const ListenerMyScore=(event_user_id:string, setMyScore:(myScore:IScoreParsed)=>void, setPlayer:(player:Player | undefined)=>void, setToGame:()=>void)=>{
+  /* const ListenerMyScore=(event_user_id:string, setMyScore:(myScore:IScoreParsed)=>void, setPlayer:(player:Player | undefined)=>void, setToGame:()=>void)=>{
     return services.listenerMyScore({event_id:cEvent.nameEvent,event_user_id, setMyScore, setPlayer, setToGame:()=>{
       setToGame()
       // setWhereIsGame(initialWhereIsGame)
@@ -273,7 +274,7 @@ export default function WhereIsInLandingProvider(props: Props) {
       // setWhereIs(null)
     }, 
     getStateWhenHavePlayer:getInitialStatePlayerAndGame})
-  }
+  } */
   const ListenerPlayer=(event_user_id:string,  setPlayer:(player:Player | undefined | null)=>void,)=>{
     return services.listenerPlayer({event_id:cEvent.nameEvent,event_user_id,setPlayer})
   }
@@ -294,7 +295,7 @@ export default function WhereIsInLandingProvider(props: Props) {
       winGame,
       getPlayer,
       getScores,
-      ListenerMyScore,
+      // ListenerMyScore:()=>{},
       ListenerPlayer,
       getStatePlayerAndGameAfterRestore
     }}>

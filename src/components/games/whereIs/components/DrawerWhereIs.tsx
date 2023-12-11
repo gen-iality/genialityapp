@@ -19,10 +19,9 @@ export default function DrawerWhereIs(props: Props) {
 	const cUser = UseUserEvent();
   const [open, setOpen] = useState(false);
   const { whereIs } = useWhereIs();
-  const { goTo, location, ListenerPlayer ,getStatePlayerAndGameAfterRestore } = useWhereIsInLanding();
+  const { goTo, location, ListenerPlayer ,getStatePlayerAndGameAfterRestore, whereIsGame } = useWhereIsInLanding();
 	const [playerRealTime, setPlayerRealTime] = useState<Player>()
 
-  console.log('playerRealTime',playerRealTime)
 
   const handleOpen = () => {
     setOpen(true);
@@ -33,13 +32,6 @@ export default function DrawerWhereIs(props: Props) {
     setOpen(false);
   };
 
- /*  useEffect(() => {
-		const unsubscribe= ListenerMyScore(cUser.value._id, ()=>{},()=>{},()=>{getStatePlayerAndGameAfterRestore()})
-	  return () => {
-		unsubscribe()
-	  }
-	}, []) */
-
   useEffect(() => {
 		const unsubscribe= ListenerPlayer(cUser.value._id, setPlayerRealTime)
 	  return () => {
@@ -48,7 +40,7 @@ export default function DrawerWhereIs(props: Props) {
 	}, [])
 
   useEffect(() => {
-    if (playerRealTime === null) {
+    if (playerRealTime === null && whereIsGame.isFinish) {
       getStatePlayerAndGameAfterRestore();
     }
   }, [playerRealTime]);

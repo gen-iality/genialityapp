@@ -1,11 +1,11 @@
-import { Card, Col, Image, Result, Row, Space, Tag, Typography } from 'antd';
+import { Card, Col,  Result, Row, Tag } from 'antd';
 import HeartBrokenIcon from '@2fd/ant-design-icons/lib/HeartBroken';
 import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
 import useWhereIsInLanding from '../../hooks/useWhereIsInLanding';
 import Ranking from '@/components/games/common/Ranking';
 import { parseTime } from '../../utils/parseTime';
 import { useEffect, useState } from 'react';
-import { getScores, getScoresListener, listenerMyScore } from '../../services';
+import { getScoresListener } from '../../services';
 import { UseUserEvent } from '@/context/eventUserContext';
 import { UseEventContext } from '@/context/eventContext';
 import { Score } from '@/components/games/common/Ranking/types';
@@ -27,9 +27,9 @@ export default function Results() {
 		whereIsGame: { won },
 		getScores,
 		player,
-		ListenerMyScore,
 		setLocation,
-		location
+		ListenerPlayer,
+		getStatePlayerAndGameAfterRestore
 	} = useWhereIsInLanding();
 	const [playerRealTime, setPlayerRealTime] = useState<Player>()
 	const dataResult = {
@@ -73,11 +73,20 @@ export default function Results() {
 
 
 	useEffect(() => {
-		const unsubscribe= ListenerMyScore(cUser.value._id, setMyScore,setPlayerRealTime,()=>{setLocation(prev => ({ ...prev, activeView: 'introduction' }));})
+		const unsubscribe= ListenerPlayer(cUser.value._id, setPlayerRealTime)
 	  return () => {
 		unsubscribe()
 	  }
 	}, [])
+
+  useEffect(() => {
+    if (playerRealTime === null) {
+      getStatePlayerAndGameAfterRestore();
+	  setLocation(prev => ({ ...prev, activeView: 'introduction' }))
+    }
+  }, [playerRealTime]);
+
+  
 	
 	return (
 		<Row justify='center' align='middle'>
