@@ -43,7 +43,7 @@ export default function GameStartAnnoucement() {
           title={<Typography.Title style={{ color: getCorrectColor(primaryMillonaire) }} level={2}>{name}</Typography.Title>}
           subTitle={
             <Typography.Paragraph style={{ color: getCorrectColor(primaryMillonaire) }}>
-              ¿Estás listo para iniciar? Puedes revisar las etapas para que identifiques cual te sirve de salvavidas. No
+              ¿Estás listo para iniciar? Puedes revisar las etapas para que identifiques cuál te sirve de salvavidas. No
               olvides que cuentas con la ayuda del 50/50 pero ¡Ten mucho cuidado con el contador! Al llegar a cero
               perderás.
             </Typography.Paragraph>
