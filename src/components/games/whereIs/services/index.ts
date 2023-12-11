@@ -312,10 +312,11 @@ interface IListenerMyScoreParams {
 	event_user_id:string
 	setPlayer:(player:Player | undefined)=>void
 	setToGame:()=>void
+	getStateWhenHavePlayer:()=>void
 }
 
 
-export const listenerMyScore = ({ event_id, event_user_id, setMyScore,setPlayer,setToGame }: IListenerMyScoreParams) => {
+export const listenerMyScore = ({ event_id, event_user_id, setMyScore,setPlayer,setToGame,getStateWhenHavePlayer }: IListenerMyScoreParams) => {
   const unsubscribe = firestore
     .collection('whereIsByEvent')
     .doc(event_id)
@@ -324,6 +325,7 @@ export const listenerMyScore = ({ event_id, event_user_id, setMyScore,setPlayer,
     .onSnapshot(
       (playersDoc) => {
         if (playersDoc.empty) {
+			console.log('porqu e estoy vacio')
 			setToGame()
         } else {
           const players = playersDoc.docs.map((doc) => doc.data()) as Player[];
@@ -354,6 +356,7 @@ export const listenerMyScore = ({ event_id, event_user_id, setMyScore,setPlayer,
 			setPlayer(myPlayer)
             setMyScore(myScoreLose);
           }
+		  getStateWhenHavePlayer()
         }
       },
       (onError) => {

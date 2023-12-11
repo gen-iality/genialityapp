@@ -6,7 +6,7 @@ import { parseTime } from '../../utils/parseTime';
 export default function Timer() {
 	const { location, setTimer, whereIsGame } = useWhereIsInLanding();
 	// const [counter, setCounter] = useState(0);
-
+	console.log('whereIsGame en timer',whereIsGame)
 	// // Uncomment in production
 	useEffect(() => {
 		if (location.activeView === 'game' && !whereIsGame.isFinish) {

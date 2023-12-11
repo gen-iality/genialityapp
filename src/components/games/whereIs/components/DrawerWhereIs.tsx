@@ -1,10 +1,12 @@
 import { Button, Drawer, Grid, Row, Space } from 'antd';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import useWhereIs from '../hooks/useWhereIs';
 import useWhereIsInLanding from '../hooks/useWhereIsInLanding';
 import FooterWithHints from './landing/FooterWithHints';
 import Lifes from './landing/Lifes';
 import Timer from './landing/Timer';
+import { UseUserEvent } from '@/context/eventUserContext';
+import { Player } from '../types';
 
 interface Props {
   children: ReactNode;
@@ -14,9 +16,13 @@ const { useBreakpoint } = Grid;
 
 export default function DrawerWhereIs(props: Props) {
   const screens = useBreakpoint();
+	const cUser = UseUserEvent();
   const [open, setOpen] = useState(false);
   const { whereIs } = useWhereIs();
-  const { goTo, location } = useWhereIsInLanding();
+  const { goTo, location, ListenerPlayer ,getStatePlayerAndGameAfterRestore } = useWhereIsInLanding();
+	const [playerRealTime, setPlayerRealTime] = useState<Player>()
+
+  console.log('playerRealTime',playerRealTime)
 
   const handleOpen = () => {
     setOpen(true);
@@ -26,6 +32,27 @@ export default function DrawerWhereIs(props: Props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+ /*  useEffect(() => {
+		const unsubscribe= ListenerMyScore(cUser.value._id, ()=>{},()=>{},()=>{getStatePlayerAndGameAfterRestore()})
+	  return () => {
+		unsubscribe()
+	  }
+	}, []) */
+
+  useEffect(() => {
+		const unsubscribe= ListenerPlayer(cUser.value._id, setPlayerRealTime)
+	  return () => {
+		unsubscribe()
+	  }
+	}, [])
+
+  useEffect(() => {
+    if (playerRealTime === null) {
+      getStatePlayerAndGameAfterRestore();
+    }
+  }, [playerRealTime]);
+  
 
   return (
     <>

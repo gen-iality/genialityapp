@@ -42,7 +42,6 @@ const RenderView = (props: RenderViewProps) => {
 	  }
 	}, [])
 
-
 	if (!!playerRealTime) return views.results.component;
 
 	return views[location.activeView].component;
