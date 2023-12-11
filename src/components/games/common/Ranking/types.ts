@@ -8,3 +8,9 @@ export interface Score {
   score: string;
   created_at: Date | string;
 }
+
+
+export interface IScoreParsed extends Omit<Score,'time' | 'email' | 'created_at'> {
+  isFinish: boolean;
+}
+

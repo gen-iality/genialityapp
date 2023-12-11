@@ -40,6 +40,7 @@ export interface Field {
   order_weight:       number;
   visibleByAdmin?:    boolean;
   visibleByContacts?: boolean;
+  options: {label: string, value: string}[]
 }
 
 export interface Currency {

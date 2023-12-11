@@ -13,6 +13,7 @@ import {
 import * as service from '../services';
 import { Score } from '../../common/Ranking/types';
 import { fromPlayerToScore } from '../utils/fromPlayerToScore';
+import { DispatchMessageService } from '@/context/MessageService';
 
 interface WhereIsContextType {
 	whereIs: WhereIs | null;
@@ -37,6 +38,7 @@ interface WhereIsContextType {
 	// Ranking
 	getScores: () => Promise<void>;
 	rankingListener: () => () => void;
+	restoreScore: () => Promise<void>;
 }
 
 export const WhereIsContext = createContext<WhereIsContextType>({} as WhereIsContextType);
@@ -215,6 +217,24 @@ export default function WhereIsProvider(props: Props) {
 		setScores(scoresFinished);
 	};
 
+	const restoreScore= async ()=>{
+		const {error} = await service.restoreScores({ event_id: eventId });
+		if(error){
+			DispatchMessageService({
+				type:'error',
+				action:'show',
+				msj:'No se pudo restablecer el Rancking, inténtelo nuevamente'
+			})
+		}else{
+			getScores()
+			DispatchMessageService({
+				type:'success',
+				action:'show',
+				msj:'Se restableció el Rancking correctamente'
+			})
+		}
+	}
+
 	const rankingListener = () => {
 		return service.getScoresListener(eventId, setScores);
 	};
@@ -242,6 +262,7 @@ export default function WhereIsProvider(props: Props) {
 		//
 		getScores,
 		rankingListener,
+		restoreScore
 	};
 
 	return <WhereIsContext.Provider value={values}>{props.children}</WhereIsContext.Provider>;

@@ -8,5 +8,9 @@ export default function useWhereIs() {
 		throw new Error('Debe estar dentro del WhereIsProvider');
 	}
 
-	return context;
+	const restoreScores=async()=>{
+		return await context.restoreScore()
+	}
+
+	return {...context, restoreScores};
 }

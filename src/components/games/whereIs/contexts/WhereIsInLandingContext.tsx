@@ -6,6 +6,7 @@ import { Player, PointInGame, WhereIsGame } from '../types';
 import * as services from '../services';
 import { DispatchMessageService } from '@/context/MessageService';
 import { fromPlayerToScore } from '../utils/fromPlayerToScore';
+import { IScoreParsed } from '../../common/Ranking/types';
 
 export type WhereIsLocationView = 'introduction' | 'game' | 'results';
 
@@ -28,6 +29,8 @@ interface WhereIsInLandingType {
   winGame: any
   getPlayer: any
   getScores: any
+  ListenerMyScore:any
+  ListenerPlayer:any
 }
 
 export const WhereIsInLandingContext = createContext<WhereIsInLandingType>({} as WhereIsInLandingType);
@@ -244,6 +247,14 @@ export default function WhereIsInLandingProvider(props: Props) {
     return { scoresFinished, scoresNotFinished };
   };
 
+  const ListenerMyScore=(event_user_id:string, setMyScore:(myScore:IScoreParsed)=>void, setPlayer:(player:Player | undefined)=>void, setToGame:()=>void)=>{
+    return services.listenerMyScore({event_id:cEvent.nameEvent,event_user_id,setMyScore, setPlayer, setToGame})
+  }
+  const ListenerPlayer=(event_user_id:string,  setPlayer:(player:Player | undefined | null)=>void,)=>{
+    return services.listenerPlayer({event_id:cEvent.nameEvent,event_user_id,setPlayer})
+  }
+ 
+
   return (
     <WhereIsInLandingContext.Provider value={{
       location,
@@ -259,6 +270,8 @@ export default function WhereIsInLandingProvider(props: Props) {
       winGame,
       getPlayer,
       getScores,
+      ListenerMyScore,
+      ListenerPlayer
     }}>
       {props.children}
     </WhereIsInLandingContext.Provider>
