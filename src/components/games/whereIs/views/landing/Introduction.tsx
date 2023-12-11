@@ -7,13 +7,13 @@ export default function Introduction() {
 	const { whereIs } = useWhereIs();
 	const {
 		goTo,
-		whereIsGame: { points },
+		whereIsGame,
 	} = useWhereIsInLanding();
+	const { points } = whereIsGame
 	const handleStart = () => {
 		goTo('game');
 	};
 	const screens = useBreakpoint();
-
 	return (
 		<Result
 			style={{ padding: '16px' }}

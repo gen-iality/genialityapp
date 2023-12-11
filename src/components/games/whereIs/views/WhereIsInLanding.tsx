@@ -14,8 +14,7 @@ interface RenderViewProps {
 }
 
 const RenderView = (props: RenderViewProps) => {
-	const { eventId } = props;
-	const { location, player ,ListenerMyScore,setLocation, ListenerPlayer} = useWhereIsInLanding();
+	const { location, ListenerPlayer} = useWhereIsInLanding();
 	const [playerRealTime, setPlayerRealTime] = useState<Player>()
 	const cUser = UseUserEvent();
 
@@ -41,7 +40,6 @@ const RenderView = (props: RenderViewProps) => {
 		unsubscribe()
 	  }
 	}, [])
-
 
 	if (!!playerRealTime) return views.results.component;
 

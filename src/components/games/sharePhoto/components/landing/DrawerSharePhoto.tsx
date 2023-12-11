@@ -1,4 +1,4 @@
-import { Button, Drawer, Grid, Space } from 'antd';
+import { Button, Drawer, Grid, Result, Space } from 'antd';
 import { useEffect, useState } from 'react';
 import useSharePhoto from '../../hooks/useSharePhoto';
 import DrawerRanking from '../../views/landing/DrawerRanking';
@@ -57,7 +57,16 @@ export default function DrawerSharePhoto(props: Props) {
 				onClose={handleClose}
 				width='100vw'
 				destroyOnClose={true}>
-				{sharePhoto.active ? props.children : <p>Esta dinamica no esta activa aun</p>}
+				{sharePhoto.active ? (
+					props.children
+				) : (
+					<Result
+						title={'Acceso cerrado a la dinámica'}
+						subTitle={
+							'Comparte tu foto se encuentra cerrada actualmente, ya sea porque aún no ha comenzado o porque ha llegado a su fin.'
+						}
+					/>
+				)}
 			</Drawer>
 		</>
 	);
