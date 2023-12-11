@@ -1,4 +1,4 @@
-import { Button, Drawer, Grid, Row, Space } from 'antd';
+import { Button, Drawer, Grid, Result, Row, Space } from 'antd';
 import { ReactNode, useEffect, useState } from 'react';
 import useWhereIs from '../hooks/useWhereIs';
 import useWhereIsInLanding from '../hooks/useWhereIsInLanding';
@@ -16,12 +16,12 @@ const { useBreakpoint } = Grid;
 
 export default function DrawerWhereIs(props: Props) {
   const screens = useBreakpoint();
-	const cUser = UseUserEvent();
+  const cUser = UseUserEvent();
   const [open, setOpen] = useState(false);
   const { whereIs } = useWhereIs();
-  const { goTo, location, ListenerPlayer ,getStatePlayerAndGameAfterRestore, whereIsGame } = useWhereIsInLanding();
-	const [playerRealTime, setPlayerRealTime] = useState<Player>()
-console.log('whereIs',whereIs)
+  const { goTo, location, ListenerPlayer, getStatePlayerAndGameAfterRestore, whereIsGame } = useWhereIsInLanding();
+  const [playerRealTime, setPlayerRealTime] = useState<Player>();
+  console.log('whereIs', whereIs);
 
   const handleOpen = () => {
     setOpen(true);
@@ -33,23 +33,23 @@ console.log('whereIs',whereIs)
   };
 
   useEffect(() => {
-		const unsubscribe= ListenerPlayer(cUser.value._id, setPlayerRealTime)
-	  return () => {
-		unsubscribe()
-	  }
-	}, [])
+    const unsubscribe = ListenerPlayer(cUser.value._id, setPlayerRealTime);
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     if (playerRealTime === null && whereIsGame.isFinish) {
       getStatePlayerAndGameAfterRestore();
     }
   }, [playerRealTime]);
-  
-useEffect(() => {
-  if(whereIs && !whereIs?.published){
-    setOpen(false);
-  }
-}, [whereIs])
+
+  useEffect(() => {
+    if (whereIs && !whereIs?.published) {
+      setOpen(false);
+    }
+  }, [whereIs]);
 
   return (
     <>
@@ -62,10 +62,10 @@ useEffect(() => {
       </Button>
       <Drawer
         title={
-          <Row align='middle' justify='space-between' >
+          <Row align='middle' justify='space-between'>
             <Timer />
             {!screens.xs && location.activeView === 'game' ? <FooterWithHints /> : undefined}
-			<Lifes />
+            <Lifes />
           </Row>
         }
         visible={open}
@@ -75,12 +75,12 @@ useEffect(() => {
         headerStyle={{
           padding: 12,
         }}
-        
         footer={screens.xs ? location.activeView === 'game' ? <FooterWithHints /> : undefined : undefined}
         onClose={handleClose}
         width='100vw'
         destroyOnClose={true}>
-        {props.children}
+          {whereIs?.active ? props.children: (<>
+          <Result title={'No disponible para jugar aun'}/></>)}
       </Drawer>
     </>
   );
