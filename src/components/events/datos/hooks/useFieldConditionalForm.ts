@@ -13,7 +13,7 @@ export const useFieldConditionalForm = ({ fields, eventId }: IOptions) => {
   const [typeFieldToValidate, setTypeFieldToValidate] = useState<TTypeFieldConditional | null>(null);
   const [valueConditional, setValueConditional] = useState<string | boolean | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [status, setStatus] = useState(false);
+  const [status, setStatus] = useState(true);
   const onCreate = async (conditionalField: IConditionalField): Promise<IResultPost<IConditionalField>> => {
     try {
       setIsSaving(true);

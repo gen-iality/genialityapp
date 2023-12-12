@@ -17,6 +17,7 @@ export const ConditionalFields = () => {
   const { conditionalFieldsTable, isLoadingConditionalFields, fetchConditionalFields } = useGetConditionalFields({
     eventId,
   });
+  console.log('conditionalFieldsTable',conditionalFieldsTable)
   const [isDeleting, setIsDeleting] = useState(false);
 
   const onOpenModal = (selectedItem?: any) => {
