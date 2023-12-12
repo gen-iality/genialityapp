@@ -2,10 +2,11 @@ import { UseEventContext } from '@/context/eventContext';
 import { UseUserEvent } from '@/context/eventUserContext';
 import { createContext, ReactNode, useEffect, useState } from 'react';
 import useWhereIs from '../hooks/useWhereIs';
-import { Player, PointInGame, WhereIsGame } from '../types';
+import { Player, PointInGame, WhereIs, WhereIsGame } from '../types';
 import * as services from '../services';
 import { DispatchMessageService } from '@/context/MessageService';
 import { fromPlayerToScore } from '../utils/fromPlayerToScore';
+import { IScoreParsed } from '../../common/Ranking/types';
 
 export type WhereIsLocationView = 'introduction' | 'game' | 'results';
 
@@ -28,6 +29,9 @@ interface WhereIsInLandingType {
   winGame: any
   getPlayer: any
   getScores: any
+  // ListenerMyScore:any
+  ListenerPlayer:any
+  getStatePlayerAndGameAfterRestore: () => void
 }
 
 export const WhereIsInLandingContext = createContext<WhereIsInLandingType>({} as WhereIsInLandingType);
@@ -58,19 +62,18 @@ export default function WhereIsInLandingProvider(props: Props) {
   const [location, setLocation] = useState<WhereIsLocation>(initialLocation);
   const [whereIsGame, setWhereIsGame] = useState<WhereIsGame>(initialWhereIsGame);
   const [player, setPlayer] = useState<Player | null>(null);
-
   // Hooks
   const cUser = UseUserEvent();
   const cEvent = UseEventContext();
-  const { whereIs, points, getWhereIs, getPoints } = useWhereIs();
+  const { whereIs, points, getWhereIs, getPoints,  } = useWhereIs();
 
-  useEffect(() => {
+  const getInitialStatePlayerAndGame = () => {
     if (!whereIs) {
-      getWhereIs()
-      getPoints()
+      getWhereIs();
+      getPoints();
     } else {
-      const pointsToShow = points.map(point => ({ ...point, stroke: undefined, isFound: false }));
-      setWhereIsGame(prev => ({
+      const pointsToShow = points.map((point) => ({ ...point, stroke: undefined, isFound: false }));
+      setWhereIsGame((prev) => ({
         ...prev,
         lifes: whereIs.lifes,
         dynamic_id: whereIs._id,
@@ -80,7 +83,27 @@ export default function WhereIsInLandingProvider(props: Props) {
         points: pointsToShow,
       }));
       verifyPlayer();
-    };
+    }
+  };
+
+  const getStatePlayerAndGameAfterRestore = async() => {
+      const whereIs = await services.get(cEvent.nameEvent);
+      if(!whereIs)return 
+      const pointsToShow = points.map((point) => ({ ...point, stroke: undefined, isFound: false }));
+      setWhereIsGame((prev) => ({
+        ...initialWhereIsGame,
+        lifes: whereIs.lifes,
+        dynamic_id: whereIs._id,
+        event_user_id: '',
+        user_name: '',
+        picture: '',
+        points: pointsToShow,
+      }));
+      verifyPlayer();
+      setLocation(prev => ({ ...prev, activeView: 'introduction' }))
+  };
+  useEffect(() => {
+    getInitialStatePlayerAndGame()
   }, []);
 
   // useEffect(() => {
@@ -128,7 +151,6 @@ export default function WhereIsInLandingProvider(props: Props) {
   };
 
   const wrongPoint = () => {
-    console.log(cEvent.nameEvent);
     if (!whereIsGame.lifes) return;
     if (whereIsGame.lifes - 1 === 0) {
       setWhereIsGame(prev => ({
@@ -244,6 +266,20 @@ export default function WhereIsInLandingProvider(props: Props) {
     return { scoresFinished, scoresNotFinished };
   };
 
+  /* const ListenerMyScore=(event_user_id:string, setMyScore:(myScore:IScoreParsed)=>void, setPlayer:(player:Player | undefined)=>void, setToGame:()=>void)=>{
+    return services.listenerMyScore({event_id:cEvent.nameEvent,event_user_id, setMyScore, setPlayer, setToGame:()=>{
+      setToGame()
+      // setWhereIsGame(initialWhereIsGame)
+      getStatePlayerAndGameAfterRestore()
+      // setWhereIs(null)
+    }, 
+    getStateWhenHavePlayer:getInitialStatePlayerAndGame})
+  } */
+  const ListenerPlayer=(event_user_id:string,  setPlayer:(player:Player | undefined | null)=>void,)=>{
+    return services.listenerPlayer({event_id:cEvent.nameEvent,event_user_id,setPlayer})
+  }
+ 
+
   return (
     <WhereIsInLandingContext.Provider value={{
       location,
@@ -259,6 +295,9 @@ export default function WhereIsInLandingProvider(props: Props) {
       winGame,
       getPlayer,
       getScores,
+      // ListenerMyScore:()=>{},
+      ListenerPlayer,
+      getStatePlayerAndGameAfterRestore
     }}>
       {props.children}
     </WhereIsInLandingContext.Provider>

@@ -1,14 +1,15 @@
-import { Card, Col, Image, Result, Row, Space, Tag, Typography } from 'antd';
+import { Card, Col,  Result, Row, Tag } from 'antd';
 import HeartBrokenIcon from '@2fd/ant-design-icons/lib/HeartBroken';
 import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
 import useWhereIsInLanding from '../../hooks/useWhereIsInLanding';
 import Ranking from '@/components/games/common/Ranking';
 import { parseTime } from '../../utils/parseTime';
 import { useEffect, useState } from 'react';
-import { getScores, getScoresListener } from '../../services';
+import { getScoresListener } from '../../services';
 import { UseUserEvent } from '@/context/eventUserContext';
 import { UseEventContext } from '@/context/eventContext';
 import { Score } from '@/components/games/common/Ranking/types';
+import { Player } from '../../types';
 
 const DataTimerResult = ({ time = 0, won }: { time?: number; won: boolean }) => {
 	return (
@@ -26,7 +27,11 @@ export default function Results() {
 		whereIsGame: { won },
 		getScores,
 		player,
+		setLocation,
+		ListenerPlayer,
+		getStatePlayerAndGameAfterRestore
 	} = useWhereIsInLanding();
+	const [playerRealTime, setPlayerRealTime] = useState<Player>()
 	const dataResult = {
 		winner: {
 			icon: ' ',
@@ -48,7 +53,6 @@ export default function Results() {
 	const cEvent = UseEventContext();
 	const [scores, setScores] = useState<Score[]>([]);
 	const [myScore, setMyScore] = useState<Score>({} as Score);
-
 	useEffect(() => {
 		getScores().then(({ scoresFinished, scoresNotFinished }) => {
 			// const myIndexScore = scores.findIndex(score => score.uid === cUser.value._id);
@@ -67,6 +71,23 @@ export default function Results() {
 		return () => unsubscribe();
 	}, []);
 
+
+	useEffect(() => {
+		const unsubscribe= ListenerPlayer(cUser.value._id, setPlayerRealTime)
+	  return () => {
+		unsubscribe()
+	  }
+	}, [])
+
+  useEffect(() => {
+    if (playerRealTime === null) {
+      getStatePlayerAndGameAfterRestore();
+	  setLocation(prev => ({ ...prev, activeView: 'introduction' }))
+    }
+  }, [playerRealTime]);
+
+  
+	
 	return (
 		<Row justify='center' align='middle'>
 			<Col xs={24} sm={24} md={14} lg={14} xl={14} xxl={14}>
@@ -74,7 +95,7 @@ export default function Results() {
 					icon={player?.isFinish ? dataResult.winner.icon : dataResult.loser.icon}
 					title={player?.isFinish ? dataResult.winner.title : dataResult.loser.title}
 					subTitle={player?.isFinish ? dataResult.winner.msg : dataResult.loser.msg}
-					extra={<DataTimerResult time={player?.duration} won={player?.isFinish ?? false} />}
+					extra={<DataTimerResult time={playerRealTime? playerRealTime.duration : player?.duration} won={playerRealTime? playerRealTime.isFinish ?? false: player?.isFinish ?? false} />}
 				/>
 			</Col>
 

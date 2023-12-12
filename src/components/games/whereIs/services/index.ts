@@ -1,6 +1,6 @@
 import { DispatchMessageService } from '@/context/MessageService';
 import { firestore } from '@/helpers/firebase';
-import { Score } from '../../common/Ranking/types';
+import { IScoreParsed, Score } from '../../common/Ranking/types';
 import {
 	CreatePlayerDto,
 	CreatePointDto,
@@ -13,6 +13,7 @@ import {
 	WhereIs,
 } from '../types';
 import { fromPlayerToScore } from '../utils/fromPlayerToScore';
+import { collection, deleteDoc, getDocs } from 'firebase/firestore';
 
 // export const get = async (eventId: string): Promise<WhereIs | null> => {
 // 	try {
@@ -256,7 +257,27 @@ export const getScores = async (getScoreDto: GetScoreDto) => {
 	}
 };
 
-export const getScoresListener = (event_id: string, setScores: React.Dispatch<React.SetStateAction<Score[]>>) => {
+export const restoreScores = async (getScoreDto: GetScoreDto) => {
+  const { event_id } = getScoreDto;
+  const playersCollection = collection(firestore, 'whereIsByEvent', event_id, 'players');
+
+  try {
+    const querySnapshot = await getDocs(playersCollection);
+
+    querySnapshot.forEach(async (doc) => {
+      await deleteDoc(doc.ref);
+    });
+    return {
+      error: false,
+    };
+  } catch (error) {
+    return {
+      error: true,
+    };
+  }
+};
+
+export const getScoresListener = (event_id: string, setScores: (score:Score[])=>void) => {
 	// console.log('Se inicializa el listener');
 	// console.log(event_id);
 	const unsubscribe = firestore
@@ -284,3 +305,97 @@ export const getScoresListener = (event_id: string, setScores: React.Dispatch<Re
 		);
 	return unsubscribe;
 };
+
+interface IListenerMyScoreParams {
+	event_id: string, 
+	setMyScore: (score: IScoreParsed) => void
+	event_user_id:string
+	setPlayer:(player:Player | undefined)=>void
+	setToGame:()=>void
+	getStateWhenHavePlayer:()=>void
+}
+
+
+export const listenerMyScore = ({ event_id, event_user_id, setMyScore,setPlayer,setToGame,getStateWhenHavePlayer }: IListenerMyScoreParams) => {
+  const unsubscribe = firestore
+    .collection('whereIsByEvent')
+    .doc(event_id)
+    .collection('players')
+    // .where('event_user_id','==',event_user_id)
+    .onSnapshot(
+      (playersDoc) => {
+        if (playersDoc.empty) {
+			console.log('porqu e estoy vacio')
+			setToGame()
+        } else {
+          const players = playersDoc.docs.map((doc) => doc.data()) as Player[];
+		  const myPlayer = players.find(player=> player.event_user_id === event_user_id)
+          const playersFinished = players.filter((player) => player.isFinish === true);
+          const playersNotFinished = players.filter((player) => player.isFinish === false);
+          const playersOrderedByDuration = playersFinished.sort(
+            (playerA, playerB) => playerA.duration - playerB.duration
+          );
+
+          const scoresFinished = playersOrderedByDuration.map((player, i) => {
+            return fromPlayerToScore(player, i + 1);
+          });
+          const scoresNotFinished = playersNotFinished.map((player) => {
+            return fromPlayerToScore(player, 0);
+          });
+
+          const myScoreWin = scoresFinished.find((score) => score.uid === event_user_id);
+          const myScoreLose = scoresNotFinished.find((score) => score.uid === event_user_id);
+		  if(!myScoreWin && myScoreLose){
+			setToGame()
+		  }
+          if (myScoreWin) {
+            setMyScore(myScoreWin);
+			setPlayer(myPlayer)
+		}
+		if (myScoreLose) {
+			setPlayer(myPlayer)
+            setMyScore(myScoreLose);
+          }
+		  getStateWhenHavePlayer()
+        }
+      },
+      (onError) => {
+        console.log(onError);
+      }
+    );
+  return unsubscribe;
+};
+
+
+interface IListenerPlayerParams {
+	event_id: string, 
+	event_user_id:string
+	setPlayer:(player:Player | null | undefined)=>void
+}
+
+
+export const listenerPlayer = ({ event_id, event_user_id, setPlayer }: IListenerPlayerParams) => {
+	const unsubscribe = firestore
+	  .collection('whereIsByEvent')
+	  .doc(event_id)
+	  .collection('players')
+	  .where('event_user_id','==',event_user_id)
+	  .onSnapshot(
+		(playersDoc) => {
+		  if (playersDoc.empty) {
+			setPlayer(null)
+		  } else {
+			const player = playersDoc.docs.map((doc) => doc.data()) as Player[];
+			setPlayer(player[0])
+		  }
+		},
+		(onError) => {
+		  console.log(onError);
+		}
+	  );
+	return unsubscribe;
+  };
+
+
+
+
