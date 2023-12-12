@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 import { Field } from '../types';
 import { IConditionalField, TTypeFieldConditional } from '../types/conditional-form.types';
-import { conditionalFieldsFacade } from '@/facades/conditionalFields.facode';
 import { IResultPost } from '@/types';
 import { DispatchMessageService } from '@/context/MessageService';
+import { conditionalFieldsFacade } from '@/services';
 interface IOptions {
   fields: Field[];
   eventId: string;
@@ -13,7 +13,7 @@ export const useFieldConditionalForm = ({ fields, eventId }: IOptions) => {
   const [typeFieldToValidate, setTypeFieldToValidate] = useState<TTypeFieldConditional | null>(null);
   const [valueConditional, setValueConditional] = useState<string | boolean | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [status, setStatus] = useState(false);
+  const [status, setStatus] = useState(true);
   const onCreate = async (conditionalField: IConditionalField): Promise<IResultPost<IConditionalField>> => {
     try {
       setIsSaving(true);
