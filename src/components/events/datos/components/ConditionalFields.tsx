@@ -7,8 +7,8 @@ import { ConditionalFieldForm } from './ConditionalFieldForm';
 import { UseEventContext } from '@/context/eventContext';
 import { IConditionalField } from '../types/conditional-form.types';
 import { useGetConditionalFields } from '../hooks/useGetConditionalFields';
-import { conditionalFieldsFacade } from '@/facades/conditionalFields.facode';
 import { DispatchMessageService } from '@/context/MessageService';
+import { conditionalFieldsFacade } from '@/services';
 
 export const ConditionalFields = () => {
   const { isOpenModal, closeModal, openModal, handledSelectedItem, selectedItem } = useModalLogic<IConditionalField>();
