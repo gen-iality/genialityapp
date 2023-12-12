@@ -91,7 +91,7 @@ export default function GameAnnoucement() {
 								Ir al Ranking
 							</Button>
 							<Button style={{backgroundColor:backgroundMillonaire, color:getCorrectColor(backgroundMillonaire), border:'none'}} size='large' onClick={() => onChangeStatusGame('NOT_STARTED')}>
-								Ir al Menu
+								Ir al Menú
 							</Button>
 						</Space>
 					}
