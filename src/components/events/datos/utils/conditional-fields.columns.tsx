@@ -33,7 +33,7 @@ export const columnsConditionalFields: ColumnsType<IConditionalFieldTable> = [
     render(value, record, index) {
       return (
         <Space wrap>
-          {value.map((item:string) => (
+          {value.map((item: string) => (
             <Tag key={item}>{item}</Tag>
           ))}
         </Space>
@@ -43,7 +43,15 @@ export const columnsConditionalFields: ColumnsType<IConditionalFieldTable> = [
   {
     title: 'Estado',
     dataIndex: 'state',
-    render: (value: TValueState) => {
+    render: (value: TValueState, record) => {
+      if (record.isRepeat) {
+        return (
+          <Space>
+            <Tag color={conditionalStatus[value].status}>{conditionalStatus[value].label}</Tag>
+            <Tag color={'warning'}>Repetido</Tag>
+          </Space>
+        );
+      }
       return <Tag color={conditionalStatus[value].status}>{conditionalStatus[value].label}</Tag>;
     },
   },

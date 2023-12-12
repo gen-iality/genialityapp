@@ -16,16 +16,28 @@ export const useGetConditionalFields = ({ eventId }: IOptions) => {
 
   const findDuplicates = (conditionalFieldsToTable: IConditionalFieldTable[]): IConditionalFieldTable[] => {
     const seen: Record<string, boolean> = {};
-    const conditionalFieldsToTableWithDuplicates: IConditionalFieldTable[] = [];
-    const duplicates: string[] = [];
+    let conditionalFieldsToTableWithDuplicates: IConditionalFieldTable[] = [];
     conditionalFieldsToTable.forEach((conditionalField) => {
       const key = `${conditionalField.fieldToValidate}-${conditionalField.value}-${conditionalField.fields
         .sort()
         .join(',')}`;
 
       if (seen[key]) {
-        duplicates.push(key);
         conditionalFieldsToTableWithDuplicates.push({ ...conditionalField, isRepeat: true });
+        conditionalFieldsToTableWithDuplicates = conditionalFieldsToTableWithDuplicates.map((conditionalField) => {
+          const keyAux = `${conditionalField.fieldToValidate}-${
+            conditionalField.value
+          }-${conditionalField.fields.sort().join(',')}`;
+
+          if (keyAux === key) {
+            return {
+              ...conditionalField,
+              isRepeat: true,
+            };
+          } else {
+            return conditionalField;
+          }
+        });
       } else {
         seen[key] = true;
         conditionalFieldsToTableWithDuplicates.push(conditionalField);
