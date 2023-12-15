@@ -4,6 +4,7 @@ export interface IResultGet<T = any> {
   error: any | null;
   data: T;
   pagination?: IPagination;
+  status?:number
 }
 
 export interface IResultPost<T = any> {
