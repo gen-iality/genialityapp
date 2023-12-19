@@ -5,7 +5,8 @@ import { EventsApi } from '@/helpers/request';
 import { Button, Col, Divider, Row, Typography } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { useEffect, useState } from 'react';
-import MenuEvents from '../../menuLanding/utils/defaultMenu.json';
+// import MenuEvents from '../../menuLanding/utils/defaultMenu.json';
+import MenuEvents from '../../menuLanding/utils/defaultMenu';
 export default function SectionHtml() {
   const eventContext = UseEventContext();
   const [htmlInput, setHtmlInput] = useState('');

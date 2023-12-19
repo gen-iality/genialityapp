@@ -1,8 +1,11 @@
 import { EventEndpoint, eventEndpoint } from '@/endpoints/events.endpoint';
-import { IResultGet } from '@/types';
+import { GetTokenUserFirebase } from '@/helpers/HelperAuth';
+import privateInstance from '@/helpers/request';
+import { IResultGet, IResultPut } from '@/types';
+import { AxiosInstance } from 'axios';
 
 class EventService {
-  constructor(private readonly endpoint: EventEndpoint) {}
+  constructor(private readonly endpoint: EventEndpoint, private readonly privateClient: AxiosInstance) {}
 
   async getById(eventId: string): Promise<IResultGet<any>> {
     try {
@@ -17,10 +20,28 @@ class EventService {
       return {
         error,
         data: null,
-        status
+        status,
+      };
+    }
+  }
+
+  async editEvent(eventId: string, putEvent: any): Promise<IResultPut> {
+    try {
+      let token = await GetTokenUserFirebase();
+      const { status, data } = await this.privateClient.put(`api/events/${eventId}?token=${token}`, putEvent);
+      return {
+        error: null,
+        status,
+        data,
+      };
+    } catch (error) {
+      const { status } = error.response;
+      return {
+        error,
+        status,
       };
     }
   }
 }
 
-export const eventService = new EventService(eventEndpoint);
+export const eventService = new EventService(eventEndpoint, privateInstance);

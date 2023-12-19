@@ -44,11 +44,3 @@ export interface Menu {
   options: JSX.Element;
 };
 
-export interface PropsEditModal {
-  item: Menu,
-  loading: boolean,
-  handleCancel: () => void
-  handleOk: (data : any) => void
-  visibility : boolean
-  setItemEdit : React.Dispatch<React.SetStateAction<Menu>>
-}
