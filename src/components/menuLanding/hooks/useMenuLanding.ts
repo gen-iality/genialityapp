@@ -123,6 +123,7 @@ export const useMenuLanding = (props: MenuLandingProps) => {
         msj: 'Información guardada correctamente',
         action: 'show',
       });
+      setHaveChanges(false)
     } else {
       const { error } = await eventService.editEvent(props.event._id, { itemsMenu: newMenu });
       DispatchMessageService({
@@ -142,6 +143,7 @@ export const useMenuLanding = (props: MenuLandingProps) => {
         msj: 'Información guardada correctamente',
         action: 'show',
       });
+      setHaveChanges(false)
     }
 
     setIsSaving(false);
