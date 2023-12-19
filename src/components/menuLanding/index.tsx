@@ -1,4 +1,4 @@
-import { Spin, Form, Table } from 'antd';
+import { Spin, Form, Table, Tag } from 'antd';
 import Header from '@/antdComponents/Header';
 import BackTop from '@/antdComponents/BackTop';
 import { MenuItem, MenuLandingProps } from './interfaces/menuLandingProps';
@@ -18,6 +18,7 @@ export default function MenuLanding(props: MenuLandingProps) {
     savedMenuList,
     isSaving,
     handleDragEnd,
+    haveChanges
   } = useMenuLanding(props);
   const { closeModal, openModal, isOpenModal, handledSelectedItem, selectedItem } = useModalLogic<MenuItem>();
 
@@ -37,6 +38,7 @@ export default function MenuLanding(props: MenuLandingProps) {
       )}
 
       <Spin tip='Cargando...' size='large' spinning={isLoadingMenuTable}>
+        {haveChanges && <Tag color='warning'>Hay cambios sin guardar</Tag>}
         <DragDropContext onDragEnd={handleDragEnd}>
           <Droppable droppableId='menu'>
             {(provided: any) => (
