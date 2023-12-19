@@ -12,11 +12,17 @@ export const useModalLogic = <T>() => {
     setIsOpenModal(false);
     setSelectedItem(undefined);
   };
+
+  const onToggle = () => {
+    setIsOpenModal((isOpen) => !isOpen);
+  };
+  
   return {
     openModal,
     closeModal,
     isOpenModal,
     selectedItem,
     handledSelectedItem: setSelectedItem,
+    onToggle,
   };
 };
