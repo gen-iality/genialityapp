@@ -5,8 +5,6 @@ import { DefaultMenu, MenuKeys } from '../interfaces/menuDefault';
 import { eventService } from '@/services';
 import { DispatchMessageService } from '@/context/MessageService';
 import { orderByChecked, sortByPosition } from '../utils/reorderListMenu';
-import { Actions, OrganizationApi } from '@/helpers/request';
-import { GetTokenUserFirebase } from '@/helpers/HelperAuth';
 import { convertArrayToObject } from '../utils';
 import { organizationService } from '@/services/organization.service';
 
@@ -15,6 +13,7 @@ export const useMenuLanding = (props: MenuLandingProps) => {
   const [menuListToTable, setMenuListToTable] = useState<MenuItem[]>([]);
   const [isLoadingMenuTable, setIsLoadingMenuTable] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+
   const getListMenu = useCallback(async () => {
     setIsLoadingMenuTable(true);
     let menuItems: Partial<DefaultMenu> = {};
@@ -36,16 +35,15 @@ export const useMenuLanding = (props: MenuLandingProps) => {
 
       menuItems = data.itemsMenu;
     }
-console.log('menuItems',menuItems)
-    const eventMenuList: Partial<DefaultMenu> = menuItems ?? ({} as Partial<DefaultMenu>);
+    const menuList: Partial<DefaultMenu> = menuItems ?? ({} as Partial<DefaultMenu>);
 
-    const tableListMenu: MenuItem[] = Object.keys(defaultMenu).map((menuItem) => {
-      if (eventMenuList[menuItem as MenuKeys]) {
-        return eventMenuList[menuItem as MenuKeys] as MenuItem;
+    const tableListMenu: MenuItem[] = Object.keys(defaultMenu).map((menuKey) => {
+      if (menuList[menuKey as MenuKeys]) {
+        return menuList[menuKey as MenuKeys] as MenuItem;
       }
 
       return {
-        ...defaultMenu[menuItem as MenuKeys],
+        ...defaultMenu[menuKey as MenuKeys],
         checked: false,
       };
     });
@@ -84,18 +82,26 @@ console.log('menuItems',menuItems)
 
   const savedMenuList = async () => {
     setIsSaving(true);
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere...',
-      action: 'show',
-    });
     const menuListToSave = menuListToTable
       .filter((menuItem) => menuItem.checked)
       .map((menuItem, index) => ({
         ...menuItem,
         position: index + 1,
       }));
+    if (menuListToSave.length === 0) {
+      setIsSaving(false);
+      return DispatchMessageService({
+        action: 'show',
+        type: 'info',
+        msj: 'Debe habilitar por lo menos un menu',
+      });
+    }
+    DispatchMessageService({
+      type: 'loading',
+      key: 'loading',
+      msj: 'Por favor espere...',
+      action: 'show',
+    });
 
     let newMenu: MenuBase = convertArrayToObject(menuListToSave, 'section');
 
