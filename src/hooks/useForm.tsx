@@ -22,6 +22,10 @@ export const useForm = <T extends {}>(initialForm: T = {} as T) => {
     setFormState(initialForm);
   };
 
+  const setFieldsValue = (formValues: Partial<T>) => {
+    setFormState((currentValueState) => ({ ...currentValueState, ...formValues }));
+  };
+
   return {
     ...formState,
     formState,
@@ -29,5 +33,6 @@ export const useForm = <T extends {}>(initialForm: T = {} as T) => {
     onResetForm,
     setFormState,
     handledChange,
+    setFieldsValue,
   };
 };

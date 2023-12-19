@@ -7,6 +7,7 @@ import { useHelper } from '../../../../context/helperContext/hooks/useHelper';
 import { setSectionPermissions } from '../../../../redux/sectionPermissions/actions';
 import { connect } from 'react-redux';
 import { useIntl } from 'react-intl';
+import { DISGUISE_MENUS } from '@/components/menuLanding/utils/disguiseMenu';
 
 const MenuEvent = ({ isMobile }) => {
   let { url } = useRouteMatch();
@@ -66,11 +67,15 @@ const MenuEvent = ({ isMobile }) => {
           {event.itemsMenu &&
             !eventPrivate.private &&
             Object.keys(event.itemsMenu).map((key) => {
+              
               //icono personalizado
               if (!event.itemsMenu[key].name || !event.itemsMenu[key].section) {
                 return <></>;
               }
 
+              if(DISGUISE_MENUS.includes(key)){
+                return <></>
+              }
               let icon =
                 event._id === '62c5e89176dfb307163c05a9' && event.itemsMenu[key].icon === 'AudioOutlined'
                   ? 'RocketOutlined'
@@ -165,6 +170,10 @@ const MenuEvent = ({ isMobile }) => {
 
                 if (!event.itemsMenu[key].name || !event.itemsMenu[key].section) {
                   return <></>;
+                }
+
+                if(DISGUISE_MENUS.includes(key)){
+                  return <></>
                 }
 
                 return (

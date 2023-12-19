@@ -11,6 +11,7 @@ export interface IConditionalFieldTable extends IConditionalField {
   fieldToValidateLabel?: string;
   fieldLabels: string[];
   isRepeat?: boolean;
+  isDeletedField?: boolean;
 }
 
 export interface IConditionalFieldForm extends Pick<IConditionalField, 'fields' | 'fieldToValidate' | 'value'> {

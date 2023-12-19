@@ -2,7 +2,7 @@ import { EventFieldsApi } from '@/helpers/request';
 import { useCallback, useEffect, useState } from 'react';
 import { Field } from '../types';
 import { IConditionalField, IConditionalFieldTable } from '../types/conditional-form.types';
-import { eventFacade } from '@/facades/event.facade';
+import { eventService } from '@/services';
 
 interface IOptions {
   eventId: string;
@@ -52,20 +52,23 @@ export const useGetConditionalFields = ({ eventId }: IOptions) => {
       try {
         setIsLoadingConditionalFields(true);
         const fields = (await EventFieldsApi.getAll(eventId)) as Field[];
-        const { data } = await eventFacade.getById(eventId);
+        const { data } = await eventService.getById(eventId);
         const conditionalFieldsEvents = data.fields_conditions as IConditionalField[];
         const conditionalFieldsTable: IConditionalFieldTable[] = conditionalFieldsEvents.map((conditionalField) => {
           const currentField = fields.find((field) => field.name === conditionalField.fieldToValidate);
+
           const fieldToValidateLabel = currentField?.label ?? conditionalField.fieldToValidate;
+
           const fieldLabels = conditionalField.fields.map((fieldName) => {
             const currentField = fields.find((field) => field.name === fieldName);
             return currentField?.label ?? fieldName;
           });
-
+          
           return {
             ...conditionalField,
             fieldToValidateLabel,
             fieldLabels,
+            isDeletedField:currentField?.label === undefined
           };
         });
         setConditionalFields(conditionalFieldsEvents);
