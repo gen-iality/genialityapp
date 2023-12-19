@@ -13,6 +13,7 @@ export const useMenuLanding = (props: MenuLandingProps) => {
   const [menuListToTable, setMenuListToTable] = useState<MenuItem[]>([]);
   const [isLoadingMenuTable, setIsLoadingMenuTable] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [haveChanges, setHaveChanges] = useState(false);
 
   const getListMenu = useCallback(async () => {
     setIsLoadingMenuTable(true);
@@ -67,6 +68,7 @@ export const useMenuLanding = (props: MenuLandingProps) => {
       updatedMenuList = orderByChecked(updatedMenuList);
       return updatedMenuList;
     });
+    setHaveChanges(true)
   };
 
   const editMenu = (newMenu: MenuItem) => {
@@ -77,6 +79,7 @@ export const useMenuLanding = (props: MenuLandingProps) => {
       return menuItem;
     });
     setMenuListToTable(newMenuList);
+    setHaveChanges(true)
     checkedMenu(newMenu.checked, newMenu.name);
   };
 
@@ -150,7 +153,8 @@ export const useMenuLanding = (props: MenuLandingProps) => {
       const disabledItems = menuListToTable.filter((item) => !item.checked);
       const movedItem = enabledItems.splice(oldIndex, 1)[0];
       enabledItems.splice(newIndex, 0, movedItem);
-
+      if (newIndex >= enabledItems.length) return;
+      setHaveChanges(true)
       const updatedData = [...enabledItems, ...disabledItems];
       const updatedDataWithPositions: MenuItem[] = updatedData.map((item, index) => {
         return {
@@ -179,5 +183,6 @@ export const useMenuLanding = (props: MenuLandingProps) => {
     savedMenuList,
     isSaving,
     handleDragEnd,
+    haveChanges
   };
 };
