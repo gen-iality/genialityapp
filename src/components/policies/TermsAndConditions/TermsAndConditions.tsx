@@ -35,7 +35,7 @@ const TermsAndConditions = () => {
 						</Breadcrumb>
 					</Col>
 					<Col span={24}>
-						<Typography.Title>{termsTitle}</Typography.Title>
+						<Typography.Title style={{color:'#111827'}}>{termsTitle}</Typography.Title>
 						<Typography.Paragraph>{termsParagraph}</Typography.Paragraph>
 					</Col>
 					<Col span={24}>
