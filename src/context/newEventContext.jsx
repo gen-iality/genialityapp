@@ -318,6 +318,8 @@ export const NewEventProvider = ({ children }) => {
         type_event: typeEvent,
         where_it_run: whereItRun,
         url_external: urlExternal,
+        is_finalized:false,
+        extended_date:null,
         styles: {
           buttonColor: '#FFF',
           banner_color: '#FFF',

@@ -215,7 +215,11 @@ const ViewPrelanding = ({ preview }: PropsPreLanding) => {
   } else {
      date = moment(moment.now()).format('YYYY-MM-DD HH:mm:ss'); // En caso de que ninguna de las condiciones anteriores se cumpla.
   }
- 
+
+  if(cEventContext.is_finalized){
+    return <></>
+  }
+  
   return (
     <>
       <Helmet>

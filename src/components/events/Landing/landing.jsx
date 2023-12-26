@@ -245,6 +245,10 @@ const Landing = (props) => {
 
   if (cEventContext.status === 'LOADING') return <Spin />;
 
+  if(cEventContext.is_finalized){
+    return <></>
+  }
+  
   return (
     <>
       {/* <ModalFeedback /> */}
