@@ -16,10 +16,10 @@ const TermsAndConditions = () => {
 	return (
 		<Row gutter={[0, 16]}>
 			<Col xs={0} sm={0} md={6} lg={6} xl={6} xxl={6}>
-				<Row style={{ padding: '60px 30px' }}>
-					<Anchor targetOffset={targetOffset}>
+				<Row style={{ padding: '60px 30px', height: '100%', backgroundColor: '#111827' }}>
+					<Anchor offsetTop={60} targetOffset={targetOffset}>
 						{termsAnchor.map((item) => (
-							<Anchor.Link key={`anchor-${item.anchor}`} href={`#${item.anchor}`} title={item.title} />
+							<Anchor.Link key={`anchor-${item.anchor}`} href={`#${item.anchor}`} title={<Typography.Text style={{color:'#FFFFFF'}}>{item.title}</Typography.Text>} />
 						))}
 					</Anchor>
 				</Row>
@@ -29,9 +29,7 @@ const TermsAndConditions = () => {
 					<Col span={24}>
 						<Breadcrumb>
 							<Breadcrumb.Item>
-								<Link to={'/'}>
-									Home
-								</Link>
+								<Link to={'/'}>Home</Link>
 							</Breadcrumb.Item>
 							<Breadcrumb.Item>Términos y condiciones</Breadcrumb.Item>
 						</Breadcrumb>
