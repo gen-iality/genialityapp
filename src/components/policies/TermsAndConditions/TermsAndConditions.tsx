@@ -1,6 +1,7 @@
-import { Anchor, Col, Row, Typography, Grid, List } from 'antd';
+import { Anchor, Col, Row, Typography, Grid, List, Breadcrumb } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { termsAnchor, termsContent, termsParagraph, termsTitle } from './constants';
+import { Link } from 'react-router-dom';
 
 const { useBreakpoint } = Grid;
 
@@ -24,7 +25,17 @@ const TermsAndConditions = () => {
 				</Row>
 			</Col>
 			<Col xs={24} sm={24} md={18} lg={18} xl={18} xxl={18}>
-				<Row style={{ padding: screens.xs ? '30px' : '60px 80px 60px 80px' }}>
+				<Row gutter={[0, 16]} style={{ padding: screens.xs ? '30px' : '60px 80px 60px 80px' }}>
+					<Col span={24}>
+						<Breadcrumb>
+							<Breadcrumb.Item>
+								<Link to={'/'}>
+									Home
+								</Link>
+							</Breadcrumb.Item>
+							<Breadcrumb.Item>Términos y condiciones</Breadcrumb.Item>
+						</Breadcrumb>
+					</Col>
 					<Col span={24}>
 						<Typography.Title>{termsTitle}</Typography.Title>
 						<Typography.Paragraph>{termsParagraph}</Typography.Paragraph>
