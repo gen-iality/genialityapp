@@ -64,6 +64,9 @@ const ContentContainer = () => {
 			<main className='main'>
 				<Switch>
 					<Route path='/terms' component={Terms} />
+          <Route path='/privacy' component={Privacy} />
+          <Route path='/policies' component={Policies} />
+          <Route path='/faqs' component={Faqs} />
 					<RouteContext path={['/landing/:event_id', '/event/:event_name']} component={Landing} />
 					<RouteContext path={'/bingo/:event_id/'} component={BingoPresentation} />
 					{/*Ruta para ver resumen */}
@@ -96,11 +99,7 @@ const ContentContainer = () => {
 					<RouteContext exact path='/organization/:id' component={EventOrganization} />
 					<PrivateRoute path='/admin/organization/:id' component={Organization} />
 					<PrivateRoute path='/noaccesstocms/:id/:withoutPermissions' component={NoMatchPage} />
-
-					<Route path='/privacy' component={Privacy} />
-					<Route path='/policies' component={Policies} />
 					<Route path='/about' component={About} />
-					<Route path='/faqs' component={Faqs} />
 					{/* Ruta para realizar pruebas de consultas a firebase */}
 					<Route path='/queryTesting' component={QueryTesting} />
 					<Route path='/api/generatorQr/:id' component={QRedirect} />
