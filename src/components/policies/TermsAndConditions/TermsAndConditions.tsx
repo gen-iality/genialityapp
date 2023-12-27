@@ -1,7 +1,8 @@
-import { Anchor, Col, Row, Typography, Grid, List, Breadcrumb } from 'antd';
+import { Anchor, Col, Row, Typography, Grid, List, Breadcrumb, BackTop, Avatar } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { termsAnchor, termsContent, termsParagraph, termsTitle } from './constants';
 import { Link } from 'react-router-dom';
+import { ArrowUpOutlined } from '@ant-design/icons';
 
 const { useBreakpoint } = Grid;
 
@@ -14,12 +15,18 @@ const TermsAndConditions = () => {
 	}, []);
 
 	return (
-		<Row gutter={[0, 16]}>
+		<Row id='terms-container' gutter={[0, 16]}>
 			<Col xs={0} sm={0} md={6} lg={6} xl={6} xxl={6}>
 				<Row style={{ padding: '60px 30px', height: '100%', backgroundColor: '#111827' }}>
 					<Anchor offsetTop={60} targetOffset={targetOffset}>
 						{termsAnchor.map((item) => (
-							<Anchor.Link key={`anchor-${item.anchor}`} href={`#${item.anchor}`} title={<Typography.Text style={{color:'#FFFFFF'}}>{item.title}</Typography.Text>} />
+							<Anchor.Link
+								key={`anchor-${item.anchor}`}
+								href={`#${item.anchor}`}
+								title={
+									<Typography.Text style={{ color: '#FFFFFF', whiteSpace: 'normal' }}>{item.title}</Typography.Text>
+								}
+							/>
 						))}
 					</Anchor>
 				</Row>
@@ -35,7 +42,7 @@ const TermsAndConditions = () => {
 						</Breadcrumb>
 					</Col>
 					<Col span={24}>
-						<Typography.Title style={{color:'#111827'}}>{termsTitle}</Typography.Title>
+						<Typography.Title style={{ color: '#111827' }}>{termsTitle}</Typography.Title>
 						<Typography.Paragraph>{termsParagraph}</Typography.Paragraph>
 					</Col>
 					<Col span={24}>
@@ -51,6 +58,25 @@ const TermsAndConditions = () => {
 					</Col>
 				</Row>
 			</Col>
+			<BackTop>
+				<Avatar
+					shape='square'
+					icon={
+						<ArrowUpOutlined
+							style={{
+								filter: 'drop-shadow(0 4px 3px rgb(17 24 39 / 0.5)) drop-shadow(0 2px 2px rgb(17 24 39 / 0.5))',
+							}}
+							className='animate__animated animate__bounce animate__slower animate__infinite'
+						/>
+					}
+					size={50}
+					style={{
+						color: '#FFFFFF',
+						backgroundColor: '#111827',
+						borderRadius: '8px',
+						overflow: 'visible',
+					}}></Avatar>
+			</BackTop>
 		</Row>
 	);
 };

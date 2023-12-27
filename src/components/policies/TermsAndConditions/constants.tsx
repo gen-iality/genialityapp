@@ -25,7 +25,7 @@ interface TTerms {
 type ITermsContent = TTerms[];
 export const termsContent: ITermsContent = [
 	{
-		title: <Typography.Title style={{color:'#111827'}} level={5}>{termsAnchor[0].title}</Typography.Title>,
+		title: <Typography.Title style={{color:'#111827'}} level={4}>{termsAnchor[0].title}</Typography.Title>,
 		anchor: termsAnchor[0].anchor,
 		content: (
 			<Typography.Paragraph>
@@ -46,7 +46,7 @@ export const termsContent: ITermsContent = [
 		),
 	},
 	{
-		title: <Typography.Title style={{color:'#111827'}} level={5}>{termsAnchor[1].title}</Typography.Title>,
+		title: <Typography.Title style={{color:'#111827'}} level={4}>{termsAnchor[1].title}</Typography.Title>,
 		anchor: termsAnchor[1].anchor,
 		content: (
 			<Typography.Paragraph>
@@ -58,7 +58,7 @@ export const termsContent: ITermsContent = [
 		),
 	},
 	{
-		title: <Typography.Title style={{color:'#111827'}} level={5}>{termsAnchor[2].title}</Typography.Title>,
+		title: <Typography.Title style={{color:'#111827'}} level={4}>{termsAnchor[2].title}</Typography.Title>,
 		anchor: termsAnchor[2].anchor,
 		content: (
 			<Typography.Paragraph>
@@ -81,7 +81,7 @@ export const termsContent: ITermsContent = [
 		),
 	},
 	{
-		title: <Typography.Title style={{color:'#111827'}} level={5}>{termsAnchor[3].title}</Typography.Title>,
+		title: <Typography.Title style={{color:'#111827'}} level={4}>{termsAnchor[3].title}</Typography.Title>,
 		anchor: termsAnchor[3].anchor,
 		content: (
 			<Typography.Paragraph>
@@ -107,7 +107,7 @@ export const termsContent: ITermsContent = [
 		),
 	},
 	{
-		title: <Typography.Title style={{color:'#111827'}} level={5}>{termsAnchor[4].title}</Typography.Title>,
+		title: <Typography.Title style={{color:'#111827'}} level={4}>{termsAnchor[4].title}</Typography.Title>,
 		anchor: termsAnchor[4].anchor,
 		content: (
 			<Typography.Paragraph>
@@ -149,7 +149,7 @@ export const termsContent: ITermsContent = [
 		),
 	},
 	{
-		title: <Typography.Title style={{color:'#111827'}} level={5}>{termsAnchor[5].title}</Typography.Title>,
+		title: <Typography.Title style={{color:'#111827'}} level={4}>{termsAnchor[5].title}</Typography.Title>,
 		anchor: termsAnchor[5].anchor,
 		content: (
 			<Typography.Paragraph>
@@ -177,7 +177,7 @@ export const termsContent: ITermsContent = [
 		),
 	},
 	{
-		title: <Typography.Title style={{color:'#111827'}} level={5}>{termsAnchor[6].title}</Typography.Title>,
+		title: <Typography.Title style={{color:'#111827'}} level={4}>{termsAnchor[6].title}</Typography.Title>,
 		anchor: termsAnchor[6].anchor,
 		content: (
 			<Typography.Paragraph>
@@ -214,7 +214,7 @@ export const termsContent: ITermsContent = [
 		),
 	},
 	{
-		title: <Typography.Title style={{color:'#111827'}} level={5}>{termsAnchor[7].title}</Typography.Title>,
+		title: <Typography.Title style={{color:'#111827'}} level={4}>{termsAnchor[7].title}</Typography.Title>,
 		anchor: termsAnchor[7].anchor,
 		content: (
 			<Typography.Paragraph>
@@ -242,7 +242,7 @@ export const termsContent: ITermsContent = [
 		),
 	},
 	{
-		title: <Typography.Title style={{color:'#111827'}} level={5}>{termsAnchor[8].title}</Typography.Title>,
+		title: <Typography.Title style={{color:'#111827'}} level={4}>{termsAnchor[8].title}</Typography.Title>,
 		anchor: termsAnchor[8].anchor,
 		content: (
 			<Typography.Paragraph>
@@ -255,7 +255,7 @@ export const termsContent: ITermsContent = [
 		),
 	},
 	{
-		title: <Typography.Title style={{color:'#111827'}} level={5}>{termsAnchor[9].title}</Typography.Title>,
+		title: <Typography.Title style={{color:'#111827'}} level={4}>{termsAnchor[9].title}</Typography.Title>,
 		anchor: termsAnchor[9].anchor,
 		content: (
 			<Typography.Paragraph>
@@ -277,7 +277,7 @@ export const termsContent: ITermsContent = [
 		),
 	},
 	{
-		title: <Typography.Title style={{color:'#111827'}} level={5}>{termsAnchor[10].title}</Typography.Title>,
+		title: <Typography.Title style={{color:'#111827'}} level={4}>{termsAnchor[10].title}</Typography.Title>,
 		anchor: termsAnchor[10].anchor,
 		content: (
 			<Typography.Paragraph>
