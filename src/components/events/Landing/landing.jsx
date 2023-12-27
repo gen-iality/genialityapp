@@ -245,8 +245,12 @@ const Landing = (props) => {
 
   if (cEventContext.status === 'LOADING') return <Spin />;
 
-  if(cEventContext.is_finalized){
-    return <></>
+  if (cEventContext.is_finalized) {
+    return (
+      <>
+        <Result status={'info'} title='Evento finalizado' />
+      </>
+    );
   }
   
   return (
