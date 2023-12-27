@@ -499,6 +499,12 @@ iframe {
 	}
 }
 
+#terms-container{
+	.ant-anchor-ink-ball{
+		background-color: #50d3c9;
+	}
+}
+
 @import 'react-quill/dist/quill.snow.css';
 @import 'react-quill/dist/quill.bubble.css';
 

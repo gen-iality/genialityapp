@@ -190,7 +190,7 @@ const ModalAuth = (props) => {
         onCancel={() => helperDispatch({ type: 'showLogin', visible: false })}
         bodyStyle={{ paddingRight: '10px', paddingLeft: '10px' }}
         centered
-        footer={null}
+        footer={<Typography.Link target='_blank' href={`${window.location.origin}/terms`}>Términos y condiciones</Typography.Link>}
         zIndex={1000}
         visible={controllerLoginVisible?.visible && props.cEvent?.value?.visibility !== 'ANONYMOUS'}
         closable={controllerLoginVisible?.organization !== 'organization' ? true : false}>

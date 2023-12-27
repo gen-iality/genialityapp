@@ -10,7 +10,7 @@ import OrgEvents from './events';
 import OrgMembers from './members';
 import MemberSettings from './memberSettings';
 import TemplateMemberSettings from './templateMemberSettings';
-import { Tag, Menu, Button, Layout } from 'antd';
+import { Tag, Menu, Button, Layout, Typography } from 'antd';
 import {
   DoubleRightOutlined,
   MenuUnfoldOutlined,
@@ -103,6 +103,13 @@ function Organization(props) {
                 {'Menú Items'}
                 <NavLink to={`${props.match.url}/menuItems`} />
               </Menu.Item>
+              <Menu.ItemGroup title={'Legal'}>
+              <Menu.Item key={'terminosycondiciones'}>
+								<Typography.Link target='_blank' href={`${window.location.origin}/terms`}>
+									Términos y condiciones
+								</Typography.Link>
+							</Menu.Item>
+              </Menu.ItemGroup>
             </Menu>
           </Layout.Sider>
           <Layout.Content className='column event-main' style={{ width: 500 }}>
