@@ -499,9 +499,15 @@ iframe {
 	}
 }
 
-#terms-container{
-	.ant-anchor-ink-ball{
+.legal-container {
+	height: 100vh;
+	.ant-anchor-ink-ball {
 		background-color: #50d3c9;
+	}
+	.ant-list-item-meta-title {
+		color: #111827 !important;
+		font-size: 20px !important;
+		font-weight: bold;
 	}
 }
 

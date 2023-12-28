@@ -1,31 +1,41 @@
 import { Typography } from 'antd';
-import { ReactNode } from 'react';
+import { TLegalAnchor, TLegalContent, TLegalParagraph, TLegalTitle } from '../typings/interfaces';
+import { convertFormat } from '@/helpers/utils';
 
-export const termsTitle = 'TÉRMINOS Y CONDICIONES PLATAFORMA EVIUS';
-export const termsParagraph =
+const termsSections = {
+	SERVICE_ACCEPTANCE: 'Aceptación de servicio',
+	SERVICE_DESCRIPTION: 'Descripción del servicio',
+	PLATFORM_USAGE: 'Uso de la plataforma',
+	ATTENDEE_DATA_RECORD: 'Registro de datos de asistentes',
+	PLATFORM_ENTRY: 'Ingreso a la plataforma',
+	ATTENDEE_LIMIT: 'Límite de asistentes',
+	PLATFORM_USAGE_VALIDITY_DURATION: 'Vigencia y duración de uso de plataforma',
+	FEES_AND_PAYMENTS: 'Fees y pagos',
+	INTELLECTUAL_PROPERTY: 'Propiedad intelectual',
+	PLATFORM_UPDATES_MAINTENANCE: 'Actualizaciones y mantenimiento de la plataforma',
+	TERMS_CONDITIONS_MODIFICATIONS: 'Modificaciones de los términos y condiciones',
+};
+
+export const termsTitle: TLegalTitle = 'TÉRMINOS Y CONDICIONES PLATAFORMA EVIUS';
+export const termsParagraph: TLegalParagraph =
 	'Gracias por elegir a EVIUS como la plataforma de eventos virtuales, físicos e híbridos. Como empresa queremos que tus eventos tengan la mejor experiencia y calidad que te mereces, por eso te invitamos a leer estos términos y condiciones de uso de nuestra plataforma con el fin de ofrecerte lo mejor para tus eventos.';
-export const termsAnchor = [
-	{ title: 'Aceptación de servicio', anchor: 'AceptacionDeServicio' },
-	{ title: 'Descripción del servicio', anchor: 'DescripcionDelServicio' },
-	{ title: 'Uso de la plataforma', anchor: 'UsoDeLaPlataforma' },
-	{ title: 'Registro de datos de asistentes', anchor: 'RegistroDeDatosDeAsistentes' },
-	{ title: 'Ingreso a la plataforma', anchor: 'IngresoALaPlataforma' },
-	{ title: 'Límite de asistentes', anchor: 'LimiteDeAsistentes' },
-	{ title: 'Vigencia y duración de uso de plataforma', anchor: 'VigenciaYDuracionDeUsoDePlataforma' },
-	{ title: 'Fees y pagos', anchor: 'FeesYPagos' },
-	{ title: 'Propiedad intelectual', anchor: 'PropiedadIntelectual' },
-	{ title: 'Actualizaciones y mantenimiento de la plataforma', anchor: 'ActualizacionesYMantenimientoDeLaPlataforma' },
-	{ title: 'Modificaciones de los términos y condiciones', anchor: 'ModificacionesDeLosTerminosYCondiciones' },
+export const termsAnchor: TLegalAnchor = [
+	{ title: termsSections.SERVICE_ACCEPTANCE, anchor: convertFormat(termsSections.SERVICE_ACCEPTANCE) },
+  { title: termsSections.SERVICE_DESCRIPTION, anchor: convertFormat(termsSections.SERVICE_DESCRIPTION) },
+  { title: termsSections.PLATFORM_USAGE, anchor: convertFormat(termsSections.PLATFORM_USAGE) },
+  { title: termsSections.ATTENDEE_DATA_RECORD, anchor: convertFormat(termsSections.ATTENDEE_DATA_RECORD) },
+  { title: termsSections.PLATFORM_ENTRY, anchor: convertFormat(termsSections.PLATFORM_ENTRY) },
+  { title: termsSections.ATTENDEE_LIMIT, anchor: convertFormat(termsSections.ATTENDEE_LIMIT) },
+  { title: termsSections.PLATFORM_USAGE_VALIDITY_DURATION, anchor: convertFormat(termsSections.PLATFORM_USAGE_VALIDITY_DURATION) },
+  { title: termsSections.FEES_AND_PAYMENTS, anchor: convertFormat(termsSections.FEES_AND_PAYMENTS) },
+  { title: termsSections.INTELLECTUAL_PROPERTY, anchor: convertFormat(termsSections.INTELLECTUAL_PROPERTY) },
+  { title: termsSections.PLATFORM_UPDATES_MAINTENANCE, anchor: convertFormat(termsSections.PLATFORM_UPDATES_MAINTENANCE) },
+  { title: termsSections.TERMS_CONDITIONS_MODIFICATIONS, anchor: convertFormat(termsSections.TERMS_CONDITIONS_MODIFICATIONS) },
 ];
-interface TTerms {
-	title: string | ReactNode;
-	anchor: string;
-	content: string | ReactNode;
-}
-type ITermsContent = TTerms[];
-export const termsContent: ITermsContent = [
+
+export const termsContent: TLegalContent = [
 	{
-		title: <Typography.Title style={{color:'#111827'}} level={4}>{termsAnchor[0].title}</Typography.Title>,
+		title: <>{termsAnchor[0].title}</>,
 		anchor: termsAnchor[0].anchor,
 		content: (
 			<Typography.Paragraph>
@@ -46,7 +56,7 @@ export const termsContent: ITermsContent = [
 		),
 	},
 	{
-		title: <Typography.Title style={{color:'#111827'}} level={4}>{termsAnchor[1].title}</Typography.Title>,
+		title: <>{termsAnchor[1].title}</>,
 		anchor: termsAnchor[1].anchor,
 		content: (
 			<Typography.Paragraph>
@@ -58,7 +68,7 @@ export const termsContent: ITermsContent = [
 		),
 	},
 	{
-		title: <Typography.Title style={{color:'#111827'}} level={4}>{termsAnchor[2].title}</Typography.Title>,
+		title: <>{termsAnchor[2].title}</>,
 		anchor: termsAnchor[2].anchor,
 		content: (
 			<Typography.Paragraph>
@@ -81,7 +91,7 @@ export const termsContent: ITermsContent = [
 		),
 	},
 	{
-		title: <Typography.Title style={{color:'#111827'}} level={4}>{termsAnchor[3].title}</Typography.Title>,
+		title: <>{termsAnchor[3].title}</>,
 		anchor: termsAnchor[3].anchor,
 		content: (
 			<Typography.Paragraph>
@@ -107,7 +117,7 @@ export const termsContent: ITermsContent = [
 		),
 	},
 	{
-		title: <Typography.Title style={{color:'#111827'}} level={4}>{termsAnchor[4].title}</Typography.Title>,
+		title: <>{termsAnchor[4].title}</>,
 		anchor: termsAnchor[4].anchor,
 		content: (
 			<Typography.Paragraph>
@@ -149,7 +159,7 @@ export const termsContent: ITermsContent = [
 		),
 	},
 	{
-		title: <Typography.Title style={{color:'#111827'}} level={4}>{termsAnchor[5].title}</Typography.Title>,
+		title: <>{termsAnchor[5].title}</>,
 		anchor: termsAnchor[5].anchor,
 		content: (
 			<Typography.Paragraph>
@@ -177,7 +187,7 @@ export const termsContent: ITermsContent = [
 		),
 	},
 	{
-		title: <Typography.Title style={{color:'#111827'}} level={4}>{termsAnchor[6].title}</Typography.Title>,
+		title: <>{termsAnchor[6].title}</>,
 		anchor: termsAnchor[6].anchor,
 		content: (
 			<Typography.Paragraph>
@@ -214,7 +224,7 @@ export const termsContent: ITermsContent = [
 		),
 	},
 	{
-		title: <Typography.Title style={{color:'#111827'}} level={4}>{termsAnchor[7].title}</Typography.Title>,
+		title: <>{termsAnchor[7].title}</>,
 		anchor: termsAnchor[7].anchor,
 		content: (
 			<Typography.Paragraph>
@@ -242,7 +252,7 @@ export const termsContent: ITermsContent = [
 		),
 	},
 	{
-		title: <Typography.Title style={{color:'#111827'}} level={4}>{termsAnchor[8].title}</Typography.Title>,
+		title: <>{termsAnchor[8].title}</>,
 		anchor: termsAnchor[8].anchor,
 		content: (
 			<Typography.Paragraph>
@@ -255,7 +265,7 @@ export const termsContent: ITermsContent = [
 		),
 	},
 	{
-		title: <Typography.Title style={{color:'#111827'}} level={4}>{termsAnchor[9].title}</Typography.Title>,
+		title: <>{termsAnchor[9].title}</>,
 		anchor: termsAnchor[9].anchor,
 		content: (
 			<Typography.Paragraph>
@@ -277,7 +287,7 @@ export const termsContent: ITermsContent = [
 		),
 	},
 	{
-		title: <Typography.Title style={{color:'#111827'}} level={4}>{termsAnchor[10].title}</Typography.Title>,
+		title: <>{termsAnchor[10].title}</>,
 		anchor: termsAnchor[10].anchor,
 		content: (
 			<Typography.Paragraph>
