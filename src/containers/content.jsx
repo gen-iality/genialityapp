@@ -37,8 +37,8 @@ const NewEvent = loadable(() => import('../components/events/createEvent/index')
 /* const MyProfile = loadable(() => import('../components/profile/index_old')); */
 /* const Purchase = loadable(() => import('../components/profile/purchase_old')); */
 /* const EventEdit = loadable(() => import('../components/profile/events_old')); */
-const Terms = loadable(() => import('../components/policies/TermsAndConditions/TermsAndConditions'));
-const Privacy = loadable(() => import('../components/policies/privacyPolicy'));
+const Terms = loadable(() => import('../components/policies/TermsAndConditions'));
+const Privacy = loadable(() => import('../components/policies/PrivacyPolicy'));
 const Policies = loadable(() => import('../components/policies/policies'));
 const About = loadable(() => import('../components/policies/about'));
 const Faqs = loadable(() => import('../components/faqs/index'));
