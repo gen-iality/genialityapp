@@ -1,4 +1,4 @@
 export const legalPage ={
 	TERMS_AND_CONDITIONS: 'Términos y condiciones',
-	PRIVACY_POLICY: 'Política de privacidad',
+	PRIVACY_POLICY: 'Política de tratamiento de datos',
 }

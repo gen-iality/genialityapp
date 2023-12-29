@@ -1,5 +1,5 @@
 import { Typography } from 'antd';
-import { TLegalAnchor, TLegalContent, TLegalParagraph, TLegalTitle } from '../typings/interfaces';
+import { TLegalAnchor, TLegalContent, TLegalParagraphs, TLegalTitle } from '../typings/interfaces';
 import { convertFormat } from '@/helpers/utils';
 
 const termsSections = {
@@ -17,7 +17,7 @@ const termsSections = {
 };
 
 export const termsTitle: TLegalTitle = 'TÉRMINOS Y CONDICIONES PLATAFORMA EVIUS';
-export const termsParagraph: TLegalParagraph =
+export const termsParagraph: TLegalParagraphs =
 	'Gracias por elegir a EVIUS como la plataforma de eventos virtuales, físicos e híbridos. Como empresa queremos que tus eventos tengan la mejor experiencia y calidad que te mereces, por eso te invitamos a leer estos términos y condiciones de uso de nuestra plataforma con el fin de ofrecerte lo mejor para tus eventos.';
 export const termsAnchor: TLegalAnchor = [
 	{ title: termsSections.SERVICE_ACCEPTANCE, anchor: convertFormat(termsSections.SERVICE_ACCEPTANCE) },

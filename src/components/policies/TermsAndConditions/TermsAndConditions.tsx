@@ -1,4 +1,4 @@
-import { termsAnchor, termsContent, termsParagraph, termsTitle } from './constants';
+import { termsAnchor, termsContent, termsParagraph, termsTitle } from './termsConstants';
 import LegalTemplate from '../LegalTemplate';
 import BreadCrumbles from '../BreadCrumbles';
 import { legalPage } from '../constant';

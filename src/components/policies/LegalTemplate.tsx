@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react';
 
 import { ILegalTemplate } from './typings/interfaces';
 const { useBreakpoint } = Grid;
-const LegalTemplate = (props:ILegalTemplate) => {
-	const {  breadCrumbles  ,termsAnchor, termsContent, termsParagraph, termsTitle } = props;
+const LegalTemplate = (props: ILegalTemplate) => {
+	const { breadCrumbles, termsAnchor, termsContent, termsParagraph, termsTitle } = props;
 	const [targetOffset, setTargetOffset] = useState<number | undefined>(undefined);
 	const screens = useBreakpoint();
 
@@ -31,9 +31,7 @@ const LegalTemplate = (props:ILegalTemplate) => {
 			</Col>
 			<Col xs={24} sm={24} md={18} lg={18} xl={18} xxl={18}>
 				<Row gutter={[0, 16]} style={{ padding: screens.xs ? '30px' : '60px 80px 60px 80px' }}>
-					<Col span={24}>
-						{breadCrumbles && breadCrumbles}
-					</Col>
+					<Col span={24}>{breadCrumbles && breadCrumbles}</Col>
 					<Col span={24}>
 						<Typography.Title style={{ color: '#111827' }}>{termsTitle}</Typography.Title>
 						<Typography.Paragraph>{termsParagraph}</Typography.Paragraph>
@@ -44,7 +42,7 @@ const LegalTemplate = (props:ILegalTemplate) => {
 							dataSource={termsContent}
 							renderItem={(item) => (
 								<List.Item id={item.anchor}>
-									<List.Item.Meta title={item.title} description={item.content} />
+									<List.Item.Meta className='legal-content' title={item.title} description={item.content} />
 								</List.Item>
 							)}
 						/>
