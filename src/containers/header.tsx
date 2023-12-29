@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import * as userActions from '../redux/user/actions';
 import * as eventActions from '../redux/event/actions';
 import MenuOld from '../components/events/shared/menu';
-import { Menu, Drawer, Button, Col, Row, Layout, Space, Grid, Dropdown, Typography, Image } from 'antd';
+import { Menu, Drawer, Button, Col, Row, Layout, Space, Grid, Dropdown, Typography, Image, Tag } from 'antd';
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -326,7 +326,7 @@ const Headers = (props: Props) => {
             )}
             {window.location.href.includes('eventadmin') && (
               <Typography.Text strong style={{ textTransform: 'uppercase' }}>
-                {cEvent.value?.name && 'Evento - ' + cEvent.value?.name}
+                {cEvent.value?.name && 'Evento - ' + cEvent.value?.name}{ ' ' }{cEvent.value?.is_finalized && <Tag color='warning'>Evento finalizado</Tag> }
               </Typography.Text>
             )}
             {validatorOrg && (
