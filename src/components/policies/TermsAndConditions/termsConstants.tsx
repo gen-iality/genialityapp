@@ -2,41 +2,10 @@ import { Typography } from 'antd';
 import { TLegalAnchor, TLegalContent, TLegalParagraphs, TLegalTitle } from '../typings/interfaces';
 import { convertFormat } from '@/helpers/utils';
 
+// Aqui encontramos el contenido y titulo de cada sección de la vista
 const termsSections = {
-	SERVICE_ACCEPTANCE: 'Aceptación de servicio',
-	SERVICE_DESCRIPTION: 'Descripción del servicio',
-	PLATFORM_USAGE: 'Uso de la plataforma',
-	ATTENDEE_DATA_RECORD: 'Registro de datos de asistentes',
-	PLATFORM_ENTRY: 'Ingreso a la plataforma',
-	ATTENDEE_LIMIT: 'Límite de asistentes',
-	PLATFORM_USAGE_VALIDITY_DURATION: 'Vigencia y duración de uso de plataforma',
-	FEES_AND_PAYMENTS: 'Fees y pagos',
-	INTELLECTUAL_PROPERTY: 'Propiedad intelectual',
-	PLATFORM_UPDATES_MAINTENANCE: 'Actualizaciones y mantenimiento de la plataforma',
-	TERMS_CONDITIONS_MODIFICATIONS: 'Modificaciones de los términos y condiciones',
-};
-
-export const termsTitle: TLegalTitle = 'TÉRMINOS Y CONDICIONES PLATAFORMA EVIUS';
-export const termsParagraph: TLegalParagraphs =
-	'Gracias por elegir a EVIUS como la plataforma de eventos virtuales, físicos e híbridos. Como empresa queremos que tus eventos tengan la mejor experiencia y calidad que te mereces, por eso te invitamos a leer estos términos y condiciones de uso de nuestra plataforma con el fin de ofrecerte lo mejor para tus eventos.';
-export const termsAnchor: TLegalAnchor = [
-	{ title: termsSections.SERVICE_ACCEPTANCE, anchor: convertFormat(termsSections.SERVICE_ACCEPTANCE) },
-  { title: termsSections.SERVICE_DESCRIPTION, anchor: convertFormat(termsSections.SERVICE_DESCRIPTION) },
-  { title: termsSections.PLATFORM_USAGE, anchor: convertFormat(termsSections.PLATFORM_USAGE) },
-  { title: termsSections.ATTENDEE_DATA_RECORD, anchor: convertFormat(termsSections.ATTENDEE_DATA_RECORD) },
-  { title: termsSections.PLATFORM_ENTRY, anchor: convertFormat(termsSections.PLATFORM_ENTRY) },
-  { title: termsSections.ATTENDEE_LIMIT, anchor: convertFormat(termsSections.ATTENDEE_LIMIT) },
-  { title: termsSections.PLATFORM_USAGE_VALIDITY_DURATION, anchor: convertFormat(termsSections.PLATFORM_USAGE_VALIDITY_DURATION) },
-  { title: termsSections.FEES_AND_PAYMENTS, anchor: convertFormat(termsSections.FEES_AND_PAYMENTS) },
-  { title: termsSections.INTELLECTUAL_PROPERTY, anchor: convertFormat(termsSections.INTELLECTUAL_PROPERTY) },
-  { title: termsSections.PLATFORM_UPDATES_MAINTENANCE, anchor: convertFormat(termsSections.PLATFORM_UPDATES_MAINTENANCE) },
-  { title: termsSections.TERMS_CONDITIONS_MODIFICATIONS, anchor: convertFormat(termsSections.TERMS_CONDITIONS_MODIFICATIONS) },
-];
-
-export const termsContent: TLegalContent = [
-	{
-		title: <>{termsAnchor[0].title}</>,
-		anchor: termsAnchor[0].anchor,
+	SERVICE_ACCEPTANCE: {
+		title: 'Aceptación de servicio',
 		content: (
 			<Typography.Paragraph>
 				<Typography.Paragraph>
@@ -55,9 +24,8 @@ export const termsContent: TLegalContent = [
 			</Typography.Paragraph>
 		),
 	},
-	{
-		title: <>{termsAnchor[1].title}</>,
-		anchor: termsAnchor[1].anchor,
+	SERVICE_DESCRIPTION: {
+		title: 'Descripción del servicio',
 		content: (
 			<Typography.Paragraph>
 				EVIUS ofrece una plataforma basada en la web, usada para la gestión y ejecución de eventos virtuales, físicos e
@@ -67,15 +35,15 @@ export const termsContent: TLegalContent = [
 			</Typography.Paragraph>
 		),
 	},
-	{
-		title: <>{termsAnchor[2].title}</>,
-		anchor: termsAnchor[2].anchor,
+	PLATFORM_USAGE: {
+		Title: 'Uso de la plataforma',
 		content: (
 			<Typography.Paragraph>
 				<Typography.Paragraph>
 					El acceso a EVIUS podrá ser realizado por cualquier dispositivo con acceso a internet, como computadores,
 					móviles Android, iOS, tablets, y smart TV, que tengan incluido uso de navegadores web como Microsoft Edge,
-					Firefox Mozilla, Google Chrome, Safari, Opera, Brave, entre otros.
+					Firefox Mozilla, Google Chrome, Safari, Opera, Brave, entre otros, importante que el navegador con el cual
+					accede debe estar actualizado.
 				</Typography.Paragraph>
 				<Typography.Paragraph>
 					EVIUS ha ejecutado diversas pruebas con el fin de garantizar la disponibilidad de la plataforma y los
@@ -90,9 +58,8 @@ export const termsContent: TLegalContent = [
 			</Typography.Paragraph>
 		),
 	},
-	{
-		title: <>{termsAnchor[3].title}</>,
-		anchor: termsAnchor[3].anchor,
+	ATTENDEE_DATA_RECORD: {
+		title: 'Registro de datos de asistentes',
 		content: (
 			<Typography.Paragraph>
 				<Typography.Paragraph>
@@ -116,13 +83,12 @@ export const termsContent: TLegalContent = [
 			</Typography.Paragraph>
 		),
 	},
-	{
-		title: <>{termsAnchor[4].title}</>,
-		anchor: termsAnchor[4].anchor,
+	PLATFORM_ENTRY: {
+		title: 'Ingreso a la plataforma',
 		content: (
 			<Typography.Paragraph>
 				<Typography.Paragraph>
-					Para acceder a EVIUS, contamos con 4 tipos de acceso para usuarios y organizadores a saber:
+					Para acceder a EVIUS, contamos con 3 tipos de acceso para usuarios y organizadores a saber:
 				</Typography.Paragraph>
 				<Typography.Paragraph>
 					<Typography.Text strong>Evento público con Registro:</Typography.Text> En este tipo de acceso, los usuarios
@@ -158,9 +124,8 @@ export const termsContent: TLegalContent = [
 			</Typography.Paragraph>
 		),
 	},
-	{
-		title: <>{termsAnchor[5].title}</>,
-		anchor: termsAnchor[5].anchor,
+	ATTENDEE_LIMIT: {
+		title: 'Límite de asistentes',
 		content: (
 			<Typography.Paragraph>
 				<Typography.Paragraph>
@@ -186,9 +151,22 @@ export const termsContent: TLegalContent = [
 			</Typography.Paragraph>
 		),
 	},
-	{
-		title: <>{termsAnchor[6].title}</>,
-		anchor: termsAnchor[6].anchor,
+	ATTENDEE_PAYMENT: {
+		title: 'Cobro de asistentes',
+		content: (
+			<Typography.Paragraph>
+				El método de facturación con respecto al número de asistentes se fundamenta en una cantidad preestablecida
+				acordada con el cliente, por ejemplo, 1000 asistentes. Se efectuará la facturación en función de este número,
+				sin considerar la cantidad real de asistentes o registros al evento, siempre y cuando no exceda la cantidad
+				pactada entre ambas partes. En caso de superar dicho límite acordado, se aplicará un cargo adicional, conforme
+				se detalla en el punto anterior. Este enfoque proporciona claridad en la estructura de tarifas y asegura que el
+				cliente abone únicamente por la capacidad acordada, ofreciendo la posibilidad de adaptarse a cambios en la
+				asistencia dentro de los límites establecidos.
+			</Typography.Paragraph>
+		),
+	},
+	PLATFORM_USAGE_VALIDITY_DURATION: {
+		title: 'Vigencia y duración de uso de plataforma',
 		content: (
 			<Typography.Paragraph>
 				<Typography.Paragraph>
@@ -201,31 +179,38 @@ export const termsContent: TLegalContent = [
 					contrate durante la vigencia del evento, garantizando así el excelente uso de la plataforma.
 				</Typography.Paragraph>
 				<Typography.Paragraph>
-					Tras la finalización de un evento, la plataforma contará con disponibilidad de ocho (8) días para que los
-					organizadores y/o póstumos asistentes puedan revisar de nuevo la landing o ver las actividades realizadas
+					Tras la finalización de un evento, la plataforma contará con disponibilidad de cuarenta y ocho (48) horas para
+					que los organizadores y/o asistentes puedan revisar de nuevo la landing o ver las actividades realizadas
 					durante el evento. Terminado ese tiempo, EVIUS se encargará de bloquear cualquier acceso y/o registro de
 					nuevos usuarios o visualizaciones de usuarios registrados.
 				</Typography.Paragraph>
 				<Typography.Paragraph>
 					Una vez se bloquee, se informará al cliente sobre la eliminación del evento, se le entregará por medio digital
-					un enlace para que descargue el video del evento (en caso de contar con transmisión), con vigencia de 3 días,
+					un enlace para que descargue el video del evento (en caso de contar con transmisión), con vigencia de 2 días,
 					una vez vencido el plazo de descarga, se procederá con la eliminación del evento. Es deber del organizador
 					asegurarse de visualizar y descargar tanto los videos, como contenido relevante dentro de este plazo.
 				</Typography.Paragraph>
 				<Typography.Paragraph>
 					En caso de que el organizador adquiera un servicio de VOD (Videos on Demand), la plataforma mantendrá la
-					landing y videos durante el tiempo que el organizador contrate con EVIUS.
+					landing y videos durante el tiempo que el organizador contrate con EVIUS o en su defecto por 30 días.
 				</Typography.Paragraph>
 				<Typography.Paragraph>
 					Cualquier extensión otorgada estará sujeta a la aprobación y términos adicionales acordados entre el
-					organizador y Evius.
+					organizador y Evius
+				</Typography.Paragraph>
+				<Typography.Paragraph>
+					La vigencia del evento se basará en los siguientes tipos de eventos a contratar:
+					<ul>
+						<li>Evento informativo: Acceso al evento por 48 horas una vez haya culminado</li>
+						<li>Evento informativo y transmisión: Acceso al evento por 48 horas una vez haya culminado</li>
+						<li>Evento informativo, transmisión y VOD: Acceso al evento por 30 días una vez haya culminado</li>
+					</ul>
 				</Typography.Paragraph>
 			</Typography.Paragraph>
 		),
 	},
-	{
-		title: <>{termsAnchor[7].title}</>,
-		anchor: termsAnchor[7].anchor,
+	FEES_AND_PAYMENTS: {
+		title: 'Fees y pagos',
 		content: (
 			<Typography.Paragraph>
 				<Typography.Paragraph>
@@ -251,9 +236,8 @@ export const termsContent: TLegalContent = [
 			</Typography.Paragraph>
 		),
 	},
-	{
-		title: <>{termsAnchor[8].title}</>,
-		anchor: termsAnchor[8].anchor,
+	INTELLECTUAL_PROPERTY: {
+		title: 'Propiedad intelectual',
 		content: (
 			<Typography.Paragraph>
 				Todos los derechos de propiedad intelectual relacionados con la plataforma, su contenido y cualquier material
@@ -264,9 +248,8 @@ export const termsContent: TLegalContent = [
 			</Typography.Paragraph>
 		),
 	},
-	{
-		title: <>{termsAnchor[9].title}</>,
-		anchor: termsAnchor[9].anchor,
+	PLATFORM_UPDATES_MAINTENANCE: {
+		title: 'Actualizaciones y mantenimiento de la plataforma',
 		content: (
 			<Typography.Paragraph>
 				<Typography.Paragraph>
@@ -286,9 +269,91 @@ export const termsContent: TLegalContent = [
 			</Typography.Paragraph>
 		),
 	},
-	{
-		title: <>{termsAnchor[10].title}</>,
-		anchor: termsAnchor[10].anchor,
+	TICKET_COLLECTION: {
+		title: 'Recaudación de boletería',
+		content: (
+			<Typography.Paragraph>
+				En el caso de contratar nuestro módulo de boletería, el recaudo de fondos para el cliente se llevará a cabo
+				mediante un proceso de corte quincenal. Esto significa que el monto acumulado por la venta de boletos se
+				liquidará y se transferirá al cliente cada 15 días, a partir de la fecha de la apertura de venta los tiquetes.
+			</Typography.Paragraph>
+		),
+	},
+	EVENT_CANCELLATION: {
+		title: 'Cancelación de evento',
+		content: (
+			<Typography.Paragraph>
+				<Typography.Paragraph>
+					En el caso de que el cliente desee solicitar la cancelación de un evento previamente programado, se debe
+					notificar a nuestra plataforma con la debida antelación especificada en los términos del contrato.
+				</Typography.Paragraph>
+				<Typography.Paragraph>
+					Es importante destacar que, a pesar de la cancelación del evento, no se realizará ninguna devolución del
+					dinero consignado por el cliente. Los fondos aportados se considerarán no reembolsables y se destinarán a
+					cubrir los costos y compromisos incurridos por la plataforma en la preparación y organización del evento. La
+					cancelación no exime al cliente de cumplir con otros términos y condiciones estipulados en el contrato, y
+					cualquier obligación financiera acordada previamente permanecerá vigente.
+				</Typography.Paragraph>
+			</Typography.Paragraph>
+		),
+	},
+	EVENT_REFUND: {
+		title: 'Reembolso de un evento',
+		content: (
+			<Typography.Paragraph>
+				<Typography.Paragraph>
+					En situaciones excepcionales y fuera del control de ambas partes, como desastres naturales imprevistos que
+					impacten significativamente en la realización de un evento, se contempla la posibilidad de reembolso. Si un
+					evento se ve afectado y debe ser cancelado debido a circunstancias de fuerza mayor, tales como desastres
+					naturales, incendios, inundaciones u otros eventos catastróficos, el cliente podrá solicitar un reembolso del
+					monto abonado.
+				</Typography.Paragraph>
+				<Typography.Paragraph>
+					Adicionalmente, en el caso poco probable de que la plataforma experimente una falta de disponibilidad que
+					impida la realización del evento, también se considerará elegible para un reembolso total o parcial.
+				</Typography.Paragraph>
+				<Typography.Paragraph>
+					Es necesario que el cliente informe de inmediato a nuestra plataforma sobre la situación y presente evidencia
+					documentada de la relación directa entre el desastre natural o la falta de disponibilidad de la plataforma y
+					la cancelación del evento. Nuestra plataforma evaluará cada caso de manera individual y determinará, a su
+					discreción, la elegibilidad para el reembolso total o parcial.
+				</Typography.Paragraph>
+				<Typography.Paragraph>
+					Este proceso de reembolso está diseñado para abordar circunstancias extraordinarias e imprevisibles, buscando
+					ofrecer una solución justa y equitativa en casos de cancelación debida a desastres naturales o a la falta de
+					disponibilidad de la plataforma. La decisión final sobre el reembolso quedará sujeta a la evaluación detallada
+					de cada situación específica.
+				</Typography.Paragraph>
+			</Typography.Paragraph>
+		),
+	},
+	ILLEGAL_CONTENT_PROHIBITION: {
+		title: 'Prohibición de Contenido Ilegal y Consecuencias',
+		content: (
+			<Typography.Paragraph>
+				<Typography.Paragraph>
+					Se prohíbe estrictamente la carga, transmisión o promoción de contenido ilegal en cualquier forma, incluyendo,
+					pero no limitado a, material difamatorio, obsceno, pornográfico, fraudulento, amenazante o que viole los
+					derechos de propiedad intelectual de terceros. En el caso de que se detecte la presencia de dicho contenido en
+					la plataforma, la empresa organizadora del evento será notificada de inmediato.
+				</Typography.Paragraph>
+				<Typography.Paragraph>
+					En conformidad con esta política, la plataforma se reserva el derecho de cancelar el evento sin previo aviso y
+					sin la obligación de realizar devolución alguna de los pagos realizados. Además, se cooperará plenamente con
+					las autoridades competentes en la investigación de actividades ilegales y se tomarán las medidas legales
+					apropiadas.
+				</Typography.Paragraph>
+				<Typography.Paragraph>
+					Los ejemplos mencionados anteriormente son indicativos y no exhaustivos. Cualquier contenido que viole las
+					leyes locales, nacionales o internacionales está sujeto a la misma prohibición y consecuencias. Se insta a los
+					usuarios a revisar y respetar los términos y condiciones para garantizar una experiencia segura y legal en la
+					plataforma.
+				</Typography.Paragraph>
+			</Typography.Paragraph>
+		),
+	},
+	TERMS_CONDITIONS_MODIFICATIONS: {
+		title: 'Modificaciones de los términos y condiciones',
 		content: (
 			<Typography.Paragraph>
 				EVIUS podrá modificar el uso de los servicios de la plataforma en cualquier momento. En estos casos,
@@ -296,5 +361,129 @@ export const termsContent: TLegalContent = [
 				cambios derivados de las actualizaciones de la plataforma.
 			</Typography.Paragraph>
 		),
+	},
+};
+
+// Indica aqui el titulo de la vista
+export const termsTitle: TLegalTitle = 'TÉRMINOS Y CONDICIONES PLATAFORMA EVIUS';
+
+export const termsParagraph: TLegalParagraphs =
+	'Gracias por elegir a EVIUS como la plataforma de eventos virtuales, físicos e híbridos. Como empresa queremos que tus eventos tengan la mejor experiencia y calidad que te mereces, por eso te invitamos a leer estos términos y condiciones de uso de nuestra plataforma con el fin de ofrecerte lo mejor para tus eventos.';
+
+// Con esto creamos los ID para conectarlos con el emnu de navegación
+export const termsAnchor: TLegalAnchor = [
+	{ title: termsSections.SERVICE_ACCEPTANCE.title, anchor: convertFormat(termsSections.SERVICE_ACCEPTANCE.title) },
+	{ title: termsSections.SERVICE_DESCRIPTION.title, anchor: convertFormat(termsSections.SERVICE_DESCRIPTION.title) },
+	{ title: termsSections.PLATFORM_USAGE.Title, anchor: convertFormat(termsSections.PLATFORM_USAGE.Title) },
+	{ title: termsSections.ATTENDEE_DATA_RECORD.title, anchor: convertFormat(termsSections.ATTENDEE_DATA_RECORD.title) },
+	{ title: termsSections.PLATFORM_ENTRY.title, anchor: convertFormat(termsSections.PLATFORM_ENTRY.title) },
+	{ title: termsSections.ATTENDEE_LIMIT.title, anchor: convertFormat(termsSections.ATTENDEE_LIMIT.title) },
+	{ title: termsSections.ATTENDEE_PAYMENT.title, anchor: convertFormat(termsSections.ATTENDEE_PAYMENT.title) },
+	{
+		title: termsSections.PLATFORM_USAGE_VALIDITY_DURATION.title,
+		anchor: convertFormat(termsSections.PLATFORM_USAGE_VALIDITY_DURATION.title),
+	},
+	{ title: termsSections.FEES_AND_PAYMENTS.title, anchor: convertFormat(termsSections.FEES_AND_PAYMENTS.title) },
+	{
+		title: termsSections.INTELLECTUAL_PROPERTY.title,
+		anchor: convertFormat(termsSections.INTELLECTUAL_PROPERTY.title),
+	},
+	{
+		title: termsSections.PLATFORM_UPDATES_MAINTENANCE.title,
+		anchor: convertFormat(termsSections.PLATFORM_UPDATES_MAINTENANCE.title),
+	},
+	{ title: termsSections.TICKET_COLLECTION.title, anchor: convertFormat(termsSections.TICKET_COLLECTION.title) },
+	{ title: termsSections.EVENT_CANCELLATION.title, anchor: convertFormat(termsSections.EVENT_CANCELLATION.title) },
+	{ title: termsSections.EVENT_REFUND.title, anchor: convertFormat(termsSections.EVENT_REFUND.title) },
+	{
+		title: termsSections.ILLEGAL_CONTENT_PROHIBITION.title,
+		anchor: convertFormat(termsSections.ILLEGAL_CONTENT_PROHIBITION.title),
+	},
+	{
+		title: termsSections.TERMS_CONDITIONS_MODIFICATIONS.title,
+		anchor: convertFormat(termsSections.TERMS_CONDITIONS_MODIFICATIONS.title),
+	},
+];
+// Estructura final de la vista
+export const termsContent: TLegalContent = [
+	{
+		title: termsSections.SERVICE_ACCEPTANCE.title,
+		anchor: termsAnchor[0].anchor,
+		content: termsSections.SERVICE_ACCEPTANCE.content,
+	},
+	{
+		title: termsSections.SERVICE_DESCRIPTION.title,
+		anchor: termsAnchor[1].anchor,
+		content: termsSections.SERVICE_DESCRIPTION.content,
+	},
+	{
+		title: termsSections.PLATFORM_USAGE.Title,
+		anchor: termsAnchor[2].anchor,
+		content: termsSections.PLATFORM_USAGE.content,
+	},
+	{
+		title: termsSections.ATTENDEE_DATA_RECORD.title,
+		anchor: termsAnchor[3].anchor,
+		content: termsSections.ATTENDEE_DATA_RECORD.content,
+	},
+	{
+		title: termsSections.PLATFORM_ENTRY.title,
+		anchor: termsAnchor[4].anchor,
+		content: termsSections.PLATFORM_ENTRY.content,
+	},
+	{
+		title: termsSections.ATTENDEE_LIMIT.title,
+		anchor: termsAnchor[5].anchor,
+		content: termsSections.ATTENDEE_LIMIT.content,
+	},
+	{
+		title: termsSections.ATTENDEE_PAYMENT.title,
+		anchor: termsAnchor[6].anchor,
+		content: termsSections.ATTENDEE_PAYMENT.content,
+	},
+	{
+		title: termsSections.PLATFORM_USAGE_VALIDITY_DURATION.title,
+		anchor: termsAnchor[7].anchor,
+		content: termsSections.PLATFORM_USAGE_VALIDITY_DURATION.content,
+	},
+	{
+		title: termsSections.FEES_AND_PAYMENTS.title,
+		anchor: termsAnchor[8].anchor,
+		content: termsSections.FEES_AND_PAYMENTS.content,
+	},
+	{
+		title: termsSections.INTELLECTUAL_PROPERTY.title,
+		anchor: termsAnchor[9].anchor,
+		content: termsSections.INTELLECTUAL_PROPERTY.content,
+	},
+	{
+		title: termsSections.PLATFORM_UPDATES_MAINTENANCE.title,
+		anchor: termsAnchor[10].anchor,
+		content: termsSections.PLATFORM_UPDATES_MAINTENANCE.content,
+	},
+	{
+		title: termsSections.TICKET_COLLECTION.title,
+		anchor: termsAnchor[11].anchor,
+		content: termsSections.TICKET_COLLECTION.content,
+	},
+	{
+		title: termsSections.EVENT_CANCELLATION.title,
+		anchor: termsAnchor[12].anchor,
+		content: termsSections.EVENT_CANCELLATION.content,
+	},
+	{
+		title: termsSections.EVENT_REFUND.title,
+		anchor: termsAnchor[13].anchor,
+		content: termsSections.EVENT_REFUND.content,
+	},
+	{
+		title: termsSections.ILLEGAL_CONTENT_PROHIBITION.title,
+		anchor: termsAnchor[14].anchor,
+		content: termsSections.ILLEGAL_CONTENT_PROHIBITION.content,
+	},
+	{
+		title: termsSections.TERMS_CONDITIONS_MODIFICATIONS.title,
+		anchor: termsAnchor[15].anchor,
+		content: termsSections.TERMS_CONDITIONS_MODIFICATIONS.content,
 	},
 ];
