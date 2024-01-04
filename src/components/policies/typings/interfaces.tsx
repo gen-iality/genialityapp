@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 export type TLegalContent = ILegalItem[];
 export type TLegalTitle = string;
-export type TLegalParagraph = string;
+export type TLegalParagraphs = string | ReactNode;
 export type TLegalAnchor = ILegalBase[];
 interface ILegalBase {
 	title: string | ReactNode;
@@ -16,7 +16,7 @@ export interface ILegalItem extends ILegalBase {
 export interface ILegalTemplate {
 	breadCrumbles?: ReactNode;
 	termsTitle: TLegalTitle;
-	termsParagraph?: TLegalParagraph;
+	termsParagraph?: TLegalParagraphs;
 	termsAnchor: TLegalAnchor;
 	termsContent: TLegalContent;
 }

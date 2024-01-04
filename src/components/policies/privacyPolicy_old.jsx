@@ -37,40 +37,36 @@ class Privacy extends Component {
 					función de los Servicios que uses. • Recopilamos los datos personales que indicaste al momento de registrarte
 					como lo son, tu nombre completo, correo electrónico, fecha de nacimiento, dirección de residencia y números de
 					contacto, así como los datos financieros que nos proporcionas al momento de realizar cualquier tipo de
-					transacción. 
-					2. ¿Cómo utilizamos tu información personal? • Procesamiento y administración de sus
+					transacción. 2. ¿Cómo utilizamos tu información personal? • Procesamiento y administración de sus
 					transacciones como cliente de EVIUS. • Establecemos un canal de comunicación contigo a fin de informarte las
 					novedades que con respecto a los productos y servicios ofrecidos puedan ocurrir, tales como cancelación de
 					eventos, cambio de fechas, cambio de programación, etc. • Conocer sus hábitos de consumo, gustos y
 					preferencias con la finalidad de ofrecerle aquellos productos que se adecuen a estos. • Enviarte promociones y
-					publicidad. • Enviarte por correo electrónico los soportes de tu compra y transacción. 
-					3. ¿Con quién	compartimos tu información personal? EVIUS no vende información personal sin tu consentimiento, sin embargo,
+					publicidad. • Enviarte por correo electrónico los soportes de tu compra y transacción. 3. ¿Con quién
+					compartimos tu información personal? EVIUS no vende información personal sin tu consentimiento, sin embargo,
 					EVIUS podría divulgar tu información personal en ciertas circunstancias como: • EVIUS puede compartir tu
 					información personal a terceros contratistas y proveedores de servicios que nos ayudan a operar nuestros
 					sistemas informáticos. • La transferencia de tus datos de contrato al promotor o promotores de los eventos de
 					los cuales adquiriste boletería para que ellos en calidad de responsables de la información y de los eventos
-					puedan contactarte y recopilen esta información para realizar estadísticas y marketing. 
-					4. ¿Cuáles son tus derechos como titular de esta información? • Según lo dispuesto en la Ley 1581 de 2012, tu o cualquier persona
-					de las referidas en el Art. 20 del Decreto 1377 de 2.013, tienen derecho a: 
-					(i) Conocer, actualizar y rectificar sus datos personales frente a los responsables del Tratamiento o Encargados del Tratamiento. 
-					(ii) Solicitar prueba de la autorización otorgada al Responsable del Tratamiento salvo cuando expresamente se
+					puedan contactarte y recopilen esta información para realizar estadísticas y marketing. 4. ¿Cuáles son tus
+					derechos como titular de esta información? • Según lo dispuesto en la Ley 1581 de 2012, tu o cualquier persona
+					de las referidas en el Art. 20 del Decreto 1377 de 2.013, tienen derecho a: (i) Conocer, actualizar y
+					rectificar sus datos personales frente a los responsables del Tratamiento o Encargados del Tratamiento. (ii)
+					Solicitar prueba de la autorización otorgada al Responsable del Tratamiento salvo cuando expresamente se
 					exceptúe como requisito para el Tratamiento, de conformidad con lo previsto en el artículo 10 de la ley 1581
-					de 2012; 
-					(iii) Ser informado por el Responsable del Tratamiento o el Encargado del Tratamiento, previa
-					solicitud, respecto del uso que le ha dado a sus datos personales; 
-					(iv) Presentar ante la Superintendencia de Industria y Comercio quejas por infracciones a lo dispuesto en la presente ley y las demás normas que la
-					modifiquen, adicionen o complementen; 
-					(vi) Revocar la autorización y/o solicitar la supresión del dato cuando en el Tratamiento no se respeten los principios, derechos y garantías constitucionales y legales. La
+					de 2012; (iii) Ser informado por el Responsable del Tratamiento o el Encargado del Tratamiento, previa
+					solicitud, respecto del uso que le ha dado a sus datos personales; (iv) Presentar ante la Superintendencia de
+					Industria y Comercio quejas por infracciones a lo dispuesto en la presente ley y las demás normas que la
+					modifiquen, adicionen o complementen; (vi) Revocar la autorización y/o solicitar la supresión del dato cuando
+					en el Tratamiento no se respeten los principios, derechos y garantías constitucionales y legales. La
 					revocatoria y/o supresión procederá cuando la Superintendencia de Industria y Comercio haya determinado que en
 					el Tratamiento el responsable o Encargado han incurrido en conductas contrarias a esta ley y a la
-					Constitución; 
-					(vii) Acceder en forma gratuita a sus datos personales que hayan sido objeto de Tratamiento.
+					Constitución; (vii) Acceder en forma gratuita a sus datos personales que hayan sido objeto de Tratamiento.
 					(viii) Ejercer el derecho fundamental al hábeas data en los términos de la Ley 1266 de 2008, mediante la
 					utilización de los procedimientos de consultas o reclamos, sin perjuicio de los demás mecanismos
-					constitucionales y legales. Así mismo tienen derecho a: 
-					a) Solicitar el respeto y la protección de los demás
-					derechos constitucionales o legales, así como de las demás disposiciones legales. 
-					b) Solicitar información de los usuarios autorizados para obtener dichos datos
+					constitucionales y legales. Así mismo tienen derecho a: a) Solicitar el respeto y la protección de los demás
+					derechos constitucionales o legales, así como de las demás disposiciones legales. b) Solicitar información de
+					los usuarios autorizados para obtener dichos datos
 					<br></br>
 					EVIUS ha establecido los siguientes métodos para que puedas ejercer los derechos mencionados anteriormente: •
 					Puedes acceder, corregir, actualizar, suprimir o revocar tu información personal, podrás ingresar a nuestro

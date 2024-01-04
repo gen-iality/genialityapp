@@ -1,7 +1,7 @@
-import LegalTemplate from '../LegalTemplate'
-import BreadCrumbles from '../BreadCrumbles'
-import { legalPage } from '../constant'
-import { privacyAnchor, privacyContent, privacyParagraph, privacyTitle } from './constants'
+import LegalTemplate from '../LegalTemplate';
+import BreadCrumbles from '../BreadCrumbles';
+import { legalPage } from '../constant';
+import { privacyAnchor, privacyContent, privacyParagraph, privacyTitle } from './privacyConstants';
 
 const PrivacyPolicy = () => {
 	return (
@@ -12,7 +12,7 @@ const PrivacyPolicy = () => {
 			termsParagraph={privacyParagraph}
 			termsTitle={privacyTitle}
 		/>
-	)
-}
+	);
+};
 
-export default PrivacyPolicy
+export default PrivacyPolicy;
