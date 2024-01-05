@@ -2,17 +2,19 @@ import { Fragment, useState } from 'react';
 import { utils, writeFileXLSX, read } from 'xlsx';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
-import { Row, Col, Button, Divider, Upload } from 'antd';
+import { Row, Col, Button, Divider, Upload, Modal } from 'antd';
 import { DownloadOutlined, InboxOutlined } from '@ant-design/icons';
 import { DispatchMessageService } from '../../context/MessageService';
-import content from '@/containers/content';
 import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
+import { useEventCapacityValidator } from '@/events-capacity';
 
 Moment.locale('es');
 momentLocalizer();
 
 const Importacion = (props) => {
   const [errMsg, setErrMsg] = useState('');
+  const { getRemainingCapacity } = useEventCapacityValidator();
+
   const handleXlsFile = (files) => {
     if (files.status === 'error') {
       DispatchMessageService({
@@ -33,7 +35,7 @@ const Importacion = (props) => {
     const f = files.originFileObj;
     const reader = new FileReader();
     try {
-      reader.onload = (e) => {
+      reader.onload = async (e) => {
         const data = e.target.result;
         const workbook = read(data, { type: 'binary' });
         const sheetName = workbook.SheetNames[0];
@@ -71,6 +73,21 @@ const Importacion = (props) => {
           //por si no pudimos agregar ningún dato
           if (!fields.length) {
             setErrMsg('Excel en blanco, o algún problema con el archivo o el formato');
+            return;
+          }
+
+          const emailObject = fields.find((propertiesObject) => propertiesObject.key === 'email');
+          if (!emailObject) return setErrMsg('No se pudo leer la propiedad email para verificación');
+
+          const emailList = emailObject.list.filter(
+            (email) => email !== undefined && email !== null && email?.length > 1
+          );
+          const remainingCapacity = await getRemainingCapacity(props.event._id);
+          if (emailList.length > remainingCapacity) {
+            Modal.warning({
+              title: 'Capacidad insuficiente',
+              content: `La cantidad de usuarios que desea importar (${emailList.length}) supera la capacidad restante del evento (${remainingCapacity}). Ajuste los usuarios y vuelta a intentarlo`,
+            });
             return;
           }
           props.handleXls(fields);

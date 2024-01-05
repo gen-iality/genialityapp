@@ -43,5 +43,9 @@
 	"dotenv.enableAutocloaking": true,
 	"[css]": {
 		"editor.defaultFormatter": "vscode.css-language-features"
-	}
+	},
+	"javascript.referencesCodeLens.enabled": true,
+	"javascript.referencesCodeLens.showOnAllFunctions": true,
+	"typescript.referencesCodeLens.enabled": true,
+	"typescript.referencesCodeLens.showOnAllFunctions": true
 }
