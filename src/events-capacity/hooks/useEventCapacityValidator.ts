@@ -6,7 +6,9 @@ export const useEventCapacityValidator = () => {
       if (!eventId) return;
       const remainingCapacity = await eventService.validateAttendeeCapacity(eventId);
       return remainingCapacity.capacity - remainingCapacity.attendees;
-    } catch (error) {}
+    } catch (error) {
+      return 0;
+    }
   };
 
   return { getRemainingCapacity };
