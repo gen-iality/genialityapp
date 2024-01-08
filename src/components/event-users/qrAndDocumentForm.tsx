@@ -3,7 +3,7 @@ import { CameraOutlined, ExpandOutlined } from '@ant-design/icons'
 import CameraFlipOutlineIcon from '@2fd/ant-design-icons/lib/CameraFlipOutline'
 import { SearchAndCleanButtons } from './buttonsQrModal'
 // @ts-ignore: Unreachable code error
-import { QrReader } from 'react-qr-reader'
+//import { QrReader } from 'react-qr-reader'
 import { divideInformationObtainedByTheCodeReader } from '@Utilities/checkInUtils'
 
 const { TabPane } = Tabs
@@ -57,7 +57,7 @@ function QrAndDocumentForm({
                   </Col>
                 </Row>
               </Form.Item>
-              <Row justify="center" wrap gutter={8}>
+              {/* <Row justify="center" wrap gutter={8}>
                 <QrReader
                   delay={1500}
                   facingMode={facingMode}
@@ -68,7 +68,7 @@ function QrAndDocumentForm({
                     marginBottom: '20px',
                   }}
                 />
-              </Row>
+              </Row> */}
             </TabPane>
             <TabPane
               tab={

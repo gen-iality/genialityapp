@@ -90,7 +90,7 @@ const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
     //Filtrado de categorias
     categoriesData = handleSelect(categoriesData)
 
-    if (state.edit && !justCreate) {
+    if (state && state.edit && !justCreate) {
       setEditDataIsLoading(true)
       const info = await SpeakersApi.getOne(state.edit, eventID)
 
@@ -154,7 +154,7 @@ const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
         index: parseInt(order),
       }
       try {
-        if (state.edit && !justCreate)
+        if (state && state.edit && !justCreate)
           await SpeakersApi.editOne(body, state.edit, eventID)
         else await SpeakersApi.create(eventID, body)
         StateMessage.destroy('loading')
@@ -178,7 +178,7 @@ const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
       'loading',
       'Por favor espere mientras se borra la información...',
     )
-    if (state.edit && !justCreate) {
+    if (state && state.edit && !justCreate) {
       confirm({
         title: `¿Está seguro de eliminar al conferencista?`,
         icon: <ExclamationCircleOutlined />,
@@ -240,7 +240,7 @@ const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
     </Select>
   )
 
-  if (!state || redirect) return redirectRouter('..')
+  //if (!state || redirect) return redirectRouter('..')
 
   return (
     <Form onFinish={() => submit(data)} {...formLayout}>
@@ -249,7 +249,7 @@ const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
         back
         save
         form
-        edit={state.edit && !justCreate}
+        edit={state && state.edit && !justCreate}
         remove={remove}
         extra={
           <Form.Item label="Visible" labelCol={{ span: 13 }}>
@@ -270,7 +270,7 @@ const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
       />
 
       <Row justify="center" wrap gutter={12}>
-        {state.edit && !justCreate && editDataIsLoading ? (
+        {state && state.edit && !justCreate && editDataIsLoading ? (
           <Loading />
         ) : (
           <Col span={justCreate ? 22 : 12}>

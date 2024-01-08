@@ -56,7 +56,6 @@ const AdditionalEventInfo: FunctionComponent<AdditionalEventInfoProps> = (props)
           </Row>
         </>
       )}
-
       {event.event_tip && (
         <Card
           style={{
@@ -72,7 +71,6 @@ const AdditionalEventInfo: FunctionComponent<AdditionalEventInfoProps> = (props)
           </Space>
         </Card>
       )}
-
       {tools.length > 0 && (
         <List
           size="small"
