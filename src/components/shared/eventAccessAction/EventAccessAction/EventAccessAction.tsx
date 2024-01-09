@@ -147,7 +147,7 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
               }}
               type='primary'
               size='large'
-              onClick={() => onRegisterUser(button.action)}>
+              onClick={button.label === 'Inscribirme al evento' ? () => onRegisterUser(button.action) : button.action}>
               {isAforoCompleted && button.label === 'Inscribirme al evento' ? 'Capacidad Superada' : button.label}
             </Button>
           )}
