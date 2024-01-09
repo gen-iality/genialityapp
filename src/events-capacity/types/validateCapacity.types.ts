@@ -1,5 +1,7 @@
 export interface IValidateCapacity {
-  message: string;
-  capacity: number;
-  attendees: number;
+  attendeeCapacity: {
+    is_completed: boolean;
+    capacity_allowed: number;
+    quantity_attendees: number;
+  };
 }

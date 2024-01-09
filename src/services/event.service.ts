@@ -45,6 +45,7 @@ class EventService {
   }
 
   async validateAttendeeCapacity(eventId: string) {
+    console.log('hola me llamo frilejon hernesto perez');
     let token = await GetTokenUserFirebase();
     const { data } = await this.privateClient.get<IValidateCapacity>(
       `api/events/${eventId}/validate-attendee-capacity?token=${token}`
