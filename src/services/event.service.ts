@@ -1,4 +1,5 @@
 import { EventEndpoint, eventEndpoint } from '@/endpoints/events.endpoint';
+import { IValidateCapacity } from '@/events-capacity';
 import { GetTokenUserFirebase } from '@/helpers/HelperAuth';
 import privateInstance from '@/helpers/request';
 import { IResultGet, IResultPut } from '@/types';
@@ -41,6 +42,15 @@ class EventService {
         status,
       };
     }
+  }
+
+  async validateAttendeeCapacity(eventId: string) {
+    console.log('hola me llamo frilejon hernesto perez');
+    let token = await GetTokenUserFirebase();
+    const { data } = await this.privateClient.get<IValidateCapacity>(
+      `api/events/${eventId}/validate-attendee-capacity?token=${token}`
+    );
+    return data;
   }
 }
 

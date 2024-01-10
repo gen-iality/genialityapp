@@ -8,7 +8,7 @@ import { CurrentUserContext } from '@/context/userContext';
 import { SectionsPrelanding } from '@/helpers/constants';
 import { AgendaApi, EventsApi, SpeakersApi } from '@/helpers/request';
 import { ArrowUpOutlined, LoadingOutlined } from '@ant-design/icons';
-import { Col, Row, Layout, Card, Grid, BackTop, Avatar, Spin } from 'antd';
+import { Col, Row, Layout, Card, Grid, BackTop, Avatar, Spin, Result } from 'antd';
 /** ant design */
 
 import React, { useContext, useEffect, useState } from 'react';
@@ -215,7 +215,12 @@ const ViewPrelanding = ({ preview }: PropsPreLanding) => {
   } else {
      date = moment(moment.now()).format('YYYY-MM-DD HH:mm:ss'); // En caso de que ninguna de las condiciones anteriores se cumpla.
   }
- 
+if (cEventContext.value.is_finalized && cEventContext.value.author_id !== cUser?.value?._id) {
+    return <>
+       <Result status={'info'} title="Evento finalizado"/>
+    </>
+  }
+  
   return (
     <>
       <Helmet>

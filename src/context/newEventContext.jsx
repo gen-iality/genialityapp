@@ -12,6 +12,7 @@ import { firestore } from '@/helpers/firebase';
 import { useIntl } from 'react-intl';
 import { parseDate } from '@/components/events/hooks/useCustomDateEvent';
 import { dateToCustomDate } from '@/components/events/utils/CustomMultiDate';
+import { DEFAULT_CAPACITY } from '@/events-capacity';
 
 export const cNewEventContext = createContext();
 //INITIAL STATE
@@ -318,6 +319,9 @@ export const NewEventProvider = ({ children }) => {
         type_event: typeEvent,
         where_it_run: whereItRun,
         url_external: urlExternal,
+        is_finalized:false,
+        extended_date:null,
+        attendee_capacity: DEFAULT_CAPACITY,
         styles: {
           buttonColor: '#FFF',
           banner_color: '#FFF',

@@ -1,7 +1,7 @@
 import { Fragment, useState } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button, Col, Divider, Menu, Row } from 'antd';
+import { Button, Col, Divider, Menu, Row, Typography } from 'antd';
 import { EventsApi } from '../../../helpers/request';
 import { useEffect } from 'react';
 import { MenuItems } from './utils';
@@ -53,9 +53,9 @@ const MenuConfig = (props: any) => {
 				overflow: 'auto',
 				background: '#1B1E28',
 			}}
-      // ?Info: inlineCollapsed should only be used when `mode` is `inline`
+			// ?Info: inlineCollapsed should only be used when `mode` is `inline`
 			// inlineCollapsed={!!props.collapsed}
-    >
+		>
 			<div style={{ textAlign: 'end', marginBottom: '15px', marginTop: '15px' }}>
 				<Button
 					type='primary'
@@ -106,6 +106,14 @@ const MenuConfig = (props: any) => {
 					<NavLink onClick={handleClick} to={`/admin/organization/${controller.organizationId}`}></NavLink>
 				</Menu.Item>
 			</SubMenu>
+			<Divider style={{ background: 'gray' }}/>
+		
+				<Menu.Item key={'terminosycondiciones'}>
+					<Typography.Link target='_blank' href={`${window.location.origin}/terms`}>
+						Términos y condiciones
+					</Typography.Link>
+				</Menu.Item>
+			
 		</Menu>
 	);
 };
@@ -127,7 +135,7 @@ const renderMenuItems = (controller: any, props: any) => {
 								<span>{item.name}</span>
 							</span>
 						}>
-						{item.items.map(subItem => (
+						{item.items.map((subItem) => (
 							<Menu.Item key={subItem.key}>
 								<NavLink to={props.match.url + subItem.path}>{subItem.name}</NavLink>
 							</Menu.Item>
