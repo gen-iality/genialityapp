@@ -1,4 +1,3 @@
-import PrintBingoCartonButton from '@/components/games/bingo/components/PrintBingoCartonButton';
 import { UseEventContext } from '@/context/eventContext';
 import { UseUserEvent } from '@/context/eventUserContext';
 import { useHelper } from '@/context/helperContext/hooks/useHelper';
@@ -17,12 +16,14 @@ import ConditionalModal from '@/components/authentication/ConditionalModal';
 import { useEventCapacityValidator } from '@/events-capacity';
 import { useModalLogic } from '@/hooks/useModalLogic';
 import { CapacityCompleted } from '@/events-capacity/components/CapacityCompleted';
+import { UseCurrentUser } from '@/context/userContext';
 
 const { useBreakpoint } = Grid;
 
 const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
   let cEvent = UseEventContext();
   const cEventUser = UseUserEvent();
+  let cUser = UseCurrentUser();
   const history = useHistory();
   const intl = useIntl();
   const initialButtonsState = [{ label: 'INITIAL_STATE', action: () => {} }];
@@ -125,7 +126,7 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
       }
     };
     fetchAforoCompleted();
-  }, [cEventUser.status]);
+  }, [cEventUser.status, cUser.value]);
 
   return (
     <Space direction='vertical' style={{ width: '100%' }}>

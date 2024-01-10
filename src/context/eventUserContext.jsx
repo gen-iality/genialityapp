@@ -9,7 +9,7 @@ let initialContextState = { status: 'LOADING', value: null };
 export function CurrentUserEventProvider({ children }) {
   let cEvent = UseEventContext();
   let cUser = UseCurrentUser();
-  const [userEvent, setuserEvent] = useState(initialContextState);
+  const [userEvent, setUserEvent] = useState(initialContextState);
   let [updateUser, setUpdateUser] = useState(true);
 
   useEffect(() => {
@@ -22,33 +22,38 @@ export function CurrentUserEventProvider({ children }) {
 
   useEffect(() => {
     let event_id = cEvent.value?._id;
-    if (cUser.value == null || cUser.value == undefined || updateUser == false) return;
-    async function asyncdata() {
-      try {
-        EventsApi.getStatusRegister(event_id, cUser.value.email).then((responseStatus) => {
-          /* console.log('responseStatus ', responseStatus, 'upadateUser ', updateUser); */
-          if (responseStatus.data.length > 0) {
-            setuserEvent({ status: 'LOADED', value: responseStatus.data[0] });
-          } else {
-            setuserEvent({ status: 'LOADED', value: null });
+    const fetchEventUser = async () => {
+      if (cUser.status === 'LOADED' && cEvent.status === 'LOADED') {
+        if (!!cUser.value || updateUser !== false) {
+          setUserEvent((currentValue) => ({ ...currentValue, status: 'LOADING' }));
+          try {
+            EventsApi.getStatusRegister(event_id, cUser.value.email).then((responseStatus) => {
+              if (responseStatus.data.length > 0) {
+                setUserEvent({ status: 'LOADED', value: responseStatus.data[0] });
+              } else {
+                setUserEvent({ status: 'LOADED', value: null });
+              }
+              setUpdateUser(false);
+            });
+          } catch (e) {
+            setUserEvent({ status: 'LOADED', value: null });
+            setUpdateUser(false);
           }
-          setUpdateUser(false);
-        });
-      } catch (e) {
-        setuserEvent({ status: 'LOADED', value: null });
-        setUpdateUser(false);
+        } else {
+          setUserEvent((currentValue) => ({ ...currentValue, status: 'LOADED' }));
+        }
       }
-    }
+    };
 
     if (!event_id) return;
-    asyncdata();
-  }, [cEvent.value, cUser.value, updateUser]);
+    fetchEventUser();
+  }, [cEvent.value, cUser.value, updateUser, cUser.status]);
 
   return (
     <CurrentEventUserContext.Provider
       value={{
         ...userEvent,
-        setuserEvent: setuserEvent,
+        setuserEvent: setUserEvent,
         setUpdateUser: setUpdateUser,
       }}>
       {children}
