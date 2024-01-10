@@ -8,7 +8,6 @@ import { UseUserEvent } from '../../../context/eventUserContext';
 import { Layout, Spin, notification, Button, Result } from 'antd';
 /* import 'react-toastify/dist/ReactToastify.css'; */
 
-
 import { setUserAgenda } from '../../../redux/networking/actions';
 import { DesktopOutlined, LoadingOutlined, IssuesCloseOutlined, NotificationOutlined } from '@ant-design/icons';
 
@@ -30,6 +29,7 @@ import moment from 'moment';
 import { useHistory } from 'react-router';
 import { recordTypeForThisEvent } from './helpers/thisRouteCanBeDisplayed';
 import { app } from '@helpers/firebase';
+import { EventFinishedView } from '@/event-finished/components/EventFinishedView';
 
 const { Content } = Layout;
 const EviusFooter = loadable(() => import('./EviusFooter'));
@@ -245,14 +245,10 @@ const Landing = (props) => {
 
   if (cEventContext.status === 'LOADING') return <Spin />;
 
-if (cEventContext.value.is_finalized && cEventContext.value.author_id !== cUser?.value?._id) {
-    return (
-      <>
-        <Result status={'info'} title='Evento finalizado' />
-      </>
-    );
+  if (cEventContext.value.is_finalized && cEventContext.value.author_id !== cUser?.value?._id) {
+    return <EventFinishedView />;
   }
-  
+
   return (
     <>
       {/* <ModalFeedback /> */}
@@ -267,15 +263,17 @@ if (cEventContext.value.is_finalized && cEventContext.value.author_id !== cUser?
         <ModalRegister register={register} setRegister={setRegister} event={cEventContext.value} />
       )}
       <Layout>
-      {cEventUser.value && props.userAgenda && <AppointmentModal
-          targetEventUserId={props.userAgenda?.eventUserId}
-          targetEventUser={{...props.userAgenda,user:props.userAgenda.properties}}
-          cEventUser={cEventUser}
-          cEvent={cEventContext}
-          closeModal={() => {
-            props.setUserAgenda(null);
-          }}
-        />}
+        {cEventUser.value && props.userAgenda && (
+          <AppointmentModal
+            targetEventUserId={props.userAgenda?.eventUserId}
+            targetEventUser={{ ...props.userAgenda, user: props.userAgenda.properties }}
+            cEventUser={cEventUser}
+            cEvent={cEventContext}
+            closeModal={() => {
+              props.setUserAgenda(null);
+            }}
+          />
+        )}
 
         <EventSectionsInnerMenu />
         <MenuTablets />
