@@ -15,12 +15,13 @@ import { assignStatusAccordingToAction } from './utils/utils';
 import { useIntl } from 'react-intl';
 import ConditionalModal from '@/components/authentication/ConditionalModal';
 import { useEventCapacityValidator } from '@/events-capacity';
+import { useModalLogic } from '@/hooks/useModalLogic';
+import { CapacityCompleted } from '@/events-capacity/components/CapacityCompleted';
 
 const { useBreakpoint } = Grid;
 
 const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
   let cEvent = UseEventContext();
-  const cUser = UseUserEvent();
   const history = useHistory();
   const intl = useIntl();
   const initialButtonsState = [{ label: 'INITIAL_STATE', action: () => {} }];
@@ -32,16 +33,44 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
   const [modal, setModal] = useState(false);
   const [isAforoCompleted, setIsAforoCompleted] = useState(false);
   const { isCompletedAforo } = useEventCapacityValidator();
-  //Validacion temporal para el evento audi
   const idEvent = cEvent?.value?._id;
-
   const [buttonsActions, setButtonsActions] = useState<EventAccessActionButtonsInterface[]>(initialButtonsState);
-
   const [informativeMessages, setInformativeMessage] = useState<informativeMessagesInterface[]>(
     informativeMessagesState
   );
-
+  console.log('buttonsActions', buttonsActions);
   let { handleChangeTypeModal, helperDispatch } = useHelper();
+  const { closeModal, isOpenModal, openModal } = useModalLogic();
+  const ORIGINAL_EVENT_ID: { [key: string]: string } = {
+    '64f2159bf5076637df054592': '64cacb2d6014cebb340ef142', // demo wom
+    /* '64230dc18611006a490d6022' : '645536848fb7b0e0dd0eb262' */ //evento de pruebas para aleja
+  };
+
+  const handleFunction = (params: EventAccessActionButtonsInterface[]): EventAccessActionButtonsInterface[] => {
+    const fakeEvents = Object.keys(ORIGINAL_EVENT_ID);
+    if (fakeEvents.includes(cEvent.value._id)) {
+      return [
+        {
+          label: 'Ingresar al evento',
+          action: () => {
+            setModal(true);
+          },
+        },
+      ];
+    } else {
+      return buttonsActions;
+    }
+  };
+  const onRegisterUser = async (action: () => void) => {
+    const isCompleted = await isCompletedAforo(cEvent.value._id);
+    setIsAforoCompleted(isCompleted);
+    if (isCompleted)
+      return Modal.warning({
+        title: 'Capacidad insuficiente',
+        content: `El evento ha llegado al máximo de participantes disponibles, si cree que es un error, comuníquese con el administrador del evento`,
+      });
+    action();
+  };
 
   useEffect(() => {
     if (idEvent && !Object.keys(eventData).length) {
@@ -89,40 +118,14 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
   useEffect(() => {
     const fetchAforoCompleted = async () => {
       const isCompleted = await isCompletedAforo(cEvent.value._id);
+      const isRegisterAction = buttonsActions.find((button) => button.label === 'Inscribirme al evento');
+      console.log('isRegisterAction', isRegisterAction);
+      if (isCompleted && isRegisterAction) openModal();
       setIsAforoCompleted(isCompleted);
     };
     fetchAforoCompleted();
-  }, []);
+  }, [buttonsActions]);
 
-  const ORIGINAL_EVENT_ID: { [key: string]: string } = {
-    '64f2159bf5076637df054592': '64cacb2d6014cebb340ef142', // demo wom
-    /* '64230dc18611006a490d6022' : '645536848fb7b0e0dd0eb262' */ //evento de pruebas para aleja
-  };
-  const handleFunction = (params: EventAccessActionButtonsInterface[]): EventAccessActionButtonsInterface[] => {
-    const fakeEvents = Object.keys(ORIGINAL_EVENT_ID);
-    if (fakeEvents.includes(cEvent.value._id)) {
-      return [
-        {
-          label: 'Ingresar al evento',
-          action: () => {
-            setModal(true);
-          },
-        },
-      ];
-    } else {
-      return buttonsActions;
-    }
-  };
-  const onRegisterUser = async (action: () => void) => {
-    const isCompleted = await isCompletedAforo(cEvent.value._id);
-    setIsAforoCompleted(isCompleted);
-    if (isCompleted)
-      return Modal.warning({
-        title: 'Capacidad insuficiente',
-        content: `El evento ha llegado al máximo de participantes disponibles, si cree que es un error, comuníquese con el administrador del evento`,
-      });
-    action();
-  };
   return (
     <Space direction='vertical' style={{ width: '100%' }}>
       {handleFunction(buttonsActions).map((button, index) => (
@@ -162,6 +165,7 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
         textColor={textColor}
       />
 
+      {isOpenModal && <CapacityCompleted visible={isOpenModal} onCancel={closeModal} />}
       {informativeMessages.map((message) => (
         <>{message.label !== 'INITIAL_STATE' && <Alert message={message.label} type='success' />}</>
       ))}
