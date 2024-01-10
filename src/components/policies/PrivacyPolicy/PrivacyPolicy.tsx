@@ -1,7 +1,14 @@
 import LegalTemplate from '../LegalTemplate';
 import BreadCrumbles from '../BreadCrumbles';
 import { legalPage } from '../constant';
-import { privacyAnchor, privacyContent, privacyParagraph, privacyTitle } from './privacyConstants';
+import {
+	privacyAnchor,
+	privacyContent,
+	privacyLastUpdate,
+	privacyParagraph,
+	privacyTitle,
+	privacyVersion,
+} from './privacyConstants';
 
 const PrivacyPolicy = () => {
 	return (
@@ -11,6 +18,8 @@ const PrivacyPolicy = () => {
 			termsContent={privacyContent}
 			termsParagraph={privacyParagraph}
 			termsTitle={privacyTitle}
+			termsLastUpdate={privacyLastUpdate}
+			termsVersion={privacyVersion}
 		/>
 	);
 };

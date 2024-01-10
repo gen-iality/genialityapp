@@ -3,9 +3,10 @@ import { Anchor, Avatar, BackTop, Col, Grid, List, Row, Typography } from 'antd'
 import React, { useEffect, useState } from 'react';
 
 import { ILegalTemplate } from './typings/interfaces';
+import DateAndVersion from './DateAndVersion';
 const { useBreakpoint } = Grid;
 const LegalTemplate = (props: ILegalTemplate) => {
-	const { breadCrumbles, termsAnchor, termsContent, termsParagraph, termsTitle } = props;
+	const { breadCrumbles, termsAnchor, termsContent, termsParagraph, termsTitle, termsVersion, termsLastUpdate } = props;
 	const [targetOffset, setTargetOffset] = useState<number | undefined>(undefined);
 	const screens = useBreakpoint();
 
@@ -16,17 +17,19 @@ const LegalTemplate = (props: ILegalTemplate) => {
 		<Row className='legal-container' gutter={[0, 16]}>
 			<Col xs={0} sm={0} md={6} lg={6} xl={6} xxl={6}>
 				<Row style={{ padding: '60px 30px', height: '100%', backgroundColor: '#111827' }}>
-					<Anchor offsetTop={60} targetOffset={targetOffset}>
-						{termsAnchor.map((item) => (
-							<Anchor.Link
-								key={`anchor-${item.anchor}`}
-								href={`#${item.anchor}`}
-								title={
-									<Typography.Text style={{ color: '#FFFFFF', whiteSpace: 'normal' }}>{item.title}</Typography.Text>
-								}
-							/>
-						))}
-					</Anchor>
+					<Col span={24}>
+						<Anchor offsetTop={60} targetOffset={targetOffset}>
+							{termsAnchor.map((item) => (
+								<Anchor.Link
+									key={`anchor-${item.anchor}`}
+									href={`#${item.anchor}`}
+									title={
+										<Typography.Text style={{ color: '#FFFFFF', whiteSpace: 'normal' }}>{item.title}</Typography.Text>
+									}
+								/>
+							))}
+						</Anchor>
+					</Col>
 				</Row>
 			</Col>
 			<Col xs={24} sm={24} md={18} lg={18} xl={18} xxl={18}>
@@ -38,6 +41,8 @@ const LegalTemplate = (props: ILegalTemplate) => {
 					</Col>
 					<Col span={24}>
 						<List
+							header={<DateAndVersion termsLastUpdate={termsLastUpdate} termsVersion={termsVersion} />}
+							footer={<DateAndVersion termsLastUpdate={termsLastUpdate} termsVersion={termsVersion} />}
 							split={false}
 							dataSource={termsContent}
 							renderItem={(item) => (

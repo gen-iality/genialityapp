@@ -1,5 +1,12 @@
 import { Typography } from 'antd';
-import { TLegalAnchor, TLegalContent, TLegalParagraphs, TLegalTitle } from '../typings/interfaces';
+import {
+	TLastUpdate,
+	TLegalAnchor,
+	TLegalContent,
+	TLegalParagraphs,
+	TLegalTitle,
+	TVersion,
+} from '../typings/interfaces';
 import { convertFormat } from '@/helpers/utils';
 
 const privacySections = {
@@ -15,7 +22,8 @@ const privacySections = {
 	PERSONAL_INFO_SECURITY: 'Seguridad de la información personal',
 	ADDITIONAL_PRIVACY_INFO: 'Información adicional sobre Privacidad y como contactar a EVIUS',
 };
-
+export const privacyLastUpdate: TLastUpdate = '29/12/2023';
+export const privacyVersion: TVersion = '2.0.0';
 export const privacyTitle: TLegalTitle = 'POLÍTICA DE TRATAMIENTO DE DATOS';
 export const privacyParagraph: TLegalParagraphs = (
 	<Typography.Paragraph>

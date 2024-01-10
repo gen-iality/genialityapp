@@ -1,5 +1,13 @@
 import { Typography } from 'antd';
-import { TLegalAnchor, TLegalContent, TLegalParagraphs, TLegalTitle } from '../typings/interfaces';
+import {
+	TLastUpdate,
+	TLegalAnchor,
+	TLegalContent,
+	TLegalParagraphs,
+	TLegalTitle,
+	TVersion,
+	TYears,
+} from '../typings/interfaces';
 import { convertFormat } from '@/helpers/utils';
 
 // Aqui encontramos el contenido y titulo de cada sección de la vista
@@ -363,6 +371,9 @@ const termsSections = {
 		),
 	},
 };
+
+export const termsLastUpdate: TLastUpdate = '29/12/2023';
+export const termsVersion: TVersion = '2.0.0';
 
 // Indica aqui el titulo de la vista
 export const termsTitle: TLegalTitle = 'TÉRMINOS Y CONDICIONES PLATAFORMA EVIUS';
