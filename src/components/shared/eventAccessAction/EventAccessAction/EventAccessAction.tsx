@@ -22,6 +22,7 @@ const { useBreakpoint } = Grid;
 
 const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
   let cEvent = UseEventContext();
+  const cEventUser = UseUserEvent();
   const history = useHistory();
   const intl = useIntl();
   const initialButtonsState = [{ label: 'INITIAL_STATE', action: () => {} }];
@@ -31,14 +32,13 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
   const [eventData, setEventData] = useState<any>({});
   const screens = useBreakpoint();
   const [modal, setModal] = useState(false);
-  const [isAforoCompleted, setIsAforoCompleted] = useState(false);
+  const [blockRegistration, setBlockRegistration] = useState(false);
   const { isCompletedAforo } = useEventCapacityValidator();
   const idEvent = cEvent?.value?._id;
   const [buttonsActions, setButtonsActions] = useState<EventAccessActionButtonsInterface[]>(initialButtonsState);
   const [informativeMessages, setInformativeMessage] = useState<informativeMessagesInterface[]>(
     informativeMessagesState
   );
-  console.log('buttonsActions', buttonsActions);
   let { handleChangeTypeModal, helperDispatch } = useHelper();
   const { closeModal, isOpenModal, openModal } = useModalLogic();
   const ORIGINAL_EVENT_ID: { [key: string]: string } = {
@@ -63,7 +63,7 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
   };
   const onRegisterUser = async (action: () => void) => {
     const isCompleted = await isCompletedAforo(cEvent.value._id);
-    setIsAforoCompleted(isCompleted);
+    setBlockRegistration(isCompleted);
     if (isCompleted)
       return Modal.warning({
         title: 'Capacidad insuficiente',
@@ -117,14 +117,15 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 
   useEffect(() => {
     const fetchAforoCompleted = async () => {
-      const isCompleted = await isCompletedAforo(cEvent.value._id);
-      const isRegisterAction = buttonsActions.find((button) => button.label === 'Inscribirme al evento');
-      console.log('isRegisterAction', isRegisterAction);
-      if (isCompleted && isRegisterAction) openModal();
-      setIsAforoCompleted(isCompleted);
+      const isRegisterInEvent = !!cEventUser.value; //diferente de null para estar registrado en el evento
+      if (cEventUser.status === 'LOADED' && !isRegisterInEvent) {
+        const isCompleted = await isCompletedAforo(cEvent.value._id);
+        if (isCompleted) openModal();
+        setBlockRegistration(isCompleted);
+      }
     };
     fetchAforoCompleted();
-  }, [buttonsActions]);
+  }, [cEventUser.status]);
 
   return (
     <Space direction='vertical' style={{ width: '100%' }}>
@@ -132,7 +133,7 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
         <>
           {button.label !== 'INITIAL_STATE' && (
             <Button
-              disabled={button.label === 'Inscribirme al evento' && isAforoCompleted}
+              disabled={button.label === 'Inscribirme al evento' && blockRegistration}
               key={`${index}-${button.label}`}
               block
               className={
@@ -151,7 +152,7 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
               type='primary'
               size='large'
               onClick={button.label === 'Inscribirme al evento' ? () => onRegisterUser(button.action) : button.action}>
-              {isAforoCompleted && button.label === 'Inscribirme al evento' ? 'Capacidad Superada' : button.label}
+              {blockRegistration && button.label === 'Inscribirme al evento' ? 'Capacidad Superada' : button.label}
             </Button>
           )}
         </>
