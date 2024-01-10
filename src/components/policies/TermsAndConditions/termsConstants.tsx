@@ -6,7 +6,6 @@ import {
 	TLegalParagraphs,
 	TLegalTitle,
 	TVersion,
-	TYears,
 } from '../typings/interfaces';
 import { convertFormat } from '@/helpers/utils';
 
