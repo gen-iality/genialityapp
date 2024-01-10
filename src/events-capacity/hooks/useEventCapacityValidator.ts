@@ -1,3 +1,4 @@
+import { EventsApi } from '@/helpers/request';
 import { eventService } from '@/services';
 
 export const useEventCapacityValidator = () => {
@@ -23,5 +24,19 @@ export const useEventCapacityValidator = () => {
     }
   };
 
-  return { getRemainingCapacity, isCompletedAforo };
+  const isEventUser = async (eventId: string, email: string) => {
+    try {
+      const responseStatus = await EventsApi.getStatusRegister(eventId, email);
+      if (responseStatus.data.length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
+
+  return { getRemainingCapacity, isCompletedAforo, isEventUser };
 };

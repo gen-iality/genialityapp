@@ -1,5 +1,4 @@
 import { UseEventContext } from '@/context/eventContext';
-import { UseUserEvent } from '@/context/eventUserContext';
 import { useHelper } from '@/context/helperContext/hooks/useHelper';
 import { firestore } from '@/helpers/firebase';
 import { Alert, Button, Space, Grid, Modal } from 'antd';
@@ -22,7 +21,6 @@ const { useBreakpoint } = Grid;
 
 const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
   let cEvent = UseEventContext();
-  const cEventUser = UseUserEvent();
   let cUser = UseCurrentUser();
   const history = useHistory();
   const intl = useIntl();
@@ -34,7 +32,7 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
   const screens = useBreakpoint();
   const [modal, setModal] = useState(false);
   const [blockRegistration, setBlockRegistration] = useState(false);
-  const { isCompletedAforo } = useEventCapacityValidator();
+  const { isCompletedAforo, isEventUser } = useEventCapacityValidator();
   const idEvent = cEvent?.value?._id;
   const [buttonsActions, setButtonsActions] = useState<EventAccessActionButtonsInterface[]>(initialButtonsState);
   const [informativeMessages, setInformativeMessage] = useState<informativeMessagesInterface[]>(
@@ -118,15 +116,23 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 
   useEffect(() => {
     const fetchAforoCompleted = async () => {
-      const isRegisterInEvent = !!cEventUser.value; //diferente de null para estar registrado en el evento
-      if (cEventUser.status === 'LOADED' && !isRegisterInEvent) {
-        const isCompleted = await isCompletedAforo(cEvent.value._id);
-        if (isCompleted) openModal();
-        setBlockRegistration(isCompleted);
+      if (cUser.status === 'LOADED') {
+        const isLoginUser = !!cUser.value;
+        if (isLoginUser) {
+          const isRegisterInEvent = await isEventUser(cEvent.value._id, cUser.value.email);
+          if (isRegisterInEvent) return;
+          const isCompleted = await isCompletedAforo(cEvent.value._id);
+          if (isCompleted) openModal();
+          setBlockRegistration(isCompleted);
+        } else {
+          const isCompleted = await isCompletedAforo(cEvent.value._id);
+          if (isCompleted) openModal();
+          setBlockRegistration(isCompleted);
+        }
       }
     };
     fetchAforoCompleted();
-  }, [cEventUser.status, cUser.value]);
+  }, [cUser.value]);
 
   return (
     <Space direction='vertical' style={{ width: '100%' }}>
