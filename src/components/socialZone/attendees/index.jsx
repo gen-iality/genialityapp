@@ -14,7 +14,7 @@ const AttendeList = function(props) {
   let [page, setPage] = useState(0);
   let [filteredlist, setfilteredlist] = useState([]);
   let [hasMore, setHasMore] = useState(true);
-  let { attendeeListPresence, attendeeList, maleIcons, femaleicons } = useHelper();
+  let { attendeeList, maleIcons, femaleicons } = useHelper();
   let cUser = UseCurrentUser();
   const page_size = 10;
 
@@ -30,11 +30,6 @@ const AttendeList = function(props) {
       //Ajustamos el formato de las propiedades de cada asistente para poder renderizar
       for (const property in attendeeList) {
         adapt_attendee_info(attendeeList[property], key);
-        //Agregamos al asistente su estado de presencia(enlinea/desconectado)
-        if (attendeeList[property]?.status != attendeeListPresence[property]?.state) {
-          attendeeList[property].status = attendeeListPresence[property]?.state;
-          attendeeList[property].idattendpresence = key;
-        }
       }
     });
 
@@ -49,7 +44,7 @@ const AttendeList = function(props) {
       //Object.values({ ...attendeeList }).filter((attendee) => attendee.status === 'online')
       Object.values({ ...attendeeList })
     );
-  }, [attendeeListPresence, attendeeList]);
+  }, [attendeeList]);
 
   //Filtramos la lista de asistenes cuando se busca
   useEffect(() => {

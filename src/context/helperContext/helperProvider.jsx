@@ -49,7 +49,6 @@ export const HelperContextProvider = ({ children }) => {
   const [contacts, setContacts] = useState([]);
   const [privateChatsList, setPrivatechatlist] = useState();
   const [attendeeList, setAttendeeList] = useState({});
-  const [attendeeListPresence, setAttendeeListPresence] = useState({});
   const [isCollapsedMenuRigth, setisCollapsedMenuRigth] = useState(true);
   const [chatAttendeChats, setchatAttendeChats] = useState('1');
   const [chatPublicPrivate, setchatPublicPrivate] = useState('public');
@@ -306,28 +305,6 @@ export const HelperContextProvider = ({ children }) => {
     });
   };
 
-  const monitorEventPresence = (event_id, attendeeListPresence, setAttendeeListPresence) => {
-    var eventpresenceRef = fireRealtime.ref('status/' + event_id);
-    eventpresenceRef.on('value', (snapshot) => {
-      const data = snapshot.val();
-      let datalist = [];
-      let attendeeListClone = { ...attendeeListPresence };
-
-      if (data === null) return;
-
-      Object.keys(data).map((key) => {
-        let attendee = attendeeListClone[key] || {};
-        attendee['state'] = data[key]['state'];
-        attendee['last_changed'] = data[key]['last_changed'];
-        attendeeListClone[key] = attendee;
-        datalist.push(attendee);
-      });
-
-      setAttendeeListPresence(attendeeListClone);
-    });
-    return true;
-  };
-
   const GetInfoAgenda = async () => {
     const infoAgenda = await AgendaApi.byEvent(cEvent.value._id);
     setinfoAgenda(infoAgenda.data);
@@ -422,9 +399,6 @@ export const HelperContextProvider = ({ children }) => {
           });
           setAttendeeList(list);
         });
-
-      /*DETERMINA ONLINE Y OFFLINE DE LOS USERS*/
-      monitorEventPresence(cEvent.value._id, attendeeList, setAttendeeListPresence);
 
       return () => {
         unSubscribePrivateChats();
@@ -594,7 +568,6 @@ export const HelperContextProvider = ({ children }) => {
         createNewOneToOneChat,
         privateChatsList,
         attendeeList,
-        attendeeListPresence,
         isCollapsedMenuRigth,
         HandleOpenCloseMenuRigth,
         HandleChatOrAttende,
