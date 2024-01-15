@@ -11,6 +11,7 @@ const Header = (props) => {
   const history = useHistory();
   //let cUser = UseCurrentUser();
   const { eventIsActive } = useHelper();
+  console.log('eventIsActive', eventIsActive);
   const {
     title, //titulo del encabezado
     titleTooltip, //tooltip para el encabezado

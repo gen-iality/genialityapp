@@ -373,60 +373,64 @@ export const HelperContextProvider = ({ children }) => {
     }
   }, [cEvent.value]);
 
-  /* CARGAR CHAT PRIVADOS */
+  /* CARGAR CHAT PRIVADOS Y LISTA DE ASISTENTES */
   useEffect(() => {
-    if (cEvent.value == null || cUser.value == null || cUser.value == undefined) return;
-    firestore
-      .collection('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/')
-      .onSnapshot(function(querySnapshot) {
-        let list = [];
-        let data;
-        let newmsj = 0;
-        querySnapshot.forEach((doc) => {
-          data = doc.data();
+    if (cEvent.value !== null && cUser.value !== null && cUser.value !== undefined) {
+      const unSubscribePrivateChats = firestore
+        .collection('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/')
+        .onSnapshot(function(querySnapshot) {
+          let list = [];
+          let data;
+          let newmsj = 0;
+          querySnapshot.forEach((doc) => {
+            data = doc.data();
 
-          if (data.newMessages) {
-            newmsj += !isNaN(parseInt(data.newMessages.length)) ? parseInt(data.newMessages.length) : 0;
-          }
+            if (data.newMessages) {
+              newmsj += !isNaN(parseInt(data.newMessages.length)) ? parseInt(data.newMessages.length) : 0;
+            }
 
-          list.push(data);
-        });
-        let totalNewMessages = 0;
-        list.map((privateuser) => {
-          let countsmsj =
-            privateuser?.participants &&
-            privateuser.participants.filter((participant) => participant.idparticipant !== cUser.value.uid);
-          if (countsmsj && countsmsj[0]?.countmessajes != undefined) {
-            totalNewMessages = totalNewMessages + countsmsj[0].countmessajes;
-          }
-        });
+            list.push(data);
+          });
+          let totalNewMessages = 0;
+          list.map((privateuser) => {
+            let countsmsj =
+              privateuser?.participants &&
+              privateuser.participants.filter((participant) => participant.idparticipant !== cUser.value.uid);
+            if (countsmsj && countsmsj[0]?.countmessajes != undefined) {
+              totalNewMessages = totalNewMessages + countsmsj[0].countmessajes;
+            }
+          });
 
-        settotalPrivateMessages(totalNewMessages);
-        setPrivatechatlist(list);
-      });
-
-    /*  CARGAR CHATS ATTENDES DEL USURIO*/
-    if (cEvent.value == null) return;
-    let colletion_name = cEvent.value._id + '_event_attendees';
-    let attendee;
-    firestore
-      .collection(colletion_name)
-      .orderBy('state_id', 'asc')
-      .limit(100)
-      .onSnapshot(function(querySnapshot) {
-        let list = {};
-
-        querySnapshot.forEach((doc) => {
-          attendee = doc.data();
-          let localattendee = attendeeList[attendee.user?.uid] || {};
-          list[attendee.user?.uid] = { ...localattendee, ...attendee };
+          settotalPrivateMessages(totalNewMessages);
+          setPrivatechatlist(list);
         });
 
-        setAttendeeList(list);
-      });
+      /*  CARGAR CHATS ATTENDES DEL USURIO*/
+      let colletion_name = cEvent.value._id + '_event_attendees';
+      let attendee;
+      const unSubscribeAttendeeList = firestore
+        .collection(colletion_name)
+        .orderBy('state_id', 'asc')
+        .limit(100)
+        .onSnapshot(function(querySnapshot) {
+          let list = {};
 
-    /*DETERMINA ONLINE Y OFFLINE DE LOS USERS*/
-    monitorEventPresence(cEvent.value._id, attendeeList, setAttendeeListPresence);
+          querySnapshot.forEach((doc) => {
+            attendee = doc.data();
+            let localattendee = attendeeList[attendee.user?.uid] || {};
+            list[attendee.user?.uid] = { ...localattendee, ...attendee };
+          });
+          setAttendeeList(list);
+        });
+
+      /*DETERMINA ONLINE Y OFFLINE DE LOS USERS*/
+      monitorEventPresence(cEvent.value._id, attendeeList, setAttendeeListPresence);
+
+      return () => {
+        unSubscribePrivateChats();
+        unSubscribeAttendeeList();
+      };
+    }
   }, [cEvent.value, cUser.value]);
 
   useEffect(() => {
