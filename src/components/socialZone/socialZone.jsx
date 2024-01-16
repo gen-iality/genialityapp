@@ -1,28 +1,26 @@
 import { withRouter } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { Tabs, Row, Badge, Button, Alert, Space } from 'antd';
-import { SearchOutlined, CloseOutlined } from '@ant-design/icons';
+import { Tabs, Row, Badge, Button, Alert } from 'antd';
 import SurveyList from '../events/surveys/surveyList';
 import { connect } from 'react-redux';
 import * as StageActions from '../../redux/stage/actions';
 import { setCurrentSurvey } from '../../redux/survey/actions';
-import AttendeList from './attendees/index';
 import * as notificationsActions from '../../redux/notifications/actions';
 import ChatList from './ChatList';
 import GameList from '../events/game/gameList';
-import { useRef } from 'react';
 import { UseEventContext } from '../../context/eventContext';
 import { UseCurrentUser } from '../../context/userContext';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import ThisRouteCanBeDisplayed, { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
+import { TabChatAttendee } from '@/zonasocial/components/TabChatAttendee';
 
 const { setMainStage } = StageActions;
 const { TabPane } = Tabs;
 const callback = () => {};
 const { setNotification } = notificationsActions;
-const styleTabAttendes = {
+const styleTabAttende = {
   backgroundColor: '#ffffff4d',
   padding: 5,
   borderRadius: '10px',
@@ -32,39 +30,11 @@ const SocialZone = function(props) {
   //contextos
   const cEvent = UseEventContext();
   const cUser = UseCurrentUser();
-  const {
-    attendeeList,
-    HandleChatOrAttende,
-    chatAttendeChats,
-    totalPrivateMessages,
-    currentActivity,
-    tabsGenerals,
-  } = useHelper();
+  const { HandleChatOrAttende, chatAttendeChats, totalPrivateMessages, currentActivity, tabsGenerals } = useHelper();
   const [currentUser, setCurrentUser] = useState(null);
-  const [busqueda, setBusqueda] = useState(null);
-  const [strAttende, setstrAttende] = useState();
-  const [isFiltered, setIsFiltered] = useState(false);
-  const busquedaRef = useRef();
   const history = useHistory();
   const [typeEvent, settypeEvent] = useState();
-  const [countAttendeesOnline, SetCountAttendeesOnline] = useState(0);
 
-  const handleChange = async (e) => {
-    const { value } = e.target;
-    setBusqueda(value);
-  };
-
-  const searhAttende = () => {
-    if (!isFiltered && (busqueda != undefined || busqueda != '')) {
-      setstrAttende(busqueda);
-      setIsFiltered(true);
-    } else {
-      setIsFiltered(false);
-      setstrAttende('');
-      setBusqueda(null);
-      busquedaRef.current.value = '';
-    }
-  };
   useEffect(() => {
     if (chatAttendeChats) {
       if (chatAttendeChats == 4) {
@@ -84,6 +54,7 @@ const SocialZone = function(props) {
 
   return (
     <Tabs
+      destroyInactiveTabPane
       style={{ marginTop: '-15px' }}
       defaultActiveKey='1'
       onChange={callback}
@@ -115,79 +86,20 @@ const SocialZone = function(props) {
       </TabPane>
 
       <>
-        {typeEvent !== 'UN_REGISTERED_PUBLIC_EVENT' && (
+        {typeEvent !== 'UN_REGISTERED_PUBLIC_EVENT' && props.generalTabs?.attendees && (
           <TabPane
-            style={styleTabAttendes}
+            style={styleTabAttende}
             tab={
               <>
                 {props.generalTabs?.attendees && (
                   <div style={{ color: cEvent.value.styles.textMenu }}>
                     <FormattedMessage id='tabs.attendees.socialzone' defaultMessage='Asistentes' />{' '}
-                    {countAttendeesOnline.length > 0 && <>({countAttendeesOnline.length})</>}
                   </div>
                 )}
               </>
             }
             key='2'>
-            <ThisRouteCanBeDisplayed>
-              <div key='AttendeList'>
-                <Row>
-                  <Space size={10} style={{ width: '100%' }}>
-                    {!Object.keys(attendeeList).length ? (
-                      ''
-                    ) : (
-                      <div
-                        className='control'
-                        style={{
-                          marginBottom: '10px',
-                          marginRight: '5px',
-                          color: 'white',
-                          width: '100%',
-                        }}>
-                        <input
-                          style={{ color: cEvent.value.styles.textMenu }}
-                          ref={busquedaRef}
-                          autoFocus
-                          type='text'
-                          name={'name'}
-                          onChange={handleChange}
-                          placeholder='Buscar participante...'
-                        />
-                      </div>
-                    )}
-                    {!Object.keys(attendeeList).length
-                      ? null
-                      : busqueda !== null && (
-                          <Button
-                            icon={!isFiltered ? <SearchOutlined /> : <CloseOutlined />}
-                            shape='round'
-                            onClick={searhAttende}>
-                            {!isFiltered && 'Buscar'}
-                            {isFiltered && 'Borrar'}
-                          </Button>
-                        )}
-                  </Space>
-                </Row>
-                <div className='asistente-list'>
-                  {!Object.keys(attendeeList).length ? (
-                    <Row justify='center'>
-                      <p>No hay asistentes aún</p>
-                    </Row>
-                  ) : (
-                    <AttendeList
-                      agendarCita={props.agendarCita}
-                      notificacion={props.notificacion}
-                      sendFriendship={props.sendFriendship}
-                      perfil={props.perfil}
-                      section={props.section}
-                      containNetWorking={props.containNetWorking}
-                      busqueda={strAttende}
-                      SetCountAttendeesOnline={SetCountAttendeesOnline}
-                    />
-                  )}
-                </div>
-              </div>
-            </ThisRouteCanBeDisplayed>
+            <TabChatAttendee colorTextMenu={cEvent.value.styles.textMenu} eventId={cEvent.value._id} />
           </TabPane>
         )}
       </>

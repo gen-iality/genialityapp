@@ -164,11 +164,6 @@ function UsersCard(props) {
       return (
         <div style={{ fontSize: '70%', lineHeight: '1' }}>
           <p style={{ lineHeight: '1' }}> {props?.item?.email}</p>
-          {status === 'online' ? (
-            <span style={{ color: '#52C41A', lineHeight: '1' }}>En linea</span>
-          ) : (
-            <span style={{ color: '#CCCCCC', lineHeight: '1' }}>Desconectado</span>
-          )}
         </div>
       );
     });
@@ -362,7 +357,7 @@ function UsersCard(props) {
 
   return (
     <List.Item
-      onClick={() => 
+      onClick={() =>
         props.type == 'privateChat'
           ? HandleGoToChat(
               cUser.value.uid,
