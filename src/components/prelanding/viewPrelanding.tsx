@@ -8,7 +8,7 @@ import { CurrentUserContext } from '@/context/userContext';
 import { SectionsPrelanding } from '@/helpers/constants';
 import { AgendaApi, EventsApi, SpeakersApi } from '@/helpers/request';
 import { ArrowUpOutlined, LoadingOutlined } from '@ant-design/icons';
-import { Col, Row, Layout, Card, Grid, BackTop, Avatar, Spin } from 'antd';
+import { Col, Row, Layout, Card, Grid, BackTop, Avatar, Spin, Result } from 'antd';
 /** ant design */
 
 import React, { useContext, useEffect, useState } from 'react';
@@ -32,6 +32,7 @@ import { style } from './constants';
 import { Helmet } from 'react-helmet';
 import ModalPayment from '../authentication/ModalPayment';
 import moment from 'moment';
+import { EventFinishedView } from '@/event-finished/components/EventFinishedView';
 
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -205,7 +206,7 @@ const ViewPrelanding = ({ preview }: PropsPreLanding) => {
   }
   moment.locale('en');
   let date;
-  const DATES_ARRAY = 0
+  const DATES_ARRAY = 0;
   if (cEventContext?.value?.dates !== undefined && cEventContext?.value?.dates.length > DATES_ARRAY) {
     date = moment(cEventContext?.value?.dates[0]?.start, 'DD MMM YYYY HH:mm').format('YYYY-MM-DD HH:mm:ss');
   } else if (cEventContext?.value?.dateLimit !== undefined && cEventContext?.value?.dateLimit !== null) {
@@ -213,9 +214,12 @@ const ViewPrelanding = ({ preview }: PropsPreLanding) => {
   } else if (cEventContext?.value?.datetime_from !== undefined && cEventContext?.value?.datetime_from !== null) {
     date = cEventContext?.value?.datetime_from;
   } else {
-     date = moment(moment.now()).format('YYYY-MM-DD HH:mm:ss'); // En caso de que ninguna de las condiciones anteriores se cumpla.
+    date = moment(moment.now()).format('YYYY-MM-DD HH:mm:ss'); // En caso de que ninguna de las condiciones anteriores se cumpla.
   }
- 
+  if (cEventContext.value.is_finalized && cEventContext.value.author_id !== cUser?.value?._id) {
+    return <EventFinishedView />;
+  }
+
   return (
     <>
       <Helmet>

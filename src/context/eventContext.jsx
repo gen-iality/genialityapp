@@ -29,7 +29,12 @@ export function CurrentEventProvider({ children, history, match }) {
 				case 'id':
 					try {	
 					eventGlobal = await EventsApi.getOne(event_id || event);
-					dataevent = { status: 'LOADED', value: eventGlobal, nameEvent: event_id || event, isByname: false };
+					const value = {
+						...eventGlobal,
+						is_finalized: eventGlobal?.is_finalized ?? false ,
+						extended_date: eventGlobal?.extended_date ?? null
+					}
+					dataevent = { status: 'LOADED', value, nameEvent: event_id || event, isByname: false };
 					} catch (error) {
 						history.push(`${match.url || 'absolute'}/notfound`)
 					}
@@ -43,9 +48,15 @@ export function CurrentEventProvider({ children, history, match }) {
 
 				case 'eventadmin':
 					eventGlobal = await EventsApi.getOne(event);
+					const value = {
+						...eventGlobal,
+						is_finalized: eventGlobal?.is_finalized ?? false ,
+						extended_date: eventGlobal?.extended_date ?? null
+					}
+
 					dataevent = {
 						status: 'LOADED',
-						value: eventGlobal,
+						value,
 						nameEvent: event_id || event,
 						idEvent: event,
 						isByname: false,

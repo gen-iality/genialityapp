@@ -499,6 +499,39 @@ iframe {
 	}
 }
 
+.legal-container {
+	height: 100vh;
+	.ant-anchor-ink-ball {
+		background-color: #50d3c9;
+	}
+	.ant-list-item-meta-title {
+		color: #111827 !important;
+		font-size: 20px !important;
+		font-weight: bold;
+	}
+	.legal-content {
+		ul,
+		ol {
+			padding-left: 20px;
+		}
+	}
+	.ul-circle {
+		list-style-type: circle;
+	}
+
+	.ul-square {
+		list-style-type: square;
+	}
+
+	.ol-upper-roman {
+		list-style-type: upper-roman;
+	}
+
+	.ol-lower-alpha {
+		list-style-type: lower-alpha;
+	}
+}
+
 @import 'react-quill/dist/quill.snow.css';
 @import 'react-quill/dist/quill.bubble.css';
 

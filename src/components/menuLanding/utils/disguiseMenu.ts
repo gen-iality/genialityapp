@@ -1,0 +1,1 @@
+export const DISGUISE_MENUS = ['trophies', 'my_sesions', 'interviews']

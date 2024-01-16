@@ -1,6 +1,6 @@
 {
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
-	"editor.formatOnSave": false,
+	"editor.formatOnSave": true,
 	"prettier.printWidth": 120,
 	"prettier.tabWidth": 2,
 	"editor.formatOnPaste": false,
@@ -43,5 +43,9 @@
 	"dotenv.enableAutocloaking": true,
 	"[css]": {
 		"editor.defaultFormatter": "vscode.css-language-features"
-	}
+	},
+	"javascript.referencesCodeLens.enabled": true,
+	"javascript.referencesCodeLens.showOnAllFunctions": true,
+	"typescript.referencesCodeLens.enabled": true,
+	"typescript.referencesCodeLens.showOnAllFunctions": true
 }

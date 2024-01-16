@@ -5,7 +5,7 @@ import { UseEventContext } from '../../../context/eventContext';
 import { Form, Row, Col } from 'antd';
 import Header from '../../../antdComponents/Header';
 import { DispatchMessageService } from '../../../context/MessageService';
-import MenuEvents from '../../menuLanding/utils/defaultMenu.json';
+import MenuEvents from '../../menuLanding/utils/defaultMenu';
 
 export default function AdmininformativeSection1(props) {
   const eventContext = UseEventContext();

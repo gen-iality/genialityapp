@@ -16,6 +16,12 @@ export const columnsConditionalFields: ColumnsType<IConditionalFieldTable> = [
   {
     title: 'Campo validador',
     dataIndex: 'fieldToValidateLabel',
+    render(value, record, index) {
+      return <Space>
+        <Typography.Text>{value}</Typography.Text>
+        {record.isDeletedField && <Tag color={'error'}>Campo validador no existe</Tag>}
+      </Space>;
+    },
   },
   {
     title: 'Valor',
@@ -44,15 +50,12 @@ export const columnsConditionalFields: ColumnsType<IConditionalFieldTable> = [
     title: 'Estado',
     dataIndex: 'state',
     render: (value: TValueState, record) => {
-      if (record.isRepeat) {
-        return (
-          <Space>
-            <Tag color={conditionalStatus[value].status}>{conditionalStatus[value].label}</Tag>
-            <Tag color={'warning'}>Repetido</Tag>
-          </Space>
-        );
-      }
-      return <Tag color={conditionalStatus[value].status}>{conditionalStatus[value].label}</Tag>;
+      return (
+        <Space>
+          <Tag color={conditionalStatus[value].status}>{conditionalStatus[value].label}</Tag>
+          {record.isRepeat && <Tag color={'warning'}>Repetido</Tag>}
+        </Space>
+      );
     },
   },
 ];

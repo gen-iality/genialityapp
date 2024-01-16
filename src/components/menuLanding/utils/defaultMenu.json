@@ -71,34 +71,6 @@
     "label" : "",
     "permissions": "public"
   },
-  "interviews": {
-    "name": "Citas",
-    "position": 30,
-    "section": "interviews",
-    "icon": "UserOutlined",
-    "checked": false,
-    "label" : "",
-    "permissions": "public"
-  },
-  "trophies": {
-    "name": "Trofeos",
-    "position": 30,
-    "section": "trophies",
-    "icon": "TrophyOutlined",
-    "checked": false,
-    "label" : "",
-    "permissions": "public"
-  },
-  "my_sesions": {
-    "name": "Mis Actividades",
-    "position": 30,
-    "section": "my_sesions",
-    "icon": "TeamOutlined",
-    "checked": false,
-    "label" : "",
-    "permissions": "public"
-  },
-
   "informativeSection": {
     "name": "Sección Informativa",
     "position": 30,

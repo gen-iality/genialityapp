@@ -20,8 +20,6 @@ export const useHelper = () => {
     contacts,
     createNewOneToOneChat,
     privateChatsList,
-    attendeeList,
-    attendeeListPresence,
     isCollapsedMenuRigth,
     HandleOpenCloseMenuRigth,
     HandleChatOrAttende,
@@ -62,7 +60,7 @@ export const useHelper = () => {
     controllerLoginVisible,
     eventIsActive,
     isPrelanding,
-    setIsPrelanding
+    setIsPrelanding,
   } = useContext(HelperContext);
 
   // const helperContextDebug = useContext(HelperContext);
@@ -86,8 +84,6 @@ export const useHelper = () => {
     contacts,
     createNewOneToOneChat,
     privateChatsList,
-    attendeeList,
-    attendeeListPresence,
     isCollapsedMenuRigth,
     HandleOpenCloseMenuRigth,
     HandleChatOrAttende,
@@ -128,6 +124,6 @@ export const useHelper = () => {
     controllerLoginVisible,
     eventIsActive,
     isPrelanding,
-    setIsPrelanding
+    setIsPrelanding,
   };
 };
