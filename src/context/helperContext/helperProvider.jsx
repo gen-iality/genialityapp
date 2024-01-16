@@ -48,7 +48,6 @@ export const HelperContextProvider = ({ children }) => {
   });
   const [contacts, setContacts] = useState([]);
   const [privateChatsList, setPrivatechatlist] = useState();
-  const [attendeeList, setAttendeeList] = useState({});
   const [isCollapsedMenuRigth, setisCollapsedMenuRigth] = useState(true);
   const [chatAttendeChats, setchatAttendeChats] = useState('1');
   const [chatPublicPrivate, setchatPublicPrivate] = useState('public');
@@ -64,7 +63,6 @@ export const HelperContextProvider = ({ children }) => {
   const [updateEventUser, setUpdateEventUser] = useState(false);
   const [register, setRegister] = useState(null);
   const [isPrelanding, setIsPrelanding] = useState(false);
-
   function handleChangeTypeModal(type) {
     setTypeModal(type);
   }
@@ -382,27 +380,8 @@ export const HelperContextProvider = ({ children }) => {
           setPrivatechatlist(list);
         });
 
-      /*  CARGAR CHATS ATTENDES DEL USURIO*/
-      let colletion_name = cEvent.value._id + '_event_attendees';
-      let attendee;
-      const unSubscribeAttendeeList = firestore
-        .collection(colletion_name)
-        .orderBy('state_id', 'asc')
-        .limit(100)
-        .onSnapshot(function(querySnapshot) {
-          let list = {};
-
-          querySnapshot.forEach((doc) => {
-            attendee = doc.data();
-            let localattendee = attendeeList[attendee.user?.uid] || {};
-            list[attendee.user?.uid] = { ...localattendee, ...attendee };
-          });
-          setAttendeeList(list);
-        });
-
       return () => {
         unSubscribePrivateChats();
-        unSubscribeAttendeeList();
       };
     }
   }, [cEvent.value, cUser.value]);
@@ -420,6 +399,7 @@ export const HelperContextProvider = ({ children }) => {
             querySnapshot.docChanges()[0].doc.data().ultimo_mensaje != '' &&
             ultimomsj != querySnapshot.docChanges()[0].doc.data().ultimo_mensaje
           ) {
+            console.log('querySnapshot.docChanges()[0].doc.data()', querySnapshot.docChanges()[0].doc.data());
             openNotification(querySnapshot.docChanges()[0].doc.data());
             ultimomsj = querySnapshot.docChanges()[0].doc.data().ultimo_mensaje;
           }
@@ -567,7 +547,6 @@ export const HelperContextProvider = ({ children }) => {
         contacts,
         createNewOneToOneChat,
         privateChatsList,
-        attendeeList,
         isCollapsedMenuRigth,
         HandleOpenCloseMenuRigth,
         HandleChatOrAttende,
