@@ -1115,6 +1115,11 @@ export const CertsApi = {
   getOne: async (id) => {
     return await Actions.getOne(`api/certificate/`, id);
   },
+
+  getByOrganizationUser: async (organizationuser_id) => {
+    return await Actions.getAll(`api/certificates/byOrganizationUser/`+organizationuser_id);
+  },
+
   generate: async (content, image) => {
     return await Actions.get(`api/pdfcertificate?content=` + content + '&image=' + image + '&download=1');
   },

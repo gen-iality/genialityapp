@@ -4,6 +4,32 @@ import { membersGetColumnSearchProps } from '../searchFunctions/membersGetColumn
 import SendChangePassword from '@/components/event-users/ChangePassword';
 import { deleteUserConfirmation } from './utils/deleteMembers';
 import { editUserConfirmation, getIconForActiveState } from './utils/disableUser';
+import { useHistory,useLocation,useRouteMatch } from 'react-router-dom';
+
+function BUttonGoToEventsByAccountId({item, itemId, orgId}) {
+  let history = useHistory();
+  let location = useLocation();
+  let routeMatch  = useRouteMatch();
+  
+  console.log('eldata inner',item, routeMatch)
+  return (
+    <>
+                <Button
+                  id={"none"}
+                  type={'primary'}
+                  icon={<EditOutlined />}
+                  size='small'
+                  // <NavLink to={`${props.match.url}/events`} />
+                  // onClick={() => editUserConfirmation(item, item._id,organizationId)}
+                 onClick={() => history.push("/admin/organization/"+orgId+"/eventsbyaccount/"+item.account_id+"/"+item._id)}
+                 // onClick={() => alert('hola: '+"/admin/organization/"+orgId+"/eventsbyaccount/"+item._id)}
+                 
+                ></Button>
+
+    </>
+  );
+}
+
 
 export const columns = (membersAll, columnsData, editModalUser, organizationId, fetchEventsStatisticsData) => [
   {
@@ -57,7 +83,7 @@ export const columns = (membersAll, columnsData, editModalUser, organizationId, 
     dataIndex: 'position',
     /* align: 'center', */
     ellipsis: true,
-    sorter: (a, b) => a.position?.localeCompare(b.position), 
+    sorter: (a, b) => a.position?.localeCompare(b.position),
     ...membersGetColumnSearchProps('position', columnsData),
   },
   {
@@ -89,14 +115,19 @@ export const columns = (membersAll, columnsData, editModalUser, organizationId, 
     fixed: 'right',
     width: 80,
     render(val, item, index) {
-      let newData = { active: false}
+      let newData = { active: false };
       const active = membersAll[index]?.active;
       return (
         <>
           {item.isAuthor ? (
-            <>
+                <Space>
               <SendChangePassword email={item.email} />
-            </>
+              <Tooltip placement='topLeft' title={'Inscripciones'}>
+                {console.log('eldata',organizationId,item)}
+                <BUttonGoToEventsByAccountId item={item} itemId = {item._id} orgId={organizationId}/>
+
+              </Tooltip>
+            </Space>
           ) : (
             <Space>
               <Tooltip title='Editar'>
@@ -109,6 +140,11 @@ export const columns = (membersAll, columnsData, editModalUser, organizationId, 
                   }}
                   icon={<EditOutlined />}></Button>
               </Tooltip>
+              <Tooltip placement='topLeft' title={'Inscripciones'}>
+                {console.log('eldata',organizationId,item)}
+                <BUttonGoToEventsByAccountId item={item} itemId = {item._id} orgId={organizationId}/>
+
+              </Tooltip>
               {!item.anonymous && <SendChangePassword email={item.email} />}
               <Tooltip title='Eliminar'>
                 <Button
@@ -118,14 +154,16 @@ export const columns = (membersAll, columnsData, editModalUser, organizationId, 
                   onClick={() => deleteUserConfirmation(organizationId, item._id, fetchEventsStatisticsData)}
                   icon={<DeleteOutlined />}></Button>
               </Tooltip>
+
               <Tooltip placement='topLeft' title={'Inhabilitar usuario'}>
                 <Button
                   id={`disableAction${index}`}
                   type={'primary'}
                   icon={getIconForActiveState(active)}
                   size='small'
-                  onClick={() => editUserConfirmation(membersAll, organizationId, item._id, newData, fetchEventsStatisticsData)}
-                ></Button>
+                  onClick={() =>
+                    editUserConfirmation(membersAll, organizationId, item._id, newData, fetchEventsStatisticsData)
+                  }></Button>
               </Tooltip>
             </Space>
           )}

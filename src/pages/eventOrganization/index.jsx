@@ -10,6 +10,8 @@ import OrgEvents from './events';
 import OrgMembers from './members';
 import MemberSettings from './memberSettings';
 import TemplateMemberSettings from './templateMemberSettings';
+import OrganizationEventsByAccount from '@/pages/eventOrganization/OrganizationEventsByAccount';
+
 import { Tag, Menu, Button, Layout } from 'antd';
 import {
   DoubleRightOutlined,
@@ -158,6 +160,17 @@ function Organization(props) {
                     org={organization}
                     componentKey='members'
                   />
+                  {/* http://localhost:3000/admin/organization/653047d0b2b1aee7e00b57e2/eventsbyaccount/651c859e29ae08bfd10d53f7 */}
+                  {/* <RouteContext exact path=' /organization/:id/eventsbyaccount/:account_id' component={Organization} /> */}
+                  {/* <PrivateRouteCetaValidation exact path='/admin/organization/:id/eventsbyaccount/:account_id' component={ OrganizationEventsByAccount } />
+                   */}
+                  <Protected
+                    exact
+                    path={`${props.match.url}/eventsbyaccount/:account_id/:orguser_id`}
+                    component={OrganizationEventsByAccount}
+                    org={organization}
+                    componentKey='OrganizationEventsByAccount'
+                  />
                   <Protected
                     exact
                     path={`${props.match.url}/membersettings`}
@@ -165,6 +178,7 @@ function Organization(props) {
                     org={organization}
                     componentKey='membersettings'
                   />
+
                   <Protected
                     exact
                     path={`${props.match.url}/templatesettings`}

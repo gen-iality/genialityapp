@@ -56,6 +56,8 @@ const MainRouter = (props) => {
 
           <RouteContext path={['/landing/:event_id', '/event/:event_name']} component={Landing} />
           <RouteContext exact path='/organization/:id/events' component={Organization} />
+          <RouteContext exact path=' /organization/:id/eventsbyaccount/:account_id/:orguser_id' component={Organization} />
+         
           <RouteContext exact path='/organization/:id' component={Organization} />
           <RouteContext exact path='/' component={PageWithFooter} />
           <Route component={NotFoundPage} />

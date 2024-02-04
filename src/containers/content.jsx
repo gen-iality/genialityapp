@@ -15,6 +15,8 @@ import { AgendaContextProvider } from '../context/AgendaContext';
 
 import EventOrganization from '../components/eventOrganization';
 import Organization from '@/pages/eventOrganization/index';
+import OrganizationEventsByAccount from '@/pages/eventOrganization/OrganizationEventsByAccount';
+
 import MainProfile from '../components/profile/main';
 
 import { UseCurrentUser } from '../context/userContext';
@@ -96,7 +98,11 @@ const ContentContainer = () => {
           <PrivateRoute path='/create-event' component={ NewEvent } />
           <RouteContextValidationCeta exact path='/organization/:id/events' component={ EventOrganization } />
           <RouteContextValidationCeta exact path='/organization/:id' component={ EventOrganization } />
+          {/* <PrivateRouteCetaValidation exact path='/admin/organization/:id/eventsbyaccount/:account_id' component={ OrganizationEventsByAccount } />
+    */}
           <PrivateRouteCetaValidation path='/admin/organization/:id' component={ Organization } />
+       
+          {/*DEV*/}
           <PrivateRoute path='/noaccesstocms/:id/:withoutPermissions' component={ NoMatchPage } />
           <Route path='/terms' component={ Terms } />
           <Route path='/privacy' component={ Privacy } />
@@ -166,7 +172,7 @@ const RouteContextValidationCeta = ({ component: Component, ...rest }) => {
   const history = useHistory();
   const organizationCetaIdPrincipal = '653047d0b2b1aee7e00b57e2'
   const organizationCetaIdDev = '64b7f26a920809c56a0e6e52'
-  const organizationPaths = ['/organization/:id', '/admin/organization/:id', '/organization/:id/events'];
+  const organizationPaths = ['/organization/:id', '/admin/organization/:id', '/organization/:id/events', '/organization/:id/eventsbyaccount/:account_id/:orguser_is'];
   const organizationId = rest.computedMatch.params.id;
   if (organizationPaths.includes(rest.path) && ![organizationCetaIdDev,organizationCetaIdPrincipal].includes(organizationId)) {
     history.replace(rest.path.replaceAll(organizationId, organizationCetaIdPrincipal));
@@ -250,7 +256,7 @@ const PrivateRouteCetaValidation = ({ component: Component, ...rest }) => {
   const history = useHistory();
   const organizationCetaIdPrincipal = '653047d0b2b1aee7e00b57e2'
   const organizationCetaIdDev = '64b7f26a920809c56a0e6e52'
-  const organizationPaths = ['/organization/:id', '/admin/organization/:id', '/organization/:id/events'];
+  const organizationPaths = ['/organization/:id', '/admin/organization/:id', '/organization/:id/events',' /admin/organization/:id/eventsbyaccount/:account_id/:orguser_id'];
   const organizationId = rest.computedMatch.params.id;
   if (organizationPaths.includes(rest.path) && ![organizationCetaIdDev,organizationCetaIdPrincipal].includes(organizationId)) {
     history.replace(rest.path.replaceAll(organizationId, organizationCetaIdPrincipal));
