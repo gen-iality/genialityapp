@@ -36,7 +36,6 @@ function EventOrganization({ match }: OrganizationProps) {
     return (cUser?.value && myOrgUser !== null) ? myOrgUser?.active ?? SHOW_BLOCK_EVENTS : SHOW_BLOCK_EVENTS;
   }, [myOrgUser, cUser?.value]);
   
-
   return (
     <div
       style={{
@@ -78,6 +77,7 @@ function EventOrganization({ match }: OrganizationProps) {
                       onCloseDrawer={closeCertificates}
                       eventUserId={cUser.value?._id}
                       organizationId={match.params.id}
+                      userOrgId={myOrgUser?._id}
                       orgContainerBg={organizationData?.styles?.containerBgColor}
                       orgTextColor={organizationData?.styles?.textMenu}
                     />

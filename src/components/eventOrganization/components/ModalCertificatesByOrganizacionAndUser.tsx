@@ -9,6 +9,7 @@ const { useBreakpoint } = Grid;
 interface Props extends DrawerProps {
   organizationId: string;
   eventUserId: string;
+  userOrgId: string;
   onCloseDrawer: () => void;
   orgContainerBg?: string;
   orgTextColor?: string;
@@ -17,6 +18,7 @@ interface Props extends DrawerProps {
 export const ModalCertificatesByOrganizacionAndUser = ({
   eventUserId,
   organizationId,
+  userOrgId,
   onCloseDrawer,
   orgContainerBg,
   orgTextColor,
@@ -24,7 +26,8 @@ export const ModalCertificatesByOrganizacionAndUser = ({
 }: Props) => {
   const { certificatesByEvents, eventsWithEventUser, isLoading } = useGetCertificatesByEvents(
     organizationId,
-    eventUserId
+    eventUserId,
+    userOrgId
   );
   const screens = useBreakpoint();
 
