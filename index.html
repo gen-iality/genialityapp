@@ -38,6 +38,9 @@
       } else if (location.hostname === 'evius-development.netlify.app') {
         // se agrega el dominio de development para poder renderizar el sitio
         document.domain = 'evius-development.netlify.app';
+      } else if (location.hostname === 'evius-staging--appevius.netlify.app') {
+        // se agrega el dominio de development para poder renderizar el sitio
+        document.domain = 'evius-staging--appevius.netlify.app';
       } else {
         document.domain = /(\w+)(.\w+)?$/.exec(location.hostname)[0];
       }
@@ -124,11 +127,11 @@
       defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmcIJ4xnytwh5ToGhN1Pl56RiualarBqk&callback=initMap&libraries=geometry,places"
     ></script> -->
-		<script
-    id="wompi"
-    src="https://cdn.wompi.co/libs/js/v1.js"
-    data-public-key="pub_test_UGgvjUcTWcZv0Q57IhQrI4XcNObpSQe4"
-    onload="
+    <script
+      id="wompi"
+      src="https://cdn.wompi.co/libs/js/v1.js"
+      data-public-key="pub_test_UGgvjUcTWcZv0Q57IhQrI4XcNObpSQe4"
+      onload="
       $wompi.initialize(function (data, error) {
         console.log('Enter into the function!');
         if (error === null) {
@@ -138,9 +141,9 @@
         }
       });
     "
-  ></script>
-<!-- Wompi Widget Script -->
-<script type="text/javascript" src="https://checkout.wompi.co/widget.js"></script>
+    ></script>
+    <!-- Wompi Widget Script -->
+    <script type="text/javascript" src="https://checkout.wompi.co/widget.js"></script>
     <!-- Facebook Pixel Code -->
     <script type="module">
       !(function(f, b, e, v, n, t, s) {
