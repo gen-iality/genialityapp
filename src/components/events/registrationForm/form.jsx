@@ -1,6 +1,11 @@
-import { useState, useEffect, useRef, useCallback, Fragment } from 'react';
-import { UsersApi, TicketsApi, EventsApi, EventFieldsApi } from '../../../helpers/request';
-import FormTags, { setSuccessMessageInRegisterForm } from './constants';
+import { useState, useEffect, useRef, useCallback, Fragment } from "react";
+import {
+  UsersApi,
+  TicketsApi,
+  EventsApi,
+  EventFieldsApi,
+} from "../../../helpers/request";
+import FormTags, { setSuccessMessageInRegisterForm } from "./constants";
 import {
   Collapse,
   Form,
@@ -18,25 +23,29 @@ import {
   Comment,
   Typography,
   Avatar,
-} from 'antd';
-import { LoadingOutlined, PlayCircleOutlined, UploadOutlined } from '@ant-design/icons';
-import ReactSelect from 'react-select';
-import { useIntl } from 'react-intl';
-import ImgCrop from 'antd-img-crop';
+} from "antd";
+import {
+  LoadingOutlined,
+  PlayCircleOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
+import ReactSelect from "react-select";
+import { useIntl } from "react-intl";
+import ImgCrop from "antd-img-crop";
 
-import { areaCode } from '../../../helpers/constants';
-import TypeRegister from '../../tickets/typeRegister';
-import { ButtonPayment } from './payRegister';
-import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
-import { connect } from 'react-redux';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
-import { UseUserEvent } from '../../../context/eventUserContext';
-import { UseEventContext } from '../../../context/eventContext';
-import { UseCurrentUser } from '../../../context/userContext';
-import { app } from '../../../helpers/firebase';
-import { DispatchMessageService } from '../../../context/MessageService';
-import { countryApi } from '@/helpers/request';
-import { ROLS_USER } from '@/constants/rols.constants';
+import { areaCode } from "../../../helpers/constants";
+import TypeRegister from "../../tickets/typeRegister";
+import { ButtonPayment } from "./payRegister";
+import { setSectionPermissions } from "../../../redux/sectionPermissions/actions";
+import { connect } from "react-redux";
+import { useHelper } from "../../../context/helperContext/hooks/useHelper";
+import { UseUserEvent } from "../../../context/eventUserContext";
+import { UseEventContext } from "../../../context/eventContext";
+import { UseCurrentUser } from "../../../context/userContext";
+import { app } from "../../../helpers/firebase";
+import { DispatchMessageService } from "../../../context/MessageService";
+import { countryApi } from "@/helpers/request";
+import { ROLS_USER } from "@/constants/rols.constants";
 /**TODO::ocaciona error en ios */
 
 const { Option } = Select;
@@ -44,14 +53,14 @@ const { Panel } = Collapse;
 const { TextArea, Password } = Input;
 
 const textLeft = {
-  textAlign: 'left',
-  width: '100%',
-  padding: '10px',
+  textAlign: "left",
+  width: "100%",
+  padding: "10px",
 };
 
 const center = {
-  margin: '0 auto',
-  textAlign: 'center',
+  margin: "0 auto",
+  textAlign: "center",
 };
 
 /**
@@ -63,17 +72,20 @@ function useOutsideAlerter(props) {
      * Alert if clicked on outside of element
      */
     function handleClickOutside(event) {
-      if (props.wrapperRef.current && props.wrapperRef.current.contains(event.target)) {
+      if (
+        props.wrapperRef.current &&
+        props.wrapperRef.current.contains(event.target)
+      ) {
         if (event.target.id) {
           props.showSection(event.target.id);
         }
       }
     }
     // Bind the event listener
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
       // Unbind the event listener on clean up
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [props]);
 }
@@ -89,8 +101,8 @@ function OutsideAlerter(props) {
 }
 //OBTENER NOMBRE ARCHIVO
 function obtenerName(fileUrl) {
-  if (typeof fileUrl == 'string') {
-    let splitUrl = fileUrl?.split('/');
+  if (typeof fileUrl == "string") {
+    let splitUrl = fileUrl?.split("/");
     return splitUrl[splitUrl.length - 1];
   } else {
     return null;
@@ -100,7 +112,9 @@ function obtenerName(fileUrl) {
 function isVisibleButton(basicDataUser, extraFields, cEventUser) {
   if (
     Object.keys(basicDataUser).length > 0 ||
-    (fieldsAditional(extraFields) == 0 && Object.keys(basicDataUser).length == 0 && cEventUser.value !== null)
+    (fieldsAditional(extraFields) == 0 &&
+      Object.keys(basicDataUser).length == 0 &&
+      cEventUser.value !== null)
   ) {
     return true;
   }
@@ -108,15 +122,19 @@ function isVisibleButton(basicDataUser, extraFields, cEventUser) {
 }
 
 function isRegister(initialValues, cEventUser) {
-  if (!initialValues?._id || cEventUser.value === null ? true : false) return 'Button.signup';
-  if (initialValues?._id) return 'registration.button.update';
+  if (!initialValues?._id || cEventUser.value === null ? true : false)
+    return "Button.signup";
+  if (initialValues?._id) return "registration.button.update";
 }
 
 function fieldsAditional(extraFields) {
   if (extraFields) {
     const countFields = extraFields.filter(
       (field) =>
-      !field.visibleByAdmin && field.name !== 'names' && field.name !== 'email' && (field.type !== 'password' || field.name === 'contrasena')
+        !field.visibleByAdmin &&
+        field.name !== "names" &&
+        field.name !== "email" &&
+        (field.type !== "password" || field.name === "contrasena")
     );
     return countFields.length;
   }
@@ -126,11 +144,20 @@ function fieldsAditional(extraFields) {
 /** CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
  * debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
  */
-let updateTakenOptionInTakeableList = (camposConOpcionTomada, values, eventId) => {
+let updateTakenOptionInTakeableList = (
+  camposConOpcionTomada,
+  values,
+  eventId
+) => {
   camposConOpcionTomada.map((field) => {
-    let taken = field.options.filter((option) => option.value == values[field.name]);
+    let taken = field.options.filter(
+      (option) => option.value == values[field.name]
+    );
     let updatedField = { ...field };
-    let fieldId = updatedField._id && updatedField._id['$oid'] ? updatedField._id['$oid'] : updatedField._id;
+    let fieldId =
+      updatedField._id && updatedField._id["$oid"]
+        ? updatedField._id["$oid"]
+        : updatedField._id;
     // updatedField.optionstaken = updatedField.optionstaken ? [...updatedField.optionstaken, ...taken] : taken;
 
     // //Esto es un parche porque el field viene con campos tipo objeto que revientan el API
@@ -176,27 +203,40 @@ const FormRegister = ({
     helperDispatch,
     // eventIsActive,
   } = useHelper();
-  const [extraFields, setExtraFields] = useState(cEvent.value?.user_properties || [] || fields);
+  const [extraFields, setExtraFields] = useState(
+    cEvent.value?.user_properties || [] || fields
+  );
   const [submittedForm, setSubmittedForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
-  const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState(false);
+  const [
+    generalFormErrorMessageVisible,
+    setGeneralFormErrorMessageVisible,
+  ] = useState(false);
   const [notLoggedAndRegister, setNotLoggedAndRegister] = useState(false);
   const [formMessage, setFormMessage] = useState({});
   // const [password, setPassword] = useState('');
   const [event, setEvent] = useState(null);
   const [loggedurl, setLogguedurl] = useState(null);
   const [imageAvatar, setImageAvatar] = useState(null);
-  let [ImgUrl, setImgUrl] = useState('');
-  const [typeRegister, setTypeRegister] = useState('pay');
+  let [ImgUrl, setImgUrl] = useState("");
+  const [typeRegister, setTypeRegister] = useState("pay");
   const [payMessage, setPayMessage] = useState(false);
   const [form] = Form.useForm();
-  let [areacodeselected, setareacodeselected] = useState('+57');
+  let [areacodeselected, setareacodeselected] = useState("+57");
   let [numberareacode, setnumberareacode] = useState(null);
   let [fieldCode, setFieldCode] = useState(null);
   const [initialValues, setinitialValues] = useState({});
-  const [country, setCountry] = useState({ name: '', countryCode: '', inputName: '' });
-  const [region, setRegion] = useState({ name: '', regionCode: '', inputName: '' });
-  const [city, setCity] = useState({ name: '', regionCode: '', inputName: '' });
+  const [country, setCountry] = useState({
+    name: "",
+    countryCode: "",
+    inputName: "",
+  });
+  const [region, setRegion] = useState({
+    name: "",
+    regionCode: "",
+    inputName: "",
+  });
+  const [city, setCity] = useState({ name: "", regionCode: "", inputName: "" });
   const [countries, setCountries] = useState([]);
   const [regiones, setRegiones] = useState([]);
   const [cities, setCities] = useState([]);
@@ -204,7 +244,9 @@ const FormRegister = ({
   const [conditionals, setconditionals] = useState(
     organization ? conditionalsOther : cEvent.value?.fields_conditions || []
   );
-  const [eventUser, seteventUser] = useState(organization ? eventUserOther : cEventUser.value || {});
+  const [eventUser, seteventUser] = useState(
+    organization ? eventUserOther : cEventUser.value || {}
+  );
   const [extraFieldsOriginal, setextraFieldsOriginal] = useState(
     organization ? fields : cEvent.value?.user_properties || {}
   );
@@ -234,9 +276,9 @@ const FormRegister = ({
   };
 
   const getNameTypeCountry = () => {
-    if (extraFields.length === 0) return '';
-    let fieldFound = extraFields.find((field) => field.type === 'country');
-    if (!fieldFound) return '';
+    if (extraFields.length === 0) return "";
+    let fieldFound = extraFields.find((field) => field.type === "country");
+    if (!fieldFound) return "";
     if (fieldFound.length > 1) {
       return fieldFound[0].name;
     }
@@ -250,7 +292,7 @@ const FormRegister = ({
       setRegiones(response);
       if (response.length === 0) {
         form.setFieldsValue({
-          [region.inputName !== '' ? region.inputName : 'region']: 'NA',
+          [region.inputName !== "" ? region.inputName : "region"]: "NA",
         });
       }
     } catch (error) {
@@ -266,7 +308,7 @@ const FormRegister = ({
       setCities(response);
       if (response.length === 0) {
         form.setFieldsValue({
-          [city.inputName !== '' ? city.inputName : 'city']: 'NA',
+          [city.inputName !== "" ? city.inputName : "city"]: "NA",
         });
       }
     } catch (error) {
@@ -329,7 +371,7 @@ const FormRegister = ({
   }, [validateEventUser?.status, validateEventUser?.statusFields]);
 
   useEffect(() => {
-    let formType = !cEventUser.value?._id ? 'register' : 'transfer';
+    let formType = !cEventUser.value?._id ? "register" : "transfer";
     setFormMessage(FormTags(formType));
     setSubmittedForm(false);
     hideConditionalFieldsToDefault(conditionals, cEventUser);
@@ -337,20 +379,25 @@ const FormRegister = ({
     !organization && getEventData(eventId);
     form.resetFields();
     if (window.fbq) {
-      window.fbq('track', 'CompleteRegistration');
+      window.fbq("track", "CompleteRegistration");
     }
   }, [cEventUser.value, initialValues, conditionals, cEvent.value?._id]);
 
   useEffect(() => {
     if (!extraFields) return;
-    let codeareafield = extraFields.filter((field) => field.type == 'codearea');
+    let codeareafield = extraFields.filter((field) => field.type == "codearea");
     if (codeareafield[0]) {
       let phonenumber =
-        eventUser && codeareafield[0] && eventUser['properties'] ? eventUser['properties'][codeareafield[0].name] : '';
-      let codeValue = eventUser && eventUser['properties'] ? eventUser['properties']['code'] : '';
+        eventUser && codeareafield[0] && eventUser["properties"]
+          ? eventUser["properties"][codeareafield[0].name]
+          : "";
+      let codeValue =
+        eventUser && eventUser["properties"]
+          ? eventUser["properties"]["code"]
+          : "";
       setFieldCode(codeareafield[0].name);
       if (phonenumber && numberareacode == null) {
-        let splitphone = phonenumber.toString().split(' ');
+        let splitphone = phonenumber.toString().split(" ");
         setareacodeselected(codeValue);
       }
     }
@@ -389,20 +436,20 @@ const FormRegister = ({
       return;
     }
 
-    if (values['email']) {
-      values['email'] = values['email'].toLowerCase();
+    if (values["email"]) {
+      values["email"] = values["email"].toLowerCase();
     }
 
     if (areacodeselected) {
-      values['code'] = areacodeselected;
+      values["code"] = areacodeselected;
     }
 
     //OBTENER RUTA ARCHIVOS FILE
     Object.values(extraFields).map((value) => {
-      if (value.type == 'file') {
+      if (value.type == "file") {
         values[value.name] = values[value.name]?.fileList
           ? values[value.name]?.fileList[0]?.response.trim()
-          : typeof values[value.name] == 'string'
+          : typeof values[value.name] == "string"
           ? values[value.name]
           : null;
       }
@@ -412,7 +459,7 @@ const FormRegister = ({
       if (imageAvatar.fileList[0]) {
         values.picture = imageAvatar.fileList[0].response;
       } else {
-        values.picture = '';
+        values.picture = "";
       }
     } else {
       delete values.picture;
@@ -420,7 +467,10 @@ const FormRegister = ({
     if (callback) {
       callback(values);
     } else {
-      const { data } = await EventsApi.getStatusRegister(cEvent.value?._id, values.email);
+      const { data } = await EventsApi.getStatusRegister(
+        cEvent.value?._id,
+        values.email
+      );
       if (data.length == 0 || cEventUser.value) {
         setSectionPermissions({ view: false, ticketview: false });
         // values.password = password;
@@ -430,15 +480,15 @@ const FormRegister = ({
         setGeneralFormErrorMessageVisible(false);
         setNotLoggedAndRegister(false);
 
-        const key = 'registerUserService';
+        const key = "registerUserService";
 
         // message.loading({ content: !eventUserId ? "Registrando Usuario" : "Realizando Transferencia", key }, 10);
         DispatchMessageService({
-          type: 'loading',
-          key: 'loading',
-          msj: intl.formatMessage({ id: 'registration.message.loading' }),
+          type: "loading",
+          key: "loading",
+          msj: intl.formatMessage({ id: "registration.message.loading" }),
           duration: 10,
-          action: 'show',
+          action: "show",
         });
 
         const registerBody = { ...values };
@@ -452,57 +502,73 @@ const FormRegister = ({
 
         if (eventUserId) {
           try {
-            await TicketsApi.transferToUser(cEvent.value?._id, eventUserId, registerBody);
+            await TicketsApi.transferToUser(
+              cEvent.value?._id,
+              eventUserId,
+              registerBody
+            );
             // textMessage.content = "Transferencia Realizada";
             textMessage.content = formMessage.successMessage;
-            setSuccessMessage(`Se ha realizado la transferencia del ticket al correo ${values.email}`);
+            setSuccessMessage(
+              `Se ha realizado la transferencia del ticket al correo ${values.email}`
+            );
 
             setSubmittedForm(true);
             DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
+              key: "loading",
+              action: "destroy",
             });
             DispatchMessageService({
-              type: 'success',
+              type: "success",
               msj: textMessage,
-              action: 'show',
+              action: "show",
             });
             setTimeout(() => {
               closeModal({
-                status: 'sent_transfer',
-                message: 'Transferencia Hecha',
+                status: "sent_transfer",
+                message: "Transferencia Hecha",
               });
             }, 4000);
           } catch (err) {
             // textMessage.content = "Error... Intentalo mas tarde";
             textMessage.content = formMessage.errorMessage;
             DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
+              key: "loading",
+              action: "destroy",
             });
             DispatchMessageService({
-              type: 'error',
+              type: "error",
               msj: textMessage,
-              action: 'show',
+              action: "show",
             });
           }
         } else {
           try {
             let resp = undefined;
             switch (typeModal) {
-              case 'registerForTheEvent':
-                const registerForTheEventData = await UsersApi.createOne(eventUserBody, cEvent.value?._id);
+              case "registerForTheEvent":
+                const registerForTheEventData = await UsersApi.createOne(
+                  eventUserBody,
+                  cEvent.value?._id
+                );
                 resp = registerForTheEventData;
 
                 break;
 
-              case 'update':
-                const updateData = await UsersApi.editEventUser(eventUserBody, cEvent.value?._id, cEventUser.value._id);
+              case "update":
+                const updateData = await UsersApi.editEventUser(
+                  eventUserBody,
+                  cEvent.value?._id,
+                  cEventUser.value._id
+                );
                 resp = updateData;
                 break;
 
               default:
-                resp = await UsersApi.createUser(registerBody, cEvent.value?._id);
+                resp = await UsersApi.createUser(
+                  registerBody,
+                  cEvent.value?._id
+                );
 
                 break;
             }
@@ -510,28 +576,35 @@ const FormRegister = ({
             // CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
             // debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
             //
-            let camposConOpcionTomada = extraFields.filter((m) => m.type == 'list' && m.justonebyattendee);
-            updateTakenOptionInTakeableList(camposConOpcionTomada, values, cEvent.value?._id);
+            let camposConOpcionTomada = extraFields.filter(
+              (m) => m.type == "list" && m.justonebyattendee
+            );
+            updateTakenOptionInTakeableList(
+              camposConOpcionTomada,
+              values,
+              cEvent.value?._id
+            );
 
             if (resp && resp._id) {
               setSuccessMessageInRegisterForm(resp.status);
               cEventUser.setUpdateUser(true);
               handleChangeTypeModal(null);
-              textMessage.content = 'Usuario ' + formMessage.successMessage;
+              textMessage.content = "Usuario " + formMessage.successMessage;
 
               let $msg =
                 organization == 1
-                  ? ''
+                  ? ""
                   : event.registration_message ||
-                    `Fuiste registrado al evento  ${values.email || ''}, revisa tu correo para confirmar.`;
+                    `Fuiste registrado al evento  ${values.email ||
+                      ""}, revisa tu correo para confirmar.`;
 
               setSuccessMessage($msg);
 
               setSubmittedForm(true);
               DispatchMessageService({
-                type: 'success',
-                msj: intl.formatMessage({ id: 'registration.message.created' }),
-                action: 'show',
+                type: "success",
+                msj: intl.formatMessage({ id: "registration.message.created" }),
+                action: "show",
               });
 
               //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
@@ -540,18 +613,21 @@ const FormRegister = ({
                 const loginFirebase = async () => {
                   app
                     .auth()
-                    .signInWithEmailAndPassword(resp.email || resp.properties.email, values.password)
+                    .signInWithEmailAndPassword(
+                      resp.email || resp.properties.email,
+                      values.password
+                    )
                     .then((response) => {
                       if (response.user) {
                         cEventUser.setUpdateUser(true);
                         handleChangeTypeModal(null);
                         setSubmittedForm(false);
                         switch (typeModal) {
-                          case 'registerForTheEvent':
+                          case "registerForTheEvent":
                             setRegister(2);
                             break;
 
-                          case 'update':
+                          case "update":
                             setRegister(4);
                             break;
                         }
@@ -561,7 +637,7 @@ const FormRegister = ({
                       }
                     });
                 };
-                cEvent?.value?.visibility !== 'ANONYMOUS' && loginFirebase();
+                cEvent?.value?.visibility !== "ANONYMOUS" && loginFirebase();
                 const loginFirebaseAnonymous = async () => {
                   app
                     .auth()
@@ -572,11 +648,11 @@ const FormRegister = ({
                         handleChangeTypeModal(null);
                         setSubmittedForm(false);
                         switch (typeModal) {
-                          case 'registerForTheEvent':
+                          case "registerForTheEvent":
                             setRegister(2);
                             break;
 
-                          case 'update':
+                          case "update":
                             setRegister(4);
                             break;
                         }
@@ -584,21 +660,24 @@ const FormRegister = ({
                       }
                     });
                 };
-                cEvent?.value?.visibility === 'ANONYMOUS' && loginFirebaseAnonymous();
+                cEvent?.value?.visibility === "ANONYMOUS" &&
+                  loginFirebaseAnonymous();
               } else {
                 window.location.replace(
-                  `/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${cEventUser.value == null ? 1 : 4}`
+                  `/landing/${cEvent.value?._id}/${
+                    eventPrivate.section
+                  }?register=${cEventUser.value == null ? 1 : 4}`
                 );
               }
             } else {
-              if (typeRegister == 'free') {
+              if (typeRegister == "free") {
                 let msg =
                   intl.formatMessage({
-                    id: 'registration.already.registered',
+                    id: "registration.already.registered",
                   }) +
-                  ' ' +
+                  " " +
                   intl.formatMessage({
-                    id: 'registration.message.success.subtitle',
+                    id: "registration.message.success.subtitle",
                   });
 
                 textMessage.content = msg;
@@ -607,9 +686,9 @@ const FormRegister = ({
                 // Retorna un mensaje en caso de que ya se encuentre registrado el correo
                 setNotLoggedAndRegister(true);
                 DispatchMessageService({
-                  type: 'success',
+                  type: "success",
                   msj: msg,
-                  action: 'show',
+                  action: "show",
                 });
               } else {
                 setPayMessage(true);
@@ -619,9 +698,9 @@ const FormRegister = ({
             textMessage.content = formMessage.errorMessage;
             textMessage.key = key;
             DispatchMessageService({
-              type: 'error',
+              type: "error",
               msj: textMessage,
-              action: 'show',
+              action: "show",
             });
           }
         }
@@ -637,7 +716,7 @@ const FormRegister = ({
   useEffect(() => {
     if (areacodeselected) {
       //form.setFieldsValue({ ...form.getFieldsValue, code: areacodeselected });
-      HandleHookForm({ target: { value: areacodeselected } }, 'code', null);
+      HandleHookForm({ target: { value: areacodeselected } }, "code", null);
     }
   }, [areacodeselected]);
 
@@ -663,6 +742,13 @@ const FormRegister = ({
     // }
   };
 
+  const customStylesLabel = `.fieldlabel a {color: teal; text-decoration: underline;}`;
+  const getShortDescription = (description) => {
+    const shortDescription = description.slice(0, 30);
+
+    return shortDescription;
+  };
+
   const valuesChange = (changedValues, allValues) => {
     //validar que todos los campos de event user esten llenos
     ValidateEmptyFields(allValues);
@@ -684,8 +770,9 @@ const FormRegister = ({
 
       //para cada campo revisamos si se cumplen todas las condiciones para mostrarlo
       conditionals.map((conditional) => {
-        if(conditional.state === 'disabled') return;
-        let fieldExistInThisCondition = conditional.fields.indexOf(field.name) !== -1;
+        if (conditional.state === "disabled") return;
+        let fieldExistInThisCondition =
+          conditional.fields.indexOf(field.name) !== -1;
 
         if (!fieldExistInThisCondition) return;
         fieldHasCondition = true;
@@ -699,13 +786,16 @@ const FormRegister = ({
           fieldShouldBeDisplayed = true;
         }
       });
-      return (fieldHasCondition && fieldShouldBeDisplayed) || !fieldHasCondition;
+      return (
+        (fieldHasCondition && fieldShouldBeDisplayed) || !fieldHasCondition
+      );
     });
     setExtraFields(newExtraFields);
   };
 
   const hideConditionalFieldsToDefault = (conditionals, eventUser) => {
-    let allFields = eventUser && eventUser['properties'] ? eventUser['properties'] : [];
+    let allFields =
+      eventUser && eventUser["properties"] ? eventUser["properties"] : [];
     updateFieldsVisibility(conditionals, allFields);
   };
 
@@ -713,9 +803,9 @@ const FormRegister = ({
     const isLt5M = file.size / 1024 / 1024 < 5;
     if (!isLt5M) {
       DispatchMessageService({
-        type: 'error',
-        msj: 'Image must smaller than 5MB!',
-        action: 'show',
+        type: "error",
+        msj: "Image must smaller than 5MB!",
+        action: "show",
       });
     }
     return isLt5M ? true : false;
@@ -723,21 +813,21 @@ const FormRegister = ({
 
   function validateUrl() {
     let url = window.location.pathname;
-    return url.includes('/landing/') ? true : false;
+    return url.includes("/landing/") ? true : false;
   }
   /**
    * Crear inputs usando ant-form, ant se encarga de los onChange y de actualizar los valores
    */
   const renderForm = useCallback(() => {
-    if (!extraFields) return '';
+    if (!extraFields) return "";
     let formUI = extraFields.map((m, key) => {
       if (m.visibleByAdmin == true && !usedInCms) {
         /* console.log(m, key) */
         return;
       }
       //Este if es nuevo para poder validar las contraseñas viejos (nuevo flujo para no mostrar esos campos)
-      if (m.name !== 'contrasena' && m.name !== 'password') {
-        let type = m.type || 'text';
+      if (m.name !== "contrasena" && m.name !== "password") {
+        let type = m.type || "text";
         let props = m.props || {};
         let name = m.name;
         let label = m.label;
@@ -746,19 +836,22 @@ const FormRegister = ({
         let labelPosition = m.labelPosition;
         let target = name;
         let value = callback
-          ? eventUser && eventUser['properties']
-            ? eventUser['properties'][target]
-            : ''
+          ? eventUser && eventUser["properties"]
+            ? eventUser["properties"][target]
+            : ""
           : initialValues
           ? initialValues[target]
-          : '';
+          : "";
         //VISIBILIDAD DE CAMPOS
         let visible =
-          (initialValues?.email && name == 'email') || (initialValues?.names && name == 'names') ? true : false;
+          (initialValues?.email && name == "email") ||
+          (initialValues?.names && name == "names")
+            ? true
+            : false;
         let validations =
-          (type === 'region' && regiones.length == 0) ||
-          (type === 'country' && countries.length == 0) ||
-          (type === 'city' && cities.length == 0);
+          (type === "region" && regiones.length == 0) ||
+          (type === "country" && countries.length == 0) ||
+          (type === "city" && cities.length == 0);
         /* console.log(initialValues, 'initialValues', m) */
 
         //no entiendo b esto para que funciona
@@ -775,9 +868,9 @@ const FormRegister = ({
           <Input
             {...props}
             addonBefore={
-              labelPosition === 'izquierda' && (
+              labelPosition === "izquierda" && (
                 <span>
-                  {mandatory && <span style={{ color: 'red' }}>* </span>}
+                  {mandatory && <span style={{ color: "red" }}>* </span>}
                   <strong>{label}</strong>
                 </span>
               )
@@ -789,18 +882,19 @@ const FormRegister = ({
           />
         );
 
-        if (type === 'codearea') {
+        if (type === "codearea") {
           const prefixSelector = (
             <Select
               showSearch
-              optionFilterProp='children'
-              style={{ fontSize: '12px', width: 150 }}
+              optionFilterProp="children"
+              style={{ fontSize: "12px", width: 150 }}
               value={areacodeselected}
               onChange={(val) => {
                 setareacodeselected(val);
                 //console.log(val);
               }}
-              placeholder='Código de area del pais'>
+              placeholder="Código de area del pais"
+            >
               {areaCode.map((code, key) => {
                 return (
                   <Option key={key} value={code.value}>
@@ -817,25 +911,26 @@ const FormRegister = ({
               defaultvalue={value?.toString().split()[2]}
               name={name}
               //required={mandatory}
-              type='number'
+              type="number"
               // key={key}
-              style={{ width: '100%' }}
-              placeholder='Numero de telefono'
+              style={{ width: "100%" }}
+              placeholder="Numero de telefono"
             />
           );
         }
 
-        if (type === 'onlyCodearea') {
+        if (type === "onlyCodearea") {
           input = (
             <Form.Item initialValue={areacodeselected} name={name} noStyle>
               <Select
                 showSearch
-                optionFilterProp='children'
-                style={{ width: '100%' }}
+                optionFilterProp="children"
+                style={{ width: "100%" }}
                 onChange={(val) => {
                   areacodeselected = val;
                 }}
-                placeholder='Código de area del pais'>
+                placeholder="Código de area del pais"
+              >
                 {areaCode.map((code, key) => {
                   return (
                     <Option key={key} value={code.value}>
@@ -848,99 +943,115 @@ const FormRegister = ({
           );
         }
 
-        if (type === 'tituloseccion') {
+        if (type === "tituloseccion") {
           input = (
             <Fragment>
-              <div className={`label has-text-grey ${mandatory ? 'required' : ''}`}>
+              <div
+                className={`label has-text-grey ${mandatory ? "required" : ""}`}
+              >
                 <div
                   dangerouslySetInnerHTML={{
                     __html: label,
-                  }}></div>
+                  }}
+                ></div>
               </div>
               <Divider />
             </Fragment>
           );
         }
 
-        let rule = name == 'email' || name == 'names' ? { required: true } : { required: mandatory };
+        let rule =
+          name == "email" || name == "names"
+            ? { required: true }
+            : { required: mandatory };
 
-        if (type === 'multiplelisttable') {
+        if (type === "multiplelisttable") {
           input = <ReactSelect options={m.options} isMulti name={name} />;
         }
 
-        if (type === 'boolean') {
-          let textoError = intl.formatMessage({ id: 'form.field.required' });
+        if (type === "boolean") {
+          let textoError = intl.formatMessage({ id: "form.field.required" });
           if (mandatory) {
-
             rule = {
-              validator: (_, value) => (value == true ? Promise.resolve() : Promise.reject(textoError)),
+              validator: (_, value) =>
+                value == true ? Promise.resolve() : Promise.reject(textoError),
             };
           } else {
             rule = {
               validator: (_, value) =>
-                value == true || value == false || value == '' || value == undefined
+                value == true ||
+                value == false ||
+                value == "" ||
+                value == undefined
                   ? Promise.resolve()
                   : Promise.reject(textoError),
             };
           }
           return (
-            <div key={'g' + key} name='field'>
-              {
-                <>
-                  <Form.Item
-                    valuePropName={'checked'}
-                    name={name}
-                    rules={[rule]}
-                    form={form}
-                    key={'l' + key}
-                    htmlFor={key}
-                    initialValue={value}>
-                    <Checkbox {...props} key={key} name={name} defaultChecked={Boolean(value ? value : false)}>
-                      {mandatory ? (
-                        <span>
-                          <span style={{ color: 'red' }}>* </span>
-                          <strong>{label}</strong>
-                        </span>
-                      ) : (
-                        label
-                      )}
-                    </Checkbox>
-                  </Form.Item>
-                  {cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && (
-                    <Row style={{ marginTop: 20 }}>
-                      {' '}
-                      <a target='_blank' rel='noreferrer' href={'https://tiempodejuego.org/tyclaventana/'}>
-                        <PlayCircleOutlined /> Ver términos y condiciones
-                      </a>
-                    </Row>
-                  )}
-                  {description && description.length < 500 && <p>{description}</p>}
-                  {description && description.length > 500 && (
-                    <Collapse defaultActiveKey={['0']} style={{ margingBotton: '15px' }}>
+            <div key={`g${key}`} name="field">
+              <Form.Item
+                valuePropName="checked"
+                name={name}
+                rules={[rule]}
+                form={form}
+                key={`l${key}`}
+                htmlFor={key}
+                initialValue={value}
+              >
+                <Checkbox
+                  {...props}
+                  key={key}
+                  name={name}
+                  defaultChecked={!!value}
+                >
+                  <span className="fieldlabel">
+                    {mandatory && <span style={{ color: "red" }}>* </span>}
+                    <style>{customStylesLabel}</style>
+                    <strong dangerouslySetInnerHTML={{ __html: label }} />
+                  </span>
+                </Checkbox>
+              </Form.Item>
+              {description && (
+                <span className="fieldlabel">
+                  <style>{customStylesLabel}</style>
+                  {description.length < 500 ? (
+                    <p dangerouslySetInnerHTML={{ __html: description }} />
+                  ) : (
+                    <Collapse
+                      defaultActiveKey={["0"]}
+                      style={{ marginBottom: "15px" }}
+                    >
                       <Panel
-                        header={intl.formatMessage({
-                          id: 'registration.message.policy',
-                        })}
-                        key='1'>
+                        header={`${getShortDescription(
+                          description
+                        )}... Ver más`}
+                        key="1"
+                      >
                         <pre
-                          dangerouslySetInnerHTML={{
-                            __html: description,
-                          }}
-                          style={{ whiteSpace: 'normal' }}></pre>
+                          dangerouslySetInnerHTML={{ __html: description }}
+                          style={{ whiteSpace: "normal" }}
+                        />
                       </Panel>
                     </Collapse>
                   )}
-                </>
-              }
+                </span>
+              )}
             </div>
           );
         }
 
-        if (type === 'longtext') {
-          input = <TextArea rows={4} autoSize={{ minRows: 3, maxRows: 25 }} value={value} defaultValue={value} />;
+        if (type === "longtext") {
+          input = (
+            <TextArea
+              rows={4}
+              autoSize={{ minRows: 3, maxRows: 25 }}
+              value={value}
+              defaultValue={value}
+            />
+          );
         }
 
-        if (type === 'multiplelist') {
+        if (type === "multiplelist") {
           input = (
             <Checkbox.Group
               options={m.options}
@@ -952,39 +1063,43 @@ const FormRegister = ({
           );
         }
 
-        if (type === 'file') {
+        if (type === "file") {
           input = (
             <Upload
-              accept='application/pdf,image/png, image/jpeg,image/jpg,application/msword,.docx'
-              action='https://api.evius.co/api/files/upload/'
+              accept="application/pdf,image/png, image/jpeg,image/jpg,application/msword,.docx"
+              action="https://api.evius.co/api/files/upload/"
               multiple={false}
-              listType='text'
+              listType="text"
               beforeUpload={beforeUpload}
               defaultFileList={
                 value
                   ? [
                       {
-                        name: typeof value == 'string' ? obtenerName(value) : null,
-                        url: typeof value == 'string' ? value : null,
+                        name:
+                          typeof value == "string" ? obtenerName(value) : null,
+                        url: typeof value == "string" ? value : null,
                       },
                     ]
                   : []
-              }>
+              }
+            >
               <Button icon={<UploadOutlined />}>Upload</Button>
             </Upload>
           );
         }
 
-        if (type === 'list' || type === 'list_type_user') {
+        if (type === "list" || type === "list_type_user") {
           //Filtramos las opciones ya tomadas si la opción justonebyattendee esta activada
 
-          let fieldId = m._id && m._id['$oid'] ? m._id['$oid'] : m._id;
+          let fieldId = m._id && m._id["$oid"] ? m._id["$oid"] : m._id;
 
           if (event && m.justonebyattendee && m.options) {
-            let takenoptions = event['takenoptions_' + fieldId];
+            let takenoptions = event["takenoptions_" + fieldId];
             if (takenoptions) {
               m.options = m.options.filter((x) => {
-                return takenoptions.filter((c) => x.value == c.value).length <= 0;
+                return (
+                  takenoptions.filter((c) => x.value == c.value).length <= 0
+                );
               });
             }
           }
@@ -998,32 +1113,42 @@ const FormRegister = ({
               })
             : [];
           input = (
-            <Select style={{ width: '100%' }} name={name} defaultValue={value}>
-              <Option value={''}>Seleccione...</Option>
+            <Select style={{ width: "100%" }} name={name} defaultValue={value}>
+              <Option value={""}>Seleccione...</Option>
               {input}
             </Select>
           );
         }
 
-        if (type === 'country') {
+        if (type === "country") {
           input = (
-            <Form.Item id='country_input_form' initialValue={value} name={name} noStyle>
+            <Form.Item
+              id="country_input_form"
+              initialValue={value}
+              name={name}
+              noStyle
+            >
               <Select
                 showSearch
-                optionFilterProp='children'
-                style={{ width: '100%' }}
+                optionFilterProp="children"
+                style={{ width: "100%" }}
                 onChange={(nameCountry, aditionalData) => {
                   form.setFieldsValue({
-                    [region.inputName !== '' ? region.inputName : 'region']: '',
-                    [city.inputName !== '' ? city.inputName : 'city']: '',
+                    [region.inputName !== "" ? region.inputName : "region"]: "",
+                    [city.inputName !== "" ? city.inputName : "city"]: "",
                   });
                   getCitiesByCountry(aditionalData.key);
                   getState(aditionalData.key);
-                  setCountry({ name: nameCountry, countryCode: aditionalData.key, inputName: name });
+                  setCountry({
+                    name: nameCountry,
+                    countryCode: aditionalData.key,
+                    inputName: name,
+                  });
                 }}
                 disabled={loading || countries.length === 0}
                 loading={loading}
-                placeholder='Seleccione un país'>
+                placeholder="Seleccione un país"
+              >
                 {countries.map((country) => {
                   return (
                     <Option key={country.iso2} value={country.name}>
@@ -1035,23 +1160,28 @@ const FormRegister = ({
             </Form.Item>
           );
         }
-        if (type === 'region') {
+        if (type === "region") {
           input = (
             <Form.Item initialValue={value} name={name} noStyle>
               <Select
                 showSearch
-                optionFilterProp='children'
-                style={{ width: '100%' }}
+                optionFilterProp="children"
+                style={{ width: "100%" }}
                 onChange={(nameRegion, aditionalData) => {
                   form.setFieldsValue({
-                    [city.inputName !== '' ? city.inputName : 'city']: '',
+                    [city.inputName !== "" ? city.inputName : "city"]: "",
                   });
                   getCities(country.countryCode, aditionalData.key);
-                  setRegion({ name: nameRegion, regionCode: aditionalData.key, inputName: name });
+                  setRegion({
+                    name: nameRegion,
+                    regionCode: aditionalData.key,
+                    inputName: name,
+                  });
                 }}
                 disabled={loading || regiones.length === 0}
                 loading={loading}
-                placeholder='Seleccione un región'>
+                placeholder="Seleccione un región"
+              >
                 {regiones.map((regiones) => {
                   return (
                     <Option key={regiones.iso2} value={regiones.name}>
@@ -1064,19 +1194,24 @@ const FormRegister = ({
           );
         }
 
-        if (type === 'city') {
+        if (type === "city") {
           input = (
             <Form.Item initialValue={value} name={name} noStyle>
               <Select
                 showSearch
-                optionFilterProp='children'
-                style={{ width: '100%' }}
+                optionFilterProp="children"
+                style={{ width: "100%" }}
                 disabled={loading || cities.length === 0}
                 loading={loading}
                 onChange={(nameCity, aditionalData) => {
-                  setCity({ name: nameCity, regionCode: aditionalData.key, inputName: name });
+                  setCity({
+                    name: nameCity,
+                    regionCode: aditionalData.key,
+                    inputName: name,
+                  });
                 }}
-                placeholder='Seleccione una ciudad'>
+                placeholder="Seleccione una ciudad"
+              >
                 {cities.map((cityCode, key) => {
                   return (
                     <Option key={key} value={cityCode.name}>
@@ -1090,36 +1225,45 @@ const FormRegister = ({
         }
 
         //SE DEBE QUEDAR PARA RENDRIZAR EL CAMPO IMAGEN DENTRO DEL CMS
-        if (type === 'avatar') {
-          ImgUrl = ImgUrl !== '' ? ImgUrl : value !== '' && value !== null ? [{ url: value }] : undefined;
+        if (type === "avatar") {
+          ImgUrl =
+            ImgUrl !== ""
+              ? ImgUrl
+              : value !== "" && value !== null
+              ? [{ url: value }]
+              : undefined;
 
           input = (
-            <div style={{ textAlign: 'center' }}>
-              <ImgCrop rotate shape='round'>
+            <div style={{ textAlign: "center" }}>
+              <ImgCrop rotate shape="round">
                 <Upload
-                  action={'https://api.evius.co/api/files/upload/'}
-                  accept='image/png,image/jpeg'
+                  action={"https://api.evius.co/api/files/upload/"}
+                  accept="image/png,image/jpeg"
                   onChange={(file) => {
                     setImageAvatar(file);
                   }}
                   multiple={false}
-                  listType='picture'
+                  listType="picture"
                   maxCount={1}
                   defaultFileList={
                     value
                       ? [
                           {
-                            name: typeof value == 'string' ? obtenerName(value) : null,
-                            url: typeof value == 'string' ? value : null,
+                            name:
+                              typeof value == "string"
+                                ? obtenerName(value)
+                                : null,
+                            url: typeof value == "string" ? value : null,
                           },
                         ]
                       : []
                   }
-                  beforeUpload={beforeUpload}>
-                  <Button type='primary' icon={<UploadOutlined />}>
+                  beforeUpload={beforeUpload}
+                >
+                  <Button type="primary" icon={<UploadOutlined />}>
                     {intl.formatMessage({
-                      id: 'form.button.avatar',
-                      defaultMessage: 'Subir imagen de perfil',
+                      id: "form.button.avatar",
+                      defaultMessage: "Subir imagen de perfil",
                     })}
                   </Button>
                 </Upload>
@@ -1129,56 +1273,73 @@ const FormRegister = ({
         }
 
         //esogemos el tipo de validación para email
-        rule = type === 'email' ? { ...rule, type: 'email' } : rule;
+        rule = type === "email" ? { ...rule, type: "email" } : rule;
 
         rule =
-          type == 'password'
+          type == "password"
             ? {
                 required: true,
                 pattern: new RegExp(/^[A-Za-z0-9_-]{8,}$/),
-                message: 'Mínimo 8 caracteres con letras y números, no se permiten caracteres especiales',
+                message:
+                  "Mínimo 8 caracteres con letras y números, no se permiten caracteres especiales",
               }
             : rule;
 
-        if (type === 'number') {
+        if (type === "number") {
           input = (
-            <Input type={type} rows={4} autoSize={{ minRows: 3, maxRows: 25 }} value={value} defaultValue={value} />
+            <Input
+              type={type}
+              rows={4}
+              autoSize={{ minRows: 3, maxRows: 25 }}
+              value={value}
+              defaultValue={value}
+            />
           );
         }
         return (
-          type !== 'boolean' && (
-            <div key={'g' + key} name='field'>
-              {type === 'tituloseccion' && input}
-              {type !== 'tituloseccion' && (
+          type !== "boolean" && (
+            <div key={"g" + key} name="field">
+              {type === "tituloseccion" && input}
+              {type !== "tituloseccion" && (
                 <>
                   <Form.Item
                     // validateStatus={type=='codearea' && mandatory && (numberareacode==null || areacodeselected==null)&& 'error'}
                     // style={eventUserId && hideFields}
                     noStyle={visible}
                     hidden={visible}
-                    valuePropName={type === 'boolean' ? 'checked' : 'value'}
+                    valuePropName={type === "boolean" ? "checked" : "value"}
                     label={
-                      (labelPosition !== 'izquierda' || !labelPosition) && type !== 'tituloseccion'
+                      (labelPosition !== "izquierda" || !labelPosition) &&
+                      type !== "tituloseccion"
                         ? label
-                        : '' && (labelPosition !== 'arriba' || !labelPosition)
+                        : "" && (labelPosition !== "arriba" || !labelPosition)
                     }
                     name={name}
                     rules={validations ? [{ required: false }] : [rule]}
-                    key={'l' + key}
+                    key={"l" + key}
                     htmlFor={key}
-                    initialValue={value}>
+                    initialValue={value}
+                  >
                     {input}
                   </Form.Item>
 
-                  {description && description.length < 500 && <p>{description}</p>}
+                  {description && description.length < 500 && (
+                    <p>{description}</p>
+                  )}
                   {description && description.length > 500 && (
-                    <Collapse defaultActiveKey={['0']} style={{ margingBotton: '15px' }}>
+                    <Collapse
+                      defaultActiveKey={["0"]}
+                      style={{ margingBotton: "15px" }}
+                    >
                       <Panel
                         header={intl.formatMessage({
-                          id: 'registration.message.policy',
+                          id: "registration.message.policy",
                         })}
-                        key='1'>
-                        <pre style={{ whiteSpace: 'normal' }}>{description}</pre>
+                        key="1"
+                      >
+                        <pre style={{ whiteSpace: "normal" }}>
+                          {description}
+                        </pre>
                       </Panel>
                     </Collapse>
                   )}
@@ -1204,51 +1365,73 @@ const FormRegister = ({
             //     ? intl.formatMessage({ id: 'registration.title.update' })
             //     : intl.formatMessage({ id: 'registration.title.create' })
             // }
-            bodyStyle={textLeft}>
+            bodyStyle={textLeft}
+          >
             {/* //Renderiza el formulario */}
-            {cEvent.value?._id && cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && !eventUser && (
-              <TypeRegister typeRegister={typeRegister} setTypeRegister={setTypeRegister} />
-            )}
+            {cEvent.value?._id &&
+              cEvent.value?._id == "60cb7c70a9e4de51ac7945a2" &&
+              !eventUser && (
+                <TypeRegister
+                  typeRegister={typeRegister}
+                  setTypeRegister={setTypeRegister}
+                />
+              )}
             {eventUser !== undefined &&
-              eventUser !== null &&
-              eventUser.rol_id == ROLS_USER.ATTENDEE_ID/* '60e8a7e74f9fb74ccd00dc22' */ &&
+            eventUser !== null &&
+            eventUser.rol_id ==
+              ROLS_USER.ATTENDEE_ID /* '60e8a7e74f9fb74ccd00dc22' */ &&
               cEvent.value?._id &&
-              cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && (
-                <Row style={{ textAlign: 'center' }} justify={'center'} align={'center'}>
-                  <strong>Te invitamos a realizar el pago para poder participar en las pujas.</strong>
+              cEvent.value?._id == "60cb7c70a9e4de51ac7945a2" && (
+                <Row
+                  style={{ textAlign: "center" }}
+                  justify={"center"}
+                  align={"center"}
+                >
+                  <strong>
+                    Te invitamos a realizar el pago para poder participar en las
+                    pujas.
+                  </strong>
                 </Row>
               )}
             {eventUser !== undefined &&
               eventUser !== null &&
-              eventUser.rol_id == '60e8a8b7f6817c280300dc23' &&
+              eventUser.rol_id == "60e8a8b7f6817c280300dc23" &&
               cEvent.value?._id &&
-              cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && (
-                <Row style={{ textAlign: 'center' }} justify={'center'} align={'center'}>
+              cEvent.value?._id == "60cb7c70a9e4de51ac7945a2" && (
+                <Row
+                  style={{ textAlign: "center" }}
+                  justify={"center"}
+                  align={"center"}
+                >
                   <strong>Ya eres un asistente pago</strong>
                 </Row>
               )}
             {eventUser !== undefined &&
-              eventUser !== null &&
-              eventUser.rol_id == ROLS_USER.ATTENDEE_ID/* '60e8a7e74f9fb74ccd00dc22' */ &&
+            eventUser !== null &&
+            eventUser.rol_id ==
+              ROLS_USER.ATTENDEE_ID /* '60e8a7e74f9fb74ccd00dc22' */ &&
               cEvent.value?._id &&
-              cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && <ButtonPayment />}
+              cEvent.value?._id == "60cb7c70a9e4de51ac7945a2" && (
+                <ButtonPayment />
+              )}
 
             <Form
               form={form}
-              layout='vertical'
+              layout="vertical"
               onFinish={onFinish}
               validateMessages={{
-                required: intl.formatMessage({ id: 'form.field.required' }),
+                required: intl.formatMessage({ id: "form.field.required" }),
                 types: {
                   email: intl.formatMessage({
-                    id: 'form.validate.message.email',
+                    id: "form.validate.message.email",
                   }),
                   // regexp: 'malo',
                 },
               }}
               initialValues={initialValues}
               onFinishFailed={showGeneralMessage}
-              onValuesChange={valuesChange}>
+              onValuesChange={valuesChange}
+            >
               {/*cEvent.value?._id && cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && (
                 <Row justify={'center'} style={{ marginBottom: 30 }}>
                   <Card style={{ width: 700, margin: 'auto', background: '#F7C2C6' }}>
@@ -1256,18 +1439,21 @@ const FormRegister = ({
                   </Card>
                 </Row>
               )*/}
-              <Row style={{ paddingBottom: '5px' }} gutter={[8, 8]}>
+              <Row style={{ paddingBottom: "5px" }} gutter={[8, 8]}>
                 <Col span={24}>
-                  <Card style={{ borderRadius: '8px' }} bodyStyle={{ padding: '20px' }}>
+                  <Card
+                    style={{ borderRadius: "8px" }}
+                    bodyStyle={{ padding: "20px" }}
+                  >
                     <Typography.Title level={5}>
                       {intl.formatMessage({
-                        id: 'title.user_data',
-                        defaultMessage: 'Datos del usuario',
+                        id: "title.user_data",
+                        defaultMessage: "Datos del usuario",
                       })}
                     </Typography.Title>
                     {/* Revisar bien que valor usamos para picture ahorita guarda todo un objeto de tipo file que no tiene sentido
 deberia ser solo la url de la imagen 
-*/}{' '}
+*/}{" "}
                     {/* {console.log('initialValues', initialValues, cUser)} */}
                     <Comment
                       avatar={
@@ -1283,44 +1469,57 @@ deberia ser solo la url de la imagen
                           cUser?.value?.picture
                         ) : null
                       }
-                      author={<Typography.Text style={{ fontSize: '18px' }}>{initialValues?.names}</Typography.Text>}
-                      content={<Typography.Text style={{ fontSize: '18px' }}>{initialValues?.email}</Typography.Text>}
+                      author={
+                        <Typography.Text style={{ fontSize: "18px" }}>
+                          {initialValues?.names}
+                        </Typography.Text>
+                      }
+                      content={
+                        <Typography.Text style={{ fontSize: "18px" }}>
+                          {initialValues?.email}
+                        </Typography.Text>
+                      }
                     />
                   </Card>
                 </Col>
                 <Col span={24}>
                   <Card
-                    bodyStyle={{ padding: '20px' }}
+                    bodyStyle={{ padding: "20px" }}
                     style={{
-                      height: 'auto',
-                      maxHeight: '50vh',
-                      overflowY: 'auto',
-                      paddingRight: '0px',
-                      borderRadius: '8px',
-                    }}>
-                    {console.log(extraFields, 'extraFields')}
+                      height: "auto",
+                      maxHeight: "50vh",
+                      overflowY: "auto",
+                      paddingRight: "0px",
+                      borderRadius: "8px",
+                    }}
+                  >
+                    {console.log(extraFields, "extraFields")}
                     {fieldsAditional(extraFields) > 0 && (
                       <Typography.Title level={5}>
                         {intl.formatMessage({
-                          id: 'modal.title.registerevent',
-                          defaultMessage: 'Información adicional para el evento',
+                          id: "modal.title.registerevent",
+                          defaultMessage:
+                            "Información adicional para el evento",
                         })}
                       </Typography.Title>
                     )}
                     {renderForm()}
-                    {typeModal == 'update' && isVisibleButton(basicDataUser, extraFields, cEventUser) ? (
-                      <div style={{ textAlign: 'center', width: '100%' }}>
+                    {typeModal == "update" &&
+                    isVisibleButton(basicDataUser, extraFields, cEventUser) ? (
+                      <div style={{ textAlign: "center", width: "100%" }}>
                         {intl.formatMessage({
-                          id: 'msg.no_fields_update',
-                          defaultMessage: 'No hay campos disponibles para actualizar en este evento',
+                          id: "msg.no_fields_update",
+                          defaultMessage:
+                            "No hay campos disponibles para actualizar en este evento",
                         })}
                       </div>
                     ) : (
-                      <div style={{ textAlign: 'center', width: '100%' }}>
+                      <div style={{ textAlign: "center", width: "100%" }}>
                         {fieldsAditional(extraFields) === 0 &&
                           intl.formatMessage({
-                            id: 'msg.no_fields_create',
-                            defaultMessage: 'No hay campos adicionales en este evento',
+                            id: "msg.no_fields_create",
+                            defaultMessage:
+                              "No hay campos adicionales en este evento",
                           })}
                       </div>
                     )}
@@ -1328,59 +1527,66 @@ deberia ser solo la url de la imagen
                 </Col>
               </Row>
 
-              <Row gutter={[24, 24]} style={{ marginTop: '5px' }}>
+              <Row gutter={[24, 24]} style={{ marginTop: "5px" }}>
                 {generalFormErrorMessageVisible && (
-                  <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                  <Col
+                    span={24}
+                    style={{ display: "inline-flex", justifyContent: "center" }}
+                  >
                     <Alert
-                      className='animate__animated animate__bounceIn'
+                      className="animate__animated animate__bounceIn"
                       style={{
-                        boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                        backgroundColor: '#FFFFFF',
-                        color: '#000000',
-                        borderLeft: '5px solid #FAAD14',
-                        fontSize: '14px',
-                        borderRadius: '5px',
+                        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+                        backgroundColor: "#FFFFFF",
+                        color: "#000000",
+                        borderLeft: "5px solid #FAAD14",
+                        fontSize: "14px",
+                        borderRadius: "5px",
                       }}
                       message={intl.formatMessage({
-                        id: 'form.missing.required.fields',
+                        id: "form.missing.required.fields",
                       })}
-                      type='warning'
+                      type="warning"
                       showIcon
                       closable
                     />
                   </Col>
                 )}
                 {notLoggedAndRegister && (
-                  <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                  <Col
+                    span={24}
+                    style={{ display: "inline-flex", justifyContent: "center" }}
+                  >
                     <Alert
-                      className='animate__animated animate__bounceIn'
+                      className="animate__animated animate__bounceIn"
                       style={{
-                        boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                        backgroundColor: '#FFFFFF',
-                        color: '#000000',
-                        borderLeft: '5px solid #FAAD14',
-                        fontSize: '14px',
-                        borderRadius: '5px',
+                        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+                        backgroundColor: "#FFFFFF",
+                        color: "#000000",
+                        borderLeft: "5px solid #FAAD14",
+                        fontSize: "14px",
+                        borderRadius: "5px",
                       }}
                       afterClose={() => setNotLoggedAndRegister(false)}
                       message={intl.formatMessage({
-                        id: 'registration.already.registered',
+                        id: "registration.already.registered",
                       })}
                       description={
                         <Button
-                          size='middle'
-                          type='primary'
+                          size="middle"
+                          type="primary"
                           onClick={() => {
-                            helperDispatch({ type: 'showLogin' });
+                            helperDispatch({ type: "showLogin" });
                             setNotLoggedAndRegister(false);
-                          }}>
+                          }}
+                        >
                           {intl.formatMessage({
-                            id: 'modal.title.login',
-                            defaultMessage: 'Iniciar sesión',
+                            id: "modal.title.login",
+                            defaultMessage: "Iniciar sesión",
                           })}
                         </Button>
                       }
-                      type='warning'
+                      type="warning"
                       showIcon
                       closable
                     />
@@ -1388,37 +1594,49 @@ deberia ser solo la url de la imagen
                 )}
 
                 {errorRegisterUser && (
-                  <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                  <Col
+                    span={24}
+                    style={{ display: "inline-flex", justifyContent: "center" }}
+                  >
                     <Alert
-                      className='animate__animated animate__bounceIn'
-                      type='warning'
+                      className="animate__animated animate__bounceIn"
+                      type="warning"
                       showIcon
                       style={{
-                        boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                        backgroundColor: '#FFFFFF',
-                        color: '#000000',
-                        borderLeft: '5px solid #FAAD14',
-                        fontSize: '14px',
-                        borderRadius: '5px',
+                        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+                        backgroundColor: "#FFFFFF",
+                        color: "#000000",
+                        borderLeft: "5px solid #FAAD14",
+                        fontSize: "14px",
+                        borderRadius: "5px",
                       }}
-                      message={'Ya te encuetras registrado en evius'}
+                      message={"Ya te encuetras registrado en evius"}
                     />
                   </Col>
                 )}
-                <Col span={24} align='center'>
+                <Col span={24} align="center">
                   {!loadingregister && (
                     <Form.Item>
                       <Button
-                        size='large'
+                        size="large"
                         ref={buttonSubmit}
                         style={{
-                          display: isVisibleButton(basicDataUser, extraFields, cEventUser) ? 'none' : 'block',
+                          display: isVisibleButton(
+                            basicDataUser,
+                            extraFields,
+                            cEventUser
+                          )
+                            ? "none"
+                            : "block",
                         }}
                         // RESTRICCIONES
                         // disabled={!eventIsActive}
-                        type='primary'
-                        htmlType='submit'>
-                        {intl.formatMessage({ id: isRegister(initialValues, cEventUser) })}
+                        type="primary"
+                        htmlType="submit"
+                      >
+                        {intl.formatMessage({
+                          id: isRegister(initialValues, cEventUser),
+                        })}
                       </Button>
 
                       {options &&
@@ -1426,14 +1644,15 @@ deberia ser solo la url de la imagen
                         initialValues._id &&
                         options.map((option) => (
                           <Button
-                            key={'option-' + option.text}
+                            key={"option-" + option.text}
                             icon={option.icon}
                             onClick={() => option.action(eventUser)}
                             type={option.type}
                             style={{
                               marginLeft: 10,
                               marginTop: 10,
-                            }}>
+                            }}
+                          >
                             {option.text}
                           </Button>
                         ))}
@@ -1445,7 +1664,7 @@ deberia ser solo la url de la imagen
             </Form>
           </Card>
         ) : (
-          <LoadingOutlined style={{ fontSize: '50px' }} />
+          <LoadingOutlined style={{ fontSize: "50px" }} />
         )}
       </Col>
     </>
