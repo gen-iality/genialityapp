@@ -75,6 +75,7 @@ const deleteLiveStream = async (stream_id) => {
   const res = await gCoreCLient.delete('streams/' + stream_id, {
     timeout: 5000,
   });
+  console.log(res);
 
   if (res?.status === 204) {
     return 'LiveStream deleted';

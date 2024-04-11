@@ -1,165 +1,103 @@
-import { Card, Button, Space, Typography, Spin, Popconfirm } from 'antd';
-import { DeleteOutlined, WarningOutlined } from '@ant-design/icons';
+import React, { useContext, useState, useMemo } from 'react';
+import { Card, Button, Space, Typography, Popconfirm } from 'antd';
+import { WarningOutlined } from '@ant-design/icons';
 import AgendaContext from '@context/AgendaContext';
-import { useContext, useState, useMemo } from 'react';
-import { deleteLiveStream, deleteAllVideos } from '@/adaptors/gcoreStreamingApi';
-import { AgendaApi } from '@/helpers/request';
-import { CurrentEventContext } from '@context/eventContext';
+import {CurrentEventContext} from '@context/eventContext';
 import useActivityType from '@context/activityType/hooks/useActivityType';
-import type { ActivityType } from '@context/activityType/types/activityType';
-import { TypeDisplayment, MainUI } from '@/context/activityType/constants/enum';
+import { TypeDisplayment, MainUI } from '@context/activityType/constants/enum';
 
-export interface TransmitionOptionsCardProps {
-  type: ActivityType.TypeAsDisplayment,
-};
-
-const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
-  const {
-    type,
-  } = props;
-
+// Definición del componente con desestructuración de las props directamente en la firma de la función
+const TransmitionOptionsCard = ({ type }) => {
+  // Estado local para controlar la operación de eliminación
   const [isDeleting, setIsDeleting] = useState(false);
-  const {
-    is,
-    setActivityContentType,
-    executer_stopStream,
-    resetActivityType,
-    setVideoId,
-    videoId
-  } = useActivityType();
 
+  // Hooks personalizados y contexto para obtener y manipular el estado global
+  const { is, executer_stopStream, resetActivityType, setVideoId, videoId } = useActivityType();
   const {
     dataLive,
     meeting_id,
     setDataLive,
     setMeetingId,
-    deleteTypeActivity,
-    activityEdit,
     removeAllRequest,
     removeViewers,
     saveConfig,
     setRoomStatus,
+    activityEdit,
   } = useContext(AgendaContext);
+  const cEvent = useContext(CurrentEventContext);
 
-  const cEvent: any = useContext(CurrentEventContext);
+  // Memos para calcular valores que dependen de los contextos y que no deben recalcularse en cada render
+  const refActivityBase = useMemo(() => `request/${cEvent.value?._id}/activities/${activityEdit}`, [cEvent, activityEdit]);
+  const isVisible = useMemo(() => [TypeDisplayment.TRANSMISSION, TypeDisplayment.EVIUS_MEET].includes(type), [type]);
 
-  const deleteTransmition = async () => {
-    /* console.debug('deleteTransmition is called'); */
-    deleteLiveStream(meeting_id);
-    /* console.debug('will call deleteLiveStream with meeting_id:', meeting_id); */
-    setDataLive(null);
-    await resetActivityType('liveBroadcast');
+  // Función para manejar la confirmación de eliminación
+  const handleDelete = async () => {
+    setIsDeleting(true); // Inicia el indicador de carga
+    await performDeleteOperations(); // Realiza operaciones de eliminación
+    setIsDeleting(false); // Finaliza el indicador de carga
   };
 
-  const refActivity = useMemo(() =>(
-    `request/${cEvent.value?._id}/activities/${activityEdit}`), [cEvent, activityEdit]);
-  const refActivityViewers = useMemo(() =>(
-    `viewers/${cEvent.value?._id}/activities/${activityEdit}`), [cEvent, activityEdit]);
-  const isVisible = useMemo(
-    () => type === TypeDisplayment.TRANSMISSION || type === TypeDisplayment.EVIUS_MEET,
-    [type],
-  );
-
-  const deletingMessage = useMemo(() => {
-    if (type === TypeDisplayment.TRANSMISSION || type === TypeDisplayment.EVIUS_MEET || type === TypeDisplayment.VIMEO || type === TypeDisplayment.YOUTUBE)
-      return 'eliminar transmisión';
-    if (type === TypeDisplayment.MEETING)
-      return 'eliminar sala de reunión';
-    return 'eliminar video';
-  }, [type])
-
-  const handleConfirmDeleting = async () => {
-    setIsDeleting(true);
-    if ( videoId ) {
-        const res =  await AgendaApi.deleteVideoVimeo(videoId)
-        console.log('epaaa---', res );
-    }
-     
-    if (isVisible && meeting_id) {
-      try {
-        executer_stopStream();
-      } catch (e) {
-        console.error('handleConfirmDeleting', e);
-      }
-      await deleteAllVideos(dataLive.name, meeting_id);
-      await removeAllRequest(refActivity);
-      await deleteTransmition();
-    }
-    try {
-      await removeViewers(refActivityViewers);
-    } catch (err) {
-      console.error('Error to try to call removeViewers', err)
-    }
-    setVideoId(null)
-    await AgendaApi.editOne({ video: null, vimeo_id: null }, activityEdit, cEvent?.value?._id);
-    // await deleteTypeActivity();
-
+  // Función que encapsula las operaciones de eliminación
+  const performDeleteOperations = async () => {
+    await resetActivityTypeAccordingToType(); // Resetea el tipo de actividad basado en el contexto actual
+    // Operaciones comunes de limpieza
     setDataLive(null);
-
-    const value = 'created_meeting_room';
-    /* console.debug('saves value of RoomStatus:', value); */
-    setRoomStatus(value);
     setMeetingId(null);
-    await saveConfig({ habilitar_ingreso: value, data: null, type: 'delete' });
-    /* console.debug('config saved - habilitar_ingreso:', value); */
+    setVideoId(null);
+    setRoomStatus('created_meeting_room'); // Actualiza el estado de la sala
+    await saveConfig({ habilitar_ingreso: 'created_meeting_room', data: null, type: 'delete' }); // Guarda la configuración actualizada
+  };
 
-    setActivityContentType(null); // last "toggleActivitySteps('initial')";
-
-    
+  // Función para resetear el tipo de actividad basado en el tipo actual
+  const resetActivityTypeAccordingToType = async () => {
     switch (type) {
       case TypeDisplayment.VIDEO:
-        /* console.debug('TransmitionOptionsCard reset AT to video'); */
         await resetActivityType(MainUI.VIDEO);
         break;
       case TypeDisplayment.MEETING:
-        /* console.debug('TransmitionOptionsCard reset AT to meeting2'); */
         await resetActivityType(MainUI.MEETING);
         break;
+      default:
+        await resetActivityType(MainUI.LIVE);
+    }
+  };
+
+  // Función para obtener el mensaje de confirmación de eliminación basado en el tipo
+  const getDeletingMessage = () => {
+    switch (type) {
       case TypeDisplayment.TRANSMISSION:
       case TypeDisplayment.EVIUS_MEET:
       case TypeDisplayment.VIMEO:
       case TypeDisplayment.YOUTUBE:
-        /* console.debug('TransmitionOptionsCard reset AT to liveBroadcast'); */
-        await resetActivityType(MainUI.LIVE);
+        return 'eliminar transmisión';
+      case TypeDisplayment.MEETING:
+        return 'eliminar sala de reunión';
+      default:
+        return 'eliminar video';
     }
-    
-
-    setIsDeleting(false);
   };
 
+  // Renderizado del componente, utilizando Ant Design components
   return (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
       <Card.Meta
-        title={
-          <Typography.Text style={{ fontSize: '20px' }} strong>
-            Opciones de {props.type}
-          </Typography.Text>
-        }
+        title={<Typography.Text style={{ fontSize: '20px' }} strong>Opciones de {type}</Typography.Text>}
         avatar={<WarningOutlined style={{ color: '#FE5455', fontSize: '25px' }} />}
         description={
           <Space>
             {isVisible && dataLive?.active && (
-              <Button
-                loading={is.stoppingStreaming}
-                type='primary'
-                danger
-                onClick={() => executer_stopStream()}
-              >
+              <Button type="primary" danger loading={is.stoppingStreaming} onClick={executer_stopStream}>
                 Detener
               </Button>
             )}
-            {
-              <Popconfirm
-                title={`¿Está seguro que desea ${deletingMessage}?`}
-                onConfirm={handleConfirmDeleting}
-                onCancel={() => console.log('cancelado')}
-                okText='Sí'
-                cancelText='No'>
-                <Button loading={isDeleting} danger>
-                  Eliminar
-                </Button>
-              </Popconfirm>
-            }
+            <Popconfirm
+              title={`¿Está seguro que desea ${getDeletingMessage()}?`}
+              onConfirm={handleDelete}
+              okText="Sí"
+              cancelText="No"
+            >
+              <Button danger loading={isDeleting}>Eliminar</Button>
+            </Popconfirm>
           </Space>
         }
       />

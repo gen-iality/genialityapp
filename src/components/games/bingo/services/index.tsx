@@ -98,6 +98,7 @@ export const getCartonBingo = async (carton: string) => {
 export const getTemplates = async (format: string) => {
   try {
     const response = await BingoApi.getTemplates(format);
+    console.log("template bingo", response)
     return response;
   } catch (error) {
     console.error(error);

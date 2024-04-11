@@ -1,15 +1,18 @@
-import { useEffect, useState } from 'react';
-import { handleRequestError } from '../../helpers/utils';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { Modal } from 'antd';
-import Header from '../../antdComponents/Header';
-import Table from '../../antdComponents/Table';
-import { useHelper } from '../../context/helperContext/hooks/useHelper';
-import { DispatchMessageService } from '../../context/MessageService';
-import Loading from '../profile/loading';
-import Service from '../agenda/roomManager/service';
-import { firestore, fireRealtime } from '@/helpers/firebase';
-import { deleteLiveStream, deleteAllVideos } from '@/adaptors/gcoreStreamingApi';
+import { useEffect, useState } from "react";
+import { handleRequestError } from "../../helpers/utils";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
+import { Modal } from "antd";
+import Header from "../../antdComponents/Header";
+import Table from "../../antdComponents/Table";
+import { useHelper } from "../../context/helperContext/hooks/useHelper";
+import { DispatchMessageService } from "../../context/MessageService";
+import Loading from "../profile/loading";
+import Service from "../agenda/roomManager/service";
+import { firestore, fireRealtime } from "@/helpers/firebase";
+import {
+  deleteLiveStream,
+  deleteAllVideos,
+} from "@/adaptors/gcoreStreamingApi";
 const { confirm } = Modal;
 
 const CMS = (props) => {
@@ -85,61 +88,75 @@ const CMS = (props) => {
     setLoading(false);
   };
 
+  const removeActivity = async (id, name, eventId) => {
+    try {
+      const refActivity = `request/${eventId}/activities/${id}`;
+      const refActivityViewers = `viewers/${eventId}/activities/${id}`;
+      const service = new Service(firestore);
+      console.log(service);
+      const configuration = await service.getConfiguration(eventId, id);
+      console.log(configuration);
+      if (configuration && configuration.typeActivity === "eviusMeet") {
+        console.log("No validó para borrar");
+        await Promise.all([
+          deleteAllVideos(name, configuration.meeting_id),
+          deleteLiveStream(configuration.meeting_id),
+        ]);
+      }
+
+      if (deleteCallback) {
+        console.log("valido deletecallback");
+        await deleteCallback(id);
+      }
+
+      // await fireRealtime.ref(refActivity).remove();
+      // await fireRealtime.ref(refActivityViewers).remove();
+      if (configuration) {
+        await service.deleteActivity(eventId, id);
+      }
+      await API.deleteOne(id, eventId);
+      await getList();
+      showSuccessMessage();
+    } catch (e) {
+      showErrorMessage(e);
+    } finally {
+      DispatchMessageService({ key: "loading", action: "destroy" });
+    }
+  };
+
+  const showSuccessMessage = () => {
+    DispatchMessageService({
+      type: "success",
+      msj: "Se eliminó la información correctamente!",
+      action: "show",
+    });
+  };
+
+  const showErrorMessage = (e) => {
+    DispatchMessageService({
+      type: "error",
+      msj: handleRequestError(e).message,
+      action: "show",
+    });
+  };
+
   const remove = (id, name) => {
     confirm({
-      title: `¿Está seguro de eliminar la información?`,
+      title: `¿Está seguro de eliminar la información? ${id}, ${name}, ${eventId}`,
       icon: <ExclamationCircleOutlined />,
-      content: 'Una vez eliminado, no lo podrá recuperar',
-      okText: 'Borrar',
-      okType: 'danger',
-      cancelText: 'Cancelar',
-      onOk() {
+      content: "Una vez eliminado, no lo podrá recuperar",
+      okText: "Borrar",
+      okType: "danger",
+      cancelText: "Cancelar",
+      onOk: () => {
         DispatchMessageService({
-          type: 'loading',
-          key: 'loading',
-          msj: 'Por favor espere mientras se borra la información...',
-          action: 'show',
+          type: "loading",
+          key: "loading",
+          msj: "Por favor espere mientras se borra la información...",
+          action: "show",
         });
-        const onHandlerRemove = async () => {
-          try {
-            const refActivity = `request/${eventId}/activities/${id}`;
-            const refActivityViewers = `viewers/${eventId}/activities/${id}`;
-            const service = new Service(firestore);
-            const configuration = await service.getConfiguration(eventId, id);
-            if (configuration && configuration.typeActivity === 'eviusMeet') {
-              await Promise.all(
-                deleteAllVideos(name, configuration.meeting_id),
-                deleteLiveStream(configuration.meeting_id)
-              )
-            }
-            if (deleteCallback) await deleteCallback(id);
-            await fireRealtime.ref(refActivity).remove();
-            await fireRealtime.ref(refActivityViewers).remove();
-            await service.deleteActivity(eventId, id);
-            await API.deleteOne(id, eventId);
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'success',
-              msj: 'Se eliminó la información correctamente!',
-              action: 'show',
-            });
-            getList();
-          } catch (e) {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'error',
-              msj: handleRequestError(e).message,
-              action: 'show',
-            });
-          }
-        };
-        onHandlerRemove();
+        console.log("dasdasdasd");
+        removeActivity(id, name, eventId);
       },
     });
   };
@@ -149,9 +166,9 @@ const CMS = (props) => {
     const updateMails = await API.updateOne(eventId, idMessage);
     await getList();
     DispatchMessageService({
-      type: 'success',
+      type: "success",
       msj: updateMails?.message,
-      action: 'show',
+      action: "show",
     });
     setLoading(false);
   };

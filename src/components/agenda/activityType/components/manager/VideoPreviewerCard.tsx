@@ -69,115 +69,151 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
 
   if (!data) data = meeting_id;
 
-  // Render the ifram or gCore component
-  const renderPlayer = () => {
-    // Gets visibility status for the react player, and the url to render
-    if (!data) return (
-      <><Spin/><p>Esperando recurso...</p></>
-    );
-
-    useEffect(() => {
-      if(!videoId || downloads.length > 0) {
-        return clearInterval(intervalState)
-      } 
-      const interval = setInterval(getStatusVideo, 5000);
-      setIntervalState(interval)
-      return () => clearInterval(interval);
-    }, [videoId, downloads]);
-
+  const renderDownloadDropdown = (downloads:any) => {
     return (
-      <>
-        {errorOcurred || statusVide==='error' ? (
-          <Result
-            status='info'
-            title='Lo sentimos'
-            subTitle={
-              errorMessage === 'An error occurred.'
-                ? errorMessage
-                : `Hubo un error al procesar el video, posiblemente se ha movido el recurso o ha sido borrado.`
-            }
-            icon={<EmoticonSadOutline />}
-          />
-        ) : (
-          <>
-          {
-            statusVide ==='in_progress' && <Result
-            status='info'
-            title='Espérenos'
-            subTitle={'El video se encuentra siendo procesado, estara disponible en breve'}
-            icon={<LoadingOutlined />}
-          />
-          }
-            {visibleReactPlayer && statusVide === 'complete' && !isLoading && (
-              <>
-              {/* @ts-expect-error */}
-              <ReactPlayer
-                playing={true}
-                loop={true}
-                onDuration={props.type === TypeDisplayment.VIDEO ? handleDuration : undefined}
-                style={{ objectFit: 'cover', aspectRatio: '16/9' }}
-                width='100%'
-                height='100%'
-                url={urlVideo /* videoId ? urlVideo.split(DIVIDER_URL_OF_QUERYPARAMS)[0]:urlVideo */}
-                controls={true}
-                onError={(e) => {
-                  if (props.type !== TypeDisplayment.EVIUS_MEET && props.type !== TypeDisplayment.TRANSMISSION) {
-                    setErrorOcurred(true);
-                    setErrorMessage(e?.message);
-                  }
+      <Dropdown
+        overlay={
+          <Menu>
+            {downloads.map((item:any, index:any) => (
+              <Menu.Item
+                key={`menu-item-${index}`}
+                onClick={() => {
+                  const link = document.createElement('a');
+                  link.href = item.link;
+                  link.download = 'video.mp4'; // Puedes personalizar el nombre del archivo aquí
+                  document.body.appendChild(link); // Necesario para que funcione en Firefox
+                  link.click();
+                  document.body.removeChild(link); // Limpiar el elemento añadido
                 }}
-              />
-               {
-                  downloads?.length > 0 && 
-                  <Dropdown 
-                    overlay={<Menu>
-                                {
-                                  downloads.map(item=>(
-                                      <Menu.Item
-                                        key='menu-item-1'
-                                        onClick={() => {
-                                          const link = document.createElement("a");
-                                          link.href = item.link;
-                                          link.download = 'video.mp4';
-                                          link.click();}}>
-                                        {`Calidad ${item.quality} ${item.rendition} - ${item.size_short}`}
-                                      </Menu.Item>
-                                  ))
-                                }
-                            </Menu>}
-                   trigger={['click', 'hover']}>
-                  <Button type='primary' size='middle' >
-                    <Space>
-                      <DownloadOutlined />
-                      Descargar
-                      <DownOutlined />
-                    </Space>
-                  </Button>
-                </Dropdown>
-            }
-              </>
-            )}
-          </>
-        )}
-
-        {!visibleReactPlayer && !errorOcurred && (
-          <iframe
-            style={{ aspectRatio: '16/9' }}
-            width='100%'
-            src={urlVideo + '?muted=1&autoplay=1'}
-            frameBorder='0'
-            allow='autoplay; encrypted-media'
-            allowFullScreen
-            onLoad={(e) => {
-              if (props.type !== TypeDisplayment.EVIUS_MEET && props.type !== TypeDisplayment.TRANSMISSION) {
-                // @ts-expect-error
-                setErrorOcurred(urlErrorCodeValidation(e.target?.src, true));
-              }
-            }}></iframe>
-        )}
-      </>
+              >
+                {`Calidad ${item.quality} ${item.rendition} - ${item.size_short}`}
+              </Menu.Item>
+            ))}
+          </Menu>
+        }
+        trigger={['click', 'hover']}
+      >
+        <Button type="primary" size="middle">
+          <Space>
+            <DownloadOutlined />
+            Descargar
+            <DownOutlined />
+          </Space>
+        </Button>
+      </Dropdown>
     );
   };
+  
+
+  // Render the ifram or gCore component
+  const renderPlayer = () => {
+    // Verifica la disponibilidad de los datos
+    if (!data) {
+      return (
+        <>
+          <Spin />
+          <p>Esperando recurso...</p>
+        </>
+      );
+    }
+  
+    // Obtiene la URL del video y la visibilidad del React Player
+    const { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data);
+  
+    // Configura el intervalo para verificar el estado del video
+    useEffect(() => {
+      if (!videoId || downloads.length > 0) {
+        return clearInterval(intervalState);
+      }
+      const interval = setInterval(getStatusVideo, 5000);
+      setIntervalState(interval);
+      return () => clearInterval(interval);
+    }, [videoId, downloads, intervalState]);
+  
+    // Maneja el error de carga del video
+    if (errorOcurred || statusVide === 'error') {
+      return renderError();
+    }
+
+    // Muestra el estado de progreso del video
+    if (statusVide === 'in_progress') {
+      return renderInProgress();
+    }
+  
+    // Renderiza el React Player o el iframe según la configuración
+    return (
+      <>
+        {visibleReactPlayer && statusVide === 'complete' && !isLoading && renderReactPlayer(urlVideo)}
+        {!visibleReactPlayer && !errorOcurred && renderIframe(urlVideo)}
+      </>
+    );
+  
+    // Funciones de renderizado específicas
+    function renderError() {
+      return (
+        <Result
+          status="info"
+          title="Lo sentimos"
+          subTitle={errorMessage === 'An error occurred.' ? errorMessage : 'Hubo un error al procesar el video, posiblemente se ha movido el recurso o ha sido borrado.'}
+          icon={<EmoticonSadOutline />}
+        />
+      );
+    }
+  
+    function renderInProgress() {
+      return (
+        <Result
+          status="info"
+          title="Espérenos"
+          subTitle="El video se encuentra siendo procesado, estará disponible en breve"
+          icon={<LoadingOutlined />}
+        />
+      );
+    }
+  
+    function renderReactPlayer(urlVideo) {
+      return (
+        <>
+          <ReactPlayer
+            playing={true}
+            loop={true}
+            onDuration={props.type === TypeDisplayment.VIDEO ? handleDuration : undefined}
+            style={{ objectFit: 'cover', aspectRatio: '16/9' }}
+            width="100%"
+            height="100%"
+            url={urlVideo}
+            controls={true}
+            onError={(e) => {
+              if (props.type !== TypeDisplayment.EVIUS_MEET && props.type !== TypeDisplayment.TRANSMISSION) {
+                setErrorOcurred(true);
+                setErrorMessage(e?.message);
+              }
+            }}
+          />
+          {downloads.length > 0 && renderDownloadDropdown(downloads)}
+        </>
+      );
+    }
+  
+    function renderIframe(urlVideo:any) {
+      return (
+        <iframe
+          style={{ aspectRatio: '16/9' }}
+          width="100%"
+          src={`${urlVideo}?muted=1&autoplay=1`}
+          frameBorder="0"
+          allow="autoplay; encrypted-media"
+          allowFullScreen
+          onLoad={(e) => {
+            if (props.type !== TypeDisplayment.EVIUS_MEET && props.type !== TypeDisplayment.TRANSMISSION) {
+              setErrorOcurred(urlErrorCodeValidation(e.target?.src, true));
+            }
+          }}
+        ></iframe>
+      );
+    }
+  };
+  
 
   /* console.debug('VideoPreviewerCard (99. data transmition):', dataLive?.live, dataLive?.hls_playlist_url); */
 

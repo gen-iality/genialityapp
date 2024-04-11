@@ -6,6 +6,7 @@ import { Tag } from 'antd';
 import moment from 'moment';
 
 const Agenda = (props) => {
+  console.log(props);
   let [columnsData, setColumnsData] = useState({});
 
   const columns = [
@@ -91,7 +92,7 @@ const Agenda = (props) => {
         state: { new: true },
       }}
       columns={columns}
-      // key='_id'
+      key={props.event._id}
       editPath={`${props.matchUrl}/actividad`}
       pagination={false}
       actions

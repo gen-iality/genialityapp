@@ -87,6 +87,7 @@ function BingoInCMS({ event }: { event: {} }) {
 		bingoPrint,
 		getBingo
 	} = useBingo();
+	console.log("databingo", dataFirebaseBingo);
 	const [openAndCloseImportModal, setOpenAndCloseImportModal] = useState(false);
 	const formLayout = {
 		labelCol: { span: 24 },
