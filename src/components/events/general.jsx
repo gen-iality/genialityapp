@@ -514,6 +514,7 @@ class General extends Component {
 
     try {
       if (event._id) {
+        console.log(data);
         const info = await EventsApi.editOne(data, event._id)
         this.props.updateEvent(info)
         self.setState({ loading: false })
@@ -1363,6 +1364,18 @@ class General extends Component {
                         })
                       },
                       initialCheck: this.state.event.visibility === 'ANONYMOUS',
+                    },
+                    checkbox1: {
+                      text: 'Curso gratuito',
+                      onCheck: (checked) => {
+                        this.setState({
+                          event: {
+                            ...this.state.event,
+                            has_payment: checked,
+                          },
+                        });
+                      },
+                      initialCheck: this.state.event.has_payment,
                     },
                   },
                   {

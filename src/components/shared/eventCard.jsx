@@ -82,6 +82,20 @@ const EventCard = ({
                 <span>{event.venue ? event.venue : 'Virtual'}</span>
               </Space>
             </div>
+
+            {event.has_payment && (
+              <>
+                <div style={{ border: '1px solid white' }}></div>
+                <div>
+                  <Space>
+                    <span>
+                      <i className="fas fa-exclamation-circle" />
+                    </span>
+                    <span>Gratuito</span>
+                  </Space>
+                </div>
+              </>
+            )}
           </span>
         }
       >
@@ -120,9 +134,16 @@ const EventCard = ({
                     if (
                       organization?.access_settings?.type === 'payment' &&
                       //si no esta logueado o si no ha pagado miramos si requiere pago
-                      (!organizationUser || !organizationUser?.payment_plan)
+                      (!organizationUser || !organizationUser?.payment_plan) &&
+                      !event.has_payment
                     ) {
                       paymentDispatch({ type: 'REQUIRE_PAYMENT' })
+                      e.preventDefault()
+                      e.stopPropagation()
+                      e.nativeEvent.stopImmediatePropagation()
+                    }
+                    if (event.has_payment && !organizationUser) {
+                      paymentDispatch({ type: 'DISPLAY_REGISTRATION' })
                       e.preventDefault()
                       e.stopPropagation()
                       e.nativeEvent.stopImmediatePropagation()

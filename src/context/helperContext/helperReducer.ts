@@ -21,6 +21,7 @@ export const helperInitialState: HelperState = {
 }
 
 export const helperReducer = (state: HelperState, action: HelperAction) => {
+  console.log("------------------",state);
   switch (action.type) {
     case 'reloadTemplatesCms':
       return {

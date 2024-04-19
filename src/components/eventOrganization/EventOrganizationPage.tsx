@@ -344,27 +344,32 @@ const EventOrganizationPage = () => {
               </Row>
               <Row gutter={[16, 16]}>
                 {lastEvents?.length > 0 ? (
-                  lastEvents.map((event, index) => (
-                    <>
-                      {/*  Si el curso es privado y no estoy inscrito no se ve en el listado de la organización*/}
-                      {(event.visibility != 'PRIVATE' ||
-                        myEvents.filter((mye) => mye.event_id == event._id).length >
-                          0) && (
-                        <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
-                          <EventCard
-                            paymentDispatch={paymentDispatch}
-                            organizationUser={organizationUser}
-                            organization={organization}
-                            noDates
-                            bordered={false}
-                            key={event._id}
-                            event={event}
-                            action={{ name: 'Ver', url: `landing/${event._id}` }}
-                          />
-                        </Col>
-                      )}
-                    </>
-                  ))
+                  [...lastEvents]
+                    .sort(
+                      (a, b) =>
+                        Number(new Date(b.created_at)) - Number(new Date(a.created_at)),
+                    )
+                    .map((event, index) => (
+                      <>
+                        {/*  Si el curso es privado y no estoy inscrito no se ve en el listado de la organización*/}
+                        {(event.visibility != 'PRIVATE' ||
+                          myEvents.filter((mye) => mye.event_id == event._id).length >
+                            0) && (
+                          <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
+                            <EventCard
+                              paymentDispatch={paymentDispatch}
+                              organizationUser={organizationUser}
+                              organization={organization}
+                              noDates
+                              bordered={false}
+                              key={event._id}
+                              event={event}
+                              action={{ name: 'Ver', url: `landing/${event._id}` }}
+                            />
+                          </Col>
+                        )}
+                      </>
+                    ))
                 ) : (
                   <div
                     style={{

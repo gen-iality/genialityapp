@@ -16,12 +16,17 @@ export interface CardSelectorProps {
       onCheck: (checked: boolean) => void
       initialCheck?: boolean
     }
+    checkbox1?: {
+      text: string
+      onCheck: (checked: boolean) => void
+      initialCheck?: boolean
+    }
   }[]
   onSelected: (id: string) => void
 }
 
 export const CardSelector = (props: CardSelectorProps) => {
-  const [currentSelected, setCurrentSelected] = useState(props.selected)
+  const [currentSelected, setCurrentSelected] = useState(props.selected);
 
   return (
     <Row justify="center" wrap gutter={[8, 8]}>
@@ -48,26 +53,33 @@ export const CardSelector = (props: CardSelectorProps) => {
                       minHeight: '170px',
                       maxWidth: '220px',
                     }}
+                    onClick={() => {
+                      props.onSelected(option.id);
+                      setCurrentSelected(option.id);
+                    }}
                   >
                     <Space direction="vertical">
-                      <div
-                        onClick={() => {
-                          props.onSelected(option.id)
-                          setCurrentSelected(option.id)
-                        }}
-                      >
-                        <Text strong>{option.title}</Text>
-                        <Divider />
-                        <Text type="secondary">{option.body}</Text>
-                      </div>
-                      {currentSelected === option.id && option.checkbox !== undefined && (
+                      <Text strong>{option.title}</Text>
+                      <Divider />
+                      <Text type="secondary">{option.body}</Text>
+                      {currentSelected === option.id && option.checkbox && (
                         <>
                           <Divider />
                           <Checkbox
                             checked={option.checkbox.initialCheck}
-                            onChange={(e) => option.checkbox!.onCheck(e.target.checked)}
+                            onChange={(e) => option.checkbox.onCheck(e.target.checked)}
                           >
                             {option.checkbox.text}
+                          </Checkbox>
+                        </>
+                      )}
+                      {currentSelected === option.id && option.checkbox1 && (
+                        <>
+                          <Checkbox
+                            checked={option.checkbox1.initialCheck}
+                            onChange={(e) => option.checkbox1.onCheck(e.target.checked)}
+                          >
+                            {option.checkbox1.text}
                           </Checkbox>
                         </>
                       )}
@@ -80,5 +92,6 @@ export const CardSelector = (props: CardSelectorProps) => {
         </Form.Item>
       </Col>
     </Row>
-  )
-}
+  );
+};
+

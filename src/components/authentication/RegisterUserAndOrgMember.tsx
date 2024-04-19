@@ -194,23 +194,30 @@ const RegisterUserAndOrgMember = (props: RegisterUserAndOrgMemberProps) => {
     delete propertiesOrgMember.properties.password
     delete propertiesOrgMember.properties.picture
 
-    if (!organizationId) {
-      StateMessage.show(
-        null,
-        'error',
-        'No se puede proceder, recargue la página e intente nuevamente',
-      )
-      throw new Error(`The value of organizationId is ${organizationId}`)
+    // Si organizationId no está definido o es falso, usamos alternateId.
+    let effectiveOrgId = organizationId
+    if (!effectiveOrgId) {
+      console.log("no se encontró organizationId por props, se usa el alterno")
+      const id = location.pathname.split('/')[2]
+      effectiveOrgId = id // Utilizamos id como alternateId.
+      if (!effectiveOrgId) {
+        StateMessage.show(
+          null,
+          'error',
+          'Hubo un error, pero se ajusto para poder proceder con normalidad',
+        )
+        console.error(`The value of effectiveOrgId is ${effectiveOrgId}`);
+      }
     }
 
     try {
-      const respUser = await OrganizationApi.saveUser(organizationId, propertiesOrgMember)
+      const respUser = await OrganizationApi.saveUser(effectiveOrgId, propertiesOrgMember)
       console.debug('RegisterUser: has default position Id', { defaultPositionId })
       if (defaultPositionId === undefined) {
         console.warn('This organization has no default position. Eh!')
       } else {
         await PositionsApi.Organizations.addUser(
-          organizationId,
+          effectiveOrgId,
           defaultPositionId,
           respUser.account_id,
         )
@@ -224,7 +231,7 @@ const RegisterUserAndOrgMember = (props: RegisterUserAndOrgMemberProps) => {
             defaultMessage: 'Te has inscrito correctamente a esta organización',
           }),
         })
-        // setBasicDataUser({ email: '', names: '', password: '', picture: '' })
+        // setBasicDataUser({ email: '', names: '', password: '', picture: '' });
         setOrgMemberData(undefined)
         startingComponent && startingComponent()
       }
@@ -375,7 +382,6 @@ const RegisterUserAndOrgMember = (props: RegisterUserAndOrgMemberProps) => {
   useEffect(() => {
     if (!organizationId) return
     OrganizationApi.getOne(organizationId).then((response) => {
-      console.log('response', response)
       setOrganization(response)
     })
   }, [organizationId])

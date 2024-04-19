@@ -27,7 +27,6 @@ const initialStateNotification = {
 
 export const HelperContextProvider = ({ children }) => {
   const [helperState, helperDispatch] = useReducer(helperReducer, helperInitialState)
-
   const cEvent = useEventContext()
   const cUser = useCurrentUser()
   const cEventuser = useUserEvent()
