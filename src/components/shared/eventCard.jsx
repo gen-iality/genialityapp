@@ -36,6 +36,7 @@ const EventCard = ({
   let location = useLocation()
 
   const [isOpenModal, setIsOpenModal] = useState(false)
+  const [isInactiveModalOpen, setIsInactiveModalOpen] = useState(false)
 
   let openModal = () => {
     setIsOpenModal(true)
@@ -46,6 +47,14 @@ const EventCard = ({
   }
   const styleNormal = {
     fontWeight: 'bold',
+  }
+
+  const openInactiveModal = () => {
+    setIsInactiveModalOpen(true)
+  }
+
+  const closeInactiveModal = () => {
+    setIsInactiveModalOpen(false)
   }
 
   const styleAdmin = {
@@ -61,6 +70,34 @@ const EventCard = ({
   //aqui  tiene que venir ahora unos minutos en caso de tener plan
   const blockedDate = new Date(actualDate.setDate(actualDate.getDate() + blockedEvent))
   // const formatDate = dayjs(blockedDate).format('DD MMM YYYY')
+
+  const handleEventLinkClick = (e) => {
+    console.log('usuario tipo de organizacion ', organization)
+    if (
+      organization?.access_settings?.type === 'payment' &&
+      (!organizationUser || !organizationUser?.payment_plan) &&
+      !event.has_payment
+    ) {
+      paymentDispatch({ type: 'REQUIRE_PAYMENT' })
+      e.preventDefault()
+      e.stopPropagation()
+      e.nativeEvent.stopImmediatePropagation()
+    }
+    if (event.has_payment && !organizationUser) {
+      paymentDispatch({ type: 'DISPLAY_REGISTRATION' })
+      e.preventDefault()
+      e.stopPropagation()
+      e.nativeEvent.stopImmediatePropagation()
+    }
+    if (event.visibility === 'INACTIVE') {
+      console.log('El curso está inactivo.')
+      openInactiveModal()
+      e.preventDefault()
+      e.stopPropagation()
+      e.nativeEvent.stopImmediatePropagation()
+    }
+    return false
+  }
 
   return (
     <div className="animate__animated animate__fadeIn">
@@ -127,32 +164,7 @@ const EventCard = ({
                   />
                 </Link>
               ) : (
-                <a
-                  href={`/landing/${event._id}/evento`}
-                  onClick={(e) => {
-                    console.log('usuario tipo de organizacion ', organization)
-                    if (
-                      organization?.access_settings?.type === 'payment' &&
-                      //si no esta logueado o si no ha pagado miramos si requiere pago
-                      (!organizationUser || !organizationUser?.payment_plan) &&
-                      !event.has_payment
-                    ) {
-                      paymentDispatch({ type: 'REQUIRE_PAYMENT' })
-                      e.preventDefault()
-                      e.stopPropagation()
-                      e.nativeEvent.stopImmediatePropagation()
-                    }
-                    if (event.has_payment && !organizationUser) {
-                      paymentDispatch({ type: 'DISPLAY_REGISTRATION' })
-                      e.preventDefault()
-                      e.stopPropagation()
-                      e.nativeEvent.stopImmediatePropagation()
-                    }
-                    console.log('organizationUser')
-
-                    return false
-                  }}
-                >
+                <a href={`/landing/${event._id}/evento`} onClick={handleEventLinkClick}>
                   <img
                     className="animate__animated animate__fadeIn animate__slower"
                     loading="lazy"
@@ -293,6 +305,17 @@ const EventCard = ({
           onCancel={() => closeModal()}
         >
           El evento será habilitado próximamente
+        </Modal>
+      )}
+      {isInactiveModalOpen && (
+        <Modal
+          title="Curso inactivo"
+          closable
+          footer={false}
+          visible
+          onCancel={closeInactiveModal}
+        >
+          Este curso no se encuentra activo con la ACN.
         </Modal>
       )}
     </div>

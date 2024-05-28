@@ -655,7 +655,16 @@ class General extends Component {
           allow_register: false,
         },
       })
-    } else {
+    } else if(value === 3 ){
+      //Cursos inactivo
+      this.setState({
+        event: {
+          ...this.state.event,
+          visibility: 'INACTIVE',
+          allow_register: false,
+        },
+      })
+    }else {
       // Cursos privado con Invitación
       this.setState({
         event: {
@@ -1397,6 +1406,17 @@ class General extends Component {
                         <li>Sólo se podrá acceder por invitación.</li>
                         <br />
                         <li>Tiene inicio de sesión para todos.</li>
+                      </ul>
+                    ),
+                  },
+                  {
+                    id: '3',
+                    title: 'Curso inactivo.',
+                    body: (
+                      <ul>
+                        <li>No se podrá acceder al curso.</li>
+                        <br />
+                        <li>El curso o la organización esta inactivo.</li>
                       </ul>
                     ),
                   },
