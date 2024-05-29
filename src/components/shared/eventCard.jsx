@@ -315,7 +315,8 @@ const EventCard = ({
           visible
           onCancel={closeInactiveModal}
         >
-          Este curso no se encuentra activo con la ACN.
+          La ACN tomo la decisión de suspender los cursos. Por favor comunicarse con
+          Andrea Meléndez eventos@acnweb.org o marketing@acnweb.org
         </Modal>
       )}
     </div>
