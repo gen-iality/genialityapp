@@ -1,4 +1,11 @@
-import { CheckCircleOutlined, CloseCircleOutlined, CloseOutlined, MailOutlined, ScheduleOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  CloseOutlined,
+  MailOutlined,
+  ScheduleOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { Button, Form, Input, Typography } from 'antd';
 import { useIntl } from 'react-intl';
 import { FormConditionalInterface } from '../types';
@@ -8,7 +15,13 @@ const formLayout = {
   wrapperCol: { span: 24 },
 };
 
-export default function FormConditional({ handleChange, onCancel, onFinish, bgColor, textColor }: FormConditionalInterface) {
+export default function FormConditional({
+  handleChange,
+  onCancel,
+  onFinish,
+  bgColor,
+  textColor,
+}: FormConditionalInterface) {
   const intl = useIntl();
   const [form] = Form.useForm();
   return (
@@ -22,11 +35,10 @@ export default function FormConditional({ handleChange, onCancel, onFinish, bgCo
       autoComplete='on'
       layout='vertical'
       {...formLayout}
-      onFinish={onFinish}
-    >
-      <Typography.Text strong>
-        Por favor ingresa los siguientes datos para verificar tu información
-      </Typography.Text><br /><br />
+      onFinish={onFinish}>
+      <Typography.Text strong>Por favor ingresa los siguientes datos para verificar tu información</Typography.Text>
+      <br />
+      <br />
       <Form.Item
         label={intl.formatMessage({
           id: 'modal.label.name',
@@ -67,7 +79,7 @@ export default function FormConditional({ handleChange, onCancel, onFinish, bgCo
             required: true,
             message: intl.formatMessage({
               id: 'register.rule.email.message2',
-              defaultMessage: 'Ingrese un email para su cuenta en Evius',
+              defaultMessage: 'Ingrese un email para su cuenta en Magnetic',
             }),
           },
         ]}>
@@ -100,13 +112,15 @@ export default function FormConditional({ handleChange, onCancel, onFinish, bgCo
         />
       </Form.Item>
       <div>
-        <Button
-          onClick={onCancel}
-          size='large'
-          style={{ margin: '0 8px' }} icon={<CloseCircleOutlined />}>
+        <Button onClick={onCancel} size='large' style={{ margin: '0 8px' }} icon={<CloseCircleOutlined />}>
           Cancelar
         </Button>
-        <Button type={'primary'} htmlType='submit'  size='large' style={{ margin: '0 8px', backgroundColor: bgColor, color: textColor }} icon={<CheckCircleOutlined />}>
+        <Button
+          type={'primary'}
+          htmlType='submit'
+          size='large'
+          style={{ margin: '0 8px', backgroundColor: bgColor, color: textColor }}
+          icon={<CheckCircleOutlined />}>
           Finalizar
         </Button>
       </div>

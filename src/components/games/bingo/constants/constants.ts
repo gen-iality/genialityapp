@@ -13,13 +13,13 @@ export const Dimension_5x5 =
 export const TemplateData = [
   {
     'Tipo Carton': 'texto',
-    'Valor en el cartón': 'Logo de evius',
+    'Valor en el cartón': 'Logo de magnetic',
     'Tipo Balota': 'imagen',
     'Valor en la balota': 'https://evius.co/wp-content/uploads/2022/09/Logo-2-258x300.png',
   },
   {
     'Tipo Carton': 'texto',
-    'Valor en el cartón': '¿Evius es una plataforma de?',
+    'Valor en el cartón': 'Magnetic es una plataforma de?',
     'Tipo Balota': 'texto',
     'Valor en la balota': 'Eventos',
   },
@@ -33,17 +33,17 @@ export const TemplateData = [
     'Tipo Carton': 'imagen',
     'Valor en el cartón': 'https://evius.co/wp-content/uploads/2022/09/Logo-2-258x300.png',
     'Tipo Balota': 'texto',
-    'Valor en la balota': 'Logo de evius',
+    'Valor en la balota': 'Logo de magnetic',
   },
   {
     'Tipo Carton': 'text',
-    'Valor en el cartón': 'Logo de evius',
+    'Valor en el cartón': 'Logo de magnetic',
     'Tipo Balota': 'image',
     'Valor en la balota': 'https://evius.co/wp-content/uploads/2022/09/Logo-2-258x300.png',
   },
   {
     'Tipo Carton': 'text',
-    'Valor en el cartón': '¿Evius es una plataforma de?',
+    'Valor en el cartón': 'Magnetic es una plataforma de?',
     'Tipo Balota': 'text',
     'Valor en la balota': 'Eventos',
   },
@@ -57,7 +57,7 @@ export const TemplateData = [
     'Tipo Carton': 'image',
     'Valor en el cartón': 'https://evius.co/wp-content/uploads/2022/09/Logo-2-258x300.png',
     'Tipo Balota': 'text',
-    'Valor en la balota': 'Logo de evius',
+    'Valor en la balota': 'Logo de magnetic',
   },
 ];
 

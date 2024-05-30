@@ -10,13 +10,13 @@ const GoToEviusMeet = (props: any) => {
   const baseUrl = 'https://stagingeviusmeet.netlify.app/prepare';
   const urlReunion = `${baseUrl}?meetingId=${props.activityId}&username=${user.value?.names}&rol=1`;
   const urlEviusTransmision = `${baseUrl}?meetingId=${props.activityId}&username=${user.value?.names}&rtmp=${dataLive?.push_url}&rol=1`;
-  
+
   return (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
       <Card.Meta
         title={
           <Typography.Text style={{ fontSize: '20px' }} strong>
-            Evius Meet
+            Magnetic Meet
           </Typography.Text>
         }
         description={

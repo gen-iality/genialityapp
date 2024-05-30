@@ -28,7 +28,7 @@ export const AccessTypeCardData: AccessTypeCardInterface[] = [
     icon: <AccountTieIcon />,
     title: 'Evento público con registro',
     description:
-      'Tus asistentes deberán registrarse en la plataforma y en tu evento para poder ver el contenido. Si ya poseen una cuenta en Evius podrán iniciar sesión y continuar con la inscripción en tu evento ',
+      'Tus asistentes deberán registrarse en la plataforma y en tu evento para poder ver el contenido. Si ya poseen una cuenta en Magnetic podrán iniciar sesión y continuar con la inscripción en tu evento ',
     infoIcon: [
       iconWithTooltip('Tiene autenticación de usuario', <AccountKeyIcon />),
       iconWithTooltip('Puede recolectar información de sus asistentes', <DatabaseIcon />),

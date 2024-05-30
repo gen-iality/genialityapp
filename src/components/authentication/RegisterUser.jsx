@@ -9,7 +9,7 @@ import { useIntl } from 'react-intl';
 import { DispatchMessageService } from '@/context/MessageService';
 import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
 
-const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop , isPayment}) => {
+const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, isPayment }) => {
   const intl = useIntl();
   const { handleChangeTypeModal } = useHelper();
   const [errorEmail, setErrorEmail] = useState(false);
@@ -25,17 +25,17 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop , isPay
       required: true,
       message: intl.formatMessage({
         id: 'register.rule.email.message2',
-        defaultMessage: 'Ingrese un email para su cuenta en Evius',
+        defaultMessage: 'Ingrese un email para su cuenta en Magnetic',
       }),
     },
   ];
-  
+
   const rulePassword = [
     {
       required: true,
       message: intl.formatMessage({
         id: 'register.rule.password.message',
-        defaultMessage: 'Ingrese una contraseña para su cuenta en Evius',
+        defaultMessage: 'Ingrese una contraseña para su cuenta en Magnetic',
       }),
     },
     {
@@ -54,7 +54,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop , isPay
       required: true,
       message: intl.formatMessage({
         id: 'register.rule.name.message',
-        defaultMessage: 'Ingrese su nombre completo para su cuenta en Evius',
+        defaultMessage: 'Ingrese su nombre completo para su cuenta en Magnetic',
       }),
     },
   ];
@@ -93,9 +93,9 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop , isPay
           .signInWithEmailAndPassword(newValues.email, newValues.password)
           .then((login) => {
             if (login) {
-              //PERMITE VALIDAR EN QUE SECCIÓN DE EVIUS SE ENCUENTRA Y ASÍ RENDERIZAR EL MODAL CORRESPONDIENTE
+              //PERMITE VALIDAR EN QUE SECCIÓN DE MAGNETIC SE ENCUENTRA Y ASÍ RENDERIZAR EL MODAL CORRESPONDIENTE
               if (isPayment) {
-                handleChangeTypeModal('registerForTheEventPayment')
+                handleChangeTypeModal('registerForTheEventPayment');
               } else {
                 handleChangeTypeModal('loginSuccess');
               }

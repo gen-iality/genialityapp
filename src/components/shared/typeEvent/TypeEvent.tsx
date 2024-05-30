@@ -80,7 +80,7 @@ const TypeEvent = ({
                   style={{
                     width: '100%',
                   }}>
-                  <Option value='InternalEvent'>En Evius</Option>
+                  <Option value='InternalEvent'>En Magnetic</Option>
                   <Option value='ExternalEvent'>En otra plataforma</Option>
                 </Select>
               </Item>

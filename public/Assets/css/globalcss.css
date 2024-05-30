@@ -89,8 +89,7 @@
 
 .preloader {
   margin: auto;
-  background: url('https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Public%2FnewLogoEvius.svg?alt=media&token=0f24d024-6115-467e-9d64-307ee13d69d3')
-    no-repeat center;
+  background: url('https://firebasestorage.googleapis.com/v0/b/magnetic-be10a.appspot.com/o/logos%2FLOGOS%20MAGNETIC-01.svg?alt=media&token=a42b2756-c715-4b40-b9dc-cf812b42ff33') no-repeat center;
   background-size: 200px;
   width: 300px;
   height: 300px;
@@ -120,6 +119,7 @@ body.geniality .preloader {
     transform: rotate(0deg);
     border-top: 10px solid #2593fc;
   }
+
   100% {
     transform: rotate(360deg);
     border-top: 10px solid #30d2e0;

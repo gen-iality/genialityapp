@@ -22,8 +22,8 @@ const socialNetworksInitialValue = {
 };
 const initiaValueContact = {
   email: '',
-  celular: ''
-}
+  celular: '',
+};
 function OrganizationInformation(props) {
   let {
     name,
@@ -32,7 +32,7 @@ function OrganizationInformation(props) {
     type_event,
     show_my_certificates = false,
     social_networks = socialNetworksInitialValue,
-    contact = initiaValueContact
+    contact = initiaValueContact,
   } = props.org;
   const [typeEvents, setTypeEvents] = useState([]);
   const [showMyCertificates, setShowMyCertificates] = useState(false);
@@ -138,17 +138,10 @@ function OrganizationInformation(props) {
                   message: 'Ingresa un correo electrónico válido',
                 },
               ]}>
-              <Input
-                placeholder='ejemplo@evius.co'
-              />
+              <Input placeholder='ejemplo@magnetic.co' />
             </Form.Item>
-            <Form.Item
-              name={['contact', 'celular']}
-              label='Número de contacto'
-              initialValue={contact?.celular}>
-              <Input
-                placeholder='Ingrese un número de contacto'
-              />
+            <Form.Item name={['contact', 'celular']} label='Número de contacto' initialValue={contact?.celular}>
+              <Input placeholder='Ingrese un número de contacto' />
             </Form.Item>
             <Form.Item
               name={['social_networks', 'facebook']}

@@ -32,7 +32,7 @@ const VimeoStreamingPanel = ({ meeting_id, activityEdit }) => {
         return (
           <>
             <Button type='primary' href={linkAdmin} target='_blank'>
-              Ingresar a EviusMeets para transmitir
+              Ingresar a MagneticMeets para transmitir
             </Button>
             <Button type='secondary' href={vimeoCreateTransmissionUrl} target='_blank'>
               Como crear una transmisión en Vimeo?

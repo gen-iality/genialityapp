@@ -69,7 +69,7 @@ function Transmitir(props) {
     <>
       {optTransmitir == false ? (
         <div className='step-transmision'>
-          <h1 className='title-step'>Transmitir desde Evius</h1>
+          <h1 className='title-step'>Transmitir desde Magnetic</h1>
           <Row>
             <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={10}>
               <div className='container'>
@@ -86,7 +86,7 @@ function Transmitir(props) {
               <div className='container-description'>
                 <div className='descriptions'>
                   <p>
-                    Tu evento será transmitido desde evius usando tus camara y teniendo la posibilidad de agregar
+                    Tu evento será transmitido desde Magnetic usando tus camara y teniendo la posibilidad de agregar
                     efectos profesionales
                   </p>
                   {/*<a onClick={() => changeTransmision(true)}>Ver opciones de transmisión externas</a>*/}

@@ -47,7 +47,7 @@ export const UserOrganizationForm = ({
       required: true,
       message: intl.formatMessage({
         id: 'register.rule.email.message2',
-        defaultMessage: 'Ingrese un email para su cuenta en Evius',
+        defaultMessage: 'Ingrese un email para su cuenta en Magnetic',
       }),
     },
   ];
@@ -57,7 +57,7 @@ export const UserOrganizationForm = ({
       required: true,
       message: intl.formatMessage({
         id: 'register.rule.password.message',
-        defaultMessage: 'Ingrese una contraseña para su cuenta en Evius',
+        defaultMessage: 'Ingrese una contraseña para su cuenta en Magnetic',
       }),
     },
     {
@@ -72,7 +72,7 @@ export const UserOrganizationForm = ({
   ];
 
   const ruleCedula: any[] = [
-    { required: true, message: 'Ingrese una cedula para su cuenta en Evius' },
+    { required: true, message: 'Ingrese una cedula para su cuenta en Magnetic' },
     {
       type: 'string',
       min: 8,
@@ -85,7 +85,7 @@ export const UserOrganizationForm = ({
       required: true,
       message: intl.formatMessage({
         id: 'register.rule.name.message',
-        defaultMessage: 'Ingrese su nombre completo para su cuenta en Evius',
+        defaultMessage: 'Ingrese su nombre completo para su cuenta en Magnetic',
       }),
     },
   ];
@@ -161,7 +161,7 @@ export const UserOrganizationForm = ({
               prefix={<UserOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
             />
           </Form.Item>
-         {/*  <Form.Item
+          {/*  <Form.Item
             initialValue={'not-register'}
             label={'Inscribir este usuario en'}
             name='registeredOption'

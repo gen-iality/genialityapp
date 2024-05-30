@@ -438,7 +438,7 @@ class DashboardEvent extends Component {
                 // 'https://via.placeholder.com/970x250/50D3C9/FFFFFF?text=Banner%20evius'
                 'https://dummyimage.com/970x250/ffffff/50d3c8.jpg&text=EVIUS'
               }
-              alt='evius'
+              alt='magnetic'
             />
 
             {this.state.printButton ? (
@@ -700,7 +700,7 @@ class DashboardEvent extends Component {
                 // 'https://via.placeholder.com/970x250/50D3C9/FFFFFF?text=Banner%20evius'
                 'https://dummyimage.com/970x250/ffffff/50d3c8.jpg&text=EVIUS'
               }
-              alt='evius'
+              alt='magnetic'
             />
           </Row>
         </div>

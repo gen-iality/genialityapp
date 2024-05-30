@@ -23,11 +23,11 @@ const EditInformation = ({ cUser }) => {
 
   const intl = useIntl();
 
-  const ruleName = [{ required: true, message: 'Ingrese un nombre para su cuenta en Evius!' }];
+  const ruleName = [{ required: true, message: 'Ingrese un nombre para su cuenta en Magnetic!' }];
 
   const uploadNewUserPicture = async () => {
     const selectedLogo = imageAvatar ? imageAvatar[0] : imageAvatar;
-console.log('imageAvatar',selectedLogo)
+    console.log('imageAvatar', selectedLogo);
     if (selectedLogo) {
       if (selectedLogo.thumbUrl) return await saveImageStorage(selectedLogo.thumbUrl);
       return selectedLogo.url;

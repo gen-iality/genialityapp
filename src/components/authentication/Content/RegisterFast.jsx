@@ -29,8 +29,8 @@ function getBase64(img, callback) {
 const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
   const intl = useIntl();
   const cEvent = UseEventContext();
-  const isCustomPassword = cEvent?.value?.is_custom_password_label
-  const customPasswordLabel = cEvent?.value?.custom_password_label
+  const isCustomPassword = cEvent?.value?.is_custom_password_label;
+  const customPasswordLabel = cEvent?.value?.custom_password_label;
   const [takingPhoto, setTakingPhoto] = useState(false);
   const [imageAvatar, setImageAvatar] = useState(null);
   const [form] = Form.useForm();
@@ -75,7 +75,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
       required: true,
       message: intl.formatMessage({
         id: 'register.rule.email.message2',
-        defaultMessage: 'Ingrese un email para su cuenta en Evius',
+        defaultMessage: 'Ingrese un email para su cuenta en Magnetic',
       }),
     },
   ];
@@ -84,10 +84,12 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
     return [
       {
         required: true,
-        message: isCustomPassword ? `Ingrese su ${customPasswordLabel}` : intl.formatMessage({
-          id: 'register.rule.password.message',
-          defaultMessage: 'Ingrese una contraseña para su cuenta en Evius',
-        }),
+        message: isCustomPassword
+          ? `Ingrese su ${customPasswordLabel}`
+          : intl.formatMessage({
+              id: 'register.rule.password.message',
+              defaultMessage: 'Ingrese una contraseña para su cuenta en Magnetic',
+            }),
       },
       {
         type: 'string',
@@ -99,10 +101,10 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
         }),
       },
     ];
-  }
+  };
 
   const ruleCedula = [
-    { required: true, message: 'Ingrese una cedula para su cuenta en Evius' },
+    { required: true, message: 'Ingrese una cedula para su cuenta en Magnetic' },
     {
       type: 'string',
       min: 8,
@@ -115,7 +117,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
       required: true,
       message: intl.formatMessage({
         id: 'register.rule.name.message',
-        defaultMessage: 'Ingrese su nombre completo para su cuenta en Evius',
+        defaultMessage: 'Ingrese su nombre completo para su cuenta en Magnetic',
       }),
     },
   ];
@@ -222,10 +224,13 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
         </Form.Item>
         {isCustomPassword && (
           <Form.Item
-            label={customPasswordLabel || intl.formatMessage({
-              id: 'modal.label.password',
-              defaultMessage: 'Contraseña',
-            })}
+            label={
+              customPasswordLabel ||
+              intl.formatMessage({
+                id: 'modal.label.password',
+                defaultMessage: 'Contraseña',
+              })
+            }
             name='password'
             hasFeedback
             style={{ marginBottom: '10px', textAlign: 'left' }}
@@ -234,10 +239,13 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
               onChange={(e) => HandleHookForm(e, 'password')}
               type='password'
               size='large'
-              placeholder={customPasswordLabel || intl.formatMessage({
-                id: 'modal.label.password',
-                defaultMessage: 'Contraseña',
-              })}
+              placeholder={
+                customPasswordLabel ||
+                intl.formatMessage({
+                  id: 'modal.label.password',
+                  defaultMessage: 'Contraseña',
+                })
+              }
               prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
             />
           </Form.Item>
@@ -261,8 +269,8 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
               prefix={<IdcardOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
             />
           </Form.Item>
-       )}
-       {!isCustomPassword && !eventWithCedula(cEvent.value).isArkmed && (
+        )}
+        {!isCustomPassword && !eventWithCedula(cEvent.value).isArkmed && (
           <Form.Item
             label={intl.formatMessage({
               id: 'modal.label.password',

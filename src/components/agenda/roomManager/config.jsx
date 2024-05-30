@@ -126,7 +126,7 @@ export default function RoomConfig(props) {
                 <Select defaultValue={platform} value={platform} name='platform' onChange={(e) => setPlatform(e)}>
                   {/* <Option value={''}>Seleccionar...</Option> */}
                   <Option value='wowza'>
-                    Evius streaming <Typography.Text type='secondary'>(recomendado)</Typography.Text>
+                    Magnetic streaming <Typography.Text type='secondary'>(recomendado)</Typography.Text>
                   </Option>
                   <Option value='vimeo'>Vimeo</Option>
                   {/* <Option value='youtube'>Youtube</Option> */}
@@ -160,7 +160,7 @@ export default function RoomConfig(props) {
                     actions={[
                       <Radio checked={transmition === 'EviusMeet'} onChange={(e) => setTransmition('EviusMeet')} />,
                     ]}>
-                    <List.Item.Meta title={<b>Evius Meet</b>} />
+                    <List.Item.Meta title={<b>Magnetic Meet</b>} />
                   </List.Item>
                   <List.Item
                     style={{
@@ -192,7 +192,7 @@ export default function RoomConfig(props) {
                   <Col span={16}>
                     <Typography.Title level={3}>
                       {'Crea una transmisión con '}{' '}
-                      {transmition === 'EviusMeet' ? 'todo el poder de EVIUS' : transmition}{' '}
+                      {transmition === 'EviusMeet' ? 'todo el poder de MAGNETIC' : transmition}{' '}
                     </Typography.Title>
                     <Typography.Text type='secondary'>
                       <ul>
