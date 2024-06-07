@@ -42,6 +42,15 @@ const fireStorage = eviusaauth.storage();
 const fireRealtime = eviusaauth.database();
 const auth = eviusaauth.auth();
 
+fireRealtime.ref(".info/connected").on("value", function(snapshot) {
+  console.log("Connection status:", snapshot.val());
+  if (snapshot.val() == false) {
+    console.log("Client is not connected to Firebase.");
+    return;
+  }
+  console.log("Client is connected to Firebase.");
+});
+
 //const firestoreDB = getFirestore(app);
 
 const firestoreeviuschat = eviuschat.firestore();
