@@ -68,12 +68,12 @@ export default function ChartRender(props: Props) {
             labels: {
               color: "#000",
               font: {
-                size: isMobile ? 12 : 18,
+                size: isMobile ? 12 : 28,
                 // family: "'Montserrat', sans-serif", // para probar si afecta la fuente cambiar Montserrat por Papyrus
                 family: "Akzidenz Grotesk",
               },
             },
-            maxWidth: 250,
+            maxWidth: isMobile ? 250: 300,
             position: isMobile ? "top" : "left",
           },
         },
