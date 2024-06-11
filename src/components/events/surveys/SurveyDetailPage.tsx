@@ -29,24 +29,40 @@ function SurveyDetailPage(props: any) {
 
   return (
     <div>
+      {cSurveys.shouldDisplayGraphics() && (
+        <>
+          <GraphicsRefactor
+            idSurvey={cSurveys.currentSurvey._id}
+            eventId={cSurveys.currentSurvey.eventId}
+            operation="participationPercentage"
+          />
+          {/* <Divider />
+					<Graphics
+						idSurvey={cSurveys.currentSurvey._id}
+						eventId={cSurveys.currentSurvey.eventId}
+						operation='participationPercentage'
+					/> */}
+        </>
+      )}
+      {/* {cSurveys.surveyResult === 'closedSurvey' && <ClosedSurvey />} */}
       <div
         style={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          gap: "16px",
         }}
       >
-        {cSurveys.shouldDisplaySurveyAttendeeAnswered() && !cSurveys.shouldDisplaySurveyClosedMenssage() && (
-          <Result
-            style={{ height: "30%", padding: "0px" }}
-            status="success"
-            title="Ya has contestado esta encuesta"
-          />
-        )}
+        {cSurveys.shouldDisplaySurveyAttendeeAnswered() &&
+          !cSurveys.shouldDisplaySurveyClosedMenssage() && (
+            <Result
+              style={{ height: "40%", padding: "5px" }}
+              status="success"
+              title="Ya has contestado esta encuesta"
+            />
+          )}
         {cSurveys.shouldDisplaySurveyClosedMenssage() && (
           <Result
-            style={{ height: "30%", padding: "0px" }}
+            style={{ height: "40%", padding: "5px" }}
             title="Esta encuesta ha sido cerrada"
           />
         )}
@@ -63,23 +79,6 @@ function SurveyDetailPage(props: any) {
           />
         </Card>
       )}
-      {cSurveys.shouldDisplayGraphics() && (
-        <>
-          <Divider />
-          <GraphicsRefactor
-            idSurvey={cSurveys.currentSurvey._id}
-            eventId={cSurveys.currentSurvey.eventId}
-            operation="participationPercentage"
-          />
-          {/* <Divider />
-					<Graphics
-						idSurvey={cSurveys.currentSurvey._id}
-						eventId={cSurveys.currentSurvey.eventId}
-						operation='participationPercentage'
-					/> */}
-        </>
-      )}
-      {/* {cSurveys.surveyResult === 'closedSurvey' && <ClosedSurvey />} */}
     </div>
   );
 }

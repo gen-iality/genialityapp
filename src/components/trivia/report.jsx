@@ -1,155 +1,152 @@
-import { Component, Fragment } from 'react';
-import { withRouter, Link } from 'react-router-dom';
+import { Component, Fragment } from "react";
+import { withRouter, Link } from "react-router-dom";
 
-import { SurveysApi } from '../../helpers/request';
-import { getTotalVotes } from './services';
+import { SurveysApi } from "../../helpers/request";
+import { getTotalVotes } from "./services";
 
-import { List, Card, Button, Spin, Empty, Row, Col, Modal, notification } from 'antd';
-import Header from '../../antdComponents/Header';
+import {
+  List,
+  Card,
+  Button,
+  Spin,
+  Empty,
+  Row,
+  Col,
+  Modal,
+  notification,
+} from "antd";
+import Header from "../../antdComponents/Header";
+import GraphicsRefactor from "../events/surveys/graphicsRefactor";
 
 class TriviaReport extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      surveyQuestions: [],
-      loading: true,
-      visibleModal: false,
-    };
-  }
-
-  loadData = async () => {
-    const { event, location } = this.props;
-
-    SurveysApi.getOne(event._id, location.state.report)
-      .then(async (response) => {
-        const votes = new Promise((resolve) => {
-          let questions = [];
-
-          response.questions.forEach(async (question, index, arr) => {
-            let infoQuestion = await getTotalVotes(location.state.report, question);
-            questions.push(infoQuestion);
-            if (questions.length === arr.length) resolve(questions);
-          });
-        });
-
-        let questions = await votes;
-        this.setState({ surveyQuestions: questions, loading: false });
-      })
-      .catch(() => {
-        //
-        notification.open({
-          message: 'No se registran respuestas guardadas',
-          description: 'No hay respuestas y/o preguntas para realizar el informe',
-        });
-        this.setState({
-          loading: false,
-        });
-      });
-  };
-
-  toggleModal = () => {
-    let { visibleModal } = this.state;
-    this.setState({ visibleModal: !visibleModal });
+  state = {
+    surveyQuestions: [],
+    loading: true,
+    visibleModal: false,
   };
 
   componentDidMount() {
     this.loadData();
   }
 
+  loadData = async () => {
+    const { event, location } = this.props;
+    try {
+      const response = await SurveysApi.getOne(
+        event._id,
+        location.state.report
+      );
+      const questions = await Promise.all(
+        response.questions.map(
+          async (question) =>
+            await getTotalVotes(location.state.report, question)
+        )
+      );
+      this.setState({
+        eventId: event._id,
+        surveyId: response._id,
+        surveyQuestions: questions,
+        loading: false,
+      });
+    } catch (error) {
+      notification.open({
+        message: "No se registran respuestas guardadas",
+        description: "No hay respuestas y/o preguntas para realizar el informe",
+      });
+      this.setState({ loading: false });
+    }
+  };
+
+  toggleModal = () => {
+    this.setState((prevState) => ({ visibleModal: !prevState.visibleModal }));
+  };
+
   goBack = () => this.props.history.goBack();
 
   render() {
-    let { surveyQuestions, loading } = this.state;
-    const { location } = this.props;
+    const {
+      surveyQuestions,
+      loading,
+      eventId,
+      surveyId,
+      visibleModal,
+    } = this.state;
+    const { location, match } = this.props;
 
-    if (!loading)
-      return (
-        <Fragment>
-          <Header title={'Detalle de la Encuesta'} back />
+    if (loading) return <Spin />;
 
-          {surveyQuestions.length > 0 ? (
-            <List
-              grid={{
-                gutter: 16,
-                xs: 1,
-                sm: 2,
-                md: 2,
-                lg: 3,
-                xl: 3,
-                xxl: 3,
-              }}
-              dataSource={surveyQuestions}
-              renderItem={(item) => (
-                <List.Item>
-                  <Link
-                    to={{
-                      pathname: `${this.props.matchUrl}/report/${item.id}`,
-                      state: { titleQuestion: item.title, surveyId: location.state.report },
-                    }}>
-                    <Card title={item.title ? item.title : 'Pregunta sin Titulo'} hoverable>
-                      {item.quantityResponses === 0
-                        ? 'No se ha respondido aun la pregunta'
-                        : `${item.quantityResponses} usuarios han respondido la pregunta`}
-                    </Card>
-                  </Link>
-                </List.Item>
-              )}
-            />
-          ) : (
-            <Empty />
+    return (
+      <Fragment>
+        <Header title="Detalle de la Encuesta" back />
+        <div style={{ margin: "auto", width: "100%" }}>
+          {eventId && surveyId && (
+            <Fragment>
+              <Button
+                type="primary"
+                onClick={this.toggleModal}
+              >
+                Mostrar Gráfica
+              </Button>
+              <Modal
+                title="Gráfica de la Encuesta"
+                visible={visibleModal}
+                onCancel={this.toggleModal}
+                footer={[
+                  <Button key="close" onClick={this.toggleModal}>
+                    Cerrar
+                  </Button>,
+                ]}
+                width="100%"
+              >
+                <div style={{width: '65%', margin: 'auto'}}>
+                  <GraphicsRefactor
+                    idSurvey={surveyId}
+                    eventId={eventId}
+                    operation="participationPercentage"
+                  />
+                </div>
+              </Modal>
+            </Fragment>
           )}
-          {/* <EventContent title='Encuestas' closeAction={this.goBack}>
-            {surveyQuestions.length > 0 ? (
-              <Fragment>
-                <Row justify='end' style={{ marginBottom: 10 }}>
-                  <Col>
-                    <Button onClick={this.toggleModal}>Votar por usuarios</Button>
-                  </Col>
-                </Row>
-
-                <List
-                  grid={{
-                    gutter: 16,
-                    xs: 1,
-                    sm: 2,
-                    md: 2,
-                    lg: 3,
-                    xl: 3,
-                    xxl: 3
+        </div>
+        {surveyQuestions.length > 0 ? (
+          <List
+            grid={{
+              gutter: 16,
+              xs: 1,
+              sm: 2,
+              md: 2,
+              lg: 3,
+              xl: 3,
+              xxl: 3,
+            }}
+            style={{ marginTop: "5px" }}
+            dataSource={surveyQuestions}
+            renderItem={(item) => (
+              <List.Item>
+                <Link
+                  to={{
+                    pathname: `${match.url}/report/${item.id}`,
+                    state: {
+                      titleQuestion: item.title,
+                      surveyId: location.state.report,
+                    },
                   }}
-                  dataSource={surveyQuestions}
-                  renderItem={(item) => (
-                    <List.Item>
-                      <Link
-                        to={{
-                          pathname: `${this.props.matchUrl}/report/${item.id}`,
-                          state: { titleQuestion: item.title, surveyId: location.state.report }
-                        }}>
-                        <Card title={item.title ? item.title : 'Pregunta sin Titulo'} hoverable>
-                          {item.quantityResponses === 0
-                            ? 'No se ha respondido aun la pregunta'
-                            : `${item.quantityResponses} usuarios han respondido la pregunta`}
-                        </Card>
-                      </Link>
-                    </List.Item>
-                  )}
-                />
-                <Modal
-                  title='Basic Modal'
-                  visible={this.state.visibleModal}
-                  onOk={this.toggleModal}
-                  onCancel={this.toggleModal}>
-                  Este es el modal
-                </Modal>
-              </Fragment>
-            ) : (
-              <Empty />
+                >
+                  <Card title={item.title || "Pregunta sin Titulo"} hoverable>
+                    {item.quantityResponses === 0
+                      ? "No se ha respondido aun la pregunta"
+                      : `${item.quantityResponses} usuarios han respondido la pregunta`}
+                  </Card>
+                </Link>
+              </List.Item>
             )}
-          </EventContent> */}
-        </Fragment>
-      );
-
-    return <Spin></Spin>;
+          />
+        ) : (
+          <Empty />
+        )}
+      </Fragment>
+    );
   }
 }
 

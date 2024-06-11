@@ -336,7 +336,7 @@ function Graphics(props: any) {
 					</Row>
 				</Card>}
 			</Col>
-			{parseStringBoolean(cSurveys.currentSurvey.showNoVotos) && (
+			{parseStringBoolean(cSurveys?.currentSurvey?.showNoVotos) && (
 				<Col span={24}>
 					<Card headStyle={{border:'none'}} bodyStyle={{paddingTop:'0px'}} title={`Participación`}>
 						<Row gutter={[16, 16]}>
