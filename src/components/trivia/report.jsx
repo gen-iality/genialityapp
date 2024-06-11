@@ -98,7 +98,7 @@ class TriviaReport extends Component {
                 ]}
                 width="100%"
               >
-                <div style={{width: '65%', margin: 'auto'}}>
+                <div style={{width: '70%', margin: 'auto'}}>
                   <GraphicsRefactor
                     idSurvey={surveyId}
                     eventId={eventId}

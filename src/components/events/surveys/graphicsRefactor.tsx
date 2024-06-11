@@ -311,7 +311,6 @@ function Graphics(props: any) {
 						{!isAssambley &&
 							state.dataVotos.map((votos, index) => (
 								<Col key={`card-no-response-${index}`} xs={24} sm={24} md={12} lg={8} xl={8} xxl={6}>
-									{console.log({ votos })}
 									<Card bodyStyle={{ padding: '0px' }}>
 										<Space align='start'>
 											<Avatar size={80} shape='square' style={{ backgroundColor: `${votos.color}` }}>
@@ -336,7 +335,8 @@ function Graphics(props: any) {
 					</Row>
 				</Card>}
 			</Col>
-			{parseStringBoolean(cSurveys?.currentSurvey?.showNoVotos) && (
+			{/* comentado para evitar discordancia de datos*/}
+			{/* {parseStringBoolean(cSurveys?.currentSurvey?.showNoVotos) && (
 				<Col span={24}>
 					<Card headStyle={{border:'none'}} bodyStyle={{paddingTop:'0px'}} title={`Participación`}>
 						<Row gutter={[16, 16]}>
@@ -375,7 +375,7 @@ function Graphics(props: any) {
 						</Row>
 					</Card>
 				</Col>
-			)}
+			)} */}
 		</Row>
 	);
 }
