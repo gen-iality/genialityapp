@@ -46,6 +46,8 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
     "64f2159bf5076637df054592": "64cacb2d6014cebb340ef142", // demo wom
     /* '64230dc18611006a490d6022' : '645536848fb7b0e0dd0eb262' */ //evento de pruebas para aleja
   };
+  const [shouldShowLoginButton, setShouldShowLoginButton] = useState(true);
+
   const handleFunction = (
     params: EventAccessActionButtonsInterface[]
   ): EventAccessActionButtonsInterface[] => {
@@ -118,6 +120,19 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
   }, [eventAction, eventData]);
 
   useEffect(() => {
+    // Paso 1: Obtén el ID de la ruta actual.
+    // Asumiendo que `history` es un objeto proporcionado por React Router y contiene la ruta actual.
+    const currentRouteId = history.location.pathname.split("/").pop();
+
+    // Paso 2: Comprueba si el ID de la ruta es igual a `6663656f68f89bcf0a0896d2`.
+    if (currentRouteId === "6663656f68f89bcf0a0896d2") {
+      // Si el ID coincide, puedes establecer una variable de estado o realizar alguna acción
+      // para evitar mostrar el botón "Iniciar sesión".
+      // Por ejemplo, establecer un estado que controle la visibilidad del botón.
+      setShouldShowLoginButton(false);
+      return; // Salir temprano para evitar ejecutar más lógica en este efecto.
+    }
+
     // El resto de tu lógica useEffect aquí...
     const fetchAforoCompleted = async () => {
       if (cUser.status === "LOADED") {
@@ -149,43 +164,46 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
     <Space direction="vertical" style={{ width: "100%" }}>
       {handleFunction(buttonsActions).map((button, index) => (
         <>
-          {button.label !== "INITIAL_STATE" && (
-            <Button
-              disabled={
-                button.label === "Inscribirme al evento" && blockRegistration
-              }
-              key={`${index}-${button.label}`}
-              block
-              className={
-                button.label === "Ingresar al evento"
-                  ? "animate__animated animate__heartBeat animate__slower animate__repeat-3"
-                  : ""
-              }
-              style={{
-                height: "48px",
-                padding: "6.4px 30px",
-                color:
-                  idEvent !== "6334782dc19fe2710a0b8753" ? bgColor : "#c55a95",
-                backgroundColor: textColor,
-                border: "none",
-                width: screens.xs ? "300px" : "",
-              }}
-              type="primary"
-              size="large"
-              onClick={
-                button.label === "Inscribirme al evento"
-                  ? () => onRegisterUser(button.action)
-                  : button.action
-              }
-            >
-              {blockRegistration && button.label === "Inscribirme al evento"
-                ? "Capacidad Superada"
-                : button.label}
-            </Button>
-          )}
+          {button.label !== "INITIAL_STATE" &&
+            (button.label === "Iniciar sesión" &&
+            !shouldShowLoginButton ? null : (
+              <Button
+                disabled={
+                  button.label === "Inscribirme al evento" && blockRegistration
+                }
+                key={`${index}-${button.label}`}
+                block
+                className={
+                  button.label === "Ingresar al evento"
+                    ? "animate__animated animate__heartBeat animate__slower animate__repeat-3"
+                    : ""
+                }
+                style={{
+                  height: "48px",
+                  padding: "6.4px 30px",
+                  color:
+                    idEvent !== "6334782dc19fe2710a0b8753"
+                      ? bgColor
+                      : "#c55a95",
+                  backgroundColor: textColor,
+                  border: "none",
+                  width: screens.xs ? "300px" : "",
+                }}
+                type="primary"
+                size="large"
+                onClick={
+                  button.label === "Inscribirme al evento"
+                    ? () => onRegisterUser(button.action)
+                    : button.action
+                }
+              >
+                {blockRegistration && button.label === "Inscribirme al evento"
+                  ? "Capacidad Superada"
+                  : button.label}
+              </Button>
+            ))}
         </>
       ))}
-
       <ConditionalModal
         visible={modal}
         setVisible={setModal}

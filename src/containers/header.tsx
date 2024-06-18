@@ -470,56 +470,56 @@ const Headers = (props: Props) => {
                 </div>
               ) : (
                 <Space>
-                  {!isForbiddenId &&
-                    (showButtons.buttonlogin ? (
-                      <>
-                        {recordTypeForThisEvent(cEvent) !==
-                          "PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS" && (
-                          <Button
-                            icon={<LockOutlined />}
-                            style={{
-                              backdropFilter: "blur(8px)",
-                              background: "#FFFFFF99",
-                              color: getCorrectColor(bgcolorContainer),
-                            }}
-                            size="large"
-                            onClick={() => {
-                              helperDispatch({
-                                type: "showLogin",
-                                visible: true,
-                                organization: WhereHerePath(),
-                              });
-                            }}
-                          >
-                            {intl.formatMessage({
-                              id: "modal.title.login",
-                              defaultMessage: "Iniciar sesión",
-                            })}
-                          </Button>
-                        )}
-                      </>
-                    ) : (
-                      <Space>
-                        <Dropdown overlay={MenuMobile}>
-                          <Button
-                            style={{
-                              backgroundColor: "#3681E3",
-                              color: "#FFFFFF",
-                              border: "none",
-                            }}
-                            size="large"
-                            shape="circle"
-                            icon={
-                              <AccountCircleIcon style={{ fontSize: "28px" }} />
-                            }
-                          />
-                        </Dropdown>
-                      </Space>
-                    ))}
+                  {showButtons.buttonlogin ? (
+                    <>
+                      {recordTypeForThisEvent(cEvent) !==
+                        "PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS" && (
+                        <Button
+                          icon={<LockOutlined />}
+                          style={{
+                            backdropFilter: "blur(8px)",
+                            background: "#FFFFFF99",
+                            color: getCorrectColor(bgcolorContainer),
+                          }}
+                          size="large"
+                          onClick={() => {
+                            helperDispatch({
+                              type: "showLogin",
+                              visible: true,
+                              organization: WhereHerePath(),
+                            });
+                          }}
+                        >
+                          {intl.formatMessage({
+                            id: "modal.title.login",
+                            defaultMessage: "Iniciar sesión",
+                          })}
+                        </Button>
+                      )}
+                    </>
+                  ) : (
+                    <Space>
+                      <Dropdown overlay={MenuMobile}>
+                        <Button
+                          style={{
+                            backgroundColor: "#3681E3",
+                            color: "#FFFFFF",
+                            border: "none",
+                          }}
+                          size="large"
+                          shape="circle"
+                          icon={
+                            <AccountCircleIcon style={{ fontSize: "28px" }} />
+                          }
+                        />
+                      </Dropdown>
+                    </Space>
+                  )}
 
                   {showButtons.buttonregister &&
                     !isOrganizationCETA() &&
-                    !isEventWithPayment(cEvent) && !isForbiddenId && (
+                    !isEventWithPayment(cEvent) &&
+                    !isForbiddenId && (
                       <Button
                         style={{
                           backdropFilter: "blur(8px)",
