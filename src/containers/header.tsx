@@ -329,9 +329,6 @@ const Headers = (props: Props) => {
     }
   }, [cUser.value, validatorOrg]);
 
-  const isForbiddenId = window.location.href.includes(
-    "6663656f68f89bcf0a0896d2"
-  );
   return (
     <Fragment>
       <Header
@@ -518,8 +515,7 @@ const Headers = (props: Props) => {
 
                   {showButtons.buttonregister &&
                     !isOrganizationCETA() &&
-                    !isEventWithPayment(cEvent) &&
-                    !isForbiddenId && (
+                    !isEventWithPayment(cEvent) && (
                       <Button
                         style={{
                           backdropFilter: "blur(8px)",

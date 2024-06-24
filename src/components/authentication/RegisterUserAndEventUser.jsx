@@ -137,13 +137,13 @@ const RegisterUserAndEventUser = ({
         const isSpecificRoute = window.location.href.includes(
           "6663656f68f89bcf0a0896d2"
         );
-        const additionalText = isSpecificRoute
-          ? " " +
-            intl.formatMessage({
-              id: "modal.feedback.title.error.astraseneca",
-              defaultMessage: "e ingresa con tu correo y cédula.",
-            })
-          : "";
+        // const additionalText = isSpecificRoute
+        //   ? " " +
+        //     intl.formatMessage({
+        //       id: "modal.feedback.title.error.astraseneca",
+        //       defaultMessage: "e ingresa con tu correo y cédula.",
+        //     })
+        //   : "";
         setValidationGeneral({
           loading: false,
           status: true,
@@ -160,7 +160,7 @@ const RegisterUserAndEventUser = ({
                 ? "modal.feedback.title.errorlink.clic"
                 : "modal.feedback.title.errorlink",
               defaultMessage: "iniciar sesión",
-            }) + additionalText,
+            }),
         });
       } else if (
         err?.response?.data?.errors?.email[0] === "email no es un correo válido"
@@ -388,7 +388,7 @@ const RegisterUserAndEventUser = ({
               {validationGeneral.component ? (
                 <Button
                   style={{ padding: 4, color: "#333F44", fontWeight: "bold" }}
-                  onClick={() => helperDispatch({ type: "showLogin" })}
+                  onClick={() => helperDispatch({ type: "showLogin", visible: true})}
                   type="link"
                 >
                   {validationGeneral.component}

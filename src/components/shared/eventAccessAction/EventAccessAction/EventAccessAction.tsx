@@ -116,6 +116,7 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
     return () => {
       setInformativeMessage(informativeMessagesState);
       setButtonsActions(initialButtonsState);
+ 
     };
   }, [eventAction, eventData]);
 
