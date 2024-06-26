@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Menu, Badge } from 'antd';
-import { CommentOutlined, TeamOutlined, PieChartOutlined, ArrowLeftOutlined } from '@ant-design/icons';
+import { CommentOutlined, TeamOutlined, PieChartOutlined, ArrowLeftOutlined, /* QuestionCircleOutlined */ } from '@ant-design/icons';
 import { stylesMenuItems } from '../helpers/csshelpers';
 import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
 import { connect } from 'react-redux';
@@ -115,7 +115,34 @@ const MenuRigth = (props) => {
                 HandleChatOrAttende('3');
               }}></Menu.Item>
           )}
+
+{/* Muestra el Icono de Questions & Answers "QuestionCircleOutlined" en el evento */}
+{/* {currentActivity != null &&
+          // currentActivity.habilitar_ingreso === 'open_meeting_room' &&
+          typeEvent != 'UN_REGISTERED_PUBLIC_EVENT' && (
+            <Menu.Item
+              key='4'
+              icon={
+                <span>
+                  <Badge dot={props.hasOpenSurveys}>
+                    <QuestionCircleOutlined
+                      style={{
+                        fontSize: '30px',
+                        color: props.cEvent.value.styles?.textMenu,
+                      }}
+                    />
+                  </Badge>
+                </span>
+              }
+              style={{ paddingTop: '20px' }}
+              onClick={() => {
+                HandleOpenCloseMenuRigth(false);
+                HandleChatOrAttende('4');
+              }}></Menu.Item>
+          )}
+           */}
         <>
+       
           {tabsGenerals &&
             tabsGenerals.games &&
             currentActivity != null &&
