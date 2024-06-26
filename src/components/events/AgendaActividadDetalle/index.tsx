@@ -6,29 +6,48 @@
 // import useActivityType from '@/context/activityType/hooks/useActivityType';
 // import WithEviusContext from '../../../context/withContext';
 // import { isMobile } from 'react-device-detect';
-import { activitiesCode, cityValid, codeActivity } from '../../../helpers/constants';
-import { AgendaApi } from '../../../helpers/request';
-import { checkinAttendeeInActivity } from '../../../helpers/HelperAuth';
-import { connect } from 'react-redux';
-import { disconnectUserPresenceInActivity, listenUserPresenceInActivity } from './utils';
-import { Row, Card, Alert, Space, Result, Button } from 'antd';
-import { setTopBanner } from '../../../redux/topBanner/actions';
-import { setVirtualConference } from '../../../redux/virtualconference/actions';
-import { UseCurrentUserContext } from '@/context/userContext';
-import { UseEventContext } from '@/context/eventContext';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
-import { useState, useEffect } from 'react';
-import { UseSurveysContext } from '../../../context/surveysContext';
-import { UseUserEvent } from '@/context/eventUserContext';
-import { withRouter } from 'react-router-dom';
-import * as SurveyActions from '../../../redux/survey/actions';
-import AditionalInformation from './AditionalInformation';
-import HCOActividad from './HOC_Actividad';
-import Moment from 'moment-timezone';
-import PlayMillonaire from '@/components/games/WhoWantsToBeAMillonaire/components/PlayMillonaire';
-import SharePhotoInLanding from '@/components/games/sharePhoto/views/SharePhotoInLanding';
-import SurveyDrawer from '../surveys/components/surveyDrawer';
-import WhereisInLanding from '@/components/games/whereIs/views/WhereIsInLanding';
+import {
+  activitiesCode,
+  cityValid,
+  codeActivity,
+} from "../../../helpers/constants";
+import { AgendaApi } from "../../../helpers/request";
+import { checkinAttendeeInActivity } from "../../../helpers/HelperAuth";
+import { connect } from "react-redux";
+import {
+  disconnectUserPresenceInActivity,
+  listenUserPresenceInActivity,
+} from "./utils";
+import {
+  Row,
+  Card,
+  Alert,
+  Space,
+  Result,
+  Button,
+  notification,
+  Input,
+} from "antd";
+import { setTopBanner } from "../../../redux/topBanner/actions";
+import { setVirtualConference } from "../../../redux/virtualconference/actions";
+import { UseCurrentUserContext } from "@/context/userContext";
+import { UseEventContext } from "@/context/eventContext";
+import { useHelper } from "../../../context/helperContext/hooks/useHelper";
+import { useState, useEffect } from "react";
+import { UseSurveysContext } from "../../../context/surveysContext";
+import { UseUserEvent } from "@/context/eventUserContext";
+import { withRouter } from "react-router-dom";
+import * as SurveyActions from "../../../redux/survey/actions";
+import AditionalInformation from "./AditionalInformation";
+import HCOActividad from "./HOC_Actividad";
+import Moment from "moment-timezone";
+import PlayMillonaire from "@/components/games/WhoWantsToBeAMillonaire/components/PlayMillonaire";
+import SharePhotoInLanding from "@/components/games/sharePhoto/views/SharePhotoInLanding";
+import SurveyDrawer from "../surveys/components/surveyDrawer";
+import WhereisInLanding from "@/components/games/whereIs/views/WhereIsInLanding";
+import { fireRealtime } from "@/helpers/firebase";
+import ReactQuill from "react-quill";
+
 const { setHasOpenSurveys } = SurveyActions;
 const millonaireEventSatus = true;
 const sharePhotoEventStatus = true;
@@ -51,20 +70,84 @@ const AgendaActividadDetalle = (props: any) => {
   const uid = cUser.value?.uid;
   const activityId = props.match.params.activity_id;
   const eventId = cEvent.value?._id;
-  const isAssambleyMod = cEvent.value?.user_properties.some((property: any) => property.type === 'voteWeight');
-  const voteWeight = cEventUser.value?.properties?.voteWeight ? Number(cEventUser.value?.properties?.voteWeight) : 1;
-//   const intl = useIntl();
+  const isAssambleyMod = cEvent.value?.user_properties.some(
+    (property: any) => property.type === "voteWeight"
+  );
+  const voteWeight = cEventUser.value?.properties?.voteWeight
+    ? Number(cEventUser.value?.properties?.voteWeight)
+    : 1;
+  //   const intl = useIntl();
   {
     Moment.locale(window.navigator.language);
   }
   const [dataTypes, setDataTypes] = useState<any[]>([]);
+
+  const [message, setMessage] = useState("");
+  const [isMessageSent, setIsMessageSent] = useState(false);
+
+  useEffect(() => {
+    if (fireRealtime) {
+      const notificationRef = fireRealtime.ref("notifications/message");
+
+      notificationRef.on("value", (snapshot) => {
+        const msg = snapshot.val();
+        const key = cEventUser.value._id; // Asumiendo que esta es la clave única para la notificación
+
+        if (msg) {
+          // Si hay un mensaje, mostrar la notificación
+          showNotification(msg);
+          setIsMessageSent(true);
+        } else {
+          // Si el mensaje es null o vacío, cerrar la notificación
+          notification.close(key);
+          setIsMessageSent(false);
+        }
+      });
+
+      return () => {
+        notificationRef.off();
+      };
+    }
+  }, [fireRealtime, cEventUser.value._id]);
+
+  const showNotification = (msg: any) => {
+    const key = cEventUser.value._id; // Clave única para la notificación
+    
+    notification.open({
+      message: "Notificación",
+      description: <div dangerouslySetInnerHTML={{ __html: msg }} />,
+      duration: 0, // Duración infinita
+      key, // Asigna la clave única
+    });
+  };
+
+  const hiddenNotify = () => {
+    if (fireRealtime) {
+      const notificationRef = fireRealtime.ref("notifications/message");
+      notificationRef
+        .remove()
+        .then(() => console.log("Mensaje borrado con éxito."))
+        .catch((error) => console.error("Error al borrar el mensaje: ", error));
+
+      // Para restablecer el campo de mensaje
+      // setMessage("");
+    }
+  };
+
+  const handleSendMessage = () => {
+    const notificationRef = fireRealtime.ref("notifications");
+    notificationRef.set({ message });
+  };
 
   useEffect(() => {
     if (!!activityId && !!eventId && !!uid && !!isAssambleyMod) {
       listenUserPresenceInActivity(eventId, activityId, uid, voteWeight);
     }
     async function getActividad() {
-      return await AgendaApi.getOne(props.match.params.activity_id, cEvent.value._id);
+      return await AgendaApi.getOne(
+        props.match.params.activity_id,
+        cEvent.value._id
+      );
     }
 
     function orderHost(hosts: any) {
@@ -76,11 +159,11 @@ const AgendaActividadDetalle = (props: any) => {
 
     getActividad().then((result) => {
       setDataTypes(result.userTypes || []);
-      helperDispatch({ type: 'currentActivity', currentActivity: result });
+      helperDispatch({ type: "currentActivity", currentActivity: result });
       // setactivity(result);
 
       orderHost(result.hosts);
-	  //@ts-ignore
+      //@ts-ignore
       cSurveys.set_current_activity(result);
     });
 
@@ -88,33 +171,42 @@ const AgendaActividadDetalle = (props: any) => {
     props.setVirtualConference(false);
 
     HandleOpenCloseMenuRigth(false);
-    if (props.socialzonetabs?.publicChat || props.socialzonetabs?.privateChat || props.socialzonetabs?.attendees) {
+    if (
+      props.socialzonetabs?.publicChat ||
+      props.socialzonetabs?.privateChat ||
+      props.socialzonetabs?.attendees
+    ) {
       HandleOpenCloseMenuRigth(false);
     } else {
       HandleOpenCloseMenuRigth(true);
     }
 
     return () => {
-      !!isAssambleyMod && disconnectUserPresenceInActivity(eventId, activityId, uid, voteWeight);
+      !!isAssambleyMod &&
+        disconnectUserPresenceInActivity(eventId, activityId, uid, voteWeight);
       props.setTopBanner(true);
       props.setVirtualConference(true);
       HandleOpenCloseMenuRigth(true);
-      helperDispatch({ type: 'currentActivity', currentActivity: null });
+      helperDispatch({ type: "currentActivity", currentActivity: null });
       // setactivity(null);
     };
   }, []);
 
   useEffect(() => {
     let unSuscribe = () => {};
-    if (cEventUser.status === 'LOADED' && cEventUser.value != null) {
-		//@ts-ignore
+    if (cEventUser.status === "LOADED" && cEventUser.value != null) {
+      //@ts-ignore
       cSurveys.set_current_activity(currentActivity);
 
-      if (cEvent.value.type_event !== 'physicalEvent') {
+      if (cEvent.value.type_event !== "physicalEvent") {
         const eventId = cEvent.value._id;
         const activityId = props.match.params.activity_id;
 
-        unSuscribe = checkinAttendeeInActivity(cEventUser.value, eventId, activityId);
+        unSuscribe = checkinAttendeeInActivity(
+          cEventUser.value,
+          eventId,
+          activityId
+        );
       }
     }
 
@@ -153,7 +245,7 @@ const AgendaActividadDetalle = (props: any) => {
   // VALIDAR ACTIVIDADES POR CODIGO
   useEffect(() => {
     if (cEvent.value && cUser.value) {
-      if (cEvent.value?._id === '61200dfb2c0e5301fa5e9d86') {
+      if (cEvent.value?._id === "61200dfb2c0e5301fa5e9d86") {
         if (activitiesCode.includes(props.match.params.activity_id)) {
           if (cEventUser.value) {
             if (
@@ -181,16 +273,17 @@ const AgendaActividadDetalle = (props: any) => {
   const MIN_vALUE = 0;
   if (!dataTypes.includes(userType) && dataTypes.length > MIN_vALUE) {
     return (
-      <div className='mediaplayer' style={{ background: 'white' }}>
+      <div className="mediaplayer" style={{ background: "white" }}>
         <Result
-          status='403'
-          title='No estás autorizado para ver este recurso'
+          status="403"
+          title="No estás autorizado para ver este recurso"
           extra={
             <Button
-              type='primary'
+              type="primary"
               onClick={() => {
                 agenda();
-              }}>
+              }}
+            >
               Volver
             </Button>
           }
@@ -200,28 +293,47 @@ const AgendaActividadDetalle = (props: any) => {
   }
   return (
     <div>
-      <div className=' container_agenda-information container-calendar2'>
-        <Card style={{ padding: '1 !important' }} className='agenda_information'>
+      {cEventUser.value.rol.name === "Administrator" && (
+        <div style={{ padding: "20px", textAlign: "center" }}>
+          <Space direction="vertical">
+          <ReactQuill value={message} onChange={setMessage} />
+            {isMessageSent ? (
+              <Button type="primary" onClick={hiddenNotify}>
+                Ocultar Notificación
+              </Button>
+            ) : (
+              <Button type="primary" onClick={handleSendMessage}>
+                Enviar Notificación
+              </Button>
+            )}
+          </Space>
+        </div>
+      )}
+      <div className=" container_agenda-information container-calendar2">
+        <Card
+          style={{ padding: "1 !important" }}
+          className="agenda_information"
+        >
           {/* <HeaderColumnswithContext isVisible={true} /> */}
           {!blockActivity ? (
             <>
-              {props.match.params.activity_id === '61992d5f020bde260e068402' &&
-              cEventUser.value.user.rol_id !== '619d0c9161162b7bd16fcb82' ? (
+              {props.match.params.activity_id === "61992d5f020bde260e068402" &&
+              cEventUser.value.user.rol_id !== "619d0c9161162b7bd16fcb82" ? (
                 <Alert
                   showIcon
                   style={{
-                    width: '100%',
+                    width: "100%",
                     marginTop: 40,
                     marginBottom: 40,
-                    textAlign: 'center',
-                    fontSize: '19px',
+                    textAlign: "center",
+                    fontSize: "19px",
                   }}
                   message={
                     <>
                       {`Hola ${cEventUser.value.user.displayName} 👋, Este contenido es exclusivo para usuarios con paquete UNIVERSO`}
                     </>
                   }
-                  type='warning'
+                  type="warning"
                 />
               ) : (
                 <HCOActividad />
@@ -234,28 +346,39 @@ const AgendaActividadDetalle = (props: any) => {
                 <Alert
                   showIcon
                   style={{
-                    width: '100%',
+                    width: "100%",
                     marginTop: 40,
                     marginBottom: 40,
-                    textAlign: 'center',
-                    fontSize: '19px',
+                    textAlign: "center",
+                    fontSize: "19px",
                   }}
                   message={
                     <>
-                      ¿Quieres acceder a la membresía del taller? ingresa aqui:{' '}
-                      <a style={{ color: '#3273dc' }} target='_blank' href='https://iberofest.co/producto/edc/'>
+                      ¿Quieres acceder a la membresía del taller? ingresa aqui:{" "}
+                      <a
+                        style={{ color: "#3273dc" }}
+                        target="_blank"
+                        href="https://iberofest.co/producto/edc/"
+                      >
                         https://iberofest.co/producto/edc/
-                      </a>{' '}
+                      </a>{" "}
                     </>
                   }
-                  type='warning'
+                  type="warning"
                 />
               </Row>
             </>
           )}
           <div
-            style={{ width: '100%', padding: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Space direction='vertical' align='center'>
+            style={{
+              width: "100%",
+              padding: "8px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Space direction="vertical" align="center">
               {/* {cEvent.value?.bingo && (
 								<>
 									<Button
@@ -270,9 +393,13 @@ const AgendaActividadDetalle = (props: any) => {
 									<DrawerBingo openOrClose={openOrCloseModalDrawer} setOpenOrClose={setOpenOrCloseModalDrawer} />
 								</>
 							)} */}
-              {sharePhotoEventStatus && <SharePhotoInLanding eventId={cEvent.value._id} />}
+              {sharePhotoEventStatus && (
+                <SharePhotoInLanding eventId={cEvent.value._id} />
+              )}
               {millonaireEventSatus && <PlayMillonaire />}
-              {whereIsEventStatus && <WhereisInLanding eventId={cEvent.value._id} />}
+              {whereIsEventStatus && (
+                <WhereisInLanding eventId={cEvent.value._id} />
+              )}
               {/* { <PrintBingoCartonButton /> } */}
             </Space>
           </div>
@@ -281,7 +408,10 @@ const AgendaActividadDetalle = (props: any) => {
         </Card>
       </div>
       {/* Drawer encuestas */}
-      <SurveyDrawer colorFondo={cEvent.value.styles.toolbarDefaultBg} colorTexto={cEvent.value.styles.textMenu} />
+      <SurveyDrawer
+        colorFondo={cEvent.value.styles.toolbarDefaultBg}
+        colorTexto={cEvent.value.styles.textMenu}
+      />
     </div>
   );
 };
@@ -306,4 +436,7 @@ const mapDispatchToProps = {
 };
 
 // let AgendaActividadDetalleWithContext = WithEviusContext(AgendaActividadDetalle);
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalle));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(AgendaActividadDetalle));

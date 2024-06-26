@@ -66,8 +66,13 @@ const RegisterUserAndEventUser: React.FC<RegisterUserAndEventUserProps> = ({
         } else {
           setEmailError(
             <>
-              El correo no se encuentra registrado, verifícalo o regístrate
-              nuevamente
+              El correo no se encuentra registrado, verifícalo{" "}
+              <a
+                onClick={() => setEmailSubmitted(false)}
+                style={{ textDecoration: "underline", cursor: "pointer" }}
+              >
+                regístrate nuevamente aquí.
+              </a>
             </>
           );
         }
