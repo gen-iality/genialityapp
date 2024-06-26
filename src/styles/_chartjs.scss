@@ -1,7 +1,15 @@
+@font-face {
+	font-family: 'Akzidenz Grotesk';
+	src: url('../Assets/fonts/Akzidenz-Grotesk\ BQ\ Medium.ttf') format('truetype');
+	font-weight: 800;
+	font-style: normal;
+  }
+
 .chartjs-render-monitor {
 	animation: chartjs-render-animation 0.001s;
 	width: 100% !important;
 	height: 350px !important ;
+	
 	@media screen and (max-width: $breakpoint-mobile) {
 		height: auto !important ;
 	}
@@ -13,9 +21,11 @@
 .chart-render {
 	width: 60% !important;
 	height: 100% !important;
+	font-family:'Akzidenz Grotesk' !important ;
 }
 
 .chart-render-cms {
 	width: 70% !important;
 	height: 100% !important;
+	
 }

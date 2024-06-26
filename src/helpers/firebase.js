@@ -1,6 +1,5 @@
-//import { initializeApp } from 'firebase/app';
+// Importa las librerías de Firebase
 import app from 'firebase/compat/app';
-
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import 'firebase/compat/storage';
@@ -11,7 +10,6 @@ import 'firebase/compat/database';
  * para cosas super realtime usar firebase realtime
  * https://stackoverflow.com/questions/46717898/firestore-slow-performance-issue-on-getting-data
  */
-
 const config = {
   apiKey: process.env.VITE_FB_APIKEY_EVIUSAUTH,
   authDomain: process.env.VITE_FB_AUTHDOMAIN_EVIUSAUTH,
@@ -34,43 +32,66 @@ const configEviuschat = {
   measurementId: process.env.VITE_MEASUREMENTID_CHATEVIUS,
 };
 
-let eviusaauth = app.initializeApp(config);
-let eviuschat = app.initializeApp(configEviuschat, 'secondary');
+// Inicializa las aplicaciones de Firebase
+let eviusaauth, eviuschat;
 
-const firestore = eviusaauth.firestore();
-const fireStorage = eviusaauth.storage();
-const fireRealtime = eviusaauth.database();
-const auth = eviusaauth.auth();
+try {
+  eviusaauth = app.initializeApp(config);
+} catch (error) {
+  console.error('Error initializing eviusaauth app:', error);
+}
 
-fireRealtime.ref(".info/connected").on("value", function(snapshot) {
-  console.log("Connection status:", snapshot.val());
-  if (snapshot.val() == false) {
-    console.log("Client is not connected to Firebase.");
-    return;
-  }
-  console.log("Client is connected to Firebase.");
-});
+try {
+  eviuschat = app.initializeApp(configEviuschat, 'secondary');
+} catch (error) {
+  console.error('Error initializing eviuschat app:', error);
+}
 
-//const firestoreDB = getFirestore(app);
+// Configura Firestore, Storage, Realtime Database y Auth
+const firestore = eviusaauth ? eviusaauth.firestore() : null;
+const fireStorage = eviusaauth ? eviusaauth.storage() : null;
+const fireRealtime = eviusaauth ? eviusaauth.database() : null;
+const auth = eviusaauth ? eviusaauth.auth() : null;
 
-const firestoreeviuschat = eviuschat.firestore();
-const realTimeviuschat = eviuschat.database();
+if (fireRealtime) {
+  fireRealtime.ref(".info/connected").on("value", (snapshot) => {
+    const isConnected = snapshot.val();
+    if (isConnected === false) {
+      console.log("Client is not connected to Firebase.");
+    } else {
+      console.log("Client is connected to Firebase.");
+    }
+  });
+}
 
-firestore.settings({
-  cacheSizeBytes: firestore.CACHE_SIZE_UNLIMITED,
-  merge: true,
-});
+const firestoreeviuschat = eviuschat ? eviuschat.firestore() : null;
+const realTimeviuschat = eviuschat ? eviuschat.database() : null;
 
-firestore
-  .enablePersistence({ synchronizeTabs: true })
-  .then(() => {
-    window.eviusFailedPersistenceEnabling = false;
-  })
-  .catch((err) => {
-    console.error(err);
-    window.eviusFailedPersistenceEnabling = true;
+// Configura Firestore con persistencia
+if (firestore) {
+  firestore.settings({
+    cacheSizeBytes: firestore.CACHE_SIZE_UNLIMITED,
+    merge: true,
   });
 
-window.firebase = app;
+  firestore
+    .enablePersistence({ synchronizeTabs: true })
+    .then(() => {
+      window.eviusFailedPersistenceEnabling = false;
+    })
+    .catch((err) => {
+      console.error('Error enabling persistence:', err);
+      window.eviusFailedPersistenceEnabling = true;
+    });
+}
 
-export { app, auth, firestore, fireStorage, fireRealtime, firestoreeviuschat, realTimeviuschat };
+// Exporta las instancias
+export {
+  app,
+  auth,
+  firestore,
+  fireStorage,
+  fireRealtime,
+  firestoreeviuschat,
+  realTimeviuschat,
+};
