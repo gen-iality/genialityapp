@@ -136,14 +136,11 @@ const RenderComponent = (props: any) => {
         : "";
       const finalMessage = "Estará disponible en pocos minutos.";
 
-      console.log(cEventContext.value)
-
       if (
         plataforma === "vimeo" ||
         plataforma === "zoom" ||
         plataforma === "dolby"
       ) {
-        console.log(actividad_estado);
         switch (actividad_estado) {
           case "open_meeting_room":
             if (render_Game === "game") {
@@ -283,7 +280,7 @@ const RenderComponent = (props: any) => {
           </>
         );
       }
-
+      
       return (
         <CountdownBlock
           textColor={textColor}
