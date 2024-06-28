@@ -141,6 +141,7 @@ const RenderComponent = (props: any) => {
         plataforma === "zoom" ||
         plataforma === "dolby"
       ) {
+        console.log(actividad_estado);
         switch (actividad_estado) {
           case "open_meeting_room":
             if (render_Game === "game") {
@@ -171,6 +172,14 @@ const RenderComponent = (props: any) => {
               <VideoActivity />
             ) : (
               <ImageComponentwithContext />
+            );
+          case "record_meeting_room":
+            return (
+              <ZoomIframe
+                platform={plataforma}
+                meeting_id={meetingId}
+                generalTabs={tabsGeneral}
+              />
             );
           default:
             return (
@@ -280,7 +289,7 @@ const RenderComponent = (props: any) => {
           </>
         );
       }
-      
+
       return (
         <CountdownBlock
           textColor={textColor}

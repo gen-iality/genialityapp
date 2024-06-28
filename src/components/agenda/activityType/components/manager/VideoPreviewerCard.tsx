@@ -371,6 +371,8 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
               <Option value='closed_meeting_room'>Iniciará pronto</Option>
               <Option value='open_meeting_room'>En vivo</Option>
               <Option value='ended_meeting_room'>Finalizada</Option>
+              <Option value='record_meeting_room'>Grabación</Option>
+              
             </Select>
           </Space>
         )}

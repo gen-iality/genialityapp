@@ -1,8 +1,8 @@
-import { Button, Col, Modal, Row, Spin } from 'antd';
-import { useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
-import { useIntl } from 'react-intl';
+import { Button, Col, Modal, Row, Spin } from "antd";
+import { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useHelper } from "../../../context/helperContext/hooks/useHelper";
+import { useIntl } from "react-intl";
 import {
   ArrowLeftOutlined,
   CaretRightOutlined,
@@ -10,28 +10,30 @@ import {
   ClockCircleOutlined,
   ExclamationCircleOutlined,
   LoadingOutlined,
-} from '@ant-design/icons';
-import WithEviusContext from '../../../context/withContext';
+  VideoCameraFilled,
+  VideoCameraOutlined,
+} from "@ant-design/icons";
+import WithEviusContext from "../../../context/withContext";
 
-import Moment from 'moment-timezone';
-import { UseEventContext } from '../../../context/eventContext';
-import HumanGreetingVariantIcon from '@2fd/ant-design-icons/lib/HumanGreetingVariant';
-import CancelIcon from '@2fd/ant-design-icons/lib/Cancel';
-import AgendaContext from '../../../context/AgendaContext';
-import { CurrentEventUserContext } from '../../../context/eventUserContext';
-import { imageUtils } from '../../../Utilities/ImageUtils';
-import { DispatchMessageService } from '../../../context/MessageService';
-import { recordTypeForThisEvent } from '../Landing/helpers/thisRouteCanBeDisplayed';
-import DrawerBingo from '@/components/games/bingo/components/DrawerBingo';
-import { useAuction } from '@/components/dinamicas/subasta/hooks/useAuction';
-import DrawerAuction from '@/components/dinamicas/subasta/components/landing/DrawerAuction';
+import Moment from "moment-timezone";
+import { UseEventContext } from "../../../context/eventContext";
+import HumanGreetingVariantIcon from "@2fd/ant-design-icons/lib/HumanGreetingVariant";
+import CancelIcon from "@2fd/ant-design-icons/lib/Cancel";
+import AgendaContext from "../../../context/AgendaContext";
+import { CurrentEventUserContext } from "../../../context/eventUserContext";
+import { imageUtils } from "../../../Utilities/ImageUtils";
+import { DispatchMessageService } from "../../../context/MessageService";
+import { recordTypeForThisEvent } from "../Landing/helpers/thisRouteCanBeDisplayed";
+import DrawerBingo from "@/components/games/bingo/components/DrawerBingo";
+import { useAuction } from "@/components/dinamicas/subasta/hooks/useAuction";
+import DrawerAuction from "@/components/dinamicas/subasta/components/landing/DrawerAuction";
 
 const HeaderColumns = (props) => {
   let { currentActivity } = useHelper();
   let cEvent = UseEventContext();
   let cEventUSer = useContext(CurrentEventUserContext);
   let [loading, setLoading] = useState(false);
-  const { auction } = useAuction(cEvent.value?._id)
+  const { auction } = useAuction(cEvent.value?._id);
   const [openOrCloseModalDrawer, setOpenOrCloseModalDrawer] = useState(false);
   const [openModalAuction, setOpenModalAuction] = useState(false);
   let {
@@ -49,12 +51,12 @@ const HeaderColumns = (props) => {
   function showPropsConfirm() {
     Modal.confirm({
       centered: true,
-      title: 'Seguro que desea cambiar a la transmisión en vivo',
+      title: "Seguro que desea cambiar a la transmisión en vivo",
       icon: <ExclamationCircleOutlined />,
-      content: '',
-      okText: 'Aceptar',
-      okType: 'danger',
-      cancelText: 'Cancelar',
+      content: "",
+      okText: "Aceptar",
+      okType: "danger",
+      cancelText: "Cancelar",
       onOk() {
         setLoading(true);
         removeRequestTransmision();
@@ -64,15 +66,16 @@ const HeaderColumns = (props) => {
         }
       },
       onCancel() {
-        console.log('Cancel');
+        console.log("Cancel");
       },
     });
   }
 
   //SE EJECUTA CUANDO TIENE UNA ACTIVIDAD PARA ESTABLECER LA REFERENCIA Y OBTENER LOS REQUEST
-  
+
   useEffect(() => {
-    if(auction?.opened !== undefined  &&  auction?.opened !== openModalAuction) setOpenModalAuction(auction.opened);
+    if (auction?.opened !== undefined && auction?.opened !== openModalAuction)
+      setOpenModalAuction(auction.opened);
   }, [auction?.opened]);
 
   useEffect(() => {
@@ -80,7 +83,7 @@ const HeaderColumns = (props) => {
       //SE SETEA EL CURRENTACTIVITY PARA DETECTAR SI LA TRANSMISION ES POR EVIUSMEET U OTRO
       // console.log('1. SE EJECUTA ESTO');
     }
-    if (!currentActivity || typeActivity !== 'eviusMeet') return;
+    if (!currentActivity || typeActivity !== "eviusMeet") return;
     const refActivity = `request/${cEvent.value?._id}/activities/${currentActivity?._id}`;
     setActivityEdit(currentActivity._id);
     setRefActivity(refActivity);
@@ -101,7 +104,7 @@ const HeaderColumns = (props) => {
   const sendOrCancelRequest = async () => {
     setLoading(true);
     if (!haveRequest() && cEventUSer.value?._id) {
-      await addRequest(refActivity + '/' + cEventUSer.value?._id, {
+      await addRequest(refActivity + "/" + cEventUSer.value?._id, {
         id: cEventUSer.value?._id,
         name: cEventUSer.value?.user?.names,
         date: new Date().getTime(),
@@ -111,9 +114,9 @@ const HeaderColumns = (props) => {
       await removeRequest(refActivity, cEventUSer.value?._id);
     } else {
       DispatchMessageService({
-        type: 'error',
-        msj: 'Error al enviar solicitud',
-        action: 'show',
+        type: "error",
+        msj: "Error al enviar solicitud",
+        action: "show",
       });
     }
     setLoading(false);
@@ -121,23 +124,30 @@ const HeaderColumns = (props) => {
 
   const intl = useIntl();
   return (
-    <Row align='middle'>
+    <Row align="middle">
       <Col
         xs={{ order: 2, span: 8 }}
         sm={{ order: 2, span: 8 }}
         md={{ order: 1, span: 4 }}
         lg={{ order: 1, span: 4 }}
         xl={{ order: 1, span: 4 }}
-        style={{ padding: '4px' }}>
+        style={{ padding: "4px" }}
+      >
         <Link
           to={
             cEvent && !cEvent?.isByname
               ? `/landing/${props.cEvent.value._id}/agenda`
               : `/event/${cEvent?.nameEvent}/agenda`
-          }>
-          <Row style={{ paddingLeft: '10px' }}>
-            <Button type='primary' shape='round' icon={<ArrowLeftOutlined />} size='small'>
-              {intl.formatMessage({ id: 'button.back.agenda' })}
+          }
+        >
+          <Row style={{ paddingLeft: "10px" }}>
+            <Button
+              type="primary"
+              shape="round"
+              icon={<ArrowLeftOutlined />}
+              size="small"
+            >
+              {intl.formatMessage({ id: "button.back.agenda" })}
             </Button>
           </Row>
         </Link>
@@ -149,21 +159,32 @@ const HeaderColumns = (props) => {
         md={{ order: 1, span: 2 }}
         lg={{ order: 1, span: 2 }}
         xl={{ order: 1, span: 2 }}
-        style={{ padding: '4px' }}>
-        <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
+        style={{ padding: "4px" }}
+      >
+        <Row style={{ alignItems: "center", justifyContent: "center" }}>
           <Col>
-            {props.activityState === 'open_meeting_room' || props.activityState === 'game' ? (
-              <img style={{ height: '4vh', width: '4vh' }} src={imageUtils.EnVivo} alt='React Logo' />
-            ) : props.activityState === 'ended_meeting_room' && currentActivity !== null && currentActivity.video ? (
-              <CaretRightOutlined style={{ fontSize: '30px' }} />
-            ) : props.activityState === 'ended_meeting_room' && currentActivity !== null ? (
-              <CheckCircleOutlined style={{ fontSize: '30px' }} />
-            ) : props.activityState === '' || props.activityState == null ? (
-              <ClockCircleOutlined style={{ fontSize: '30px' }} />
-            ) : props.activityState === 'closed_meeting_room' ? (
-              <LoadingOutlined style={{ fontSize: '30px' }} />
+            {props.activityState === "open_meeting_room" ||
+            props.activityState === "game" ? (
+              <img
+                style={{ height: "4vh", width: "4vh" }}
+                src={imageUtils.EnVivo}
+                alt="React Logo"
+              />
+            ) : props.activityState === "ended_meeting_room" &&
+              currentActivity !== null &&
+              currentActivity.video ? (
+              <CaretRightOutlined style={{ fontSize: "30px" }} />
+            ) : props.activityState === "ended_meeting_room" &&
+              currentActivity !== null ? (
+              <CheckCircleOutlined style={{ fontSize: "30px" }} />
+            ) : props.activityState === "" || props.activityState == null ? (
+              <ClockCircleOutlined style={{ fontSize: "30px" }} />
+            ) : props.activityState === "closed_meeting_room" ? (
+              <LoadingOutlined style={{ fontSize: "30px" }} />
+            ) : props.activityState === "record_meeting_room" ? (
+              <VideoCameraOutlined style={{ fontSize: "30px" }} />
             ) : (
-              ''
+              ""
             )}
           </Col>
         </Row>
@@ -171,19 +192,26 @@ const HeaderColumns = (props) => {
           style={{
             // height: '2vh',
             fontSize: 11,
-            fontWeight: 'normal',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          {props.activityState === 'open_meeting_room' || props.activityState === 'game'
-            ? 'En vivo'
-            : props.activityState === 'ended_meeting_room' && currentActivity !== null && currentActivity.video
-            ? 'Grabado'
-            : props.activityState === 'ended_meeting_room' && currentActivity !== null
-            ? 'Terminada'
-            : props.activityState === 'closed_meeting_room'
-            ? 'Por iniciar'
-            : ''}
+            fontWeight: "normal",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {props.activityState === "open_meeting_room" ||
+          props.activityState === "game"
+            ? "En vivo"
+            : props.activityState === "ended_meeting_room" &&
+              currentActivity !== null &&
+              currentActivity.video
+            ? "Grabado"
+            : props.activityState === "ended_meeting_room" &&
+              currentActivity !== null
+            ? "Terminada"
+            : props.activityState === "closed_meeting_room"
+            ? "Por iniciar"
+            : props.activityState === "record_meeting_room"
+            ? "Grabación"
+            : ""}
         </Row>
       </Col>
 
@@ -193,9 +221,10 @@ const HeaderColumns = (props) => {
         md={{ order: 2, span: 18 }}
         lg={{ order: 2, span: 16 }}
         xl={{ order: 2, span: 18 }}
-        style={{ display: 'flex' }}>
-        <div style={{ padding: '8px' }}>
-          <Row style={{ textAlign: 'left', fontWeight: 'bolder' }}>
+        style={{ display: "flex" }}
+      >
+        <div style={{ padding: "8px" }}>
+          <Row style={{ textAlign: "left", fontWeight: "bolder" }}>
             {currentActivity && currentActivity?.name}
             {/* {configfast && configfast.enableCount && (
                             <>
@@ -221,88 +250,95 @@ const HeaderColumns = (props) => {
           </Row>
           <Row
             style={{
-              height: '2.5vh',
+              height: "2.5vh",
               fontSize: 10,
-              fontWeight: 'normal',
-            }}>
+              fontWeight: "normal",
+            }}
+          >
             <div
               xs={{ order: 1, span: 24 }}
               sm={{ order: 1, span: 24 }}
               md={{ order: 1, span: 24 }}
               lg={{ order: 3, span: 6 }}
-              xl={{ order: 3, span: 4 }}>
+              xl={{ order: 3, span: 4 }}
+            >
               {props.isVisible && (
                 <div>
                   {Moment.tz(
                     currentActivity !== null && currentActivity?.datetime_start,
-                    'YYYY-MM-DD h:mm',
-                    'America/Bogota'
+                    "YYYY-MM-DD h:mm",
+                    "America/Bogota"
                   )
                     .tz(Moment.tz.guess())
-                    .format('DD MMM YYYY')}{' '}
+                    .format("DD MMM YYYY")}{" "}
                   {Moment.tz(
                     currentActivity !== null && currentActivity?.datetime_start,
-                    'YYYY-MM-DD h:mm',
-                    'America/Bogota'
+                    "YYYY-MM-DD h:mm",
+                    "America/Bogota"
                   )
                     .tz(Moment.tz.guess())
-                    .format('h:mm a z')}{' '}
-                  -{' '}
+                    .format("h:mm a z")}{" "}
+                  -{" "}
                   {Moment.tz(
                     currentActivity !== null && currentActivity?.datetime_end,
-                    'YYYY-MM-DD h:mm',
-                    'America/Bogota'
+                    "YYYY-MM-DD h:mm",
+                    "America/Bogota"
                   )
                     .tz(Moment.tz.guess())
-                    .format('h:mm a z')}
+                    .format("h:mm a z")}
                 </div>
               )}
             </div>
 
-            {currentActivity !== null && currentActivity?.space && currentActivity?.space?.name}
+            {currentActivity !== null &&
+              currentActivity?.space &&
+              currentActivity?.space?.name}
           </Row>
           <Col>
             {/* {console.log('1. TIPE ACTIVITY==>', typeActivity, recordTypeForThisEvent(cEvent.value?._id))} */}
-            {typeActivity == 'eviusMeet' &&
+            {typeActivity == "eviusMeet" &&
               !request[cEventUSer.value?._id]?.active &&
               cEventUSer.value?._id &&
-              props.activityState === 'open_meeting_room' &&
-              recordTypeForThisEvent(cEvent) !== 'UN_REGISTERED_PUBLIC_EVENT' && (
+              props.activityState === "open_meeting_room" &&
+              recordTypeForThisEvent(cEvent) !==
+                "UN_REGISTERED_PUBLIC_EVENT" && (
                 <Button
-                  style={{ transition: 'all 1s' }}
+                  style={{ transition: "all 1s" }}
                   onClick={() => (!loading ? sendOrCancelRequest() : null)}
                   icon={
                     !haveRequest() && !loading ? (
-                      <HumanGreetingVariantIcon style={{ fontSize: '16px' }} />
+                      <HumanGreetingVariantIcon style={{ fontSize: "16px" }} />
                     ) : haveRequest() && !loading ? (
-                      <CancelIcon style={{ fontSize: '16px' }} />
+                      <CancelIcon style={{ fontSize: "16px" }} />
                     ) : (
                       <Spin />
                     )
                   }
                   disabled={request && request[cEventUSer.value?._id]?.active}
-                  type={!haveRequest() ? 'primary' : 'danger'}>
+                  type={!haveRequest() ? "primary" : "danger"}
+                >
                   {!haveRequest() && !loading
-                    ? 'Solicitar participar en la transmisión'
+                    ? "Solicitar participar en la transmisión"
                     : !loading
-                    ? 'Cancelar solicitud'
-                    : 'Espere...'}
+                    ? "Cancelar solicitud"
+                    : "Espere..."}
                 </Button>
               )}
-            {typeActivity == 'eviusMeet' &&
+            {typeActivity == "eviusMeet" &&
               request[cEventUSer.value?._id]?.active &&
-              props.activityState === 'open_meeting_room' && (
+              props.activityState === "open_meeting_room" && (
                 <Button
-                  style={{ transition: 'all 1s' }}
+                  style={{ transition: "all 1s" }}
                   onClick={() => showPropsConfirm()}
                   icon={
                     !haveRequest() ? (
-                      <HumanGreetingVariantIcon style={{ fontSize: '16px' }} />
+                      <HumanGreetingVariantIcon style={{ fontSize: "16px" }} />
                     ) : (
-                      <CancelIcon style={{ fontSize: '16px' }} />
+                      <CancelIcon style={{ fontSize: "16px" }} />
                     )
                   }
-                  type={!haveRequest() ? 'primary' : 'danger'}>
+                  type={!haveRequest() ? "primary" : "danger"}
+                >
                   Cambiar a modo transmisión en vivo
                 </Button>
               )}
@@ -314,37 +350,53 @@ const HeaderColumns = (props) => {
         sm={{ order: 4, span: 24 }}
         md={{ order: 4, span: 24 }}
         lg={{ order: 4, span: 24 }}
-        xl={{ order: 4, span: 24 }}>
+        xl={{ order: 4, span: 24 }}
+      >
         {cEvent.value?.bingo && (
-          <Row justify='end' align='top'>
+          <Row justify="end" align="top">
             <Button
-              style={{ float: 'right' }}
-              size='large'
-              type='primary'
+              style={{ float: "right" }}
+              size="large"
+              type="primary"
               onClick={() => {
                 setOpenOrCloseModalDrawer(true);
-              }}>
-              ¡Jugar {cEvent?.value?._id === '64d2b7f39b9f9cc49008a263' ? 'LOTERÍA' : 'BINGO'}!
+              }}
+            >
+              ¡Jugar{" "}
+              {cEvent?.value?._id === "64d2b7f39b9f9cc49008a263"
+                ? "LOTERÍA"
+                : "BINGO"}
+              !
             </Button>
-            <DrawerBingo openOrClose={openOrCloseModalDrawer} setOpenOrClose={setOpenOrCloseModalDrawer} />
+            <DrawerBingo
+              openOrClose={openOrCloseModalDrawer}
+              setOpenOrClose={setOpenOrCloseModalDrawer}
+            />
           </Row>
         )}
         {auction?.published && (
-          <Row justify='end' align='top'>
+          <Row justify="end" align="top">
             <Button
-              style={{ float: 'right' }}
-              size='large'
-              type='primary'
+              style={{ float: "right" }}
+              size="large"
+              type="primary"
               onClick={() => {
                 setOpenModalAuction(true);
               }}
               disabled={!auction?.opened}
-              >
+            >
               Abrir Subasta
             </Button>
-            <DrawerAuction auction={auction} eventId={cEvent.value?._id} openOrClose={openModalAuction}  cEventUser={cEventUSer} cEvent={cEvent} setOpenOrClose={() => {
+            <DrawerAuction
+              auction={auction}
+              eventId={cEvent.value?._id}
+              openOrClose={openModalAuction}
+              cEventUser={cEventUSer}
+              cEvent={cEvent}
+              setOpenOrClose={() => {
                 setOpenModalAuction(false);
-              }} />
+              }}
+            />
           </Row>
         )}
       </Col>
