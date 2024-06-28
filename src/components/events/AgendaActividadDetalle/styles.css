@@ -13,8 +13,18 @@
   
   .blinking-text {
     color: white;
-    
     text-shadow: 0px 0px 10px black;
     animation: blink 2s infinite;
   }
+
+  .loading-custom {
+    color: #33FF93
+  }
   
+  /* Media query para pantallas pequeñas */
+  @media (max-width: 480px) {
+    .blinking-text {
+      font-size: 1rem; /* Tamaño fijo de fuente para pantallas pequeñas */
+    }
+  }
+

@@ -9,7 +9,8 @@ import {
 } from "@ant-design/icons";
 import "./styles.css";
 
-const vimeoVideoUrl = "https://player.vimeo.com/video/970166216?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=1";
+const vimeoVideoUrl =
+  "https://player.vimeo.com/video/970166216?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=1";
 
 const ImageComponent = (props) => {
   let { currentActivity } = useHelper();
@@ -25,7 +26,7 @@ const ImageComponent = (props) => {
   const RenderTextActivity = (state) => {
     switch (state) {
       case "created_meeting_room":
-        return "El contenido está siendo configurado para que puedas disfrutar de esta actividad.";
+        return "Estamos configurando el contenido para que puedas disfrutarlo. ¡Espéralo!";
       case "closed_meeting_room":
         return "La actividad iniciará pronto. ¡Prepárate!";
       default:
@@ -36,9 +37,9 @@ const ImageComponent = (props) => {
   const getIcon = (state) => {
     switch (state) {
       case "created_meeting_room":
-        return <ClockCircleOutlined style={{ color: "#33FF93" }} />;
+        return <ClockCircleOutlined style={{ color: "#33FF93", fontSize: "2.5rem" }} />;
       case "closed_meeting_room":
-        return <LoadingOutlined style={{ color: "#33FF93" }} />;
+        return <LoadingOutlined style={{ color: "#33FF93", fontSize: "2.5rem" }} />;
       default:
         return <SettingOutlined />;
     }
@@ -88,20 +89,23 @@ const ImageComponent = (props) => {
           style={iframeStyles}
           title="video_back"
         ></iframe>
-      </div>
-      <div style={overlayStyles} className="content">
-        {currentActivity ? (
-          <Result
-            icon={getIcon(currentActivity.habilitar_ingreso)}
-            title={
-              <span className="blinking-text" style={{    background: "rgba(0, 0, 0, 0.5)",}}>
-                {RenderTextActivity(currentActivity.habilitar_ingreso)}
-              </span>
-            }
-          />
-        ) : (
-          <Result icon={getIcon("")} title={RenderTextActivity("")} />
-        )}
+        <div style={overlayStyles} className="content">
+          {currentActivity ? (
+            <Result
+              icon={getIcon(currentActivity.habilitar_ingreso)}
+              title={
+                <span
+                  className="blinking-text"
+                  style={{ background: "rgba(0, 0, 0, 0.5)" }}
+                >
+                  {RenderTextActivity(currentActivity.habilitar_ingreso)}
+                </span>
+              }
+            />
+          ) : (
+            <Result icon={getIcon("")} title={RenderTextActivity("")} />
+          )}
+        </div>
       </div>
     </div>
   );

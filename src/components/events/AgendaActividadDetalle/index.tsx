@@ -294,7 +294,7 @@ const AgendaActividadDetalle = (props: any) => {
   return (
     <div>
       {/*Interfaz mensaje de notificación*/}
-      {/* {cEventUser.value.rol.name === "Administrator" && (
+      {cEventUser.value.rol.name === "Administrator" && (
         <div style={{ padding: "20px", textAlign: "center" }}>
           <Space direction="vertical">
           <ReactQuill value={message} onChange={setMessage} />
@@ -309,7 +309,7 @@ const AgendaActividadDetalle = (props: any) => {
             )}
           </Space>
         </div>
-      )} */}
+      )}
       <div className=" container_agenda-information container-calendar2">
         <Card
           style={{ padding: "1 !important" }}
