@@ -15,8 +15,8 @@ import { useHistory } from 'react-router-dom';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import ThisRouteCanBeDisplayed, { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
 import { TabChatAttendee } from '@/zonasocial/components/TabChatAttendee';
-/* import QuestionsAndAnswers from '../trivia/types/QuestionsAndAnswers';
-import { get, getDatabase, onValue, ref, update } from 'firebase/database'; */
+import QuestionsAndAnswers from '../trivia/types/QuestionsAndAnswers';
+import { get, getDatabase, onValue, ref, update } from 'firebase/database';
 
 const { setMainStage } = StageActions;
 const { TabPane } = Tabs;
@@ -37,7 +37,8 @@ const SocialZone = function(props) {
   const history = useHistory();
   const [typeEvent, settypeEvent] = useState();
   //------------states Q&A ---------------------------
-  // const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState([]);
+  console.log("array de preguntas:", questions)
   //--- maneja el mostrar o no el icono de preguntas, falta implementar
   // const [showQuestions, setShowQuestions] = useState(false);
 
@@ -58,62 +59,60 @@ const SocialZone = function(props) {
     settypeEvent(eventype);
   }, [cEvent]);
 
-
   // ------- Start funcions Q&A ---------------------------->
   /* -----------------------------------------------------------------
-  // Envia las preguntas a firebase y las ordena de mayor a menor votos
+  // Muestra las preguntas a todos los demas usuarios y las ordena de mayor a menor votos
   ----------------------------------------------------------------------   */
-  // useEffect(() => {
-  //   const db = getDatabase();
-  //   const questionsRef = ref(db, 'events/general/questions');
-  //   onValue(questionsRef, (snapshot) => {
-  //     const data = snapshot.val();
-  //     if (data) {
-  //       const questionsArray = Object.keys(data).map((key) => ({
-  //         ...data[key],
-  //         id: key,
-  //       }));
-  //       setQuestions(questionsArray.sort((a, b) => b.counterVotes - a.counterVotes));
-  //     } else {
-  //       setQuestions([]);
-  //     }
-  //   });
-  // }, []);
-
- 
-/* -----------------------------------------------------------------
-  // Agrega las preguntas al array
-  ----------------------------------------------------------------------   */
-  // const handleAddQuestion = (question) => {
-  //      setQuestions((prevQuestions) => [...prevQuestions, question]);
-  // };
+  useEffect(() => {
+    const db = getDatabase();
+    const questionsRef = ref(db, 'events/general/questions');
+    onValue(questionsRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        const questionsArray = Object.keys(data).map((key) => ({
+          ...data[key],
+          id: key,
+        }));
+        /* setQuestions(questionsArray.sort((a, b) => b.counterVotes - a.counterVotes)); */
+        setQuestions(questionsArray)
+      } else {
+        setQuestions([]);
+      }
+    });
+  }, []);
 
   /* -----------------------------------------------------------------
-  // Envia las preguntas a firebase y las almacena por el id, además las ordena de mayor a menor votos para guardarlas en el estado "questions"
+  // Agrega las preguntas al array
   ----------------------------------------------------------------------   */
-  //  const handleVoteQuestion = async (id) => {
-  //   const db = getDatabase();
-  //   const questionRef = ref(db, `events/general/questions/${id}`);
-  //   const snapshot = await get(questionRef);
-  //   if (snapshot.exists()) {
-  //     const currentVotes = snapshot.val().counterVotes || 0;
-  //     const newVotes = currentVotes + 1;
-  //     await update(questionRef, { counterVotes: newVotes });
-      
-  //     // Actualizar el estado local
-  //     setQuestions((prevQuestions) =>
-  //       prevQuestions.map((question) =>
-  //         question.id === id ? { ...question, counterVotes: newVotes } : question
-  //       ).sort((a, b) => b.counterVotes - a.counterVotes)
-  //     );
-  //   } else {
-  //     console.log('La pregunta no existe.');
-  //   }
-  // };
+  const handleAddQuestion = (question) => {
+    console.log('handleAddQuestion called:', question);
+    setQuestions((prevQuestions) => [...prevQuestions, question]);
+  };
 
- //---------------End funcions Q&A ---------------->
+  /* -----------------------------------------------------------------
+  // obtiene la pregunta por su id y le suma a su propiedad que contiene el numero de votos, además las ordena de mayor a menor votos"
+  ----------------------------------------------------------------------   */
+  const handleVoteQuestion = async (id) => {
+    const db = getDatabase();
+    const questionRef = ref(db, `events/general/questions/${id}`);
+    const snapshot = await get(questionRef);
+    if (snapshot.exists()) {
+      const currentVotes = snapshot.val().counterVotes || 0;
+      const newVotes = currentVotes + 1;
+      await update(questionRef, { counterVotes: newVotes });
 
- 
+      // Actualizar el estado local
+      setQuestions((prevQuestions) =>
+        prevQuestions
+          .map((question) => (question.id === id ? { ...question, counterVotes: newVotes } : question))
+          .sort((a, b) => b.counterVotes - a.counterVotes)
+      );
+    } else {
+      console.log('La pregunta no existe.');
+    }
+  };
+
+  //---------------End funcions Q&A ---------------->
 
   return (
     <Tabs
@@ -241,8 +240,8 @@ const SocialZone = function(props) {
             </>
           </TabPane>
         )}
-        {/* Renderiza el componente  Q&A y le envia el array de "questions", los handles y el nombre del usuario que hace la pregunta */}
-     {/*  <TabPane
+      {/* Renderiza el componente  Q&A y le envia el array de "questions", los handles y el nombre del usuario que hace la pregunta */}
+      {/* <TabPane
         className='asistente-chat-list'
         tab={
           <>
@@ -259,7 +258,7 @@ const SocialZone = function(props) {
             questions={questions}
             onAddQuestion={handleAddQuestion}
             onVoteQuestion={handleVoteQuestion}
-            currentUser ={cUser.value.names}
+            currentUser={cUser.value.names}
           />
         </ThisRouteCanBeDisplayed>
       </TabPane> */}

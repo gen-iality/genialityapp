@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-import { useState, useEffect } from "react";
 import { useHelper } from "../../../context/helperContext/hooks/useHelper";
 import ImageComponentwithContext from "./ImageComponent";
 import RenderComponent from "./RenderComponent";
@@ -15,20 +14,20 @@ const HCOActividad = ({ isBingo = false }) => {
 
   const generateICSFile = () => {
     const icsContent = `
-BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Your Organization//Your Product//EN
-BEGIN:VEVENT
-UID:${new Date().getTime()}@yourdomain.com
-DTSTAMP:${new Date().toISOString().replace(/-|:|\.\d+/g, "")}
-DTSTART:${formatDateToICS(currentActivity?.datetime_start)}
-DTEND:${formatDateToICS(currentActivity?.datetime_end)}
-SUMMARY:${currentActivity?.nombre || "Actividad sin nombre"}
-LOCATION:${currentActivity?.lugar || "Ubicación no especificada"}
-DESCRIPTION:${currentActivity?.descripcion || "Sin descripción"}
-END:VEVENT
-END:VCALENDAR
-    `;
+          BEGIN:VCALENDAR
+          VERSION:2.0
+          PRODID:-//Live Events//Live Events//ES
+          BEGIN:VEVENT
+          UID:${new Date().getTime()}@geniality.com.co
+          DTSTAMP:${new Date().toISOString().replace(/-|:|\.\d+/g, "")}
+          DTSTART:${formatDateToICS(currentActivity?.datetime_start)}
+          DTEND:${formatDateToICS(currentActivity?.datetime_end)}
+          SUMMARY:${currentActivity?.name || "Actividad sin nombre"}
+          LOCATION:${currentActivity?.lugar || "Evento virtual"}
+          DESCRIPTION:${currentActivity?.descripcion || "Sin descripción"}
+          END:VEVENT
+          END:VCALENDAR
+              `;
 
     const blob = new Blob([icsContent], {
       type: "text/calendar;charset=utf-8",
@@ -56,12 +55,12 @@ END:VCALENDAR
         {/* {currentActivity && currentActivity.secondvideo && <SecondVideoActivity />} */}
         {/* {imageVisible() && <ImageComponentwithContext/>} */}
       </div>
-      {/* <div
+      <div
         style={{ textDecoration: "underline", cursor: "pointer" }}
         onClick={generateICSFile}
       >
-        Clic aquí para añadir esta actividad al calendario
-      </div> */}
+        Clic aquí para añadir este evento a tú calendario
+      </div>
     </header>
   );
 };

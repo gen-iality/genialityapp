@@ -82,8 +82,9 @@ const AgendaActividadDetalle = (props: any) => {
   }
   const [dataTypes, setDataTypes] = useState<any[]>([]);
 
+  const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState("");
-  const [isMessageSent, setIsMessageSent] = useState(false);
+  const [isMessageSent, setIsMessageSent] = useState<Boolean>(false);
 
   useEffect(() => {
     if (fireRealtime) {
@@ -92,7 +93,7 @@ const AgendaActividadDetalle = (props: any) => {
       notificationRef.on("value", (snapshot) => {
         const msg = snapshot.val();
         const key = cEventUser.value._id; // Asumiendo que esta es la clave única para la notificación
-
+        console.log(snapshot.val());
         if (msg) {
           // Si hay un mensaje, mostrar la notificación
           showNotification(msg);
@@ -112,7 +113,7 @@ const AgendaActividadDetalle = (props: any) => {
 
   const showNotification = (msg: any) => {
     const key = cEventUser.value._id; // Clave única para la notificación
-    
+
     notification.open({
       message: "Notificación",
       description: <div dangerouslySetInnerHTML={{ __html: msg }} />,
@@ -137,6 +138,36 @@ const AgendaActividadDetalle = (props: any) => {
   const handleSendMessage = () => {
     const notificationRef = fireRealtime.ref("notifications");
     notificationRef.set({ message });
+    setIsEditing(false);
+  };
+
+  // quita las etiquetas html del contenido
+  const stripHtmlTags = (html: string): string => {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.body.textContent || "";
+  };
+
+  // Manejar cambios en el editor ReactQuill
+  const handleQuillChange = (content: string) => {
+    // Asegurar que los enlaces tengan el formato correcto
+    const formattedContent = formatLinks(content);
+    setMessage(formattedContent);
+  };
+
+  // Formatear enlaces para asegurar que tengan el formato correcto
+  const formatLinks = (content: string): string => {
+    const regex = /<a\b[^>]*>(.*?)<\/a>/gm;
+    const formattedContent = content.replace(regex, (match, p1) => {
+      // Asegurarse de extraer el href del enlace
+      const hrefMatch = match.match(/href="([^"]*)"/);
+      let href = hrefMatch ? hrefMatch[1] : "";
+      if (!href.startsWith("http://") && !href.startsWith("https://")) {
+        href = `https://${href}`;
+      }
+      // Reconstruir el enlace con el href corregido
+      return `<a href="${href}" rel="noopener noreferrer" target="_blank">${p1}</a>`;
+    });
+    return formattedContent;
   };
 
   useEffect(() => {
@@ -271,6 +302,7 @@ const AgendaActividadDetalle = (props: any) => {
   };
   const userType = cEventUser.value?.properties.list_type_user;
   const MIN_vALUE = 0;
+
   if (!dataTypes.includes(userType) && dataTypes.length > MIN_vALUE) {
     return (
       <div className="mediaplayer" style={{ background: "white" }}>
@@ -291,22 +323,39 @@ const AgendaActividadDetalle = (props: any) => {
       </div>
     );
   }
+
   return (
     <div>
       {/*Interfaz mensaje de notificación*/}
       {cEventUser.value.rol.name === "Administrator" && (
         <div style={{ padding: "20px", textAlign: "center" }}>
           <Space direction="vertical">
-          <ReactQuill value={message} onChange={setMessage} />
-            {isMessageSent ? (
-              <Button type="primary" onClick={hiddenNotify}>
-                Ocultar Notificación
-              </Button>
-            ) : (
-              <Button type="primary" onClick={handleSendMessage}>
-                Enviar Notificación
-              </Button>
-            )}
+            <Card style={{ backgroundColor: "white" }}>
+              <Space direction="vertical">
+                {isEditing ? (
+                  <ReactQuill value={message} onChange={handleQuillChange} />
+                ) : (
+                  <Input
+                    placeholder="Escribe tu mensaje.."
+                    onFocus={() => setIsEditing(true)}
+                    value={stripHtmlTags(message)}
+                  />
+                )}
+                {isMessageSent ? (
+                  <Button type="primary" onClick={hiddenNotify}>
+                    Ocultar Notificación
+                  </Button>
+                ) : (
+                  <Button
+                    type="primary"
+                    onClick={handleSendMessage}
+                    disabled={message === "<p><br></p>" || !message}
+                  >
+                    Enviar Notificación
+                  </Button>
+                )}
+              </Space>
+            </Card>
           </Space>
         </div>
       )}
