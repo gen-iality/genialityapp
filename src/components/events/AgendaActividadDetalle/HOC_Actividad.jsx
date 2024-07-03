@@ -1,12 +1,16 @@
 /* eslint-disable no-unused-vars */
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useHelper } from "../../../context/helperContext/hooks/useHelper";
 import ImageComponentwithContext from "./ImageComponent";
 import RenderComponent from "./RenderComponent";
-import { createEvent } from 'ics';
+import { createEvent } from "ics";
 import { saveAs } from "file-saver";
+import { CurrentEventContext } from "@/context/eventContext";
 
 const HCOActividad = ({ isBingo = false }) => {
   const { currentActivity } = useHelper();
+  const cEventContext = useContext(CurrentEventContext);
+  console.log(cEventContext.nameEvent);
 
   const generateICSFile = () => {
     const event = {
@@ -15,9 +19,9 @@ const HCOActividad = ({ isBingo = false }) => {
       title: currentActivity?.name || "Actividad sin nombre",
       description: currentActivity?.descripcion || "",
       location: currentActivity?.lugar || "Evento virtual",
-      url: 'https://liveevents.geniality.com.co',
-      status: 'CONFIRMED',
-      organizer: { name: 'Live Events', email: 'alerts@geniality.com.co' }
+      url: `https://liveevents.geniality.com.co/${cEventContext.nameEvent}`,
+      status: "CONFIRMED",
+      organizer: { name: "Live Events", email: "alerts@geniality.com.co" },
     };
 
     createEvent(event, (error, value) => {
@@ -33,21 +37,21 @@ const HCOActividad = ({ isBingo = false }) => {
   const formatDateToICSArray = (dateString) => {
     if (!dateString) return null;
     // Parsea la fecha y hora de inicio
-    const [date, time] = dateString.split(' ');
-    const [year, month, day] = date.split('-').map(num => parseInt(num, 10));
-    const [hour, minute] = time.split(':').map(num => parseInt(num, 10));
-  
+    const [date, time] = dateString.split(" ");
+    const [year, month, day] = date.split("-").map((num) => parseInt(num, 10));
+    const [hour, minute] = time.split(":").map((num) => parseInt(num, 10));
+
     // Retorna el arreglo en el formato esperado por ics
     return [year, month, day, hour, minute];
   };
 
   const saveFile = (blob) => {
-    if (navigator.msSaveBlob) { 
+    if (navigator.msSaveBlob) {
       // Para Internet Explorer
       navigator.msSaveBlob(blob, "evento.ics");
     } else {
       const link = document.createElement("a");
-      if (link.download !== undefined) { 
+      if (link.download !== undefined) {
         // Para navegadores modernos
         const url = URL.createObjectURL(blob);
         link.setAttribute("href", url);
@@ -68,7 +72,7 @@ const HCOActividad = ({ isBingo = false }) => {
       ((currentActivity?.habilitar_ingreso === "" ||
         currentActivity?.habilitar_ingreso === null ||
         currentActivity?.habilitar_ingreso === "created_meeting_room") &&
-        (!currentActivity?.video)) ||
+        !currentActivity?.video) ||
       (!currentActivity?.habilitar_ingreso && !currentActivity?.video)
     );
   };
