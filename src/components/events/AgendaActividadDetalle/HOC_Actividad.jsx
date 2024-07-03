@@ -9,7 +9,6 @@ const HCOActividad = ({ isBingo = false }) => {
   const { currentActivity } = useHelper();
 
   const generateICSFile = () => {
-    console.log(currentActivity?.datetime_start)
     const event = {
       start: formatDateToICSArray(currentActivity?.datetime_start),
       end: formatDateToICSArray(currentActivity?.datetime_end),
@@ -20,8 +19,6 @@ const HCOActividad = ({ isBingo = false }) => {
       status: 'CONFIRMED',
       organizer: { name: 'Live Events', email: 'alerts@geniality.com.co' }
     };
-
-    console.log(event);
 
     createEvent(event, (error, value) => {
       if (error) {
