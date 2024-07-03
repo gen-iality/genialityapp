@@ -2,34 +2,49 @@
 import { useHelper } from "../../../context/helperContext/hooks/useHelper";
 import ImageComponentwithContext from "./ImageComponent";
 import RenderComponent from "./RenderComponent";
+import { createEvent } from 'ics';
+import { saveAs } from "file-saver";
 
 const HCOActividad = ({ isBingo = false }) => {
   const { currentActivity } = useHelper();
 
-  const formatDateToICS = (dateString) => {
-    const date = new Date(dateString);
-    return date.toISOString().replace(/-|:|\.\d+/g, "") + "Z";
+  const generateICSFile = () => {
+    console.log(currentActivity?.datetime_start)
+    const event = {
+      start: formatDateToICSArray(currentActivity?.datetime_start),
+      end: formatDateToICSArray(currentActivity?.datetime_end),
+      title: currentActivity?.name || "Actividad sin nombre",
+      description: currentActivity?.descripcion || "",
+      location: currentActivity?.lugar || "Evento virtual",
+      url: 'https://liveevents.geniality.com.co',
+      status: 'CONFIRMED',
+      organizer: { name: 'Live Events', email: 'alerts@geniality.com.co' }
+    };
+
+    console.log(event);
+
+    createEvent(event, (error, value) => {
+      if (error) {
+        console.error(error);
+        return;
+      }
+      const blob = new Blob([value], { type: "text/calendar;charset=utf-8" });
+      saveFile(blob);
+    });
   };
 
-  const generateICSFile = () => {
-    const icsContent = `
-BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Live Events//Live Events//ES
-BEGIN:VEVENT
-UID:${new Date().getTime()}@geniality.com.co
-DTSTAMP:${new Date().toISOString().replace(/-|:|\.\d+/g, "")}Z
-DTSTART:${formatDateToICS(currentActivity?.datetime_start)}
-DTEND:${formatDateToICS(currentActivity?.datetime_end)}
-SUMMARY:${currentActivity?.name || "Actividad sin nombre"}
-LOCATION:${currentActivity?.lugar || "Evento virtual"}
-DESCRIPTION:${currentActivity?.descripcion || ""}
-END:VEVENT
-END:VCALENDAR
-    `;
+  const formatDateToICSArray = (dateString) => {
+    if (!dateString) return null;
+    // Parsea la fecha y hora de inicio
+    const [date, time] = dateString.split(' ');
+    const [year, month, day] = date.split('-').map(num => parseInt(num, 10));
+    const [hour, minute] = time.split(':').map(num => parseInt(num, 10));
+  
+    // Retorna el arreglo en el formato esperado por ics
+    return [year, month, day, hour, minute];
+  };
 
-    const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
-
+  const saveFile = (blob) => {
     if (navigator.msSaveBlob) { 
       // Para Internet Explorer
       navigator.msSaveBlob(blob, "evento.ics");
@@ -81,4 +96,3 @@ END:VCALENDAR
 };
 
 export default HCOActividad;
-

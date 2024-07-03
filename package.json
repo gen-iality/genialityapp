@@ -52,6 +52,7 @@
     "html2canvas-proxy": "^1.0.1",
     "html2pdf": "^0.0.11",
     "html2pdf-certs": "David256/html2pdf-certs.git#1.0.5",
+    "ics": "^3.7.6",
     "install": "^0.13.0",
     "jspdf": "^2.5.1",
     "konva": "8.3.2",
