@@ -89,7 +89,6 @@ const AgendaActividadDetalle = (props: any) => {
   useEffect(() => {
     if (fireRealtime) {
       const notificationRef = fireRealtime.ref("notifications/message");
-
       notificationRef.on("value", (snapshot) => {
         const msg = snapshot.val();
         const key = cEventUser.value._id; // Asumiendo que esta es la clave única para la notificación

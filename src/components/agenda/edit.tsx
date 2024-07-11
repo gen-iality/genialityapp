@@ -1,7 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useContext, useEffect } from "react";
 import { Redirect, useLocation, useHistory } from "react-router-dom";
-import { Tabs, Row, Col, Form, Switch, Modal, Select, Space, Button } from "antd";
+import {
+  Tabs,
+  Row,
+  Col,
+  Form,
+  Switch,
+  Modal,
+  Select,
+  Space,
+  Button,
+  Input,
+} from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import AgendaContext from "@context/AgendaContext";
 import Header from "@/antdComponents/Header";
@@ -29,6 +40,8 @@ import ActivityContentSelector from "./activityType/ActivityContentSelector";
 import { hourWithAdditionalMinutes } from "./hooks/useHourWithAdditionalMinutes";
 import { PropertyTypeUser } from "./utils/constants";
 import ReactQuill from "react-quill";
+import { set } from "firebase/database";
+import { list } from "ramda-adjunct";
 
 const { TabPane } = Tabs;
 const { confirm } = Modal;
@@ -449,29 +462,40 @@ function AgendaEdit(props: AgendaEditProps) {
 
   //-------Constantes para "Enviar notificación"----------------------->
 
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [isMessageSent, setIsMessageSent] = useState(false);
+  const [listMessages, setListMessages] = useState<string[]>([]);
+  const [intervale, setIntervale] = useState<any>();
+  const [time, setTime] = useState<any>();
 
   //-----------------Funciones "Enviar Mensaje"----------------------->
 
   const hiddenNotify = () => {
     if (fireRealtime) {
-      const notificationRef = fireRealtime.ref('notifications/message');
+      const notificationRef = fireRealtime.ref("notifications/message");
       notificationRef
         .remove()
-        .then(() => console.log('Mensaje borrado con éxito.'))
-        .catch((error) => console.error('Error al borrar el mensaje: ', error));
-
-      // Para restablecer el campo de mensaje
-      // setMessage('');
+        .then(() => console.log("Mensaje borrado con éxito."))
+        .catch((error) => console.error("Error al borrar el mensaje: ", error));
     }
-    setIsMessageSent(!isMessageSent)
   };
 
   const handleSendMessage = () => {
-    const notificationRef = fireRealtime.ref('notifications');
-    notificationRef.set({ message });
-    setIsMessageSent(!isMessageSent);
+    // const notificationRef = fireRealtime.ref('notifications');
+    // notificationRef.set({ message });
+    // setIsMessageSent(!isMessageSent);
+    setListMessages((prev) => [...prev, message]);
+    console.log(listMessages);
+  };
+
+  const sendMessage = (msg: String) => {
+    if (fireRealtime) {
+      const notificationRef = fireRealtime.ref("notifications");
+      notificationRef
+        .set({ message: msg })
+        .then(() => console.log("Mensaje enviado con éxito."))
+        .catch((error) => console.error("Error al enviar el mensaje: ", error));
+    }
   };
 
   // Manejar cambios en el editor ReactQuill
@@ -495,6 +519,52 @@ function AgendaEdit(props: AgendaEditProps) {
       return `<a href="${href}" rel="noopener noreferrer" target="_blank">${p1}</a>`;
     });
     return formattedContent;
+  };
+
+  let intervalId: any;
+  let isNotificationRunning = false;
+
+  const startNotificationLoop = () => {
+    if (isNotificationRunning) {
+      console.log("El bucle de notificaciones ya está corriendo.");
+      return;
+    }
+    isNotificationRunning = true;
+    let currentIndex = 0; // Inicializa un índice para llevar el control del mensaje actual
+    console.log("Mostrando mensajes...", listMessages);
+  
+    // Enviar el primer mensaje inmediatamente
+    sendMessage(listMessages[currentIndex % listMessages.length]);
+    console.log("Mostrando mensaje: ", listMessages[currentIndex % listMessages.length]);
+    currentIndex++;
+  
+    setTimeout(() => {
+      hiddenNotify();
+    }, time * 60000); // Oculta el mensaje después de 'time' minutos
+  
+    // Configura el intervalo para los mensajes subsecuentes
+    intervalId = setInterval(() => {
+      console.log(
+        "Mostrando mensaje: ",
+        listMessages[currentIndex % listMessages.length]
+      );
+      sendMessage(listMessages[currentIndex % listMessages.length]); // Usa el módulo para ciclar sobre la lista
+      currentIndex++; // Incrementa el índice para el próximo mensaje
+  
+      setTimeout(() => {
+        hiddenNotify();
+      }, time * 60000); // Oculta el mensaje después de 'time' minutos
+    }, intervale * 60000); // Intervalo de 'intervale' minutos
+  };
+  
+  const stopNotificationLoop = () => {
+    if (!isNotificationRunning) {
+      console.log("El bucle de notificaciones no está corriendo.");
+      return;
+    }
+    clearInterval(intervalId);
+    isNotificationRunning = false;
+    console.log("El bucle de notificaciones se ha detenido.");
   };
 
   //<--------------------------------------------------------
@@ -655,7 +725,49 @@ function AgendaEdit(props: AgendaEditProps) {
                       </Col>
                     </Row>
                   </TabPane>
-                  <TabPane tab="Enviar mensaje" key="7">
+                  <TabPane tab="Enviar notificación" key="7">
+                    <Row justify="center" wrap gutter={12}>
+                      <Col span={12}>
+                        <div>
+                          <span>Lista de mensajes</span>
+                          <Row justify="center" wrap gutter={12}>
+                            <Col span={12}>
+                              <Input
+                                placeholder="Intervalos en que se muestra el mensaje"
+                                value={intervale}
+                                type="number"
+                                onChange={(e) => setIntervale(e.target.value)}
+                              />
+                              <Input
+                                placeholder="Tiempo que se muestra el mensaje"
+                                value={time}
+                                type="number"
+                                onChange={(e) => setTime(e.target.value)}
+                              />
+                            </Col>
+                            <Col span={12}>
+                              <Button
+                                type="primary"
+                                onClick={startNotificationLoop}
+                              >
+                                Mostrar
+                              </Button>
+                              <Button
+                                type="primary"
+                                onClick={stopNotificationLoop}
+                              >
+                                Ocultar
+                              </Button>
+                            </Col>
+                          </Row>
+                        </div>
+                        {listMessages.map((item, index) => {
+                          return (
+                            <div dangerouslySetInnerHTML={{ __html: item }} />
+                          );
+                        })}
+                      </Col>
+                    </Row>
                     <Row justify="center" wrap gutter={12}>
                       <Col span={12}>
                         <Space
@@ -676,7 +788,7 @@ function AgendaEdit(props: AgendaEditProps) {
                               onClick={handleSendMessage}
                               disabled={!message}
                             >
-                              Enviar Notificación
+                              Agregar mensaje
                             </Button>
                           )}
                         </Space>

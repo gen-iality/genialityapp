@@ -127,6 +127,7 @@ const RenderComponent = (props: any) => {
     (plataforma: string, actividad_estado: string, render_Game: string) => {
       // Información para componente CountdownBlock
       const cEventContext = useContext(CurrentEventContext);
+      console.log(cEventContext.value?.styles);
       const textColor = cEventContext.value?.styles?.textMenu;
       const imageBackEvent = "";
       const countdownMessage =
@@ -141,7 +142,6 @@ const RenderComponent = (props: any) => {
         plataforma === "zoom" ||
         plataforma === "dolby"
       ) {
-        console.log(actividad_estado);
         switch (actividad_estado) {
           case "open_meeting_room":
             if (render_Game === "game") {
@@ -171,7 +171,13 @@ const RenderComponent = (props: any) => {
             return currentActivity?.video ? (
               <VideoActivity />
             ) : (
-              <ImageComponentwithContext />
+              <CountdownBlock
+              textColor={textColor}
+              imageBackEvent={imageBackEvent}
+              date={startDate}
+              countdownMessage={countdownMessage}
+              countdownFinalMessage={finalMessage}
+            />
             );
           case "record_meeting_room":
             return (

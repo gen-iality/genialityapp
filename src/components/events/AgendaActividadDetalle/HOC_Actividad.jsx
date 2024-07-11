@@ -10,7 +10,6 @@ import { CurrentEventContext } from "@/context/eventContext";
 const HCOActividad = ({ isBingo = false }) => {
   const { currentActivity } = useHelper();
   const cEventContext = useContext(CurrentEventContext);
-  console.log(cEventContext.nameEvent);
 
   const generateICSFile = () => {
     const event = {
@@ -89,6 +88,7 @@ const HCOActividad = ({ isBingo = false }) => {
       <div
         style={{ textDecoration: "underline", cursor: "pointer" }}
         onClick={generateICSFile}
+        align="center"
       >
         Clic aquí para añadir este evento a tú calendario
       </div>
