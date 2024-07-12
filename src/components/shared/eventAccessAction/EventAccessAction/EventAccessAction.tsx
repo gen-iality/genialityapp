@@ -133,6 +133,7 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
       setShouldShowLoginButton(false);
       return; // Salir temprano para evitar ejecutar más lógica en este efecto.
     }
+    setShouldShowLoginButton(false);
 
     // El resto de tu lógica useEffect aquí...
     const fetchAforoCompleted = async () => {
