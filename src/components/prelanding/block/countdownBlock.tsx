@@ -1,10 +1,18 @@
 import { CalendarFilled, ClockCircleFilled } from "@ant-design/icons";
 import { Card, Col, Row, Space, Typography } from "antd";
-import moment from "moment";
 import React, { useEffect, useState } from "react";
 import Countdown, { CountdownRenderProps, zeroPad } from "react-countdown";
 import { style } from "../constants";
 import { useIntl } from "react-intl";
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+// Extender dayjs con los plugins
+dayjs.extend(localizedFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 interface CountdownBlockProps {
   textColor: string;
@@ -25,11 +33,16 @@ const CountdownBlock: React.FC<CountdownBlockProps> = ({
     null
   );
   const intl = useIntl();
+
   useEffect(() => {
-    if (date === null) return setDateLimitContador(null);
+    if (!date) return setDateLimitContador(null);
     const dateSplit = date.split(" ");
     const dateFormat = dateSplit.join("T");
-    setDateLimitContador(dateFormat);
+    setDateLimitContador(
+      dayjs(dateFormat)
+        .tz(dayjs.tz.guess())
+        .format()
+    );
   }, [date]);
 
   const numberBlink = (
@@ -39,16 +52,9 @@ const CountdownBlock: React.FC<CountdownBlockProps> = ({
     seconds: number,
     completed: boolean
   ): boolean => {
-    if (
-      !completed &&
-      days === 0 &&
-      hours === 0 &&
-      minutes === 0 &&
-      seconds <= 10
-    ) {
-      return true;
-    }
-    return false;
+    return (
+      !completed && days === 0 && hours === 0 && minutes === 0 && seconds <= 10
+    );
   };
 
   const renderer = ({
@@ -59,7 +65,6 @@ const CountdownBlock: React.FC<CountdownBlockProps> = ({
     completed,
   }: CountdownRenderProps) => {
     if (completed) {
-      // Render a completed state
       return (
         <Row
           gutter={[0, 16]}
@@ -84,7 +89,6 @@ const CountdownBlock: React.FC<CountdownBlockProps> = ({
         </Row>
       );
     } else {
-      // Render a countdown
       return (
         <Row
           gutter={[0, 16]}
@@ -92,11 +96,11 @@ const CountdownBlock: React.FC<CountdownBlockProps> = ({
           align="middle"
           style={{
             height: "100%",
-            backgroundImage: "url(" + imageBackEvent + ")",
+            backgroundImage: `url(${imageBackEvent})`,
             backgroundSize: "contain",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
-            filter: "brightness(0.5",
+            filter: "brightness(0.5)",
           }}
         >
           <Col span={24}>
@@ -140,7 +144,6 @@ const CountdownBlock: React.FC<CountdownBlockProps> = ({
                     </Typography.Text>
                   </Space>
                 </Col>
-
                 <Col>
                   <Space
                     direction="vertical"
@@ -242,7 +245,7 @@ const CountdownBlock: React.FC<CountdownBlockProps> = ({
                   <Space direction="vertical" style={{ color: textColor }}>
                     <CalendarFilled style={{ fontSize: "30px" }} />
                     <span style={{ fontWeight: "bold" }}>
-                      {moment(date).format("ll")}
+                      {dayjs(date).format("LL")}
                     </span>
                   </Space>
                 </Card.Grid>
@@ -256,7 +259,7 @@ const CountdownBlock: React.FC<CountdownBlockProps> = ({
                   <Space direction="vertical" style={{ color: textColor }}>
                     <ClockCircleFilled style={{ fontSize: "30px" }} />
                     <span style={{ fontWeight: "bold" }}>
-                      {moment(date).format("LT")}
+                      {dayjs(date).format("LT")}
                     </span>
                   </Space>
                 </Card.Grid>
@@ -267,7 +270,7 @@ const CountdownBlock: React.FC<CountdownBlockProps> = ({
       );
     }
   };
-  // @ts-ignore
+
   return dateLimitContador ? (
     <Countdown date={dateLimitContador.toString()} renderer={renderer} />
   ) : (

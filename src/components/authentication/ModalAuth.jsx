@@ -134,6 +134,9 @@ const ModalAuth = (props) => {
 			case 'auth/too-many-requests':
 				setmsjError(intl.formatMessage({ id: 'auth.error.tooManyRequests' }));
 				break;
+			case 'auth/invalid-login-credentials':
+				setmsjError(intl.formatMessage({ id: 'auth.error.invalidLoginCredentials' }));
+				break;
 		}
 	};
 

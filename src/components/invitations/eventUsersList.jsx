@@ -35,7 +35,7 @@ class eventUsersList extends Component {
     this.setState({ tickets });
     let attendeesFormatedForTable = this.formatAttendeesForTable(attendees.data);
     let columnsTable = this.createTableColumns(event);
-
+    console.log('attendees', attendees);
     this.setState({ attendees: attendees.data, attendeesFormatedForTable, columnsTable });
   }
 

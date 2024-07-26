@@ -16,6 +16,8 @@ import { CurrentEventContext } from "@/context/eventContext";
 import moment from "moment";
 import CountdownBlock from "@/components/prelanding/block/countdownBlock";
 import CustomCountdownMessage from "./CustomCountdownMessage";
+import { createEvent } from "ics";
+import { saveAs } from "file-saver";
 
 const RenderComponent = (props: any) => {
   let tabsdefault = {
@@ -48,11 +50,67 @@ const RenderComponent = (props: any) => {
     helperDispatch,
   } = useHelper();
 
+  const cEventContext = useContext(CurrentEventContext);
+
+  const generateICSFile = () => {
+    const event = {
+      start: formatDateToICSArray(currentActivity?.datetime_start),
+      end: formatDateToICSArray(currentActivity?.datetime_end),
+      title: currentActivity?.name || "Actividad sin nombre",
+      description: currentActivity?.descripcion || "",
+      location: currentActivity?.lugar || "Evento virtual",
+      url: `https://liveevents.geniality.com.co/${cEventContext.nameEvent}`,
+      status: "CONFIRMED",
+      organizer: { name: "Live Events", email: "alerts@geniality.com.co" },
+    };
+
+    createEvent(event, (error, value) => {
+      if (error) {
+        console.error(error);
+        return;
+      }
+      const blob = new Blob([value], { type: "text/calendar;charset=utf-8" });
+      saveFile(blob);
+    });
+  };
+
+  const formatDateToICSArray = (dateString) => {
+    if (!dateString) return null;
+    // Parsea la fecha y hora de inicio
+    const [date, time] = dateString.split(" ");
+    const [year, month, day] = date.split("-").map((num) => parseInt(num, 10));
+    const [hour, minute] = time.split(":").map((num) => parseInt(num, 10));
+
+    // Retorna el arreglo en el formato esperado por ics
+    return [year, month, day, hour, minute];
+  };
+
+  const saveFile = (blob) => {
+    if (navigator.msSaveBlob) {
+      // Para Internet Explorer
+      navigator.msSaveBlob(blob, "evento.ics");
+    } else {
+      const link = document.createElement("a");
+      if (link.download !== undefined) {
+        // Para navegadores modernos
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", "evento.ics");
+        link.style.visibility = "hidden";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        // Para Safari en iOS, abrir el archivo en una nueva pestaña
+        window.open(URL.createObjectURL(blob), "_blank");
+      }
+    }
+  };
+
   async function listeningStateMeetingRoom(
     event_id: string,
     activity_id: string
   ) {
-    // console.log({ activity_id });
     if (!fnCiclo) {
       let tempactivty = currentActivity;
       firestore
@@ -86,7 +144,6 @@ const RenderComponent = (props: any) => {
             HandleChatOrAttende("4");
           }
 
-          // handleChangeTabs(tabs);
           helperDispatch({ type: "changeTabs", tabs: tabs });
           tempactivty.habilitar_ingreso = habilitar_ingreso;
           tempactivty.avalibleGames = avalibleGames;
@@ -95,10 +152,10 @@ const RenderComponent = (props: any) => {
             currentActivity: tempactivty,
           });
           setFnCiclo(true);
-          /* console.log('tempactivty', tempactivty); */
         });
     }
   }
+
   useEffect(() => {
     async function GetStateMeetingRoom() {
       await listeningStateMeetingRoom(
@@ -116,7 +173,6 @@ const RenderComponent = (props: any) => {
     if (chatAttendeChats === "4") {
       setRenderGame("game");
     } else {
-      // NO SE DEBE QUEMAR OPEN MEETEING ROOM POR QUE SE CAMBIA EL ESTADO AL DAR CLICK EN CUALQUIER TAB
       if (activityStateGlobal) {
         setactivityState(activityStateGlobal);
       }
@@ -125,9 +181,7 @@ const RenderComponent = (props: any) => {
 
   const RenderizarComponente = useCallback(
     (plataforma: string, actividad_estado: string, render_Game: string) => {
-      // Información para componente CountdownBlock
       const cEventContext = useContext(CurrentEventContext);
-      console.log(cEventContext.value?.styles);
       const textColor = cEventContext.value?.styles?.textMenu;
       const imageBackEvent = "";
       const countdownMessage =
@@ -136,6 +190,16 @@ const RenderComponent = (props: any) => {
         ? moment(currentActivity.datetime_start).format("YYYY-MM-DD HH:mm:ss")
         : "";
       const finalMessage = "Estará disponible en pocos minutos.";
+
+      const calendarLink = (
+        <div
+          style={{ textDecoration: "underline", cursor: "pointer" }}
+          onClick={generateICSFile}
+          align="center"
+        >
+          Clic aquí para añadir este evento a tú calendario
+        </div>
+      );
 
       if (
         plataforma === "vimeo" ||
@@ -171,13 +235,16 @@ const RenderComponent = (props: any) => {
             return currentActivity?.video ? (
               <VideoActivity />
             ) : (
-              <CountdownBlock
-              textColor={textColor}
-              imageBackEvent={imageBackEvent}
-              date={startDate}
-              countdownMessage={countdownMessage}
-              countdownFinalMessage={finalMessage}
-            />
+              <>
+                <CountdownBlock
+                  textColor={textColor}
+                  imageBackEvent={imageBackEvent}
+                  date={startDate}
+                  countdownMessage={countdownMessage}
+                  countdownFinalMessage={finalMessage}
+                />
+                {calendarLink}
+              </>
             );
           case "record_meeting_room":
             return (
@@ -189,13 +256,16 @@ const RenderComponent = (props: any) => {
             );
           default:
             return (
-              <CountdownBlock
-                textColor={textColor}
-                imageBackEvent={imageBackEvent}
-                date={startDate}
-                countdownMessage={countdownMessage}
-                countdownFinalMessage={finalMessage}
-              />
+              <>
+                <CountdownBlock
+                  textColor={textColor}
+                  imageBackEvent={imageBackEvent}
+                  date={startDate}
+                  countdownMessage={countdownMessage}
+                  countdownFinalMessage={finalMessage}
+                />
+                {calendarLink}
+              </>
             );
         }
       }
@@ -255,7 +325,10 @@ const RenderComponent = (props: any) => {
             ) : currentActivity?.video ? (
               <VideoActivity />
             ) : (
-              <ImageComponentwithContext />
+              <>
+                <ImageComponentwithContext />
+                {calendarLink}
+              </>
             );
           case "no_visibe":
             return <ImageComponentwithContext />;
@@ -272,13 +345,16 @@ const RenderComponent = (props: any) => {
             );
           default:
             return (
-              <CountdownBlock
-                textColor={textColor}
-                imageBackEvent={imageBackEvent}
-                date={startDate}
-                countdownMessage={countdownMessage}
-                countdownFinalMessage={""}
-              />
+              <>
+                <CountdownBlock
+                  textColor={textColor}
+                  imageBackEvent={imageBackEvent}
+                  date={startDate}
+                  countdownMessage={countdownMessage}
+                  countdownFinalMessage={""}
+                />
+                {calendarLink}
+              </>
             );
         }
       }
@@ -297,19 +373,22 @@ const RenderComponent = (props: any) => {
       }
 
       return (
-        <CountdownBlock
-          textColor={textColor}
-          imageBackEvent={imageBackEvent}
-          date={startDate}
-          countdownMessage={countdownMessage}
-          //@ts-ignore
-          countdownFinalMessage={<CustomCountdownMessage />}
-        />
+        <>
+          <CountdownBlock
+            textColor={textColor}
+            imageBackEvent={imageBackEvent}
+            date={startDate}
+            countdownMessage={countdownMessage}
+            //@ts-ignore
+            countdownFinalMessage={<CustomCountdownMessage />}
+          />
+          {calendarLink}
+        </>
       );
     },
-
     [platform, currentActivity, meetingId, tabsGeneral, transmition, fnCiclo]
   );
+
   return (
     <>
       {!props.isBingo && (

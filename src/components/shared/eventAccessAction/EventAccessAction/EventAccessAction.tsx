@@ -177,8 +177,8 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
                 block
                 className={
                   button.label === "Ingresar al evento"
-                    ? "animate__animated animate__heartBeat animate__slower animate__repeat-3"
-                    : ""
+                    ? "animate__animated animate__heartBeat animate__slower animate__infinite"
+                    : "animate__animated animate__heartBeat animate__slower animate__infinite"
                 }
                 style={{
                   height: "48px",

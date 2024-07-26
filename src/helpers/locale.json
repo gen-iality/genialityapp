@@ -421,6 +421,7 @@
     "auth.error.wrongPassword": "La contraseña es incorrecta",
     "auth.error.userNotFound": "este email no esta registrado",
     "auth.error.invalidEmail": "el email es invalido",
+    "auth.error.invalidLoginCredentials": "El email o la contraseña son incorrectos",
     "auth.error.tooManyRequests": "El acceso a esta cuenta se ha desactivado temporalmente por varios intentos fallidos de ingreso, intentelo de nuevo más tarde",
     "live.join": "Ingresar",
     "live.join.disabled": "El evento iniciará pronto",
