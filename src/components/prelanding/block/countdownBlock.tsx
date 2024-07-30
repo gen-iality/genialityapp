@@ -36,13 +36,16 @@ const CountdownBlock: React.FC<CountdownBlockProps> = ({
 
   useEffect(() => {
     if (!date) return setDateLimitContador(null);
+
     const dateSplit = date.split(" ");
     const dateFormat = dateSplit.join("T");
-    setDateLimitContador(
-      dayjs(dateFormat)
-        .tz(dayjs.tz.guess())
-        .format()
-    );
+
+    const dateInUserTimezone = dayjs
+      .tz(dateFormat, "America/Bogota")
+      .tz(dayjs.tz.guess())
+      .format();
+
+    setDateLimitContador(dateInUserTimezone);
   }, [date]);
 
   const numberBlink = (
@@ -245,7 +248,7 @@ const CountdownBlock: React.FC<CountdownBlockProps> = ({
                   <Space direction="vertical" style={{ color: textColor }}>
                     <CalendarFilled style={{ fontSize: "30px" }} />
                     <span style={{ fontWeight: "bold" }}>
-                      {dayjs(date).format("LL")}
+                      {dayjs(dateLimitContador).format("LL")}
                     </span>
                   </Space>
                 </Card.Grid>
@@ -259,7 +262,7 @@ const CountdownBlock: React.FC<CountdownBlockProps> = ({
                   <Space direction="vertical" style={{ color: textColor }}>
                     <ClockCircleFilled style={{ fontSize: "30px" }} />
                     <span style={{ fontWeight: "bold" }}>
-                      {dayjs(date).format("LT")}
+                      {dayjs(dateLimitContador).format("LT")}
                     </span>
                   </Space>
                 </Card.Grid>

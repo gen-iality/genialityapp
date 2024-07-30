@@ -7,6 +7,15 @@ import { useIntl } from 'react-intl';
 import { useGetMultiDate } from '@/hooks/useGetMultiDate';
 import { getDateEvent } from './utils/getDatesEvents';
 
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(localizedFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 const { useBreakpoint } = Grid;
 
 const InfoEvent = ({ paddingOff, preview }) => {
@@ -22,6 +31,7 @@ const InfoEvent = ({ paddingOff, preview }) => {
   const idEvent = cEventValues?._id;
   const intl = useIntl();
   const { getStartTime} = useGetMultiDate(idEvent);
+
   return (
     <PageHeader
       style={{
@@ -59,11 +69,25 @@ const InfoEvent = ({ paddingOff, preview }) => {
                 <Space wrap>
                   <Space>
                     <CalendarFilled />
-                    <time>{getDateEvent(cEventValues)}</time>
+                    <time>{dayjs
+                    .tz(
+                      cEventValues !== null &&
+                      cEventValues?.datetime_from,
+                      "America/Bogota"
+                    )
+                    .tz(dayjs.tz.guess())
+                    .format("YYYY-MM-DD")}</time>
                   </Space>
                   <Space>
                     <ClockCircleFilled />
-                    <time>{getStartTime()}</time>
+                    <time>{dayjs
+                    .tz(
+                      cEventValues !== null &&
+                      cEventValues?.datetime_from,
+                      "America/Bogota"
+                    )
+                    .tz(dayjs.tz.guess())
+                    .format("h:mm A")}</time>
                   </Space>
                 </Space>
                 {/* {idEvent !== '6334782dc19fe2710a0b8753' && (

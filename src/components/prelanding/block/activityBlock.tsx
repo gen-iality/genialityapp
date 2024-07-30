@@ -1,25 +1,44 @@
-import { CurrentEventContext } from '@/context/eventContext';
-import { Avatar, Row, Space, Tag, Timeline, Typography, Grid, List, Col, Card, Comment } from 'antd';
-import { useContext, useEffect, useState } from 'react';
-import FlagCheckeredIcon from '@2fd/ant-design-icons/lib/FlagCheckered';
-import ClockTimeFourOutlineIcon from '@2fd/ant-design-icons/lib/ClockTimeFourOutline';
-import { UserOutlined } from '@ant-design/icons';
-import { PropsPreLanding } from '../types/Prelanding';
-import { Agenda } from '../types';
-import { obtenerActivity } from '../services';
-import useDateFormat from '@/components/networking/hooks/useDateFormat';
+import { CurrentEventContext } from "@/context/eventContext";
+import {
+  Avatar,
+  Row,
+  Space,
+  Tag,
+  Timeline,
+  Typography,
+  Grid,
+  List,
+  Col,
+  Card,
+  Comment,
+} from "antd";
+import { useContext, useEffect, useState } from "react";
+import FlagCheckeredIcon from "@2fd/ant-design-icons/lib/FlagCheckered";
+import ClockTimeFourOutlineIcon from "@2fd/ant-design-icons/lib/ClockTimeFourOutline";
+import { UserOutlined } from "@ant-design/icons";
+import { PropsPreLanding } from "../types/Prelanding";
+import { Agenda } from "../types";
+import { obtenerActivity } from "../services";
+
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(localizedFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const { useBreakpoint } = Grid;
 
 const ActivityBlock = ({ preview, title }: PropsPreLanding) => {
-  const mobilePreview = preview ? preview : '';
+  const mobilePreview = preview ? preview : "";
   const screens = useBreakpoint();
   const cEvent = useContext(CurrentEventContext);
   const [activities, setActivities] = useState<Agenda[]>([]);
-  const { dateFormat } = useDateFormat();
   const bgColor = cEvent.value?.styles?.toolbarDefaultBg;
   const textColor = cEvent.value?.styles?.textMenu;
-  const isMobile = screens.xs || mobilePreview === 'smartphone';
+  const isMobile = screens.xs || mobilePreview === "smartphone";
 
   useEffect(() => {
     if (!cEvent.value) return;
@@ -28,76 +47,130 @@ const ActivityBlock = ({ preview, title }: PropsPreLanding) => {
 
   const determineType = (type: string) => {
     switch (type) {
-      case 'url':
-      case 'cargarvideo':
-        return 'Video'
+      case "url":
+      case "cargarvideo":
+        return "Video";
 
-      case 'eviusMeet':
-      case 'vimeo':
-      case 'youTube':
-        return 'Transmisión'
-        
-      case 'meeting':
-        return 'Reunión'
+      case "eviusMeet":
+      case "vimeo":
+      case "youTube":
+        return "Transmisión";
+
+      case "meeting":
+        return "Reunión";
       default:
-        return '';
+        return "";
     }
   };
-  
+
+  const dateFormat = (date: any, format: any) => {
+    return dayjs
+      .tz(date, "America/Bogota")
+      .tz(dayjs.tz.guess())
+      .format(format);
+  };
+
   return (
     <>
-      <Row justify='center' align='middle'>
+      <Row justify="center" align="middle">
         <Col span={isMobile ? 24 : 22}>
-          <Typography.Title level={4} style={{color: textColor}}>{title}</Typography.Title>
-          <List 
-            itemLayout={isMobile ? 'vertical' : 'horizontal'}
-            grid={{gutter: 8, column: 1}}
+          <Typography.Title level={4} style={{ color: textColor }}>
+            {title}
+          </Typography.Title>
+          <List
+            itemLayout={isMobile ? "vertical" : "horizontal"}
+            grid={{ gutter: 8, column: 1 }}
             dataSource={activities}
-            style={{paddingTop: 10}}
-            renderItem={activity => (
-              <List.Item style={{border: 'none', backgroundColor: bgColor}}>
-                <Card style={{borderRadius: 10, border: 'none', backgroundColor: bgColor}} 
-                bodyStyle={isMobile || mobilePreview === 'tablet' || screens.sm ? {padding: 20} : {}}
+            style={{ paddingTop: 10 }}
+            renderItem={(activity) => (
+              <List.Item style={{ border: "none", backgroundColor: bgColor }}>
+                <Card
+                  style={{
+                    borderRadius: 10,
+                    border: "none",
+                    backgroundColor: bgColor,
+                  }}
+                  bodyStyle={
+                    isMobile || mobilePreview === "tablet" || screens.sm
+                      ? { padding: 20 }
+                      : {}
+                  }
                 >
-                  <Row justify={isMobile ? 'start' : 'space-between'} >
-                    <Card.Meta 
+                  <Row justify={isMobile ? "start" : "space-between"}>
+                    <Card.Meta
                       avatar={
-                        <Space 
-                          size={0} 
-                          direction='vertical' 
-                          align='center' 
-                          style={{padding: '0px 20px'}}
+                        <Space
+                          size={0}
+                          direction="vertical"
+                          align="center"
+                          style={{ padding: "0px 20px" }}
                         >
-                          <Typography.Text strong style={{textTransform: 'uppercase', color: textColor}}>
-                            {dateFormat(activity?.datetime_start, 'MMM')}
+                          <Typography.Text
+                            strong
+                            style={{
+                              textTransform: "uppercase",
+                              color: textColor,
+                            }}
+                          >
+                            {dateFormat(activity?.datetime_start, "MMM")}
                           </Typography.Text>
-                          <Typography.Text strong style={{fontSize: 30, color: textColor}}>
-                            {dateFormat(activity?.datetime_start, 'DD')}
+                          <Typography.Text
+                            strong
+                            style={{ fontSize: 30, color: textColor }}
+                          >
+                            {dateFormat(activity?.datetime_start, "DD")}
                           </Typography.Text>
                         </Space>
                       }
                       title={
                         <Space size={4} wrap>
-                          <ClockTimeFourOutlineIcon style={{color: textColor}}/>
-                          <Typography.Text style={{color: textColor}}>{dateFormat(activity?.datetime_start, 'hh:mm A')}</Typography.Text>
-                          <Typography.Text style={{color: textColor}}>-</Typography.Text>
-                          <Typography.Text style={{color: textColor}}>{dateFormat(activity?.datetime_end, 'hh:mm A')}</Typography.Text>
+                          <ClockTimeFourOutlineIcon
+                            style={{ color: textColor }}
+                          />
+                          <Typography.Text style={{ color: textColor }}>
+                            {dateFormat(activity?.datetime_start, "hh:mm A")}
+                          </Typography.Text>
+                          <Typography.Text style={{ color: textColor }}>
+                            -
+                          </Typography.Text>
+                          <Typography.Text style={{ color: textColor }}>
+                            {dateFormat(activity?.datetime_end, "hh:mm A")}
+                          </Typography.Text>
                         </Space>
                       }
                       description={
-                        <Space direction='vertical' size={0}>
-                          <Typography.Text strong style={{color: textColor}}>{activity?.name}</Typography.Text>
-                          {activity?.type?.name &&
-                            <Typography.Text type='secondary' style={{fontSize: '12px', color: textColor}}>{determineType(activity.type.name)}</Typography.Text>
-                          }
+                        <Space direction="vertical" size={0}>
+                          <Typography.Text strong style={{ color: textColor }}>
+                            {activity?.name}
+                          </Typography.Text>
+                          {activity?.type?.name && (
+                            <Typography.Text
+                              type="secondary"
+                              style={{ fontSize: "12px", color: textColor }}
+                            >
+                              {determineType(activity.type.name)}
+                            </Typography.Text>
+                          )}
                         </Space>
                       }
-                    />             
-                    <Avatar.Group maxCount={3} maxStyle={{ color: textColor, backgroundColor: bgColor }} 
-                      style={isMobile || mobilePreview === 'tablet' || screens.sm ? {paddingLeft: 95, paddingTop: 10} : {}}>
+                    />
+                    <Avatar.Group
+                      maxCount={3}
+                      maxStyle={{ color: textColor, backgroundColor: bgColor }}
+                      style={
+                        isMobile || mobilePreview === "tablet" || screens.sm
+                          ? { paddingLeft: 95, paddingTop: 10 }
+                          : {}
+                      }
+                    >
                       {activity.hosts.length > 0 &&
-                        activity.hosts.map((host,index) => (
-                          <Avatar key={`key-${index}`} size={isMobile ? 'small' : 'large'} icon={<UserOutlined />} src={host.image || ''} />
+                        activity.hosts.map((host, index) => (
+                          <Avatar
+                            key={`key-${index}`}
+                            size={isMobile ? "small" : "large"}
+                            icon={<UserOutlined />}
+                            src={host.image || ""}
+                          />
                         ))}
                     </Avatar.Group>
                   </Row>
@@ -107,7 +180,7 @@ const ActivityBlock = ({ preview, title }: PropsPreLanding) => {
           />
         </Col>
       </Row>
-      
+
       {/* <Row style={{ height: '100%' }} justify={activities.length < 2 ? 'start' : 'center'} align='middle'>
         <Timeline
           style={{ width: '100%' }}

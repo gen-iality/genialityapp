@@ -28,6 +28,15 @@ import DrawerBingo from "@/components/games/bingo/components/DrawerBingo";
 import { useAuction } from "@/components/dinamicas/subasta/hooks/useAuction";
 import DrawerAuction from "@/components/dinamicas/subasta/components/landing/DrawerAuction";
 
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(localizedFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 const HeaderColumns = (props) => {
   let { currentActivity } = useHelper();
   let cEvent = UseEventContext();
@@ -264,28 +273,31 @@ const HeaderColumns = (props) => {
             >
               {props.isVisible && (
                 <div>
-                  {Moment.tz(
-                    currentActivity !== null && currentActivity?.datetime_start,
-                    "YYYY-MM-DD h:mm",
-                    "America/Bogota"
-                  )
-                    .tz(Moment.tz.guess())
-                    .format("DD MMM YYYY")}{" "}
-                  {Moment.tz(
-                    currentActivity !== null && currentActivity?.datetime_start,
-                    "YYYY-MM-DD h:mm",
-                    "America/Bogota"
-                  )
-                    .tz(Moment.tz.guess())
-                    .format("h:mm a z")}{" "}
+                  {dayjs
+                    .tz(
+                      currentActivity !== null &&
+                        currentActivity?.datetime_start,
+                      "America/Bogota"
+                    )
+                    .tz(dayjs.tz.guess())
+                    .format("YYYY-MM-DD")}{" "}
+                  {dayjs
+                    .tz(
+                      currentActivity !== null &&
+                        currentActivity?.datetime_start,
+                      "America/Bogota"
+                    )
+                    .tz(dayjs.tz.guess())
+                    .format("h:mm A")}{" "}
                   -{" "}
-                  {Moment.tz(
-                    currentActivity !== null && currentActivity?.datetime_end,
-                    "YYYY-MM-DD h:mm",
-                    "America/Bogota"
-                  )
-                    .tz(Moment.tz.guess())
-                    .format("h:mm a z")}
+                  {dayjs
+                    .tz(
+                      currentActivity !== null &&
+                        currentActivity?.datetime_end,
+                      "America/Bogota"
+                    )
+                    .tz(dayjs.tz.guess())
+                    .format("h:mm A [GMT]Z")}
                 </div>
               )}
             </div>
