@@ -17,7 +17,6 @@ const calcPrice = (money: number) => Math.round(money) * 100
 const lang = 'ES'
 
 const style = `
-
 .waybox-modal.waybox-display-block:before {
   content: "Suscripción 1 año 50.000 COP o 15 USD";
   /* background: blue; */
@@ -25,7 +24,7 @@ const style = `
   /* height: 100px; */
   padding: 0.7em;
   /* position: absolute; */
-  font-size: 150%;
+  font-size: 100%;
   text-align: center;
   font-weight:bold;
 }
@@ -161,9 +160,9 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
   }, [paymentStep, checkout])
 
   return (
-    <>
+    <div>
       <style>{style}</style>
-    </>
+    </div>
   )
 }
 
