@@ -428,6 +428,7 @@ const FormRegister = ({
     } else {
       delete values.picture;
     }
+
     if (callback) {
       callback(values);
     } else {
@@ -641,6 +642,7 @@ const FormRegister = ({
       }
     }
   };
+  
   useEffect(() => {
     form.setFieldsValue(initialValues);
   }, [initialValues]);

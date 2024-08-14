@@ -248,9 +248,11 @@ class SendRsvp extends Component {
                   />
                   {/* <Quill value={this.state.rsvp.content_header} onChange={this.QuillComplement1} name='content_header' /> */}
                 </Form.Item>
+
                 <Form.Item label={'Específicar fecha del evento'}>
                   <Checkbox style={{ marginRight: '2%' }} defaultChecked={include_date} onChange={this.onChangeDate} />
                 </Form.Item>
+
                 {include_date && (
                   <div>
                     <Row gutter={[8, 8]} wrap>
@@ -297,6 +299,7 @@ class SendRsvp extends Component {
                         </p>
                       </Col>
                     </Row>
+
                     {this.props.event.dates && !!this.props.event.dates.length ? null : (
                       <>
                         <Alert
@@ -317,6 +320,7 @@ class SendRsvp extends Component {
                     )}
                   </div>
                 )}
+                
                 <Row justify='center'>
                   <Col>
                     <EnvironmentOutlined />
@@ -416,6 +420,7 @@ class SendRsvp extends Component {
               </Col>
             )}
           </Row>
+
           <Modal
             visible={this.state.modal}
             onCancel={this.closeModal}
@@ -430,6 +435,7 @@ class SendRsvp extends Component {
               {this.state.selection?.length === 1 ? 'invitación' : 'invitaciones'}
             </p>
           </Modal>
+
           <BackTop />
         </Form>
       </>

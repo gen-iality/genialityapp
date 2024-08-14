@@ -413,6 +413,7 @@ export const EventsApi = {
     return await Actions.delete(`/api/descriptions/${sectionId}?token=${token}`);
   },
 };
+
 export const BingoApi = {
   getOne: async (event) => {
     let token = await GetTokenUserFirebase();
@@ -504,6 +505,7 @@ export const BingoApi = {
     return await Actions.get(`api/bingotemplates/format/${format}?token=${token}`, true);
   },
 };
+
 export const AuctionApi = {
   getOne: async (event) => {
     let token = await GetTokenUserFirebase();
@@ -527,6 +529,7 @@ export const AuctionApi = {
     return await Actions.put(`/api/events/${event}/subastas/reset-products?token=${token}`, '', true);
   },
 };
+
 export const AuctionProductApi = {
   getOne: async (event) => {
     let token = await GetTokenUserFirebase();
@@ -546,6 +549,7 @@ export const AuctionProductApi = {
     return await Actions.delete(`/api/events/${event}/products/${id}?token=${token}`, '', true);
   },
 };
+
 export const WhoWantsToBeAMillonaireApi = {
   getOne: async (eventId) => {
     let token = await GetTokenUserFirebase();
@@ -924,6 +928,7 @@ export const CategoriesApi = {
     return await Actions.delete(`api/organizations/${organizationId}/categories/${id_category}?token=${token}`, '', true);
   },
 };
+
 export const GroupsApi = {
   getGroupsByOrg: async (orgId) => {
     const resp = await Actions.getAll(`api/organizations/${orgId}/groups`, true);
@@ -957,6 +962,7 @@ export const TypesApi = {
     return handleSelect(resp.data);
   },
 };
+
 export const OrganizationApi = {
   mine: async () => {
     let token = await GetTokenUserFirebase();
@@ -1083,6 +1089,7 @@ export const OrganizationApi = {
     return await Actions.put(`/api/organizations/${id}?update_events_itemsMenu=false&token=${token}`, data);
   },
 };
+
 export const BadgeApi = {
   create: async (data) => {
     let token = await GetTokenUserFirebase();
@@ -1095,6 +1102,7 @@ export const BadgeApi = {
     return await Actions.getOne('/api/escarapelas/', id);
   },
 };
+
 export const HelperApi = {
   listHelper: async (id) => {
     return await Actions.getOne(`api/contributors/events/`, id);
@@ -1336,6 +1344,7 @@ export const SpacesApi = {
     return await Actions.create(`api/events/${event}/spaces?token=${token}`, data, true);
   },
 };
+
 export const CategoriesAgendaApi = {
   byEvent: async (event) => {
     return await Actions.getAll(`api/events/${event}/categoryactivities`).then(({ data }) => data);
@@ -1353,6 +1362,7 @@ export const CategoriesAgendaApi = {
     return await Actions.create(`api/events/${event}/categoryactivities`, data);
   },
 };
+
 export const TypesAgendaApi = {
   byEvent: async (event) => {
     return await Actions.getAll(`api/events/${event}/type`).then(({ data }) => data);
@@ -1406,6 +1416,7 @@ export const AgendaApi = {
     return await Actions.delete(`api/vimeo/videos/${videoId}`, '');
   },
 };
+
 export const SpeakersApi = {
   byEvent: async (event) => {
     return await Actions.getAll(`api/events/${event}/host`).then(({ data }) => data);
@@ -1633,6 +1644,7 @@ export const OrganizationFuction = {
     return organization;
   },
 };
+
 //ENDPOINT PARA CREAR ORDENES
 export const OrderFunctions = {
   createOrder: async (data) => {
