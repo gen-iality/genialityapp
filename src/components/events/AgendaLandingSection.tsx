@@ -23,6 +23,7 @@ import {
   Space,
   Badge,
   Row,
+  Image,
 } from 'antd'
 
 import AgendaActivityItem from './AgendaActivityItem/index'
@@ -711,6 +712,14 @@ class AgendaLandingSection extends Component {
 
         {!currentActivity && !loading && (
           <div className="container-calendar-section">
+            {this.props.cEvent.value?.permanent_video_banner && (
+              <Image
+                width="100%"
+                src={this.props.cEvent.value.permanent_video_banner}
+                alt={this.props.cEvent.value.permanent_video_banner}
+                preview={false}
+              />
+            )}
             <Row justify="center">
               <div className="container-calendar ">
                 {/* LECCIONES SIN AGRUPAR */}
