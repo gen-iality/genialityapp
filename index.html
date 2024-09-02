@@ -16,20 +16,17 @@
     <link rel="shortcut icon" href="<%- faviconGlobalPortalHref %>" />
     <title><%- titleGlobalPortal %></title>
     <meta name="description" content="<%- contentGlobalPortalHref %>" />
+
     <!-- preconnect & prefetch -->
-    <link rel="preconnect" href="https://www.gstatic.com" crossorigin />
-    <link rel="dns-prefetch" href="https://www.gstatic.com" />
     <link rel="preconnect" href="https://cdn.firebase.com" crossorigin />
     <link rel="dns-prefetch" href="https://cdn.firebase.com" />
     <link rel="preconnect" href="https://use.fontawesome.com" crossorigin />
     <link rel="dns-prefetch" href="https://use.fontawesome.com" />
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
-    <link rel="preconnect" href="https://player.wowza.com" crossorigin />
-    <link rel="dns-prefetch" href="https://player.wowza.com" />
 
     <script type="module">
-      // si esta en producción retorna el dominio evius.co si está en modo desarrollo retorna localhost
+      // si esta en producción retorna el dominio geniality.com.co  si está en modo desarrollo retorna localhost
       if (location.hostname === 'beta.geniality.com.co') {
         document.domain = 'beta.geniality.com.co'
       } else if (location.hostname.includes('.geniality.com.co')) {
@@ -70,7 +67,6 @@
     <!-- TODO: Change public key test for prod in production -->
     <!-- data-public-key="pub_test_YApbIlYJNlg50X0yEUGb2oV8ooIX3cWw" -->
     <!-- data-public-key="pub_prod_SJtHVutpd9crWD84AvBY5oJKzUKWxLqb" -->
-
     <script
       id="wompi"
       src="https://cdn.wompi.co/libs/js/v1.js"
@@ -88,11 +84,6 @@
     ></script>
     <!-- Wompi Widget Script -->
     <script type="text/javascript" src="https://checkout.wompi.co/widget.js"></script>
-
-    <!-- WOWZA -->
-    <!-- <script defer type="module" src="//player.wowza.com/player/latest/wowzaplayer.min.js"></script> -->
-    <script type="module" defer src="//cdn.jsdelivr.net/npm/less"></script>
-    <link rel="stylesheet" href="/Assets/css/globalcss.css" />
   </head>
 
   <body class="<%- globalPortalClassName %>" id="evius-body">
@@ -104,82 +95,16 @@
       </div>
     </div>
 
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script
-      type="module"
-      defer
-      src="https://www.googletagmanager.com/gtag/js?id=UA-72179148-1"
-    ></script>
-    <script type="module">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0CFS4B2C08"></script>
+    <script>
       window.dataLayer = window.dataLayer || []
       function gtag() {
         dataLayer.push(arguments)
       }
       gtag('js', new Date())
-      gtag('config', 'UA-72179148-1')
+
+      gtag('config', 'G-0CFS4B2C08')
     </script>
-
-    <!-- Google Tag Manager (noscript) -->
-    <noscript
-      ><iframe
-        src="https://www.googletagmanager.com/ns.html?id=GTM-MQJQCS9"
-        height="0"
-        width="0"
-        style="display: none; visibility: hidden"
-      ></iframe
-    ></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-
-    <!-- Google Tag Manager ( for Event) -->
-    <script class="gtmScrip"></script>
-    <!-- Google Tag Manager ( for Event) -->
-
-    <!-- Google Analytics ( for Event) -->
-    <script class="analyticsScrip"></script>
-    <!-- Google Analytics ( for Event) -->
-
-    <!-- Google maps callback init -->
-    <script type="module">
-      function initMap() {
-        return true
-      }
-    </script>
-    <!-- <script
-      type="module"
-      defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmcIJ4xnytwh5ToGhN1Pl56RiualarBqk&callback=initMap&libraries=geometry,places"
-    ></script> -->
-
-    <!-- Facebook Pixel Code -->
-    <script type="module">
-      !(function (f, b, e, v, n, t, s) {
-        if (f.fbq) return
-        n = f.fbq = function () {
-          n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-        }
-        if (!f._fbq) f._fbq = n
-        n.push = n
-        n.loaded = !0
-        n.version = '2.0'
-        n.queue = []
-        t = b.createElement(e)
-        t.defer = !0
-        t.src = v
-        s = b.getElementsByTagName(e)[0]
-        s.parentNode.insertBefore(t, s)
-      })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js')
-      fbq('init', '1224063924627255')
-      fbq('track', 'Lead')
-    </script>
-    <noscript
-      ><img
-        height="1"
-        width="1"
-        style="display: none"
-        src="https://www.facebook.com/tr?id=1224063924627255&ev=PageView&noscript=1"
-    /></noscript>
-    <!-- End Facebook Pixel Code -->
-    <!-- <script type="module" defer src="https://my.afrus.app/template/index.js"></script> -->
-    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
