@@ -261,6 +261,17 @@ const MainProfile = () => {
               <Menu.Item
                 title={null}
                 onClick={() => {
+                  showContent('MY_PLAN')
+                  screens.xs && showSider()
+                }}
+                key="myPlan"
+                icon={<EditOutlined style={{ fontSize: '18px' }} />}
+              >
+                Manejar Membresia
+              </Menu.Item>
+              <Menu.Item
+                title={null}
+                onClick={() => {
                   showContent('EDIT_INFORMATION')
                   screens.xs && showSider()
                 }}

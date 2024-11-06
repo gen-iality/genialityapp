@@ -631,31 +631,6 @@ class AgendaLandingSection extends Component {
         </Modal>
 
         <Modal
-          open={this.state.visibleModalRestricted}
-          title="Información"
-          // onOk={this.handleOk}
-          onCancel={this.handleCancelModalRestricted}
-          onClose={this.handleCancelModalRestricted}
-          footer={[
-            <Button key="cancel" onClick={this.handleCancelModalRestricted}>
-              Cancelar
-            </Button>,
-            <Button key="login" onClick={this.handleOpenModalExchangeCode}>
-              Canjear código
-            </Button>,
-          ]}
-        >
-          <p>
-            Para poder disfrutar de este contenido debes haber pagado y tener un código
-            por favor ingresalo a continuación, Si aún no has comprado el código lo puedes
-            comprar en el siguiente link
-            <a href="https://www.eticketablanca.com/evento/magic-land/">
-              https://www.eticketablanca.com/evento/magic-land/
-            </a>
-          </p>
-        </Modal>
-
-        <Modal
           open={this.state.visibleModalRegisteredDevices}
           title="Información"
           // onOk={this.handleOk}

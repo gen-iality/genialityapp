@@ -785,6 +785,15 @@ export const PaymentGatewayApi = {
     return await Actions.getAll(`api/wompi/get-stored-event/${id}`)
   },
 }
+
+export const OrganizationMembership = {
+  mine: async () => {
+    const token = await GetTokenUserFirebase()
+    const resp = await Actions.getAll(`api/me/organizations?token=${token}`)
+    return resp.data
+  },
+}
+
 export const OrganizationApi = {
   mine: async () => {
     const token = await GetTokenUserFirebase()

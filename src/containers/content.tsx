@@ -95,9 +95,23 @@ const ContentContainer = () => {
               </PrivateRoute>
             }
           >
-            <Route path="/myprofile" element={<MainProfile />} />
+            <Route
+              path="/myprofile"
+              element={
+                <OrganizationPaymentProvider>
+                  <MainProfile />
+                </OrganizationPaymentProvider>
+              }
+            />
             {/*Ruta para ver resumen */}
-            <Route path="/myprofile/:tab" element={<MainProfile />} />
+            <Route
+              path="/myprofile/:tab"
+              element={
+                <OrganizationPaymentProvider>
+                  <MainProfile />
+                </OrganizationPaymentProvider>
+              }
+            />
 
             <Route
               path="/create-event/:user?"

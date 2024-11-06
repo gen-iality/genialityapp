@@ -175,6 +175,7 @@ const EventOrganizationPage = () => {
       }}
     >
       <OrganizationPaymentConfirmationModal organization={organization} />
+
       <OrganizationPaymentModal
         organizationUser={organizationUser}
         organization={organization}
@@ -184,7 +185,7 @@ const EventOrganizationPage = () => {
         organizationUser={organizationUser}
         organization={organization}
       />
-      {isNotProd && (
+      {
         <div>
           <Button onClick={() => paymentDispatch({ type: 'REQUIRE_PAYMENT' })}>
             REQUIRE_PAYMENT
@@ -200,7 +201,7 @@ const EventOrganizationPage = () => {
             DISPLAY_SUCCESS
           </Button>
         </div>
-      )}
+      }
       <ModalLoginHelpers />
 
       {!isLoading && orgId ? (
