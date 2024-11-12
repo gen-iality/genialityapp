@@ -30,9 +30,11 @@ const MyPlan = ({ cUser }) => {
     OrganizationPaymentContext,
   )
 
-  console.log('usuario', paymentDispatch, cUser)
-  if (cUser.status.LOADING) return <p>Cargando....</p>
+  if (!cUser || cUser.status == 'LOADING') {
+    return <p>Cargando... {cUser.status}</p>
+  }
 
+  console.log('cUser', cUser)
   const { value, setCurrentUser } = cUser
   const { names, picture, _id } = value
 
@@ -173,6 +175,7 @@ const MyPlan = ({ cUser }) => {
                         dayjs(item?.payment_plan?.created_at).format('YYYY-MMMM-DD')}
                     </p>
                     <p>
+                      <strong>Finalización del Plan: </strong>
                       {item?.payment_plan &&
                         dayjs(item?.payment_plan?.date_until).format('YYYY-MMMM-DD')}
                     </p>

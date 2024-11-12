@@ -29,7 +29,7 @@ import withContext from '@context/withContext'
 import { EventsApi, TicketsApi, OrganizationApi, SurveysApi } from '@helpers/request'
 
 import EventCard from '../shared/eventCard'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import dayjs from 'dayjs'
 import Loading from './loading'
 import ChangePassword from './components/changePassword'
@@ -68,6 +68,8 @@ const MainProfile = () => {
 
   const screens = useBreakpoint()
   const { tab: selectedTab } = useParams()
+  //useSearchParams
+
   const { helperDispatch } = useHelper()
   const cUser = useCurrentUser()
 
@@ -160,8 +162,9 @@ const MainProfile = () => {
     /* Surveys del usuario */
     eventsWithSurveys()
   }
-
+  console.log('MAGIA', selectedTab)
   useEffect(() => {
+    console.log('MAGIA', selectedTab)
     fetchItem()
     switch (selectedTab) {
       case 'organization':
@@ -173,10 +176,15 @@ const MainProfile = () => {
       case 'tickets':
         setActiveTab('4')
         break
+      case 'myPlan':
+        //setActiveTab('4')
+        showContent('MY_PLAN')
+        break
+
       default:
         setActiveTab('1')
     }
-  }, [])
+  }, [selectedTab])
 
   useEffect(() => {
     if (!cUser.value?._id) return
