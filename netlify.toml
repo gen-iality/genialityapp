@@ -8,9 +8,3 @@ publish = "dist"
   #CYPRESS_RECORD_KEY = "0e92a938-6e98-47df-a5ad-96d80927613f"
   # set TERM variable for terminal output
   TERM = "xterm"
-
-[[plugins]]
-# runs Cypress tests against the deployed URL
-#package = "netlify-plugin-cypress"
-  [plugins.inputs]
-  record = true
