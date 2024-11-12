@@ -171,13 +171,14 @@ const MyPlan = ({ cUser }) => {
                     </p>
                     <p>
                       <strong>Inicio del Plan: </strong>
-                      {item?.payment_plan &&
-                        dayjs(item?.payment_plan?.created_at).format('YYYY-MMMM-DD')}
+                      {item?.payment_plan && item?.payment_plan?.created_at}
+
+                      {/* //dayjs(item?.payment_plan?.created_at).format('YYYY-MMMM-DD') */}
                     </p>
                     <p>
                       <strong>Finalización del Plan: </strong>
-                      {item?.payment_plan &&
-                        dayjs(item?.payment_plan?.date_until).format('YYYY-MMMM-DD')}
+                      {item?.payment_plan && item?.payment_plan?.date_until}
+                      {/*dayjs(item?.payment_plan?.date_until).format('YYYY-MMMM-DD') */}
                     </p>
                     <p>
                       {item?.payment_plan &&
