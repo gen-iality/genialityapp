@@ -1,5 +1,16 @@
 import { useState, useEffect, useContext } from 'react'
-import { Button, Card, Form, Input, Space, Upload, Alert, PageHeader, List } from 'antd'
+import {
+  Button,
+  Card,
+  Form,
+  Input,
+  Space,
+  Upload,
+  Alert,
+  PageHeader,
+  List,
+  Skeleton,
+} from 'antd'
 import { PictureOutlined, UserOutlined, LoadingOutlined } from '@ant-design/icons'
 import ImgCrop from 'antd-img-crop'
 import { useIntl } from 'react-intl'
@@ -39,7 +50,7 @@ const MyPlan = ({ cUser }) => {
     useState('initial')
 
   const [myMemberships, setMyMemberships] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   const intl = useIntl()
 
@@ -108,19 +119,16 @@ const MyPlan = ({ cUser }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true)
         const myMembershipsLoaded = await OrganizationMembership.mine()
         setMyMemberships(myMembershipsLoaded)
-        //console.log('respuesta', myOrganizations)
+        console.log('paymnet myMembershipsLoaded', myMembershipsLoaded)
 
-        myOrganizations.forEach((org) => {
-          console.log(org) // This will log each fruit to the console
-          //createPaymentPlan: async (organizationUserId: string, days: number, price: number)
-          //org._id
-        })
-        //const result   = await response.json();
-        //setData(result);
+        setIsLoading(false)
       } catch (error) {
         console.error('Error fetching data:', error)
+        alert('Error fetching data', error.message)
+        setIsLoading(false)
       }
     }
 
@@ -146,77 +154,84 @@ const MyPlan = ({ cUser }) => {
           // }}
           title="Editar mi Plan"
         />
-        <div style={{ padding: '24px' }}>
-          <List
-            grid={{ gutter: 16, column: 1 }}
-            dataSource={myMemberships}
-            renderItem={(item) => (
-              <List.Item>
-                <Card title={item.organization.name}>
-                  <p>
-                    {console.log('orgi', item)}
-                    <strong>Duración: </strong> {item?.payment_plan?.days}
-                  </p>
-                  <p>
-                    <strong>Inicio del Plan: </strong>
-                    {item?.payment_plan &&
-                      dayjs(item?.payment_plan?.created_at).format('YYYY-MMMM-DD')}
-                  </p>
-                  <p>
-                    {item?.payment_plan &&
-                      dayjs(item?.payment_plan?.date_until).format('YYYY-MMMM-DD')}
-                  </p>
-                  <p>
-                    {item?.payment_plan &&
-                      (dayjs(item?.payment_plan?.date_until).diff(dayjs(), 'day') >= 0 ? (
-                        <Alert message="PLAN ACTIVO" type="success" />
-                      ) : (
-                        <>
-                          <Alert
-                            onClick={() => paymentDispatch({ type: 'REQUIRE_PAYMENT' })}
-                            action={
-                              <Space direction="vertical">
-                                <Button size="small" type="primary">
-                                  RENOVAR
-                                </Button>
-                              </Space>
-                            }
-                            message="PLAN VENCIDO"
-                            type="warning"
-                          ></Alert>
+        {isLoading && <Skeleton active />}
+        {!isLoading && (
+          <div style={{ padding: '24px' }}>
+            <List
+              grid={{ gutter: 16, column: 1 }}
+              dataSource={myMemberships}
+              renderItem={(item) => (
+                <List.Item>
+                  <Card title={item.organization.name}>
+                    <p>
+                      {console.log('orgi', item)}
+                      <strong>Duración: </strong> {item?.payment_plan?.days}
+                    </p>
+                    <p>
+                      <strong>Inicio del Plan: </strong>
+                      {item?.payment_plan &&
+                        dayjs(item?.payment_plan?.created_at).format('YYYY-MMMM-DD')}
+                    </p>
+                    <p>
+                      {item?.payment_plan &&
+                        dayjs(item?.payment_plan?.date_until).format('YYYY-MMMM-DD')}
+                    </p>
+                    <p>
+                      {item?.payment_plan &&
+                        (dayjs(item?.payment_plan?.date_until).diff(dayjs(), 'day') >=
+                        0 ? (
+                          <Alert message="PLAN ACTIVO" type="success" />
+                        ) : (
+                          <>
+                            <Alert
+                              onClick={() => paymentDispatch({ type: 'REQUIRE_PAYMENT' })}
+                              action={
+                                <Space direction="vertical">
+                                  <Button size="small" type="primary">
+                                    RENOVAR
+                                  </Button>
+                                </Space>
+                              }
+                              message="PLAN VENCIDO"
+                              type="warning"
+                            ></Alert>
 
-                          <OrganizationPaymentConfirmationModal
-                            organization={item.organization}
-                          />
-                          <OrganizationPaymentModal
-                            organizationUser={item}
-                            organization={item.organization}
-                          />
+                            <OrganizationPaymentConfirmationModal
+                              organization={item.organization}
+                            />
+                            <OrganizationPaymentModal
+                              organizationUser={item}
+                              organization={item.organization}
+                            />
 
-                          <OrganizationPaymentSuccessModal
-                            organizationUser={item}
-                            organization={item.organization}
-                          />
-                        </>
-                      ))}
-                  </p>
+                            <OrganizationPaymentSuccessModal
+                              organizationUser={item}
+                              organization={item.organization}
+                            />
+                          </>
+                        ))}
+                    </p>
 
-                  <p>
-                    <strong> Días sobre pasados </strong>
                     {item?.payment_plan &&
-                      dayjs(item?.payment_plan?.date_until).diff(dayjs(), 'day')}
-                  </p>
+                      dayjs(item?.payment_plan?.date_until).diff(dayjs(), 'day') < 0 && (
+                        <p>
+                          <strong> Días sobre pasados </strong>
+                          {item?.payment_plan &&
+                            dayjs(item?.payment_plan?.date_until).diff(dayjs(), 'day')}
+                        </p>
+                      )}
 
-                  <p>
-                    <strong>Precio:</strong>{' '}
-                    {item?.payment_plan &&
-                      (item?.payment_plan?.price ?? '').toLocaleString()}
-                  </p>
-                </Card>
-              </List.Item>
-            )}
-          />
-        </div>
+                    <p>
+                      <strong>Precio:</strong>{' '}
+                      {item?.payment_plan &&
+                        (item?.payment_plan?.price ?? '').toLocaleString()}
+                    </p>
+                  </Card>
+                </List.Item>
+              )}
+            />
+          </div>
+        )}
       </Card>
     </>
   )
