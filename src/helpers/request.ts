@@ -360,6 +360,13 @@ export const EventsApi = {
   refreshLinkEmailUser: async (email) => {
     return await Actions.post(`/api/getloginlink`, { email: email, refreshlink: true })
   },
+  refreshLinkEmailUserOrganization: async (email, organization) => {
+    return await Actions.post(`/api/getloginlink`, {
+      email: email,
+      organization: organization,
+      refreshlink: true,
+    })
+  },
   generalMagicLink: async (email, url, content) => {
     return await Actions.post(`/api/general-magic-link`, { email, url, content })
   },

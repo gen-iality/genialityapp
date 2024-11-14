@@ -72,7 +72,6 @@ const EventCard = ({
   // const formatDate = dayjs(blockedDate).format('DD MMM YYYY')
 
   const handleEventLinkClick = (e) => {
-    console.log('usuario tipo de organizacion ', organization)
     if (
       organization?.access_settings?.type === 'payment' &&
       (!organizationUser || !organizationUser?.payment_plan) &&

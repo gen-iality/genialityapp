@@ -7,6 +7,7 @@ import { FB } from '@helpers/firestore-request'
 const WithCode = () => {
   const [email, setEmail] = useState()
   const [event, setEvent] = useState()
+  const [organization, setOrganization] = useState()
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(false)
   const [verifyLink, setVerifyLink] = useState(false)
@@ -18,9 +19,11 @@ const WithCode = () => {
     const params = new URLSearchParams(querystring)
     let email = params.get('email')
     const event = params.get('event_id')
+    const organization = params.get('organization')
     if (email) {
       setEmail(email)
       setEvent(event)
+      setOrganization(organization)
       email = email.replace('%40', '@')
       FB.Connections.getAllByEmail(email, true).then(async (resp) => {
         if (
@@ -53,6 +56,8 @@ const WithCode = () => {
           let urlredirect
           if (event && result) {
             urlredirect = `${window.location.origin}/landing/${event}`
+          } else if (organization) {
+            urlredirect = `${window.location.origin}/myprofile/myPlan`
           } else {
             urlredirect = `${window.location.origin}`
           }
@@ -65,13 +70,19 @@ const WithCode = () => {
         })
         .catch(async (err) => {
           console.error(err)
+          console.log('Hubo un error al intentar iniciar sesión con el link')
           let refreshLink
           if (event) {
+            console.log('Ejecutando refreshLinkEmailUserEvent')
             refreshLink = await EventsApi.refreshLinkEmailUserEvent(email, event)
+          } else if (organization) {
+            refreshLink = await EventsApi.refreshLinkEmailUserOrganization(email, organization)
           } else {
+            console.log('Ejecutando refreshLinkEmailUser')
             refreshLink = await EventsApi.refreshLinkEmailUser(email)
           }
           if (refreshLink) {
+            console.log('Redireccionando a la página de refreshLink', refreshLink)
             setTimeout(() => (window.location.href = refreshLink), 3000)
 
             /*fetch(refreshLink).then((result) => {

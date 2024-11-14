@@ -113,7 +113,7 @@ const VideoActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =
             style={{ backgroundColor: '#BA1D36', color: 'while' }}
           />
         </div>
-        {/**Comenta imagen banner */}
+
         {/* {cEvent.value?.permanent_video_banner && (
           <Image
             width="100%"
