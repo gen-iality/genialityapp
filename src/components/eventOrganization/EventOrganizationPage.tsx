@@ -28,6 +28,7 @@ const EventOrganizationPage = () => {
   const [isVisibleRegister, setIsVisibleRegister] = useState(false)
   const [organizationUser, setOrganizationUser] = useState<any | null>(null)
   const [myEvents, setMyEvents] = useState<any[]>([])
+  const [memberPaid, setMemberPaid ] = useState(false);
 
   const [isAdminUser, setIsAdminUser] = useState(false)
 
@@ -88,7 +89,6 @@ const EventOrganizationPage = () => {
     if (!cUser.value && organization) {
       let positionId = organization.default_position_id || undefined
 
-      console.log('5. positionId', positionId, 'orgId', orgId)
       helperDispatch({
         type: 'showRegister',
         visible: true,
@@ -104,7 +104,6 @@ const EventOrganizationPage = () => {
     if (!cUser.value) return
     if (organizationUser) return
     const { visibility, allow_register } = organization
-    console.log('organization access', { visibility, allow_register })
     if (visibility === 'PUBLIC' && allow_register) {
       //helperDispatch({ type: 'showRegister', visible: true });
       setIsVisibleRegister(true)
@@ -118,23 +117,19 @@ const EventOrganizationPage = () => {
     OrganizationApi.getMeUser(orgId).then(({ data }) => {
       const [orgUser] = data
       setOrganizationUser(orgUser)
-      console.debug('EventOrganization member rol:', orgUser, orgUser?.rol)
       setIsAdminUser(orgUser?.rol?.type === 'admin')
     })
 
     let load_minetickets = async () => {
       let MyEvents = await TicketsApi.getAll()
       setMyEvents(MyEvents)
-      console.log('mis eventos', MyEvents)
     }
     load_minetickets()
   }, [cUser.value, orgId])
 
   useEffect(() => {
     if (!organization || !organizationUser) return
-    console.log('member plan:', organizationUser.payment_plan)
     if (organization.access_settings?.type === 'payment') {
-      console.log('organizationUser', organizationUser)
 
       // Check if the organization user has an available payment plan
       let memberHadPaid = false
@@ -145,14 +140,15 @@ const EventOrganizationPage = () => {
           const diff = memberDateUntil.diff(today, 'day')
           if (diff > 0) {
             /* Congratulation!!! */
+            setMemberPaid(true);
             memberHadPaid = true
           }
         }
       }
-      if (!!organizationUser.payment_plan && !memberHadPaid) {
-        console.log('assume user is premium ⭐️⭐️⭐️', organizationUser.payment_plan)
-        memberHadPaid = true
-      }
+      // if (!!organizationUser.payment_plan && !memberHadPaid) {
+      //   console.log('assume user is premium ⭐️⭐️⭐️', organizationUser.payment_plan)
+      //   memberHadPaid = true
+      // }
 
       //
       if (memberHadPaid) {
@@ -238,6 +234,7 @@ const EventOrganizationPage = () => {
                 }}
               />
             )}
+
             {isAdminUser && (
               <Link
                 to={`/admin/organization/${orgId}`}
@@ -252,6 +249,7 @@ const EventOrganizationPage = () => {
                 </Button>
               </Link>
             )}
+
             {organization.styles.show_icon_title_and_description_container && (
               <Row
                 gutter={[10, 10]}
@@ -309,6 +307,7 @@ const EventOrganizationPage = () => {
                 </Col>
               </Row>
             )}
+            
             {/* Lista de cursos pasados -> 'Disponibles' */}
             <div
               style={{
@@ -361,6 +360,7 @@ const EventOrganizationPage = () => {
                               paymentDispatch={paymentDispatch}
                               organizationUser={organizationUser}
                               organization={organization}
+                              memberPaid={memberPaid}
                               noDates
                               bordered={false}
                               key={event._id}

@@ -31,6 +31,7 @@ const EventCard = ({
   organizationUser,
   paymentDispatch,
   organization,
+  memberPaid,
 }) => {
   let navigate = useNavigate()
   let location = useLocation()
@@ -72,6 +73,16 @@ const EventCard = ({
   // const formatDate = dayjs(blockedDate).format('DD MMM YYYY')
 
   const handleEventLinkClick = (e) => {
+    // Verificar si el usuario ha pagado
+    if (!memberPaid) {
+      paymentDispatch({ type: 'REQUIRE_PAYMENT' })
+      e.preventDefault()
+      e.stopPropagation()
+      e.nativeEvent.stopImmediatePropagation()
+      return
+    }
+
+    // Lógica existente para eventos con pago y cursos inactivos
     if (
       organization?.access_settings?.type === 'payment' &&
       (!organizationUser || !organizationUser?.payment_plan) &&
@@ -95,7 +106,6 @@ const EventCard = ({
       e.stopPropagation()
       e.nativeEvent.stopImmediatePropagation()
     }
-    return false
   }
 
   return (

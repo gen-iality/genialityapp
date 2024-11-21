@@ -48,7 +48,6 @@ const OrganizationCard = (props) => {
     OrganizationApi.getMeUser(props.data.id).then(({ data }) => {
       const [orgUser] = data
 
-      console.debug('EventOrganization member rol:', orgUser?.rol)
       setIsAdminUser(orgUser?.rol?.type === 'admin')
     })
   }, [props.data])

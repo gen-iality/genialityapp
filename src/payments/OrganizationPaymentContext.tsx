@@ -62,11 +62,10 @@ const OrganizationPaymentContext = createContext<OPState>({
 })
 
 const reducerOP = (state: OPState, action: OPAction): OPState => {
-  console.log('payment state reducer', state, action)
 
   switch (action.type) {
     case 'SET_ATTENDEE':
-      console.log('usuario action', action?.payload?.cUser)
+
       return { ...state, cUser: action?.payload?.cUser, paymentStep: steps.RESTING }
     case 'ABORT':
       return { ...state, paymentStep: steps.RESTING }
@@ -103,10 +102,6 @@ export const OrganizationPaymentProvider: FunctionComponent<PropsWithChildren> =
 
   const cUser = useCurrentUser()
   const cHelper = useContext(HelperContext)
-
-  {
-    console.log('usuario data', cUser, cHelper.helperDispatch)
-  }
 
   useEffect(() => {
     dispatch({ type: 'SET_ATTENDEE', payload: { cUser: cUser.value } })

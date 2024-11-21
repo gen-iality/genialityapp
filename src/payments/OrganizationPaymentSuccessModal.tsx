@@ -30,7 +30,6 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
 
   useEffect(() => {
     if (result) {
-      console.log('id: ', result.id)
       const timeoutId = setTimeout(() => {
         SendId() // Realiza la consulta después de un tiempo determinado
       }, 8000) // Espera 5 segundos (puedes ajustar el tiempo según tus necesidades)
@@ -44,12 +43,6 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
 
   const makeUserAsPaidPlan = async () => {
     StateMessage.show('presend', 'loading', 'Espera...')
-    console.log(
-      'payment initresult ',
-      { organizationUser },
-      { email: organizationUser?.email },
-      { prop: organizationUser?.properties },
-    )
 
     if (!organizationUser?.user?.email) {
       //if (!organizationUser.properties?.email) {
@@ -63,7 +56,6 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
       return
     }
 
-    console.log('payment initresult progress')
     const data = {
       payment_plan: {
         price: organization.access_settings?.price ?? 0,
@@ -73,13 +65,13 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
         ),
       },
     }
-    console.log('payment initresult data', data)
+
     const result = await OrganizationApi.editUser(
       organizationUser.organization_id,
       organizationUser._id,
       data,
     )
-    console.log('payment result fin', data, result)
+
     // Do request to send email
     try {
       await EventsApi.sendGenericMail(
@@ -113,8 +105,6 @@ const OrganizationPaymentSuccessModal: FunctionComponent<
     if (!organizationUser) return
     if (!organization) return
     if (!isLoading) return
-    console.debug('paymentStep', paymentStep)
-    console.debug('stateTransaction', stateTransaction)
 
     // Now, we dont use the local checking, use the backend checking instead
     // if (paymentStep !== 'DISPLAYING_SUCCESS') return

@@ -34,7 +34,6 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
   props,
 ) => {
   const { organizationUser, organization } = props
-  console.log('organizationUser', organizationUser)
 
   const { isDev, isStage } = useIsDevOrStage()
 
@@ -103,7 +102,6 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
       moreCustomData.legalIdType = 'CC'
     }
 
-    console.log('moreCustomData:', moreCustomData)
     /// @ts-ignore
     /// WIDGET de WOMPI viene importado de forma global
     return !organization || !organizationUser
@@ -146,7 +144,6 @@ const OrganizationPaymentModal: FunctionComponent<IOrganizationPaymentModalProps
         console.debug('payment member', { organizationUser, result })
 
         if (result.transaction.status == 'APPROVED') {
-          console.log('paid')
           dispatch({
             type: 'DISPLAY_SUCCESS',
             result: result.transaction,

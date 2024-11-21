@@ -106,7 +106,6 @@ const ModalAuth = (props) => {
 
   const checkIfUserHasAuth = () =>
     app.auth().onAuthStateChanged((user) => {
-      console.log("---------",controllerLoginVisible)
       if (user && controllerLoginVisible.onlyAddOrganizationMember) {
         setModalVisible(true)
         helperDispatch({
