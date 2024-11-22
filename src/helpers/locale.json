@@ -427,7 +427,7 @@
     "auth.restricted.event.message": "Debes estar previamente registrado al curso para acceder al espacio en vivo, si estás registrado y no tienes acceso comunicate con el organizador",
     "Button.signup": "Inscribir",
     "msg.no_fields_update": "No hay campos disponibles para actualizar en este curso",
-    "msg.no_fields_create": "No hay campos adicionales en este curso",
+    "msg.no_fields_create": "Inscribete al contenido",
     "title.user_data": "Datos del usuario",
     "result_link.title.logging_in": "Iniciando la sesión...",
     "result_link.title.checking_link": "Verificando link",
